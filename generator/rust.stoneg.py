@@ -75,6 +75,13 @@ class RustGenerator(CodeGenerator):
                 # TODO: do optional fields also need `default` serde attributes?
         self.emit()
 
+        if not struct.all_required_fields:
+            self._impl_default_for_struct(struct)
+
+        if struct.all_required_fields:
+            with self._impl_struct(struct):
+                self._emit_new_for_struct(struct)
+
     def _emit_union(self, union):
         enum_name = self._enum_name(union)
         self.emit(u'#[derive(Debug, Deserialize, Serialize)]')
@@ -104,6 +111,72 @@ class RustGenerator(CodeGenerator):
                 ns,
                 fn.name))
         self.emit()
+
+    # Helpers
+
+    def _impl_default_for_struct(self, struct):
+        struct_name = self._struct_name(struct)
+        with self.block(u'impl Default for {}'.format(struct_name)):
+            with self.block(u'fn default() -> Self'):
+                with self.block(struct_name):
+                    for field in struct.all_fields:
+                        self.emit(u'{}: {},'.format(
+                            self._field_name(field), self._default_value(field)))
+
+    def _impl_struct(self, struct):
+        return self.block(u'impl {}'.format(self._struct_name(struct)))
+
+    def _emit_new_for_struct(self, struct):
+        struct_name = self._struct_name(struct)
+        args = u''
+        for field in struct.all_required_fields:
+            args += u'{}: {}, '.format(self._field_name(field), self._rust_type(field.data_type))
+        args = args[:-2]
+
+        with self.block(u'pub fn new({}) -> Self'.format(args)):
+            with self.block(struct_name):
+                for field in struct.all_required_fields:
+                    self.emit(u'{},'.format(self._field_name(field))) # shorthand assignment
+                for field in struct.all_optional_fields:
+                    self.emit(u'{}: {},'.format(self._field_name(field), self._default_value(field)))
+
+        for field in struct.all_optional_fields:
+            self.emit()
+            field_name = self._field_name(field)
+            with self.block(u'pub fn {}(mut self, value: {}) -> Self'.format(
+                    field_name,
+                    self._rust_type(field.data_type))):
+                self.emit(u'self.{} = value;'.format(field_name))
+                self.emit(u'self')
+
+        self.emit()
+
+    def _default_value(self, field):
+        if isinstance(field.data_type, data_type.Nullable):
+            return u'None'
+        elif data_type.is_numeric_type(field.data_type):
+            return field.default
+        elif isinstance(field.default, data_type.TagRef):
+            for variant in field.default.union_data_type.fields:
+                if variant.name == field.default.tag_name:
+                    default_variant = variant
+            return u'{}::{}'.format(
+                self._rust_type(field.default.union_data_type),
+                self._enum_variant_name(default_variant))
+        elif isinstance(field.data_type, data_type.Boolean):
+            if field.default:
+                return u'true'
+            else:
+                return u'false'
+        elif isinstance(field.data_type, data_type.String):
+            if not field.default:
+                return u'String::new()'
+            else:
+                return u'"{}".to_owned()'.format(field.default)
+        else:
+            print(u'WARNING: unhandled default value {}'.format(field.default))
+            print(u'    in field: {}'.format(field))
+            return field.default
 
     # Naming Rules
 
