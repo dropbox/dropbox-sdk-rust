@@ -4,3 +4,13 @@ version = "0.1.0"
 authors = ["Bill Fraser <wfraser@dropbox.com>"]
 
 [dependencies]
+error-chain = "0.9"
+hyper = { version = "0.10", optional = true }
+hyper-native-tls = { version = "0.2", optional = true }
+log = "0.3"
+serde = "1.0"
+serde_derive = "1.0"
+serde_json = "1.0"
+
+[features]
+hyper_client = ["hyper", "hyper-native-tls"]
