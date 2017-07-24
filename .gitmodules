@@ -1,0 +1,6 @@
+[submodule "stone"]
+	path = stone
+	url = https://github.com/dropbox/stone.git
+[submodule "dropbox-api-spec"]
+	path = dropbox-api-spec
+	url = https://github.com/dropbox/dropbox-api-spec.git
