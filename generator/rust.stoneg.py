@@ -11,6 +11,12 @@ RUST_RESERVED_WORDS = [
     "macro", "match", "mod", "move", "mut", "offsetof", "override", "priv", "proc", "pub", "pure",
     "ref", "return", "Self", "self", "sizeof", "static", "struct", "super", "trait", "true", "type",
     "typeof", "unsafe", "unsized", "use", "virtual", "where", "while", "yield",
+
+    # Also include names of types that are in the prelude:
+    "Copy", "Send", "Sized", "Sync", "Drop", "Fn", "FnMut", "FnOnce", "drop", "Box", "ToOwned",
+    "Clone", "PartialEq", "PartialOrd", "Eq", "Ord", "AsRef", "AsMut", "Into", "From", "Default",
+    "Iterator", "Extend", "IntoIterator", "DoubleEndedIterator", "ExactSizeIterator", "Option",
+    "Some", "None", "Result", "Ok", "Err", "SliceConcatExt", "String", "ToString", "Vec",
 ]
 
 class RustGenerator(CodeGenerator):
