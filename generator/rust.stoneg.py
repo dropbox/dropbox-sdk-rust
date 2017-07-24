@@ -43,9 +43,6 @@ class RustGenerator(CodeGenerator):
         with self.output_to_relative_path(namespace.name + '.rs'):
             self._emit_header()
 
-            self.emit(u'use client_trait;')
-            self.emit(u'use client_helpers;')
-
             for fn in namespace.routes:
                 self._emit_route(namespace.name, fn)
 
@@ -96,13 +93,13 @@ class RustGenerator(CodeGenerator):
 
     def _emit_route(self, ns, fn):
         route_name = self._route_name(fn)
-        with self.block(u'pub fn {}(client: &client_trait::HttpClient, arg: &{}) -> ::Result<Result<{}, {}>>'.format(
+        with self.block(u'pub fn {}(client: &::client_trait::HttpClient, arg: &{}) -> ::Result<Result<{}, {}>>'.format(
                 route_name,
                 self._rust_type(fn.arg_data_type),
                 self._rust_type(fn.result_data_type),
                 self._rust_type(fn.error_data_type))):
-            endpoint = u'client_trait::Endpoint::Api' # TODO: support content endpoints
-            self.emit(u'client_helpers::request(client, {}, "{}/{}", arg, None)'.format(
+            endpoint = u'::client_trait::Endpoint::Api' # TODO: support content endpoints
+            self.emit(u'::client_helpers::request(client, {}, "{}/{}", arg, None)'.format(
                 endpoint,
                 ns,
                 fn.name))
