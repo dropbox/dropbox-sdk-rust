@@ -48,7 +48,10 @@ class RustGenerator(CodeGenerator):
 
             for typ in namespace.data_type_by_name.values():
                 if isinstance(typ, data_type.Struct):
-                    self._emit_struct(typ)
+                    if typ.has_enumerated_subtypes():
+                        self._emit_polymorphic_struct(typ)
+                    else:
+                        self._emit_struct(typ)
                 elif isinstance(typ, data_type.Union):
                     self._emit_union(typ)
                 else:
@@ -81,6 +84,23 @@ class RustGenerator(CodeGenerator):
         if struct.all_required_fields:
             with self._impl_struct(struct):
                 self._emit_new_for_struct(struct)
+
+    def _emit_polymorphic_struct(self, struct):
+        enum_name = self._enum_name(struct)
+        self.emit(u'#[derive(Debug, Deserialize, Serialize)]')
+        self.emit(u'#[serde(tag = ".tag")]')
+        with self.block(u'pub enum {}'.format(enum_name)):
+            for subtype in struct.get_enumerated_subtypes():
+                self.emit(u'#[serde(rename = "{}")] {}({}),'.format(
+                    subtype.name,
+                    self._enum_variant_name(subtype.data_type),
+                    self._rust_type(subtype.data_type)))
+            if struct.is_catch_all():
+                # TODO implement this
+                print(u'WARNING: open unions are not implemented yet: {}::{}'.format(
+                    struct.namespace.name,
+                    struct.name))
+                self.emit(u'#[serde(skip_deserializing)] _Unknown(::serde_json::value::Value),')
 
     def _emit_union(self, union):
         enum_name = self._enum_name(union)
