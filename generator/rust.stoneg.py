@@ -184,12 +184,18 @@ class RustGenerator(CodeGenerator):
     def _default_value(self, field):
         if isinstance(field.data_type, data_type.Nullable):
             return u'None'
-        elif data_type.is_numeric_type(field.data_type):
+        elif data_type.is_numeric_type(data_type.unwrap_aliases(field.data_type)[0]):
             return field.default
         elif isinstance(field.default, data_type.TagRef):
-            for variant in field.default.union_data_type.fields:
+            default_variant = None
+            for variant in field.default.union_data_type.all_fields:
                 if variant.name == field.default.tag_name:
                     default_variant = variant
+            if default_variant is None:
+                print('ERROR: didn\'t find matching variant: {}'.format(field.default.tag_name))
+                for variant in field.default.union_data_type.fields:
+                    print(u'\tvariant.name = {}'.format(variant.name))
+                default_variant = variant
             return u'{}::{}'.format(
                 self._rust_type(field.default.union_data_type),
                 self._enum_variant_name(default_variant))
@@ -206,6 +212,8 @@ class RustGenerator(CodeGenerator):
         else:
             print(u'WARNING: unhandled default value {}'.format(field.default))
             print(u'    in field: {}'.format(field))
+            if isinstance(field.data_type, data_type.Alias):
+                print(u'    unwrapped alias: {}'.format(data_type.unwrap_aliases(field.data_type)[0]))
             return field.default
 
     # Naming Rules
