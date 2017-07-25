@@ -92,8 +92,19 @@ class RustGenerator(CodeGenerator):
             self.emit(u'#[derive(Debug)]')
         with self.block(u'pub struct {}'.format(struct_name)):
             for field in struct.all_fields:
+                serde_attrs = u''
+                if USE_SERDE_DERIVE:
+                    default_attr = u''
+                    if field.has_default:
+                        if self._needs_explicit_default(field):
+                            default_attr = u', default = "{}::default_{}"'.format(
+                                struct_name,
+                                self._field_name(field))
+                        else:
+                            default_attr = u', default'
+                    serde_attrs = u'#[serde(rename = "{}"{})] '.format(field.name, default_attr)
                 self.emit(u'{}pub {}: {},'.format(
-                    u'#[serde(rename = "{}")] '.format(field.name) if USE_SERDE_DERIVE else '',
+                    serde_attrs,
                     self._field_name(field),
                     self._rust_type(field.data_type)))
                 # TODO: do optional fields also need `default` serde attributes?
@@ -101,10 +112,26 @@ class RustGenerator(CodeGenerator):
 
         if not struct.all_required_fields:
             self._impl_default_for_struct(struct)
+            self.emit()
 
-        if struct.all_required_fields:
+        explicit_default_fields = []
+        for field in struct.all_optional_fields:
+            if self._needs_explicit_default(field):
+                explicit_default_fields.append(field)
+
+        if struct.all_required_fields or explicit_default_fields:
             with self._impl_struct(struct):
-                self._emit_new_for_struct(struct)
+                if struct.all_required_fields:
+                    self._emit_new_for_struct(struct)
+
+                for field in explicit_default_fields:
+                    self.emit()
+                    with self.block(u'fn default_{}() -> {}'.format(
+                            self._field_name(field),
+                            self._rust_type(field.data_type))):
+                        self.emit(u'{}'.format(self._default_value(field)))
+                self.emit()
+            self.emit()
 
         if not USE_SERDE_DERIVE:
             self._impl_serde_for_struct(struct)
@@ -288,8 +315,6 @@ class RustGenerator(CodeGenerator):
                 self.emit(u'self.{} = value;'.format(field_name))
                 self.emit(u'self')
 
-        self.emit()
-
     def _default_value(self, field):
         if isinstance(field.data_type, data_type.Nullable):
             return u'None'
@@ -324,6 +349,11 @@ class RustGenerator(CodeGenerator):
             if isinstance(field.data_type, data_type.Alias):
                 print(u'    unwrapped alias: {}'.format(data_type.unwrap_aliases(field.data_type)[0]))
             return field.default
+
+    def _needs_explicit_default(self, field):
+        return field.has_default \
+                and not (isinstance(field, data_type.Nullable) \
+                    or (isinstance(field.data_type, data_type.Boolean) and not field.default))
 
     def _impl_error(self, type_name):
         with self.block(u'impl ::std::error::Error for {}'.format(type_name)):
