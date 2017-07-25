@@ -42,6 +42,7 @@ class RustGenerator(CodeGenerator):
 
     def _emit_namespace(self, namespace):
         with self.output_to_relative_path(namespace.name + '.rs'):
+            self._current_namespace = namespace.name
             self._emit_header()
 
             for alias in namespace.aliases:
@@ -239,9 +240,12 @@ class RustGenerator(CodeGenerator):
                 self._rust_type(typ.key_data_type),
                 self._rust_type(typ.value_data_type))
         elif isinstance(typ, data_type.Alias):
-            return u'super::{}::{}'.format(
-                self._namespace_name(typ.namespace),
-                self._alias_name(typ))
+            if typ.namespace.name == self._current_namespace:
+                return self._alias_name(typ)
+            else:
+                return u'super::{}::{}'.format(
+                    self._namespace_name(typ.namespace),
+                    self._alias_name(typ))
         elif isinstance(typ, data_type.UserDefined):
             if isinstance(typ, data_type.Struct):
                 name = self._struct_name(typ)
@@ -249,10 +253,13 @@ class RustGenerator(CodeGenerator):
                 name = self._enum_name(typ)
             else:
                 print(u'ERROR: user-defined type "{}" is neither Struct nor Union???'.format(typ))
-                name = u'()'
-            return u'super::{}::{}'.format(
-                self._namespace_name(typ.namespace),
-                name)
+                return u'()'
+            if typ.namespace.name == self._current_namespace:
+                return name
+            else:
+                return u'super::{}::{}'.format(
+                    self._namespace_name(typ.namespace),
+                    name)
         else:
             print(u'ERROR: unhandled type "{}"'.format(typ))
             return u'()'
