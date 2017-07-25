@@ -23,6 +23,7 @@ class RustGenerator(CodeGenerator):
     def __init__(self, target_folder_path, args):
         super(RustGenerator, self).__init__(target_folder_path, args)
         self._modules = []
+        self.preserve_aliases = True
 
     # File Generators
 
@@ -42,6 +43,11 @@ class RustGenerator(CodeGenerator):
     def _emit_namespace(self, namespace):
         with self.output_to_relative_path(namespace.name + '.rs'):
             self._emit_header()
+
+            for alias in namespace.aliases:
+                self._emit_alias(alias)
+            if namespace.aliases:
+                self.emit()
 
             for fn in namespace.routes:
                 self._emit_route(namespace.name, fn)
@@ -132,6 +138,10 @@ class RustGenerator(CodeGenerator):
                 fn.name))
         self.emit()
 
+    def _emit_alias(self, alias):
+        alias_name = self._alias_name(alias)
+        self.emit(u'pub type {} = {};'.format(alias_name, self._rust_type(alias.data_type)))
+
     # Helpers
 
     def _impl_default_for_struct(self, struct):
@@ -220,6 +230,10 @@ class RustGenerator(CodeGenerator):
             return u'HashMap<{}, {}>'.format(
                 self._rust_type(typ.key_data_type),
                 self._rust_type(typ.value_data_type))
+        elif isinstance(typ, data_type.Alias):
+            return u'super::{}::{}'.format(
+                self._namespace_name(typ.namespace),
+                self._alias_name(typ))
         elif isinstance(typ, data_type.UserDefined):
             if isinstance(typ, data_type.Struct):
                 name = self._struct_name(typ)
@@ -269,4 +283,10 @@ class RustGenerator(CodeGenerator):
         name = fmt_underscores(route.name)
         if name in RUST_RESERVED_WORDS:
             name += '_route'
+        return name
+
+    def _alias_name(self, alias):
+        name = fmt_pascal(alias.name)
+        if name in RUST_RESERVED_WORDS:
+            name += 'Alias'
         return name
