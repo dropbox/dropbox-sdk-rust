@@ -158,6 +158,9 @@ class RustGenerator(CodeGenerator):
         if not USE_SERDE_DERIVE:
             self._impl_serde_for_union(union)
 
+        if union.name.endswith('Error'):
+            self._impl_error(enum_name)
+
     def _emit_route(self, ns, fn):
         route_name = self._route_name(fn)
 
@@ -321,6 +324,16 @@ class RustGenerator(CodeGenerator):
             if isinstance(field.data_type, data_type.Alias):
                 print(u'    unwrapped alias: {}'.format(data_type.unwrap_aliases(field.data_type)[0]))
             return field.default
+
+    def _impl_error(self, type_name):
+        with self.block(u'impl ::std::error::Error for {}'.format(type_name)):
+            with self.block(u'fn description(&self) -> &str'):
+                self.emit(u'"{}"'.format(type_name))
+        self.emit()
+        with self.block(u'impl ::std::fmt::Display for {}'.format(type_name)):
+            with self.block(u'fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result'):
+                self.emit(u'write!(f, "{:?}", *self)')
+        self.emit()
 
     # Naming Rules
 
