@@ -67,7 +67,7 @@ impl HttpClient for HyperClient {
             // If the params are totally empt, don't send any arg header or body.
             if !params_json.is_empty() {
                 match endpoint {
-                    Endpoint::Api => {
+                    Endpoint::Api | Endpoint::Notify => {
                         // Send params in the body.
                         headers.set(ContentType::json());
                         builder = builder.body(params_json.as_bytes());
@@ -108,7 +108,7 @@ impl HttpClient for HyperClient {
             }
 
             return match endpoint {
-                Endpoint::Api => {
+                Endpoint::Api | Endpoint::Notify => {
                     // Get the response from the body; return no body stream.
                     let mut s = String::new();
                     resp.read_to_string(&mut s)?;

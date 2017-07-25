@@ -20,9 +20,16 @@ pub struct HttpRequestResultRaw {
     pub body: Option<Box<Read>>,
 }
 
+pub struct HttpRequestResult<T> {
+    pub result: T,
+    pub content_length: Option<u64>,
+    pub body: Option<Box<Read>>,
+}
+
 pub enum Endpoint {
     Api,
     Content,
+    Notify,
 }
 
 impl Endpoint {
@@ -30,6 +37,7 @@ impl Endpoint {
         match *self {
             Endpoint::Api => "https://api.dropboxapi.com/2/",
             Endpoint::Content => "https://content.dropboxapi.com/2/",
+            Endpoint::Notify => "https://notify.dropboxapi.com/2/",
         }
     }
 }

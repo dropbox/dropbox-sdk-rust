@@ -1,15 +1,8 @@
-use std::io::Read;
 use ResultExt;
 use client_trait::*;
 use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
 use serde_json;
-
-pub struct HttpRequestResult<T> {
-    pub result: T,
-    pub content_length: Option<u64>,
-    pub body: Option<Box<Read>>,
-}
 
 #[derive(Debug, Deserialize)]
 pub struct TopLevelError<T> {

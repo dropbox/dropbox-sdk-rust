@@ -10,4 +10,4 @@ ALL=$(find -L $SPEC -name '*.stone')
 
 rm -rf src/generated
 mkdir -p src/generated
-PYTHONPATH=stone python -m stone.cli -v generator/rust.stoneg.py src/generated $ALL
+PYTHONPATH=stone python -m stone.cli -v generator/rust.stoneg.py --attribute :all src/generated $ALL
