@@ -7,7 +7,7 @@ from stone.target.helpers import (
     fmt_underscores,
 )
 
-USE_SERDE_DERIVE = True
+USE_SERDE_DERIVE = False
 
 RUST_RESERVED_WORDS = [
     "abstract", "alignof", "as", "become", "box", "break", "const", "continue", "crate", "do",
@@ -51,6 +51,10 @@ class RustGenerator(CodeGenerator):
 
             if namespace.doc is not None:
                 self.emit_wrapped_text(namespace.doc, prefix=u'//! ', width=100)
+                self.emit()
+
+            if not USE_SERDE_DERIVE:
+                self.emit(u'use serde::ser::SerializeStruct;')
                 self.emit()
 
             for alias in namespace.aliases:
@@ -180,25 +184,13 @@ class RustGenerator(CodeGenerator):
             for field in union.all_fields:
                 self._emit_doc(field.doc)
                 variant_name = self._enum_variant_name(field)
+                rename_attr = u'#[serde(rename = "{}")] '.format(field.name) if USE_SERDE_DERIVE else u''
                 if isinstance(field.data_type, data_type.Void):
-                    self.emit(u'{}{},'.format(
-                        u'#[serde(rename = "{}")] '.format(field.name) if USE_SERDE_DERIVE else u'',
-                        variant_name))
+                    self.emit(u'{}{},'.format(rename_attr, variant_name))
                 else:
-                    # This is awkward (the variant name is effectively written twice) but necessary
-                    # to match the JSON that actually gets sent: it too has the variant name twice:
-                    # once in the ".tag" and again as a field...
-                    # enum Container {
-                    #     Variant { variant: VariantType },
-                    #     ....
-                    # }
-                    # as JSON, it is: { ".tag": "variant", "variant": { ... } }
-                    rename_attr = u'#[serde(rename = "{}")] '.format(field.name) if USE_SERDE_DERIVE else u''
-                    self.emit(u'{}{} {{ {}{}: {} }},'.format(
+                    self.emit(u'{}{}({}),'.format(
                         rename_attr,
                         variant_name,
-                        rename_attr,
-                        self._field_name(field),
                         self._rust_type(field.data_type)))
         self.emit()
 
@@ -271,23 +263,90 @@ class RustGenerator(CodeGenerator):
             self.emit(u'unimplemented!()')
         self.emit()
         with self._impl_serialize(self._struct_name(struct)):
-            self.emit(u'unimplemented!()')
+            self.emit(u'// struct serializer')
+            if not struct.all_fields:
+                self.emit(u'serializer.serialize_unit_struct("{}")'.format(struct.name))
+            else:
+                self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
+                    struct.name,
+                    len(struct.all_fields)))
+                for field in struct.all_fields:
+                    self.emit(u's.serialize_field("{}", &self.{})?;'.format(
+                        field.name,
+                        self._field_name(field)))
+                self.emit(u's.end()')
         self.emit()
 
     def _impl_serde_for_polymorphic_struct(self, struct):
         with self._impl_deserialize(self._enum_name(struct)):
             self.emit(u'unimplemented!()')
         self.emit()
+        type_name = self._enum_name(struct)
         with self._impl_serialize(self._struct_name(struct)):
-            self.emit(u'unimplemented!()')
+            self.emit(u'// polymorphic struct serializer')
+            with self.block(u'match *self'):
+                i = 0
+                for subtype in struct.get_enumerated_subtypes():
+                    variant_name = self._enum_variant_name(subtype.data_type)
+                    with self.block(u'{}::{}(ref x) =>'.format(type_name, variant_name)):
+                        self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
+                            type_name, len(subtype.data_type.all_fields) + 1))
+                        self.emit(u's.serialize_field(".tag", "{}")?;'.format(subtype.name))
+                        for field in subtype.data_type.all_fields:
+                            self.emit(u's.serialize_field("{}", &x.{})?;'.format(
+                                field.name,
+                                self._field_name(field)))
+                        self.emit(u's.end()')
+                if struct.is_catch_all():
+                    self.emit(u'{}::_Unknown(_) => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))'.format(
+                        type_name))
         self.emit()
 
     def _impl_serde_for_union(self, union):
-        with self._impl_deserialize(self._enum_name(union)):
+        type_name = self._enum_name(union)
+        with self._impl_deserialize(type_name):
             self.emit(u'unimplemented!()')
         self.emit()
-        with self._impl_serialize(self._enum_name(union)):
-            self.emit(u'unimplemented!()')
+        with self._impl_serialize(type_name):
+            self.emit(u'// union serializer')
+            with self.block(u'match *self'):
+                for field in union.all_fields:
+                    variant_name = self._enum_variant_name(field)
+                    if isinstance(field.data_type, data_type.Void):
+                        with self.block(u'{}::{} =>'.format(type_name, variant_name)):
+                            self.emit(u'// unit')
+                            self.emit(u'let mut s = serializer.serialize_struct("{}", 1)?;'.format(union.name))
+                            self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
+                            self.emit(u's.end()')
+                    else:
+                        needs_x = not (isinstance(field.data_type, data_type.Struct) and not field.data_type.all_fields)
+                        ref_x = 'ref x' if needs_x else '_'
+                        with self.block(u'{}::{}({}) =>'.format(type_name, variant_name, ref_x)):
+                            if isinstance(field.data_type, data_type.Union) or \
+                                    (isinstance(field.data_type, data_type.Struct) and \
+                                        field.data_type.has_enumerated_subtypes()):
+                                self.emit(u'// union or polymporphic struct')
+                                self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;')
+                                self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
+                                self.emit(u's.serialize_field("{}", x)?;'.format(field.name))
+                                self.emit(u's.end()')
+                            elif isinstance(field.data_type, data_type.Struct):
+                                self.emit(u'// struct')
+                                self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
+                                    union.name,
+                                    len(field.data_type.all_fields) + 1))
+                                self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
+                                for subfield in field.data_type.all_fields:
+                                    self.emit(u's.serialize_field("{}", &x.{})?;'.format(
+                                        subfield.name,
+                                        self._field_name(subfield)))
+                                self.emit(u's.end()')
+                            else:
+                                self.emit(u'// primitive')
+                                self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;')
+                                self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
+                                self.emit(u's.serialize_field("{}", x)?;'.format(field.name))
+                                self.emit(u's.end()')
         self.emit()
 
     # Helpers
@@ -296,13 +355,13 @@ class RustGenerator(CodeGenerator):
         if doc_string is not None:
             self.emit_wrapped_text(doc_string, prefix=u'/// ', width=100)
 
-    def _impl_serialize(self, type_name):
+    def _impl_deserialize(self, type_name):
         return nested(self.block(u'impl<\'de> ::serde::de::Deserialize<\'de> for {}'.format(type_name)),
             self.block(u'fn deserialize<D: ::serde::de::Deserializer<\'de>>(_deserializer: D) -> Result<Self, D::Error>'))
 
-    def _impl_deserialize(self, type_name):
+    def _impl_serialize(self, type_name):
         return nested(self.block(u'impl ::serde::ser::Serialize for {}'.format(type_name)),
-            self.block(u'fn serialize<S: ::serde::ser::Serializer>(&self, _serializer: S) -> Result<S::Ok, S::Error>'))
+            self.block(u'fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error>'))
 
     def _impl_default_for_struct(self, struct):
         struct_name = self._struct_name(struct)
@@ -375,6 +434,8 @@ class RustGenerator(CodeGenerator):
             return field.default
 
     def _needs_explicit_default(self, field):
+        if not USE_SERDE_DERIVE:
+            return False
         return field.has_default \
                 and not (isinstance(field, data_type.Nullable) \
                     or (isinstance(field.data_type, data_type.Boolean) and not field.default))
