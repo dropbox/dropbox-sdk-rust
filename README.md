@@ -23,6 +23,7 @@ Some implementation notes and limitations:
     This issue is being tracked at https://github.com/serde-rs/serde/issues/286 
     and https://github.com/serde-rs/serde-json/issues/313.
  * Another limitation of the Serde generated deserialization code is that open unions are currently not supported, in that unknown variants will fail to deserialize.
+    There's a feature request for this at https://github.com/serde-rs/serde/issues/912
  * Stone allows structures to inherit from other structures and be polymorphic.
     Rust doesn't have these paradigms, so instead this SDK represents polymorphic parent structs as enums, and the inherited fields are put in all variants.
     See `dropbox_sdk::files::Metadata` for an example.
