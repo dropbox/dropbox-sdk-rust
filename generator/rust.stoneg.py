@@ -7,8 +7,6 @@ from stone.target.helpers import (
     fmt_underscores,
 )
 
-USE_SERDE_DERIVE = False
-
 RUST_RESERVED_WORDS = [
     "abstract", "alignof", "as", "become", "box", "break", "const", "continue", "crate", "do",
     "else", "enum", "extern", "false", "final", "fn", "for", "if", "impl", "in", "let", "loop",
@@ -53,9 +51,8 @@ class RustGenerator(CodeGenerator):
                 self.emit_wrapped_text(namespace.doc, prefix=u'//! ', width=100)
                 self.emit()
 
-            if not USE_SERDE_DERIVE:
-                self.emit(u'use serde::ser::SerializeStruct;')
-                self.emit()
+            self.emit(u'use serde::ser::SerializeStruct;')
+            self.emit()
 
             for alias in namespace.aliases:
                 self._emit_alias(alias)
@@ -96,26 +93,11 @@ class RustGenerator(CodeGenerator):
     def _emit_struct(self, struct):
         struct_name = self._struct_name(struct)
         self._emit_doc(struct.doc)
-        if USE_SERDE_DERIVE:
-            self.emit(u'#[derive(Debug, Deserialize, Serialize)]')
-        else:
-            self.emit(u'#[derive(Debug)]')
+        self.emit(u'#[derive(Debug)]')
         with self.block(u'pub struct {}'.format(struct_name)):
             for field in struct.all_fields:
-                serde_attrs = u''
-                if USE_SERDE_DERIVE:
-                    default_attr = u''
-                    if field.has_default:
-                        if self._needs_explicit_default(field):
-                            default_attr = u', default = "{}::default_{}"'.format(
-                                struct_name,
-                                self._field_name(field))
-                        else:
-                            default_attr = u', default'
-                    serde_attrs = u'#[serde(rename = "{}"{})] '.format(field.name, default_attr)
                 self._emit_doc(field.doc)
-                self.emit(u'{}pub {}: {},'.format(
-                    serde_attrs,
+                self.emit(u'pub {}: {},'.format(
                     self._field_name(field),
                     self._rust_type(field.data_type)))
         self.emit()
@@ -124,40 +106,22 @@ class RustGenerator(CodeGenerator):
             self._impl_default_for_struct(struct)
             self.emit()
 
-        explicit_default_fields = []
-        for field in struct.all_optional_fields:
-            if self._needs_explicit_default(field):
-                explicit_default_fields.append(field)
-
-        if struct.all_required_fields or explicit_default_fields:
+        if struct.all_required_fields:
             with self._impl_struct(struct):
                 if struct.all_required_fields:
                     self._emit_new_for_struct(struct)
-
-                for field in explicit_default_fields:
-                    self.emit()
-                    with self.block(u'fn default_{}() -> {}'.format(
-                            self._field_name(field),
-                            self._rust_type(field.data_type))):
-                        self.emit(u'{}'.format(self._default_value(field)))
                 self.emit()
             self.emit()
 
-        if not USE_SERDE_DERIVE:
-            self._impl_serde_for_struct(struct)
+        self._impl_serde_for_struct(struct)
 
     def _emit_polymorphic_struct(self, struct):
         enum_name = self._enum_name(struct)
         self._emit_doc(struct.doc)
-        if USE_SERDE_DERIVE:
-            self.emit(u'#[derive(Debug, Deserialize, Serialize)]')
-            self.emit(u'#[serde(tag = ".tag")]')
-        else:
-            self.emit(u'#[derive(Debug)]')
+        self.emit(u'#[derive(Debug)]')
         with self.block(u'pub enum {}'.format(enum_name)):
             for subtype in struct.get_enumerated_subtypes():
-                self.emit(u'{}{}({}),'.format(
-                    u'#[serde(rename = "{}")] '.format(subtype.name) if USE_SERDE_DERIVE else u'',
+                self.emit(u'{}({}),'.format(
                     self._enum_variant_name(subtype.data_type),
                     self._rust_type(subtype.data_type)))
             if struct.is_catch_all():
@@ -165,37 +129,26 @@ class RustGenerator(CodeGenerator):
                 print(u'WARNING: open unions are not implemented yet: {}::{}'.format(
                     struct.namespace.name,
                     struct.name))
-                self.emit(u'{}_Unknown(::serde_json::value::Value),'.format(
-                    u'#[serde(skip_deserializing)] ' if USE_SERDE_DERIVE else u''))
+                self.emit(u'_Unknown(::serde_json::value::Value),')
         self.emit()
 
-        if not USE_SERDE_DERIVE:
-            self._impl_serde_for_polymorphic_struct(struct)
+        self._impl_serde_for_polymorphic_struct(struct)
 
     def _emit_union(self, union):
         enum_name = self._enum_name(union)
         self._emit_doc(union.doc)
-        if USE_SERDE_DERIVE:
-            self.emit(u'#[derive(Debug, Deserialize, Serialize)]')
-            self.emit(u'#[serde(tag = ".tag")]') # TODO: is the tag always ".tag"?
-        else:
-            self.emit(u'#[derive(Debug)]')
+        self.emit(u'#[derive(Debug)]')
         with self.block(u'pub enum {}'.format(enum_name)):
             for field in union.all_fields:
                 self._emit_doc(field.doc)
                 variant_name = self._enum_variant_name(field)
-                rename_attr = u'#[serde(rename = "{}")] '.format(field.name) if USE_SERDE_DERIVE else u''
                 if isinstance(field.data_type, data_type.Void):
-                    self.emit(u'{}{},'.format(rename_attr, variant_name))
+                    self.emit(u'{},'.format(variant_name))
                 else:
-                    self.emit(u'{}{}({}),'.format(
-                        rename_attr,
-                        variant_name,
-                        self._rust_type(field.data_type)))
+                    self.emit(u'{}({}),'.format(variant_name, self._rust_type(field.data_type)))
         self.emit()
 
-        if not USE_SERDE_DERIVE:
-            self._impl_serde_for_union(union)
+        self._impl_serde_for_union(union)
 
         if union.name.endswith('Error'):
             self._impl_error(enum_name)
@@ -434,8 +387,6 @@ class RustGenerator(CodeGenerator):
             return field.default
 
     def _needs_explicit_default(self, field):
-        if not USE_SERDE_DERIVE:
-            return False
         return field.has_default \
                 and not (isinstance(field, data_type.Nullable) \
                     or (isinstance(field.data_type, data_type.Boolean) and not field.default))

@@ -1,14 +1,20 @@
 use ResultExt;
 use client_trait::*;
-use serde::de::DeserializeOwned;
+use serde::de::{Deserialize, DeserializeOwned, Deserializer};
 use serde::ser::Serialize;
 use serde_json;
 
-#[derive(Debug, Deserialize)]
+#[derive(Debug)]
 pub struct TopLevelError<T> {
     pub error_summary: String,
     pub user_message: Option<String>,
     pub error: T,
+}
+
+impl<'de, T> Deserialize<'de> for TopLevelError<T> {
+    fn deserialize<D: Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+        unimplemented!()
+    }
 }
 
 /// Does the request and returns a two-level result. The outer result has an error if something

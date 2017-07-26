@@ -3,7 +3,6 @@
 #[cfg(feature = "hyper_client")] extern crate hyper_native_tls;
 #[macro_use] extern crate log;
 extern crate serde;
-#[macro_use] extern crate serde_derive;
 extern crate serde_json;
 
 error_chain! {
