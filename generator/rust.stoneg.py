@@ -49,6 +49,10 @@ class RustGenerator(CodeGenerator):
             self._current_namespace = namespace.name
             self._emit_header()
 
+            if namespace.doc is not None:
+                self.emit_wrapped_text(namespace.doc, prefix=u'//! ', width=100)
+                self.emit()
+
             for alias in namespace.aliases:
                 self._emit_alias(alias)
             if namespace.aliases:
@@ -81,11 +85,13 @@ class RustGenerator(CodeGenerator):
         self.emit(u'    identity_op,    // due to a bug with serde + clippy')
         self.emit(u'    too_many_arguments,')
         self.emit(u'    large_enum_variant,')
+        self.emit(u'    doc_markdown,')
         self.emit(u')]')
         self.emit()
 
     def _emit_struct(self, struct):
         struct_name = self._struct_name(struct)
+        self._emit_doc(struct.doc)
         if USE_SERDE_DERIVE:
             self.emit(u'#[derive(Debug, Deserialize, Serialize)]')
         else:
@@ -103,11 +109,11 @@ class RustGenerator(CodeGenerator):
                         else:
                             default_attr = u', default'
                     serde_attrs = u'#[serde(rename = "{}"{})] '.format(field.name, default_attr)
+                self._emit_doc(field.doc)
                 self.emit(u'{}pub {}: {},'.format(
                     serde_attrs,
                     self._field_name(field),
                     self._rust_type(field.data_type)))
-                # TODO: do optional fields also need `default` serde attributes?
         self.emit()
 
         if not struct.all_required_fields:
@@ -138,6 +144,7 @@ class RustGenerator(CodeGenerator):
 
     def _emit_polymorphic_struct(self, struct):
         enum_name = self._enum_name(struct)
+        self._emit_doc(struct.doc)
         if USE_SERDE_DERIVE:
             self.emit(u'#[derive(Debug, Deserialize, Serialize)]')
             self.emit(u'#[serde(tag = ".tag")]')
@@ -163,6 +170,7 @@ class RustGenerator(CodeGenerator):
 
     def _emit_union(self, union):
         enum_name = self._enum_name(union)
+        self._emit_doc(union.doc)
         if USE_SERDE_DERIVE:
             self.emit(u'#[derive(Debug, Deserialize, Serialize)]')
             self.emit(u'#[serde(tag = ".tag")]') # TODO: is the tag always ".tag"?
@@ -170,6 +178,7 @@ class RustGenerator(CodeGenerator):
             self.emit(u'#[derive(Debug)]')
         with self.block(u'pub enum {}'.format(enum_name)):
             for field in union.all_fields:
+                self._emit_doc(field.doc)
                 variant_name = self._enum_variant_name(field)
                 if isinstance(field.data_type, data_type.Void):
                     self.emit(u'{}{},'.format(
@@ -190,7 +199,7 @@ class RustGenerator(CodeGenerator):
 
     def _emit_route(self, ns, fn):
         route_name = self._route_name(fn)
-
+        self._emit_doc(fn.doc)
         host = fn.attrs.get('host', 'api')
         if host == 'api':
             endpoint = u'::client_trait::Endpoint::Api'
@@ -255,7 +264,7 @@ class RustGenerator(CodeGenerator):
         self.emit()
 
     def _impl_serde_for_polymorphic_struct(self, struct):
-        with self._impl_deserialize(self._struct_name(struct)):
+        with self._impl_deserialize(self._enum_name(struct)):
             self.emit(u'unimplemented!()')
         self.emit()
         with self._impl_serialize(self._struct_name(struct)):
@@ -271,6 +280,10 @@ class RustGenerator(CodeGenerator):
         self.emit()
 
     # Helpers
+
+    def _emit_doc(self, doc_string):
+        if doc_string is not None:
+            self.emit_wrapped_text(doc_string, prefix=u'/// ', width=100)
 
     def _impl_serialize(self, type_name):
         return nested(self.block(u'impl<\'de> ::serde::de::Deserialize<\'de> for {}'.format(type_name)),
