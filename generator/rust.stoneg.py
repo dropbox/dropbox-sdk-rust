@@ -185,9 +185,20 @@ class RustGenerator(CodeGenerator):
                         u'#[serde(rename = "{}")] '.format(field.name) if USE_SERDE_DERIVE else u'',
                         variant_name))
                 else:
-                    self.emit(u'{}{}({}),'.format(
-                        u'#[serde(rename = "{}")] '.format(field.name) if USE_SERDE_DERIVE else u'',
+                    # This is awkward (the variant name is effectively written twice) but necessary
+                    # to match the JSON that actually gets sent: it too has the variant name twice:
+                    # once in the ".tag" and again as a field...
+                    # enum Container {
+                    #     Variant { variant: VariantType },
+                    #     ....
+                    # }
+                    # as JSON, it is: { ".tag": "variant", "variant": { ... } }
+                    rename_attr = u'#[serde(rename = "{}")] '.format(field.name) if USE_SERDE_DERIVE else u''
+                    self.emit(u'{}{} {{ {}{}: {} }},'.format(
+                        rename_attr,
                         variant_name,
+                        rename_attr,
+                        self._field_name(field),
                         self._rust_type(field.data_type)))
         self.emit()
 
