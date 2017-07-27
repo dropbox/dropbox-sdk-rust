@@ -212,10 +212,47 @@ class RustGenerator(CodeGenerator):
     # Serialization
 
     def _impl_serde_for_struct(self, struct):
+        type_name = self._struct_name(struct)
         with self._impl_deserialize(self._struct_name(struct)):
-            self.emit(u'unimplemented!()')
+            self.emit(u'// struct deserializer')
+            self.emit(u'use serde::de::{self, MapAccess, Visitor};')
+            self.emit(u'struct StructVisitor;')
+            with self.block(u'impl<\'de> Visitor<\'de> for StructVisitor'):
+                self.emit(u'type Value = {};'.format(type_name))
+                with self.block(u'fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result'):
+                    self.emit(u'f.write_str("a {} struct")'.format(struct.name))
+                with self.block(u'fn visit_map<V: MapAccess<\'de>>(self, mut map: V) -> Result<Self::Value, V::Error>'):
+                    for field in struct.all_fields:
+                        self.emit(u'let mut {} = None;'.format(self._field_name(field)))
+                    with nested(self.block(u'while let Some(key) = map.next_key()?'), self.block(u'match key')):
+                        for field in struct.all_fields:
+                            field_name = self._field_name(field)
+                            with self.block(u'"{}" =>'.format(field.name)):
+                                with self.block(u'if {}.is_some()'.format(field_name)):
+                                    self.emit(u'return Err(de::Error::duplicate_field("{}"));'.format(field.name))
+                                self.emit(u'{} = Some(map.next_value()?);'.format(field_name))
+                        self.emit(u'_ => return Err(de::Error::unknown_field(key, FIELDS))')
+                    with self.block(u'Ok({}'.format(type_name), delim=(u'{',u'})')):
+                        for field in struct.all_fields:
+                            field_name = self._field_name(field)
+                            if isinstance(field.data_type, data_type.Nullable):
+                                self.emit(u'{},'.format(field_name))
+                            elif field.has_default:
+                                # TODO: check if the default is a copy type (i.e. primitive) and don't make a lambda
+                                self.emit(u'{}: {}.unwrap_or_else(|| {}),'.format(
+                                    field_name, field_name, self._default_value(field)))
+                            else:
+                                self.emit(u'{}: {}.ok_or_else(|| de::Error::missing_field("{}"))?,'.format(
+                                    field_name, field_name, field.name))
+            self.generate_multiline_list(
+                    list(u'"{}"'.format(field.name) for field in struct.all_fields),
+                    before='const FIELDS: &\'static [&\'static str] = &',
+                    after=';',
+                    delim=(u'[',u']'),)
+            self.emit(u'_deserializer.deserialize_struct("{}", FIELDS, StructVisitor)'.format(
+                struct.name))
         self.emit()
-        with self._impl_serialize(self._struct_name(struct)):
+        with self._impl_serialize(type_name):
             self.emit(u'// struct serializer')
             if not struct.all_fields:
                 self.emit(u'serializer.serialize_unit_struct("{}")'.format(struct.name))
