@@ -1,6 +1,7 @@
+use std::marker::PhantomData;
 use ResultExt;
 use client_trait::*;
-use serde::de::{Deserialize, DeserializeOwned, Deserializer};
+use serde::de::{self, Deserialize, DeserializeOwned, Deserializer, MapAccess, Visitor};
 use serde::ser::Serialize;
 use serde_json;
 
@@ -11,9 +12,52 @@ pub struct TopLevelError<T> {
     pub error: T,
 }
 
-impl<'de, T> Deserialize<'de> for TopLevelError<T> {
-    fn deserialize<D: Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
-        unimplemented!()
+impl<'de, T: DeserializeOwned> Deserialize<'de> for TopLevelError<T> {
+    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        struct StructVisitor<T> {
+            phantom: PhantomData<T>,
+        }
+        impl<'de, T: DeserializeOwned> Visitor<'de> for StructVisitor<T> {
+            type Value = TopLevelError<T>;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a top-level error struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let mut error_summary = None;
+                let mut user_message = None;
+                let mut error = None;
+                while let Some(key) = map.next_key()? {
+                    match key {
+                        "error_summary" => {
+                            if error_summary.is_some() {
+                                return Err(de::Error::duplicate_field("error_summary"));
+                            }
+                            error_summary = Some(map.next_value()?);
+                        }
+                        "user_message" => {
+                            if user_message.is_some() {
+                                return Err(de::Error::duplicate_field("user_message"));
+                            }
+                            user_message = Some(map.next_value()?);
+                        }
+                        "error" => {
+                            if error.is_some() {
+                                return Err(de::Error::duplicate_field("error"));
+                            }
+                            error = Some(map.next_value()?);
+                        }
+                        _ => return Err(de::Error::unknown_field(key, FIELDS))
+                    }
+                }
+                Ok(TopLevelError {
+                    error_summary: error_summary.ok_or_else(|| de::Error::missing_field("error_summary"))?,
+                    user_message,
+                    error: error.ok_or_else(|| de::Error::missing_field("error"))?,
+                })
+            }
+        }
+        const FIELDS: &'static [&'static str] = &["error_summary", "user_message", "error"];
+        deserializer.deserialize_struct("<top level error>", FIELDS, StructVisitor { phantom: PhantomData })
     }
 }
 

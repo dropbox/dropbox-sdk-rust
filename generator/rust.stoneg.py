@@ -5,7 +5,11 @@ from stone.generator import CodeGenerator
 from stone.target.helpers import (
     fmt_pascal,
     fmt_underscores,
+    split_words
 )
+
+def fmt_shouting_snake(name):
+    return '_'.join([word.upper() for word in split_words(name)])
 
 RUST_RESERVED_WORDS = [
     "abstract", "alignof", "as", "become", "box", "break", "const", "continue", "crate", "do",
@@ -50,9 +54,6 @@ class RustGenerator(CodeGenerator):
             if namespace.doc is not None:
                 self.emit_wrapped_text(namespace.doc, prefix=u'//! ', width=100)
                 self.emit()
-
-            self.emit(u'use serde::ser::SerializeStruct;')
-            self.emit()
 
             for alias in namespace.aliases:
                 self._emit_alias(alias)
@@ -122,7 +123,7 @@ class RustGenerator(CodeGenerator):
         with self.block(u'pub enum {}'.format(enum_name)):
             for subtype in struct.get_enumerated_subtypes():
                 self.emit(u'{}({}),'.format(
-                    self._enum_variant_name(subtype.data_type),
+                    self._enum_variant_name(subtype),
                     self._rust_type(subtype.data_type)))
             if struct.is_catch_all():
                 # TODO implement this
@@ -213,50 +214,58 @@ class RustGenerator(CodeGenerator):
 
     def _impl_serde_for_struct(self, struct):
         type_name = self._struct_name(struct)
+        field_list_name = u'{}_FIELDS'.format(fmt_shouting_snake(struct.name))
+        self.generate_multiline_list(
+            list(u'"{}"'.format(field.name) for field in struct.all_fields),
+            before='const {}: &\'static [&\'static str] = &'.format(field_list_name),
+            after=';',
+            delim=(u'[',u']'))
+        with self._impl_struct(struct):
+            with self.block(u'pub(crate) fn internal_deserialize<\'de, V: ::serde::de::MapAccess<\'de>>(mut map: V) -> Result<{}, V::Error>'.format(type_name)):
+                self.emit(u'use serde::de;')
+                for field in struct.all_fields:
+                    self.emit(u'let mut {} = None;'.format(self._field_name(field)))
+                with nested(self.block(u'while let Some(key) = map.next_key()?'), self.block(u'match key')):
+                    for field in struct.all_fields:
+                        field_name = self._field_name(field)
+                        with self.block(u'"{}" =>'.format(field.name)):
+                            with self.block(u'if {}.is_some()'.format(field_name)):
+                                self.emit(u'return Err(de::Error::duplicate_field("{}"));'.format(field.name))
+                            self.emit(u'{} = Some(map.next_value()?);'.format(field_name))
+                    self.emit(u'_ => return Err(de::Error::unknown_field(key, {}))'.format(field_list_name))
+                with self.block(u'Ok({}'.format(type_name), delim=(u'{',u'})')):
+                    for field in struct.all_fields:
+                        field_name = self._field_name(field)
+                        if isinstance(field.data_type, data_type.Nullable):
+                            self.emit(u'{},'.format(field_name))
+                        elif field.has_default:
+                            # TODO: check if the default is a copy type (i.e. primitive) and don't make a lambda
+                            self.emit(u'{}: {}.unwrap_or_else(|| {}),'.format(
+                                field_name, field_name, self._default_value(field)))
+                        else:
+                            self.emit(u'{}: {}.ok_or_else(|| de::Error::missing_field("{}"))?,'.format(
+                                field_name, field_name, field.name))
+        self.emit()
         with self._impl_deserialize(self._struct_name(struct)):
             self.emit(u'// struct deserializer')
-            self.emit(u'use serde::de::{self, MapAccess, Visitor};')
+            self.emit(u'use serde::de::{MapAccess, Visitor};')
             self.emit(u'struct StructVisitor;')
             with self.block(u'impl<\'de> Visitor<\'de> for StructVisitor'):
                 self.emit(u'type Value = {};'.format(type_name))
                 with self.block(u'fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result'):
                     self.emit(u'f.write_str("a {} struct")'.format(struct.name))
-                with self.block(u'fn visit_map<V: MapAccess<\'de>>(self, mut map: V) -> Result<Self::Value, V::Error>'):
-                    for field in struct.all_fields:
-                        self.emit(u'let mut {} = None;'.format(self._field_name(field)))
-                    with nested(self.block(u'while let Some(key) = map.next_key()?'), self.block(u'match key')):
-                        for field in struct.all_fields:
-                            field_name = self._field_name(field)
-                            with self.block(u'"{}" =>'.format(field.name)):
-                                with self.block(u'if {}.is_some()'.format(field_name)):
-                                    self.emit(u'return Err(de::Error::duplicate_field("{}"));'.format(field.name))
-                                self.emit(u'{} = Some(map.next_value()?);'.format(field_name))
-                        self.emit(u'_ => return Err(de::Error::unknown_field(key, FIELDS))')
-                    with self.block(u'Ok({}'.format(type_name), delim=(u'{',u'})')):
-                        for field in struct.all_fields:
-                            field_name = self._field_name(field)
-                            if isinstance(field.data_type, data_type.Nullable):
-                                self.emit(u'{},'.format(field_name))
-                            elif field.has_default:
-                                # TODO: check if the default is a copy type (i.e. primitive) and don't make a lambda
-                                self.emit(u'{}: {}.unwrap_or_else(|| {}),'.format(
-                                    field_name, field_name, self._default_value(field)))
-                            else:
-                                self.emit(u'{}: {}.ok_or_else(|| de::Error::missing_field("{}"))?,'.format(
-                                    field_name, field_name, field.name))
-            self.generate_multiline_list(
-                    list(u'"{}"'.format(field.name) for field in struct.all_fields),
-                    before='const FIELDS: &\'static [&\'static str] = &',
-                    after=';',
-                    delim=(u'[',u']'),)
-            self.emit(u'_deserializer.deserialize_struct("{}", FIELDS, StructVisitor)'.format(
-                struct.name))
+                with self.block(u'fn visit_map<V: MapAccess<\'de>>(self, map: V) -> Result<Self::Value, V::Error>'):
+                    self.emit(u'{}::internal_deserialize(map)'.format(type_name))
+            self.emit(u'_deserializer.deserialize_struct("{}", {}, StructVisitor)'.format(
+                struct.name,
+                field_list_name))
         self.emit()
         with self._impl_serialize(type_name):
             self.emit(u'// struct serializer')
             if not struct.all_fields:
                 self.emit(u'serializer.serialize_unit_struct("{}")'.format(struct.name))
             else:
+                self.emit(u'use serde::ser::SerializeStruct;')
                 self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
                     struct.name,
                     len(struct.all_fields)))
@@ -268,16 +277,55 @@ class RustGenerator(CodeGenerator):
         self.emit()
 
     def _impl_serde_for_polymorphic_struct(self, struct):
-        with self._impl_deserialize(self._enum_name(struct)):
-            self.emit(u'unimplemented!()')
-        self.emit()
         type_name = self._enum_name(struct)
-        with self._impl_serialize(self._struct_name(struct)):
+        with self._impl_deserialize(type_name):
+            self.emit(u'// polymorphic struct deserializer')
+            self.emit(u'use serde::de::{self, MapAccess, Visitor};')
+            self.emit(u'struct EnumVisitor;')
+            with self.block(u'impl<\'de> Visitor<\'de> for EnumVisitor'):
+                self.emit(u'type Value = {};'.format(type_name))
+                with self.block(u'fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result'):
+                    self.emit(u'f.write_str("a {} structure")'.format(struct.name))
+                with self.block(u'fn visit_map<V: MapAccess<\'de>>(self, mut map: V) -> Result<Self::Value, V::Error>'):
+                    with self.block(u'let tag = match map.next_key()?', after=';'):
+                        self.emit(u'Some(".tag") => map.next_value()?,')
+                        self.emit(u'_ => return Err(de::Error::missing_field(".tag"))')
+                    with self.block(u'match tag'):
+                        for subtype in struct.get_enumerated_subtypes():
+                            variant_name = self._enum_variant_name(subtype)
+                            if isinstance(subtype.data_type, data_type.Void):
+                                self.emit(u'"{}" => Ok({}::{}),'.format(subtype.name, type_name, variant_name))
+                            elif isinstance(data_type.unwrap_aliases(subtype.data_type)[0], data_type.Struct) \
+                                    and not subtype.data_type.has_enumerated_subtypes():
+                                self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'.format(
+                                    subtype.name,
+                                    type_name,
+                                    variant_name,
+                                    self._rust_type(subtype.data_type)))
+                            else:
+                                with self.block(u'"{}" =>'.format(subtype.name)):
+                                    with self.block(u'if map.next_key()? != Some("{}")'.format(subtype.name)):
+                                        self.emit(u'return Err(de::Error::missing_field("{}"));'.format(subtype.name))
+                                    self.emit(u'Ok({}::{}(map.next_value()?))'.format(type_name, variant_name))
+                        if struct.is_catch_all:
+                            self.emit(u'_ => unimplemented!("open unions")')
+                        else:
+                            self.emit(u'_ => return Err(de::Error::unknown_variant(tag, VARIANTS))')
+            self.generate_multiline_list(
+                    list(u'"{}"'.format(subtype.name) for field in struct.get_enumerated_subtypes()),
+                    before='const VARIANTS: &\'static [&\'static str] = &',
+                    after=';',
+                    delim=(u'[',u']'),)
+            self.emit(u'_deserializer.deserialize_struct("{}", VARIANTS, EnumVisitor)'.format(
+                struct.name))
+        self.emit()
+        with self._impl_serialize(type_name):
             self.emit(u'// polymorphic struct serializer')
+            self.emit(u'use serde::ser::SerializeStruct;')
             with self.block(u'match *self'):
                 i = 0
                 for subtype in struct.get_enumerated_subtypes():
-                    variant_name = self._enum_variant_name(subtype.data_type)
+                    variant_name = self._enum_variant_name(subtype)
                     with self.block(u'{}::{}(ref x) =>'.format(type_name, variant_name)):
                         self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
                             type_name, len(subtype.data_type.all_fields) + 1))
@@ -295,10 +343,49 @@ class RustGenerator(CodeGenerator):
     def _impl_serde_for_union(self, union):
         type_name = self._enum_name(union)
         with self._impl_deserialize(type_name):
-            self.emit(u'unimplemented!()')
+            self.emit(u'// union deserializer')
+            self.emit(u'use serde::de::{self, MapAccess, Visitor};')
+            self.emit(u'struct EnumVisitor;')
+            with self.block(u'impl<\'de> Visitor<\'de> for EnumVisitor'):
+                self.emit(u'type Value = {};'.format(type_name))
+                with self.block(u'fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result'):
+                    self.emit(u'f.write_str("a {} structure")'.format(union.name))
+                with self.block(u'fn visit_map<V: MapAccess<\'de>>(self, mut map: V) -> Result<Self::Value, V::Error>'):
+                    with self.block(u'let tag = match map.next_key()?', after=';'):
+                        self.emit(u'Some(".tag") => map.next_value()?,')
+                        self.emit(u'_ => return Err(de::Error::missing_field(".tag"))')
+                    with self.block(u'match tag'):
+                        for field in union.all_fields:
+                            variant_name = self._enum_variant_name(field)
+                            if isinstance(field.data_type, data_type.Void):
+                                self.emit(u'"{}" => Ok({}::{}),'.format(field.name, type_name, variant_name))
+                            elif isinstance(data_type.unwrap_aliases(field.data_type)[0], data_type.Struct) \
+                                    and not field.data_type.has_enumerated_subtypes():
+                                self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'.format(
+                                    field.name,
+                                    type_name,
+                                    variant_name,
+                                    self._rust_type(field.data_type)))
+                            else:
+                                with self.block(u'"{}" =>'.format(field.name)):
+                                    with self.block(u'if map.next_key()? != Some("{}")'.format(field.name)):
+                                        self.emit(u'return Err(de::Error::missing_field("{}"));'.format(field.name))
+                                    self.emit(u'Ok({}::{}(map.next_value()?))'.format(type_name, variant_name))
+                        if not union.closed:
+                            self.emit(u'_ => unimplemented!("open unions")')
+                        else:
+                            self.emit(u'_ => return Err(de::Error::unknown_variant(tag, VARIANTS))')
+            self.generate_multiline_list(
+                    list(u'"{}"'.format(field.name) for field in union.all_fields),
+                    before='const VARIANTS: &\'static [&\'static str] = &',
+                    after=';',
+                    delim=(u'[',u']'),)
+            self.emit(u'_deserializer.deserialize_struct("{}", VARIANTS, EnumVisitor)'.format(
+                union.name))
         self.emit()
         with self._impl_serialize(type_name):
             self.emit(u'// union serializer')
+            self.emit(u'use serde::ser::SerializeStruct;')
             with self.block(u'match *self'):
                 for field in union.all_fields:
                     variant_name = self._enum_variant_name(field)
