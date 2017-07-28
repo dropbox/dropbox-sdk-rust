@@ -308,12 +308,12 @@ class RustGenerator(CodeGenerator):
                             else:
                                 with self.block(u'"{}" =>'.format(subtype.name)):
                                     with self.block(u'if map.next_key()? != Some("{}")'.format(subtype.name)):
-                                        self.emit(u'return Err(de::Error::missing_field("{}"));'.format(subtype.name))
+                                        self.emit(u'Err(de::Error::missing_field("{}"));'.format(subtype.name))
                                     self.emit(u'Ok({}::{}(map.next_value()?))'.format(type_name, variant_name))
                         if struct.is_catch_all():
                             self.emit(u'_ => Ok({}::_Unknown)'.format(type_name))
                         else:
-                            self.emit(u'_ => return Err(de::Error::unknown_variant(tag, VARIANTS))')
+                            self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(
                     list(u'"{}"'.format(subtype.name) for field in struct.get_enumerated_subtypes()),
                     before='const VARIANTS: &\'static [&\'static str] = &',
@@ -378,7 +378,7 @@ class RustGenerator(CodeGenerator):
                             #self.emit(u'_ => unimplemented!("open unions")')
                             self.emit(u'_ => Ok({}::_Unknown)'.format(type_name))
                         else:
-                            self.emit(u'_ => return Err(de::Error::unknown_variant(tag, VARIANTS))')
+                            self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(
                     list(u'"{}"'.format(field.name) for field in union.all_fields),
                     before='const VARIANTS: &\'static [&\'static str] = &',
