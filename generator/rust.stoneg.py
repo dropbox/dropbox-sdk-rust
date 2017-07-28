@@ -84,7 +84,6 @@ class RustGenerator(CodeGenerator):
         self.emit()
         self.emit(u'#![allow(')
         self.emit(u'    unknown_lints,  // keep rustc from complaining about clippy lints')
-        self.emit(u'    identity_op,    // due to a bug with serde + clippy')
         self.emit(u'    too_many_arguments,')
         self.emit(u'    large_enum_variant,')
         self.emit(u'    doc_markdown,')
@@ -224,27 +223,36 @@ class RustGenerator(CodeGenerator):
             with self.block(u'pub(crate) fn internal_deserialize<\'de, V: ::serde::de::MapAccess<\'de>>(mut map: V) -> Result<{}, V::Error>'.format(type_name)):
                 self.emit(u'use serde::de;')
                 for field in struct.all_fields:
-                    self.emit(u'let mut {} = None;'.format(self._field_name(field)))
+                    self.emit(u'let mut field_{} = None;'.format(self._field_name(field)))
                 with nested(self.block(u'while let Some(key) = map.next_key()?'), self.block(u'match key')):
                     for field in struct.all_fields:
                         field_name = self._field_name(field)
                         with self.block(u'"{}" =>'.format(field.name)):
-                            with self.block(u'if {}.is_some()'.format(field_name)):
+                            with self.block(u'if field_{}.is_some()'.format(field_name)):
                                 self.emit(u'return Err(de::Error::duplicate_field("{}"));'.format(field.name))
-                            self.emit(u'{} = Some(map.next_value()?);'.format(field_name))
+                            self.emit(u'field_{} = Some(map.next_value()?);'.format(field_name))
                     self.emit(u'_ => return Err(de::Error::unknown_field(key, {}))'.format(field_list_name))
                 with self.block(u'Ok({}'.format(type_name), delim=(u'{',u'})')):
                     for field in struct.all_fields:
                         field_name = self._field_name(field)
                         if isinstance(field.data_type, data_type.Nullable):
-                            self.emit(u'{},'.format(field_name))
+                            self.emit(u'{}: field_{},'.format(field_name, field_name))
                         elif field.has_default:
                             # TODO: check if the default is a copy type (i.e. primitive) and don't make a lambda
-                            self.emit(u'{}: {}.unwrap_or_else(|| {}),'.format(
+                            self.emit(u'{}: field_{}.unwrap_or_else(|| {}),'.format(
                                 field_name, field_name, self._default_value(field)))
                         else:
-                            self.emit(u'{}: {}.ok_or_else(|| de::Error::missing_field("{}"))?,'.format(
+                            self.emit(u'{}: field_{}.ok_or_else(|| de::Error::missing_field("{}"))?,'.format(
                                 field_name, field_name, field.name))
+            if struct.all_fields:
+                self.emit()
+                with self.block(u'pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error>'):
+                    self.emit(u'use serde::ser::SerializeStruct;')
+                    self.generate_multiline_list(
+                        list(u's.serialize_field("{}", &self.{})'.format(field.name, self._field_name(field)) for field in struct.all_fields),
+                        delim=(u'',u''),
+                        sep='?;',
+                        skip_last_sep=True)
         self.emit()
         with self._impl_deserialize(self._struct_name(struct)):
             self.emit(u'// struct deserializer')
@@ -269,10 +277,7 @@ class RustGenerator(CodeGenerator):
                 self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
                     struct.name,
                     len(struct.all_fields)))
-                for field in struct.all_fields:
-                    self.emit(u's.serialize_field("{}", &self.{})?;'.format(
-                        field.name,
-                        self._field_name(field)))
+                self.emit(u'self.internal_serialize::<S>(&mut s)?;')
                 self.emit(u's.end()')
         self.emit()
 
@@ -413,10 +418,8 @@ class RustGenerator(CodeGenerator):
                                     union.name,
                                     len(field.data_type.all_fields) + 1))
                                 self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
-                                for subfield in field.data_type.all_fields:
-                                    self.emit(u's.serialize_field("{}", &x.{})?;'.format(
-                                        subfield.name,
-                                        self._field_name(subfield)))
+                                if field.data_type.all_fields:
+                                    self.emit(u'x.internal_serialize::<S>(&mut s)?;')
                                 self.emit(u's.end()')
                             else:
                                 self.emit(u'// primitive')
