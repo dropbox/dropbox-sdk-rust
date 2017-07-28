@@ -18,15 +18,13 @@ To use it, build with the `hyper_client` feature flag, and then there will be a 
 The default Hyper client needs a Dropbox API token; how you get one is up to you and your program.
 
 Some implementation notes and limitations:
- * The code uses `serde_derive` to generate the serialization/deserialization code at build time.
-    Unfortunately, this currently results in extremely long build times and large binary sizes.
-    This issue is being tracked at https://github.com/serde-rs/serde/issues/286 
-    and https://github.com/serde-rs/serde-json/issues/313.
- * Another limitation of the Serde generated deserialization code is that open unions are currently not supported, in that unknown variants will fail to deserialize.
-    There's a feature request for this at https://github.com/serde-rs/serde/issues/912
  * Stone allows structures to inherit from other structures and be polymorphic.
     Rust doesn't have these paradigms, so instead this SDK represents polymorphic parent structs as enums, and the inherited fields are put in all variants.
     See `dropbox_sdk::files::Metadata` for an example.
+ * This code does not use `serde_derive` and instead uses manually-emitted serialization code.
+    Previous work did attempt to use `serde_derive`, but the way the Dropbox API serializes unions containing structs (by collapsing their fields into the union) isn't supported by `serde_derive`.
+    It also took an extremely long time to compile (~30 minutes for release build) and huge (~190MB) .rlib files.
+    The hand-written code is more versatile, compiles faster, and produces a smaller binary, at the expense of making the generated code much larger.
 
 Happy Dropboxing!
 
