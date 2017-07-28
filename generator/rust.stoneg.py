@@ -125,11 +125,7 @@ class RustGenerator(CodeGenerator):
                     self._enum_variant_name(subtype),
                     self._rust_type(subtype.data_type)))
             if struct.is_catch_all():
-                # TODO implement this
-                print(u'WARNING: open unions are not implemented yet: {}::{}'.format(
-                    struct.namespace.name,
-                    struct.name))
-                self.emit(u'_Unknown(::serde_json::value::Value),')
+                self.emit(u'_Unknown')
         self.emit()
 
         self._impl_serde_for_polymorphic_struct(struct)
@@ -146,6 +142,8 @@ class RustGenerator(CodeGenerator):
                     self.emit(u'{},'.format(variant_name))
                 else:
                     self.emit(u'{}({}),'.format(variant_name, self._rust_type(field.data_type)))
+            if not union.closed:
+                self.emit(u'_Unknown')
         self.emit()
 
         self._impl_serde_for_union(union)
@@ -312,8 +310,8 @@ class RustGenerator(CodeGenerator):
                                     with self.block(u'if map.next_key()? != Some("{}")'.format(subtype.name)):
                                         self.emit(u'return Err(de::Error::missing_field("{}"));'.format(subtype.name))
                                     self.emit(u'Ok({}::{}(map.next_value()?))'.format(type_name, variant_name))
-                        if struct.is_catch_all:
-                            self.emit(u'_ => unimplemented!("open unions")')
+                        if struct.is_catch_all():
+                            self.emit(u'_ => Ok({}::_Unknown)'.format(type_name))
                         else:
                             self.emit(u'_ => return Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(
@@ -341,7 +339,7 @@ class RustGenerator(CodeGenerator):
                                 self._field_name(field)))
                         self.emit(u's.end()')
                 if struct.is_catch_all():
-                    self.emit(u'{}::_Unknown(_) => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))'.format(
+                    self.emit(u'{}::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))'.format(
                         type_name))
         self.emit()
 
@@ -377,7 +375,8 @@ class RustGenerator(CodeGenerator):
                                         self.emit(u'return Err(de::Error::missing_field("{}"));'.format(field.name))
                                     self.emit(u'Ok({}::{}(map.next_value()?))'.format(type_name, variant_name))
                         if not union.closed:
-                            self.emit(u'_ => unimplemented!("open unions")')
+                            #self.emit(u'_ => unimplemented!("open unions")')
+                            self.emit(u'_ => Ok({}::_Unknown)'.format(type_name))
                         else:
                             self.emit(u'_ => return Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(
@@ -427,6 +426,9 @@ class RustGenerator(CodeGenerator):
                                 self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
                                 self.emit(u's.serialize_field("{}", x)?;'.format(field.name))
                                 self.emit(u's.end()')
+                if not union.closed:
+                    self.emit(u'{}::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))'.format(
+                        type_name))
         self.emit()
 
     # Helpers
