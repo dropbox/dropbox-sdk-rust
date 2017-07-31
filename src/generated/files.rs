@@ -539,7 +539,7 @@ impl PreviewArg {
         }
     }
 
-    pub fn rev(mut self, value: Option<Rev>) -> Self {
+    pub fn with_rev(mut self, value: Option<Rev>) -> Self {
         self.rev = value;
         self
     }
@@ -1476,7 +1476,7 @@ impl ListRevisionsResult {
         }
     }
 
-    pub fn server_deleted(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_server_deleted(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.server_deleted = value;
         self
     }
@@ -1818,22 +1818,22 @@ impl FolderSharingInfo {
         }
     }
 
-    pub fn parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
 
-    pub fn shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
         self.shared_folder_id = value;
         self
     }
 
-    pub fn traverse_only(mut self, value: bool) -> Self {
+    pub fn with_traverse_only(mut self, value: bool) -> Self {
         self.traverse_only = value;
         self
     }
 
-    pub fn no_access(mut self, value: bool) -> Self {
+    pub fn with_no_access(mut self, value: bool) -> Self {
         self.no_access = value;
         self
     }
@@ -2216,12 +2216,12 @@ impl ThumbnailArg {
         }
     }
 
-    pub fn format(mut self, value: ThumbnailFormat) -> Self {
+    pub fn with_format(mut self, value: ThumbnailFormat) -> Self {
         self.format = value;
         self
     }
 
-    pub fn size(mut self, value: ThumbnailSize) -> Self {
+    pub fn with_size(mut self, value: ThumbnailSize) -> Self {
         self.size = value;
         self
     }
@@ -2451,7 +2451,7 @@ impl UploadSessionAppendArg {
         }
     }
 
-    pub fn close(mut self, value: bool) -> Self {
+    pub fn with_close(mut self, value: bool) -> Self {
         self.close = value;
         self
     }
@@ -2780,42 +2780,42 @@ impl FileMetadata {
         }
     }
 
-    pub fn path_lower(mut self, value: Option<String>) -> Self {
+    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
         self.path_lower = value;
         self
     }
 
-    pub fn path_display(mut self, value: Option<String>) -> Self {
+    pub fn with_path_display(mut self, value: Option<String>) -> Self {
         self.path_display = value;
         self
     }
 
-    pub fn parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
 
-    pub fn media_info(mut self, value: Option<MediaInfo>) -> Self {
+    pub fn with_media_info(mut self, value: Option<MediaInfo>) -> Self {
         self.media_info = value;
         self
     }
 
-    pub fn sharing_info(mut self, value: Option<FileSharingInfo>) -> Self {
+    pub fn with_sharing_info(mut self, value: Option<FileSharingInfo>) -> Self {
         self.sharing_info = value;
         self
     }
 
-    pub fn property_groups(mut self, value: Option<Vec<super::properties::PropertyGroup>>) -> Self {
+    pub fn with_property_groups(mut self, value: Option<Vec<super::properties::PropertyGroup>>) -> Self {
         self.property_groups = value;
         self
     }
 
-    pub fn has_explicit_shared_members(mut self, value: Option<bool>) -> Self {
+    pub fn with_has_explicit_shared_members(mut self, value: Option<bool>) -> Self {
         self.has_explicit_shared_members = value;
         self
     }
 
-    pub fn content_hash(mut self, value: Option<Sha256HexHash>) -> Self {
+    pub fn with_content_hash(mut self, value: Option<Sha256HexHash>) -> Self {
         self.content_hash = value;
         self
     }
@@ -3118,32 +3118,32 @@ impl FolderMetadata {
         }
     }
 
-    pub fn path_lower(mut self, value: Option<String>) -> Self {
+    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
         self.path_lower = value;
         self
     }
 
-    pub fn path_display(mut self, value: Option<String>) -> Self {
+    pub fn with_path_display(mut self, value: Option<String>) -> Self {
         self.path_display = value;
         self
     }
 
-    pub fn parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
 
-    pub fn shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
         self.shared_folder_id = value;
         self
     }
 
-    pub fn sharing_info(mut self, value: Option<FolderSharingInfo>) -> Self {
+    pub fn with_sharing_info(mut self, value: Option<FolderSharingInfo>) -> Self {
         self.sharing_info = value;
         self
     }
 
-    pub fn property_groups(mut self, value: Option<Vec<super::properties::PropertyGroup>>) -> Self {
+    pub fn with_property_groups(mut self, value: Option<Vec<super::properties::PropertyGroup>>) -> Self {
         self.property_groups = value;
         self
     }
@@ -3502,17 +3502,17 @@ impl SearchArg {
         }
     }
 
-    pub fn start(mut self, value: u64) -> Self {
+    pub fn with_start(mut self, value: u64) -> Self {
         self.start = value;
         self
     }
 
-    pub fn max_results(mut self, value: u64) -> Self {
+    pub fn with_max_results(mut self, value: u64) -> Self {
         self.max_results = value;
         self
     }
 
-    pub fn mode(mut self, value: SearchMode) -> Self {
+    pub fn with_mode(mut self, value: SearchMode) -> Self {
         self.mode = value;
         self
     }
@@ -3642,22 +3642,22 @@ impl ListFolderArg {
         }
     }
 
-    pub fn recursive(mut self, value: bool) -> Self {
+    pub fn with_recursive(mut self, value: bool) -> Self {
         self.recursive = value;
         self
     }
 
-    pub fn include_media_info(mut self, value: bool) -> Self {
+    pub fn with_include_media_info(mut self, value: bool) -> Self {
         self.include_media_info = value;
         self
     }
 
-    pub fn include_deleted(mut self, value: bool) -> Self {
+    pub fn with_include_deleted(mut self, value: bool) -> Self {
         self.include_deleted = value;
         self
     }
 
-    pub fn include_has_explicit_shared_members(mut self, value: bool) -> Self {
+    pub fn with_include_has_explicit_shared_members(mut self, value: bool) -> Self {
         self.include_has_explicit_shared_members = value;
         self
     }
@@ -4317,7 +4317,7 @@ impl DownloadArg {
         }
     }
 
-    pub fn rev(mut self, value: Option<Rev>) -> Self {
+    pub fn with_rev(mut self, value: Option<Rev>) -> Self {
         self.rev = value;
         self
     }
@@ -4689,7 +4689,7 @@ impl CreateFolderArg {
         }
     }
 
-    pub fn autorename(mut self, value: bool) -> Self {
+    pub fn with_autorename(mut self, value: bool) -> Self {
         self.autorename = value;
         self
     }
@@ -6337,7 +6337,7 @@ impl ListFolderLongpollArg {
         }
     }
 
-    pub fn timeout(mut self, value: u64) -> Self {
+    pub fn with_timeout(mut self, value: u64) -> Self {
         self.timeout = value;
         self
     }
@@ -6433,17 +6433,17 @@ impl GetMetadataArg {
         }
     }
 
-    pub fn include_media_info(mut self, value: bool) -> Self {
+    pub fn with_include_media_info(mut self, value: bool) -> Self {
         self.include_media_info = value;
         self
     }
 
-    pub fn include_deleted(mut self, value: bool) -> Self {
+    pub fn with_include_deleted(mut self, value: bool) -> Self {
         self.include_deleted = value;
         self
     }
 
-    pub fn include_has_explicit_shared_members(mut self, value: bool) -> Self {
+    pub fn with_include_has_explicit_shared_members(mut self, value: bool) -> Self {
         self.include_has_explicit_shared_members = value;
         self
     }
@@ -7025,17 +7025,17 @@ impl RelocationArg {
         }
     }
 
-    pub fn allow_shared_folder(mut self, value: bool) -> Self {
+    pub fn with_allow_shared_folder(mut self, value: bool) -> Self {
         self.allow_shared_folder = value;
         self
     }
 
-    pub fn autorename(mut self, value: bool) -> Self {
+    pub fn with_autorename(mut self, value: bool) -> Self {
         self.autorename = value;
         self
     }
 
-    pub fn allow_ownership_transfer(mut self, value: bool) -> Self {
+    pub fn with_allow_ownership_transfer(mut self, value: bool) -> Self {
         self.allow_ownership_transfer = value;
         self
     }
@@ -7234,22 +7234,22 @@ impl AlphaGetMetadataArg {
         }
     }
 
-    pub fn include_media_info(mut self, value: bool) -> Self {
+    pub fn with_include_media_info(mut self, value: bool) -> Self {
         self.include_media_info = value;
         self
     }
 
-    pub fn include_deleted(mut self, value: bool) -> Self {
+    pub fn with_include_deleted(mut self, value: bool) -> Self {
         self.include_deleted = value;
         self
     }
 
-    pub fn include_has_explicit_shared_members(mut self, value: bool) -> Self {
+    pub fn with_include_has_explicit_shared_members(mut self, value: bool) -> Self {
         self.include_has_explicit_shared_members = value;
         self
     }
 
-    pub fn include_property_templates(mut self, value: Option<Vec<super::properties::TemplateId>>) -> Self {
+    pub fn with_include_property_templates(mut self, value: Option<Vec<super::properties::TemplateId>>) -> Self {
         self.include_property_templates = value;
         self
     }
@@ -7870,17 +7870,17 @@ impl DeletedMetadata {
         }
     }
 
-    pub fn path_lower(mut self, value: Option<String>) -> Self {
+    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
         self.path_lower = value;
         self
     }
 
-    pub fn path_display(mut self, value: Option<String>) -> Self {
+    pub fn with_path_display(mut self, value: Option<String>) -> Self {
         self.path_display = value;
         self
     }
 
-    pub fn parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
@@ -8227,7 +8227,7 @@ impl ListRevisionsArg {
         }
     }
 
-    pub fn limit(mut self, value: u64) -> Self {
+    pub fn with_limit(mut self, value: u64) -> Self {
         self.limit = value;
         self
     }
@@ -8333,27 +8333,27 @@ impl CommitInfoWithProperties {
         }
     }
 
-    pub fn mode(mut self, value: WriteMode) -> Self {
+    pub fn with_mode(mut self, value: WriteMode) -> Self {
         self.mode = value;
         self
     }
 
-    pub fn autorename(mut self, value: bool) -> Self {
+    pub fn with_autorename(mut self, value: bool) -> Self {
         self.autorename = value;
         self
     }
 
-    pub fn client_modified(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_client_modified(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.client_modified = value;
         self
     }
 
-    pub fn mute(mut self, value: bool) -> Self {
+    pub fn with_mute(mut self, value: bool) -> Self {
         self.mute = value;
         self
     }
 
-    pub fn property_groups(mut self, value: Option<Vec<super::properties::PropertyGroup>>) -> Self {
+    pub fn with_property_groups(mut self, value: Option<Vec<super::properties::PropertyGroup>>) -> Self {
         self.property_groups = value;
         self
     }
@@ -8662,17 +8662,17 @@ impl RelocationBatchArg {
         }
     }
 
-    pub fn allow_shared_folder(mut self, value: bool) -> Self {
+    pub fn with_allow_shared_folder(mut self, value: bool) -> Self {
         self.allow_shared_folder = value;
         self
     }
 
-    pub fn autorename(mut self, value: bool) -> Self {
+    pub fn with_autorename(mut self, value: bool) -> Self {
         self.autorename = value;
         self
     }
 
-    pub fn allow_ownership_transfer(mut self, value: bool) -> Self {
+    pub fn with_allow_ownership_transfer(mut self, value: bool) -> Self {
         self.allow_ownership_transfer = value;
         self
     }
@@ -9707,7 +9707,7 @@ impl ListFolderLongpollResult {
         }
     }
 
-    pub fn backoff(mut self, value: Option<u64>) -> Self {
+    pub fn with_backoff(mut self, value: Option<u64>) -> Self {
         self.backoff = value;
         self
     }
@@ -9799,12 +9799,12 @@ impl PropertyGroupUpdate {
         }
     }
 
-    pub fn add_or_update_fields(mut self, value: Option<Vec<super::properties::PropertyField>>) -> Self {
+    pub fn with_add_or_update_fields(mut self, value: Option<Vec<super::properties::PropertyField>>) -> Self {
         self.add_or_update_fields = value;
         self
     }
 
-    pub fn remove_fields(mut self, value: Option<Vec<String>>) -> Self {
+    pub fn with_remove_fields(mut self, value: Option<Vec<String>>) -> Self {
         self.remove_fields = value;
         self
     }
@@ -9965,7 +9965,7 @@ impl FileSharingInfo {
         }
     }
 
-    pub fn modified_by(mut self, value: Option<super::users_common::AccountId>) -> Self {
+    pub fn with_modified_by(mut self, value: Option<super::users_common::AccountId>) -> Self {
         self.modified_by = value;
         self
     }
@@ -10323,22 +10323,22 @@ impl CommitInfo {
         }
     }
 
-    pub fn mode(mut self, value: WriteMode) -> Self {
+    pub fn with_mode(mut self, value: WriteMode) -> Self {
         self.mode = value;
         self
     }
 
-    pub fn autorename(mut self, value: bool) -> Self {
+    pub fn with_autorename(mut self, value: bool) -> Self {
         self.autorename = value;
         self
     }
 
-    pub fn client_modified(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_client_modified(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.client_modified = value;
         self
     }
 
-    pub fn mute(mut self, value: bool) -> Self {
+    pub fn with_mute(mut self, value: bool) -> Self {
         self.mute = value;
         self
     }

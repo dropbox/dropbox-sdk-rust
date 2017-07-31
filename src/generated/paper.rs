@@ -674,12 +674,12 @@ impl AddPaperDocUser {
         }
     }
 
-    pub fn custom_message(mut self, value: Option<String>) -> Self {
+    pub fn with_custom_message(mut self, value: Option<String>) -> Self {
         self.custom_message = value;
         self
     }
 
-    pub fn quiet(mut self, value: bool) -> Self {
+    pub fn with_quiet(mut self, value: bool) -> Self {
         self.quiet = value;
         self
     }
@@ -1176,7 +1176,7 @@ impl AddMember {
         }
     }
 
-    pub fn permission_level(mut self, value: PaperDocPermissionLevel) -> Self {
+    pub fn with_permission_level(mut self, value: PaperDocPermissionLevel) -> Self {
         self.permission_level = value;
         self
     }
@@ -2333,7 +2333,7 @@ impl Cursor {
         }
     }
 
-    pub fn expiration(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_expiration(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.expiration = value;
         self
     }
@@ -2583,7 +2583,7 @@ impl ListUsersOnFolderArgs {
         }
     }
 
-    pub fn limit(mut self, value: i32) -> Self {
+    pub fn with_limit(mut self, value: i32) -> Self {
         self.limit = value;
         self
     }
@@ -2997,12 +2997,12 @@ impl ListUsersOnPaperDocArgs {
         }
     }
 
-    pub fn limit(mut self, value: i32) -> Self {
+    pub fn with_limit(mut self, value: i32) -> Self {
         self.limit = value;
         self
     }
 
-    pub fn filter_by(mut self, value: UserOnPaperDocFilter) -> Self {
+    pub fn with_filter_by(mut self, value: UserOnPaperDocFilter) -> Self {
         self.filter_by = value;
         self
     }

@@ -1282,12 +1282,12 @@ impl GroupLogInfo {
         }
     }
 
-    pub fn group_id(mut self, value: Option<super::team_common::GroupId>) -> Self {
+    pub fn with_group_id(mut self, value: Option<super::team_common::GroupId>) -> Self {
         self.group_id = value;
         self
     }
 
-    pub fn external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
+    pub fn with_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
         self.external_id = value;
         self
     }
@@ -1528,7 +1528,7 @@ impl TeamProfileChangeNameDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<TeamName>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<TeamName>) -> Self {
         self.previous_value = value;
         self
     }
@@ -1869,12 +1869,12 @@ impl SharedContentClaimInvitationDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn shared_content_link(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
         self.shared_content_link = value;
         self
     }
@@ -2045,7 +2045,7 @@ impl TwoAccountChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<TwoAccountPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<TwoAccountPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -2933,12 +2933,12 @@ impl SharedContentChangeInviteeRoleDetails {
         }
     }
 
-    pub fn new_sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_new_sharing_permission(mut self, value: Option<String>) -> Self {
         self.new_sharing_permission = value;
         self
     }
 
-    pub fn previous_sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_previous_sharing_permission(mut self, value: Option<String>) -> Self {
         self.previous_sharing_permission = value;
         self
     }
@@ -3589,7 +3589,7 @@ impl TfaChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<TfaPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<TfaPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -4188,7 +4188,7 @@ impl DomainVerificationAddDomainSuccessDetails {
         }
     }
 
-    pub fn verification_method(mut self, value: Option<String>) -> Self {
+    pub fn with_verification_method(mut self, value: Option<String>) -> Self {
         self.verification_method = value;
         self
     }
@@ -7138,7 +7138,7 @@ impl SsoChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<SsoPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<SsoPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -7515,7 +7515,7 @@ impl RemoveLogoutUrlDetails {
         }
     }
 
-    pub fn new_value(mut self, value: Option<String>) -> Self {
+    pub fn with_new_value(mut self, value: Option<String>) -> Self {
         self.new_value = value;
         self
     }
@@ -7771,7 +7771,7 @@ impl DeviceLinkFailDetails {
         }
     }
 
-    pub fn device_info(mut self, value: Option<DeviceLogInfo>) -> Self {
+    pub fn with_device_info(mut self, value: Option<DeviceLogInfo>) -> Self {
         self.device_info = value;
         self
     }
@@ -8194,7 +8194,7 @@ impl PaperDocDeleteCommentDetails {
         }
     }
 
-    pub fn comment_text(mut self, value: Option<String>) -> Self {
+    pub fn with_comment_text(mut self, value: Option<String>) -> Self {
         self.comment_text = value;
         self
     }
@@ -8350,12 +8350,12 @@ impl SharedFolderChangeLinkPolicyDetails {
         }
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
 
-    pub fn previous_value(mut self, value: Option<SharedFolderLinkPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<SharedFolderLinkPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -8474,7 +8474,7 @@ impl FileLikeCommentDetails {
         }
     }
 
-    pub fn comment_text(mut self, value: Option<String>) -> Self {
+    pub fn with_comment_text(mut self, value: Option<String>) -> Self {
         self.comment_text = value;
         self
     }
@@ -8568,12 +8568,12 @@ impl TfaChangeStatusDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<TfaConfiguration>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<TfaConfiguration>) -> Self {
         self.previous_value = value;
         self
     }
 
-    pub fn used_rescue_code(mut self, value: Option<bool>) -> Self {
+    pub fn with_used_rescue_code(mut self, value: Option<bool>) -> Self {
         self.used_rescue_code = value;
         self
     }
@@ -9215,7 +9215,7 @@ impl PaperChangeDeploymentPolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<PaperDeploymentPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<PaperDeploymentPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -9390,7 +9390,7 @@ impl SfTeamInviteDetails {
         }
     }
 
-    pub fn sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
         self.sharing_permission = value;
         self
     }
@@ -9490,7 +9490,7 @@ impl PathLogInfo {
         }
     }
 
-    pub fn contextual(mut self, value: Option<super::files::Path>) -> Self {
+    pub fn with_contextual(mut self, value: Option<super::files::Path>) -> Self {
         self.contextual = value;
         self
     }
@@ -9579,7 +9579,7 @@ impl PaperDocResolveCommentDetails {
         }
     }
 
-    pub fn comment_text(mut self, value: Option<String>) -> Self {
+    pub fn with_comment_text(mut self, value: Option<String>) -> Self {
         self.comment_text = value;
         self
     }
@@ -9802,17 +9802,17 @@ impl GeoLocationLogInfo {
         }
     }
 
-    pub fn city(mut self, value: Option<String>) -> Self {
+    pub fn with_city(mut self, value: Option<String>) -> Self {
         self.city = value;
         self
     }
 
-    pub fn region(mut self, value: Option<String>) -> Self {
+    pub fn with_region(mut self, value: Option<String>) -> Self {
         self.region = value;
         self
     }
 
-    pub fn country(mut self, value: Option<String>) -> Self {
+    pub fn with_country(mut self, value: Option<String>) -> Self {
         self.country = value;
         self
     }
@@ -9921,7 +9921,7 @@ impl DeviceChangeIpWebDetails {
         }
     }
 
-    pub fn device_info(mut self, value: Option<DeviceLogInfo>) -> Self {
+    pub fn with_device_info(mut self, value: Option<DeviceLogInfo>) -> Self {
         self.device_info = value;
         self
     }
@@ -10108,7 +10108,7 @@ impl FileUnlikeCommentDetails {
         }
     }
 
-    pub fn comment_text(mut self, value: Option<String>) -> Self {
+    pub fn with_comment_text(mut self, value: Option<String>) -> Self {
         self.comment_text = value;
         self
     }
@@ -10197,7 +10197,7 @@ impl GroupChangeManagementTypeDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<GroupManagementType>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<GroupManagementType>) -> Self {
         self.previous_value = value;
         self
     }
@@ -10286,7 +10286,7 @@ impl AccountCaptureChangeAvailabilityDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<AccountCaptureAvailability>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<AccountCaptureAvailability>) -> Self {
         self.previous_value = value;
         self
     }
@@ -10504,12 +10504,12 @@ impl SharedContentChangeLinkExpiryDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
@@ -10634,12 +10634,12 @@ impl SfNestDetails {
         }
     }
 
-    pub fn prev_parent_ns_id(mut self, value: Option<super::common::NamespaceId>) -> Self {
+    pub fn with_prev_parent_ns_id(mut self, value: Option<super::common::NamespaceId>) -> Self {
         self.prev_parent_ns_id = value;
         self
     }
 
-    pub fn new_parent_ns_id(mut self, value: Option<super::common::NamespaceId>) -> Self {
+    pub fn with_new_parent_ns_id(mut self, value: Option<super::common::NamespaceId>) -> Self {
         self.new_parent_ns_id = value;
         self
     }
@@ -10822,12 +10822,12 @@ impl SharedContentRemoveLinkPasswordDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
@@ -11543,7 +11543,7 @@ impl SfAllowNonMembersToViewSharedLinksDetails {
         }
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
@@ -11784,7 +11784,7 @@ impl SharedFolderCreateDetails {
         }
     }
 
-    pub fn parent_ns_id(mut self, value: Option<super::common::NamespaceId>) -> Self {
+    pub fn with_parent_ns_id(mut self, value: Option<super::common::NamespaceId>) -> Self {
         self.parent_ns_id = value;
         self
     }
@@ -11943,12 +11943,12 @@ impl SharedContentChangeLinkPasswordDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
@@ -12050,12 +12050,12 @@ impl SharedContentAddInviteesDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
         self.sharing_permission = value;
         self
     }
@@ -12529,7 +12529,7 @@ impl SharingChangeMemberPolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<SharingMemberPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<SharingMemberPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -12910,7 +12910,7 @@ impl GroupCreateDetails {
         }
     }
 
-    pub fn is_admin_managed(mut self, value: Option<bool>) -> Self {
+    pub fn with_is_admin_managed(mut self, value: Option<bool>) -> Self {
         self.is_admin_managed = value;
         self
     }
@@ -12999,7 +12999,7 @@ impl MemberChangeEmailDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<super::common::EmailAddress>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<super::common::EmailAddress>) -> Self {
         self.previous_value = value;
         self
     }
@@ -13384,7 +13384,7 @@ impl FileRequestsChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<FileRequestsPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<FileRequestsPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -13482,17 +13482,17 @@ impl SharedContentChangeLinkAudienceDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
 
-    pub fn previous_value(mut self, value: Option<LinkAudience>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<LinkAudience>) -> Self {
         self.previous_value = value;
         self
     }
@@ -13754,7 +13754,7 @@ impl PaperChangeMemberPolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<PaperMemberPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<PaperMemberPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -15045,7 +15045,7 @@ impl DomainVerificationRemoveDomainDetails {
         }
     }
 
-    pub fn verification_method(mut self, value: Option<String>) -> Self {
+    pub fn with_verification_method(mut self, value: Option<String>) -> Self {
         self.verification_method = value;
         self
     }
@@ -15295,12 +15295,12 @@ impl SfTeamJoinFromOobLinkDetails {
         }
     }
 
-    pub fn token_key(mut self, value: Option<String>) -> Self {
+    pub fn with_token_key(mut self, value: Option<String>) -> Self {
         self.token_key = value;
         self
     }
 
-    pub fn sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
         self.sharing_permission = value;
         self
     }
@@ -15694,7 +15694,7 @@ impl PaperDocEditCommentDetails {
         }
     }
 
-    pub fn comment_text(mut self, value: Option<String>) -> Self {
+    pub fn with_comment_text(mut self, value: Option<String>) -> Self {
         self.comment_text = value;
         self
     }
@@ -18812,7 +18812,7 @@ impl SharedContentDownloadDetails {
         }
     }
 
-    pub fn sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
         self.sharing_permission = value;
         self
     }
@@ -18920,12 +18920,12 @@ impl SharedFolderChangeMemberPolicyDetails {
         }
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
 
-    pub fn previous_value(mut self, value: Option<SharedFolderMemberPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<SharedFolderMemberPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -19316,7 +19316,7 @@ impl SharedContentViewDetails {
         }
     }
 
-    pub fn sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
         self.sharing_permission = value;
         self
     }
@@ -19424,17 +19424,17 @@ impl SharedContentChangeViewerInfoPolicyDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
 
-    pub fn previous_value(mut self, value: Option<SharedContentViewerInfoPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<SharedContentViewerInfoPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -19928,7 +19928,7 @@ impl SharingChangeFolderJoinPolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<SharingFolderJoinPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<SharingFolderJoinPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -20104,12 +20104,12 @@ impl MemberChangeStatusDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<MemberStatus>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<MemberStatus>) -> Self {
         self.previous_value = value;
         self
     }
 
-    pub fn team_join_details(mut self, value: Option<JoinTeamDetails>) -> Self {
+    pub fn with_team_join_details(mut self, value: Option<JoinTeamDetails>) -> Self {
         self.team_join_details = value;
         self
     }
@@ -20387,7 +20387,7 @@ impl PaperDocUnresolveCommentDetails {
         }
     }
 
-    pub fn comment_text(mut self, value: Option<String>) -> Self {
+    pub fn with_comment_text(mut self, value: Option<String>) -> Self {
         self.comment_text = value;
         self
     }
@@ -20479,7 +20479,7 @@ impl UserNameLogInfo {
         }
     }
 
-    pub fn locale(mut self, value: Option<String>) -> Self {
+    pub fn with_locale(mut self, value: Option<String>) -> Self {
         self.locale = value;
         self
     }
@@ -20646,7 +20646,7 @@ impl SfAddGroupDetails {
         }
     }
 
-    pub fn sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
         self.sharing_permission = value;
         self
     }
@@ -20839,7 +20839,7 @@ impl SsoChangeLogoutUrlDetails {
         }
     }
 
-    pub fn new_value(mut self, value: Option<String>) -> Self {
+    pub fn with_new_value(mut self, value: Option<String>) -> Self {
         self.new_value = value;
         self
     }
@@ -20934,12 +20934,12 @@ impl SfTeamInviteChangeRoleDetails {
         }
     }
 
-    pub fn new_sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_new_sharing_permission(mut self, value: Option<String>) -> Self {
         self.new_sharing_permission = value;
         self
     }
 
-    pub fn previous_sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_previous_sharing_permission(mut self, value: Option<String>) -> Self {
         self.previous_sharing_permission = value;
         self
     }
@@ -21048,7 +21048,7 @@ impl ExtendedVersionHistoryChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<ExtendedVersionHistoryPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<ExtendedVersionHistoryPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -21143,17 +21143,17 @@ impl SharedContentAddMemberDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
         self.sharing_permission = value;
         self
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
@@ -21498,22 +21498,22 @@ impl SharedContentChangeMemberRoleDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn new_sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_new_sharing_permission(mut self, value: Option<String>) -> Self {
         self.new_sharing_permission = value;
         self
     }
 
-    pub fn previous_sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_previous_sharing_permission(mut self, value: Option<String>) -> Self {
         self.previous_sharing_permission = value;
         self
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
@@ -21632,7 +21632,7 @@ impl EmmChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<EmmPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<EmmPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -21958,7 +21958,7 @@ impl GroupUserManagementChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<GroupUserManagementPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<GroupUserManagementPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -22280,12 +22280,12 @@ impl SharedContentAddLinkExpiryDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
@@ -22870,7 +22870,7 @@ impl PermanentDeleteChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<ContentPermanentDeletePolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<ContentPermanentDeletePolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -23104,12 +23104,12 @@ impl PaperDocChangeSharingPolicyDetails {
         }
     }
 
-    pub fn public_sharing_policy(mut self, value: Option<String>) -> Self {
+    pub fn with_public_sharing_policy(mut self, value: Option<String>) -> Self {
         self.public_sharing_policy = value;
         self
     }
 
-    pub fn team_sharing_policy(mut self, value: Option<String>) -> Self {
+    pub fn with_team_sharing_policy(mut self, value: Option<String>) -> Self {
         self.team_sharing_policy = value;
         self
     }
@@ -23208,7 +23208,7 @@ impl PaperDocAddCommentDetails {
         }
     }
 
-    pub fn comment_text(mut self, value: Option<String>) -> Self {
+    pub fn with_comment_text(mut self, value: Option<String>) -> Self {
         self.comment_text = value;
         self
     }
@@ -23537,7 +23537,7 @@ impl MemberRequestsChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<MemberRequestsPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<MemberRequestsPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -23985,7 +23985,7 @@ impl GroupJoinPolicyUpdatedDetails {
         }
     }
 
-    pub fn is_admin_managed(mut self, value: Option<bool>) -> Self {
+    pub fn with_is_admin_managed(mut self, value: Option<bool>) -> Self {
         self.is_admin_managed = value;
         self
     }
@@ -24251,17 +24251,17 @@ impl SharedContentChangeDownloadsPolicyDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
 
-    pub fn previous_value(mut self, value: Option<SharedContentDownloadsPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<SharedContentDownloadsPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -24513,7 +24513,7 @@ impl DomainVerificationAddDomainFailDetails {
         }
     }
 
-    pub fn verification_method(mut self, value: Option<String>) -> Self {
+    pub fn with_verification_method(mut self, value: Option<String>) -> Self {
         self.verification_method = value;
         self
     }
@@ -24651,7 +24651,7 @@ impl GoogleSsoChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<GoogleSsoPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<GoogleSsoPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -24743,12 +24743,12 @@ impl FileOrFolderLogInfo {
         }
     }
 
-    pub fn display_name(mut self, value: Option<String>) -> Self {
+    pub fn with_display_name(mut self, value: Option<String>) -> Self {
         self.display_name = value;
         self
     }
 
-    pub fn file_id(mut self, value: Option<String>) -> Self {
+    pub fn with_file_id(mut self, value: Option<String>) -> Self {
         self.file_id = value;
         self
     }
@@ -25004,7 +25004,7 @@ impl MemberSuggestionsChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<MemberSuggestionsPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<MemberSuggestionsPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -25300,7 +25300,7 @@ impl PaperContentChangeSubscriptionDetails {
         }
     }
 
-    pub fn previous_subscription_level(mut self, value: Option<PaperTaggedValue>) -> Self {
+    pub fn with_previous_subscription_level(mut self, value: Option<PaperTaggedValue>) -> Self {
         self.previous_subscription_level = value;
         self
     }
@@ -25408,12 +25408,12 @@ impl SharedFolderChangeMemberManagementPolicyDetails {
         }
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
 
-    pub fn previous_value(mut self, value: Option<SharedFolderMembershipManagementPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<SharedFolderMembershipManagementPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -26513,12 +26513,12 @@ impl SharedContentAddLinkPasswordDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
@@ -26738,12 +26738,12 @@ impl SharedContentRemoveLinkExpiryDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
@@ -26845,12 +26845,12 @@ impl OriginLogInfo {
         }
     }
 
-    pub fn geo_location(mut self, value: Option<GeoLocationLogInfo>) -> Self {
+    pub fn with_geo_location(mut self, value: Option<GeoLocationLogInfo>) -> Self {
         self.geo_location = value;
         self
     }
 
-    pub fn host(mut self, value: Option<HostLogInfo>) -> Self {
+    pub fn with_host(mut self, value: Option<HostLogInfo>) -> Self {
         self.host = value;
         self
     }
@@ -27648,7 +27648,7 @@ impl SharedFolderChangeConfidentialityDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<Confidentiality>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<Confidentiality>) -> Self {
         self.previous_value = value;
         self
     }
@@ -27760,12 +27760,12 @@ impl FolderLogInfo {
         }
     }
 
-    pub fn display_name(mut self, value: Option<String>) -> Self {
+    pub fn with_display_name(mut self, value: Option<String>) -> Self {
         self.display_name = value;
         self
     }
 
-    pub fn file_id(mut self, value: Option<String>) -> Self {
+    pub fn with_file_id(mut self, value: Option<String>) -> Self {
         self.file_id = value;
         self
     }
@@ -28086,7 +28086,7 @@ impl PaperChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<PaperPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<PaperPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -28175,7 +28175,7 @@ impl TeamFolderChangeStatusDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<TeamFolderStatus>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<TeamFolderStatus>) -> Self {
         self.previous_value = value;
         self
     }
@@ -28434,7 +28434,7 @@ impl SharingChangeLinkPolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<SharingLinkPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<SharingLinkPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -28746,17 +28746,17 @@ impl SharedContentRemoveMemberDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
         self.sharing_permission = value;
         self
     }
 
-    pub fn shared_folder_type(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
         self.shared_folder_type = value;
         self
     }
@@ -29310,7 +29310,7 @@ impl SharedContentUnshareDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
@@ -29995,7 +29995,7 @@ impl MicrosoftOfficeAddinChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<MicrosoftOfficeAddinPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<MicrosoftOfficeAddinPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -30369,7 +30369,7 @@ impl SmartSyncChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<SmartSyncPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<SmartSyncPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -30795,7 +30795,7 @@ impl AccountCaptureChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<AccountCapturePolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<AccountCapturePolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -30887,12 +30887,12 @@ impl FileLogInfo {
         }
     }
 
-    pub fn display_name(mut self, value: Option<String>) -> Self {
+    pub fn with_display_name(mut self, value: Option<String>) -> Self {
         self.display_name = value;
         self
     }
 
-    pub fn file_id(mut self, value: Option<String>) -> Self {
+    pub fn with_file_id(mut self, value: Option<String>) -> Self {
         self.file_id = value;
         self
     }
@@ -31327,12 +31327,12 @@ impl SharedContentRequestAccessDetails {
         }
     }
 
-    pub fn original_folder_name(mut self, value: Option<String>) -> Self {
+    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
         self.original_folder_name = value;
         self
     }
 
-    pub fn shared_content_link(mut self, value: Option<String>) -> Self {
+    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
         self.shared_content_link = value;
         self
     }
@@ -31462,17 +31462,17 @@ impl TeamEvent {
         }
     }
 
-    pub fn origin(mut self, value: Option<OriginLogInfo>) -> Self {
+    pub fn with_origin(mut self, value: Option<OriginLogInfo>) -> Self {
         self.origin = value;
         self
     }
 
-    pub fn participants(mut self, value: Option<Vec<ParticipantLogInfo>>) -> Self {
+    pub fn with_participants(mut self, value: Option<Vec<ParticipantLogInfo>>) -> Self {
         self.participants = value;
         self
     }
 
-    pub fn assets(mut self, value: Option<Vec<AssetLogInfo>>) -> Self {
+    pub fn with_assets(mut self, value: Option<Vec<AssetLogInfo>>) -> Self {
         self.assets = value;
         self
     }
@@ -31641,7 +31641,7 @@ impl FileAddCommentDetails {
         }
     }
 
-    pub fn comment_text(mut self, value: Option<String>) -> Self {
+    pub fn with_comment_text(mut self, value: Option<String>) -> Self {
         self.comment_text = value;
         self
     }
@@ -32001,7 +32001,7 @@ impl NetworkControlChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<NetworkControlPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<NetworkControlPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -32426,7 +32426,7 @@ impl FileCommentsChangePolicyDetails {
         }
     }
 
-    pub fn previous_value(mut self, value: Option<FileCommentsPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<FileCommentsPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -32605,7 +32605,7 @@ impl SharedContentCopyDetails {
         }
     }
 
-    pub fn sharing_permission(mut self, value: Option<String>) -> Self {
+    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
         self.sharing_permission = value;
         self
     }

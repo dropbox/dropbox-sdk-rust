@@ -147,7 +147,7 @@ impl Account {
         }
     }
 
-    pub fn profile_photo_url(mut self, value: Option<String>) -> Self {
+    pub fn with_profile_photo_url(mut self, value: Option<String>) -> Self {
         self.profile_photo_url = value;
         self
     }
@@ -656,22 +656,22 @@ impl FullAccount {
         }
     }
 
-    pub fn profile_photo_url(mut self, value: Option<String>) -> Self {
+    pub fn with_profile_photo_url(mut self, value: Option<String>) -> Self {
         self.profile_photo_url = value;
         self
     }
 
-    pub fn country(mut self, value: Option<String>) -> Self {
+    pub fn with_country(mut self, value: Option<String>) -> Self {
         self.country = value;
         self
     }
 
-    pub fn team(mut self, value: Option<FullTeam>) -> Self {
+    pub fn with_team(mut self, value: Option<FullTeam>) -> Self {
         self.team = value;
         self
     }
 
-    pub fn team_member_id(mut self, value: Option<String>) -> Self {
+    pub fn with_team_member_id(mut self, value: Option<String>) -> Self {
         self.team_member_id = value;
         self
     }
@@ -1356,12 +1356,12 @@ impl BasicAccount {
         }
     }
 
-    pub fn profile_photo_url(mut self, value: Option<String>) -> Self {
+    pub fn with_profile_photo_url(mut self, value: Option<String>) -> Self {
         self.profile_photo_url = value;
         self
     }
 
-    pub fn team_member_id(mut self, value: Option<String>) -> Self {
+    pub fn with_team_member_id(mut self, value: Option<String>) -> Self {
         self.team_member_id = value;
         self
     }

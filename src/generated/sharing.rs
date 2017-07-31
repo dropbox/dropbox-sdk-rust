@@ -316,7 +316,7 @@ impl ListFoldersResult {
         }
     }
 
-    pub fn cursor(mut self, value: Option<String>) -> Self {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
         self.cursor = value;
         self
     }
@@ -662,7 +662,7 @@ impl FilePermission {
         }
     }
 
-    pub fn reason(mut self, value: Option<PermissionDeniedReason>) -> Self {
+    pub fn with_reason(mut self, value: Option<PermissionDeniedReason>) -> Self {
         self.reason = value;
         self
     }
@@ -864,37 +864,37 @@ impl ShareFolderArg {
         }
     }
 
-    pub fn acl_update_policy(mut self, value: Option<AclUpdatePolicy>) -> Self {
+    pub fn with_acl_update_policy(mut self, value: Option<AclUpdatePolicy>) -> Self {
         self.acl_update_policy = value;
         self
     }
 
-    pub fn force_async(mut self, value: bool) -> Self {
+    pub fn with_force_async(mut self, value: bool) -> Self {
         self.force_async = value;
         self
     }
 
-    pub fn member_policy(mut self, value: Option<MemberPolicy>) -> Self {
+    pub fn with_member_policy(mut self, value: Option<MemberPolicy>) -> Self {
         self.member_policy = value;
         self
     }
 
-    pub fn shared_link_policy(mut self, value: Option<SharedLinkPolicy>) -> Self {
+    pub fn with_shared_link_policy(mut self, value: Option<SharedLinkPolicy>) -> Self {
         self.shared_link_policy = value;
         self
     }
 
-    pub fn viewer_info_policy(mut self, value: Option<ViewerInfoPolicy>) -> Self {
+    pub fn with_viewer_info_policy(mut self, value: Option<ViewerInfoPolicy>) -> Self {
         self.viewer_info_policy = value;
         self
     }
 
-    pub fn actions(mut self, value: Option<Vec<FolderAction>>) -> Self {
+    pub fn with_actions(mut self, value: Option<Vec<FolderAction>>) -> Self {
         self.actions = value;
         self
     }
 
-    pub fn link_settings(mut self, value: Option<LinkSettings>) -> Self {
+    pub fn with_link_settings(mut self, value: Option<LinkSettings>) -> Self {
         self.link_settings = value;
         self
     }
@@ -1061,32 +1061,32 @@ impl UpdateFolderPolicyArg {
         }
     }
 
-    pub fn member_policy(mut self, value: Option<MemberPolicy>) -> Self {
+    pub fn with_member_policy(mut self, value: Option<MemberPolicy>) -> Self {
         self.member_policy = value;
         self
     }
 
-    pub fn acl_update_policy(mut self, value: Option<AclUpdatePolicy>) -> Self {
+    pub fn with_acl_update_policy(mut self, value: Option<AclUpdatePolicy>) -> Self {
         self.acl_update_policy = value;
         self
     }
 
-    pub fn viewer_info_policy(mut self, value: Option<ViewerInfoPolicy>) -> Self {
+    pub fn with_viewer_info_policy(mut self, value: Option<ViewerInfoPolicy>) -> Self {
         self.viewer_info_policy = value;
         self
     }
 
-    pub fn shared_link_policy(mut self, value: Option<SharedLinkPolicy>) -> Self {
+    pub fn with_shared_link_policy(mut self, value: Option<SharedLinkPolicy>) -> Self {
         self.shared_link_policy = value;
         self
     }
 
-    pub fn link_settings(mut self, value: Option<LinkSettings>) -> Self {
+    pub fn with_link_settings(mut self, value: Option<LinkSettings>) -> Self {
         self.link_settings = value;
         self
     }
 
-    pub fn actions(mut self, value: Option<Vec<FolderAction>>) -> Self {
+    pub fn with_actions(mut self, value: Option<Vec<FolderAction>>) -> Self {
         self.actions = value;
         self
     }
@@ -1234,7 +1234,7 @@ impl SharedFileMembers {
         }
     }
 
-    pub fn cursor(mut self, value: Option<String>) -> Self {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
         self.cursor = value;
         self
     }
@@ -1566,7 +1566,7 @@ impl ModifySharedLinkSettingsArgs {
         }
     }
 
-    pub fn remove_expiration(mut self, value: bool) -> Self {
+    pub fn with_remove_expiration(mut self, value: bool) -> Self {
         self.remove_expiration = value;
         self
     }
@@ -2315,17 +2315,17 @@ impl ListFileMembersArg {
         }
     }
 
-    pub fn actions(mut self, value: Option<Vec<MemberAction>>) -> Self {
+    pub fn with_actions(mut self, value: Option<Vec<MemberAction>>) -> Self {
         self.actions = value;
         self
     }
 
-    pub fn include_inherited(mut self, value: bool) -> Self {
+    pub fn with_include_inherited(mut self, value: bool) -> Self {
         self.include_inherited = value;
         self
     }
 
-    pub fn limit(mut self, value: u32) -> Self {
+    pub fn with_limit(mut self, value: u32) -> Self {
         self.limit = value;
         self
     }
@@ -2525,7 +2525,7 @@ impl CollectionLinkMetadata {
         }
     }
 
-    pub fn expires(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_expires(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.expires = value;
         self
     }
@@ -2723,7 +2723,7 @@ impl FolderPermission {
         }
     }
 
-    pub fn reason(mut self, value: Option<PermissionDeniedReason>) -> Self {
+    pub fn with_reason(mut self, value: Option<PermissionDeniedReason>) -> Self {
         self.reason = value;
         self
     }
@@ -2842,17 +2842,17 @@ impl ExpectedSharedContentLinkMetadata {
         }
     }
 
-    pub fn access_level(mut self, value: Option<AccessLevel>) -> Self {
+    pub fn with_access_level(mut self, value: Option<AccessLevel>) -> Self {
         self.access_level = value;
         self
     }
 
-    pub fn audience_restricting_shared_folder(mut self, value: Option<AudienceRestrictingSharedFolder>) -> Self {
+    pub fn with_audience_restricting_shared_folder(mut self, value: Option<AudienceRestrictingSharedFolder>) -> Self {
         self.audience_restricting_shared_folder = value;
         self
     }
 
-    pub fn expiry(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_expiry(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.expiry = value;
         self
     }
@@ -3706,32 +3706,32 @@ impl SharedFolderMetadata {
         }
     }
 
-    pub fn owner_display_names(mut self, value: Option<Vec<String>>) -> Self {
+    pub fn with_owner_display_names(mut self, value: Option<Vec<String>>) -> Self {
         self.owner_display_names = value;
         self
     }
 
-    pub fn owner_team(mut self, value: Option<super::users::Team>) -> Self {
+    pub fn with_owner_team(mut self, value: Option<super::users::Team>) -> Self {
         self.owner_team = value;
         self
     }
 
-    pub fn parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
 
-    pub fn path_lower(mut self, value: Option<String>) -> Self {
+    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
         self.path_lower = value;
         self
     }
 
-    pub fn link_metadata(mut self, value: Option<SharedContentLinkMetadata>) -> Self {
+    pub fn with_link_metadata(mut self, value: Option<SharedContentLinkMetadata>) -> Self {
         self.link_metadata = value;
         self
     }
 
-    pub fn permissions(mut self, value: Option<Vec<FolderPermission>>) -> Self {
+    pub fn with_permissions(mut self, value: Option<Vec<FolderPermission>>) -> Self {
         self.permissions = value;
         self
     }
@@ -4014,7 +4014,7 @@ impl ListSharedLinksResult {
         }
     }
 
-    pub fn cursor(mut self, value: Option<String>) -> Self {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
         self.cursor = value;
         self
     }
@@ -4133,12 +4133,12 @@ impl GroupInfo {
         }
     }
 
-    pub fn group_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
+    pub fn with_group_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
         self.group_external_id = value;
         self
     }
 
-    pub fn member_count(mut self, value: Option<u32>) -> Self {
+    pub fn with_member_count(mut self, value: Option<u32>) -> Self {
         self.member_count = value;
         self
     }
@@ -4304,17 +4304,17 @@ impl MembershipInfo {
         }
     }
 
-    pub fn permissions(mut self, value: Option<Vec<MemberPermission>>) -> Self {
+    pub fn with_permissions(mut self, value: Option<Vec<MemberPermission>>) -> Self {
         self.permissions = value;
         self
     }
 
-    pub fn initials(mut self, value: Option<String>) -> Self {
+    pub fn with_initials(mut self, value: Option<String>) -> Self {
         self.initials = value;
         self
     }
 
-    pub fn is_inherited(mut self, value: bool) -> Self {
+    pub fn with_is_inherited(mut self, value: bool) -> Self {
         self.is_inherited = value;
         self
     }
@@ -4674,7 +4674,7 @@ impl ListFileMembersBatchArg {
         }
     }
 
-    pub fn limit(mut self, value: u32) -> Self {
+    pub fn with_limit(mut self, value: u32) -> Self {
         self.limit = value;
         self
     }
@@ -4876,12 +4876,12 @@ impl GetSharedLinkMetadataArg {
         }
     }
 
-    pub fn path(mut self, value: Option<Path>) -> Self {
+    pub fn with_path(mut self, value: Option<Path>) -> Self {
         self.path = value;
         self
     }
 
-    pub fn link_password(mut self, value: Option<String>) -> Self {
+    pub fn with_link_password(mut self, value: Option<String>) -> Self {
         self.link_password = value;
         self
     }
@@ -5173,17 +5173,17 @@ impl SharedContentLinkMetadataBase {
         }
     }
 
-    pub fn access_level(mut self, value: Option<AccessLevel>) -> Self {
+    pub fn with_access_level(mut self, value: Option<AccessLevel>) -> Self {
         self.access_level = value;
         self
     }
 
-    pub fn audience_restricting_shared_folder(mut self, value: Option<AudienceRestrictingSharedFolder>) -> Self {
+    pub fn with_audience_restricting_shared_folder(mut self, value: Option<AudienceRestrictingSharedFolder>) -> Self {
         self.audience_restricting_shared_folder = value;
         self
     }
 
-    pub fn expiry(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_expiry(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.expiry = value;
         self
     }
@@ -5349,22 +5349,22 @@ impl SharedContentLinkMetadata {
         }
     }
 
-    pub fn access_level(mut self, value: Option<AccessLevel>) -> Self {
+    pub fn with_access_level(mut self, value: Option<AccessLevel>) -> Self {
         self.access_level = value;
         self
     }
 
-    pub fn audience_restricting_shared_folder(mut self, value: Option<AudienceRestrictingSharedFolder>) -> Self {
+    pub fn with_audience_restricting_shared_folder(mut self, value: Option<AudienceRestrictingSharedFolder>) -> Self {
         self.audience_restricting_shared_folder = value;
         self
     }
 
-    pub fn expiry(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_expiry(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.expiry = value;
         self
     }
 
-    pub fn audience_exceptions(mut self, value: Option<AudienceExceptions>) -> Self {
+    pub fn with_audience_exceptions(mut self, value: Option<AudienceExceptions>) -> Self {
         self.audience_exceptions = value;
         self
     }
@@ -5536,22 +5536,22 @@ impl InviteeMembershipInfo {
         }
     }
 
-    pub fn permissions(mut self, value: Option<Vec<MemberPermission>>) -> Self {
+    pub fn with_permissions(mut self, value: Option<Vec<MemberPermission>>) -> Self {
         self.permissions = value;
         self
     }
 
-    pub fn initials(mut self, value: Option<String>) -> Self {
+    pub fn with_initials(mut self, value: Option<String>) -> Self {
         self.initials = value;
         self
     }
 
-    pub fn is_inherited(mut self, value: bool) -> Self {
+    pub fn with_is_inherited(mut self, value: bool) -> Self {
         self.is_inherited = value;
         self
     }
 
-    pub fn user(mut self, value: Option<UserInfo>) -> Self {
+    pub fn with_user(mut self, value: Option<UserInfo>) -> Self {
         self.user = value;
         self
     }
@@ -5681,7 +5681,7 @@ impl UnshareFolderArg {
         }
     }
 
-    pub fn leave_a_copy(mut self, value: bool) -> Self {
+    pub fn with_leave_a_copy(mut self, value: bool) -> Self {
         self.leave_a_copy = value;
         self
     }
@@ -6198,7 +6198,7 @@ impl LinkPermission {
         }
     }
 
-    pub fn reason(mut self, value: Option<PermissionDeniedReason>) -> Self {
+    pub fn with_reason(mut self, value: Option<PermissionDeniedReason>) -> Self {
         self.reason = value;
         self
     }
@@ -6467,7 +6467,7 @@ impl MemberPermission {
         }
     }
 
-    pub fn reason(mut self, value: Option<PermissionDeniedReason>) -> Self {
+    pub fn with_reason(mut self, value: Option<PermissionDeniedReason>) -> Self {
         self.reason = value;
         self
     }
@@ -6844,7 +6844,7 @@ impl PathLinkMetadata {
         }
     }
 
-    pub fn expires(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_expires(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.expires = value;
         self
     }
@@ -7359,7 +7359,7 @@ impl SharedFolderMembers {
         }
     }
 
-    pub fn cursor(mut self, value: Option<String>) -> Self {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
         self.cursor = value;
         self
     }
@@ -7468,7 +7468,7 @@ impl ListFilesResult {
         }
     }
 
-    pub fn cursor(mut self, value: Option<String>) -> Self {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
         self.cursor = value;
         self
     }
@@ -7653,7 +7653,7 @@ impl InsufficientPlan {
         }
     }
 
-    pub fn upsell_url(mut self, value: Option<String>) -> Self {
+    pub fn with_upsell_url(mut self, value: Option<String>) -> Self {
         self.upsell_url = value;
         self
     }
@@ -7898,12 +7898,12 @@ impl CreateSharedLinkArg {
         }
     }
 
-    pub fn short_url(mut self, value: bool) -> Self {
+    pub fn with_short_url(mut self, value: bool) -> Self {
         self.short_url = value;
         self
     }
 
-    pub fn pending_upload(mut self, value: Option<PendingUploadMode>) -> Self {
+    pub fn with_pending_upload(mut self, value: Option<PendingUploadMode>) -> Self {
         self.pending_upload = value;
         self
     }
@@ -8113,7 +8113,7 @@ impl GetFileMetadataBatchArg {
         }
     }
 
-    pub fn actions(mut self, value: Option<Vec<FileAction>>) -> Self {
+    pub fn with_actions(mut self, value: Option<Vec<FileAction>>) -> Self {
         self.actions = value;
         self
     }
@@ -8204,7 +8204,7 @@ impl GetFileMetadataArg {
         }
     }
 
-    pub fn actions(mut self, value: Option<Vec<FileAction>>) -> Self {
+    pub fn with_actions(mut self, value: Option<Vec<FileAction>>) -> Self {
         self.actions = value;
         self
     }
@@ -8681,12 +8681,12 @@ impl AddFolderMemberArg {
         }
     }
 
-    pub fn quiet(mut self, value: bool) -> Self {
+    pub fn with_quiet(mut self, value: bool) -> Self {
         self.quiet = value;
         self
     }
 
-    pub fn custom_message(mut self, value: Option<String>) -> Self {
+    pub fn with_custom_message(mut self, value: Option<String>) -> Self {
         self.custom_message = value;
         self
     }
@@ -8914,27 +8914,27 @@ impl FolderLinkMetadata {
         }
     }
 
-    pub fn id(mut self, value: Option<Id>) -> Self {
+    pub fn with_id(mut self, value: Option<Id>) -> Self {
         self.id = value;
         self
     }
 
-    pub fn expires(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_expires(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.expires = value;
         self
     }
 
-    pub fn path_lower(mut self, value: Option<String>) -> Self {
+    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
         self.path_lower = value;
         self
     }
 
-    pub fn team_member_info(mut self, value: Option<TeamMemberInfo>) -> Self {
+    pub fn with_team_member_info(mut self, value: Option<TeamMemberInfo>) -> Self {
         self.team_member_info = value;
         self
     }
 
-    pub fn content_owner_team_info(mut self, value: Option<TeamInfo>) -> Self {
+    pub fn with_content_owner_team_info(mut self, value: Option<TeamInfo>) -> Self {
         self.content_owner_team_info = value;
         self
     }
@@ -9397,27 +9397,27 @@ impl ShareFolderArgBase {
         }
     }
 
-    pub fn acl_update_policy(mut self, value: Option<AclUpdatePolicy>) -> Self {
+    pub fn with_acl_update_policy(mut self, value: Option<AclUpdatePolicy>) -> Self {
         self.acl_update_policy = value;
         self
     }
 
-    pub fn force_async(mut self, value: bool) -> Self {
+    pub fn with_force_async(mut self, value: bool) -> Self {
         self.force_async = value;
         self
     }
 
-    pub fn member_policy(mut self, value: Option<MemberPolicy>) -> Self {
+    pub fn with_member_policy(mut self, value: Option<MemberPolicy>) -> Self {
         self.member_policy = value;
         self
     }
 
-    pub fn shared_link_policy(mut self, value: Option<SharedLinkPolicy>) -> Self {
+    pub fn with_shared_link_policy(mut self, value: Option<SharedLinkPolicy>) -> Self {
         self.shared_link_policy = value;
         self
     }
 
-    pub fn viewer_info_policy(mut self, value: Option<ViewerInfoPolicy>) -> Self {
+    pub fn with_viewer_info_policy(mut self, value: Option<ViewerInfoPolicy>) -> Self {
         self.viewer_info_policy = value;
         self
     }
@@ -10069,52 +10069,52 @@ impl SharedFileMetadata {
         }
     }
 
-    pub fn access_type(mut self, value: Option<AccessLevel>) -> Self {
+    pub fn with_access_type(mut self, value: Option<AccessLevel>) -> Self {
         self.access_type = value;
         self
     }
 
-    pub fn expected_link_metadata(mut self, value: Option<ExpectedSharedContentLinkMetadata>) -> Self {
+    pub fn with_expected_link_metadata(mut self, value: Option<ExpectedSharedContentLinkMetadata>) -> Self {
         self.expected_link_metadata = value;
         self
     }
 
-    pub fn link_metadata(mut self, value: Option<SharedContentLinkMetadata>) -> Self {
+    pub fn with_link_metadata(mut self, value: Option<SharedContentLinkMetadata>) -> Self {
         self.link_metadata = value;
         self
     }
 
-    pub fn owner_display_names(mut self, value: Option<Vec<String>>) -> Self {
+    pub fn with_owner_display_names(mut self, value: Option<Vec<String>>) -> Self {
         self.owner_display_names = value;
         self
     }
 
-    pub fn owner_team(mut self, value: Option<super::users::Team>) -> Self {
+    pub fn with_owner_team(mut self, value: Option<super::users::Team>) -> Self {
         self.owner_team = value;
         self
     }
 
-    pub fn parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
 
-    pub fn path_display(mut self, value: Option<String>) -> Self {
+    pub fn with_path_display(mut self, value: Option<String>) -> Self {
         self.path_display = value;
         self
     }
 
-    pub fn path_lower(mut self, value: Option<String>) -> Self {
+    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
         self.path_lower = value;
         self
     }
 
-    pub fn permissions(mut self, value: Option<Vec<FilePermission>>) -> Self {
+    pub fn with_permissions(mut self, value: Option<Vec<FilePermission>>) -> Self {
         self.permissions = value;
         self
     }
 
-    pub fn time_invited(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_time_invited(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.time_invited = value;
         self
     }
@@ -10402,22 +10402,22 @@ impl AddFileMemberArgs {
         }
     }
 
-    pub fn custom_message(mut self, value: Option<String>) -> Self {
+    pub fn with_custom_message(mut self, value: Option<String>) -> Self {
         self.custom_message = value;
         self
     }
 
-    pub fn quiet(mut self, value: bool) -> Self {
+    pub fn with_quiet(mut self, value: bool) -> Self {
         self.quiet = value;
         self
     }
 
-    pub fn access_level(mut self, value: AccessLevel) -> Self {
+    pub fn with_access_level(mut self, value: AccessLevel) -> Self {
         self.access_level = value;
         self
     }
 
-    pub fn add_message_as_comment(mut self, value: bool) -> Self {
+    pub fn with_add_message_as_comment(mut self, value: bool) -> Self {
         self.add_message_as_comment = value;
         self
     }
@@ -11030,27 +11030,27 @@ impl FileLinkMetadata {
         }
     }
 
-    pub fn id(mut self, value: Option<Id>) -> Self {
+    pub fn with_id(mut self, value: Option<Id>) -> Self {
         self.id = value;
         self
     }
 
-    pub fn expires(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_expires(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.expires = value;
         self
     }
 
-    pub fn path_lower(mut self, value: Option<String>) -> Self {
+    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
         self.path_lower = value;
         self
     }
 
-    pub fn team_member_info(mut self, value: Option<TeamMemberInfo>) -> Self {
+    pub fn with_team_member_info(mut self, value: Option<TeamMemberInfo>) -> Self {
         self.team_member_info = value;
         self
     }
 
-    pub fn content_owner_team_info(mut self, value: Option<TeamInfo>) -> Self {
+    pub fn with_content_owner_team_info(mut self, value: Option<TeamInfo>) -> Self {
         self.content_owner_team_info = value;
         self
     }
@@ -11468,12 +11468,12 @@ impl ListFolderMembersArgs {
         }
     }
 
-    pub fn actions(mut self, value: Option<Vec<MemberAction>>) -> Self {
+    pub fn with_actions(mut self, value: Option<Vec<MemberAction>>) -> Self {
         self.actions = value;
         self
     }
 
-    pub fn limit(mut self, value: u32) -> Self {
+    pub fn with_limit(mut self, value: u32) -> Self {
         self.limit = value;
         self
     }
@@ -11585,17 +11585,17 @@ impl FolderPolicy {
         }
     }
 
-    pub fn member_policy(mut self, value: Option<MemberPolicy>) -> Self {
+    pub fn with_member_policy(mut self, value: Option<MemberPolicy>) -> Self {
         self.member_policy = value;
         self
     }
 
-    pub fn resolved_member_policy(mut self, value: Option<MemberPolicy>) -> Self {
+    pub fn with_resolved_member_policy(mut self, value: Option<MemberPolicy>) -> Self {
         self.resolved_member_policy = value;
         self
     }
 
-    pub fn viewer_info_policy(mut self, value: Option<ViewerInfoPolicy>) -> Self {
+    pub fn with_viewer_info_policy(mut self, value: Option<ViewerInfoPolicy>) -> Self {
         self.viewer_info_policy = value;
         self
     }
@@ -11991,7 +11991,7 @@ impl GetMetadataArgs {
         }
     }
 
-    pub fn actions(mut self, value: Option<Vec<FolderAction>>) -> Self {
+    pub fn with_actions(mut self, value: Option<Vec<FolderAction>>) -> Self {
         self.actions = value;
         self
     }
@@ -12153,7 +12153,7 @@ impl RelinquishFolderMembershipArg {
         }
     }
 
-    pub fn leave_a_copy(mut self, value: bool) -> Self {
+    pub fn with_leave_a_copy(mut self, value: bool) -> Self {
         self.leave_a_copy = value;
         self
     }
@@ -12246,7 +12246,7 @@ impl TeamMemberInfo {
         }
     }
 
-    pub fn member_id(mut self, value: Option<String>) -> Self {
+    pub fn with_member_id(mut self, value: Option<String>) -> Self {
         self.member_id = value;
         self
     }
@@ -12344,7 +12344,7 @@ impl CreateSharedLinkWithSettingsArg {
         }
     }
 
-    pub fn settings(mut self, value: Option<SharedLinkSettings>) -> Self {
+    pub fn with_settings(mut self, value: Option<SharedLinkSettings>) -> Self {
         self.settings = value;
         self
     }
@@ -12652,17 +12652,17 @@ impl LinkPermissions {
         }
     }
 
-    pub fn resolved_visibility(mut self, value: Option<ResolvedVisibility>) -> Self {
+    pub fn with_resolved_visibility(mut self, value: Option<ResolvedVisibility>) -> Self {
         self.resolved_visibility = value;
         self
     }
 
-    pub fn requested_visibility(mut self, value: Option<RequestedVisibility>) -> Self {
+    pub fn with_requested_visibility(mut self, value: Option<RequestedVisibility>) -> Self {
         self.requested_visibility = value;
         self
     }
 
-    pub fn revoke_failure_reason(mut self, value: Option<SharedLinkAccessFailureReason>) -> Self {
+    pub fn with_revoke_failure_reason(mut self, value: Option<SharedLinkAccessFailureReason>) -> Self {
         self.revoke_failure_reason = value;
         self
     }
@@ -12880,22 +12880,22 @@ impl SharedFolderMetadataBase {
         }
     }
 
-    pub fn owner_display_names(mut self, value: Option<Vec<String>>) -> Self {
+    pub fn with_owner_display_names(mut self, value: Option<Vec<String>>) -> Self {
         self.owner_display_names = value;
         self
     }
 
-    pub fn owner_team(mut self, value: Option<super::users::Team>) -> Self {
+    pub fn with_owner_team(mut self, value: Option<super::users::Team>) -> Self {
         self.owner_team = value;
         self
     }
 
-    pub fn parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
 
-    pub fn path_lower(mut self, value: Option<String>) -> Self {
+    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
         self.path_lower = value;
         self
     }
@@ -13663,7 +13663,7 @@ impl UserInfo {
         }
     }
 
-    pub fn team_member_id(mut self, value: Option<String>) -> Self {
+    pub fn with_team_member_id(mut self, value: Option<String>) -> Self {
         self.team_member_id = value;
         self
     }
@@ -14718,17 +14718,17 @@ impl UserMembershipInfo {
         }
     }
 
-    pub fn permissions(mut self, value: Option<Vec<MemberPermission>>) -> Self {
+    pub fn with_permissions(mut self, value: Option<Vec<MemberPermission>>) -> Self {
         self.permissions = value;
         self
     }
 
-    pub fn initials(mut self, value: Option<String>) -> Self {
+    pub fn with_initials(mut self, value: Option<String>) -> Self {
         self.initials = value;
         self
     }
 
-    pub fn is_inherited(mut self, value: bool) -> Self {
+    pub fn with_is_inherited(mut self, value: bool) -> Self {
         self.is_inherited = value;
         self
     }
@@ -15059,17 +15059,17 @@ impl GroupMembershipInfo {
         }
     }
 
-    pub fn permissions(mut self, value: Option<Vec<MemberPermission>>) -> Self {
+    pub fn with_permissions(mut self, value: Option<Vec<MemberPermission>>) -> Self {
         self.permissions = value;
         self
     }
 
-    pub fn initials(mut self, value: Option<String>) -> Self {
+    pub fn with_initials(mut self, value: Option<String>) -> Self {
         self.initials = value;
         self
     }
 
-    pub fn is_inherited(mut self, value: bool) -> Self {
+    pub fn with_is_inherited(mut self, value: bool) -> Self {
         self.is_inherited = value;
         self
     }
@@ -15189,7 +15189,7 @@ impl AddMember {
         }
     }
 
-    pub fn access_level(mut self, value: AccessLevel) -> Self {
+    pub fn with_access_level(mut self, value: AccessLevel) -> Self {
         self.access_level = value;
         self
     }

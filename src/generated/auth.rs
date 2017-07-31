@@ -128,7 +128,7 @@ impl RateLimitError {
         }
     }
 
-    pub fn retry_after(mut self, value: u64) -> Self {
+    pub fn with_retry_after(mut self, value: u64) -> Self {
         self.retry_after = value;
         self
     }

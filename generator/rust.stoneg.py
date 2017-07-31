@@ -484,7 +484,7 @@ class RustGenerator(CodeGenerator):
         for field in struct.all_optional_fields:
             self.emit()
             field_name = self._field_name(field)
-            with self.block(u'pub fn {}(mut self, value: {}) -> Self'.format(
+            with self.block(u'pub fn with_{}(mut self, value: {}) -> Self'.format(
                     field_name,
                     self._rust_type(field.data_type))):
                 self.emit(u'self.{} = value;'.format(field_name))

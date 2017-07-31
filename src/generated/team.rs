@@ -853,7 +853,7 @@ impl GroupMembersRemoveArg {
         }
     }
 
-    pub fn return_members(mut self, value: bool) -> Self {
+    pub fn with_return_members(mut self, value: bool) -> Self {
         self.return_members = value;
         self
     }
@@ -959,7 +959,7 @@ impl NamespaceMetadata {
         }
     }
 
-    pub fn team_member_id(mut self, value: Option<super::team_common::TeamMemberId>) -> Self {
+    pub fn with_team_member_id(mut self, value: Option<super::team_common::TeamMemberId>) -> Self {
         self.team_member_id = value;
         self
     }
@@ -1144,7 +1144,7 @@ impl ListMembersAppsResult {
         }
     }
 
-    pub fn cursor(mut self, value: Option<String>) -> Self {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
         self.cursor = value;
         self
     }
@@ -1974,32 +1974,32 @@ impl MemberAddArg {
         }
     }
 
-    pub fn member_given_name(mut self, value: Option<super::common::NamePart>) -> Self {
+    pub fn with_member_given_name(mut self, value: Option<super::common::NamePart>) -> Self {
         self.member_given_name = value;
         self
     }
 
-    pub fn member_surname(mut self, value: Option<super::common::NamePart>) -> Self {
+    pub fn with_member_surname(mut self, value: Option<super::common::NamePart>) -> Self {
         self.member_surname = value;
         self
     }
 
-    pub fn member_external_id(mut self, value: Option<super::team_common::MemberExternalId>) -> Self {
+    pub fn with_member_external_id(mut self, value: Option<super::team_common::MemberExternalId>) -> Self {
         self.member_external_id = value;
         self
     }
 
-    pub fn member_persistent_id(mut self, value: Option<String>) -> Self {
+    pub fn with_member_persistent_id(mut self, value: Option<String>) -> Self {
         self.member_persistent_id = value;
         self
     }
 
-    pub fn send_welcome_email(mut self, value: bool) -> Self {
+    pub fn with_send_welcome_email(mut self, value: bool) -> Self {
         self.send_welcome_email = value;
         self
     }
 
-    pub fn role(mut self, value: AdminTier) -> Self {
+    pub fn with_role(mut self, value: AdminTier) -> Self {
         self.role = value;
         self
     }
@@ -2449,7 +2449,7 @@ impl GroupMembersSetAccessTypeArg {
         }
     }
 
-    pub fn return_members(mut self, value: bool) -> Self {
+    pub fn with_return_members(mut self, value: bool) -> Self {
         self.return_members = value;
         self
     }
@@ -3283,7 +3283,7 @@ impl RevokeDeviceSessionStatus {
         }
     }
 
-    pub fn error_type(mut self, value: Option<RevokeDeviceSessionError>) -> Self {
+    pub fn with_error_type(mut self, value: Option<RevokeDeviceSessionError>) -> Self {
         self.error_type = value;
         self
     }
@@ -3565,37 +3565,37 @@ impl MobileClientSession {
         }
     }
 
-    pub fn ip_address(mut self, value: Option<String>) -> Self {
+    pub fn with_ip_address(mut self, value: Option<String>) -> Self {
         self.ip_address = value;
         self
     }
 
-    pub fn country(mut self, value: Option<String>) -> Self {
+    pub fn with_country(mut self, value: Option<String>) -> Self {
         self.country = value;
         self
     }
 
-    pub fn created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.created = value;
         self
     }
 
-    pub fn updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.updated = value;
         self
     }
 
-    pub fn client_version(mut self, value: Option<String>) -> Self {
+    pub fn with_client_version(mut self, value: Option<String>) -> Self {
         self.client_version = value;
         self
     }
 
-    pub fn os_version(mut self, value: Option<String>) -> Self {
+    pub fn with_os_version(mut self, value: Option<String>) -> Self {
         self.os_version = value;
         self
     }
 
-    pub fn last_carrier(mut self, value: Option<String>) -> Self {
+    pub fn with_last_carrier(mut self, value: Option<String>) -> Self {
         self.last_carrier = value;
         self
     }
@@ -4022,7 +4022,7 @@ impl ListTeamDevicesResult {
         }
     }
 
-    pub fn cursor(mut self, value: Option<String>) -> Self {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
         self.cursor = value;
         self
     }
@@ -5057,7 +5057,7 @@ impl TeamFolderArchiveArg {
         }
     }
 
-    pub fn force_async_off(mut self, value: bool) -> Self {
+    pub fn with_force_async_off(mut self, value: bool) -> Self {
         self.force_async_off = value;
         self
     }
@@ -5159,17 +5159,17 @@ impl GroupFullInfo {
         }
     }
 
-    pub fn group_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
+    pub fn with_group_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
         self.group_external_id = value;
         self
     }
 
-    pub fn member_count(mut self, value: Option<u32>) -> Self {
+    pub fn with_member_count(mut self, value: Option<u32>) -> Self {
         self.member_count = value;
         self
     }
 
-    pub fn members(mut self, value: Option<Vec<GroupMemberInfo>>) -> Self {
+    pub fn with_members(mut self, value: Option<Vec<GroupMemberInfo>>) -> Self {
         self.members = value;
         self
     }
@@ -5319,22 +5319,22 @@ impl GroupUpdateArgs {
         }
     }
 
-    pub fn return_members(mut self, value: bool) -> Self {
+    pub fn with_return_members(mut self, value: bool) -> Self {
         self.return_members = value;
         self
     }
 
-    pub fn new_group_name(mut self, value: Option<String>) -> Self {
+    pub fn with_new_group_name(mut self, value: Option<String>) -> Self {
         self.new_group_name = value;
         self
     }
 
-    pub fn new_group_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
+    pub fn with_new_group_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
         self.new_group_external_id = value;
         self
     }
 
-    pub fn new_group_management_type(mut self, value: Option<super::team_common::GroupManagementType>) -> Self {
+    pub fn with_new_group_management_type(mut self, value: Option<super::team_common::GroupManagementType>) -> Self {
         self.new_group_management_type = value;
         self
     }
@@ -5647,7 +5647,7 @@ impl GroupsMembersListArg {
         }
     }
 
-    pub fn limit(mut self, value: u32) -> Self {
+    pub fn with_limit(mut self, value: u32) -> Self {
         self.limit = value;
         self
     }
@@ -6548,7 +6548,7 @@ impl MembersDeactivateArg {
         }
     }
 
-    pub fn wipe_data(mut self, value: bool) -> Self {
+    pub fn with_wipe_data(mut self, value: bool) -> Self {
         self.wipe_data = value;
         self
     }
@@ -6948,7 +6948,7 @@ impl GroupMembersAddArg {
         }
     }
 
-    pub fn return_members(mut self, value: bool) -> Self {
+    pub fn with_return_members(mut self, value: bool) -> Self {
         self.return_members = value;
         self
     }
@@ -8303,17 +8303,17 @@ impl ListMemberDevicesArg {
         }
     }
 
-    pub fn include_web_sessions(mut self, value: bool) -> Self {
+    pub fn with_include_web_sessions(mut self, value: bool) -> Self {
         self.include_web_sessions = value;
         self
     }
 
-    pub fn include_desktop_clients(mut self, value: bool) -> Self {
+    pub fn with_include_desktop_clients(mut self, value: bool) -> Self {
         self.include_desktop_clients = value;
         self
     }
 
-    pub fn include_mobile_clients(mut self, value: bool) -> Self {
+    pub fn with_include_mobile_clients(mut self, value: bool) -> Self {
         self.include_mobile_clients = value;
         self
     }
@@ -8424,7 +8424,7 @@ impl RevokeLinkedApiAppArg {
         }
     }
 
-    pub fn keep_app_folder(mut self, value: bool) -> Self {
+    pub fn with_keep_app_folder(mut self, value: bool) -> Self {
         self.keep_app_folder = value;
         self
     }
@@ -8748,17 +8748,17 @@ impl ApiApp {
         }
     }
 
-    pub fn publisher(mut self, value: Option<String>) -> Self {
+    pub fn with_publisher(mut self, value: Option<String>) -> Self {
         self.publisher = value;
         self
     }
 
-    pub fn publisher_url(mut self, value: Option<String>) -> Self {
+    pub fn with_publisher_url(mut self, value: Option<String>) -> Self {
         self.publisher_url = value;
         self
     }
 
-    pub fn linked(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_linked(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.linked = value;
         self
     }
@@ -9798,17 +9798,17 @@ impl UpdatePropertyTemplateArg {
         }
     }
 
-    pub fn name(mut self, value: Option<String>) -> Self {
+    pub fn with_name(mut self, value: Option<String>) -> Self {
         self.name = value;
         self
     }
 
-    pub fn description(mut self, value: Option<String>) -> Self {
+    pub fn with_description(mut self, value: Option<String>) -> Self {
         self.description = value;
         self
     }
 
-    pub fn add_fields(mut self, value: Option<Vec<super::properties::PropertyFieldTemplate>>) -> Self {
+    pub fn with_add_fields(mut self, value: Option<Vec<super::properties::PropertyFieldTemplate>>) -> Self {
         self.add_fields = value;
         self
     }
@@ -9992,7 +9992,7 @@ impl RevokeDesktopClientArg {
         }
     }
 
-    pub fn delete_on_unlink(mut self, value: bool) -> Self {
+    pub fn with_delete_on_unlink(mut self, value: bool) -> Self {
         self.delete_on_unlink = value;
         self
     }
@@ -10599,22 +10599,22 @@ impl MemberProfile {
         }
     }
 
-    pub fn external_id(mut self, value: Option<String>) -> Self {
+    pub fn with_external_id(mut self, value: Option<String>) -> Self {
         self.external_id = value;
         self
     }
 
-    pub fn account_id(mut self, value: Option<super::users_common::AccountId>) -> Self {
+    pub fn with_account_id(mut self, value: Option<super::users_common::AccountId>) -> Self {
         self.account_id = value;
         self
     }
 
-    pub fn joined_on(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_joined_on(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.joined_on = value;
         self
     }
 
-    pub fn persistent_id(mut self, value: Option<String>) -> Self {
+    pub fn with_persistent_id(mut self, value: Option<String>) -> Self {
         self.persistent_id = value;
         self
     }
@@ -11092,22 +11092,22 @@ impl DesktopClientSession {
         }
     }
 
-    pub fn ip_address(mut self, value: Option<String>) -> Self {
+    pub fn with_ip_address(mut self, value: Option<String>) -> Self {
         self.ip_address = value;
         self
     }
 
-    pub fn country(mut self, value: Option<String>) -> Self {
+    pub fn with_country(mut self, value: Option<String>) -> Self {
         self.country = value;
         self
     }
 
-    pub fn created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.created = value;
         self
     }
 
-    pub fn updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.updated = value;
         self
     }
@@ -12285,17 +12285,17 @@ impl MemberDevices {
         }
     }
 
-    pub fn web_sessions(mut self, value: Option<Vec<ActiveWebSession>>) -> Self {
+    pub fn with_web_sessions(mut self, value: Option<Vec<ActiveWebSession>>) -> Self {
         self.web_sessions = value;
         self
     }
 
-    pub fn desktop_clients(mut self, value: Option<Vec<DesktopClientSession>>) -> Self {
+    pub fn with_desktop_clients(mut self, value: Option<Vec<DesktopClientSession>>) -> Self {
         self.desktop_clients = value;
         self
     }
 
-    pub fn mobile_clients(mut self, value: Option<Vec<MobileClientSession>>) -> Self {
+    pub fn with_mobile_clients(mut self, value: Option<Vec<MobileClientSession>>) -> Self {
         self.mobile_clients = value;
         self
     }
@@ -12464,7 +12464,7 @@ impl MembersAddArg {
         }
     }
 
-    pub fn force_async(mut self, value: bool) -> Self {
+    pub fn with_force_async(mut self, value: bool) -> Self {
         self.force_async = value;
         self
     }
@@ -12903,27 +12903,27 @@ impl ActiveWebSession {
         }
     }
 
-    pub fn ip_address(mut self, value: Option<String>) -> Self {
+    pub fn with_ip_address(mut self, value: Option<String>) -> Self {
         self.ip_address = value;
         self
     }
 
-    pub fn country(mut self, value: Option<String>) -> Self {
+    pub fn with_country(mut self, value: Option<String>) -> Self {
         self.country = value;
         self
     }
 
-    pub fn created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.created = value;
         self
     }
 
-    pub fn updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.updated = value;
         self
     }
 
-    pub fn expires(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_expires(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.expires = value;
         self
     }
@@ -13179,7 +13179,7 @@ impl ListTeamAppsResult {
         }
     }
 
-    pub fn cursor(mut self, value: Option<String>) -> Self {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
         self.cursor = value;
         self
     }
@@ -13995,7 +13995,7 @@ impl ListMembersDevicesResult {
         }
     }
 
-    pub fn cursor(mut self, value: Option<String>) -> Self {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
         self.cursor = value;
         self
     }
@@ -14165,7 +14165,7 @@ impl RevokeLinkedAppStatus {
         }
     }
 
-    pub fn error_type(mut self, value: Option<RevokeLinkedAppError>) -> Self {
+    pub fn with_error_type(mut self, value: Option<RevokeLinkedAppError>) -> Self {
         self.error_type = value;
         self
     }
@@ -14696,12 +14696,12 @@ impl GroupCreateArg {
         }
     }
 
-    pub fn group_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
+    pub fn with_group_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
         self.group_external_id = value;
         self
     }
 
-    pub fn group_management_type(mut self, value: Option<super::team_common::GroupManagementType>) -> Self {
+    pub fn with_group_management_type(mut self, value: Option<super::team_common::GroupManagementType>) -> Self {
         self.group_management_type = value;
         self
     }
@@ -14891,22 +14891,22 @@ impl DeviceSession {
         }
     }
 
-    pub fn ip_address(mut self, value: Option<String>) -> Self {
+    pub fn with_ip_address(mut self, value: Option<String>) -> Self {
         self.ip_address = value;
         self
     }
 
-    pub fn country(mut self, value: Option<String>) -> Self {
+    pub fn with_country(mut self, value: Option<String>) -> Self {
         self.country = value;
         self
     }
 
-    pub fn created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.created = value;
         self
     }
 
-    pub fn updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.updated = value;
         self
     }
@@ -15362,22 +15362,22 @@ impl TeamMemberProfile {
         }
     }
 
-    pub fn external_id(mut self, value: Option<String>) -> Self {
+    pub fn with_external_id(mut self, value: Option<String>) -> Self {
         self.external_id = value;
         self
     }
 
-    pub fn account_id(mut self, value: Option<super::users_common::AccountId>) -> Self {
+    pub fn with_account_id(mut self, value: Option<super::users_common::AccountId>) -> Self {
         self.account_id = value;
         self
     }
 
-    pub fn joined_on(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+    pub fn with_joined_on(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
         self.joined_on = value;
         self
     }
 
-    pub fn persistent_id(mut self, value: Option<String>) -> Self {
+    pub fn with_persistent_id(mut self, value: Option<String>) -> Self {
         self.persistent_id = value;
         self
     }
@@ -15581,27 +15581,27 @@ impl MembersSetProfileArg {
         }
     }
 
-    pub fn new_email(mut self, value: Option<super::common::EmailAddress>) -> Self {
+    pub fn with_new_email(mut self, value: Option<super::common::EmailAddress>) -> Self {
         self.new_email = value;
         self
     }
 
-    pub fn new_external_id(mut self, value: Option<super::team_common::MemberExternalId>) -> Self {
+    pub fn with_new_external_id(mut self, value: Option<super::team_common::MemberExternalId>) -> Self {
         self.new_external_id = value;
         self
     }
 
-    pub fn new_given_name(mut self, value: Option<super::common::NamePart>) -> Self {
+    pub fn with_new_given_name(mut self, value: Option<super::common::NamePart>) -> Self {
         self.new_given_name = value;
         self
     }
 
-    pub fn new_surname(mut self, value: Option<super::common::NamePart>) -> Self {
+    pub fn with_new_surname(mut self, value: Option<super::common::NamePart>) -> Self {
         self.new_surname = value;
         self
     }
 
-    pub fn new_persistent_id(mut self, value: Option<String>) -> Self {
+    pub fn with_new_persistent_id(mut self, value: Option<String>) -> Self {
         self.new_persistent_id = value;
         self
     }
@@ -15825,22 +15825,22 @@ impl MembersRemoveArg {
         }
     }
 
-    pub fn wipe_data(mut self, value: bool) -> Self {
+    pub fn with_wipe_data(mut self, value: bool) -> Self {
         self.wipe_data = value;
         self
     }
 
-    pub fn transfer_dest_id(mut self, value: Option<UserSelectorArg>) -> Self {
+    pub fn with_transfer_dest_id(mut self, value: Option<UserSelectorArg>) -> Self {
         self.transfer_dest_id = value;
         self
     }
 
-    pub fn transfer_admin_id(mut self, value: Option<UserSelectorArg>) -> Self {
+    pub fn with_transfer_admin_id(mut self, value: Option<UserSelectorArg>) -> Self {
         self.transfer_admin_id = value;
         self
     }
 
-    pub fn keep_account(mut self, value: bool) -> Self {
+    pub fn with_keep_account(mut self, value: bool) -> Self {
         self.keep_account = value;
         self
     }

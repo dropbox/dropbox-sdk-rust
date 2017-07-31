@@ -171,12 +171,12 @@ impl GroupSummary {
         }
     }
 
-    pub fn group_external_id(mut self, value: Option<GroupExternalId>) -> Self {
+    pub fn with_group_external_id(mut self, value: Option<GroupExternalId>) -> Self {
         self.group_external_id = value;
         self
     }
 
-    pub fn member_count(mut self, value: Option<u32>) -> Self {
+    pub fn with_member_count(mut self, value: Option<u32>) -> Self {
         self.member_count = value;
         self
     }
