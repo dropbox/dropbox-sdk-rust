@@ -18,6 +18,91 @@ pub fn token_revoke(client: &::client_trait::HttpClient, arg: &()) -> ::Result<R
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "auth/token/revoke", arg, None)
 }
 
+/// Error occurred because the account doesn't have permission to access the resource.
+#[derive(Debug)]
+pub enum AccessError {
+    /// Current account type cannot access the resource.
+    InvalidAccountType(InvalidAccountTypeError),
+    /// Current account cannot access Paper.
+    PaperAccessDenied(PaperAccessError),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AccessError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = AccessError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a AccessError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "invalid_account_type" => {
+                        if map.next_key()? != Some("invalid_account_type") {
+                            return Err(de::Error::missing_field("invalid_account_type"));
+                        }
+                        Ok(AccessError::InvalidAccountType(map.next_value()?))
+                    }
+                    "paper_access_denied" => {
+                        if map.next_key()? != Some("paper_access_denied") {
+                            return Err(de::Error::missing_field("paper_access_denied"));
+                        }
+                        Ok(AccessError::PaperAccessDenied(map.next_value()?))
+                    }
+                    _ => Ok(AccessError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["invalid_account_type",
+                                                    "paper_access_denied",
+                                                    "other"];
+        deserializer.deserialize_struct("AccessError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AccessError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            AccessError::InvalidAccountType(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "invalid_account_type")?;
+                s.serialize_field("invalid_account_type", x)?;
+                s.end()
+            }
+            AccessError::PaperAccessDenied(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "paper_access_denied")?;
+                s.serialize_field("paper_access_denied", x)?;
+                s.end()
+            }
+            AccessError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for AccessError {
+    fn description(&self) -> &str {
+        "AccessError"
+    }
+}
+
+impl ::std::fmt::Display for AccessError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
 /// Errors occurred during authentication.
 #[derive(Debug)]
 pub enum AuthError {
@@ -106,6 +191,150 @@ impl ::std::error::Error for AuthError {
 }
 
 impl ::std::fmt::Display for AuthError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum InvalidAccountTypeError {
+    /// Current account type doesn't have permission to access this route endpoint.
+    Endpoint,
+    /// Current account type doesn't have permission to access this feature.
+    Feature,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for InvalidAccountTypeError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = InvalidAccountTypeError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a InvalidAccountTypeError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "endpoint" => Ok(InvalidAccountTypeError::Endpoint),
+                    "feature" => Ok(InvalidAccountTypeError::Feature),
+                    _ => Ok(InvalidAccountTypeError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["endpoint",
+                                                    "feature",
+                                                    "other"];
+        deserializer.deserialize_struct("InvalidAccountTypeError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for InvalidAccountTypeError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            InvalidAccountTypeError::Endpoint => {
+                // unit
+                let mut s = serializer.serialize_struct("InvalidAccountTypeError", 1)?;
+                s.serialize_field(".tag", "endpoint")?;
+                s.end()
+            }
+            InvalidAccountTypeError::Feature => {
+                // unit
+                let mut s = serializer.serialize_struct("InvalidAccountTypeError", 1)?;
+                s.serialize_field(".tag", "feature")?;
+                s.end()
+            }
+            InvalidAccountTypeError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for InvalidAccountTypeError {
+    fn description(&self) -> &str {
+        "InvalidAccountTypeError"
+    }
+}
+
+impl ::std::fmt::Display for InvalidAccountTypeError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum PaperAccessError {
+    /// Paper is disabled.
+    PaperDisabled,
+    /// The provided user has not used Paper yet.
+    NotPaperUser,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperAccessError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PaperAccessError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperAccessError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "paper_disabled" => Ok(PaperAccessError::PaperDisabled),
+                    "not_paper_user" => Ok(PaperAccessError::NotPaperUser),
+                    _ => Ok(PaperAccessError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["paper_disabled",
+                                                    "not_paper_user",
+                                                    "other"];
+        deserializer.deserialize_struct("PaperAccessError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperAccessError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PaperAccessError::PaperDisabled => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperAccessError", 1)?;
+                s.serialize_field(".tag", "paper_disabled")?;
+                s.end()
+            }
+            PaperAccessError::NotPaperUser => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperAccessError", 1)?;
+                s.serialize_field(".tag", "not_paper_user")?;
+                s.end()
+            }
+            PaperAccessError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for PaperAccessError {
+    fn description(&self) -> &str {
+        "PaperAccessError"
+    }
+}
+
+impl ::std::fmt::Display for PaperAccessError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
     }
@@ -200,25 +429,24 @@ impl ::serde::ser::Serialize for RateLimitError {
     }
 }
 
-/// Error occurred because the account doesn't have permission to access the resource.
 #[derive(Debug)]
-pub enum AccessError {
-    /// Current account type cannot access the resource.
-    InvalidAccountType(InvalidAccountTypeError),
-    /// Current account cannot access Paper.
-    PaperAccessDenied(PaperAccessError),
+pub enum RateLimitReason {
+    /// You are making too many requests in the past few minutes.
+    TooManyRequests,
+    /// There are currently too many write operations happening in the user's Dropbox.
+    TooManyWriteOperations,
     Other,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for AccessError {
+impl<'de> ::serde::de::Deserialize<'de> for RateLimitReason {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = AccessError;
+            type Value = RateLimitReason;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a AccessError structure")
+                f.write_str("a RateLimitReason structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -226,62 +454,38 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "invalid_account_type" => {
-                        if map.next_key()? != Some("invalid_account_type") {
-                            return Err(de::Error::missing_field("invalid_account_type"));
-                        }
-                        Ok(AccessError::InvalidAccountType(map.next_value()?))
-                    }
-                    "paper_access_denied" => {
-                        if map.next_key()? != Some("paper_access_denied") {
-                            return Err(de::Error::missing_field("paper_access_denied"));
-                        }
-                        Ok(AccessError::PaperAccessDenied(map.next_value()?))
-                    }
-                    _ => Ok(AccessError::Other)
+                    "too_many_requests" => Ok(RateLimitReason::TooManyRequests),
+                    "too_many_write_operations" => Ok(RateLimitReason::TooManyWriteOperations),
+                    _ => Ok(RateLimitReason::Other)
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_account_type",
-                                                    "paper_access_denied",
+        const VARIANTS: &'static [&'static str] = &["too_many_requests",
+                                                    "too_many_write_operations",
                                                     "other"];
-        deserializer.deserialize_struct("AccessError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("RateLimitReason", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for AccessError {
+impl ::serde::ser::Serialize for RateLimitReason {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            AccessError::InvalidAccountType(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "invalid_account_type")?;
-                s.serialize_field("invalid_account_type", x)?;
+            RateLimitReason::TooManyRequests => {
+                // unit
+                let mut s = serializer.serialize_struct("RateLimitReason", 1)?;
+                s.serialize_field(".tag", "too_many_requests")?;
                 s.end()
             }
-            AccessError::PaperAccessDenied(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "paper_access_denied")?;
-                s.serialize_field("paper_access_denied", x)?;
+            RateLimitReason::TooManyWriteOperations => {
+                // unit
+                let mut s = serializer.serialize_struct("RateLimitReason", 1)?;
+                s.serialize_field(".tag", "too_many_write_operations")?;
                 s.end()
             }
-            AccessError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            RateLimitReason::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
-    }
-}
-
-impl ::std::error::Error for AccessError {
-    fn description(&self) -> &str {
-        "AccessError"
-    }
-}
-
-impl ::std::fmt::Display for AccessError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
     }
 }
 
@@ -369,138 +573,6 @@ impl ::serde::ser::Serialize for TokenFromOAuth1Arg {
 }
 
 #[derive(Debug)]
-pub enum InvalidAccountTypeError {
-    /// Current account type doesn't have permission to access this route endpoint.
-    Endpoint,
-    /// Current account type doesn't have permission to access this feature.
-    Feature,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for InvalidAccountTypeError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = InvalidAccountTypeError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a InvalidAccountTypeError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "endpoint" => Ok(InvalidAccountTypeError::Endpoint),
-                    "feature" => Ok(InvalidAccountTypeError::Feature),
-                    _ => Ok(InvalidAccountTypeError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["endpoint",
-                                                    "feature",
-                                                    "other"];
-        deserializer.deserialize_struct("InvalidAccountTypeError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for InvalidAccountTypeError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            InvalidAccountTypeError::Endpoint => {
-                // unit
-                let mut s = serializer.serialize_struct("InvalidAccountTypeError", 1)?;
-                s.serialize_field(".tag", "endpoint")?;
-                s.end()
-            }
-            InvalidAccountTypeError::Feature => {
-                // unit
-                let mut s = serializer.serialize_struct("InvalidAccountTypeError", 1)?;
-                s.serialize_field(".tag", "feature")?;
-                s.end()
-            }
-            InvalidAccountTypeError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for InvalidAccountTypeError {
-    fn description(&self) -> &str {
-        "InvalidAccountTypeError"
-    }
-}
-
-impl ::std::fmt::Display for InvalidAccountTypeError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub enum RateLimitReason {
-    /// You are making too many requests in the past few minutes.
-    TooManyRequests,
-    /// There are currently too many write operations happening in the user's Dropbox.
-    TooManyWriteOperations,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for RateLimitReason {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = RateLimitReason;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RateLimitReason structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "too_many_requests" => Ok(RateLimitReason::TooManyRequests),
-                    "too_many_write_operations" => Ok(RateLimitReason::TooManyWriteOperations),
-                    _ => Ok(RateLimitReason::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["too_many_requests",
-                                                    "too_many_write_operations",
-                                                    "other"];
-        deserializer.deserialize_struct("RateLimitReason", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for RateLimitReason {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            RateLimitReason::TooManyRequests => {
-                // unit
-                let mut s = serializer.serialize_struct("RateLimitReason", 1)?;
-                s.serialize_field(".tag", "too_many_requests")?;
-                s.end()
-            }
-            RateLimitReason::TooManyWriteOperations => {
-                // unit
-                let mut s = serializer.serialize_struct("RateLimitReason", 1)?;
-                s.serialize_field(".tag", "too_many_write_operations")?;
-                s.end()
-            }
-            RateLimitReason::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-#[derive(Debug)]
 pub enum TokenFromOAuth1Error {
     /// Part or all of the OAuth 1.0 access token info is invalid.
     InvalidOauth1TokenInfo,
@@ -567,78 +639,6 @@ impl ::std::error::Error for TokenFromOAuth1Error {
 }
 
 impl ::std::fmt::Display for TokenFromOAuth1Error {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub enum PaperAccessError {
-    /// Paper is disabled.
-    PaperDisabled,
-    /// The provided user has not used Paper yet.
-    NotPaperUser,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PaperAccessError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = PaperAccessError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PaperAccessError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "paper_disabled" => Ok(PaperAccessError::PaperDisabled),
-                    "not_paper_user" => Ok(PaperAccessError::NotPaperUser),
-                    _ => Ok(PaperAccessError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["paper_disabled",
-                                                    "not_paper_user",
-                                                    "other"];
-        deserializer.deserialize_struct("PaperAccessError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PaperAccessError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            PaperAccessError::PaperDisabled => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperAccessError", 1)?;
-                s.serialize_field(".tag", "paper_disabled")?;
-                s.end()
-            }
-            PaperAccessError::NotPaperUser => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperAccessError", 1)?;
-                s.serialize_field(".tag", "not_paper_user")?;
-                s.end()
-            }
-            PaperAccessError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for PaperAccessError {
-    fn description(&self) -> &str {
-        "PaperAccessError"
-    }
-}
-
-impl ::std::fmt::Display for PaperAccessError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
     }

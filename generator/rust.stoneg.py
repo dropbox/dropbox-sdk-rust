@@ -63,7 +63,7 @@ class RustGenerator(CodeGenerator):
             for fn in namespace.routes:
                 self._emit_route(namespace.name, fn)
 
-            for typ in namespace.data_type_by_name.values():
+            for typ in namespace.data_types:
                 if isinstance(typ, data_type.Struct):
                     if typ.has_enumerated_subtypes():
                         self._emit_polymorphic_struct(typ)

@@ -103,6 +103,1512 @@ pub fn docs_users_remove(client: &::client_trait::HttpClient, arg: &RemovePaperD
 }
 
 #[derive(Debug)]
+pub struct AddMember {
+    /// User which should be added to the Paper doc. Specify only email address or Dropbox account
+    /// ID.
+    pub member: super::sharing::MemberSelector,
+    /// Permission for the user.
+    pub permission_level: PaperDocPermissionLevel,
+}
+
+impl AddMember {
+    pub fn new(member: super::sharing::MemberSelector) -> Self {
+        AddMember {
+            member,
+            permission_level: PaperDocPermissionLevel::Edit,
+        }
+    }
+
+    pub fn with_permission_level(mut self, value: PaperDocPermissionLevel) -> Self {
+        self.permission_level = value;
+        self
+    }
+
+}
+
+const ADD_MEMBER_FIELDS: &'static [&'static str] = &["member",
+                                                     "permission_level"];
+impl AddMember {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddMember, V::Error> {
+        use serde::de;
+        let mut field_member = None;
+        let mut field_permission_level = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "member" => {
+                    if field_member.is_some() {
+                        return Err(de::Error::duplicate_field("member"));
+                    }
+                    field_member = Some(map.next_value()?);
+                }
+                "permission_level" => {
+                    if field_permission_level.is_some() {
+                        return Err(de::Error::duplicate_field("permission_level"));
+                    }
+                    field_permission_level = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, ADD_MEMBER_FIELDS))
+            }
+        }
+        Ok(AddMember {
+            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
+            permission_level: field_permission_level.unwrap_or_else(|| PaperDocPermissionLevel::Edit),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("member", &self.member)?;
+        s.serialize_field("permission_level", &self.permission_level)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AddMember {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = AddMember;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a AddMember struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                AddMember::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("AddMember", ADD_MEMBER_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AddMember {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("AddMember", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct AddPaperDocUser {
+    /// The Paper doc ID.
+    pub doc_id: PaperDocId,
+    /// User which should be added to the Paper doc. Specify only email address or Dropbox account
+    /// ID.
+    pub members: Vec<AddMember>,
+    /// A personal message that will be emailed to each successfully added member.
+    pub custom_message: Option<String>,
+    /// Clients should set this to true if no email message shall be sent to added users.
+    pub quiet: bool,
+}
+
+impl AddPaperDocUser {
+    pub fn new(doc_id: PaperDocId, members: Vec<AddMember>) -> Self {
+        AddPaperDocUser {
+            doc_id,
+            members,
+            custom_message: None,
+            quiet: false,
+        }
+    }
+
+    pub fn with_custom_message(mut self, value: Option<String>) -> Self {
+        self.custom_message = value;
+        self
+    }
+
+    pub fn with_quiet(mut self, value: bool) -> Self {
+        self.quiet = value;
+        self
+    }
+
+}
+
+const ADD_PAPER_DOC_USER_FIELDS: &'static [&'static str] = &["doc_id",
+                                                             "members",
+                                                             "custom_message",
+                                                             "quiet"];
+impl AddPaperDocUser {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddPaperDocUser, V::Error> {
+        use serde::de;
+        let mut field_doc_id = None;
+        let mut field_members = None;
+        let mut field_custom_message = None;
+        let mut field_quiet = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "doc_id" => {
+                    if field_doc_id.is_some() {
+                        return Err(de::Error::duplicate_field("doc_id"));
+                    }
+                    field_doc_id = Some(map.next_value()?);
+                }
+                "members" => {
+                    if field_members.is_some() {
+                        return Err(de::Error::duplicate_field("members"));
+                    }
+                    field_members = Some(map.next_value()?);
+                }
+                "custom_message" => {
+                    if field_custom_message.is_some() {
+                        return Err(de::Error::duplicate_field("custom_message"));
+                    }
+                    field_custom_message = Some(map.next_value()?);
+                }
+                "quiet" => {
+                    if field_quiet.is_some() {
+                        return Err(de::Error::duplicate_field("quiet"));
+                    }
+                    field_quiet = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, ADD_PAPER_DOC_USER_FIELDS))
+            }
+        }
+        Ok(AddPaperDocUser {
+            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
+            members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
+            custom_message: field_custom_message,
+            quiet: field_quiet.unwrap_or(false),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("doc_id", &self.doc_id)?;
+        s.serialize_field("members", &self.members)?;
+        s.serialize_field("custom_message", &self.custom_message)?;
+        s.serialize_field("quiet", &self.quiet)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AddPaperDocUser {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = AddPaperDocUser;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a AddPaperDocUser struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                AddPaperDocUser::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("AddPaperDocUser", ADD_PAPER_DOC_USER_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AddPaperDocUser {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("AddPaperDocUser", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Per-member result for :route:`docs/users/add`.
+#[derive(Debug)]
+pub struct AddPaperDocUserMemberResult {
+    /// One of specified input members.
+    pub member: super::sharing::MemberSelector,
+    /// The outcome of the action on this member.
+    pub result: AddPaperDocUserResult,
+}
+
+impl AddPaperDocUserMemberResult {
+    pub fn new(member: super::sharing::MemberSelector, result: AddPaperDocUserResult) -> Self {
+        AddPaperDocUserMemberResult {
+            member,
+            result,
+        }
+    }
+
+}
+
+const ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS: &'static [&'static str] = &["member",
+                                                                           "result"];
+impl AddPaperDocUserMemberResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddPaperDocUserMemberResult, V::Error> {
+        use serde::de;
+        let mut field_member = None;
+        let mut field_result = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "member" => {
+                    if field_member.is_some() {
+                        return Err(de::Error::duplicate_field("member"));
+                    }
+                    field_member = Some(map.next_value()?);
+                }
+                "result" => {
+                    if field_result.is_some() {
+                        return Err(de::Error::duplicate_field("result"));
+                    }
+                    field_result = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS))
+            }
+        }
+        Ok(AddPaperDocUserMemberResult {
+            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
+            result: field_result.ok_or_else(|| de::Error::missing_field("result"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("member", &self.member)?;
+        s.serialize_field("result", &self.result)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AddPaperDocUserMemberResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = AddPaperDocUserMemberResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a AddPaperDocUserMemberResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                AddPaperDocUserMemberResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("AddPaperDocUserMemberResult", ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AddPaperDocUserMemberResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("AddPaperDocUserMemberResult", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum AddPaperDocUserResult {
+    /// User was successfully added to the Paper doc.
+    Success,
+    /// Something unexpected happened when trying to add the user to the Paper doc.
+    UnknownError,
+    /// The Paper doc can be shared only with team members.
+    SharingOutsideTeamDisabled,
+    /// The daily limit of how many users can be added to the Paper doc was reached.
+    DailyLimitReached,
+    /// Owner's permissions cannot be changed.
+    UserIsOwner,
+    /// User data could not be retrieved. Clients should retry.
+    FailedUserDataRetrieval,
+    /// This user already has the correct permission to the Paper doc.
+    PermissionAlreadyGranted,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AddPaperDocUserResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = AddPaperDocUserResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a AddPaperDocUserResult structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "success" => Ok(AddPaperDocUserResult::Success),
+                    "unknown_error" => Ok(AddPaperDocUserResult::UnknownError),
+                    "sharing_outside_team_disabled" => Ok(AddPaperDocUserResult::SharingOutsideTeamDisabled),
+                    "daily_limit_reached" => Ok(AddPaperDocUserResult::DailyLimitReached),
+                    "user_is_owner" => Ok(AddPaperDocUserResult::UserIsOwner),
+                    "failed_user_data_retrieval" => Ok(AddPaperDocUserResult::FailedUserDataRetrieval),
+                    "permission_already_granted" => Ok(AddPaperDocUserResult::PermissionAlreadyGranted),
+                    _ => Ok(AddPaperDocUserResult::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["success",
+                                                    "unknown_error",
+                                                    "sharing_outside_team_disabled",
+                                                    "daily_limit_reached",
+                                                    "user_is_owner",
+                                                    "failed_user_data_retrieval",
+                                                    "permission_already_granted",
+                                                    "other"];
+        deserializer.deserialize_struct("AddPaperDocUserResult", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AddPaperDocUserResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            AddPaperDocUserResult::Success => {
+                // unit
+                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
+                s.serialize_field(".tag", "success")?;
+                s.end()
+            }
+            AddPaperDocUserResult::UnknownError => {
+                // unit
+                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
+                s.serialize_field(".tag", "unknown_error")?;
+                s.end()
+            }
+            AddPaperDocUserResult::SharingOutsideTeamDisabled => {
+                // unit
+                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
+                s.serialize_field(".tag", "sharing_outside_team_disabled")?;
+                s.end()
+            }
+            AddPaperDocUserResult::DailyLimitReached => {
+                // unit
+                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
+                s.serialize_field(".tag", "daily_limit_reached")?;
+                s.end()
+            }
+            AddPaperDocUserResult::UserIsOwner => {
+                // unit
+                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
+                s.serialize_field(".tag", "user_is_owner")?;
+                s.end()
+            }
+            AddPaperDocUserResult::FailedUserDataRetrieval => {
+                // unit
+                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
+                s.serialize_field(".tag", "failed_user_data_retrieval")?;
+                s.end()
+            }
+            AddPaperDocUserResult::PermissionAlreadyGranted => {
+                // unit
+                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
+                s.serialize_field(".tag", "permission_already_granted")?;
+                s.end()
+            }
+            AddPaperDocUserResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct Cursor {
+    /// The actual cursor value.
+    pub value: String,
+    /// Expiration time of :field:`value`. Some cursors might have expiration time assigned. This is
+    /// a UTC value after which the cursor is no longer valid and the API starts returning an error.
+    /// If cursor expires a new one needs to be obtained and pagination needs to be restarted. Some
+    /// cursors might be short-lived some cursors might be long-lived. This really depends on the
+    /// sorting type and order, e.g.: 1. on one hand, listing docs created by the user, sorted by
+    /// the created time ascending will have undefinite expiration because the results cannot change
+    /// while the iteration is happening. This cursor would be suitable for long term polling. 2. on
+    /// the other hand, listing docs sorted by the last modified time will have a very short
+    /// expiration as docs do get modified very often and the modified time can be changed while the
+    /// iteration is happening thus altering the results.
+    pub expiration: Option<super::common::DropboxTimestamp>,
+}
+
+impl Cursor {
+    pub fn new(value: String) -> Self {
+        Cursor {
+            value,
+            expiration: None,
+        }
+    }
+
+    pub fn with_expiration(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.expiration = value;
+        self
+    }
+
+}
+
+const CURSOR_FIELDS: &'static [&'static str] = &["value",
+                                                 "expiration"];
+impl Cursor {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Cursor, V::Error> {
+        use serde::de;
+        let mut field_value = None;
+        let mut field_expiration = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "value" => {
+                    if field_value.is_some() {
+                        return Err(de::Error::duplicate_field("value"));
+                    }
+                    field_value = Some(map.next_value()?);
+                }
+                "expiration" => {
+                    if field_expiration.is_some() {
+                        return Err(de::Error::duplicate_field("expiration"));
+                    }
+                    field_expiration = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, CURSOR_FIELDS))
+            }
+        }
+        Ok(Cursor {
+            value: field_value.ok_or_else(|| de::Error::missing_field("value"))?,
+            expiration: field_expiration,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("value", &self.value)?;
+        s.serialize_field("expiration", &self.expiration)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for Cursor {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = Cursor;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a Cursor struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                Cursor::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("Cursor", CURSOR_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for Cursor {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("Cursor", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum DocLookupError {
+    /// Your account does not have permissions to perform this action.
+    InsufficientPermissions,
+    Other,
+    /// The required doc was not found.
+    DocNotFound,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DocLookupError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = DocLookupError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DocLookupError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "insufficient_permissions" => Ok(DocLookupError::InsufficientPermissions),
+                    "doc_not_found" => Ok(DocLookupError::DocNotFound),
+                    _ => Ok(DocLookupError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["insufficient_permissions",
+                                                    "other",
+                                                    "doc_not_found"];
+        deserializer.deserialize_struct("DocLookupError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DocLookupError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            DocLookupError::InsufficientPermissions => {
+                // unit
+                let mut s = serializer.serialize_struct("DocLookupError", 1)?;
+                s.serialize_field(".tag", "insufficient_permissions")?;
+                s.end()
+            }
+            DocLookupError::DocNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("DocLookupError", 1)?;
+                s.serialize_field(".tag", "doc_not_found")?;
+                s.end()
+            }
+            DocLookupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for DocLookupError {
+    fn description(&self) -> &str {
+        "DocLookupError"
+    }
+}
+
+impl ::std::fmt::Display for DocLookupError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// The subscription level of a Paper doc.
+#[derive(Debug)]
+pub enum DocSubscriptionLevel {
+    /// No change email messages unless you're the creator.
+    DefaultVariant,
+    /// Ignored: Not shown in pad lists or activity and no email message is sent.
+    Ignore,
+    /// Subscribed: Shown in pad lists and activity and change email messages are sent.
+    Every,
+    /// Unsubscribed: Shown in pad lists, but not in activity and no change email messages are sent.
+    NoEmail,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DocSubscriptionLevel {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = DocSubscriptionLevel;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DocSubscriptionLevel structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "default" => Ok(DocSubscriptionLevel::DefaultVariant),
+                    "ignore" => Ok(DocSubscriptionLevel::Ignore),
+                    "every" => Ok(DocSubscriptionLevel::Every),
+                    "no_email" => Ok(DocSubscriptionLevel::NoEmail),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["default",
+                                                    "ignore",
+                                                    "every",
+                                                    "no_email"];
+        deserializer.deserialize_struct("DocSubscriptionLevel", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DocSubscriptionLevel {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            DocSubscriptionLevel::DefaultVariant => {
+                // unit
+                let mut s = serializer.serialize_struct("DocSubscriptionLevel", 1)?;
+                s.serialize_field(".tag", "default")?;
+                s.end()
+            }
+            DocSubscriptionLevel::Ignore => {
+                // unit
+                let mut s = serializer.serialize_struct("DocSubscriptionLevel", 1)?;
+                s.serialize_field(".tag", "ignore")?;
+                s.end()
+            }
+            DocSubscriptionLevel::Every => {
+                // unit
+                let mut s = serializer.serialize_struct("DocSubscriptionLevel", 1)?;
+                s.serialize_field(".tag", "every")?;
+                s.end()
+            }
+            DocSubscriptionLevel::NoEmail => {
+                // unit
+                let mut s = serializer.serialize_struct("DocSubscriptionLevel", 1)?;
+                s.serialize_field(".tag", "no_email")?;
+                s.end()
+            }
+        }
+    }
+}
+
+/// The desired export format of the Paper doc.
+#[derive(Debug)]
+pub enum ExportFormat {
+    /// The HTML export format.
+    Html,
+    /// The markdown export format.
+    Markdown,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExportFormat {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ExportFormat;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ExportFormat structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "html" => Ok(ExportFormat::Html),
+                    "markdown" => Ok(ExportFormat::Markdown),
+                    _ => Ok(ExportFormat::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["html",
+                                                    "markdown",
+                                                    "other"];
+        deserializer.deserialize_struct("ExportFormat", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExportFormat {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ExportFormat::Html => {
+                // unit
+                let mut s = serializer.serialize_struct("ExportFormat", 1)?;
+                s.serialize_field(".tag", "html")?;
+                s.end()
+            }
+            ExportFormat::Markdown => {
+                // unit
+                let mut s = serializer.serialize_struct("ExportFormat", 1)?;
+                s.serialize_field(".tag", "markdown")?;
+                s.end()
+            }
+            ExportFormat::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Data structure representing a Paper folder.
+#[derive(Debug)]
+pub struct Folder {
+    /// Paper folder ID. This ID uniquely identifies the folder.
+    pub id: String,
+    /// Paper folder name.
+    pub name: String,
+}
+
+impl Folder {
+    pub fn new(id: String, name: String) -> Self {
+        Folder {
+            id,
+            name,
+        }
+    }
+
+}
+
+const FOLDER_FIELDS: &'static [&'static str] = &["id",
+                                                 "name"];
+impl Folder {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Folder, V::Error> {
+        use serde::de;
+        let mut field_id = None;
+        let mut field_name = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "id" => {
+                    if field_id.is_some() {
+                        return Err(de::Error::duplicate_field("id"));
+                    }
+                    field_id = Some(map.next_value()?);
+                }
+                "name" => {
+                    if field_name.is_some() {
+                        return Err(de::Error::duplicate_field("name"));
+                    }
+                    field_name = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, FOLDER_FIELDS))
+            }
+        }
+        Ok(Folder {
+            id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
+            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("id", &self.id)?;
+        s.serialize_field("name", &self.name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for Folder {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = Folder;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a Folder struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                Folder::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("Folder", FOLDER_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for Folder {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("Folder", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// The sharing policy of a Paper folder.  Note: The sharing policy of subfolders is inherited from
+/// the root folder.
+#[derive(Debug)]
+pub enum FolderSharingPolicyType {
+    /// Everyone in your team and anyone directly invited can access this folder.
+    Team,
+    /// Only people directly invited can access this folder.
+    InviteOnly,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FolderSharingPolicyType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = FolderSharingPolicyType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a FolderSharingPolicyType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "team" => Ok(FolderSharingPolicyType::Team),
+                    "invite_only" => Ok(FolderSharingPolicyType::InviteOnly),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["team",
+                                                    "invite_only"];
+        deserializer.deserialize_struct("FolderSharingPolicyType", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FolderSharingPolicyType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            FolderSharingPolicyType::Team => {
+                // unit
+                let mut s = serializer.serialize_struct("FolderSharingPolicyType", 1)?;
+                s.serialize_field(".tag", "team")?;
+                s.end()
+            }
+            FolderSharingPolicyType::InviteOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("FolderSharingPolicyType", 1)?;
+                s.serialize_field(".tag", "invite_only")?;
+                s.end()
+            }
+        }
+    }
+}
+
+/// The subscription level of a Paper folder.
+#[derive(Debug)]
+pub enum FolderSubscriptionLevel {
+    /// Not shown in activity, no email messages.
+    NoneVariant,
+    /// Shown in activity, no email messages.
+    ActivityOnly,
+    /// Shown in activity, daily email messages.
+    DailyEmails,
+    /// Shown in activity, weekly email messages.
+    WeeklyEmails,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FolderSubscriptionLevel {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = FolderSubscriptionLevel;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a FolderSubscriptionLevel structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "none" => Ok(FolderSubscriptionLevel::NoneVariant),
+                    "activity_only" => Ok(FolderSubscriptionLevel::ActivityOnly),
+                    "daily_emails" => Ok(FolderSubscriptionLevel::DailyEmails),
+                    "weekly_emails" => Ok(FolderSubscriptionLevel::WeeklyEmails),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["none",
+                                                    "activity_only",
+                                                    "daily_emails",
+                                                    "weekly_emails"];
+        deserializer.deserialize_struct("FolderSubscriptionLevel", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FolderSubscriptionLevel {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            FolderSubscriptionLevel::NoneVariant => {
+                // unit
+                let mut s = serializer.serialize_struct("FolderSubscriptionLevel", 1)?;
+                s.serialize_field(".tag", "none")?;
+                s.end()
+            }
+            FolderSubscriptionLevel::ActivityOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("FolderSubscriptionLevel", 1)?;
+                s.serialize_field(".tag", "activity_only")?;
+                s.end()
+            }
+            FolderSubscriptionLevel::DailyEmails => {
+                // unit
+                let mut s = serializer.serialize_struct("FolderSubscriptionLevel", 1)?;
+                s.serialize_field(".tag", "daily_emails")?;
+                s.end()
+            }
+            FolderSubscriptionLevel::WeeklyEmails => {
+                // unit
+                let mut s = serializer.serialize_struct("FolderSubscriptionLevel", 1)?;
+                s.serialize_field(".tag", "weekly_emails")?;
+                s.end()
+            }
+        }
+    }
+}
+
+/// Metadata about Paper folders containing the specififed Paper doc.
+#[derive(Debug)]
+pub struct FoldersContainingPaperDoc {
+    /// The sharing policy of the folder containing the Paper doc.
+    pub folder_sharing_policy_type: Option<FolderSharingPolicyType>,
+    /// The folder path. If present the first folder is the root folder.
+    pub folders: Option<Vec<Folder>>,
+}
+
+impl Default for FoldersContainingPaperDoc {
+    fn default() -> Self {
+        FoldersContainingPaperDoc {
+            folder_sharing_policy_type: None,
+            folders: None,
+        }
+    }
+}
+
+const FOLDERS_CONTAINING_PAPER_DOC_FIELDS: &'static [&'static str] = &["folder_sharing_policy_type",
+                                                                       "folders"];
+impl FoldersContainingPaperDoc {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FoldersContainingPaperDoc, V::Error> {
+        use serde::de;
+        let mut field_folder_sharing_policy_type = None;
+        let mut field_folders = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "folder_sharing_policy_type" => {
+                    if field_folder_sharing_policy_type.is_some() {
+                        return Err(de::Error::duplicate_field("folder_sharing_policy_type"));
+                    }
+                    field_folder_sharing_policy_type = Some(map.next_value()?);
+                }
+                "folders" => {
+                    if field_folders.is_some() {
+                        return Err(de::Error::duplicate_field("folders"));
+                    }
+                    field_folders = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, FOLDERS_CONTAINING_PAPER_DOC_FIELDS))
+            }
+        }
+        Ok(FoldersContainingPaperDoc {
+            folder_sharing_policy_type: field_folder_sharing_policy_type,
+            folders: field_folders,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("folder_sharing_policy_type", &self.folder_sharing_policy_type)?;
+        s.serialize_field("folders", &self.folders)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FoldersContainingPaperDoc {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = FoldersContainingPaperDoc;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a FoldersContainingPaperDoc struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                FoldersContainingPaperDoc::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("FoldersContainingPaperDoc", FOLDERS_CONTAINING_PAPER_DOC_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FoldersContainingPaperDoc {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("FoldersContainingPaperDoc", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct InviteeInfoWithPermissionLevel {
+    /// Email address invited to the Paper doc.
+    pub invitee: super::sharing::InviteeInfo,
+    /// Permission level for the invitee.
+    pub permission_level: PaperDocPermissionLevel,
+}
+
+impl InviteeInfoWithPermissionLevel {
+    pub fn new(invitee: super::sharing::InviteeInfo, permission_level: PaperDocPermissionLevel) -> Self {
+        InviteeInfoWithPermissionLevel {
+            invitee,
+            permission_level,
+        }
+    }
+
+}
+
+const INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS: &'static [&'static str] = &["invitee",
+                                                                             "permission_level"];
+impl InviteeInfoWithPermissionLevel {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<InviteeInfoWithPermissionLevel, V::Error> {
+        use serde::de;
+        let mut field_invitee = None;
+        let mut field_permission_level = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "invitee" => {
+                    if field_invitee.is_some() {
+                        return Err(de::Error::duplicate_field("invitee"));
+                    }
+                    field_invitee = Some(map.next_value()?);
+                }
+                "permission_level" => {
+                    if field_permission_level.is_some() {
+                        return Err(de::Error::duplicate_field("permission_level"));
+                    }
+                    field_permission_level = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS))
+            }
+        }
+        Ok(InviteeInfoWithPermissionLevel {
+            invitee: field_invitee.ok_or_else(|| de::Error::missing_field("invitee"))?,
+            permission_level: field_permission_level.ok_or_else(|| de::Error::missing_field("permission_level"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("invitee", &self.invitee)?;
+        s.serialize_field("permission_level", &self.permission_level)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for InviteeInfoWithPermissionLevel {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = InviteeInfoWithPermissionLevel;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a InviteeInfoWithPermissionLevel struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                InviteeInfoWithPermissionLevel::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("InviteeInfoWithPermissionLevel", INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for InviteeInfoWithPermissionLevel {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("InviteeInfoWithPermissionLevel", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum ListDocsCursorError {
+    CursorError(PaperApiCursorError),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListDocsCursorError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ListDocsCursorError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListDocsCursorError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "cursor_error" => {
+                        if map.next_key()? != Some("cursor_error") {
+                            return Err(de::Error::missing_field("cursor_error"));
+                        }
+                        Ok(ListDocsCursorError::CursorError(map.next_value()?))
+                    }
+                    _ => Ok(ListDocsCursorError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["cursor_error",
+                                                    "other"];
+        deserializer.deserialize_struct("ListDocsCursorError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListDocsCursorError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ListDocsCursorError::CursorError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "cursor_error")?;
+                s.serialize_field("cursor_error", x)?;
+                s.end()
+            }
+            ListDocsCursorError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for ListDocsCursorError {
+    fn description(&self) -> &str {
+        "ListDocsCursorError"
+    }
+}
+
+impl ::std::fmt::Display for ListDocsCursorError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct ListPaperDocsArgs {
+    /// Allows user to specify how the Paper docs should be filtered.
+    pub filter_by: ListPaperDocsFilterBy,
+    /// Allows user to specify how the Paper docs should be sorted.
+    pub sort_by: ListPaperDocsSortBy,
+    /// Allows user to specify the sort order of the result.
+    pub sort_order: ListPaperDocsSortOrder,
+    /// Size limit per batch. The maximum number of docs that can be retrieved per batch is 1000.
+    /// Higher value results in invalid arguments error.
+    pub limit: i32,
+}
+
+impl Default for ListPaperDocsArgs {
+    fn default() -> Self {
+        ListPaperDocsArgs {
+            filter_by: ListPaperDocsFilterBy::DocsAccessed,
+            sort_by: ListPaperDocsSortBy::Accessed,
+            sort_order: ListPaperDocsSortOrder::Ascending,
+            limit: 1000,
+        }
+    }
+}
+
+const LIST_PAPER_DOCS_ARGS_FIELDS: &'static [&'static str] = &["filter_by",
+                                                               "sort_by",
+                                                               "sort_order",
+                                                               "limit"];
+impl ListPaperDocsArgs {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListPaperDocsArgs, V::Error> {
+        use serde::de;
+        let mut field_filter_by = None;
+        let mut field_sort_by = None;
+        let mut field_sort_order = None;
+        let mut field_limit = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "filter_by" => {
+                    if field_filter_by.is_some() {
+                        return Err(de::Error::duplicate_field("filter_by"));
+                    }
+                    field_filter_by = Some(map.next_value()?);
+                }
+                "sort_by" => {
+                    if field_sort_by.is_some() {
+                        return Err(de::Error::duplicate_field("sort_by"));
+                    }
+                    field_sort_by = Some(map.next_value()?);
+                }
+                "sort_order" => {
+                    if field_sort_order.is_some() {
+                        return Err(de::Error::duplicate_field("sort_order"));
+                    }
+                    field_sort_order = Some(map.next_value()?);
+                }
+                "limit" => {
+                    if field_limit.is_some() {
+                        return Err(de::Error::duplicate_field("limit"));
+                    }
+                    field_limit = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_PAPER_DOCS_ARGS_FIELDS))
+            }
+        }
+        Ok(ListPaperDocsArgs {
+            filter_by: field_filter_by.unwrap_or_else(|| ListPaperDocsFilterBy::DocsAccessed),
+            sort_by: field_sort_by.unwrap_or_else(|| ListPaperDocsSortBy::Accessed),
+            sort_order: field_sort_order.unwrap_or_else(|| ListPaperDocsSortOrder::Ascending),
+            limit: field_limit.unwrap_or(1000),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("filter_by", &self.filter_by)?;
+        s.serialize_field("sort_by", &self.sort_by)?;
+        s.serialize_field("sort_order", &self.sort_order)?;
+        s.serialize_field("limit", &self.limit)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListPaperDocsArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListPaperDocsArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListPaperDocsArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListPaperDocsArgs", LIST_PAPER_DOCS_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListPaperDocsArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListPaperDocsArgs", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ListPaperDocsContinueArgs {
+    /// The cursor obtained from :route:`docs/list` or :route:`docs/list/continue`. Allows for
+    /// pagination.
+    pub cursor: String,
+}
+
+impl ListPaperDocsContinueArgs {
+    pub fn new(cursor: String) -> Self {
+        ListPaperDocsContinueArgs {
+            cursor,
+        }
+    }
+
+}
+
+const LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS: &'static [&'static str] = &["cursor"];
+impl ListPaperDocsContinueArgs {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListPaperDocsContinueArgs, V::Error> {
+        use serde::de;
+        let mut field_cursor = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS))
+            }
+        }
+        Ok(ListPaperDocsContinueArgs {
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("cursor", &self.cursor)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsContinueArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListPaperDocsContinueArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListPaperDocsContinueArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListPaperDocsContinueArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListPaperDocsContinueArgs", LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListPaperDocsContinueArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListPaperDocsContinueArgs", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum ListPaperDocsFilterBy {
+    /// Fetches all Paper doc IDs that the user has ever accessed.
+    DocsAccessed,
+    /// Fetches only the Paper doc IDs that the user has created.
+    DocsCreated,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsFilterBy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ListPaperDocsFilterBy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListPaperDocsFilterBy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "docs_accessed" => Ok(ListPaperDocsFilterBy::DocsAccessed),
+                    "docs_created" => Ok(ListPaperDocsFilterBy::DocsCreated),
+                    _ => Ok(ListPaperDocsFilterBy::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["docs_accessed",
+                                                    "docs_created",
+                                                    "other"];
+        deserializer.deserialize_struct("ListPaperDocsFilterBy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListPaperDocsFilterBy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ListPaperDocsFilterBy::DocsAccessed => {
+                // unit
+                let mut s = serializer.serialize_struct("ListPaperDocsFilterBy", 1)?;
+                s.serialize_field(".tag", "docs_accessed")?;
+                s.end()
+            }
+            ListPaperDocsFilterBy::DocsCreated => {
+                // unit
+                let mut s = serializer.serialize_struct("ListPaperDocsFilterBy", 1)?;
+                s.serialize_field(".tag", "docs_created")?;
+                s.end()
+            }
+            ListPaperDocsFilterBy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct ListPaperDocsResponse {
+    /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to
+    /// other API methods. The list is sorted in the order specified by the initial call to
+    /// :route:`docs/list`.
+    pub doc_ids: Vec<String>,
+    /// Pass the cursor into :route:`docs/list/continue` to paginate through all files. The cursor
+    /// preserves all properties as specified in the original call to :route:`docs/list`.
+    pub cursor: Cursor,
+    /// Will be set to True if a subsequent call with the provided cursor to
+    /// :route:`docs/list/continue` returns immediately with some results. If set to False please
+    /// allow some delay before making another call to :route:`docs/list/continue`.
+    pub has_more: bool,
+}
+
+impl ListPaperDocsResponse {
+    pub fn new(doc_ids: Vec<String>, cursor: Cursor, has_more: bool) -> Self {
+        ListPaperDocsResponse {
+            doc_ids,
+            cursor,
+            has_more,
+        }
+    }
+
+}
+
+const LIST_PAPER_DOCS_RESPONSE_FIELDS: &'static [&'static str] = &["doc_ids",
+                                                                   "cursor",
+                                                                   "has_more"];
+impl ListPaperDocsResponse {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListPaperDocsResponse, V::Error> {
+        use serde::de;
+        let mut field_doc_ids = None;
+        let mut field_cursor = None;
+        let mut field_has_more = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "doc_ids" => {
+                    if field_doc_ids.is_some() {
+                        return Err(de::Error::duplicate_field("doc_ids"));
+                    }
+                    field_doc_ids = Some(map.next_value()?);
+                }
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                "has_more" => {
+                    if field_has_more.is_some() {
+                        return Err(de::Error::duplicate_field("has_more"));
+                    }
+                    field_has_more = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_PAPER_DOCS_RESPONSE_FIELDS))
+            }
+        }
+        Ok(ListPaperDocsResponse {
+            doc_ids: field_doc_ids.ok_or_else(|| de::Error::missing_field("doc_ids"))?,
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("doc_ids", &self.doc_ids)?;
+        s.serialize_field("cursor", &self.cursor)?;
+        s.serialize_field("has_more", &self.has_more)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsResponse {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListPaperDocsResponse;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListPaperDocsResponse struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListPaperDocsResponse::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListPaperDocsResponse", LIST_PAPER_DOCS_RESPONSE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListPaperDocsResponse {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListPaperDocsResponse", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub enum ListPaperDocsSortBy {
     /// Sorts the Paper docs by the time they were last accessed.
     Accessed,
@@ -173,31 +1679,183 @@ impl ::serde::ser::Serialize for ListPaperDocsSortBy {
 }
 
 #[derive(Debug)]
-pub struct RemovePaperDocUser {
-    /// The Paper doc ID.
-    pub doc_id: PaperDocId,
-    /// User which should be removed from the Paper doc. Specify only email address or Dropbox
-    /// account ID.
-    pub member: super::sharing::MemberSelector,
+pub enum ListPaperDocsSortOrder {
+    /// Sorts the search result in ascending order.
+    Ascending,
+    /// Sorts the search result in descending order.
+    Descending,
+    Other,
 }
 
-impl RemovePaperDocUser {
-    pub fn new(doc_id: PaperDocId, member: super::sharing::MemberSelector) -> Self {
-        RemovePaperDocUser {
-            doc_id,
-            member,
+impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsSortOrder {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ListPaperDocsSortOrder;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListPaperDocsSortOrder structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "ascending" => Ok(ListPaperDocsSortOrder::Ascending),
+                    "descending" => Ok(ListPaperDocsSortOrder::Descending),
+                    _ => Ok(ListPaperDocsSortOrder::Other)
+                }
+            }
         }
+        const VARIANTS: &'static [&'static str] = &["ascending",
+                                                    "descending",
+                                                    "other"];
+        deserializer.deserialize_struct("ListPaperDocsSortOrder", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListPaperDocsSortOrder {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ListPaperDocsSortOrder::Ascending => {
+                // unit
+                let mut s = serializer.serialize_struct("ListPaperDocsSortOrder", 1)?;
+                s.serialize_field(".tag", "ascending")?;
+                s.end()
+            }
+            ListPaperDocsSortOrder::Descending => {
+                // unit
+                let mut s = serializer.serialize_struct("ListPaperDocsSortOrder", 1)?;
+                s.serialize_field(".tag", "descending")?;
+                s.end()
+            }
+            ListPaperDocsSortOrder::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum ListUsersCursorError {
+    /// Your account does not have permissions to perform this action.
+    InsufficientPermissions,
+    Other,
+    /// The required doc was not found.
+    DocNotFound,
+    CursorError(PaperApiCursorError),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListUsersCursorError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ListUsersCursorError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListUsersCursorError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "insufficient_permissions" => Ok(ListUsersCursorError::InsufficientPermissions),
+                    "doc_not_found" => Ok(ListUsersCursorError::DocNotFound),
+                    "cursor_error" => {
+                        if map.next_key()? != Some("cursor_error") {
+                            return Err(de::Error::missing_field("cursor_error"));
+                        }
+                        Ok(ListUsersCursorError::CursorError(map.next_value()?))
+                    }
+                    _ => Ok(ListUsersCursorError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["insufficient_permissions",
+                                                    "other",
+                                                    "doc_not_found",
+                                                    "cursor_error"];
+        deserializer.deserialize_struct("ListUsersCursorError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListUsersCursorError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ListUsersCursorError::InsufficientPermissions => {
+                // unit
+                let mut s = serializer.serialize_struct("ListUsersCursorError", 1)?;
+                s.serialize_field(".tag", "insufficient_permissions")?;
+                s.end()
+            }
+            ListUsersCursorError::DocNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("ListUsersCursorError", 1)?;
+                s.serialize_field(".tag", "doc_not_found")?;
+                s.end()
+            }
+            ListUsersCursorError::CursorError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "cursor_error")?;
+                s.serialize_field("cursor_error", x)?;
+                s.end()
+            }
+            ListUsersCursorError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for ListUsersCursorError {
+    fn description(&self) -> &str {
+        "ListUsersCursorError"
+    }
+}
+
+impl ::std::fmt::Display for ListUsersCursorError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct ListUsersOnFolderArgs {
+    /// The Paper doc ID.
+    pub doc_id: PaperDocId,
+    /// Size limit per batch. The maximum number of users that can be retrieved per batch is 1000.
+    /// Higher value results in invalid arguments error.
+    pub limit: i32,
+}
+
+impl ListUsersOnFolderArgs {
+    pub fn new(doc_id: PaperDocId) -> Self {
+        ListUsersOnFolderArgs {
+            doc_id,
+            limit: 1000,
+        }
+    }
+
+    pub fn with_limit(mut self, value: i32) -> Self {
+        self.limit = value;
+        self
     }
 
 }
 
-const REMOVE_PAPER_DOC_USER_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                "member"];
-impl RemovePaperDocUser {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RemovePaperDocUser, V::Error> {
+const LIST_USERS_ON_FOLDER_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
+                                                                    "limit"];
+impl ListUsersOnFolderArgs {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnFolderArgs, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
-        let mut field_member = None;
+        let mut field_limit = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "doc_id" => {
@@ -206,80 +1864,82 @@ impl RemovePaperDocUser {
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
-                "member" => {
-                    if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
+                "limit" => {
+                    if field_limit.is_some() {
+                        return Err(de::Error::duplicate_field("limit"));
                     }
-                    field_member = Some(map.next_value()?);
+                    field_limit = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, REMOVE_PAPER_DOC_USER_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_FOLDER_ARGS_FIELDS))
             }
         }
-        Ok(RemovePaperDocUser {
+        Ok(ListUsersOnFolderArgs {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
+            limit: field_limit.unwrap_or(1000),
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("member", &self.member)
+        s.serialize_field("limit", &self.limit)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for RemovePaperDocUser {
+impl<'de> ::serde::de::Deserialize<'de> for ListUsersOnFolderArgs {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = RemovePaperDocUser;
+            type Value = ListUsersOnFolderArgs;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RemovePaperDocUser struct")
+                f.write_str("a ListUsersOnFolderArgs struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                RemovePaperDocUser::internal_deserialize(map)
+                ListUsersOnFolderArgs::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("RemovePaperDocUser", REMOVE_PAPER_DOC_USER_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ListUsersOnFolderArgs", LIST_USERS_ON_FOLDER_ARGS_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for RemovePaperDocUser {
+impl ::serde::ser::Serialize for ListUsersOnFolderArgs {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("RemovePaperDocUser", 2)?;
+        let mut s = serializer.serialize_struct("ListUsersOnFolderArgs", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
 }
 
 #[derive(Debug)]
-pub struct PaperDocExport {
+pub struct ListUsersOnFolderContinueArgs {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
-    pub export_format: ExportFormat,
+    /// The cursor obtained from :route:`docs/folder_users/list` or
+    /// :route:`docs/folder_users/list/continue`. Allows for pagination.
+    pub cursor: String,
 }
 
-impl PaperDocExport {
-    pub fn new(doc_id: PaperDocId, export_format: ExportFormat) -> Self {
-        PaperDocExport {
+impl ListUsersOnFolderContinueArgs {
+    pub fn new(doc_id: PaperDocId, cursor: String) -> Self {
+        ListUsersOnFolderContinueArgs {
             doc_id,
-            export_format,
+            cursor,
         }
     }
 
 }
 
-const PAPER_DOC_EXPORT_FIELDS: &'static [&'static str] = &["doc_id",
-                                                           "export_format"];
-impl PaperDocExport {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocExport, V::Error> {
+const LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
+                                                                             "cursor"];
+impl ListUsersOnFolderContinueArgs {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnFolderContinueArgs, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
-        let mut field_export_format = None;
+        let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "doc_id" => {
@@ -288,51 +1948,356 @@ impl PaperDocExport {
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
-                "export_format" => {
-                    if field_export_format.is_some() {
-                        return Err(de::Error::duplicate_field("export_format"));
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
                     }
-                    field_export_format = Some(map.next_value()?);
+                    field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_EXPORT_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS))
             }
         }
-        Ok(PaperDocExport {
+        Ok(ListUsersOnFolderContinueArgs {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            export_format: field_export_format.ok_or_else(|| de::Error::missing_field("export_format"))?,
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("export_format", &self.export_format)
+        s.serialize_field("cursor", &self.cursor)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for PaperDocExport {
+impl<'de> ::serde::de::Deserialize<'de> for ListUsersOnFolderContinueArgs {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = PaperDocExport;
+            type Value = ListUsersOnFolderContinueArgs;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PaperDocExport struct")
+                f.write_str("a ListUsersOnFolderContinueArgs struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                PaperDocExport::internal_deserialize(map)
+                ListUsersOnFolderContinueArgs::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("PaperDocExport", PAPER_DOC_EXPORT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ListUsersOnFolderContinueArgs", LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for PaperDocExport {
+impl ::serde::ser::Serialize for ListUsersOnFolderContinueArgs {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PaperDocExport", 2)?;
+        let mut s = serializer.serialize_struct("ListUsersOnFolderContinueArgs", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ListUsersOnFolderResponse {
+    /// List of email addresses that are invited on the Paper folder.
+    pub invitees: Vec<super::sharing::InviteeInfo>,
+    /// List of users that are invited on the Paper folder.
+    pub users: Vec<super::sharing::UserInfo>,
+    /// Pass the cursor into :route:`docs/folder_users/list/continue` to paginate through all users.
+    /// The cursor preserves all properties as specified in the original call to
+    /// :route:`docs/folder_users/list`.
+    pub cursor: Cursor,
+    /// Will be set to True if a subsequent call with the provided cursor to
+    /// :route:`docs/folder_users/list/continue` returns immediately with some results. If set to
+    /// False please allow some delay before making another call to
+    /// :route:`docs/folder_users/list/continue`.
+    pub has_more: bool,
+}
+
+impl ListUsersOnFolderResponse {
+    pub fn new(invitees: Vec<super::sharing::InviteeInfo>, users: Vec<super::sharing::UserInfo>, cursor: Cursor, has_more: bool) -> Self {
+        ListUsersOnFolderResponse {
+            invitees,
+            users,
+            cursor,
+            has_more,
+        }
+    }
+
+}
+
+const LIST_USERS_ON_FOLDER_RESPONSE_FIELDS: &'static [&'static str] = &["invitees",
+                                                                        "users",
+                                                                        "cursor",
+                                                                        "has_more"];
+impl ListUsersOnFolderResponse {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnFolderResponse, V::Error> {
+        use serde::de;
+        let mut field_invitees = None;
+        let mut field_users = None;
+        let mut field_cursor = None;
+        let mut field_has_more = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "invitees" => {
+                    if field_invitees.is_some() {
+                        return Err(de::Error::duplicate_field("invitees"));
+                    }
+                    field_invitees = Some(map.next_value()?);
+                }
+                "users" => {
+                    if field_users.is_some() {
+                        return Err(de::Error::duplicate_field("users"));
+                    }
+                    field_users = Some(map.next_value()?);
+                }
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                "has_more" => {
+                    if field_has_more.is_some() {
+                        return Err(de::Error::duplicate_field("has_more"));
+                    }
+                    field_has_more = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_FOLDER_RESPONSE_FIELDS))
+            }
+        }
+        Ok(ListUsersOnFolderResponse {
+            invitees: field_invitees.ok_or_else(|| de::Error::missing_field("invitees"))?,
+            users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("invitees", &self.invitees)?;
+        s.serialize_field("users", &self.users)?;
+        s.serialize_field("cursor", &self.cursor)?;
+        s.serialize_field("has_more", &self.has_more)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListUsersOnFolderResponse {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListUsersOnFolderResponse;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListUsersOnFolderResponse struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListUsersOnFolderResponse::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListUsersOnFolderResponse", LIST_USERS_ON_FOLDER_RESPONSE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListUsersOnFolderResponse {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListUsersOnFolderResponse", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ListUsersOnPaperDocArgs {
+    /// The Paper doc ID.
+    pub doc_id: PaperDocId,
+    /// Size limit per batch. The maximum number of users that can be retrieved per batch is 1000.
+    /// Higher value results in invalid arguments error.
+    pub limit: i32,
+    /// Specify this attribute if you want to obtain users that have already accessed the Paper doc.
+    pub filter_by: UserOnPaperDocFilter,
+}
+
+impl ListUsersOnPaperDocArgs {
+    pub fn new(doc_id: PaperDocId) -> Self {
+        ListUsersOnPaperDocArgs {
+            doc_id,
+            limit: 1000,
+            filter_by: UserOnPaperDocFilter::Shared,
+        }
+    }
+
+    pub fn with_limit(mut self, value: i32) -> Self {
+        self.limit = value;
+        self
+    }
+
+    pub fn with_filter_by(mut self, value: UserOnPaperDocFilter) -> Self {
+        self.filter_by = value;
+        self
+    }
+
+}
+
+const LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
+                                                                       "limit",
+                                                                       "filter_by"];
+impl ListUsersOnPaperDocArgs {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnPaperDocArgs, V::Error> {
+        use serde::de;
+        let mut field_doc_id = None;
+        let mut field_limit = None;
+        let mut field_filter_by = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "doc_id" => {
+                    if field_doc_id.is_some() {
+                        return Err(de::Error::duplicate_field("doc_id"));
+                    }
+                    field_doc_id = Some(map.next_value()?);
+                }
+                "limit" => {
+                    if field_limit.is_some() {
+                        return Err(de::Error::duplicate_field("limit"));
+                    }
+                    field_limit = Some(map.next_value()?);
+                }
+                "filter_by" => {
+                    if field_filter_by.is_some() {
+                        return Err(de::Error::duplicate_field("filter_by"));
+                    }
+                    field_filter_by = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS))
+            }
+        }
+        Ok(ListUsersOnPaperDocArgs {
+            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
+            limit: field_limit.unwrap_or(1000),
+            filter_by: field_filter_by.unwrap_or_else(|| UserOnPaperDocFilter::Shared),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("doc_id", &self.doc_id)?;
+        s.serialize_field("limit", &self.limit)?;
+        s.serialize_field("filter_by", &self.filter_by)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListUsersOnPaperDocArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListUsersOnPaperDocArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListUsersOnPaperDocArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListUsersOnPaperDocArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListUsersOnPaperDocArgs", LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListUsersOnPaperDocArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListUsersOnPaperDocArgs", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ListUsersOnPaperDocContinueArgs {
+    /// The Paper doc ID.
+    pub doc_id: PaperDocId,
+    /// The cursor obtained from :route:`docs/users/list` or :route:`docs/users/list/continue`.
+    /// Allows for pagination.
+    pub cursor: String,
+}
+
+impl ListUsersOnPaperDocContinueArgs {
+    pub fn new(doc_id: PaperDocId, cursor: String) -> Self {
+        ListUsersOnPaperDocContinueArgs {
+            doc_id,
+            cursor,
+        }
+    }
+
+}
+
+const LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
+                                                                                "cursor"];
+impl ListUsersOnPaperDocContinueArgs {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnPaperDocContinueArgs, V::Error> {
+        use serde::de;
+        let mut field_doc_id = None;
+        let mut field_cursor = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "doc_id" => {
+                    if field_doc_id.is_some() {
+                        return Err(de::Error::duplicate_field("doc_id"));
+                    }
+                    field_doc_id = Some(map.next_value()?);
+                }
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS))
+            }
+        }
+        Ok(ListUsersOnPaperDocContinueArgs {
+            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("doc_id", &self.doc_id)?;
+        s.serialize_field("cursor", &self.cursor)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListUsersOnPaperDocContinueArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListUsersOnPaperDocContinueArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListUsersOnPaperDocContinueArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListUsersOnPaperDocContinueArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListUsersOnPaperDocContinueArgs", LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListUsersOnPaperDocContinueArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListUsersOnPaperDocContinueArgs", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -466,1093 +2431,21 @@ impl ::serde::ser::Serialize for ListUsersOnPaperDocResponse {
 }
 
 #[derive(Debug)]
-pub enum SharingPublicPolicyType {
-    /// Users who have a link to this doc can edit it.
-    PeopleWithLinkCanEdit,
-    /// Users who have a link to this doc can view and comment on it.
-    PeopleWithLinkCanViewAndComment,
-    /// Users must be explicitly invited to this doc.
-    InviteOnly,
-    /// Value used to indicate that doc sharing is enabled only within team.
-    Disabled,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SharingPublicPolicyType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SharingPublicPolicyType;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharingPublicPolicyType structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "people_with_link_can_edit" => Ok(SharingPublicPolicyType::PeopleWithLinkCanEdit),
-                    "people_with_link_can_view_and_comment" => Ok(SharingPublicPolicyType::PeopleWithLinkCanViewAndComment),
-                    "invite_only" => Ok(SharingPublicPolicyType::InviteOnly),
-                    "disabled" => Ok(SharingPublicPolicyType::Disabled),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["people_with_link_can_edit",
-                                                    "people_with_link_can_view_and_comment",
-                                                    "invite_only",
-                                                    "disabled"];
-        deserializer.deserialize_struct("SharingPublicPolicyType", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SharingPublicPolicyType {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SharingPublicPolicyType::PeopleWithLinkCanEdit => {
-                // unit
-                let mut s = serializer.serialize_struct("SharingPublicPolicyType", 1)?;
-                s.serialize_field(".tag", "people_with_link_can_edit")?;
-                s.end()
-            }
-            SharingPublicPolicyType::PeopleWithLinkCanViewAndComment => {
-                // unit
-                let mut s = serializer.serialize_struct("SharingPublicPolicyType", 1)?;
-                s.serialize_field(".tag", "people_with_link_can_view_and_comment")?;
-                s.end()
-            }
-            SharingPublicPolicyType::InviteOnly => {
-                // unit
-                let mut s = serializer.serialize_struct("SharingPublicPolicyType", 1)?;
-                s.serialize_field(".tag", "invite_only")?;
-                s.end()
-            }
-            SharingPublicPolicyType::Disabled => {
-                // unit
-                let mut s = serializer.serialize_struct("SharingPublicPolicyType", 1)?;
-                s.serialize_field(".tag", "disabled")?;
-                s.end()
-            }
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct ListPaperDocsArgs {
-    /// Allows user to specify how the Paper docs should be filtered.
-    pub filter_by: ListPaperDocsFilterBy,
-    /// Allows user to specify how the Paper docs should be sorted.
-    pub sort_by: ListPaperDocsSortBy,
-    /// Allows user to specify the sort order of the result.
-    pub sort_order: ListPaperDocsSortOrder,
-    /// Size limit per batch. The maximum number of docs that can be retrieved per batch is 1000.
-    /// Higher value results in invalid arguments error.
-    pub limit: i32,
-}
-
-impl Default for ListPaperDocsArgs {
-    fn default() -> Self {
-        ListPaperDocsArgs {
-            filter_by: ListPaperDocsFilterBy::DocsAccessed,
-            sort_by: ListPaperDocsSortBy::Accessed,
-            sort_order: ListPaperDocsSortOrder::Ascending,
-            limit: 1000,
-        }
-    }
-}
-
-const LIST_PAPER_DOCS_ARGS_FIELDS: &'static [&'static str] = &["filter_by",
-                                                               "sort_by",
-                                                               "sort_order",
-                                                               "limit"];
-impl ListPaperDocsArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListPaperDocsArgs, V::Error> {
-        use serde::de;
-        let mut field_filter_by = None;
-        let mut field_sort_by = None;
-        let mut field_sort_order = None;
-        let mut field_limit = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "filter_by" => {
-                    if field_filter_by.is_some() {
-                        return Err(de::Error::duplicate_field("filter_by"));
-                    }
-                    field_filter_by = Some(map.next_value()?);
-                }
-                "sort_by" => {
-                    if field_sort_by.is_some() {
-                        return Err(de::Error::duplicate_field("sort_by"));
-                    }
-                    field_sort_by = Some(map.next_value()?);
-                }
-                "sort_order" => {
-                    if field_sort_order.is_some() {
-                        return Err(de::Error::duplicate_field("sort_order"));
-                    }
-                    field_sort_order = Some(map.next_value()?);
-                }
-                "limit" => {
-                    if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
-                    }
-                    field_limit = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_PAPER_DOCS_ARGS_FIELDS))
-            }
-        }
-        Ok(ListPaperDocsArgs {
-            filter_by: field_filter_by.unwrap_or_else(|| ListPaperDocsFilterBy::DocsAccessed),
-            sort_by: field_sort_by.unwrap_or_else(|| ListPaperDocsSortBy::Accessed),
-            sort_order: field_sort_order.unwrap_or_else(|| ListPaperDocsSortOrder::Ascending),
-            limit: field_limit.unwrap_or(1000),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("filter_by", &self.filter_by)?;
-        s.serialize_field("sort_by", &self.sort_by)?;
-        s.serialize_field("sort_order", &self.sort_order)?;
-        s.serialize_field("limit", &self.limit)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsArgs {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListPaperDocsArgs;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListPaperDocsArgs struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListPaperDocsArgs::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListPaperDocsArgs", LIST_PAPER_DOCS_ARGS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListPaperDocsArgs {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListPaperDocsArgs", 4)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct AddPaperDocUser {
-    /// The Paper doc ID.
-    pub doc_id: PaperDocId,
-    /// User which should be added to the Paper doc. Specify only email address or Dropbox account
-    /// ID.
-    pub members: Vec<AddMember>,
-    /// A personal message that will be emailed to each successfully added member.
-    pub custom_message: Option<String>,
-    /// Clients should set this to true if no email message shall be sent to added users.
-    pub quiet: bool,
-}
-
-impl AddPaperDocUser {
-    pub fn new(doc_id: PaperDocId, members: Vec<AddMember>) -> Self {
-        AddPaperDocUser {
-            doc_id,
-            members,
-            custom_message: None,
-            quiet: false,
-        }
-    }
-
-    pub fn with_custom_message(mut self, value: Option<String>) -> Self {
-        self.custom_message = value;
-        self
-    }
-
-    pub fn with_quiet(mut self, value: bool) -> Self {
-        self.quiet = value;
-        self
-    }
-
-}
-
-const ADD_PAPER_DOC_USER_FIELDS: &'static [&'static str] = &["doc_id",
-                                                             "members",
-                                                             "custom_message",
-                                                             "quiet"];
-impl AddPaperDocUser {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddPaperDocUser, V::Error> {
-        use serde::de;
-        let mut field_doc_id = None;
-        let mut field_members = None;
-        let mut field_custom_message = None;
-        let mut field_quiet = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "doc_id" => {
-                    if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
-                    }
-                    field_doc_id = Some(map.next_value()?);
-                }
-                "members" => {
-                    if field_members.is_some() {
-                        return Err(de::Error::duplicate_field("members"));
-                    }
-                    field_members = Some(map.next_value()?);
-                }
-                "custom_message" => {
-                    if field_custom_message.is_some() {
-                        return Err(de::Error::duplicate_field("custom_message"));
-                    }
-                    field_custom_message = Some(map.next_value()?);
-                }
-                "quiet" => {
-                    if field_quiet.is_some() {
-                        return Err(de::Error::duplicate_field("quiet"));
-                    }
-                    field_quiet = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, ADD_PAPER_DOC_USER_FIELDS))
-            }
-        }
-        Ok(AddPaperDocUser {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
-            custom_message: field_custom_message,
-            quiet: field_quiet.unwrap_or(false),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("members", &self.members)?;
-        s.serialize_field("custom_message", &self.custom_message)?;
-        s.serialize_field("quiet", &self.quiet)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for AddPaperDocUser {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = AddPaperDocUser;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a AddPaperDocUser struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                AddPaperDocUser::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("AddPaperDocUser", ADD_PAPER_DOC_USER_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for AddPaperDocUser {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("AddPaperDocUser", 4)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Data structure representing a Paper folder.
-#[derive(Debug)]
-pub struct Folder {
-    /// Paper folder ID. This ID uniquely identifies the folder.
-    pub id: String,
-    /// Paper folder name.
-    pub name: String,
-}
-
-impl Folder {
-    pub fn new(id: String, name: String) -> Self {
-        Folder {
-            id,
-            name,
-        }
-    }
-
-}
-
-const FOLDER_FIELDS: &'static [&'static str] = &["id",
-                                                 "name"];
-impl Folder {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Folder, V::Error> {
-        use serde::de;
-        let mut field_id = None;
-        let mut field_name = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "id" => {
-                    if field_id.is_some() {
-                        return Err(de::Error::duplicate_field("id"));
-                    }
-                    field_id = Some(map.next_value()?);
-                }
-                "name" => {
-                    if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
-                    }
-                    field_name = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FOLDER_FIELDS))
-            }
-        }
-        Ok(Folder {
-            id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("id", &self.id)?;
-        s.serialize_field("name", &self.name)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for Folder {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = Folder;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a Folder struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                Folder::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("Folder", FOLDER_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for Folder {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("Folder", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct ListUsersOnPaperDocContinueArgs {
-    /// The Paper doc ID.
-    pub doc_id: PaperDocId,
-    /// The cursor obtained from :route:`docs/users/list` or :route:`docs/users/list/continue`.
-    /// Allows for pagination.
-    pub cursor: String,
-}
-
-impl ListUsersOnPaperDocContinueArgs {
-    pub fn new(doc_id: PaperDocId, cursor: String) -> Self {
-        ListUsersOnPaperDocContinueArgs {
-            doc_id,
-            cursor,
-        }
-    }
-
-}
-
-const LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                                "cursor"];
-impl ListUsersOnPaperDocContinueArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnPaperDocContinueArgs, V::Error> {
-        use serde::de;
-        let mut field_doc_id = None;
-        let mut field_cursor = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "doc_id" => {
-                    if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
-                    }
-                    field_doc_id = Some(map.next_value()?);
-                }
-                "cursor" => {
-                    if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
-                    }
-                    field_cursor = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS))
-            }
-        }
-        Ok(ListUsersOnPaperDocContinueArgs {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("cursor", &self.cursor)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListUsersOnPaperDocContinueArgs {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListUsersOnPaperDocContinueArgs;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListUsersOnPaperDocContinueArgs struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListUsersOnPaperDocContinueArgs::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListUsersOnPaperDocContinueArgs", LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListUsersOnPaperDocContinueArgs {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListUsersOnPaperDocContinueArgs", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Sharing policy of Paper doc.
-#[derive(Debug)]
-pub struct SharingPolicy {
-    /// This value applies to the non-team members.
-    pub public_sharing_policy: Option<SharingPublicPolicyType>,
-    /// This value applies to the team members only. The value is null for all personal accounts.
-    pub team_sharing_policy: Option<SharingTeamPolicyType>,
-}
-
-impl Default for SharingPolicy {
-    fn default() -> Self {
-        SharingPolicy {
-            public_sharing_policy: None,
-            team_sharing_policy: None,
-        }
-    }
-}
-
-const SHARING_POLICY_FIELDS: &'static [&'static str] = &["public_sharing_policy",
-                                                         "team_sharing_policy"];
-impl SharingPolicy {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharingPolicy, V::Error> {
-        use serde::de;
-        let mut field_public_sharing_policy = None;
-        let mut field_team_sharing_policy = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "public_sharing_policy" => {
-                    if field_public_sharing_policy.is_some() {
-                        return Err(de::Error::duplicate_field("public_sharing_policy"));
-                    }
-                    field_public_sharing_policy = Some(map.next_value()?);
-                }
-                "team_sharing_policy" => {
-                    if field_team_sharing_policy.is_some() {
-                        return Err(de::Error::duplicate_field("team_sharing_policy"));
-                    }
-                    field_team_sharing_policy = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SHARING_POLICY_FIELDS))
-            }
-        }
-        Ok(SharingPolicy {
-            public_sharing_policy: field_public_sharing_policy,
-            team_sharing_policy: field_team_sharing_policy,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("public_sharing_policy", &self.public_sharing_policy)?;
-        s.serialize_field("team_sharing_policy", &self.team_sharing_policy)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SharingPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SharingPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharingPolicy struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SharingPolicy::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("SharingPolicy", SHARING_POLICY_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SharingPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharingPolicy", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// The subscription level of a Paper folder.
-#[derive(Debug)]
-pub enum FolderSubscriptionLevel {
-    /// Not shown in activity, no email messages.
-    NoneVariant,
-    /// Shown in activity, no email messages.
-    ActivityOnly,
-    /// Shown in activity, daily email messages.
-    DailyEmails,
-    /// Shown in activity, weekly email messages.
-    WeeklyEmails,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FolderSubscriptionLevel {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = FolderSubscriptionLevel;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FolderSubscriptionLevel structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "none" => Ok(FolderSubscriptionLevel::NoneVariant),
-                    "activity_only" => Ok(FolderSubscriptionLevel::ActivityOnly),
-                    "daily_emails" => Ok(FolderSubscriptionLevel::DailyEmails),
-                    "weekly_emails" => Ok(FolderSubscriptionLevel::WeeklyEmails),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["none",
-                                                    "activity_only",
-                                                    "daily_emails",
-                                                    "weekly_emails"];
-        deserializer.deserialize_struct("FolderSubscriptionLevel", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FolderSubscriptionLevel {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            FolderSubscriptionLevel::NoneVariant => {
-                // unit
-                let mut s = serializer.serialize_struct("FolderSubscriptionLevel", 1)?;
-                s.serialize_field(".tag", "none")?;
-                s.end()
-            }
-            FolderSubscriptionLevel::ActivityOnly => {
-                // unit
-                let mut s = serializer.serialize_struct("FolderSubscriptionLevel", 1)?;
-                s.serialize_field(".tag", "activity_only")?;
-                s.end()
-            }
-            FolderSubscriptionLevel::DailyEmails => {
-                // unit
-                let mut s = serializer.serialize_struct("FolderSubscriptionLevel", 1)?;
-                s.serialize_field(".tag", "daily_emails")?;
-                s.end()
-            }
-            FolderSubscriptionLevel::WeeklyEmails => {
-                // unit
-                let mut s = serializer.serialize_struct("FolderSubscriptionLevel", 1)?;
-                s.serialize_field(".tag", "weekly_emails")?;
-                s.end()
-            }
-        }
-    }
-}
-
-/// The sharing policy of a Paper folder.  Note: The sharing policy of subfolders is inherited from
-/// the root folder.
-#[derive(Debug)]
-pub enum FolderSharingPolicyType {
-    /// Everyone in your team and anyone directly invited can access this folder.
-    Team,
-    /// Only people directly invited can access this folder.
-    InviteOnly,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FolderSharingPolicyType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = FolderSharingPolicyType;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FolderSharingPolicyType structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "team" => Ok(FolderSharingPolicyType::Team),
-                    "invite_only" => Ok(FolderSharingPolicyType::InviteOnly),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["team",
-                                                    "invite_only"];
-        deserializer.deserialize_struct("FolderSharingPolicyType", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FolderSharingPolicyType {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            FolderSharingPolicyType::Team => {
-                // unit
-                let mut s = serializer.serialize_struct("FolderSharingPolicyType", 1)?;
-                s.serialize_field(".tag", "team")?;
-                s.end()
-            }
-            FolderSharingPolicyType::InviteOnly => {
-                // unit
-                let mut s = serializer.serialize_struct("FolderSharingPolicyType", 1)?;
-                s.serialize_field(".tag", "invite_only")?;
-                s.end()
-            }
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct AddMember {
-    /// User which should be added to the Paper doc. Specify only email address or Dropbox account
-    /// ID.
-    pub member: super::sharing::MemberSelector,
-    /// Permission for the user.
-    pub permission_level: PaperDocPermissionLevel,
-}
-
-impl AddMember {
-    pub fn new(member: super::sharing::MemberSelector) -> Self {
-        AddMember {
-            member,
-            permission_level: PaperDocPermissionLevel::Edit,
-        }
-    }
-
-    pub fn with_permission_level(mut self, value: PaperDocPermissionLevel) -> Self {
-        self.permission_level = value;
-        self
-    }
-
-}
-
-const ADD_MEMBER_FIELDS: &'static [&'static str] = &["member",
-                                                     "permission_level"];
-impl AddMember {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddMember, V::Error> {
-        use serde::de;
-        let mut field_member = None;
-        let mut field_permission_level = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "member" => {
-                    if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
-                    }
-                    field_member = Some(map.next_value()?);
-                }
-                "permission_level" => {
-                    if field_permission_level.is_some() {
-                        return Err(de::Error::duplicate_field("permission_level"));
-                    }
-                    field_permission_level = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, ADD_MEMBER_FIELDS))
-            }
-        }
-        Ok(AddMember {
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
-            permission_level: field_permission_level.unwrap_or_else(|| PaperDocPermissionLevel::Edit),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("member", &self.member)?;
-        s.serialize_field("permission_level", &self.permission_level)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for AddMember {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = AddMember;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a AddMember struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                AddMember::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("AddMember", ADD_MEMBER_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for AddMember {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("AddMember", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum ListPaperDocsFilterBy {
-    /// Fetches all Paper doc IDs that the user has ever accessed.
-    DocsAccessed,
-    /// Fetches only the Paper doc IDs that the user has created.
-    DocsCreated,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsFilterBy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ListPaperDocsFilterBy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListPaperDocsFilterBy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "docs_accessed" => Ok(ListPaperDocsFilterBy::DocsAccessed),
-                    "docs_created" => Ok(ListPaperDocsFilterBy::DocsCreated),
-                    _ => Ok(ListPaperDocsFilterBy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["docs_accessed",
-                                                    "docs_created",
-                                                    "other"];
-        deserializer.deserialize_struct("ListPaperDocsFilterBy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListPaperDocsFilterBy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            ListPaperDocsFilterBy::DocsAccessed => {
-                // unit
-                let mut s = serializer.serialize_struct("ListPaperDocsFilterBy", 1)?;
-                s.serialize_field(".tag", "docs_accessed")?;
-                s.end()
-            }
-            ListPaperDocsFilterBy::DocsCreated => {
-                // unit
-                let mut s = serializer.serialize_struct("ListPaperDocsFilterBy", 1)?;
-                s.serialize_field(".tag", "docs_created")?;
-                s.end()
-            }
-            ListPaperDocsFilterBy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum ListPaperDocsSortOrder {
-    /// Sorts the search result in ascending order.
-    Ascending,
-    /// Sorts the search result in descending order.
-    Descending,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsSortOrder {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ListPaperDocsSortOrder;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListPaperDocsSortOrder structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "ascending" => Ok(ListPaperDocsSortOrder::Ascending),
-                    "descending" => Ok(ListPaperDocsSortOrder::Descending),
-                    _ => Ok(ListPaperDocsSortOrder::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["ascending",
-                                                    "descending",
-                                                    "other"];
-        deserializer.deserialize_struct("ListPaperDocsSortOrder", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListPaperDocsSortOrder {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            ListPaperDocsSortOrder::Ascending => {
-                // unit
-                let mut s = serializer.serialize_struct("ListPaperDocsSortOrder", 1)?;
-                s.serialize_field(".tag", "ascending")?;
-                s.end()
-            }
-            ListPaperDocsSortOrder::Descending => {
-                // unit
-                let mut s = serializer.serialize_struct("ListPaperDocsSortOrder", 1)?;
-                s.serialize_field(".tag", "descending")?;
-                s.end()
-            }
-            ListPaperDocsSortOrder::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct UserInfoWithPermissionLevel {
-    /// User shared on the Paper doc.
-    pub user: super::sharing::UserInfo,
-    /// Permission level for the user.
-    pub permission_level: PaperDocPermissionLevel,
-}
-
-impl UserInfoWithPermissionLevel {
-    pub fn new(user: super::sharing::UserInfo, permission_level: PaperDocPermissionLevel) -> Self {
-        UserInfoWithPermissionLevel {
-            user,
-            permission_level,
-        }
-    }
-
-}
-
-const USER_INFO_WITH_PERMISSION_LEVEL_FIELDS: &'static [&'static str] = &["user",
-                                                                          "permission_level"];
-impl UserInfoWithPermissionLevel {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserInfoWithPermissionLevel, V::Error> {
-        use serde::de;
-        let mut field_user = None;
-        let mut field_permission_level = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "user" => {
-                    if field_user.is_some() {
-                        return Err(de::Error::duplicate_field("user"));
-                    }
-                    field_user = Some(map.next_value()?);
-                }
-                "permission_level" => {
-                    if field_permission_level.is_some() {
-                        return Err(de::Error::duplicate_field("permission_level"));
-                    }
-                    field_permission_level = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, USER_INFO_WITH_PERMISSION_LEVEL_FIELDS))
-            }
-        }
-        Ok(UserInfoWithPermissionLevel {
-            user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
-            permission_level: field_permission_level.ok_or_else(|| de::Error::missing_field("permission_level"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("user", &self.user)?;
-        s.serialize_field("permission_level", &self.permission_level)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UserInfoWithPermissionLevel {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = UserInfoWithPermissionLevel;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UserInfoWithPermissionLevel struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UserInfoWithPermissionLevel::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("UserInfoWithPermissionLevel", USER_INFO_WITH_PERMISSION_LEVEL_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UserInfoWithPermissionLevel {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UserInfoWithPermissionLevel", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Per-member result for :route:`docs/users/add`.
-#[derive(Debug)]
-pub struct AddPaperDocUserMemberResult {
-    /// One of specified input members.
-    pub member: super::sharing::MemberSelector,
-    /// The outcome of the action on this member.
-    pub result: AddPaperDocUserResult,
-}
-
-impl AddPaperDocUserMemberResult {
-    pub fn new(member: super::sharing::MemberSelector, result: AddPaperDocUserResult) -> Self {
-        AddPaperDocUserMemberResult {
-            member,
-            result,
-        }
-    }
-
-}
-
-const ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS: &'static [&'static str] = &["member",
-                                                                           "result"];
-impl AddPaperDocUserMemberResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddPaperDocUserMemberResult, V::Error> {
-        use serde::de;
-        let mut field_member = None;
-        let mut field_result = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "member" => {
-                    if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
-                    }
-                    field_member = Some(map.next_value()?);
-                }
-                "result" => {
-                    if field_result.is_some() {
-                        return Err(de::Error::duplicate_field("result"));
-                    }
-                    field_result = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS))
-            }
-        }
-        Ok(AddPaperDocUserMemberResult {
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
-            result: field_result.ok_or_else(|| de::Error::missing_field("result"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("member", &self.member)?;
-        s.serialize_field("result", &self.result)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for AddPaperDocUserMemberResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = AddPaperDocUserMemberResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a AddPaperDocUserMemberResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                AddPaperDocUserMemberResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("AddPaperDocUserMemberResult", ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for AddPaperDocUserMemberResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("AddPaperDocUserMemberResult", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum DocLookupError {
+pub enum PaperApiBaseError {
     /// Your account does not have permissions to perform this action.
     InsufficientPermissions,
     Other,
-    /// The required doc was not found.
-    DocNotFound,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for DocLookupError {
+impl<'de> ::serde::de::Deserialize<'de> for PaperApiBaseError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = DocLookupError;
+            type Value = PaperApiBaseError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DocLookupError structure")
+                f.write_str("a PaperApiBaseError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -1560,81 +2453,68 @@ impl<'de> ::serde::de::Deserialize<'de> for DocLookupError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "insufficient_permissions" => Ok(DocLookupError::InsufficientPermissions),
-                    "doc_not_found" => Ok(DocLookupError::DocNotFound),
-                    _ => Ok(DocLookupError::Other)
+                    "insufficient_permissions" => Ok(PaperApiBaseError::InsufficientPermissions),
+                    _ => Ok(PaperApiBaseError::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["insufficient_permissions",
-                                                    "other",
-                                                    "doc_not_found"];
-        deserializer.deserialize_struct("DocLookupError", VARIANTS, EnumVisitor)
+                                                    "other"];
+        deserializer.deserialize_struct("PaperApiBaseError", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for DocLookupError {
+impl ::serde::ser::Serialize for PaperApiBaseError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            DocLookupError::InsufficientPermissions => {
+            PaperApiBaseError::InsufficientPermissions => {
                 // unit
-                let mut s = serializer.serialize_struct("DocLookupError", 1)?;
+                let mut s = serializer.serialize_struct("PaperApiBaseError", 1)?;
                 s.serialize_field(".tag", "insufficient_permissions")?;
                 s.end()
             }
-            DocLookupError::DocNotFound => {
-                // unit
-                let mut s = serializer.serialize_struct("DocLookupError", 1)?;
-                s.serialize_field(".tag", "doc_not_found")?;
-                s.end()
-            }
-            DocLookupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            PaperApiBaseError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
 
-impl ::std::error::Error for DocLookupError {
+impl ::std::error::Error for PaperApiBaseError {
     fn description(&self) -> &str {
-        "DocLookupError"
+        "PaperApiBaseError"
     }
 }
 
-impl ::std::fmt::Display for DocLookupError {
+impl ::std::fmt::Display for PaperApiBaseError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
     }
 }
 
 #[derive(Debug)]
-pub enum AddPaperDocUserResult {
-    /// User was successfully added to the Paper doc.
-    Success,
-    /// Something unexpected happened when trying to add the user to the Paper doc.
-    UnknownError,
-    /// The Paper doc can be shared only with team members.
-    SharingOutsideTeamDisabled,
-    /// The daily limit of how many users can be added to the Paper doc was reached.
-    DailyLimitReached,
-    /// Owner's permissions cannot be changed.
-    UserIsOwner,
-    /// User data could not be retrieved. Clients should retry.
-    FailedUserDataRetrieval,
-    /// This user already has the correct permission to the Paper doc.
-    PermissionAlreadyGranted,
+pub enum PaperApiCursorError {
+    /// The provided cursor is expired.
+    ExpiredCursor,
+    /// The provided cursor is invalid.
+    InvalidCursor,
+    /// The provided cursor contains invalid user.
+    WrongUserInCursor,
+    /// Indicates that the cursor has been invalidated. Call the corresponding non-continue endpoint
+    /// to obtain a new cursor.
+    Reset,
     Other,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for AddPaperDocUserResult {
+impl<'de> ::serde::de::Deserialize<'de> for PaperApiCursorError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = AddPaperDocUserResult;
+            type Value = PaperApiCursorError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a AddPaperDocUserResult structure")
+                f.write_str("a PaperApiCursorError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -1642,78 +2522,148 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPaperDocUserResult {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "success" => Ok(AddPaperDocUserResult::Success),
-                    "unknown_error" => Ok(AddPaperDocUserResult::UnknownError),
-                    "sharing_outside_team_disabled" => Ok(AddPaperDocUserResult::SharingOutsideTeamDisabled),
-                    "daily_limit_reached" => Ok(AddPaperDocUserResult::DailyLimitReached),
-                    "user_is_owner" => Ok(AddPaperDocUserResult::UserIsOwner),
-                    "failed_user_data_retrieval" => Ok(AddPaperDocUserResult::FailedUserDataRetrieval),
-                    "permission_already_granted" => Ok(AddPaperDocUserResult::PermissionAlreadyGranted),
-                    _ => Ok(AddPaperDocUserResult::Other)
+                    "expired_cursor" => Ok(PaperApiCursorError::ExpiredCursor),
+                    "invalid_cursor" => Ok(PaperApiCursorError::InvalidCursor),
+                    "wrong_user_in_cursor" => Ok(PaperApiCursorError::WrongUserInCursor),
+                    "reset" => Ok(PaperApiCursorError::Reset),
+                    _ => Ok(PaperApiCursorError::Other)
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["success",
-                                                    "unknown_error",
-                                                    "sharing_outside_team_disabled",
-                                                    "daily_limit_reached",
-                                                    "user_is_owner",
-                                                    "failed_user_data_retrieval",
-                                                    "permission_already_granted",
+        const VARIANTS: &'static [&'static str] = &["expired_cursor",
+                                                    "invalid_cursor",
+                                                    "wrong_user_in_cursor",
+                                                    "reset",
                                                     "other"];
-        deserializer.deserialize_struct("AddPaperDocUserResult", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PaperApiCursorError", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for AddPaperDocUserResult {
+impl ::serde::ser::Serialize for PaperApiCursorError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            AddPaperDocUserResult::Success => {
+            PaperApiCursorError::ExpiredCursor => {
                 // unit
-                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
-                s.serialize_field(".tag", "success")?;
+                let mut s = serializer.serialize_struct("PaperApiCursorError", 1)?;
+                s.serialize_field(".tag", "expired_cursor")?;
                 s.end()
             }
-            AddPaperDocUserResult::UnknownError => {
+            PaperApiCursorError::InvalidCursor => {
                 // unit
-                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
-                s.serialize_field(".tag", "unknown_error")?;
+                let mut s = serializer.serialize_struct("PaperApiCursorError", 1)?;
+                s.serialize_field(".tag", "invalid_cursor")?;
                 s.end()
             }
-            AddPaperDocUserResult::SharingOutsideTeamDisabled => {
+            PaperApiCursorError::WrongUserInCursor => {
                 // unit
-                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
-                s.serialize_field(".tag", "sharing_outside_team_disabled")?;
+                let mut s = serializer.serialize_struct("PaperApiCursorError", 1)?;
+                s.serialize_field(".tag", "wrong_user_in_cursor")?;
                 s.end()
             }
-            AddPaperDocUserResult::DailyLimitReached => {
+            PaperApiCursorError::Reset => {
                 // unit
-                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
-                s.serialize_field(".tag", "daily_limit_reached")?;
+                let mut s = serializer.serialize_struct("PaperApiCursorError", 1)?;
+                s.serialize_field(".tag", "reset")?;
                 s.end()
             }
-            AddPaperDocUserResult::UserIsOwner => {
-                // unit
-                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
-                s.serialize_field(".tag", "user_is_owner")?;
-                s.end()
-            }
-            AddPaperDocUserResult::FailedUserDataRetrieval => {
-                // unit
-                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
-                s.serialize_field(".tag", "failed_user_data_retrieval")?;
-                s.end()
-            }
-            AddPaperDocUserResult::PermissionAlreadyGranted => {
-                // unit
-                let mut s = serializer.serialize_struct("AddPaperDocUserResult", 1)?;
-                s.serialize_field(".tag", "permission_already_granted")?;
-                s.end()
-            }
-            AddPaperDocUserResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            PaperApiCursorError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
+    }
+}
+
+impl ::std::error::Error for PaperApiCursorError {
+    fn description(&self) -> &str {
+        "PaperApiCursorError"
+    }
+}
+
+impl ::std::fmt::Display for PaperApiCursorError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct PaperDocExport {
+    /// The Paper doc ID.
+    pub doc_id: PaperDocId,
+    pub export_format: ExportFormat,
+}
+
+impl PaperDocExport {
+    pub fn new(doc_id: PaperDocId, export_format: ExportFormat) -> Self {
+        PaperDocExport {
+            doc_id,
+            export_format,
+        }
+    }
+
+}
+
+const PAPER_DOC_EXPORT_FIELDS: &'static [&'static str] = &["doc_id",
+                                                           "export_format"];
+impl PaperDocExport {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocExport, V::Error> {
+        use serde::de;
+        let mut field_doc_id = None;
+        let mut field_export_format = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "doc_id" => {
+                    if field_doc_id.is_some() {
+                        return Err(de::Error::duplicate_field("doc_id"));
+                    }
+                    field_doc_id = Some(map.next_value()?);
+                }
+                "export_format" => {
+                    if field_export_format.is_some() {
+                        return Err(de::Error::duplicate_field("export_format"));
+                    }
+                    field_export_format = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_EXPORT_FIELDS))
+            }
+        }
+        Ok(PaperDocExport {
+            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
+            export_format: field_export_format.ok_or_else(|| de::Error::missing_field("export_format"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("doc_id", &self.doc_id)?;
+        s.serialize_field("export_format", &self.export_format)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocExport {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperDocExport;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperDocExport struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperDocExport::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperDocExport", PAPER_DOC_EXPORT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDocExport {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperDocExport", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -1827,221 +2777,23 @@ impl ::serde::ser::Serialize for PaperDocExportResult {
 }
 
 #[derive(Debug)]
-pub struct ListUsersOnFolderResponse {
-    /// List of email addresses that are invited on the Paper folder.
-    pub invitees: Vec<super::sharing::InviteeInfo>,
-    /// List of users that are invited on the Paper folder.
-    pub users: Vec<super::sharing::UserInfo>,
-    /// Pass the cursor into :route:`docs/folder_users/list/continue` to paginate through all users.
-    /// The cursor preserves all properties as specified in the original call to
-    /// :route:`docs/folder_users/list`.
-    pub cursor: Cursor,
-    /// Will be set to True if a subsequent call with the provided cursor to
-    /// :route:`docs/folder_users/list/continue` returns immediately with some results. If set to
-    /// False please allow some delay before making another call to
-    /// :route:`docs/folder_users/list/continue`.
-    pub has_more: bool,
-}
-
-impl ListUsersOnFolderResponse {
-    pub fn new(invitees: Vec<super::sharing::InviteeInfo>, users: Vec<super::sharing::UserInfo>, cursor: Cursor, has_more: bool) -> Self {
-        ListUsersOnFolderResponse {
-            invitees,
-            users,
-            cursor,
-            has_more,
-        }
-    }
-
-}
-
-const LIST_USERS_ON_FOLDER_RESPONSE_FIELDS: &'static [&'static str] = &["invitees",
-                                                                        "users",
-                                                                        "cursor",
-                                                                        "has_more"];
-impl ListUsersOnFolderResponse {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnFolderResponse, V::Error> {
-        use serde::de;
-        let mut field_invitees = None;
-        let mut field_users = None;
-        let mut field_cursor = None;
-        let mut field_has_more = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "invitees" => {
-                    if field_invitees.is_some() {
-                        return Err(de::Error::duplicate_field("invitees"));
-                    }
-                    field_invitees = Some(map.next_value()?);
-                }
-                "users" => {
-                    if field_users.is_some() {
-                        return Err(de::Error::duplicate_field("users"));
-                    }
-                    field_users = Some(map.next_value()?);
-                }
-                "cursor" => {
-                    if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
-                    }
-                    field_cursor = Some(map.next_value()?);
-                }
-                "has_more" => {
-                    if field_has_more.is_some() {
-                        return Err(de::Error::duplicate_field("has_more"));
-                    }
-                    field_has_more = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_FOLDER_RESPONSE_FIELDS))
-            }
-        }
-        Ok(ListUsersOnFolderResponse {
-            invitees: field_invitees.ok_or_else(|| de::Error::missing_field("invitees"))?,
-            users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-            has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("invitees", &self.invitees)?;
-        s.serialize_field("users", &self.users)?;
-        s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("has_more", &self.has_more)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListUsersOnFolderResponse {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListUsersOnFolderResponse;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListUsersOnFolderResponse struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListUsersOnFolderResponse::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListUsersOnFolderResponse", LIST_USERS_ON_FOLDER_RESPONSE_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListUsersOnFolderResponse {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListUsersOnFolderResponse", 4)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Metadata about Paper folders containing the specififed Paper doc.
-#[derive(Debug)]
-pub struct FoldersContainingPaperDoc {
-    /// The sharing policy of the folder containing the Paper doc.
-    pub folder_sharing_policy_type: Option<FolderSharingPolicyType>,
-    /// The folder path. If present the first folder is the root folder.
-    pub folders: Option<Vec<Folder>>,
-}
-
-impl Default for FoldersContainingPaperDoc {
-    fn default() -> Self {
-        FoldersContainingPaperDoc {
-            folder_sharing_policy_type: None,
-            folders: None,
-        }
-    }
-}
-
-const FOLDERS_CONTAINING_PAPER_DOC_FIELDS: &'static [&'static str] = &["folder_sharing_policy_type",
-                                                                       "folders"];
-impl FoldersContainingPaperDoc {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FoldersContainingPaperDoc, V::Error> {
-        use serde::de;
-        let mut field_folder_sharing_policy_type = None;
-        let mut field_folders = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "folder_sharing_policy_type" => {
-                    if field_folder_sharing_policy_type.is_some() {
-                        return Err(de::Error::duplicate_field("folder_sharing_policy_type"));
-                    }
-                    field_folder_sharing_policy_type = Some(map.next_value()?);
-                }
-                "folders" => {
-                    if field_folders.is_some() {
-                        return Err(de::Error::duplicate_field("folders"));
-                    }
-                    field_folders = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FOLDERS_CONTAINING_PAPER_DOC_FIELDS))
-            }
-        }
-        Ok(FoldersContainingPaperDoc {
-            folder_sharing_policy_type: field_folder_sharing_policy_type,
-            folders: field_folders,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("folder_sharing_policy_type", &self.folder_sharing_policy_type)?;
-        s.serialize_field("folders", &self.folders)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FoldersContainingPaperDoc {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FoldersContainingPaperDoc;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FoldersContainingPaperDoc struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FoldersContainingPaperDoc::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("FoldersContainingPaperDoc", FOLDERS_CONTAINING_PAPER_DOC_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FoldersContainingPaperDoc {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FoldersContainingPaperDoc", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// The desired export format of the Paper doc.
-#[derive(Debug)]
-pub enum ExportFormat {
-    /// The HTML export format.
-    Html,
-    /// The markdown export format.
-    Markdown,
+pub enum PaperDocPermissionLevel {
+    /// User will be granted edit permissions.
+    Edit,
+    /// User will be granted view and comment permissions.
+    ViewAndComment,
     Other,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for ExportFormat {
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocPermissionLevel {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ExportFormat;
+            type Value = PaperDocPermissionLevel;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ExportFormat structure")
+                f.write_str("a PaperDocPermissionLevel structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -2049,764 +2801,38 @@ impl<'de> ::serde::de::Deserialize<'de> for ExportFormat {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "html" => Ok(ExportFormat::Html),
-                    "markdown" => Ok(ExportFormat::Markdown),
-                    _ => Ok(ExportFormat::Other)
+                    "edit" => Ok(PaperDocPermissionLevel::Edit),
+                    "view_and_comment" => Ok(PaperDocPermissionLevel::ViewAndComment),
+                    _ => Ok(PaperDocPermissionLevel::Other)
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["html",
-                                                    "markdown",
+        const VARIANTS: &'static [&'static str] = &["edit",
+                                                    "view_and_comment",
                                                     "other"];
-        deserializer.deserialize_struct("ExportFormat", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PaperDocPermissionLevel", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for ExportFormat {
+impl ::serde::ser::Serialize for PaperDocPermissionLevel {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            ExportFormat::Html => {
+            PaperDocPermissionLevel::Edit => {
                 // unit
-                let mut s = serializer.serialize_struct("ExportFormat", 1)?;
-                s.serialize_field(".tag", "html")?;
+                let mut s = serializer.serialize_struct("PaperDocPermissionLevel", 1)?;
+                s.serialize_field(".tag", "edit")?;
                 s.end()
             }
-            ExportFormat::Markdown => {
+            PaperDocPermissionLevel::ViewAndComment => {
                 // unit
-                let mut s = serializer.serialize_struct("ExportFormat", 1)?;
-                s.serialize_field(".tag", "markdown")?;
+                let mut s = serializer.serialize_struct("PaperDocPermissionLevel", 1)?;
+                s.serialize_field(".tag", "view_and_comment")?;
                 s.end()
             }
-            ExportFormat::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            PaperDocPermissionLevel::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
-    }
-}
-
-#[derive(Debug)]
-pub struct ListPaperDocsResponse {
-    /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to
-    /// other API methods. The list is sorted in the order specified by the initial call to
-    /// :route:`docs/list`.
-    pub doc_ids: Vec<String>,
-    /// Pass the cursor into :route:`docs/list/continue` to paginate through all files. The cursor
-    /// preserves all properties as specified in the original call to :route:`docs/list`.
-    pub cursor: Cursor,
-    /// Will be set to True if a subsequent call with the provided cursor to
-    /// :route:`docs/list/continue` returns immediately with some results. If set to False please
-    /// allow some delay before making another call to :route:`docs/list/continue`.
-    pub has_more: bool,
-}
-
-impl ListPaperDocsResponse {
-    pub fn new(doc_ids: Vec<String>, cursor: Cursor, has_more: bool) -> Self {
-        ListPaperDocsResponse {
-            doc_ids,
-            cursor,
-            has_more,
-        }
-    }
-
-}
-
-const LIST_PAPER_DOCS_RESPONSE_FIELDS: &'static [&'static str] = &["doc_ids",
-                                                                   "cursor",
-                                                                   "has_more"];
-impl ListPaperDocsResponse {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListPaperDocsResponse, V::Error> {
-        use serde::de;
-        let mut field_doc_ids = None;
-        let mut field_cursor = None;
-        let mut field_has_more = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "doc_ids" => {
-                    if field_doc_ids.is_some() {
-                        return Err(de::Error::duplicate_field("doc_ids"));
-                    }
-                    field_doc_ids = Some(map.next_value()?);
-                }
-                "cursor" => {
-                    if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
-                    }
-                    field_cursor = Some(map.next_value()?);
-                }
-                "has_more" => {
-                    if field_has_more.is_some() {
-                        return Err(de::Error::duplicate_field("has_more"));
-                    }
-                    field_has_more = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_PAPER_DOCS_RESPONSE_FIELDS))
-            }
-        }
-        Ok(ListPaperDocsResponse {
-            doc_ids: field_doc_ids.ok_or_else(|| de::Error::missing_field("doc_ids"))?,
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-            has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("doc_ids", &self.doc_ids)?;
-        s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("has_more", &self.has_more)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsResponse {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListPaperDocsResponse;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListPaperDocsResponse struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListPaperDocsResponse::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListPaperDocsResponse", LIST_PAPER_DOCS_RESPONSE_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListPaperDocsResponse {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListPaperDocsResponse", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum PaperApiBaseError {
-    /// Your account does not have permissions to perform this action.
-    InsufficientPermissions,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PaperApiBaseError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = PaperApiBaseError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PaperApiBaseError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "insufficient_permissions" => Ok(PaperApiBaseError::InsufficientPermissions),
-                    _ => Ok(PaperApiBaseError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["insufficient_permissions",
-                                                    "other"];
-        deserializer.deserialize_struct("PaperApiBaseError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PaperApiBaseError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            PaperApiBaseError::InsufficientPermissions => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperApiBaseError", 1)?;
-                s.serialize_field(".tag", "insufficient_permissions")?;
-                s.end()
-            }
-            PaperApiBaseError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for PaperApiBaseError {
-    fn description(&self) -> &str {
-        "PaperApiBaseError"
-    }
-}
-
-impl ::std::fmt::Display for PaperApiBaseError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub enum UserOnPaperDocFilter {
-    /// all users who have visited the Paper doc.
-    Visited,
-    /// All uses who are shared on the Paper doc. This includes all users who have visited the Paper
-    /// doc as well as those who have not.
-    Shared,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UserOnPaperDocFilter {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = UserOnPaperDocFilter;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UserOnPaperDocFilter structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "visited" => Ok(UserOnPaperDocFilter::Visited),
-                    "shared" => Ok(UserOnPaperDocFilter::Shared),
-                    _ => Ok(UserOnPaperDocFilter::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["visited",
-                                                    "shared",
-                                                    "other"];
-        deserializer.deserialize_struct("UserOnPaperDocFilter", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UserOnPaperDocFilter {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            UserOnPaperDocFilter::Visited => {
-                // unit
-                let mut s = serializer.serialize_struct("UserOnPaperDocFilter", 1)?;
-                s.serialize_field(".tag", "visited")?;
-                s.end()
-            }
-            UserOnPaperDocFilter::Shared => {
-                // unit
-                let mut s = serializer.serialize_struct("UserOnPaperDocFilter", 1)?;
-                s.serialize_field(".tag", "shared")?;
-                s.end()
-            }
-            UserOnPaperDocFilter::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct Cursor {
-    /// The actual cursor value.
-    pub value: String,
-    /// Expiration time of :field:`value`. Some cursors might have expiration time assigned. This is
-    /// a UTC value after which the cursor is no longer valid and the API starts returning an error.
-    /// If cursor expires a new one needs to be obtained and pagination needs to be restarted. Some
-    /// cursors might be short-lived some cursors might be long-lived. This really depends on the
-    /// sorting type and order, e.g.: 1. on one hand, listing docs created by the user, sorted by
-    /// the created time ascending will have undefinite expiration because the results cannot change
-    /// while the iteration is happening. This cursor would be suitable for long term polling. 2. on
-    /// the other hand, listing docs sorted by the last modified time will have a very short
-    /// expiration as docs do get modified very often and the modified time can be changed while the
-    /// iteration is happening thus altering the results.
-    pub expiration: Option<super::common::DropboxTimestamp>,
-}
-
-impl Cursor {
-    pub fn new(value: String) -> Self {
-        Cursor {
-            value,
-            expiration: None,
-        }
-    }
-
-    pub fn with_expiration(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.expiration = value;
-        self
-    }
-
-}
-
-const CURSOR_FIELDS: &'static [&'static str] = &["value",
-                                                 "expiration"];
-impl Cursor {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Cursor, V::Error> {
-        use serde::de;
-        let mut field_value = None;
-        let mut field_expiration = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "value" => {
-                    if field_value.is_some() {
-                        return Err(de::Error::duplicate_field("value"));
-                    }
-                    field_value = Some(map.next_value()?);
-                }
-                "expiration" => {
-                    if field_expiration.is_some() {
-                        return Err(de::Error::duplicate_field("expiration"));
-                    }
-                    field_expiration = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, CURSOR_FIELDS))
-            }
-        }
-        Ok(Cursor {
-            value: field_value.ok_or_else(|| de::Error::missing_field("value"))?,
-            expiration: field_expiration,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("value", &self.value)?;
-        s.serialize_field("expiration", &self.expiration)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for Cursor {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = Cursor;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a Cursor struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                Cursor::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("Cursor", CURSOR_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for Cursor {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("Cursor", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct InviteeInfoWithPermissionLevel {
-    /// Email address invited to the Paper doc.
-    pub invitee: super::sharing::InviteeInfo,
-    /// Permission level for the invitee.
-    pub permission_level: PaperDocPermissionLevel,
-}
-
-impl InviteeInfoWithPermissionLevel {
-    pub fn new(invitee: super::sharing::InviteeInfo, permission_level: PaperDocPermissionLevel) -> Self {
-        InviteeInfoWithPermissionLevel {
-            invitee,
-            permission_level,
-        }
-    }
-
-}
-
-const INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS: &'static [&'static str] = &["invitee",
-                                                                             "permission_level"];
-impl InviteeInfoWithPermissionLevel {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<InviteeInfoWithPermissionLevel, V::Error> {
-        use serde::de;
-        let mut field_invitee = None;
-        let mut field_permission_level = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "invitee" => {
-                    if field_invitee.is_some() {
-                        return Err(de::Error::duplicate_field("invitee"));
-                    }
-                    field_invitee = Some(map.next_value()?);
-                }
-                "permission_level" => {
-                    if field_permission_level.is_some() {
-                        return Err(de::Error::duplicate_field("permission_level"));
-                    }
-                    field_permission_level = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS))
-            }
-        }
-        Ok(InviteeInfoWithPermissionLevel {
-            invitee: field_invitee.ok_or_else(|| de::Error::missing_field("invitee"))?,
-            permission_level: field_permission_level.ok_or_else(|| de::Error::missing_field("permission_level"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("invitee", &self.invitee)?;
-        s.serialize_field("permission_level", &self.permission_level)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for InviteeInfoWithPermissionLevel {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = InviteeInfoWithPermissionLevel;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a InviteeInfoWithPermissionLevel struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                InviteeInfoWithPermissionLevel::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("InviteeInfoWithPermissionLevel", INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for InviteeInfoWithPermissionLevel {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("InviteeInfoWithPermissionLevel", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// The subscription level of a Paper doc.
-#[derive(Debug)]
-pub enum DocSubscriptionLevel {
-    /// No change email messages unless you're the creator.
-    DefaultVariant,
-    /// Ignored: Not shown in pad lists or activity and no email message is sent.
-    Ignore,
-    /// Subscribed: Shown in pad lists and activity and change email messages are sent.
-    Every,
-    /// Unsubscribed: Shown in pad lists, but not in activity and no change email messages are sent.
-    NoEmail,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for DocSubscriptionLevel {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = DocSubscriptionLevel;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DocSubscriptionLevel structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "default" => Ok(DocSubscriptionLevel::DefaultVariant),
-                    "ignore" => Ok(DocSubscriptionLevel::Ignore),
-                    "every" => Ok(DocSubscriptionLevel::Every),
-                    "no_email" => Ok(DocSubscriptionLevel::NoEmail),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["default",
-                                                    "ignore",
-                                                    "every",
-                                                    "no_email"];
-        deserializer.deserialize_struct("DocSubscriptionLevel", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for DocSubscriptionLevel {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            DocSubscriptionLevel::DefaultVariant => {
-                // unit
-                let mut s = serializer.serialize_struct("DocSubscriptionLevel", 1)?;
-                s.serialize_field(".tag", "default")?;
-                s.end()
-            }
-            DocSubscriptionLevel::Ignore => {
-                // unit
-                let mut s = serializer.serialize_struct("DocSubscriptionLevel", 1)?;
-                s.serialize_field(".tag", "ignore")?;
-                s.end()
-            }
-            DocSubscriptionLevel::Every => {
-                // unit
-                let mut s = serializer.serialize_struct("DocSubscriptionLevel", 1)?;
-                s.serialize_field(".tag", "every")?;
-                s.end()
-            }
-            DocSubscriptionLevel::NoEmail => {
-                // unit
-                let mut s = serializer.serialize_struct("DocSubscriptionLevel", 1)?;
-                s.serialize_field(".tag", "no_email")?;
-                s.end()
-            }
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct ListUsersOnFolderArgs {
-    /// The Paper doc ID.
-    pub doc_id: PaperDocId,
-    /// Size limit per batch. The maximum number of users that can be retrieved per batch is 1000.
-    /// Higher value results in invalid arguments error.
-    pub limit: i32,
-}
-
-impl ListUsersOnFolderArgs {
-    pub fn new(doc_id: PaperDocId) -> Self {
-        ListUsersOnFolderArgs {
-            doc_id,
-            limit: 1000,
-        }
-    }
-
-    pub fn with_limit(mut self, value: i32) -> Self {
-        self.limit = value;
-        self
-    }
-
-}
-
-const LIST_USERS_ON_FOLDER_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                    "limit"];
-impl ListUsersOnFolderArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnFolderArgs, V::Error> {
-        use serde::de;
-        let mut field_doc_id = None;
-        let mut field_limit = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "doc_id" => {
-                    if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
-                    }
-                    field_doc_id = Some(map.next_value()?);
-                }
-                "limit" => {
-                    if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
-                    }
-                    field_limit = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_FOLDER_ARGS_FIELDS))
-            }
-        }
-        Ok(ListUsersOnFolderArgs {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            limit: field_limit.unwrap_or(1000),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("limit", &self.limit)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListUsersOnFolderArgs {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListUsersOnFolderArgs;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListUsersOnFolderArgs struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListUsersOnFolderArgs::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListUsersOnFolderArgs", LIST_USERS_ON_FOLDER_ARGS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListUsersOnFolderArgs {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListUsersOnFolderArgs", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// The sharing policy type of the Paper doc.
-#[derive(Debug)]
-pub enum SharingTeamPolicyType {
-    /// Users who have a link to this doc can edit it.
-    PeopleWithLinkCanEdit,
-    /// Users who have a link to this doc can view and comment on it.
-    PeopleWithLinkCanViewAndComment,
-    /// Users must be explicitly invited to this doc.
-    InviteOnly,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SharingTeamPolicyType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SharingTeamPolicyType;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharingTeamPolicyType structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "people_with_link_can_edit" => Ok(SharingTeamPolicyType::PeopleWithLinkCanEdit),
-                    "people_with_link_can_view_and_comment" => Ok(SharingTeamPolicyType::PeopleWithLinkCanViewAndComment),
-                    "invite_only" => Ok(SharingTeamPolicyType::InviteOnly),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["people_with_link_can_edit",
-                                                    "people_with_link_can_view_and_comment",
-                                                    "invite_only"];
-        deserializer.deserialize_struct("SharingTeamPolicyType", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SharingTeamPolicyType {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SharingTeamPolicyType::PeopleWithLinkCanEdit => {
-                // unit
-                let mut s = serializer.serialize_struct("SharingTeamPolicyType", 1)?;
-                s.serialize_field(".tag", "people_with_link_can_edit")?;
-                s.end()
-            }
-            SharingTeamPolicyType::PeopleWithLinkCanViewAndComment => {
-                // unit
-                let mut s = serializer.serialize_struct("SharingTeamPolicyType", 1)?;
-                s.serialize_field(".tag", "people_with_link_can_view_and_comment")?;
-                s.end()
-            }
-            SharingTeamPolicyType::InviteOnly => {
-                // unit
-                let mut s = serializer.serialize_struct("SharingTeamPolicyType", 1)?;
-                s.serialize_field(".tag", "invite_only")?;
-                s.end()
-            }
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum ListUsersCursorError {
-    /// Your account does not have permissions to perform this action.
-    InsufficientPermissions,
-    Other,
-    /// The required doc was not found.
-    DocNotFound,
-    CursorError(PaperApiCursorError),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListUsersCursorError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ListUsersCursorError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListUsersCursorError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "insufficient_permissions" => Ok(ListUsersCursorError::InsufficientPermissions),
-                    "doc_not_found" => Ok(ListUsersCursorError::DocNotFound),
-                    "cursor_error" => {
-                        if map.next_key()? != Some("cursor_error") {
-                            return Err(de::Error::missing_field("cursor_error"));
-                        }
-                        Ok(ListUsersCursorError::CursorError(map.next_value()?))
-                    }
-                    _ => Ok(ListUsersCursorError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["insufficient_permissions",
-                                                    "other",
-                                                    "doc_not_found",
-                                                    "cursor_error"];
-        deserializer.deserialize_struct("ListUsersCursorError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListUsersCursorError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            ListUsersCursorError::InsufficientPermissions => {
-                // unit
-                let mut s = serializer.serialize_struct("ListUsersCursorError", 1)?;
-                s.serialize_field(".tag", "insufficient_permissions")?;
-                s.end()
-            }
-            ListUsersCursorError::DocNotFound => {
-                // unit
-                let mut s = serializer.serialize_struct("ListUsersCursorError", 1)?;
-                s.serialize_field(".tag", "doc_not_found")?;
-                s.end()
-            }
-            ListUsersCursorError::CursorError(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "cursor_error")?;
-                s.serialize_field("cursor_error", x)?;
-                s.end()
-            }
-            ListUsersCursorError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for ListUsersCursorError {
-    fn description(&self) -> &str {
-        "ListUsersCursorError"
-    }
-}
-
-impl ::std::fmt::Display for ListUsersCursorError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
     }
 }
 
@@ -2894,324 +2920,6 @@ impl ::serde::ser::Serialize for PaperDocSharingPolicy {
 }
 
 #[derive(Debug)]
-pub struct ListUsersOnFolderContinueArgs {
-    /// The Paper doc ID.
-    pub doc_id: PaperDocId,
-    /// The cursor obtained from :route:`docs/folder_users/list` or
-    /// :route:`docs/folder_users/list/continue`. Allows for pagination.
-    pub cursor: String,
-}
-
-impl ListUsersOnFolderContinueArgs {
-    pub fn new(doc_id: PaperDocId, cursor: String) -> Self {
-        ListUsersOnFolderContinueArgs {
-            doc_id,
-            cursor,
-        }
-    }
-
-}
-
-const LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                             "cursor"];
-impl ListUsersOnFolderContinueArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnFolderContinueArgs, V::Error> {
-        use serde::de;
-        let mut field_doc_id = None;
-        let mut field_cursor = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "doc_id" => {
-                    if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
-                    }
-                    field_doc_id = Some(map.next_value()?);
-                }
-                "cursor" => {
-                    if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
-                    }
-                    field_cursor = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS))
-            }
-        }
-        Ok(ListUsersOnFolderContinueArgs {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("cursor", &self.cursor)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListUsersOnFolderContinueArgs {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListUsersOnFolderContinueArgs;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListUsersOnFolderContinueArgs struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListUsersOnFolderContinueArgs::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListUsersOnFolderContinueArgs", LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListUsersOnFolderContinueArgs {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListUsersOnFolderContinueArgs", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct ListUsersOnPaperDocArgs {
-    /// The Paper doc ID.
-    pub doc_id: PaperDocId,
-    /// Size limit per batch. The maximum number of users that can be retrieved per batch is 1000.
-    /// Higher value results in invalid arguments error.
-    pub limit: i32,
-    /// Specify this attribute if you want to obtain users that have already accessed the Paper doc.
-    pub filter_by: UserOnPaperDocFilter,
-}
-
-impl ListUsersOnPaperDocArgs {
-    pub fn new(doc_id: PaperDocId) -> Self {
-        ListUsersOnPaperDocArgs {
-            doc_id,
-            limit: 1000,
-            filter_by: UserOnPaperDocFilter::Shared,
-        }
-    }
-
-    pub fn with_limit(mut self, value: i32) -> Self {
-        self.limit = value;
-        self
-    }
-
-    pub fn with_filter_by(mut self, value: UserOnPaperDocFilter) -> Self {
-        self.filter_by = value;
-        self
-    }
-
-}
-
-const LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                       "limit",
-                                                                       "filter_by"];
-impl ListUsersOnPaperDocArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnPaperDocArgs, V::Error> {
-        use serde::de;
-        let mut field_doc_id = None;
-        let mut field_limit = None;
-        let mut field_filter_by = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "doc_id" => {
-                    if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
-                    }
-                    field_doc_id = Some(map.next_value()?);
-                }
-                "limit" => {
-                    if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
-                    }
-                    field_limit = Some(map.next_value()?);
-                }
-                "filter_by" => {
-                    if field_filter_by.is_some() {
-                        return Err(de::Error::duplicate_field("filter_by"));
-                    }
-                    field_filter_by = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS))
-            }
-        }
-        Ok(ListUsersOnPaperDocArgs {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            limit: field_limit.unwrap_or(1000),
-            filter_by: field_filter_by.unwrap_or_else(|| UserOnPaperDocFilter::Shared),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("doc_id", &self.doc_id)?;
-        s.serialize_field("limit", &self.limit)?;
-        s.serialize_field("filter_by", &self.filter_by)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListUsersOnPaperDocArgs {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListUsersOnPaperDocArgs;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListUsersOnPaperDocArgs struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListUsersOnPaperDocArgs::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListUsersOnPaperDocArgs", LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListUsersOnPaperDocArgs {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListUsersOnPaperDocArgs", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum ListDocsCursorError {
-    CursorError(PaperApiCursorError),
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListDocsCursorError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ListDocsCursorError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListDocsCursorError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "cursor_error" => {
-                        if map.next_key()? != Some("cursor_error") {
-                            return Err(de::Error::missing_field("cursor_error"));
-                        }
-                        Ok(ListDocsCursorError::CursorError(map.next_value()?))
-                    }
-                    _ => Ok(ListDocsCursorError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["cursor_error",
-                                                    "other"];
-        deserializer.deserialize_struct("ListDocsCursorError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListDocsCursorError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            ListDocsCursorError::CursorError(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "cursor_error")?;
-                s.serialize_field("cursor_error", x)?;
-                s.end()
-            }
-            ListDocsCursorError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for ListDocsCursorError {
-    fn description(&self) -> &str {
-        "ListDocsCursorError"
-    }
-}
-
-impl ::std::fmt::Display for ListDocsCursorError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub enum PaperDocPermissionLevel {
-    /// User will be granted edit permissions.
-    Edit,
-    /// User will be granted view and comment permissions.
-    ViewAndComment,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PaperDocPermissionLevel {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = PaperDocPermissionLevel;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PaperDocPermissionLevel structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "edit" => Ok(PaperDocPermissionLevel::Edit),
-                    "view_and_comment" => Ok(PaperDocPermissionLevel::ViewAndComment),
-                    _ => Ok(PaperDocPermissionLevel::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["edit",
-                                                    "view_and_comment",
-                                                    "other"];
-        deserializer.deserialize_struct("PaperDocPermissionLevel", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PaperDocPermissionLevel {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            PaperDocPermissionLevel::Edit => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperDocPermissionLevel", 1)?;
-                s.serialize_field(".tag", "edit")?;
-                s.end()
-            }
-            PaperDocPermissionLevel::ViewAndComment => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperDocPermissionLevel", 1)?;
-                s.serialize_field(".tag", "view_and_comment")?;
-                s.end()
-            }
-            PaperDocPermissionLevel::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-#[derive(Debug)]
 pub struct RefPaperDoc {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
@@ -3282,99 +2990,193 @@ impl ::serde::ser::Serialize for RefPaperDoc {
 }
 
 #[derive(Debug)]
-pub struct ListPaperDocsContinueArgs {
-    /// The cursor obtained from :route:`docs/list` or :route:`docs/list/continue`. Allows for
-    /// pagination.
-    pub cursor: String,
+pub struct RemovePaperDocUser {
+    /// The Paper doc ID.
+    pub doc_id: PaperDocId,
+    /// User which should be removed from the Paper doc. Specify only email address or Dropbox
+    /// account ID.
+    pub member: super::sharing::MemberSelector,
 }
 
-impl ListPaperDocsContinueArgs {
-    pub fn new(cursor: String) -> Self {
-        ListPaperDocsContinueArgs {
-            cursor,
+impl RemovePaperDocUser {
+    pub fn new(doc_id: PaperDocId, member: super::sharing::MemberSelector) -> Self {
+        RemovePaperDocUser {
+            doc_id,
+            member,
         }
     }
 
 }
 
-const LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS: &'static [&'static str] = &["cursor"];
-impl ListPaperDocsContinueArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListPaperDocsContinueArgs, V::Error> {
+const REMOVE_PAPER_DOC_USER_FIELDS: &'static [&'static str] = &["doc_id",
+                                                                "member"];
+impl RemovePaperDocUser {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RemovePaperDocUser, V::Error> {
         use serde::de;
-        let mut field_cursor = None;
+        let mut field_doc_id = None;
+        let mut field_member = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "cursor" => {
-                    if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                "doc_id" => {
+                    if field_doc_id.is_some() {
+                        return Err(de::Error::duplicate_field("doc_id"));
                     }
-                    field_cursor = Some(map.next_value()?);
+                    field_doc_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS))
+                "member" => {
+                    if field_member.is_some() {
+                        return Err(de::Error::duplicate_field("member"));
+                    }
+                    field_member = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, REMOVE_PAPER_DOC_USER_FIELDS))
             }
         }
-        Ok(ListPaperDocsContinueArgs {
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+        Ok(RemovePaperDocUser {
+            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
+            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
+        s.serialize_field("doc_id", &self.doc_id)?;
+        s.serialize_field("member", &self.member)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsContinueArgs {
+impl<'de> ::serde::de::Deserialize<'de> for RemovePaperDocUser {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListPaperDocsContinueArgs;
+            type Value = RemovePaperDocUser;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListPaperDocsContinueArgs struct")
+                f.write_str("a RemovePaperDocUser struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListPaperDocsContinueArgs::internal_deserialize(map)
+                RemovePaperDocUser::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("ListPaperDocsContinueArgs", LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("RemovePaperDocUser", REMOVE_PAPER_DOC_USER_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for ListPaperDocsContinueArgs {
+impl ::serde::ser::Serialize for RemovePaperDocUser {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListPaperDocsContinueArgs", 1)?;
+        let mut s = serializer.serialize_struct("RemovePaperDocUser", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Sharing policy of Paper doc.
+#[derive(Debug)]
+pub struct SharingPolicy {
+    /// This value applies to the non-team members.
+    pub public_sharing_policy: Option<SharingPublicPolicyType>,
+    /// This value applies to the team members only. The value is null for all personal accounts.
+    pub team_sharing_policy: Option<SharingTeamPolicyType>,
+}
+
+impl Default for SharingPolicy {
+    fn default() -> Self {
+        SharingPolicy {
+            public_sharing_policy: None,
+            team_sharing_policy: None,
+        }
+    }
+}
+
+const SHARING_POLICY_FIELDS: &'static [&'static str] = &["public_sharing_policy",
+                                                         "team_sharing_policy"];
+impl SharingPolicy {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharingPolicy, V::Error> {
+        use serde::de;
+        let mut field_public_sharing_policy = None;
+        let mut field_team_sharing_policy = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "public_sharing_policy" => {
+                    if field_public_sharing_policy.is_some() {
+                        return Err(de::Error::duplicate_field("public_sharing_policy"));
+                    }
+                    field_public_sharing_policy = Some(map.next_value()?);
+                }
+                "team_sharing_policy" => {
+                    if field_team_sharing_policy.is_some() {
+                        return Err(de::Error::duplicate_field("team_sharing_policy"));
+                    }
+                    field_team_sharing_policy = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHARING_POLICY_FIELDS))
+            }
+        }
+        Ok(SharingPolicy {
+            public_sharing_policy: field_public_sharing_policy,
+            team_sharing_policy: field_team_sharing_policy,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("public_sharing_policy", &self.public_sharing_policy)?;
+        s.serialize_field("team_sharing_policy", &self.team_sharing_policy)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharingPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SharingPolicy struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharingPolicy::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharingPolicy", SHARING_POLICY_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharingPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SharingPolicy", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
 }
 
 #[derive(Debug)]
-pub enum PaperApiCursorError {
-    /// The provided cursor is expired.
-    ExpiredCursor,
-    /// The provided cursor is invalid.
-    InvalidCursor,
-    /// The provided cursor contains invalid user.
-    WrongUserInCursor,
-    /// Indicates that the cursor has been invalidated. Call the corresponding non-continue endpoint
-    /// to obtain a new cursor.
-    Reset,
-    Other,
+pub enum SharingPublicPolicyType {
+    /// Users who have a link to this doc can edit it.
+    PeopleWithLinkCanEdit,
+    /// Users who have a link to this doc can view and comment on it.
+    PeopleWithLinkCanViewAndComment,
+    /// Users must be explicitly invited to this doc.
+    InviteOnly,
+    /// Value used to indicate that doc sharing is enabled only within team.
+    Disabled,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for PaperApiCursorError {
+impl<'de> ::serde::de::Deserialize<'de> for SharingPublicPolicyType {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = PaperApiCursorError;
+            type Value = SharingPublicPolicyType;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PaperApiCursorError structure")
+                f.write_str("a SharingPublicPolicyType structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -3382,66 +3184,264 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperApiCursorError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "expired_cursor" => Ok(PaperApiCursorError::ExpiredCursor),
-                    "invalid_cursor" => Ok(PaperApiCursorError::InvalidCursor),
-                    "wrong_user_in_cursor" => Ok(PaperApiCursorError::WrongUserInCursor),
-                    "reset" => Ok(PaperApiCursorError::Reset),
-                    _ => Ok(PaperApiCursorError::Other)
+                    "people_with_link_can_edit" => Ok(SharingPublicPolicyType::PeopleWithLinkCanEdit),
+                    "people_with_link_can_view_and_comment" => Ok(SharingPublicPolicyType::PeopleWithLinkCanViewAndComment),
+                    "invite_only" => Ok(SharingPublicPolicyType::InviteOnly),
+                    "disabled" => Ok(SharingPublicPolicyType::Disabled),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["expired_cursor",
-                                                    "invalid_cursor",
-                                                    "wrong_user_in_cursor",
-                                                    "reset",
-                                                    "other"];
-        deserializer.deserialize_struct("PaperApiCursorError", VARIANTS, EnumVisitor)
+        const VARIANTS: &'static [&'static str] = &["people_with_link_can_edit",
+                                                    "people_with_link_can_view_and_comment",
+                                                    "invite_only",
+                                                    "disabled"];
+        deserializer.deserialize_struct("SharingPublicPolicyType", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for PaperApiCursorError {
+impl ::serde::ser::Serialize for SharingPublicPolicyType {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            PaperApiCursorError::ExpiredCursor => {
+            SharingPublicPolicyType::PeopleWithLinkCanEdit => {
                 // unit
-                let mut s = serializer.serialize_struct("PaperApiCursorError", 1)?;
-                s.serialize_field(".tag", "expired_cursor")?;
+                let mut s = serializer.serialize_struct("SharingPublicPolicyType", 1)?;
+                s.serialize_field(".tag", "people_with_link_can_edit")?;
                 s.end()
             }
-            PaperApiCursorError::InvalidCursor => {
+            SharingPublicPolicyType::PeopleWithLinkCanViewAndComment => {
                 // unit
-                let mut s = serializer.serialize_struct("PaperApiCursorError", 1)?;
-                s.serialize_field(".tag", "invalid_cursor")?;
+                let mut s = serializer.serialize_struct("SharingPublicPolicyType", 1)?;
+                s.serialize_field(".tag", "people_with_link_can_view_and_comment")?;
                 s.end()
             }
-            PaperApiCursorError::WrongUserInCursor => {
+            SharingPublicPolicyType::InviteOnly => {
                 // unit
-                let mut s = serializer.serialize_struct("PaperApiCursorError", 1)?;
-                s.serialize_field(".tag", "wrong_user_in_cursor")?;
+                let mut s = serializer.serialize_struct("SharingPublicPolicyType", 1)?;
+                s.serialize_field(".tag", "invite_only")?;
                 s.end()
             }
-            PaperApiCursorError::Reset => {
+            SharingPublicPolicyType::Disabled => {
                 // unit
-                let mut s = serializer.serialize_struct("PaperApiCursorError", 1)?;
-                s.serialize_field(".tag", "reset")?;
+                let mut s = serializer.serialize_struct("SharingPublicPolicyType", 1)?;
+                s.serialize_field(".tag", "disabled")?;
                 s.end()
             }
-            PaperApiCursorError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
 
-impl ::std::error::Error for PaperApiCursorError {
-    fn description(&self) -> &str {
-        "PaperApiCursorError"
+/// The sharing policy type of the Paper doc.
+#[derive(Debug)]
+pub enum SharingTeamPolicyType {
+    /// Users who have a link to this doc can edit it.
+    PeopleWithLinkCanEdit,
+    /// Users who have a link to this doc can view and comment on it.
+    PeopleWithLinkCanViewAndComment,
+    /// Users must be explicitly invited to this doc.
+    InviteOnly,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharingTeamPolicyType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SharingTeamPolicyType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SharingTeamPolicyType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "people_with_link_can_edit" => Ok(SharingTeamPolicyType::PeopleWithLinkCanEdit),
+                    "people_with_link_can_view_and_comment" => Ok(SharingTeamPolicyType::PeopleWithLinkCanViewAndComment),
+                    "invite_only" => Ok(SharingTeamPolicyType::InviteOnly),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["people_with_link_can_edit",
+                                                    "people_with_link_can_view_and_comment",
+                                                    "invite_only"];
+        deserializer.deserialize_struct("SharingTeamPolicyType", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::std::fmt::Display for PaperApiCursorError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+impl ::serde::ser::Serialize for SharingTeamPolicyType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SharingTeamPolicyType::PeopleWithLinkCanEdit => {
+                // unit
+                let mut s = serializer.serialize_struct("SharingTeamPolicyType", 1)?;
+                s.serialize_field(".tag", "people_with_link_can_edit")?;
+                s.end()
+            }
+            SharingTeamPolicyType::PeopleWithLinkCanViewAndComment => {
+                // unit
+                let mut s = serializer.serialize_struct("SharingTeamPolicyType", 1)?;
+                s.serialize_field(".tag", "people_with_link_can_view_and_comment")?;
+                s.end()
+            }
+            SharingTeamPolicyType::InviteOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("SharingTeamPolicyType", 1)?;
+                s.serialize_field(".tag", "invite_only")?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct UserInfoWithPermissionLevel {
+    /// User shared on the Paper doc.
+    pub user: super::sharing::UserInfo,
+    /// Permission level for the user.
+    pub permission_level: PaperDocPermissionLevel,
+}
+
+impl UserInfoWithPermissionLevel {
+    pub fn new(user: super::sharing::UserInfo, permission_level: PaperDocPermissionLevel) -> Self {
+        UserInfoWithPermissionLevel {
+            user,
+            permission_level,
+        }
+    }
+
+}
+
+const USER_INFO_WITH_PERMISSION_LEVEL_FIELDS: &'static [&'static str] = &["user",
+                                                                          "permission_level"];
+impl UserInfoWithPermissionLevel {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserInfoWithPermissionLevel, V::Error> {
+        use serde::de;
+        let mut field_user = None;
+        let mut field_permission_level = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "user" => {
+                    if field_user.is_some() {
+                        return Err(de::Error::duplicate_field("user"));
+                    }
+                    field_user = Some(map.next_value()?);
+                }
+                "permission_level" => {
+                    if field_permission_level.is_some() {
+                        return Err(de::Error::duplicate_field("permission_level"));
+                    }
+                    field_permission_level = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, USER_INFO_WITH_PERMISSION_LEVEL_FIELDS))
+            }
+        }
+        Ok(UserInfoWithPermissionLevel {
+            user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
+            permission_level: field_permission_level.ok_or_else(|| de::Error::missing_field("permission_level"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("user", &self.user)?;
+        s.serialize_field("permission_level", &self.permission_level)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UserInfoWithPermissionLevel {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UserInfoWithPermissionLevel;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UserInfoWithPermissionLevel struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UserInfoWithPermissionLevel::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UserInfoWithPermissionLevel", USER_INFO_WITH_PERMISSION_LEVEL_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UserInfoWithPermissionLevel {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UserInfoWithPermissionLevel", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum UserOnPaperDocFilter {
+    /// all users who have visited the Paper doc.
+    Visited,
+    /// All uses who are shared on the Paper doc. This includes all users who have visited the Paper
+    /// doc as well as those who have not.
+    Shared,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UserOnPaperDocFilter {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UserOnPaperDocFilter;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UserOnPaperDocFilter structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "visited" => Ok(UserOnPaperDocFilter::Visited),
+                    "shared" => Ok(UserOnPaperDocFilter::Shared),
+                    _ => Ok(UserOnPaperDocFilter::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["visited",
+                                                    "shared",
+                                                    "other"];
+        deserializer.deserialize_struct("UserOnPaperDocFilter", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UserOnPaperDocFilter {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            UserOnPaperDocFilter::Visited => {
+                // unit
+                let mut s = serializer.serialize_struct("UserOnPaperDocFilter", 1)?;
+                s.serialize_field(".tag", "visited")?;
+                s.end()
+            }
+            UserOnPaperDocFilter::Shared => {
+                // unit
+                let mut s = serializer.serialize_struct("UserOnPaperDocFilter", 1)?;
+                s.serialize_field(".tag", "shared")?;
+                s.end()
+            }
+            UserOnPaperDocFilter::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 

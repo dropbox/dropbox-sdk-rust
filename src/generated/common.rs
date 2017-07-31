@@ -19,6 +19,75 @@ pub type SessionId = String;
 pub type SharedFolderId = NamespaceId;
 
 #[derive(Debug)]
+pub struct InvalidPathRootError {
+    /// The latest path root id for user's team if the user is still in a team.
+    pub path_root: Option<PathRootId>,
+}
+
+impl Default for InvalidPathRootError {
+    fn default() -> Self {
+        InvalidPathRootError {
+            path_root: None,
+        }
+    }
+}
+
+const INVALID_PATH_ROOT_ERROR_FIELDS: &'static [&'static str] = &["path_root"];
+impl InvalidPathRootError {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<InvalidPathRootError, V::Error> {
+        use serde::de;
+        let mut field_path_root = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path_root" => {
+                    if field_path_root.is_some() {
+                        return Err(de::Error::duplicate_field("path_root"));
+                    }
+                    field_path_root = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, INVALID_PATH_ROOT_ERROR_FIELDS))
+            }
+        }
+        Ok(InvalidPathRootError {
+            path_root: field_path_root,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path_root", &self.path_root)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for InvalidPathRootError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = InvalidPathRootError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a InvalidPathRootError struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                InvalidPathRootError::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("InvalidPathRootError", INVALID_PATH_ROOT_ERROR_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for InvalidPathRootError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("InvalidPathRootError", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub enum PathRoot {
     /// Paths are relative to the authenticating user's home directory, whether or not that user
     /// belongs to a team.
@@ -123,75 +192,6 @@ impl ::serde::ser::Serialize for PathRoot {
             }
             PathRoot::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
-    }
-}
-
-#[derive(Debug)]
-pub struct InvalidPathRootError {
-    /// The latest path root id for user's team if the user is still in a team.
-    pub path_root: Option<PathRootId>,
-}
-
-impl Default for InvalidPathRootError {
-    fn default() -> Self {
-        InvalidPathRootError {
-            path_root: None,
-        }
-    }
-}
-
-const INVALID_PATH_ROOT_ERROR_FIELDS: &'static [&'static str] = &["path_root"];
-impl InvalidPathRootError {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<InvalidPathRootError, V::Error> {
-        use serde::de;
-        let mut field_path_root = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path_root" => {
-                    if field_path_root.is_some() {
-                        return Err(de::Error::duplicate_field("path_root"));
-                    }
-                    field_path_root = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, INVALID_PATH_ROOT_ERROR_FIELDS))
-            }
-        }
-        Ok(InvalidPathRootError {
-            path_root: field_path_root,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path_root", &self.path_root)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for InvalidPathRootError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = InvalidPathRootError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a InvalidPathRootError struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                InvalidPathRootError::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("InvalidPathRootError", INVALID_PATH_ROOT_ERROR_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for InvalidPathRootError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("InvalidPathRootError", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
     }
 }
 

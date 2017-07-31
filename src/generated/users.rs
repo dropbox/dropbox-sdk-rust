@@ -32,90 +32,6 @@ pub fn get_space_usage(client: &::client_trait::HttpClient, arg: &()) -> ::Resul
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "users/get_space_usage", arg, None)
 }
 
-/// Information about a user's space usage and quota.
-#[derive(Debug)]
-pub struct SpaceUsage {
-    /// The user's total space usage (bytes).
-    pub used: u64,
-    /// The user's space allocation.
-    pub allocation: SpaceAllocation,
-}
-
-impl SpaceUsage {
-    pub fn new(used: u64, allocation: SpaceAllocation) -> Self {
-        SpaceUsage {
-            used,
-            allocation,
-        }
-    }
-
-}
-
-const SPACE_USAGE_FIELDS: &'static [&'static str] = &["used",
-                                                      "allocation"];
-impl SpaceUsage {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SpaceUsage, V::Error> {
-        use serde::de;
-        let mut field_used = None;
-        let mut field_allocation = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "used" => {
-                    if field_used.is_some() {
-                        return Err(de::Error::duplicate_field("used"));
-                    }
-                    field_used = Some(map.next_value()?);
-                }
-                "allocation" => {
-                    if field_allocation.is_some() {
-                        return Err(de::Error::duplicate_field("allocation"));
-                    }
-                    field_allocation = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SPACE_USAGE_FIELDS))
-            }
-        }
-        Ok(SpaceUsage {
-            used: field_used.ok_or_else(|| de::Error::missing_field("used"))?,
-            allocation: field_allocation.ok_or_else(|| de::Error::missing_field("allocation"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("used", &self.used)?;
-        s.serialize_field("allocation", &self.allocation)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SpaceUsage {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SpaceUsage;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SpaceUsage struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SpaceUsage::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("SpaceUsage", SPACE_USAGE_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SpaceUsage {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SpaceUsage", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
 /// The amount of detail revealed about an account depends on the user being queried and the user
 /// making the query.
 #[derive(Debug)]
@@ -259,95 +175,75 @@ impl ::serde::ser::Serialize for Account {
     }
 }
 
+/// Basic information about any account.
 #[derive(Debug)]
-pub enum GetAccountBatchError {
-    /// The value is an account ID specified in :field:`GetAccountBatchArg.account_ids` that does
-    /// not exist.
-    NoAccount(super::users_common::AccountId),
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = GetAccountBatchError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetAccountBatchError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "no_account" => {
-                        if map.next_key()? != Some("no_account") {
-                            return Err(de::Error::missing_field("no_account"));
-                        }
-                        Ok(GetAccountBatchError::NoAccount(map.next_value()?))
-                    }
-                    _ => Ok(GetAccountBatchError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["no_account",
-                                                    "other"];
-        deserializer.deserialize_struct("GetAccountBatchError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetAccountBatchError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            GetAccountBatchError::NoAccount(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "no_account")?;
-                s.serialize_field("no_account", x)?;
-                s.end()
-            }
-            GetAccountBatchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for GetAccountBatchError {
-    fn description(&self) -> &str {
-        "GetAccountBatchError"
-    }
-}
-
-impl ::std::fmt::Display for GetAccountBatchError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct GetAccountArg {
-    /// A user's account identifier.
+pub struct BasicAccount {
+    /// The user's unique Dropbox ID.
     pub account_id: super::users_common::AccountId,
+    /// Details of a user's name.
+    pub name: Name,
+    /// The user's e-mail address. Do not rely on this without checking the :field:`email_verified`
+    /// field. Even then, it's possible that the user has since lost access to their e-mail.
+    pub email: String,
+    /// Whether the user has verified their e-mail address.
+    pub email_verified: bool,
+    /// Whether the user has been disabled.
+    pub disabled: bool,
+    /// Whether this user is a teammate of the current user. If this account is the current user's
+    /// account, then this will be :val:`true`.
+    pub is_teammate: bool,
+    /// URL for the photo representing the user, if one is set.
+    pub profile_photo_url: Option<String>,
+    /// The user's unique team member id. This field will only be present if the user is part of a
+    /// team and :field:`is_teammate` is :val:`true`.
+    pub team_member_id: Option<String>,
 }
 
-impl GetAccountArg {
-    pub fn new(account_id: super::users_common::AccountId) -> Self {
-        GetAccountArg {
+impl BasicAccount {
+    pub fn new(account_id: super::users_common::AccountId, name: Name, email: String, email_verified: bool, disabled: bool, is_teammate: bool) -> Self {
+        BasicAccount {
             account_id,
+            name,
+            email,
+            email_verified,
+            disabled,
+            is_teammate,
+            profile_photo_url: None,
+            team_member_id: None,
         }
+    }
+
+    pub fn with_profile_photo_url(mut self, value: Option<String>) -> Self {
+        self.profile_photo_url = value;
+        self
+    }
+
+    pub fn with_team_member_id(mut self, value: Option<String>) -> Self {
+        self.team_member_id = value;
+        self
     }
 
 }
 
-const GET_ACCOUNT_ARG_FIELDS: &'static [&'static str] = &["account_id"];
-impl GetAccountArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetAccountArg, V::Error> {
+const BASIC_ACCOUNT_FIELDS: &'static [&'static str] = &["account_id",
+                                                        "name",
+                                                        "email",
+                                                        "email_verified",
+                                                        "disabled",
+                                                        "is_teammate",
+                                                        "profile_photo_url",
+                                                        "team_member_id"];
+impl BasicAccount {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<BasicAccount, V::Error> {
         use serde::de;
         let mut field_account_id = None;
+        let mut field_name = None;
+        let mut field_email = None;
+        let mut field_email_verified = None;
+        let mut field_disabled = None;
+        let mut field_is_teammate = None;
+        let mut field_profile_photo_url = None;
+        let mut field_team_member_id = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "account_id" => {
@@ -356,245 +252,99 @@ impl GetAccountArg {
                     }
                     field_account_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GET_ACCOUNT_ARG_FIELDS))
+                "name" => {
+                    if field_name.is_some() {
+                        return Err(de::Error::duplicate_field("name"));
+                    }
+                    field_name = Some(map.next_value()?);
+                }
+                "email" => {
+                    if field_email.is_some() {
+                        return Err(de::Error::duplicate_field("email"));
+                    }
+                    field_email = Some(map.next_value()?);
+                }
+                "email_verified" => {
+                    if field_email_verified.is_some() {
+                        return Err(de::Error::duplicate_field("email_verified"));
+                    }
+                    field_email_verified = Some(map.next_value()?);
+                }
+                "disabled" => {
+                    if field_disabled.is_some() {
+                        return Err(de::Error::duplicate_field("disabled"));
+                    }
+                    field_disabled = Some(map.next_value()?);
+                }
+                "is_teammate" => {
+                    if field_is_teammate.is_some() {
+                        return Err(de::Error::duplicate_field("is_teammate"));
+                    }
+                    field_is_teammate = Some(map.next_value()?);
+                }
+                "profile_photo_url" => {
+                    if field_profile_photo_url.is_some() {
+                        return Err(de::Error::duplicate_field("profile_photo_url"));
+                    }
+                    field_profile_photo_url = Some(map.next_value()?);
+                }
+                "team_member_id" => {
+                    if field_team_member_id.is_some() {
+                        return Err(de::Error::duplicate_field("team_member_id"));
+                    }
+                    field_team_member_id = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, BASIC_ACCOUNT_FIELDS))
             }
         }
-        Ok(GetAccountArg {
+        Ok(BasicAccount {
             account_id: field_account_id.ok_or_else(|| de::Error::missing_field("account_id"))?,
+            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
+            email: field_email.ok_or_else(|| de::Error::missing_field("email"))?,
+            email_verified: field_email_verified.ok_or_else(|| de::Error::missing_field("email_verified"))?,
+            disabled: field_disabled.ok_or_else(|| de::Error::missing_field("disabled"))?,
+            is_teammate: field_is_teammate.ok_or_else(|| de::Error::missing_field("is_teammate"))?,
+            profile_photo_url: field_profile_photo_url,
+            team_member_id: field_team_member_id,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("account_id", &self.account_id)
+        s.serialize_field("account_id", &self.account_id)?;
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("email", &self.email)?;
+        s.serialize_field("email_verified", &self.email_verified)?;
+        s.serialize_field("disabled", &self.disabled)?;
+        s.serialize_field("is_teammate", &self.is_teammate)?;
+        s.serialize_field("profile_photo_url", &self.profile_photo_url)?;
+        s.serialize_field("team_member_id", &self.team_member_id)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for GetAccountArg {
+impl<'de> ::serde::de::Deserialize<'de> for BasicAccount {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GetAccountArg;
+            type Value = BasicAccount;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetAccountArg struct")
+                f.write_str("a BasicAccount struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GetAccountArg::internal_deserialize(map)
+                BasicAccount::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("GetAccountArg", GET_ACCOUNT_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("BasicAccount", BASIC_ACCOUNT_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for GetAccountArg {
+impl ::serde::ser::Serialize for BasicAccount {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetAccountArg", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum GetAccountError {
-    /// The specified :field:`GetAccountArg.account_id` does not exist.
-    NoAccount,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetAccountError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = GetAccountError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetAccountError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "no_account" => Ok(GetAccountError::NoAccount),
-                    _ => Ok(GetAccountError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["no_account",
-                                                    "other"];
-        deserializer.deserialize_struct("GetAccountError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetAccountError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            GetAccountError::NoAccount => {
-                // unit
-                let mut s = serializer.serialize_struct("GetAccountError", 1)?;
-                s.serialize_field(".tag", "no_account")?;
-                s.end()
-            }
-            GetAccountError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for GetAccountError {
-    fn description(&self) -> &str {
-        "GetAccountError"
-    }
-}
-
-impl ::std::fmt::Display for GetAccountError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct IndividualSpaceAllocation {
-    /// The total space allocated to the user's account (bytes).
-    pub allocated: u64,
-}
-
-impl IndividualSpaceAllocation {
-    pub fn new(allocated: u64) -> Self {
-        IndividualSpaceAllocation {
-            allocated,
-        }
-    }
-
-}
-
-const INDIVIDUAL_SPACE_ALLOCATION_FIELDS: &'static [&'static str] = &["allocated"];
-impl IndividualSpaceAllocation {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<IndividualSpaceAllocation, V::Error> {
-        use serde::de;
-        let mut field_allocated = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "allocated" => {
-                    if field_allocated.is_some() {
-                        return Err(de::Error::duplicate_field("allocated"));
-                    }
-                    field_allocated = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, INDIVIDUAL_SPACE_ALLOCATION_FIELDS))
-            }
-        }
-        Ok(IndividualSpaceAllocation {
-            allocated: field_allocated.ok_or_else(|| de::Error::missing_field("allocated"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("allocated", &self.allocated)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for IndividualSpaceAllocation {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = IndividualSpaceAllocation;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a IndividualSpaceAllocation struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                IndividualSpaceAllocation::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("IndividualSpaceAllocation", INDIVIDUAL_SPACE_ALLOCATION_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for IndividualSpaceAllocation {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("IndividualSpaceAllocation", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct GetAccountBatchArg {
-    /// List of user account identifiers.  Should not contain any duplicate account IDs.
-    pub account_ids: Vec<super::users_common::AccountId>,
-}
-
-impl GetAccountBatchArg {
-    pub fn new(account_ids: Vec<super::users_common::AccountId>) -> Self {
-        GetAccountBatchArg {
-            account_ids,
-        }
-    }
-
-}
-
-const GET_ACCOUNT_BATCH_ARG_FIELDS: &'static [&'static str] = &["account_ids"];
-impl GetAccountBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetAccountBatchArg, V::Error> {
-        use serde::de;
-        let mut field_account_ids = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "account_ids" => {
-                    if field_account_ids.is_some() {
-                        return Err(de::Error::duplicate_field("account_ids"));
-                    }
-                    field_account_ids = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, GET_ACCOUNT_BATCH_ARG_FIELDS))
-            }
-        }
-        Ok(GetAccountBatchArg {
-            account_ids: field_account_ids.ok_or_else(|| de::Error::missing_field("account_ids"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("account_ids", &self.account_ids)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GetAccountBatchArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetAccountBatchArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GetAccountBatchArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("GetAccountBatchArg", GET_ACCOUNT_BATCH_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetAccountBatchArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetAccountBatchArg", 1)?;
+        let mut s = serializer.serialize_struct("BasicAccount", 8)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -853,32 +603,42 @@ impl ::serde::ser::Serialize for FullAccount {
     }
 }
 
-/// Information about a team.
+/// Detailed information about a team.
 #[derive(Debug)]
-pub struct Team {
+pub struct FullTeam {
     /// The team's unique ID.
     pub id: String,
     /// The name of the team.
     pub name: String,
+    /// Team policies governing sharing.
+    pub sharing_policies: super::team_policies::TeamSharingPolicies,
+    /// Team policy governing the use of the Office Add-In.
+    pub office_addin_policy: super::team_policies::OfficeAddInPolicy,
 }
 
-impl Team {
-    pub fn new(id: String, name: String) -> Self {
-        Team {
+impl FullTeam {
+    pub fn new(id: String, name: String, sharing_policies: super::team_policies::TeamSharingPolicies, office_addin_policy: super::team_policies::OfficeAddInPolicy) -> Self {
+        FullTeam {
             id,
             name,
+            sharing_policies,
+            office_addin_policy,
         }
     }
 
 }
 
-const TEAM_FIELDS: &'static [&'static str] = &["id",
-                                               "name"];
-impl Team {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Team, V::Error> {
+const FULL_TEAM_FIELDS: &'static [&'static str] = &["id",
+                                                    "name",
+                                                    "sharing_policies",
+                                                    "office_addin_policy"];
+impl FullTeam {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FullTeam, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_name = None;
+        let mut field_sharing_policies = None;
+        let mut field_office_addin_policy = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "id" => {
@@ -893,45 +653,402 @@ impl Team {
                     }
                     field_name = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, TEAM_FIELDS))
+                "sharing_policies" => {
+                    if field_sharing_policies.is_some() {
+                        return Err(de::Error::duplicate_field("sharing_policies"));
+                    }
+                    field_sharing_policies = Some(map.next_value()?);
+                }
+                "office_addin_policy" => {
+                    if field_office_addin_policy.is_some() {
+                        return Err(de::Error::duplicate_field("office_addin_policy"));
+                    }
+                    field_office_addin_policy = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, FULL_TEAM_FIELDS))
             }
         }
-        Ok(Team {
+        Ok(FullTeam {
             id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
+            sharing_policies: field_sharing_policies.ok_or_else(|| de::Error::missing_field("sharing_policies"))?,
+            office_addin_policy: field_office_addin_policy.ok_or_else(|| de::Error::missing_field("office_addin_policy"))?,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
-        s.serialize_field("name", &self.name)
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("sharing_policies", &self.sharing_policies)?;
+        s.serialize_field("office_addin_policy", &self.office_addin_policy)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for Team {
+impl<'de> ::serde::de::Deserialize<'de> for FullTeam {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = Team;
+            type Value = FullTeam;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a Team struct")
+                f.write_str("a FullTeam struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                Team::internal_deserialize(map)
+                FullTeam::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("Team", TEAM_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FullTeam", FULL_TEAM_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for Team {
+impl ::serde::ser::Serialize for FullTeam {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("Team", 2)?;
+        let mut s = serializer.serialize_struct("FullTeam", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct GetAccountArg {
+    /// A user's account identifier.
+    pub account_id: super::users_common::AccountId,
+}
+
+impl GetAccountArg {
+    pub fn new(account_id: super::users_common::AccountId) -> Self {
+        GetAccountArg {
+            account_id,
+        }
+    }
+
+}
+
+const GET_ACCOUNT_ARG_FIELDS: &'static [&'static str] = &["account_id"];
+impl GetAccountArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetAccountArg, V::Error> {
+        use serde::de;
+        let mut field_account_id = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "account_id" => {
+                    if field_account_id.is_some() {
+                        return Err(de::Error::duplicate_field("account_id"));
+                    }
+                    field_account_id = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GET_ACCOUNT_ARG_FIELDS))
+            }
+        }
+        Ok(GetAccountArg {
+            account_id: field_account_id.ok_or_else(|| de::Error::missing_field("account_id"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("account_id", &self.account_id)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetAccountArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetAccountArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetAccountArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetAccountArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetAccountArg", GET_ACCOUNT_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetAccountArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetAccountArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct GetAccountBatchArg {
+    /// List of user account identifiers.  Should not contain any duplicate account IDs.
+    pub account_ids: Vec<super::users_common::AccountId>,
+}
+
+impl GetAccountBatchArg {
+    pub fn new(account_ids: Vec<super::users_common::AccountId>) -> Self {
+        GetAccountBatchArg {
+            account_ids,
+        }
+    }
+
+}
+
+const GET_ACCOUNT_BATCH_ARG_FIELDS: &'static [&'static str] = &["account_ids"];
+impl GetAccountBatchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetAccountBatchArg, V::Error> {
+        use serde::de;
+        let mut field_account_ids = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "account_ids" => {
+                    if field_account_ids.is_some() {
+                        return Err(de::Error::duplicate_field("account_ids"));
+                    }
+                    field_account_ids = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GET_ACCOUNT_BATCH_ARG_FIELDS))
+            }
+        }
+        Ok(GetAccountBatchArg {
+            account_ids: field_account_ids.ok_or_else(|| de::Error::missing_field("account_ids"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("account_ids", &self.account_ids)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetAccountBatchArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetAccountBatchArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetAccountBatchArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetAccountBatchArg", GET_ACCOUNT_BATCH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetAccountBatchArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetAccountBatchArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum GetAccountBatchError {
+    /// The value is an account ID specified in :field:`GetAccountBatchArg.account_ids` that does
+    /// not exist.
+    NoAccount(super::users_common::AccountId),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetAccountBatchError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetAccountBatchError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "no_account" => {
+                        if map.next_key()? != Some("no_account") {
+                            return Err(de::Error::missing_field("no_account"));
+                        }
+                        Ok(GetAccountBatchError::NoAccount(map.next_value()?))
+                    }
+                    _ => Ok(GetAccountBatchError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["no_account",
+                                                    "other"];
+        deserializer.deserialize_struct("GetAccountBatchError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetAccountBatchError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            GetAccountBatchError::NoAccount(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "no_account")?;
+                s.serialize_field("no_account", x)?;
+                s.end()
+            }
+            GetAccountBatchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for GetAccountBatchError {
+    fn description(&self) -> &str {
+        "GetAccountBatchError"
+    }
+}
+
+impl ::std::fmt::Display for GetAccountBatchError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum GetAccountError {
+    /// The specified :field:`GetAccountArg.account_id` does not exist.
+    NoAccount,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetAccountError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetAccountError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetAccountError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "no_account" => Ok(GetAccountError::NoAccount),
+                    _ => Ok(GetAccountError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["no_account",
+                                                    "other"];
+        deserializer.deserialize_struct("GetAccountError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetAccountError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            GetAccountError::NoAccount => {
+                // unit
+                let mut s = serializer.serialize_struct("GetAccountError", 1)?;
+                s.serialize_field(".tag", "no_account")?;
+                s.end()
+            }
+            GetAccountError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for GetAccountError {
+    fn description(&self) -> &str {
+        "GetAccountError"
+    }
+}
+
+impl ::std::fmt::Display for GetAccountError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct IndividualSpaceAllocation {
+    /// The total space allocated to the user's account (bytes).
+    pub allocated: u64,
+}
+
+impl IndividualSpaceAllocation {
+    pub fn new(allocated: u64) -> Self {
+        IndividualSpaceAllocation {
+            allocated,
+        }
+    }
+
+}
+
+const INDIVIDUAL_SPACE_ALLOCATION_FIELDS: &'static [&'static str] = &["allocated"];
+impl IndividualSpaceAllocation {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<IndividualSpaceAllocation, V::Error> {
+        use serde::de;
+        let mut field_allocated = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "allocated" => {
+                    if field_allocated.is_some() {
+                        return Err(de::Error::duplicate_field("allocated"));
+                    }
+                    field_allocated = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, INDIVIDUAL_SPACE_ALLOCATION_FIELDS))
+            }
+        }
+        Ok(IndividualSpaceAllocation {
+            allocated: field_allocated.ok_or_else(|| de::Error::missing_field("allocated"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("allocated", &self.allocated)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for IndividualSpaceAllocation {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = IndividualSpaceAllocation;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a IndividualSpaceAllocation struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                IndividualSpaceAllocation::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("IndividualSpaceAllocation", INDIVIDUAL_SPACE_ALLOCATION_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for IndividualSpaceAllocation {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("IndividualSpaceAllocation", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -1125,42 +1242,116 @@ impl ::serde::ser::Serialize for SpaceAllocation {
     }
 }
 
-/// Detailed information about a team.
+/// Information about a user's space usage and quota.
 #[derive(Debug)]
-pub struct FullTeam {
-    /// The team's unique ID.
-    pub id: String,
-    /// The name of the team.
-    pub name: String,
-    /// Team policies governing sharing.
-    pub sharing_policies: super::team_policies::TeamSharingPolicies,
-    /// Team policy governing the use of the Office Add-In.
-    pub office_addin_policy: super::team_policies::OfficeAddInPolicy,
+pub struct SpaceUsage {
+    /// The user's total space usage (bytes).
+    pub used: u64,
+    /// The user's space allocation.
+    pub allocation: SpaceAllocation,
 }
 
-impl FullTeam {
-    pub fn new(id: String, name: String, sharing_policies: super::team_policies::TeamSharingPolicies, office_addin_policy: super::team_policies::OfficeAddInPolicy) -> Self {
-        FullTeam {
-            id,
-            name,
-            sharing_policies,
-            office_addin_policy,
+impl SpaceUsage {
+    pub fn new(used: u64, allocation: SpaceAllocation) -> Self {
+        SpaceUsage {
+            used,
+            allocation,
         }
     }
 
 }
 
-const FULL_TEAM_FIELDS: &'static [&'static str] = &["id",
-                                                    "name",
-                                                    "sharing_policies",
-                                                    "office_addin_policy"];
-impl FullTeam {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FullTeam, V::Error> {
+const SPACE_USAGE_FIELDS: &'static [&'static str] = &["used",
+                                                      "allocation"];
+impl SpaceUsage {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SpaceUsage, V::Error> {
+        use serde::de;
+        let mut field_used = None;
+        let mut field_allocation = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "used" => {
+                    if field_used.is_some() {
+                        return Err(de::Error::duplicate_field("used"));
+                    }
+                    field_used = Some(map.next_value()?);
+                }
+                "allocation" => {
+                    if field_allocation.is_some() {
+                        return Err(de::Error::duplicate_field("allocation"));
+                    }
+                    field_allocation = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SPACE_USAGE_FIELDS))
+            }
+        }
+        Ok(SpaceUsage {
+            used: field_used.ok_or_else(|| de::Error::missing_field("used"))?,
+            allocation: field_allocation.ok_or_else(|| de::Error::missing_field("allocation"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("used", &self.used)?;
+        s.serialize_field("allocation", &self.allocation)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SpaceUsage {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SpaceUsage;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SpaceUsage struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SpaceUsage::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SpaceUsage", SPACE_USAGE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SpaceUsage {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SpaceUsage", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Information about a team.
+#[derive(Debug)]
+pub struct Team {
+    /// The team's unique ID.
+    pub id: String,
+    /// The name of the team.
+    pub name: String,
+}
+
+impl Team {
+    pub fn new(id: String, name: String) -> Self {
+        Team {
+            id,
+            name,
+        }
+    }
+
+}
+
+const TEAM_FIELDS: &'static [&'static str] = &["id",
+                                               "name"];
+impl Team {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Team, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_name = None;
-        let mut field_sharing_policies = None;
-        let mut field_office_addin_policy = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "id" => {
@@ -1175,61 +1366,45 @@ impl FullTeam {
                     }
                     field_name = Some(map.next_value()?);
                 }
-                "sharing_policies" => {
-                    if field_sharing_policies.is_some() {
-                        return Err(de::Error::duplicate_field("sharing_policies"));
-                    }
-                    field_sharing_policies = Some(map.next_value()?);
-                }
-                "office_addin_policy" => {
-                    if field_office_addin_policy.is_some() {
-                        return Err(de::Error::duplicate_field("office_addin_policy"));
-                    }
-                    field_office_addin_policy = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FULL_TEAM_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, TEAM_FIELDS))
             }
         }
-        Ok(FullTeam {
+        Ok(Team {
             id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            sharing_policies: field_sharing_policies.ok_or_else(|| de::Error::missing_field("sharing_policies"))?,
-            office_addin_policy: field_office_addin_policy.ok_or_else(|| de::Error::missing_field("office_addin_policy"))?,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
-        s.serialize_field("name", &self.name)?;
-        s.serialize_field("sharing_policies", &self.sharing_policies)?;
-        s.serialize_field("office_addin_policy", &self.office_addin_policy)
+        s.serialize_field("name", &self.name)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for FullTeam {
+impl<'de> ::serde::de::Deserialize<'de> for Team {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FullTeam;
+            type Value = Team;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FullTeam struct")
+                f.write_str("a Team struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FullTeam::internal_deserialize(map)
+                Team::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("FullTeam", FULL_TEAM_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("Team", TEAM_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for FullTeam {
+impl ::serde::ser::Serialize for Team {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FullTeam", 4)?;
+        let mut s = serializer.serialize_struct("Team", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -1313,181 +1488,6 @@ impl ::serde::ser::Serialize for TeamSpaceAllocation {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("TeamSpaceAllocation", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Basic information about any account.
-#[derive(Debug)]
-pub struct BasicAccount {
-    /// The user's unique Dropbox ID.
-    pub account_id: super::users_common::AccountId,
-    /// Details of a user's name.
-    pub name: Name,
-    /// The user's e-mail address. Do not rely on this without checking the :field:`email_verified`
-    /// field. Even then, it's possible that the user has since lost access to their e-mail.
-    pub email: String,
-    /// Whether the user has verified their e-mail address.
-    pub email_verified: bool,
-    /// Whether the user has been disabled.
-    pub disabled: bool,
-    /// Whether this user is a teammate of the current user. If this account is the current user's
-    /// account, then this will be :val:`true`.
-    pub is_teammate: bool,
-    /// URL for the photo representing the user, if one is set.
-    pub profile_photo_url: Option<String>,
-    /// The user's unique team member id. This field will only be present if the user is part of a
-    /// team and :field:`is_teammate` is :val:`true`.
-    pub team_member_id: Option<String>,
-}
-
-impl BasicAccount {
-    pub fn new(account_id: super::users_common::AccountId, name: Name, email: String, email_verified: bool, disabled: bool, is_teammate: bool) -> Self {
-        BasicAccount {
-            account_id,
-            name,
-            email,
-            email_verified,
-            disabled,
-            is_teammate,
-            profile_photo_url: None,
-            team_member_id: None,
-        }
-    }
-
-    pub fn with_profile_photo_url(mut self, value: Option<String>) -> Self {
-        self.profile_photo_url = value;
-        self
-    }
-
-    pub fn with_team_member_id(mut self, value: Option<String>) -> Self {
-        self.team_member_id = value;
-        self
-    }
-
-}
-
-const BASIC_ACCOUNT_FIELDS: &'static [&'static str] = &["account_id",
-                                                        "name",
-                                                        "email",
-                                                        "email_verified",
-                                                        "disabled",
-                                                        "is_teammate",
-                                                        "profile_photo_url",
-                                                        "team_member_id"];
-impl BasicAccount {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<BasicAccount, V::Error> {
-        use serde::de;
-        let mut field_account_id = None;
-        let mut field_name = None;
-        let mut field_email = None;
-        let mut field_email_verified = None;
-        let mut field_disabled = None;
-        let mut field_is_teammate = None;
-        let mut field_profile_photo_url = None;
-        let mut field_team_member_id = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "account_id" => {
-                    if field_account_id.is_some() {
-                        return Err(de::Error::duplicate_field("account_id"));
-                    }
-                    field_account_id = Some(map.next_value()?);
-                }
-                "name" => {
-                    if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
-                    }
-                    field_name = Some(map.next_value()?);
-                }
-                "email" => {
-                    if field_email.is_some() {
-                        return Err(de::Error::duplicate_field("email"));
-                    }
-                    field_email = Some(map.next_value()?);
-                }
-                "email_verified" => {
-                    if field_email_verified.is_some() {
-                        return Err(de::Error::duplicate_field("email_verified"));
-                    }
-                    field_email_verified = Some(map.next_value()?);
-                }
-                "disabled" => {
-                    if field_disabled.is_some() {
-                        return Err(de::Error::duplicate_field("disabled"));
-                    }
-                    field_disabled = Some(map.next_value()?);
-                }
-                "is_teammate" => {
-                    if field_is_teammate.is_some() {
-                        return Err(de::Error::duplicate_field("is_teammate"));
-                    }
-                    field_is_teammate = Some(map.next_value()?);
-                }
-                "profile_photo_url" => {
-                    if field_profile_photo_url.is_some() {
-                        return Err(de::Error::duplicate_field("profile_photo_url"));
-                    }
-                    field_profile_photo_url = Some(map.next_value()?);
-                }
-                "team_member_id" => {
-                    if field_team_member_id.is_some() {
-                        return Err(de::Error::duplicate_field("team_member_id"));
-                    }
-                    field_team_member_id = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, BASIC_ACCOUNT_FIELDS))
-            }
-        }
-        Ok(BasicAccount {
-            account_id: field_account_id.ok_or_else(|| de::Error::missing_field("account_id"))?,
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            email: field_email.ok_or_else(|| de::Error::missing_field("email"))?,
-            email_verified: field_email_verified.ok_or_else(|| de::Error::missing_field("email_verified"))?,
-            disabled: field_disabled.ok_or_else(|| de::Error::missing_field("disabled"))?,
-            is_teammate: field_is_teammate.ok_or_else(|| de::Error::missing_field("is_teammate"))?,
-            profile_photo_url: field_profile_photo_url,
-            team_member_id: field_team_member_id,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("account_id", &self.account_id)?;
-        s.serialize_field("name", &self.name)?;
-        s.serialize_field("email", &self.email)?;
-        s.serialize_field("email_verified", &self.email_verified)?;
-        s.serialize_field("disabled", &self.disabled)?;
-        s.serialize_field("is_teammate", &self.is_teammate)?;
-        s.serialize_field("profile_photo_url", &self.profile_photo_url)?;
-        s.serialize_field("team_member_id", &self.team_member_id)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for BasicAccount {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = BasicAccount;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a BasicAccount struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                BasicAccount::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("BasicAccount", BASIC_ACCOUNT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for BasicAccount {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("BasicAccount", 8)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

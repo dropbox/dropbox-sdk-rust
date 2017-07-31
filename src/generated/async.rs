@@ -10,56 +10,6 @@
 
 pub type AsyncJobId = String;
 
-/// Result returned by methods that poll for the status of an asynchronous job. Unions that extend
-/// this union should add a 'complete' field with a type of the information returned upon job
-/// completion. See :type:`PollEmptyResult` for an example.
-#[derive(Debug)]
-pub enum PollResultBase {
-    /// The asynchronous job is still in progress.
-    InProgress,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PollResultBase {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = PollResultBase;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PollResultBase structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "in_progress" => Ok(PollResultBase::InProgress),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["in_progress"];
-        deserializer.deserialize_struct("PollResultBase", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PollResultBase {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            PollResultBase::InProgress => {
-                // unit
-                let mut s = serializer.serialize_struct("PollResultBase", 1)?;
-                s.serialize_field(".tag", "in_progress")?;
-                s.end()
-            }
-        }
-    }
-}
-
 /// Result returned by methods that may either launch an asynchronous job or complete synchronously.
 /// Upon synchronous completion of the job, no additional information is returned.
 #[derive(Debug)]
@@ -123,80 +73,6 @@ impl ::serde::ser::Serialize for LaunchEmptyResult {
                 s.end()
             }
         }
-    }
-}
-
-/// Error returned by methods for polling the status of asynchronous job.
-#[derive(Debug)]
-pub enum PollError {
-    /// The job ID is invalid.
-    InvalidAsyncJobId,
-    /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action
-    /// you were taking succeeded, and if not, try again. This should happen very rarely.
-    InternalError,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PollError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = PollError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PollError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "invalid_async_job_id" => Ok(PollError::InvalidAsyncJobId),
-                    "internal_error" => Ok(PollError::InternalError),
-                    _ => Ok(PollError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["invalid_async_job_id",
-                                                    "internal_error",
-                                                    "other"];
-        deserializer.deserialize_struct("PollError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PollError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            PollError::InvalidAsyncJobId => {
-                // unit
-                let mut s = serializer.serialize_struct("PollError", 1)?;
-                s.serialize_field(".tag", "invalid_async_job_id")?;
-                s.end()
-            }
-            PollError::InternalError => {
-                // unit
-                let mut s = serializer.serialize_struct("PollError", 1)?;
-                s.serialize_field(".tag", "internal_error")?;
-                s.end()
-            }
-            PollError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for PollError {
-    fn description(&self) -> &str {
-        "PollError"
-    }
-}
-
-impl ::std::fmt::Display for PollError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
     }
 }
 
@@ -383,6 +259,130 @@ impl ::serde::ser::Serialize for PollEmptyResult {
                 // unit
                 let mut s = serializer.serialize_struct("PollEmptyResult", 1)?;
                 s.serialize_field(".tag", "complete")?;
+                s.end()
+            }
+        }
+    }
+}
+
+/// Error returned by methods for polling the status of asynchronous job.
+#[derive(Debug)]
+pub enum PollError {
+    /// The job ID is invalid.
+    InvalidAsyncJobId,
+    /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action
+    /// you were taking succeeded, and if not, try again. This should happen very rarely.
+    InternalError,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PollError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PollError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PollError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "invalid_async_job_id" => Ok(PollError::InvalidAsyncJobId),
+                    "internal_error" => Ok(PollError::InternalError),
+                    _ => Ok(PollError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["invalid_async_job_id",
+                                                    "internal_error",
+                                                    "other"];
+        deserializer.deserialize_struct("PollError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PollError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PollError::InvalidAsyncJobId => {
+                // unit
+                let mut s = serializer.serialize_struct("PollError", 1)?;
+                s.serialize_field(".tag", "invalid_async_job_id")?;
+                s.end()
+            }
+            PollError::InternalError => {
+                // unit
+                let mut s = serializer.serialize_struct("PollError", 1)?;
+                s.serialize_field(".tag", "internal_error")?;
+                s.end()
+            }
+            PollError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for PollError {
+    fn description(&self) -> &str {
+        "PollError"
+    }
+}
+
+impl ::std::fmt::Display for PollError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// Result returned by methods that poll for the status of an asynchronous job. Unions that extend
+/// this union should add a 'complete' field with a type of the information returned upon job
+/// completion. See :type:`PollEmptyResult` for an example.
+#[derive(Debug)]
+pub enum PollResultBase {
+    /// The asynchronous job is still in progress.
+    InProgress,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PollResultBase {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PollResultBase;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PollResultBase structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "in_progress" => Ok(PollResultBase::InProgress),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["in_progress"];
+        deserializer.deserialize_struct("PollResultBase", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PollResultBase {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PollResultBase::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("PollResultBase", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
                 s.end()
             }
         }

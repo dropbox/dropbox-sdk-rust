@@ -14,68 +14,6 @@ pub type MemberExternalId = String;
 pub type ResellerId = String;
 pub type TeamMemberId = String;
 
-/// The group type determines how a group is created and managed.
-#[derive(Debug)]
-pub enum GroupType {
-    /// A group to which team members are automatically added. Applicable to :link:`team folders
-    /// https://www.dropbox.com/help/986` only.
-    Team,
-    /// A group is created and managed by a user.
-    UserManaged,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GroupType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = GroupType;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GroupType structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "team" => Ok(GroupType::Team),
-                    "user_managed" => Ok(GroupType::UserManaged),
-                    _ => Ok(GroupType::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["team",
-                                                    "user_managed",
-                                                    "other"];
-        deserializer.deserialize_struct("GroupType", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GroupType {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            GroupType::Team => {
-                // unit
-                let mut s = serializer.serialize_struct("GroupType", 1)?;
-                s.serialize_field(".tag", "team")?;
-                s.end()
-            }
-            GroupType::UserManaged => {
-                // unit
-                let mut s = serializer.serialize_struct("GroupType", 1)?;
-                s.serialize_field(".tag", "user_managed")?;
-                s.end()
-            }
-            GroupType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
 /// The group type determines how a group is managed.
 #[derive(Debug)]
 pub enum GroupManagementType {
@@ -275,6 +213,68 @@ impl ::serde::ser::Serialize for GroupSummary {
         let mut s = serializer.serialize_struct("GroupSummary", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+/// The group type determines how a group is created and managed.
+#[derive(Debug)]
+pub enum GroupType {
+    /// A group to which team members are automatically added. Applicable to :link:`team folders
+    /// https://www.dropbox.com/help/986` only.
+    Team,
+    /// A group is created and managed by a user.
+    UserManaged,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GroupType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GroupType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GroupType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "team" => Ok(GroupType::Team),
+                    "user_managed" => Ok(GroupType::UserManaged),
+                    _ => Ok(GroupType::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["team",
+                                                    "user_managed",
+                                                    "other"];
+        deserializer.deserialize_struct("GroupType", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GroupType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            GroupType::Team => {
+                // unit
+                let mut s = serializer.serialize_struct("GroupType", 1)?;
+                s.serialize_field(".tag", "team")?;
+                s.end()
+            }
+            GroupType::UserManaged => {
+                // unit
+                let mut s = serializer.serialize_struct("GroupType", 1)?;
+                s.serialize_field(".tag", "user_managed")?;
+                s.end()
+            }
+            GroupType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 

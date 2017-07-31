@@ -8,67 +8,6 @@
     doc_markdown,
 )]
 
-/// Policy governing which shared folders a team member can join.
-#[derive(Debug)]
-pub enum SharedFolderJoinPolicy {
-    /// Team members can only join folders shared by teammates.
-    FromTeamOnly,
-    /// Team members can join any shared folder, including those shared by users outside the team.
-    FromAnyone,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SharedFolderJoinPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SharedFolderJoinPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedFolderJoinPolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "from_team_only" => Ok(SharedFolderJoinPolicy::FromTeamOnly),
-                    "from_anyone" => Ok(SharedFolderJoinPolicy::FromAnyone),
-                    _ => Ok(SharedFolderJoinPolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["from_team_only",
-                                                    "from_anyone",
-                                                    "other"];
-        deserializer.deserialize_struct("SharedFolderJoinPolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SharedFolderJoinPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SharedFolderJoinPolicy::FromTeamOnly => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedFolderJoinPolicy", 1)?;
-                s.serialize_field(".tag", "from_team_only")?;
-                s.end()
-            }
-            SharedFolderJoinPolicy::FromAnyone => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedFolderJoinPolicy", 1)?;
-                s.serialize_field(".tag", "from_anyone")?;
-                s.end()
-            }
-            SharedFolderJoinPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
 #[derive(Debug)]
 pub enum EmmState {
     /// Emm token is disabled
@@ -139,6 +78,127 @@ impl ::serde::ser::Serialize for EmmState {
     }
 }
 
+#[derive(Debug)]
+pub enum OfficeAddInPolicy {
+    /// Office Add-In is disabled
+    Disabled,
+    /// Office Add-In is enabled
+    Enabled,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for OfficeAddInPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = OfficeAddInPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a OfficeAddInPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => Ok(OfficeAddInPolicy::Disabled),
+                    "enabled" => Ok(OfficeAddInPolicy::Enabled),
+                    _ => Ok(OfficeAddInPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["disabled",
+                                                    "enabled",
+                                                    "other"];
+        deserializer.deserialize_struct("OfficeAddInPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for OfficeAddInPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            OfficeAddInPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("OfficeAddInPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            OfficeAddInPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("OfficeAddInPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            OfficeAddInPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Policy governing which shared folders a team member can join.
+#[derive(Debug)]
+pub enum SharedFolderJoinPolicy {
+    /// Team members can only join folders shared by teammates.
+    FromTeamOnly,
+    /// Team members can join any shared folder, including those shared by users outside the team.
+    FromAnyone,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharedFolderJoinPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SharedFolderJoinPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SharedFolderJoinPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "from_team_only" => Ok(SharedFolderJoinPolicy::FromTeamOnly),
+                    "from_anyone" => Ok(SharedFolderJoinPolicy::FromAnyone),
+                    _ => Ok(SharedFolderJoinPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["from_team_only",
+                                                    "from_anyone",
+                                                    "other"];
+        deserializer.deserialize_struct("SharedFolderJoinPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharedFolderJoinPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SharedFolderJoinPolicy::FromTeamOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedFolderJoinPolicy", 1)?;
+                s.serialize_field(".tag", "from_team_only")?;
+                s.end()
+            }
+            SharedFolderJoinPolicy::FromAnyone => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedFolderJoinPolicy", 1)?;
+                s.serialize_field(".tag", "from_anyone")?;
+                s.end()
+            }
+            SharedFolderJoinPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Policy governing who can be a member of a folder shared by a team member.
 #[derive(Debug)]
 pub enum SharedFolderMemberPolicy {
@@ -196,6 +256,81 @@ impl ::serde::ser::Serialize for SharedFolderMemberPolicy {
                 s.end()
             }
             SharedFolderMemberPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Policy governing the visibility of shared links. This policy can apply to newly created shared
+/// links, or all shared links.
+#[derive(Debug)]
+pub enum SharedLinkCreatePolicy {
+    /// By default, anyone can access newly created shared links. No login will be required to
+    /// access the shared links unless overridden.
+    DefaultPublic,
+    /// By default, only members of the same team can access newly created shared links. Login will
+    /// be required to access the shared links unless overridden.
+    DefaultTeamOnly,
+    /// Only members of the same team can access all shared links. Login will be required to access
+    /// all shared links.
+    TeamOnly,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharedLinkCreatePolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SharedLinkCreatePolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SharedLinkCreatePolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "default_public" => Ok(SharedLinkCreatePolicy::DefaultPublic),
+                    "default_team_only" => Ok(SharedLinkCreatePolicy::DefaultTeamOnly),
+                    "team_only" => Ok(SharedLinkCreatePolicy::TeamOnly),
+                    _ => Ok(SharedLinkCreatePolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["default_public",
+                                                    "default_team_only",
+                                                    "team_only",
+                                                    "other"];
+        deserializer.deserialize_struct("SharedLinkCreatePolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharedLinkCreatePolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SharedLinkCreatePolicy::DefaultPublic => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedLinkCreatePolicy", 1)?;
+                s.serialize_field(".tag", "default_public")?;
+                s.end()
+            }
+            SharedLinkCreatePolicy::DefaultTeamOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedLinkCreatePolicy", 1)?;
+                s.serialize_field(".tag", "default_team_only")?;
+                s.end()
+            }
+            SharedLinkCreatePolicy::TeamOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("SharedLinkCreatePolicy", 1)?;
+                s.serialize_field(".tag", "team_only")?;
+                s.end()
+            }
+            SharedLinkCreatePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -301,66 +436,6 @@ impl ::serde::ser::Serialize for TeamMemberPolicies {
     }
 }
 
-#[derive(Debug)]
-pub enum OfficeAddInPolicy {
-    /// Office Add-In is disabled
-    Disabled,
-    /// Office Add-In is enabled
-    Enabled,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for OfficeAddInPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = OfficeAddInPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a OfficeAddInPolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "disabled" => Ok(OfficeAddInPolicy::Disabled),
-                    "enabled" => Ok(OfficeAddInPolicy::Enabled),
-                    _ => Ok(OfficeAddInPolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
-        deserializer.deserialize_struct("OfficeAddInPolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for OfficeAddInPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            OfficeAddInPolicy::Disabled => {
-                // unit
-                let mut s = serializer.serialize_struct("OfficeAddInPolicy", 1)?;
-                s.serialize_field(".tag", "disabled")?;
-                s.end()
-            }
-            OfficeAddInPolicy::Enabled => {
-                // unit
-                let mut s = serializer.serialize_struct("OfficeAddInPolicy", 1)?;
-                s.serialize_field(".tag", "enabled")?;
-                s.end()
-            }
-            OfficeAddInPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
 /// Policies governing sharing within and outside of the team.
 #[derive(Debug)]
 pub struct TeamSharingPolicies {
@@ -455,81 +530,6 @@ impl ::serde::ser::Serialize for TeamSharingPolicies {
         let mut s = serializer.serialize_struct("TeamSharingPolicies", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
-    }
-}
-
-/// Policy governing the visibility of shared links. This policy can apply to newly created shared
-/// links, or all shared links.
-#[derive(Debug)]
-pub enum SharedLinkCreatePolicy {
-    /// By default, anyone can access newly created shared links. No login will be required to
-    /// access the shared links unless overridden.
-    DefaultPublic,
-    /// By default, only members of the same team can access newly created shared links. Login will
-    /// be required to access the shared links unless overridden.
-    DefaultTeamOnly,
-    /// Only members of the same team can access all shared links. Login will be required to access
-    /// all shared links.
-    TeamOnly,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SharedLinkCreatePolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SharedLinkCreatePolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedLinkCreatePolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "default_public" => Ok(SharedLinkCreatePolicy::DefaultPublic),
-                    "default_team_only" => Ok(SharedLinkCreatePolicy::DefaultTeamOnly),
-                    "team_only" => Ok(SharedLinkCreatePolicy::TeamOnly),
-                    _ => Ok(SharedLinkCreatePolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["default_public",
-                                                    "default_team_only",
-                                                    "team_only",
-                                                    "other"];
-        deserializer.deserialize_struct("SharedLinkCreatePolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SharedLinkCreatePolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SharedLinkCreatePolicy::DefaultPublic => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedLinkCreatePolicy", 1)?;
-                s.serialize_field(".tag", "default_public")?;
-                s.end()
-            }
-            SharedLinkCreatePolicy::DefaultTeamOnly => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedLinkCreatePolicy", 1)?;
-                s.serialize_field(".tag", "default_team_only")?;
-                s.end()
-            }
-            SharedLinkCreatePolicy::TeamOnly => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedLinkCreatePolicy", 1)?;
-                s.serialize_field(".tag", "team_only")?;
-                s.end()
-            }
-            SharedLinkCreatePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
     }
 }
 

@@ -345,732 +345,6 @@ pub fn upload_session_start(client: &::client_trait::HttpClient, arg: &UploadSes
 }
 
 #[derive(Debug)]
-pub struct DeleteBatchArg {
-    pub entries: Vec<DeleteArg>,
-}
-
-impl DeleteBatchArg {
-    pub fn new(entries: Vec<DeleteArg>) -> Self {
-        DeleteBatchArg {
-            entries,
-        }
-    }
-
-}
-
-const DELETE_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries"];
-impl DeleteBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeleteBatchArg, V::Error> {
-        use serde::de;
-        let mut field_entries = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "entries" => {
-                    if field_entries.is_some() {
-                        return Err(de::Error::duplicate_field("entries"));
-                    }
-                    field_entries = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, DELETE_BATCH_ARG_FIELDS))
-            }
-        }
-        Ok(DeleteBatchArg {
-            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = DeleteBatchArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DeleteBatchArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                DeleteBatchArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("DeleteBatchArg", DELETE_BATCH_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for DeleteBatchArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DeleteBatchArg", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum DeleteBatchResultEntry {
-    Success(DeleteBatchResultData),
-    Failure(DeleteError),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchResultEntry {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = DeleteBatchResultEntry;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DeleteBatchResultEntry structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "success" => Ok(DeleteBatchResultEntry::Success(DeleteBatchResultData::internal_deserialize(map)?)),
-                    "failure" => {
-                        if map.next_key()? != Some("failure") {
-                            return Err(de::Error::missing_field("failure"));
-                        }
-                        Ok(DeleteBatchResultEntry::Failure(map.next_value()?))
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["success",
-                                                    "failure"];
-        deserializer.deserialize_struct("DeleteBatchResultEntry", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for DeleteBatchResultEntry {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            DeleteBatchResultEntry::Success(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("DeleteBatchResultEntry", 2)?;
-                s.serialize_field(".tag", "success")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            DeleteBatchResultEntry::Failure(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "failure")?;
-                s.serialize_field("failure", x)?;
-                s.end()
-            }
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct FileOpsResult {
-}
-
-impl Default for FileOpsResult {
-    fn default() -> Self {
-        FileOpsResult {
-        }
-    }
-}
-
-const FILE_OPS_RESULT_FIELDS: &'static [&'static str] = &[];
-impl FileOpsResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileOpsResult, V::Error> {
-        use serde::de;
-        if let Some(key) = map.next_key()? {
-            return Err(de::Error::unknown_field(key, FILE_OPS_RESULT_FIELDS));
-        }
-        Ok(FileOpsResult {
-        })
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FileOpsResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FileOpsResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FileOpsResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FileOpsResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("FileOpsResult", FILE_OPS_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FileOpsResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        serializer.serialize_unit_struct("FileOpsResult")
-    }
-}
-
-#[derive(Debug)]
-pub struct PreviewArg {
-    /// The path of the file to preview.
-    pub path: ReadPath,
-    /// Deprecated. Please specify revision in :field:`path` instead.
-    pub rev: Option<Rev>,
-}
-
-impl PreviewArg {
-    pub fn new(path: ReadPath) -> Self {
-        PreviewArg {
-            path,
-            rev: None,
-        }
-    }
-
-    pub fn with_rev(mut self, value: Option<Rev>) -> Self {
-        self.rev = value;
-        self
-    }
-
-}
-
-const PREVIEW_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                      "rev"];
-impl PreviewArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PreviewArg, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_rev = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "rev" => {
-                    if field_rev.is_some() {
-                        return Err(de::Error::duplicate_field("rev"));
-                    }
-                    field_rev = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, PREVIEW_ARG_FIELDS))
-            }
-        }
-        Ok(PreviewArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            rev: field_rev,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("rev", &self.rev)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PreviewArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = PreviewArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PreviewArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                PreviewArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("PreviewArg", PREVIEW_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PreviewArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PreviewArg", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum RelocationBatchError {
-    FromLookup(LookupError),
-    FromWrite(WriteError),
-    To(WriteError),
-    /// Shared folders can't be copied.
-    CantCopySharedFolder,
-    /// Your move operation would result in nested shared folders.  This is not allowed.
-    CantNestSharedFolder,
-    /// You cannot move a folder into itself.
-    CantMoveFolderIntoItself,
-    /// The operation would involve more than 10,000 files and folders.
-    TooManyFiles,
-    /// There are duplicated/nested paths among :field:`RelocationArg.from_path` and
-    /// :field:`RelocationArg.to_path`.
-    DuplicatedOrNestedPaths,
-    /// Your move operation would result in an ownership transfer. You may reissue the request with
-    /// the field :field:`RelocationArg.allow_ownership_transfer` to true.
-    CantTransferOwnership,
-    Other,
-    /// There are too many write operations in user's Dropbox. Please retry this request.
-    TooManyWriteOperations,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = RelocationBatchError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RelocationBatchError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "from_lookup" => {
-                        if map.next_key()? != Some("from_lookup") {
-                            return Err(de::Error::missing_field("from_lookup"));
-                        }
-                        Ok(RelocationBatchError::FromLookup(map.next_value()?))
-                    }
-                    "from_write" => {
-                        if map.next_key()? != Some("from_write") {
-                            return Err(de::Error::missing_field("from_write"));
-                        }
-                        Ok(RelocationBatchError::FromWrite(map.next_value()?))
-                    }
-                    "to" => {
-                        if map.next_key()? != Some("to") {
-                            return Err(de::Error::missing_field("to"));
-                        }
-                        Ok(RelocationBatchError::To(map.next_value()?))
-                    }
-                    "cant_copy_shared_folder" => Ok(RelocationBatchError::CantCopySharedFolder),
-                    "cant_nest_shared_folder" => Ok(RelocationBatchError::CantNestSharedFolder),
-                    "cant_move_folder_into_itself" => Ok(RelocationBatchError::CantMoveFolderIntoItself),
-                    "too_many_files" => Ok(RelocationBatchError::TooManyFiles),
-                    "duplicated_or_nested_paths" => Ok(RelocationBatchError::DuplicatedOrNestedPaths),
-                    "cant_transfer_ownership" => Ok(RelocationBatchError::CantTransferOwnership),
-                    "too_many_write_operations" => Ok(RelocationBatchError::TooManyWriteOperations),
-                    _ => Ok(RelocationBatchError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["from_lookup",
-                                                    "from_write",
-                                                    "to",
-                                                    "cant_copy_shared_folder",
-                                                    "cant_nest_shared_folder",
-                                                    "cant_move_folder_into_itself",
-                                                    "too_many_files",
-                                                    "duplicated_or_nested_paths",
-                                                    "cant_transfer_ownership",
-                                                    "other",
-                                                    "too_many_write_operations"];
-        deserializer.deserialize_struct("RelocationBatchError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for RelocationBatchError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            RelocationBatchError::FromLookup(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "from_lookup")?;
-                s.serialize_field("from_lookup", x)?;
-                s.end()
-            }
-            RelocationBatchError::FromWrite(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "from_write")?;
-                s.serialize_field("from_write", x)?;
-                s.end()
-            }
-            RelocationBatchError::To(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "to")?;
-                s.serialize_field("to", x)?;
-                s.end()
-            }
-            RelocationBatchError::CantCopySharedFolder => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
-                s.serialize_field(".tag", "cant_copy_shared_folder")?;
-                s.end()
-            }
-            RelocationBatchError::CantNestSharedFolder => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
-                s.serialize_field(".tag", "cant_nest_shared_folder")?;
-                s.end()
-            }
-            RelocationBatchError::CantMoveFolderIntoItself => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
-                s.serialize_field(".tag", "cant_move_folder_into_itself")?;
-                s.end()
-            }
-            RelocationBatchError::TooManyFiles => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
-                s.serialize_field(".tag", "too_many_files")?;
-                s.end()
-            }
-            RelocationBatchError::DuplicatedOrNestedPaths => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
-                s.serialize_field(".tag", "duplicated_or_nested_paths")?;
-                s.end()
-            }
-            RelocationBatchError::CantTransferOwnership => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
-                s.serialize_field(".tag", "cant_transfer_ownership")?;
-                s.end()
-            }
-            RelocationBatchError::TooManyWriteOperations => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
-                s.serialize_field(".tag", "too_many_write_operations")?;
-                s.end()
-            }
-            RelocationBatchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for RelocationBatchError {
-    fn description(&self) -> &str {
-        "RelocationBatchError"
-    }
-}
-
-impl ::std::fmt::Display for RelocationBatchError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-/// Metadata for a file or folder.
-#[derive(Debug)]
-pub enum Metadata {
-    File(FileMetadata),
-    Folder(FolderMetadata),
-    Deleted(DeletedMetadata),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for Metadata {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // polymorphic struct deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = Metadata;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a Metadata structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "file" => Ok(Metadata::File(FileMetadata::internal_deserialize(map)?)),
-                    "folder" => Ok(Metadata::Folder(FolderMetadata::internal_deserialize(map)?)),
-                    "deleted" => Ok(Metadata::Deleted(DeletedMetadata::internal_deserialize(map)?)),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["deleted",
-                                                    "deleted",
-                                                    "deleted"];
-        deserializer.deserialize_struct("Metadata", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for Metadata {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // polymorphic struct serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            Metadata::File(ref x) => {
-                let mut s = serializer.serialize_struct("Metadata", 15)?;
-                s.serialize_field(".tag", "file")?;
-                s.serialize_field("name", &x.name)?;
-                s.serialize_field("id", &x.id)?;
-                s.serialize_field("client_modified", &x.client_modified)?;
-                s.serialize_field("server_modified", &x.server_modified)?;
-                s.serialize_field("rev", &x.rev)?;
-                s.serialize_field("size", &x.size)?;
-                s.serialize_field("path_lower", &x.path_lower)?;
-                s.serialize_field("path_display", &x.path_display)?;
-                s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
-                s.serialize_field("media_info", &x.media_info)?;
-                s.serialize_field("sharing_info", &x.sharing_info)?;
-                s.serialize_field("property_groups", &x.property_groups)?;
-                s.serialize_field("has_explicit_shared_members", &x.has_explicit_shared_members)?;
-                s.serialize_field("content_hash", &x.content_hash)?;
-                s.end()
-            }
-            Metadata::Folder(ref x) => {
-                let mut s = serializer.serialize_struct("Metadata", 9)?;
-                s.serialize_field(".tag", "folder")?;
-                s.serialize_field("name", &x.name)?;
-                s.serialize_field("id", &x.id)?;
-                s.serialize_field("path_lower", &x.path_lower)?;
-                s.serialize_field("path_display", &x.path_display)?;
-                s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
-                s.serialize_field("shared_folder_id", &x.shared_folder_id)?;
-                s.serialize_field("sharing_info", &x.sharing_info)?;
-                s.serialize_field("property_groups", &x.property_groups)?;
-                s.end()
-            }
-            Metadata::Deleted(ref x) => {
-                let mut s = serializer.serialize_struct("Metadata", 5)?;
-                s.serialize_field(".tag", "deleted")?;
-                s.serialize_field("name", &x.name)?;
-                s.serialize_field("path_lower", &x.path_lower)?;
-                s.serialize_field("path_display", &x.path_display)?;
-                s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
-                s.end()
-            }
-        }
-    }
-}
-
-/// Indicates what type of match was found for a given item.
-#[derive(Debug)]
-pub enum SearchMatchType {
-    /// This item was matched on its file or folder name.
-    Filename,
-    /// This item was matched based on its file contents.
-    Content,
-    /// This item was matched based on both its contents and its file name.
-    Both,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SearchMatchType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SearchMatchType;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SearchMatchType structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "filename" => Ok(SearchMatchType::Filename),
-                    "content" => Ok(SearchMatchType::Content),
-                    "both" => Ok(SearchMatchType::Both),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["filename",
-                                                    "content",
-                                                    "both"];
-        deserializer.deserialize_struct("SearchMatchType", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SearchMatchType {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SearchMatchType::Filename => {
-                // unit
-                let mut s = serializer.serialize_struct("SearchMatchType", 1)?;
-                s.serialize_field(".tag", "filename")?;
-                s.end()
-            }
-            SearchMatchType::Content => {
-                // unit
-                let mut s = serializer.serialize_struct("SearchMatchType", 1)?;
-                s.serialize_field(".tag", "content")?;
-                s.end()
-            }
-            SearchMatchType::Both => {
-                // unit
-                let mut s = serializer.serialize_struct("SearchMatchType", 1)?;
-                s.serialize_field(".tag", "both")?;
-                s.end()
-            }
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum ListFolderError {
-    Path(LookupError),
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListFolderError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ListFolderError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListFolderError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(ListFolderError::Path(map.next_value()?))
-                    }
-                    _ => Ok(ListFolderError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
-        deserializer.deserialize_struct("ListFolderError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListFolderError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            ListFolderError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            ListFolderError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for ListFolderError {
-    fn description(&self) -> &str {
-        "ListFolderError"
-    }
-}
-
-impl ::std::fmt::Display for ListFolderError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub enum SearchError {
-    Path(LookupError),
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SearchError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SearchError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SearchError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(SearchError::Path(map.next_value()?))
-                    }
-                    _ => Ok(SearchError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
-        deserializer.deserialize_struct("SearchError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SearchError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SearchError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            SearchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for SearchError {
-    fn description(&self) -> &str {
-        "SearchError"
-    }
-}
-
-impl ::std::fmt::Display for SearchError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
 pub enum AddPropertiesError {
     /// Property template does not exist for given identifier.
     TemplateNotFound(super::properties::TemplateId),
@@ -1194,6 +468,767 @@ impl ::std::fmt::Display for AddPropertiesError {
 }
 
 #[derive(Debug)]
+pub struct AlphaGetMetadataArg {
+    /// The path of a file or folder on Dropbox.
+    pub path: ReadPath,
+    /// If true, :field:`FileMetadata.media_info` is set for photo and video.
+    pub include_media_info: bool,
+    /// If true, :type:`DeletedMetadata` will be returned for deleted file or folder, otherwise
+    /// :field:`LookupError.not_found` will be returned.
+    pub include_deleted: bool,
+    /// If true, the results will include a flag for each file indicating whether or not  that file
+    /// has any explicit members.
+    pub include_has_explicit_shared_members: bool,
+    /// If set to a valid list of template IDs, :field:`FileMetadata.property_groups` is set for
+    /// files with custom properties.
+    pub include_property_templates: Option<Vec<super::properties::TemplateId>>,
+}
+
+impl AlphaGetMetadataArg {
+    pub fn new(path: ReadPath) -> Self {
+        AlphaGetMetadataArg {
+            path,
+            include_media_info: false,
+            include_deleted: false,
+            include_has_explicit_shared_members: false,
+            include_property_templates: None,
+        }
+    }
+
+    pub fn with_include_media_info(mut self, value: bool) -> Self {
+        self.include_media_info = value;
+        self
+    }
+
+    pub fn with_include_deleted(mut self, value: bool) -> Self {
+        self.include_deleted = value;
+        self
+    }
+
+    pub fn with_include_has_explicit_shared_members(mut self, value: bool) -> Self {
+        self.include_has_explicit_shared_members = value;
+        self
+    }
+
+    pub fn with_include_property_templates(mut self, value: Option<Vec<super::properties::TemplateId>>) -> Self {
+        self.include_property_templates = value;
+        self
+    }
+
+}
+
+const ALPHA_GET_METADATA_ARG_FIELDS: &'static [&'static str] = &["path",
+                                                                 "include_media_info",
+                                                                 "include_deleted",
+                                                                 "include_has_explicit_shared_members",
+                                                                 "include_property_templates"];
+impl AlphaGetMetadataArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AlphaGetMetadataArg, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        let mut field_include_media_info = None;
+        let mut field_include_deleted = None;
+        let mut field_include_has_explicit_shared_members = None;
+        let mut field_include_property_templates = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "include_media_info" => {
+                    if field_include_media_info.is_some() {
+                        return Err(de::Error::duplicate_field("include_media_info"));
+                    }
+                    field_include_media_info = Some(map.next_value()?);
+                }
+                "include_deleted" => {
+                    if field_include_deleted.is_some() {
+                        return Err(de::Error::duplicate_field("include_deleted"));
+                    }
+                    field_include_deleted = Some(map.next_value()?);
+                }
+                "include_has_explicit_shared_members" => {
+                    if field_include_has_explicit_shared_members.is_some() {
+                        return Err(de::Error::duplicate_field("include_has_explicit_shared_members"));
+                    }
+                    field_include_has_explicit_shared_members = Some(map.next_value()?);
+                }
+                "include_property_templates" => {
+                    if field_include_property_templates.is_some() {
+                        return Err(de::Error::duplicate_field("include_property_templates"));
+                    }
+                    field_include_property_templates = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, ALPHA_GET_METADATA_ARG_FIELDS))
+            }
+        }
+        Ok(AlphaGetMetadataArg {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            include_media_info: field_include_media_info.unwrap_or(false),
+            include_deleted: field_include_deleted.unwrap_or(false),
+            include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
+            include_property_templates: field_include_property_templates,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("include_media_info", &self.include_media_info)?;
+        s.serialize_field("include_deleted", &self.include_deleted)?;
+        s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
+        s.serialize_field("include_property_templates", &self.include_property_templates)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AlphaGetMetadataArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = AlphaGetMetadataArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a AlphaGetMetadataArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                AlphaGetMetadataArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("AlphaGetMetadataArg", ALPHA_GET_METADATA_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AlphaGetMetadataArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("AlphaGetMetadataArg", 5)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum AlphaGetMetadataError {
+    Path(LookupError),
+    PropertiesError(LookUpPropertiesError),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AlphaGetMetadataError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = AlphaGetMetadataError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a AlphaGetMetadataError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(AlphaGetMetadataError::Path(map.next_value()?))
+                    }
+                    "properties_error" => {
+                        if map.next_key()? != Some("properties_error") {
+                            return Err(de::Error::missing_field("properties_error"));
+                        }
+                        Ok(AlphaGetMetadataError::PropertiesError(map.next_value()?))
+                    }
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path",
+                                                    "properties_error"];
+        deserializer.deserialize_struct("AlphaGetMetadataError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AlphaGetMetadataError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            AlphaGetMetadataError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            AlphaGetMetadataError::PropertiesError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "properties_error")?;
+                s.serialize_field("properties_error", x)?;
+                s.end()
+            }
+        }
+    }
+}
+
+impl ::std::error::Error for AlphaGetMetadataError {
+    fn description(&self) -> &str {
+        "AlphaGetMetadataError"
+    }
+}
+
+impl ::std::fmt::Display for AlphaGetMetadataError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct CommitInfo {
+    /// Path in the user's Dropbox to save the file.
+    pub path: WritePathOrId,
+    /// Selects what to do if the file already exists.
+    pub mode: WriteMode,
+    /// If there's a conflict, as determined by :field:`mode`, have the Dropbox server try to
+    /// autorename the file to avoid conflict.
+    pub autorename: bool,
+    /// The value to store as the :field:`client_modified` timestamp. Dropbox automatically records
+    /// the time at which the file was written to the Dropbox servers. It can also record an
+    /// additional timestamp, provided by Dropbox desktop clients, mobile clients, and API apps of
+    /// when the file was actually created or modified.
+    pub client_modified: Option<super::common::DropboxTimestamp>,
+    /// Normally, users are made aware of any file modifications in their Dropbox account via
+    /// notifications in the client software. If :val:`true`, this tells the clients that this
+    /// modification shouldn't result in a user notification.
+    pub mute: bool,
+}
+
+impl CommitInfo {
+    pub fn new(path: WritePathOrId) -> Self {
+        CommitInfo {
+            path,
+            mode: WriteMode::Add,
+            autorename: false,
+            client_modified: None,
+            mute: false,
+        }
+    }
+
+    pub fn with_mode(mut self, value: WriteMode) -> Self {
+        self.mode = value;
+        self
+    }
+
+    pub fn with_autorename(mut self, value: bool) -> Self {
+        self.autorename = value;
+        self
+    }
+
+    pub fn with_client_modified(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.client_modified = value;
+        self
+    }
+
+    pub fn with_mute(mut self, value: bool) -> Self {
+        self.mute = value;
+        self
+    }
+
+}
+
+const COMMIT_INFO_FIELDS: &'static [&'static str] = &["path",
+                                                      "mode",
+                                                      "autorename",
+                                                      "client_modified",
+                                                      "mute"];
+impl CommitInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CommitInfo, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        let mut field_mode = None;
+        let mut field_autorename = None;
+        let mut field_client_modified = None;
+        let mut field_mute = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "mode" => {
+                    if field_mode.is_some() {
+                        return Err(de::Error::duplicate_field("mode"));
+                    }
+                    field_mode = Some(map.next_value()?);
+                }
+                "autorename" => {
+                    if field_autorename.is_some() {
+                        return Err(de::Error::duplicate_field("autorename"));
+                    }
+                    field_autorename = Some(map.next_value()?);
+                }
+                "client_modified" => {
+                    if field_client_modified.is_some() {
+                        return Err(de::Error::duplicate_field("client_modified"));
+                    }
+                    field_client_modified = Some(map.next_value()?);
+                }
+                "mute" => {
+                    if field_mute.is_some() {
+                        return Err(de::Error::duplicate_field("mute"));
+                    }
+                    field_mute = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, COMMIT_INFO_FIELDS))
+            }
+        }
+        Ok(CommitInfo {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            mode: field_mode.unwrap_or_else(|| WriteMode::Add),
+            autorename: field_autorename.unwrap_or(false),
+            client_modified: field_client_modified,
+            mute: field_mute.unwrap_or(false),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("mode", &self.mode)?;
+        s.serialize_field("autorename", &self.autorename)?;
+        s.serialize_field("client_modified", &self.client_modified)?;
+        s.serialize_field("mute", &self.mute)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CommitInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CommitInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CommitInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CommitInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CommitInfo", COMMIT_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CommitInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CommitInfo", 5)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct CommitInfoWithProperties {
+    /// Path in the user's Dropbox to save the file.
+    pub path: WritePathOrId,
+    /// Selects what to do if the file already exists.
+    pub mode: WriteMode,
+    /// If there's a conflict, as determined by :field:`mode`, have the Dropbox server try to
+    /// autorename the file to avoid conflict.
+    pub autorename: bool,
+    /// The value to store as the :field:`client_modified` timestamp. Dropbox automatically records
+    /// the time at which the file was written to the Dropbox servers. It can also record an
+    /// additional timestamp, provided by Dropbox desktop clients, mobile clients, and API apps of
+    /// when the file was actually created or modified.
+    pub client_modified: Option<super::common::DropboxTimestamp>,
+    /// Normally, users are made aware of any file modifications in their Dropbox account via
+    /// notifications in the client software. If :val:`true`, this tells the clients that this
+    /// modification shouldn't result in a user notification.
+    pub mute: bool,
+    /// List of custom properties to add to file.
+    pub property_groups: Option<Vec<super::properties::PropertyGroup>>,
+}
+
+impl CommitInfoWithProperties {
+    pub fn new(path: WritePathOrId) -> Self {
+        CommitInfoWithProperties {
+            path,
+            mode: WriteMode::Add,
+            autorename: false,
+            client_modified: None,
+            mute: false,
+            property_groups: None,
+        }
+    }
+
+    pub fn with_mode(mut self, value: WriteMode) -> Self {
+        self.mode = value;
+        self
+    }
+
+    pub fn with_autorename(mut self, value: bool) -> Self {
+        self.autorename = value;
+        self
+    }
+
+    pub fn with_client_modified(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.client_modified = value;
+        self
+    }
+
+    pub fn with_mute(mut self, value: bool) -> Self {
+        self.mute = value;
+        self
+    }
+
+    pub fn with_property_groups(mut self, value: Option<Vec<super::properties::PropertyGroup>>) -> Self {
+        self.property_groups = value;
+        self
+    }
+
+}
+
+const COMMIT_INFO_WITH_PROPERTIES_FIELDS: &'static [&'static str] = &["path",
+                                                                      "mode",
+                                                                      "autorename",
+                                                                      "client_modified",
+                                                                      "mute",
+                                                                      "property_groups"];
+impl CommitInfoWithProperties {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CommitInfoWithProperties, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        let mut field_mode = None;
+        let mut field_autorename = None;
+        let mut field_client_modified = None;
+        let mut field_mute = None;
+        let mut field_property_groups = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "mode" => {
+                    if field_mode.is_some() {
+                        return Err(de::Error::duplicate_field("mode"));
+                    }
+                    field_mode = Some(map.next_value()?);
+                }
+                "autorename" => {
+                    if field_autorename.is_some() {
+                        return Err(de::Error::duplicate_field("autorename"));
+                    }
+                    field_autorename = Some(map.next_value()?);
+                }
+                "client_modified" => {
+                    if field_client_modified.is_some() {
+                        return Err(de::Error::duplicate_field("client_modified"));
+                    }
+                    field_client_modified = Some(map.next_value()?);
+                }
+                "mute" => {
+                    if field_mute.is_some() {
+                        return Err(de::Error::duplicate_field("mute"));
+                    }
+                    field_mute = Some(map.next_value()?);
+                }
+                "property_groups" => {
+                    if field_property_groups.is_some() {
+                        return Err(de::Error::duplicate_field("property_groups"));
+                    }
+                    field_property_groups = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, COMMIT_INFO_WITH_PROPERTIES_FIELDS))
+            }
+        }
+        Ok(CommitInfoWithProperties {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            mode: field_mode.unwrap_or_else(|| WriteMode::Add),
+            autorename: field_autorename.unwrap_or(false),
+            client_modified: field_client_modified,
+            mute: field_mute.unwrap_or(false),
+            property_groups: field_property_groups,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("mode", &self.mode)?;
+        s.serialize_field("autorename", &self.autorename)?;
+        s.serialize_field("client_modified", &self.client_modified)?;
+        s.serialize_field("mute", &self.mute)?;
+        s.serialize_field("property_groups", &self.property_groups)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CommitInfoWithProperties {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CommitInfoWithProperties;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CommitInfoWithProperties struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CommitInfoWithProperties::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CommitInfoWithProperties", COMMIT_INFO_WITH_PROPERTIES_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CommitInfoWithProperties {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CommitInfoWithProperties", 6)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct CreateFolderArg {
+    /// Path in the user's Dropbox to create.
+    pub path: WritePath,
+    /// If there's a conflict, have the Dropbox server try to autorename the folder to avoid the
+    /// conflict.
+    pub autorename: bool,
+}
+
+impl CreateFolderArg {
+    pub fn new(path: WritePath) -> Self {
+        CreateFolderArg {
+            path,
+            autorename: false,
+        }
+    }
+
+    pub fn with_autorename(mut self, value: bool) -> Self {
+        self.autorename = value;
+        self
+    }
+
+}
+
+const CREATE_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
+                                                            "autorename"];
+impl CreateFolderArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CreateFolderArg, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        let mut field_autorename = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "autorename" => {
+                    if field_autorename.is_some() {
+                        return Err(de::Error::duplicate_field("autorename"));
+                    }
+                    field_autorename = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, CREATE_FOLDER_ARG_FIELDS))
+            }
+        }
+        Ok(CreateFolderArg {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            autorename: field_autorename.unwrap_or(false),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("autorename", &self.autorename)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateFolderArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CreateFolderArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CreateFolderArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CreateFolderArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CreateFolderArg", CREATE_FOLDER_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateFolderArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CreateFolderArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum CreateFolderError {
+    Path(WriteError),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateFolderError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = CreateFolderError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CreateFolderError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(CreateFolderError::Path(map.next_value()?))
+                    }
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path"];
+        deserializer.deserialize_struct("CreateFolderError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateFolderError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            CreateFolderError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+        }
+    }
+}
+
+impl ::std::error::Error for CreateFolderError {
+    fn description(&self) -> &str {
+        "CreateFolderError"
+    }
+}
+
+impl ::std::fmt::Display for CreateFolderError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct CreateFolderResult {
+    /// Metadata of the created folder.
+    pub metadata: FolderMetadata,
+}
+
+impl CreateFolderResult {
+    pub fn new(metadata: FolderMetadata) -> Self {
+        CreateFolderResult {
+            metadata,
+        }
+    }
+
+}
+
+const CREATE_FOLDER_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
+impl CreateFolderResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CreateFolderResult, V::Error> {
+        use serde::de;
+        let mut field_metadata = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, CREATE_FOLDER_RESULT_FIELDS))
+            }
+        }
+        Ok(CreateFolderResult {
+            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("metadata", &self.metadata)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateFolderResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CreateFolderResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CreateFolderResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CreateFolderResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CreateFolderResult", CREATE_FOLDER_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateFolderResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CreateFolderResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub struct DeleteArg {
     /// Path in the user's Dropbox to delete.
     pub path: WritePathOrId,
@@ -1264,331 +1299,91 @@ impl ::serde::ser::Serialize for DeleteArg {
 }
 
 #[derive(Debug)]
-pub enum WriteError {
-    MalformedPath(MalformedPathError),
-    /// Couldn't write to the target path because there was something in the way.
-    Conflict(WriteConflictError),
-    /// The user doesn't have permissions to write to the target location.
-    NoWritePermission,
-    /// The user doesn't have enough available space (bytes) to write more data.
-    InsufficientSpace,
-    /// Dropbox will not save the file or folder because of its name.
-    DisallowedName,
-    /// This endpoint cannot modify or delete team folders.
-    TeamFolder,
-    Other,
+pub struct DeleteBatchArg {
+    pub entries: Vec<DeleteArg>,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for WriteError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = WriteError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a WriteError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "malformed_path" => {
-                        if map.next_key()? != Some("malformed_path") {
-                            return Err(de::Error::missing_field("malformed_path"));
-                        }
-                        Ok(WriteError::MalformedPath(map.next_value()?))
-                    }
-                    "conflict" => {
-                        if map.next_key()? != Some("conflict") {
-                            return Err(de::Error::missing_field("conflict"));
-                        }
-                        Ok(WriteError::Conflict(map.next_value()?))
-                    }
-                    "no_write_permission" => Ok(WriteError::NoWritePermission),
-                    "insufficient_space" => Ok(WriteError::InsufficientSpace),
-                    "disallowed_name" => Ok(WriteError::DisallowedName),
-                    "team_folder" => Ok(WriteError::TeamFolder),
-                    _ => Ok(WriteError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["malformed_path",
-                                                    "conflict",
-                                                    "no_write_permission",
-                                                    "insufficient_space",
-                                                    "disallowed_name",
-                                                    "team_folder",
-                                                    "other"];
-        deserializer.deserialize_struct("WriteError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for WriteError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            WriteError::MalformedPath(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "malformed_path")?;
-                s.serialize_field("malformed_path", x)?;
-                s.end()
-            }
-            WriteError::Conflict(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "conflict")?;
-                s.serialize_field("conflict", x)?;
-                s.end()
-            }
-            WriteError::NoWritePermission => {
-                // unit
-                let mut s = serializer.serialize_struct("WriteError", 1)?;
-                s.serialize_field(".tag", "no_write_permission")?;
-                s.end()
-            }
-            WriteError::InsufficientSpace => {
-                // unit
-                let mut s = serializer.serialize_struct("WriteError", 1)?;
-                s.serialize_field(".tag", "insufficient_space")?;
-                s.end()
-            }
-            WriteError::DisallowedName => {
-                // unit
-                let mut s = serializer.serialize_struct("WriteError", 1)?;
-                s.serialize_field(".tag", "disallowed_name")?;
-                s.end()
-            }
-            WriteError::TeamFolder => {
-                // unit
-                let mut s = serializer.serialize_struct("WriteError", 1)?;
-                s.serialize_field(".tag", "team_folder")?;
-                s.end()
-            }
-            WriteError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for WriteError {
-    fn description(&self) -> &str {
-        "WriteError"
-    }
-}
-
-impl ::std::fmt::Display for WriteError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct ListFolderContinueArg {
-    /// The cursor returned by your last call to :route:`list_folder` or
-    /// :route:`list_folder/continue`.
-    pub cursor: ListFolderCursor,
-}
-
-impl ListFolderContinueArg {
-    pub fn new(cursor: ListFolderCursor) -> Self {
-        ListFolderContinueArg {
-            cursor,
-        }
-    }
-
-}
-
-const LIST_FOLDER_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
-impl ListFolderContinueArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderContinueArg, V::Error> {
-        use serde::de;
-        let mut field_cursor = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "cursor" => {
-                    if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
-                    }
-                    field_cursor = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_CONTINUE_ARG_FIELDS))
-            }
-        }
-        Ok(ListFolderContinueArg {
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListFolderContinueArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListFolderContinueArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListFolderContinueArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListFolderContinueArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListFolderContinueArg", LIST_FOLDER_CONTINUE_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListFolderContinueArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListFolderContinueArg", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct ListRevisionsResult {
-    /// If the file is deleted.
-    pub is_deleted: bool,
-    /// The revisions for the file. Only revisions that are not deleted will show up here.
-    pub entries: Vec<FileMetadata>,
-    /// The time of deletion if the file was deleted.
-    pub server_deleted: Option<super::common::DropboxTimestamp>,
-}
-
-impl ListRevisionsResult {
-    pub fn new(is_deleted: bool, entries: Vec<FileMetadata>) -> Self {
-        ListRevisionsResult {
-            is_deleted,
+impl DeleteBatchArg {
+    pub fn new(entries: Vec<DeleteArg>) -> Self {
+        DeleteBatchArg {
             entries,
-            server_deleted: None,
         }
-    }
-
-    pub fn with_server_deleted(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.server_deleted = value;
-        self
     }
 
 }
 
-const LIST_REVISIONS_RESULT_FIELDS: &'static [&'static str] = &["is_deleted",
-                                                                "entries",
-                                                                "server_deleted"];
-impl ListRevisionsResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListRevisionsResult, V::Error> {
+const DELETE_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries"];
+impl DeleteBatchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeleteBatchArg, V::Error> {
         use serde::de;
-        let mut field_is_deleted = None;
         let mut field_entries = None;
-        let mut field_server_deleted = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "is_deleted" => {
-                    if field_is_deleted.is_some() {
-                        return Err(de::Error::duplicate_field("is_deleted"));
-                    }
-                    field_is_deleted = Some(map.next_value()?);
-                }
                 "entries" => {
                     if field_entries.is_some() {
                         return Err(de::Error::duplicate_field("entries"));
                     }
                     field_entries = Some(map.next_value()?);
                 }
-                "server_deleted" => {
-                    if field_server_deleted.is_some() {
-                        return Err(de::Error::duplicate_field("server_deleted"));
-                    }
-                    field_server_deleted = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_REVISIONS_RESULT_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, DELETE_BATCH_ARG_FIELDS))
             }
         }
-        Ok(ListRevisionsResult {
-            is_deleted: field_is_deleted.ok_or_else(|| de::Error::missing_field("is_deleted"))?,
+        Ok(DeleteBatchArg {
             entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
-            server_deleted: field_server_deleted,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("is_deleted", &self.is_deleted)?;
-        s.serialize_field("entries", &self.entries)?;
-        s.serialize_field("server_deleted", &self.server_deleted)
+        s.serialize_field("entries", &self.entries)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsResult {
+impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchArg {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListRevisionsResult;
+            type Value = DeleteBatchArg;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListRevisionsResult struct")
+                f.write_str("a DeleteBatchArg struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListRevisionsResult::internal_deserialize(map)
+                DeleteBatchArg::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("ListRevisionsResult", LIST_REVISIONS_RESULT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeleteBatchArg", DELETE_BATCH_ARG_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for ListRevisionsResult {
+impl ::serde::ser::Serialize for DeleteBatchArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListRevisionsResult", 3)?;
+        let mut s = serializer.serialize_struct("DeleteBatchArg", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
 }
 
 #[derive(Debug)]
-pub enum RelocationError {
-    FromLookup(LookupError),
-    FromWrite(WriteError),
-    To(WriteError),
-    /// Shared folders can't be copied.
-    CantCopySharedFolder,
-    /// Your move operation would result in nested shared folders.  This is not allowed.
-    CantNestSharedFolder,
-    /// You cannot move a folder into itself.
-    CantMoveFolderIntoItself,
-    /// The operation would involve more than 10,000 files and folders.
-    TooManyFiles,
-    /// There are duplicated/nested paths among :field:`RelocationArg.from_path` and
-    /// :field:`RelocationArg.to_path`.
-    DuplicatedOrNestedPaths,
-    /// Your move operation would result in an ownership transfer. You may reissue the request with
-    /// the field :field:`RelocationArg.allow_ownership_transfer` to true.
-    CantTransferOwnership,
+pub enum DeleteBatchError {
+    /// Deprecated by :field:`DeleteError.too_many_write_operations`. :route:`delete_batch` now
+    /// provides smaller granularity about which entry has failed because of this.
+    TooManyWriteOperations,
     Other,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
+impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = RelocationError;
+            type Value = DeleteBatchError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RelocationError structure")
+                f.write_str("a DeleteBatchError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -1596,365 +1391,65 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "from_lookup" => {
-                        if map.next_key()? != Some("from_lookup") {
-                            return Err(de::Error::missing_field("from_lookup"));
-                        }
-                        Ok(RelocationError::FromLookup(map.next_value()?))
-                    }
-                    "from_write" => {
-                        if map.next_key()? != Some("from_write") {
-                            return Err(de::Error::missing_field("from_write"));
-                        }
-                        Ok(RelocationError::FromWrite(map.next_value()?))
-                    }
-                    "to" => {
-                        if map.next_key()? != Some("to") {
-                            return Err(de::Error::missing_field("to"));
-                        }
-                        Ok(RelocationError::To(map.next_value()?))
-                    }
-                    "cant_copy_shared_folder" => Ok(RelocationError::CantCopySharedFolder),
-                    "cant_nest_shared_folder" => Ok(RelocationError::CantNestSharedFolder),
-                    "cant_move_folder_into_itself" => Ok(RelocationError::CantMoveFolderIntoItself),
-                    "too_many_files" => Ok(RelocationError::TooManyFiles),
-                    "duplicated_or_nested_paths" => Ok(RelocationError::DuplicatedOrNestedPaths),
-                    "cant_transfer_ownership" => Ok(RelocationError::CantTransferOwnership),
-                    _ => Ok(RelocationError::Other)
+                    "too_many_write_operations" => Ok(DeleteBatchError::TooManyWriteOperations),
+                    _ => Ok(DeleteBatchError::Other)
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["from_lookup",
-                                                    "from_write",
-                                                    "to",
-                                                    "cant_copy_shared_folder",
-                                                    "cant_nest_shared_folder",
-                                                    "cant_move_folder_into_itself",
-                                                    "too_many_files",
-                                                    "duplicated_or_nested_paths",
-                                                    "cant_transfer_ownership",
+        const VARIANTS: &'static [&'static str] = &["too_many_write_operations",
                                                     "other"];
-        deserializer.deserialize_struct("RelocationError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("DeleteBatchError", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for RelocationError {
+impl ::serde::ser::Serialize for DeleteBatchError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            RelocationError::FromLookup(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "from_lookup")?;
-                s.serialize_field("from_lookup", x)?;
-                s.end()
-            }
-            RelocationError::FromWrite(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "from_write")?;
-                s.serialize_field("from_write", x)?;
-                s.end()
-            }
-            RelocationError::To(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "to")?;
-                s.serialize_field("to", x)?;
-                s.end()
-            }
-            RelocationError::CantCopySharedFolder => {
+            DeleteBatchError::TooManyWriteOperations => {
                 // unit
-                let mut s = serializer.serialize_struct("RelocationError", 1)?;
-                s.serialize_field(".tag", "cant_copy_shared_folder")?;
+                let mut s = serializer.serialize_struct("DeleteBatchError", 1)?;
+                s.serialize_field(".tag", "too_many_write_operations")?;
                 s.end()
             }
-            RelocationError::CantNestSharedFolder => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationError", 1)?;
-                s.serialize_field(".tag", "cant_nest_shared_folder")?;
-                s.end()
-            }
-            RelocationError::CantMoveFolderIntoItself => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationError", 1)?;
-                s.serialize_field(".tag", "cant_move_folder_into_itself")?;
-                s.end()
-            }
-            RelocationError::TooManyFiles => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationError", 1)?;
-                s.serialize_field(".tag", "too_many_files")?;
-                s.end()
-            }
-            RelocationError::DuplicatedOrNestedPaths => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationError", 1)?;
-                s.serialize_field(".tag", "duplicated_or_nested_paths")?;
-                s.end()
-            }
-            RelocationError::CantTransferOwnership => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationError", 1)?;
-                s.serialize_field(".tag", "cant_transfer_ownership")?;
-                s.end()
-            }
-            RelocationError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            DeleteBatchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
 
-impl ::std::error::Error for RelocationError {
+impl ::std::error::Error for DeleteBatchError {
     fn description(&self) -> &str {
-        "RelocationError"
+        "DeleteBatchError"
     }
 }
 
-impl ::std::fmt::Display for RelocationError {
+impl ::std::fmt::Display for DeleteBatchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
     }
 }
 
 #[derive(Debug)]
-pub struct UploadSessionStartResult {
-    /// A unique identifier for the upload session. Pass this to :route:`upload_session/append_v2`
-    /// and :route:`upload_session/finish`.
-    pub session_id: String,
-}
-
-impl UploadSessionStartResult {
-    pub fn new(session_id: String) -> Self {
-        UploadSessionStartResult {
-            session_id,
-        }
-    }
-
-}
-
-const UPLOAD_SESSION_START_RESULT_FIELDS: &'static [&'static str] = &["session_id"];
-impl UploadSessionStartResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionStartResult, V::Error> {
-        use serde::de;
-        let mut field_session_id = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "session_id" => {
-                    if field_session_id.is_some() {
-                        return Err(de::Error::duplicate_field("session_id"));
-                    }
-                    field_session_id = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_START_RESULT_FIELDS))
-            }
-        }
-        Ok(UploadSessionStartResult {
-            session_id: field_session_id.ok_or_else(|| de::Error::missing_field("session_id"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("session_id", &self.session_id)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UploadSessionStartResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = UploadSessionStartResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadSessionStartResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UploadSessionStartResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("UploadSessionStartResult", UPLOAD_SESSION_START_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UploadSessionStartResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UploadSessionStartResult", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Sharing info for a folder which is contained in a shared folder or is a shared folder mount
-/// point.
-#[derive(Debug)]
-pub struct FolderSharingInfo {
-    /// True if the file or folder is inside a read-only shared folder.
-    pub read_only: bool,
-    /// Set if the folder is contained by a shared folder.
-    pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
-    /// If this folder is a shared folder mount point, the ID of the shared folder mounted at this
-    /// location.
-    pub shared_folder_id: Option<super::common::SharedFolderId>,
-    /// Specifies that the folder can only be traversed and the user can only see a limited subset
-    /// of the contents of this folder because they don't have read access to this folder. They do,
-    /// however, have access to some sub folder.
-    pub traverse_only: bool,
-    /// Specifies that the folder cannot be accessed by the user.
-    pub no_access: bool,
-}
-
-impl FolderSharingInfo {
-    pub fn new(read_only: bool) -> Self {
-        FolderSharingInfo {
-            read_only,
-            parent_shared_folder_id: None,
-            shared_folder_id: None,
-            traverse_only: false,
-            no_access: false,
-        }
-    }
-
-    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
-        self.parent_shared_folder_id = value;
-        self
-    }
-
-    pub fn with_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
-        self.shared_folder_id = value;
-        self
-    }
-
-    pub fn with_traverse_only(mut self, value: bool) -> Self {
-        self.traverse_only = value;
-        self
-    }
-
-    pub fn with_no_access(mut self, value: bool) -> Self {
-        self.no_access = value;
-        self
-    }
-
-}
-
-const FOLDER_SHARING_INFO_FIELDS: &'static [&'static str] = &["read_only",
-                                                              "parent_shared_folder_id",
-                                                              "shared_folder_id",
-                                                              "traverse_only",
-                                                              "no_access"];
-impl FolderSharingInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FolderSharingInfo, V::Error> {
-        use serde::de;
-        let mut field_read_only = None;
-        let mut field_parent_shared_folder_id = None;
-        let mut field_shared_folder_id = None;
-        let mut field_traverse_only = None;
-        let mut field_no_access = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "read_only" => {
-                    if field_read_only.is_some() {
-                        return Err(de::Error::duplicate_field("read_only"));
-                    }
-                    field_read_only = Some(map.next_value()?);
-                }
-                "parent_shared_folder_id" => {
-                    if field_parent_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("parent_shared_folder_id"));
-                    }
-                    field_parent_shared_folder_id = Some(map.next_value()?);
-                }
-                "shared_folder_id" => {
-                    if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
-                    }
-                    field_shared_folder_id = Some(map.next_value()?);
-                }
-                "traverse_only" => {
-                    if field_traverse_only.is_some() {
-                        return Err(de::Error::duplicate_field("traverse_only"));
-                    }
-                    field_traverse_only = Some(map.next_value()?);
-                }
-                "no_access" => {
-                    if field_no_access.is_some() {
-                        return Err(de::Error::duplicate_field("no_access"));
-                    }
-                    field_no_access = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FOLDER_SHARING_INFO_FIELDS))
-            }
-        }
-        Ok(FolderSharingInfo {
-            read_only: field_read_only.ok_or_else(|| de::Error::missing_field("read_only"))?,
-            parent_shared_folder_id: field_parent_shared_folder_id,
-            shared_folder_id: field_shared_folder_id,
-            traverse_only: field_traverse_only.unwrap_or(false),
-            no_access: field_no_access.unwrap_or(false),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("read_only", &self.read_only)?;
-        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
-        s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
-        s.serialize_field("traverse_only", &self.traverse_only)?;
-        s.serialize_field("no_access", &self.no_access)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FolderSharingInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FolderSharingInfo;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FolderSharingInfo struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FolderSharingInfo::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("FolderSharingInfo", FOLDER_SHARING_INFO_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FolderSharingInfo {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FolderSharingInfo", 5)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum RemovePropertiesError {
-    /// Property template does not exist for given identifier.
-    TemplateNotFound(super::properties::TemplateId),
-    /// You do not have the permissions to modify this property template.
-    RestrictedContent,
+pub enum DeleteBatchJobStatus {
+    /// The asynchronous job is still in progress.
+    InProgress,
+    /// The batch delete has finished.
+    Complete(DeleteBatchResult),
+    /// The batch delete has failed.
+    Failed(DeleteBatchError),
     Other,
-    Path(LookupError),
-    PropertyGroupLookup(LookUpPropertiesError),
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
+impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchJobStatus {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = RemovePropertiesError;
+            type Value = DeleteBatchJobStatus;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RemovePropertiesError structure")
+                f.write_str("a DeleteBatchJobStatus structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -1962,84 +1457,191 @@ impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "template_not_found" => {
-                        if map.next_key()? != Some("template_not_found") {
-                            return Err(de::Error::missing_field("template_not_found"));
+                    "in_progress" => Ok(DeleteBatchJobStatus::InProgress),
+                    "complete" => Ok(DeleteBatchJobStatus::Complete(DeleteBatchResult::internal_deserialize(map)?)),
+                    "failed" => {
+                        if map.next_key()? != Some("failed") {
+                            return Err(de::Error::missing_field("failed"));
                         }
-                        Ok(RemovePropertiesError::TemplateNotFound(map.next_value()?))
+                        Ok(DeleteBatchJobStatus::Failed(map.next_value()?))
                     }
-                    "restricted_content" => Ok(RemovePropertiesError::RestrictedContent),
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(RemovePropertiesError::Path(map.next_value()?))
-                    }
-                    "property_group_lookup" => {
-                        if map.next_key()? != Some("property_group_lookup") {
-                            return Err(de::Error::missing_field("property_group_lookup"));
-                        }
-                        Ok(RemovePropertiesError::PropertyGroupLookup(map.next_value()?))
-                    }
-                    _ => Ok(RemovePropertiesError::Other)
+                    _ => Ok(DeleteBatchJobStatus::Other)
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path",
-                                                    "property_group_lookup"];
-        deserializer.deserialize_struct("RemovePropertiesError", VARIANTS, EnumVisitor)
+        const VARIANTS: &'static [&'static str] = &["in_progress",
+                                                    "complete",
+                                                    "failed",
+                                                    "other"];
+        deserializer.deserialize_struct("DeleteBatchJobStatus", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for RemovePropertiesError {
+impl ::serde::ser::Serialize for DeleteBatchJobStatus {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            RemovePropertiesError::TemplateNotFound(ref x) => {
+            DeleteBatchJobStatus::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteBatchJobStatus", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            DeleteBatchJobStatus::Complete(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("DeleteBatchJobStatus", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            DeleteBatchJobStatus::Failed(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "failed")?;
+                s.serialize_field("failed", x)?;
+                s.end()
+            }
+            DeleteBatchJobStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Result returned by :route:`delete_batch` that may either launch an asynchronous job or complete
+/// synchronously.
+#[derive(Debug)]
+pub enum DeleteBatchLaunch {
+    /// This response indicates that the processing is asynchronous. The string is an id that can be
+    /// used to obtain the status of the asynchronous job.
+    AsyncJobId(super::async::AsyncJobId),
+    Complete(DeleteBatchResult),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchLaunch {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = DeleteBatchLaunch;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DeleteBatchLaunch structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "async_job_id" => {
+                        if map.next_key()? != Some("async_job_id") {
+                            return Err(de::Error::missing_field("async_job_id"));
+                        }
+                        Ok(DeleteBatchLaunch::AsyncJobId(map.next_value()?))
+                    }
+                    "complete" => Ok(DeleteBatchLaunch::Complete(DeleteBatchResult::internal_deserialize(map)?)),
+                    _ => Ok(DeleteBatchLaunch::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["async_job_id",
+                                                    "complete",
+                                                    "other"];
+        deserializer.deserialize_struct("DeleteBatchLaunch", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeleteBatchLaunch {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            DeleteBatchLaunch::AsyncJobId(ref x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "template_not_found")?;
-                s.serialize_field("template_not_found", x)?;
+                s.serialize_field(".tag", "async_job_id")?;
+                s.serialize_field("async_job_id", x)?;
                 s.end()
             }
-            RemovePropertiesError::RestrictedContent => {
-                // unit
-                let mut s = serializer.serialize_struct("RemovePropertiesError", 1)?;
-                s.serialize_field(".tag", "restricted_content")?;
+            DeleteBatchLaunch::Complete(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("DeleteBatchLaunch", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            RemovePropertiesError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            RemovePropertiesError::PropertyGroupLookup(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "property_group_lookup")?;
-                s.serialize_field("property_group_lookup", x)?;
-                s.end()
-            }
-            RemovePropertiesError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            DeleteBatchLaunch::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
 
-impl ::std::error::Error for RemovePropertiesError {
-    fn description(&self) -> &str {
-        "RemovePropertiesError"
+#[derive(Debug)]
+pub struct DeleteBatchResult {
+    pub entries: Vec<DeleteBatchResultEntry>,
+}
+
+impl DeleteBatchResult {
+    pub fn new(entries: Vec<DeleteBatchResultEntry>) -> Self {
+        DeleteBatchResult {
+            entries,
+        }
+    }
+
+}
+
+const DELETE_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
+impl DeleteBatchResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeleteBatchResult, V::Error> {
+        use serde::de;
+        let mut field_entries = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, DELETE_BATCH_RESULT_FIELDS))
+            }
+        }
+        Ok(DeleteBatchResult {
+            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)
     }
 }
 
-impl ::std::fmt::Display for RemovePropertiesError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DeleteBatchResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DeleteBatchResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DeleteBatchResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DeleteBatchResult", DELETE_BATCH_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeleteBatchResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DeleteBatchResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -2114,279 +1716,20 @@ impl ::serde::ser::Serialize for DeleteBatchResultData {
 }
 
 #[derive(Debug)]
-pub struct UploadWriteFailed {
-    /// The reason why the file couldn't be saved.
-    pub reason: WriteError,
-    /// The upload session ID; this may be used to retry the commit.
-    pub upload_session_id: String,
+pub enum DeleteBatchResultEntry {
+    Success(DeleteBatchResultData),
+    Failure(DeleteError),
 }
 
-impl UploadWriteFailed {
-    pub fn new(reason: WriteError, upload_session_id: String) -> Self {
-        UploadWriteFailed {
-            reason,
-            upload_session_id,
-        }
-    }
-
-}
-
-const UPLOAD_WRITE_FAILED_FIELDS: &'static [&'static str] = &["reason",
-                                                              "upload_session_id"];
-impl UploadWriteFailed {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadWriteFailed, V::Error> {
-        use serde::de;
-        let mut field_reason = None;
-        let mut field_upload_session_id = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "reason" => {
-                    if field_reason.is_some() {
-                        return Err(de::Error::duplicate_field("reason"));
-                    }
-                    field_reason = Some(map.next_value()?);
-                }
-                "upload_session_id" => {
-                    if field_upload_session_id.is_some() {
-                        return Err(de::Error::duplicate_field("upload_session_id"));
-                    }
-                    field_upload_session_id = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, UPLOAD_WRITE_FAILED_FIELDS))
-            }
-        }
-        Ok(UploadWriteFailed {
-            reason: field_reason.ok_or_else(|| de::Error::missing_field("reason"))?,
-            upload_session_id: field_upload_session_id.ok_or_else(|| de::Error::missing_field("upload_session_id"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("reason", &self.reason)?;
-        s.serialize_field("upload_session_id", &self.upload_session_id)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UploadWriteFailed {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = UploadWriteFailed;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadWriteFailed struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UploadWriteFailed::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("UploadWriteFailed", UPLOAD_WRITE_FAILED_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UploadWriteFailed {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UploadWriteFailed", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct ThumbnailArg {
-    /// The path to the image file you want to thumbnail.
-    pub path: ReadPath,
-    /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
-    /// should be preferred, while png is  better for screenshots and digital arts.
-    pub format: ThumbnailFormat,
-    /// The size for the thumbnail image.
-    pub size: ThumbnailSize,
-}
-
-impl ThumbnailArg {
-    pub fn new(path: ReadPath) -> Self {
-        ThumbnailArg {
-            path,
-            format: ThumbnailFormat::Jpeg,
-            size: ThumbnailSize::W64h64,
-        }
-    }
-
-    pub fn with_format(mut self, value: ThumbnailFormat) -> Self {
-        self.format = value;
-        self
-    }
-
-    pub fn with_size(mut self, value: ThumbnailSize) -> Self {
-        self.size = value;
-        self
-    }
-
-}
-
-const THUMBNAIL_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                        "format",
-                                                        "size"];
-impl ThumbnailArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ThumbnailArg, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_format = None;
-        let mut field_size = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "format" => {
-                    if field_format.is_some() {
-                        return Err(de::Error::duplicate_field("format"));
-                    }
-                    field_format = Some(map.next_value()?);
-                }
-                "size" => {
-                    if field_size.is_some() {
-                        return Err(de::Error::duplicate_field("size"));
-                    }
-                    field_size = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, THUMBNAIL_ARG_FIELDS))
-            }
-        }
-        Ok(ThumbnailArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            format: field_format.unwrap_or_else(|| ThumbnailFormat::Jpeg),
-            size: field_size.unwrap_or_else(|| ThumbnailSize::W64h64),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("format", &self.format)?;
-        s.serialize_field("size", &self.size)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ThumbnailArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ThumbnailArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ThumbnailArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ThumbnailArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ThumbnailArg", THUMBNAIL_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ThumbnailArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ThumbnailArg", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct DeleteBatchResult {
-    pub entries: Vec<DeleteBatchResultEntry>,
-}
-
-impl DeleteBatchResult {
-    pub fn new(entries: Vec<DeleteBatchResultEntry>) -> Self {
-        DeleteBatchResult {
-            entries,
-        }
-    }
-
-}
-
-const DELETE_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
-impl DeleteBatchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeleteBatchResult, V::Error> {
-        use serde::de;
-        let mut field_entries = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "entries" => {
-                    if field_entries.is_some() {
-                        return Err(de::Error::duplicate_field("entries"));
-                    }
-                    field_entries = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, DELETE_BATCH_RESULT_FIELDS))
-            }
-        }
-        Ok(DeleteBatchResult {
-            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = DeleteBatchResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DeleteBatchResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                DeleteBatchResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("DeleteBatchResult", DELETE_BATCH_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for DeleteBatchResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DeleteBatchResult", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum UploadSessionFinishBatchResultEntry {
-    Success(FileMetadata),
-    Failure(UploadSessionFinishError),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchResultEntry {
+impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchResultEntry {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = UploadSessionFinishBatchResultEntry;
+            type Value = DeleteBatchResultEntry;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadSessionFinishBatchResultEntry structure")
+                f.write_str("a DeleteBatchResultEntry structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -2394,12 +1737,12 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchResultEntry 
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "success" => Ok(UploadSessionFinishBatchResultEntry::Success(FileMetadata::internal_deserialize(map)?)),
+                    "success" => Ok(DeleteBatchResultEntry::Success(DeleteBatchResultData::internal_deserialize(map)?)),
                     "failure" => {
                         if map.next_key()? != Some("failure") {
                             return Err(de::Error::missing_field("failure"));
                         }
-                        Ok(UploadSessionFinishBatchResultEntry::Failure(map.next_value()?))
+                        Ok(DeleteBatchResultEntry::Failure(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -2407,23 +1750,23 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchResultEntry 
         }
         const VARIANTS: &'static [&'static str] = &["success",
                                                     "failure"];
-        deserializer.deserialize_struct("UploadSessionFinishBatchResultEntry", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("DeleteBatchResultEntry", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for UploadSessionFinishBatchResultEntry {
+impl ::serde::ser::Serialize for DeleteBatchResultEntry {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            UploadSessionFinishBatchResultEntry::Success(ref x) => {
+            DeleteBatchResultEntry::Success(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 15)?;
+                let mut s = serializer.serialize_struct("DeleteBatchResultEntry", 2)?;
                 s.serialize_field(".tag", "success")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            UploadSessionFinishBatchResultEntry::Failure(ref x) => {
+            DeleteBatchResultEntry::Failure(ref x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("{}", 2)?;
                 s.serialize_field(".tag", "failure")?;
@@ -2435,119 +1778,127 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchResultEntry {
 }
 
 #[derive(Debug)]
-pub struct UploadSessionAppendArg {
-    /// Contains the upload session ID and the offset.
-    pub cursor: UploadSessionCursor,
-    /// If true, the current session will be closed, at which point you won't be able to call
-    /// :route:`upload_session/append_v2` anymore with the current session.
-    pub close: bool,
+pub enum DeleteError {
+    PathLookup(LookupError),
+    PathWrite(WriteError),
+    /// There are too many write operations in user's Dropbox. Please retry this request.
+    TooManyWriteOperations,
+    /// There are too many files in one request. Please retry with fewer files.
+    TooManyFiles,
+    Other,
 }
 
-impl UploadSessionAppendArg {
-    pub fn new(cursor: UploadSessionCursor) -> Self {
-        UploadSessionAppendArg {
-            cursor,
-            close: false,
-        }
-    }
-
-    pub fn with_close(mut self, value: bool) -> Self {
-        self.close = value;
-        self
-    }
-
-}
-
-const UPLOAD_SESSION_APPEND_ARG_FIELDS: &'static [&'static str] = &["cursor",
-                                                                    "close"];
-impl UploadSessionAppendArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionAppendArg, V::Error> {
-        use serde::de;
-        let mut field_cursor = None;
-        let mut field_close = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "cursor" => {
-                    if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
-                    }
-                    field_cursor = Some(map.next_value()?);
-                }
-                "close" => {
-                    if field_close.is_some() {
-                        return Err(de::Error::duplicate_field("close"));
-                    }
-                    field_close = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_APPEND_ARG_FIELDS))
-            }
-        }
-        Ok(UploadSessionAppendArg {
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-            close: field_close.unwrap_or(false),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("close", &self.close)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UploadSessionAppendArg {
+impl<'de> ::serde::de::Deserialize<'de> for DeleteError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = UploadSessionAppendArg;
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = DeleteError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadSessionAppendArg struct")
+                f.write_str("a DeleteError structure")
             }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UploadSessionAppendArg::internal_deserialize(map)
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path_lookup" => {
+                        if map.next_key()? != Some("path_lookup") {
+                            return Err(de::Error::missing_field("path_lookup"));
+                        }
+                        Ok(DeleteError::PathLookup(map.next_value()?))
+                    }
+                    "path_write" => {
+                        if map.next_key()? != Some("path_write") {
+                            return Err(de::Error::missing_field("path_write"));
+                        }
+                        Ok(DeleteError::PathWrite(map.next_value()?))
+                    }
+                    "too_many_write_operations" => Ok(DeleteError::TooManyWriteOperations),
+                    "too_many_files" => Ok(DeleteError::TooManyFiles),
+                    _ => Ok(DeleteError::Other)
+                }
             }
         }
-        deserializer.deserialize_struct("UploadSessionAppendArg", UPLOAD_SESSION_APPEND_ARG_FIELDS, StructVisitor)
+        const VARIANTS: &'static [&'static str] = &["path_lookup",
+                                                    "path_write",
+                                                    "too_many_write_operations",
+                                                    "too_many_files",
+                                                    "other"];
+        deserializer.deserialize_struct("DeleteError", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for UploadSessionAppendArg {
+impl ::serde::ser::Serialize for DeleteError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
+        // union serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UploadSessionAppendArg", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
+        match *self {
+            DeleteError::PathLookup(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path_lookup")?;
+                s.serialize_field("path_lookup", x)?;
+                s.end()
+            }
+            DeleteError::PathWrite(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path_write")?;
+                s.serialize_field("path_write", x)?;
+                s.end()
+            }
+            DeleteError::TooManyWriteOperations => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteError", 1)?;
+                s.serialize_field(".tag", "too_many_write_operations")?;
+                s.end()
+            }
+            DeleteError::TooManyFiles => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteError", 1)?;
+                s.serialize_field(".tag", "too_many_files")?;
+                s.end()
+            }
+            DeleteError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for DeleteError {
+    fn description(&self) -> &str {
+        "DeleteError"
+    }
+}
+
+impl ::std::fmt::Display for DeleteError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
     }
 }
 
 #[derive(Debug)]
-pub struct GetTemporaryLinkResult {
-    /// Metadata of the file.
-    pub metadata: FileMetadata,
-    /// The temporary link which can be used to stream content the file.
-    pub link: String,
+pub struct DeleteResult {
+    /// Metadata of the deleted object.
+    pub metadata: Metadata,
 }
 
-impl GetTemporaryLinkResult {
-    pub fn new(metadata: FileMetadata, link: String) -> Self {
-        GetTemporaryLinkResult {
+impl DeleteResult {
+    pub fn new(metadata: Metadata) -> Self {
+        DeleteResult {
             metadata,
-            link,
         }
     }
 
 }
 
-const GET_TEMPORARY_LINK_RESULT_FIELDS: &'static [&'static str] = &["metadata",
-                                                                    "link"];
-impl GetTemporaryLinkResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetTemporaryLinkResult, V::Error> {
+const DELETE_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
+impl DeleteResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeleteResult, V::Error> {
         use serde::de;
         let mut field_metadata = None;
-        let mut field_link = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "metadata" => {
@@ -2556,80 +1907,366 @@ impl GetTemporaryLinkResult {
                     }
                     field_metadata = Some(map.next_value()?);
                 }
-                "link" => {
-                    if field_link.is_some() {
-                        return Err(de::Error::duplicate_field("link"));
-                    }
-                    field_link = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, GET_TEMPORARY_LINK_RESULT_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, DELETE_RESULT_FIELDS))
             }
         }
-        Ok(GetTemporaryLinkResult {
+        Ok(DeleteResult {
             metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
-            link: field_link.ok_or_else(|| de::Error::missing_field("link"))?,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)?;
-        s.serialize_field("link", &self.link)
+        s.serialize_field("metadata", &self.metadata)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkResult {
+impl<'de> ::serde::de::Deserialize<'de> for DeleteResult {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GetTemporaryLinkResult;
+            type Value = DeleteResult;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetTemporaryLinkResult struct")
+                f.write_str("a DeleteResult struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GetTemporaryLinkResult::internal_deserialize(map)
+                DeleteResult::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("GetTemporaryLinkResult", GET_TEMPORARY_LINK_RESULT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeleteResult", DELETE_RESULT_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for GetTemporaryLinkResult {
+impl ::serde::ser::Serialize for DeleteResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetTemporaryLinkResult", 2)?;
+        let mut s = serializer.serialize_struct("DeleteResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Indicates that there used to be a file or folder at this path, but it no longer exists.
+#[derive(Debug)]
+pub struct DeletedMetadata {
+    /// The last component of the path (including extension). This never contains a slash.
+    pub name: String,
+    /// The lowercased full path in the user's Dropbox. This always starts with a slash. This field
+    /// will be null if the file or folder is not mounted.
+    pub path_lower: Option<String>,
+    /// The cased path to be used for display purposes only. In rare instances the casing will not
+    /// correctly match the user's filesystem, but this behavior will match the path provided in the
+    /// Core API v1, and at least the last path component will have the correct casing. Changes to
+    /// only the casing of paths won't be returned by :route:`list_folder/continue`. This field will
+    /// be null if the file or folder is not mounted.
+    pub path_display: Option<String>,
+    /// Deprecated. Please use :field:`FileSharingInfo.parent_shared_folder_id` or
+    /// :field:`FolderSharingInfo.parent_shared_folder_id` instead.
+    pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
+}
+
+impl DeletedMetadata {
+    pub fn new(name: String) -> Self {
+        DeletedMetadata {
+            name,
+            path_lower: None,
+            path_display: None,
+            parent_shared_folder_id: None,
+        }
+    }
+
+    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
+        self.path_lower = value;
+        self
+    }
+
+    pub fn with_path_display(mut self, value: Option<String>) -> Self {
+        self.path_display = value;
+        self
+    }
+
+    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+        self.parent_shared_folder_id = value;
+        self
+    }
+
+}
+
+const DELETED_METADATA_FIELDS: &'static [&'static str] = &["name",
+                                                           "path_lower",
+                                                           "path_display",
+                                                           "parent_shared_folder_id"];
+impl DeletedMetadata {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeletedMetadata, V::Error> {
+        use serde::de;
+        let mut field_name = None;
+        let mut field_path_lower = None;
+        let mut field_path_display = None;
+        let mut field_parent_shared_folder_id = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "name" => {
+                    if field_name.is_some() {
+                        return Err(de::Error::duplicate_field("name"));
+                    }
+                    field_name = Some(map.next_value()?);
+                }
+                "path_lower" => {
+                    if field_path_lower.is_some() {
+                        return Err(de::Error::duplicate_field("path_lower"));
+                    }
+                    field_path_lower = Some(map.next_value()?);
+                }
+                "path_display" => {
+                    if field_path_display.is_some() {
+                        return Err(de::Error::duplicate_field("path_display"));
+                    }
+                    field_path_display = Some(map.next_value()?);
+                }
+                "parent_shared_folder_id" => {
+                    if field_parent_shared_folder_id.is_some() {
+                        return Err(de::Error::duplicate_field("parent_shared_folder_id"));
+                    }
+                    field_parent_shared_folder_id = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, DELETED_METADATA_FIELDS))
+            }
+        }
+        Ok(DeletedMetadata {
+            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
+            path_lower: field_path_lower,
+            path_display: field_path_display,
+            parent_shared_folder_id: field_parent_shared_folder_id,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("path_lower", &self.path_lower)?;
+        s.serialize_field("path_display", &self.path_display)?;
+        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeletedMetadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DeletedMetadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DeletedMetadata struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DeletedMetadata::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DeletedMetadata", DELETED_METADATA_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeletedMetadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DeletedMetadata", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Dimensions for a photo or video.
+#[derive(Debug)]
+pub struct Dimensions {
+    /// Height of the photo/video.
+    pub height: u64,
+    /// Width of the photo/video.
+    pub width: u64,
+}
+
+impl Dimensions {
+    pub fn new(height: u64, width: u64) -> Self {
+        Dimensions {
+            height,
+            width,
+        }
+    }
+
+}
+
+const DIMENSIONS_FIELDS: &'static [&'static str] = &["height",
+                                                     "width"];
+impl Dimensions {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Dimensions, V::Error> {
+        use serde::de;
+        let mut field_height = None;
+        let mut field_width = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "height" => {
+                    if field_height.is_some() {
+                        return Err(de::Error::duplicate_field("height"));
+                    }
+                    field_height = Some(map.next_value()?);
+                }
+                "width" => {
+                    if field_width.is_some() {
+                        return Err(de::Error::duplicate_field("width"));
+                    }
+                    field_width = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, DIMENSIONS_FIELDS))
+            }
+        }
+        Ok(Dimensions {
+            height: field_height.ok_or_else(|| de::Error::missing_field("height"))?,
+            width: field_width.ok_or_else(|| de::Error::missing_field("width"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("height", &self.height)?;
+        s.serialize_field("width", &self.width)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for Dimensions {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = Dimensions;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a Dimensions struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                Dimensions::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("Dimensions", DIMENSIONS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for Dimensions {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("Dimensions", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
 }
 
 #[derive(Debug)]
-pub enum UploadSessionFinishError {
-    /// The session arguments are incorrect; the value explains the reason.
-    LookupFailed(UploadSessionLookupError),
-    /// Unable to save the uploaded contents to a file.
-    Path(WriteError),
-    /// The batch request commits files into too many different shared folders. Please limit your
-    /// batch request to files contained in a single shared folder.
-    TooManySharedFolderTargets,
-    /// There are too many write operations happening in the user's Dropbox. You should retry
-    /// uploading this file.
-    TooManyWriteOperations,
+pub struct DownloadArg {
+    /// The path of the file to download.
+    pub path: ReadPath,
+    /// Deprecated. Please specify revision in :field:`path` instead.
+    pub rev: Option<Rev>,
+}
+
+impl DownloadArg {
+    pub fn new(path: ReadPath) -> Self {
+        DownloadArg {
+            path,
+            rev: None,
+        }
+    }
+
+    pub fn with_rev(mut self, value: Option<Rev>) -> Self {
+        self.rev = value;
+        self
+    }
+
+}
+
+const DOWNLOAD_ARG_FIELDS: &'static [&'static str] = &["path",
+                                                       "rev"];
+impl DownloadArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DownloadArg, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        let mut field_rev = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "rev" => {
+                    if field_rev.is_some() {
+                        return Err(de::Error::duplicate_field("rev"));
+                    }
+                    field_rev = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, DOWNLOAD_ARG_FIELDS))
+            }
+        }
+        Ok(DownloadArg {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            rev: field_rev,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("rev", &self.rev)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DownloadArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DownloadArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DownloadArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DownloadArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DownloadArg", DOWNLOAD_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DownloadArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DownloadArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum DownloadError {
+    Path(LookupError),
     Other,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
+impl<'de> ::serde::de::Deserialize<'de> for DownloadError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = UploadSessionFinishError;
+            type Value = DownloadError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadSessionFinishError structure")
+                f.write_str("a DownloadError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -2637,76 +2274,46 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "lookup_failed" => {
-                        if map.next_key()? != Some("lookup_failed") {
-                            return Err(de::Error::missing_field("lookup_failed"));
-                        }
-                        Ok(UploadSessionFinishError::LookupFailed(map.next_value()?))
-                    }
                     "path" => {
                         if map.next_key()? != Some("path") {
                             return Err(de::Error::missing_field("path"));
                         }
-                        Ok(UploadSessionFinishError::Path(map.next_value()?))
+                        Ok(DownloadError::Path(map.next_value()?))
                     }
-                    "too_many_shared_folder_targets" => Ok(UploadSessionFinishError::TooManySharedFolderTargets),
-                    "too_many_write_operations" => Ok(UploadSessionFinishError::TooManyWriteOperations),
-                    _ => Ok(UploadSessionFinishError::Other)
+                    _ => Ok(DownloadError::Other)
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["lookup_failed",
-                                                    "path",
-                                                    "too_many_shared_folder_targets",
-                                                    "too_many_write_operations",
+        const VARIANTS: &'static [&'static str] = &["path",
                                                     "other"];
-        deserializer.deserialize_struct("UploadSessionFinishError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("DownloadError", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for UploadSessionFinishError {
+impl ::serde::ser::Serialize for DownloadError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            UploadSessionFinishError::LookupFailed(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "lookup_failed")?;
-                s.serialize_field("lookup_failed", x)?;
-                s.end()
-            }
-            UploadSessionFinishError::Path(ref x) => {
+            DownloadError::Path(ref x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("{}", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
             }
-            UploadSessionFinishError::TooManySharedFolderTargets => {
-                // unit
-                let mut s = serializer.serialize_struct("UploadSessionFinishError", 1)?;
-                s.serialize_field(".tag", "too_many_shared_folder_targets")?;
-                s.end()
-            }
-            UploadSessionFinishError::TooManyWriteOperations => {
-                // unit
-                let mut s = serializer.serialize_struct("UploadSessionFinishError", 1)?;
-                s.serialize_field(".tag", "too_many_write_operations")?;
-                s.end()
-            }
-            UploadSessionFinishError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            DownloadError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
 
-impl ::std::error::Error for UploadSessionFinishError {
+impl ::std::error::Error for DownloadError {
     fn description(&self) -> &str {
-        "UploadSessionFinishError"
+        "DownloadError"
     }
 }
 
-impl ::std::fmt::Display for UploadSessionFinishError {
+impl ::std::fmt::Display for DownloadError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
     }
@@ -3008,70 +2615,151 @@ impl ::serde::ser::Serialize for FileMetadata {
 }
 
 #[derive(Debug)]
-pub struct UploadSessionStartArg {
-    /// If true, the current session will be closed, at which point you won't be able to call
-    /// :route:`upload_session/append_v2` anymore with the current session.
-    pub close: bool,
+pub struct FileOpsResult {
 }
 
-impl Default for UploadSessionStartArg {
+impl Default for FileOpsResult {
     fn default() -> Self {
-        UploadSessionStartArg {
-            close: false,
+        FileOpsResult {
         }
     }
 }
 
-const UPLOAD_SESSION_START_ARG_FIELDS: &'static [&'static str] = &["close"];
-impl UploadSessionStartArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionStartArg, V::Error> {
+const FILE_OPS_RESULT_FIELDS: &'static [&'static str] = &[];
+impl FileOpsResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileOpsResult, V::Error> {
         use serde::de;
-        let mut field_close = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "close" => {
-                    if field_close.is_some() {
-                        return Err(de::Error::duplicate_field("close"));
-                    }
-                    field_close = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_START_ARG_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_OPS_RESULT_FIELDS));
         }
-        Ok(UploadSessionStartArg {
-            close: field_close.unwrap_or(false),
+        Ok(FileOpsResult {
         })
     }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("close", &self.close)
-    }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for UploadSessionStartArg {
+impl<'de> ::serde::de::Deserialize<'de> for FileOpsResult {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = UploadSessionStartArg;
+            type Value = FileOpsResult;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadSessionStartArg struct")
+                f.write_str("a FileOpsResult struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UploadSessionStartArg::internal_deserialize(map)
+                FileOpsResult::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("UploadSessionStartArg", UPLOAD_SESSION_START_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileOpsResult", FILE_OPS_RESULT_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for UploadSessionStartArg {
+impl ::serde::ser::Serialize for FileOpsResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        serializer.serialize_unit_struct("FileOpsResult")
+    }
+}
+
+/// Sharing info for a file which is contained by a shared folder.
+#[derive(Debug)]
+pub struct FileSharingInfo {
+    /// True if the file or folder is inside a read-only shared folder.
+    pub read_only: bool,
+    /// ID of shared folder that holds this file.
+    pub parent_shared_folder_id: super::common::SharedFolderId,
+    /// The last user who modified the file. This field will be null if the user's account has been
+    /// deleted.
+    pub modified_by: Option<super::users_common::AccountId>,
+}
+
+impl FileSharingInfo {
+    pub fn new(read_only: bool, parent_shared_folder_id: super::common::SharedFolderId) -> Self {
+        FileSharingInfo {
+            read_only,
+            parent_shared_folder_id,
+            modified_by: None,
+        }
+    }
+
+    pub fn with_modified_by(mut self, value: Option<super::users_common::AccountId>) -> Self {
+        self.modified_by = value;
+        self
+    }
+
+}
+
+const FILE_SHARING_INFO_FIELDS: &'static [&'static str] = &["read_only",
+                                                            "parent_shared_folder_id",
+                                                            "modified_by"];
+impl FileSharingInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileSharingInfo, V::Error> {
+        use serde::de;
+        let mut field_read_only = None;
+        let mut field_parent_shared_folder_id = None;
+        let mut field_modified_by = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "read_only" => {
+                    if field_read_only.is_some() {
+                        return Err(de::Error::duplicate_field("read_only"));
+                    }
+                    field_read_only = Some(map.next_value()?);
+                }
+                "parent_shared_folder_id" => {
+                    if field_parent_shared_folder_id.is_some() {
+                        return Err(de::Error::duplicate_field("parent_shared_folder_id"));
+                    }
+                    field_parent_shared_folder_id = Some(map.next_value()?);
+                }
+                "modified_by" => {
+                    if field_modified_by.is_some() {
+                        return Err(de::Error::duplicate_field("modified_by"));
+                    }
+                    field_modified_by = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, FILE_SHARING_INFO_FIELDS))
+            }
+        }
+        Ok(FileSharingInfo {
+            read_only: field_read_only.ok_or_else(|| de::Error::missing_field("read_only"))?,
+            parent_shared_folder_id: field_parent_shared_folder_id.ok_or_else(|| de::Error::missing_field("parent_shared_folder_id"))?,
+            modified_by: field_modified_by,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("read_only", &self.read_only)?;
+        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
+        s.serialize_field("modified_by", &self.modified_by)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileSharingInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = FileSharingInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a FileSharingInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                FileSharingInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("FileSharingInfo", FILE_SHARING_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileSharingInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UploadSessionStartArg", 1)?;
+        let mut s = serializer.serialize_struct("FileSharingInfo", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -3275,263 +2963,173 @@ impl ::serde::ser::Serialize for FolderMetadata {
     }
 }
 
+/// Sharing info for a folder which is contained in a shared folder or is a shared folder mount
+/// point.
 #[derive(Debug)]
-pub struct RelocationResult {
-    /// Metadata of the relocated object.
-    pub metadata: Metadata,
+pub struct FolderSharingInfo {
+    /// True if the file or folder is inside a read-only shared folder.
+    pub read_only: bool,
+    /// Set if the folder is contained by a shared folder.
+    pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
+    /// If this folder is a shared folder mount point, the ID of the shared folder mounted at this
+    /// location.
+    pub shared_folder_id: Option<super::common::SharedFolderId>,
+    /// Specifies that the folder can only be traversed and the user can only see a limited subset
+    /// of the contents of this folder because they don't have read access to this folder. They do,
+    /// however, have access to some sub folder.
+    pub traverse_only: bool,
+    /// Specifies that the folder cannot be accessed by the user.
+    pub no_access: bool,
 }
 
-impl RelocationResult {
-    pub fn new(metadata: Metadata) -> Self {
-        RelocationResult {
-            metadata,
+impl FolderSharingInfo {
+    pub fn new(read_only: bool) -> Self {
+        FolderSharingInfo {
+            read_only,
+            parent_shared_folder_id: None,
+            shared_folder_id: None,
+            traverse_only: false,
+            no_access: false,
         }
+    }
+
+    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+        self.parent_shared_folder_id = value;
+        self
+    }
+
+    pub fn with_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+        self.shared_folder_id = value;
+        self
+    }
+
+    pub fn with_traverse_only(mut self, value: bool) -> Self {
+        self.traverse_only = value;
+        self
+    }
+
+    pub fn with_no_access(mut self, value: bool) -> Self {
+        self.no_access = value;
+        self
     }
 
 }
 
-const RELOCATION_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
-impl RelocationResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationResult, V::Error> {
+const FOLDER_SHARING_INFO_FIELDS: &'static [&'static str] = &["read_only",
+                                                              "parent_shared_folder_id",
+                                                              "shared_folder_id",
+                                                              "traverse_only",
+                                                              "no_access"];
+impl FolderSharingInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FolderSharingInfo, V::Error> {
         use serde::de;
-        let mut field_metadata = None;
+        let mut field_read_only = None;
+        let mut field_parent_shared_folder_id = None;
+        let mut field_shared_folder_id = None;
+        let mut field_traverse_only = None;
+        let mut field_no_access = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "metadata" => {
-                    if field_metadata.is_some() {
-                        return Err(de::Error::duplicate_field("metadata"));
+                "read_only" => {
+                    if field_read_only.is_some() {
+                        return Err(de::Error::duplicate_field("read_only"));
                     }
-                    field_metadata = Some(map.next_value()?);
+                    field_read_only = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, RELOCATION_RESULT_FIELDS))
+                "parent_shared_folder_id" => {
+                    if field_parent_shared_folder_id.is_some() {
+                        return Err(de::Error::duplicate_field("parent_shared_folder_id"));
+                    }
+                    field_parent_shared_folder_id = Some(map.next_value()?);
+                }
+                "shared_folder_id" => {
+                    if field_shared_folder_id.is_some() {
+                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                    }
+                    field_shared_folder_id = Some(map.next_value()?);
+                }
+                "traverse_only" => {
+                    if field_traverse_only.is_some() {
+                        return Err(de::Error::duplicate_field("traverse_only"));
+                    }
+                    field_traverse_only = Some(map.next_value()?);
+                }
+                "no_access" => {
+                    if field_no_access.is_some() {
+                        return Err(de::Error::duplicate_field("no_access"));
+                    }
+                    field_no_access = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, FOLDER_SHARING_INFO_FIELDS))
             }
         }
-        Ok(RelocationResult {
-            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+        Ok(FolderSharingInfo {
+            read_only: field_read_only.ok_or_else(|| de::Error::missing_field("read_only"))?,
+            parent_shared_folder_id: field_parent_shared_folder_id,
+            shared_folder_id: field_shared_folder_id,
+            traverse_only: field_traverse_only.unwrap_or(false),
+            no_access: field_no_access.unwrap_or(false),
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
+        s.serialize_field("read_only", &self.read_only)?;
+        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
+        s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
+        s.serialize_field("traverse_only", &self.traverse_only)?;
+        s.serialize_field("no_access", &self.no_access)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for RelocationResult {
+impl<'de> ::serde::de::Deserialize<'de> for FolderSharingInfo {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = RelocationResult;
+            type Value = FolderSharingInfo;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RelocationResult struct")
+                f.write_str("a FolderSharingInfo struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                RelocationResult::internal_deserialize(map)
+                FolderSharingInfo::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("RelocationResult", RELOCATION_RESULT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FolderSharingInfo", FOLDER_SHARING_INFO_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for RelocationResult {
+impl ::serde::ser::Serialize for FolderSharingInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("RelocationResult", 1)?;
+        let mut s = serializer.serialize_struct("FolderSharingInfo", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
 }
 
 #[derive(Debug)]
-pub struct UploadSessionOffsetError {
-    /// The offset up to which data has been collected.
-    pub correct_offset: u64,
+pub struct GetCopyReferenceArg {
+    /// The path to the file or folder you want to get a copy reference to.
+    pub path: ReadPath,
 }
 
-impl UploadSessionOffsetError {
-    pub fn new(correct_offset: u64) -> Self {
-        UploadSessionOffsetError {
-            correct_offset,
-        }
-    }
-
-}
-
-const UPLOAD_SESSION_OFFSET_ERROR_FIELDS: &'static [&'static str] = &["correct_offset"];
-impl UploadSessionOffsetError {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionOffsetError, V::Error> {
-        use serde::de;
-        let mut field_correct_offset = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "correct_offset" => {
-                    if field_correct_offset.is_some() {
-                        return Err(de::Error::duplicate_field("correct_offset"));
-                    }
-                    field_correct_offset = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_OFFSET_ERROR_FIELDS))
-            }
-        }
-        Ok(UploadSessionOffsetError {
-            correct_offset: field_correct_offset.ok_or_else(|| de::Error::missing_field("correct_offset"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("correct_offset", &self.correct_offset)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UploadSessionOffsetError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = UploadSessionOffsetError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadSessionOffsetError struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UploadSessionOffsetError::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("UploadSessionOffsetError", UPLOAD_SESSION_OFFSET_ERROR_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UploadSessionOffsetError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UploadSessionOffsetError", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum LookUpPropertiesError {
-    /// This property group does not exist for this file.
-    PropertyGroupNotFound,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for LookUpPropertiesError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = LookUpPropertiesError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a LookUpPropertiesError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "property_group_not_found" => Ok(LookUpPropertiesError::PropertyGroupNotFound),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["property_group_not_found"];
-        deserializer.deserialize_struct("LookUpPropertiesError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for LookUpPropertiesError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            LookUpPropertiesError::PropertyGroupNotFound => {
-                // unit
-                let mut s = serializer.serialize_struct("LookUpPropertiesError", 1)?;
-                s.serialize_field(".tag", "property_group_not_found")?;
-                s.end()
-            }
-        }
-    }
-}
-
-impl ::std::error::Error for LookUpPropertiesError {
-    fn description(&self) -> &str {
-        "LookUpPropertiesError"
-    }
-}
-
-impl ::std::fmt::Display for LookUpPropertiesError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct SearchArg {
-    /// The path in the user's Dropbox to search. Should probably be a folder.
-    pub path: PathROrId,
-    /// The string to search for. The search string is split on spaces into multiple tokens. For
-    /// file name searching, the last token is used for prefix matching (i.e. "bat c" matches "bat
-    /// cave" but not "batman car").
-    pub query: String,
-    /// The starting index within the search results (used for paging).
-    pub start: u64,
-    /// The maximum number of search results to return.
-    pub max_results: u64,
-    /// The search mode (filename, filename_and_content, or deleted_filename). Note that searching
-    /// file content is only available for Dropbox Business accounts.
-    pub mode: SearchMode,
-}
-
-impl SearchArg {
-    pub fn new(path: PathROrId, query: String) -> Self {
-        SearchArg {
+impl GetCopyReferenceArg {
+    pub fn new(path: ReadPath) -> Self {
+        GetCopyReferenceArg {
             path,
-            query,
-            start: 0,
-            max_results: 100,
-            mode: SearchMode::Filename,
         }
-    }
-
-    pub fn with_start(mut self, value: u64) -> Self {
-        self.start = value;
-        self
-    }
-
-    pub fn with_max_results(mut self, value: u64) -> Self {
-        self.max_results = value;
-        self
-    }
-
-    pub fn with_mode(mut self, value: SearchMode) -> Self {
-        self.mode = value;
-        self
     }
 
 }
 
-const SEARCH_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                     "query",
-                                                     "start",
-                                                     "max_results",
-                                                     "mode"];
-impl SearchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SearchArg, V::Error> {
+const GET_COPY_REFERENCE_ARG_FIELDS: &'static [&'static str] = &["path"];
+impl GetCopyReferenceArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetCopyReferenceArg, V::Error> {
         use serde::de;
         let mut field_path = None;
-        let mut field_query = None;
-        let mut field_start = None;
-        let mut field_max_results = None;
-        let mut field_mode = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "path" => {
@@ -3540,77 +3138,816 @@ impl SearchArg {
                     }
                     field_path = Some(map.next_value()?);
                 }
-                "query" => {
-                    if field_query.is_some() {
-                        return Err(de::Error::duplicate_field("query"));
-                    }
-                    field_query = Some(map.next_value()?);
-                }
-                "start" => {
-                    if field_start.is_some() {
-                        return Err(de::Error::duplicate_field("start"));
-                    }
-                    field_start = Some(map.next_value()?);
-                }
-                "max_results" => {
-                    if field_max_results.is_some() {
-                        return Err(de::Error::duplicate_field("max_results"));
-                    }
-                    field_max_results = Some(map.next_value()?);
-                }
-                "mode" => {
-                    if field_mode.is_some() {
-                        return Err(de::Error::duplicate_field("mode"));
-                    }
-                    field_mode = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SEARCH_ARG_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, GET_COPY_REFERENCE_ARG_FIELDS))
             }
         }
-        Ok(SearchArg {
+        Ok(GetCopyReferenceArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            query: field_query.ok_or_else(|| de::Error::missing_field("query"))?,
-            start: field_start.unwrap_or(0),
-            max_results: field_max_results.unwrap_or(100),
-            mode: field_mode.unwrap_or_else(|| SearchMode::Filename),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetCopyReferenceArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetCopyReferenceArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetCopyReferenceArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetCopyReferenceArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetCopyReferenceArg", GET_COPY_REFERENCE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetCopyReferenceArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetCopyReferenceArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum GetCopyReferenceError {
+    Path(LookupError),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetCopyReferenceError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetCopyReferenceError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetCopyReferenceError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(GetCopyReferenceError::Path(map.next_value()?))
+                    }
+                    _ => Ok(GetCopyReferenceError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path",
+                                                    "other"];
+        deserializer.deserialize_struct("GetCopyReferenceError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetCopyReferenceError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            GetCopyReferenceError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            GetCopyReferenceError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for GetCopyReferenceError {
+    fn description(&self) -> &str {
+        "GetCopyReferenceError"
+    }
+}
+
+impl ::std::fmt::Display for GetCopyReferenceError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct GetCopyReferenceResult {
+    /// Metadata of the file or folder.
+    pub metadata: Metadata,
+    /// A copy reference to the file or folder.
+    pub copy_reference: String,
+    /// The expiration date of the copy reference. This value is currently set to be far enough in
+    /// the future so that expiration is effectively not an issue.
+    pub expires: super::common::DropboxTimestamp,
+}
+
+impl GetCopyReferenceResult {
+    pub fn new(metadata: Metadata, copy_reference: String, expires: super::common::DropboxTimestamp) -> Self {
+        GetCopyReferenceResult {
+            metadata,
+            copy_reference,
+            expires,
+        }
+    }
+
+}
+
+const GET_COPY_REFERENCE_RESULT_FIELDS: &'static [&'static str] = &["metadata",
+                                                                    "copy_reference",
+                                                                    "expires"];
+impl GetCopyReferenceResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetCopyReferenceResult, V::Error> {
+        use serde::de;
+        let mut field_metadata = None;
+        let mut field_copy_reference = None;
+        let mut field_expires = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                "copy_reference" => {
+                    if field_copy_reference.is_some() {
+                        return Err(de::Error::duplicate_field("copy_reference"));
+                    }
+                    field_copy_reference = Some(map.next_value()?);
+                }
+                "expires" => {
+                    if field_expires.is_some() {
+                        return Err(de::Error::duplicate_field("expires"));
+                    }
+                    field_expires = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GET_COPY_REFERENCE_RESULT_FIELDS))
+            }
+        }
+        Ok(GetCopyReferenceResult {
+            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+            copy_reference: field_copy_reference.ok_or_else(|| de::Error::missing_field("copy_reference"))?,
+            expires: field_expires.ok_or_else(|| de::Error::missing_field("expires"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("metadata", &self.metadata)?;
+        s.serialize_field("copy_reference", &self.copy_reference)?;
+        s.serialize_field("expires", &self.expires)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetCopyReferenceResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetCopyReferenceResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetCopyReferenceResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetCopyReferenceResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetCopyReferenceResult", GET_COPY_REFERENCE_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetCopyReferenceResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetCopyReferenceResult", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct GetMetadataArg {
+    /// The path of a file or folder on Dropbox.
+    pub path: ReadPath,
+    /// If true, :field:`FileMetadata.media_info` is set for photo and video.
+    pub include_media_info: bool,
+    /// If true, :type:`DeletedMetadata` will be returned for deleted file or folder, otherwise
+    /// :field:`LookupError.not_found` will be returned.
+    pub include_deleted: bool,
+    /// If true, the results will include a flag for each file indicating whether or not  that file
+    /// has any explicit members.
+    pub include_has_explicit_shared_members: bool,
+}
+
+impl GetMetadataArg {
+    pub fn new(path: ReadPath) -> Self {
+        GetMetadataArg {
+            path,
+            include_media_info: false,
+            include_deleted: false,
+            include_has_explicit_shared_members: false,
+        }
+    }
+
+    pub fn with_include_media_info(mut self, value: bool) -> Self {
+        self.include_media_info = value;
+        self
+    }
+
+    pub fn with_include_deleted(mut self, value: bool) -> Self {
+        self.include_deleted = value;
+        self
+    }
+
+    pub fn with_include_has_explicit_shared_members(mut self, value: bool) -> Self {
+        self.include_has_explicit_shared_members = value;
+        self
+    }
+
+}
+
+const GET_METADATA_ARG_FIELDS: &'static [&'static str] = &["path",
+                                                           "include_media_info",
+                                                           "include_deleted",
+                                                           "include_has_explicit_shared_members"];
+impl GetMetadataArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetMetadataArg, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        let mut field_include_media_info = None;
+        let mut field_include_deleted = None;
+        let mut field_include_has_explicit_shared_members = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "include_media_info" => {
+                    if field_include_media_info.is_some() {
+                        return Err(de::Error::duplicate_field("include_media_info"));
+                    }
+                    field_include_media_info = Some(map.next_value()?);
+                }
+                "include_deleted" => {
+                    if field_include_deleted.is_some() {
+                        return Err(de::Error::duplicate_field("include_deleted"));
+                    }
+                    field_include_deleted = Some(map.next_value()?);
+                }
+                "include_has_explicit_shared_members" => {
+                    if field_include_has_explicit_shared_members.is_some() {
+                        return Err(de::Error::duplicate_field("include_has_explicit_shared_members"));
+                    }
+                    field_include_has_explicit_shared_members = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GET_METADATA_ARG_FIELDS))
+            }
+        }
+        Ok(GetMetadataArg {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            include_media_info: field_include_media_info.unwrap_or(false),
+            include_deleted: field_include_deleted.unwrap_or(false),
+            include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("query", &self.query)?;
-        s.serialize_field("start", &self.start)?;
-        s.serialize_field("max_results", &self.max_results)?;
-        s.serialize_field("mode", &self.mode)
+        s.serialize_field("include_media_info", &self.include_media_info)?;
+        s.serialize_field("include_deleted", &self.include_deleted)?;
+        s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for SearchArg {
+impl<'de> ::serde::de::Deserialize<'de> for GetMetadataArg {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SearchArg;
+            type Value = GetMetadataArg;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SearchArg struct")
+                f.write_str("a GetMetadataArg struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SearchArg::internal_deserialize(map)
+                GetMetadataArg::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("SearchArg", SEARCH_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GetMetadataArg", GET_METADATA_ARG_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for SearchArg {
+impl ::serde::ser::Serialize for GetMetadataArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SearchArg", 5)?;
+        let mut s = serializer.serialize_struct("GetMetadataArg", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum GetMetadataError {
+    Path(LookupError),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetMetadataError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetMetadataError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetMetadataError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(GetMetadataError::Path(map.next_value()?))
+                    }
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path"];
+        deserializer.deserialize_struct("GetMetadataError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetMetadataError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            GetMetadataError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+        }
+    }
+}
+
+impl ::std::error::Error for GetMetadataError {
+    fn description(&self) -> &str {
+        "GetMetadataError"
+    }
+}
+
+impl ::std::fmt::Display for GetMetadataError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct GetTemporaryLinkArg {
+    /// The path to the file you want a temporary link to.
+    pub path: ReadPath,
+}
+
+impl GetTemporaryLinkArg {
+    pub fn new(path: ReadPath) -> Self {
+        GetTemporaryLinkArg {
+            path,
+        }
+    }
+
+}
+
+const GET_TEMPORARY_LINK_ARG_FIELDS: &'static [&'static str] = &["path"];
+impl GetTemporaryLinkArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetTemporaryLinkArg, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GET_TEMPORARY_LINK_ARG_FIELDS))
+            }
+        }
+        Ok(GetTemporaryLinkArg {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetTemporaryLinkArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetTemporaryLinkArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetTemporaryLinkArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetTemporaryLinkArg", GET_TEMPORARY_LINK_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetTemporaryLinkArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetTemporaryLinkArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum GetTemporaryLinkError {
+    Path(LookupError),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetTemporaryLinkError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetTemporaryLinkError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(GetTemporaryLinkError::Path(map.next_value()?))
+                    }
+                    _ => Ok(GetTemporaryLinkError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path",
+                                                    "other"];
+        deserializer.deserialize_struct("GetTemporaryLinkError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetTemporaryLinkError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            GetTemporaryLinkError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            GetTemporaryLinkError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for GetTemporaryLinkError {
+    fn description(&self) -> &str {
+        "GetTemporaryLinkError"
+    }
+}
+
+impl ::std::fmt::Display for GetTemporaryLinkError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct GetTemporaryLinkResult {
+    /// Metadata of the file.
+    pub metadata: FileMetadata,
+    /// The temporary link which can be used to stream content the file.
+    pub link: String,
+}
+
+impl GetTemporaryLinkResult {
+    pub fn new(metadata: FileMetadata, link: String) -> Self {
+        GetTemporaryLinkResult {
+            metadata,
+            link,
+        }
+    }
+
+}
+
+const GET_TEMPORARY_LINK_RESULT_FIELDS: &'static [&'static str] = &["metadata",
+                                                                    "link"];
+impl GetTemporaryLinkResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetTemporaryLinkResult, V::Error> {
+        use serde::de;
+        let mut field_metadata = None;
+        let mut field_link = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                "link" => {
+                    if field_link.is_some() {
+                        return Err(de::Error::duplicate_field("link"));
+                    }
+                    field_link = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GET_TEMPORARY_LINK_RESULT_FIELDS))
+            }
+        }
+        Ok(GetTemporaryLinkResult {
+            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+            link: field_link.ok_or_else(|| de::Error::missing_field("link"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("metadata", &self.metadata)?;
+        s.serialize_field("link", &self.link)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetTemporaryLinkResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetTemporaryLinkResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetTemporaryLinkResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetTemporaryLinkResult", GET_TEMPORARY_LINK_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetTemporaryLinkResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetTemporaryLinkResult", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// GPS coordinates for a photo or video.
+#[derive(Debug)]
+pub struct GpsCoordinates {
+    /// Latitude of the GPS coordinates.
+    pub latitude: f64,
+    /// Longitude of the GPS coordinates.
+    pub longitude: f64,
+}
+
+impl GpsCoordinates {
+    pub fn new(latitude: f64, longitude: f64) -> Self {
+        GpsCoordinates {
+            latitude,
+            longitude,
+        }
+    }
+
+}
+
+const GPS_COORDINATES_FIELDS: &'static [&'static str] = &["latitude",
+                                                          "longitude"];
+impl GpsCoordinates {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GpsCoordinates, V::Error> {
+        use serde::de;
+        let mut field_latitude = None;
+        let mut field_longitude = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "latitude" => {
+                    if field_latitude.is_some() {
+                        return Err(de::Error::duplicate_field("latitude"));
+                    }
+                    field_latitude = Some(map.next_value()?);
+                }
+                "longitude" => {
+                    if field_longitude.is_some() {
+                        return Err(de::Error::duplicate_field("longitude"));
+                    }
+                    field_longitude = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GPS_COORDINATES_FIELDS))
+            }
+        }
+        Ok(GpsCoordinates {
+            latitude: field_latitude.ok_or_else(|| de::Error::missing_field("latitude"))?,
+            longitude: field_longitude.ok_or_else(|| de::Error::missing_field("longitude"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("latitude", &self.latitude)?;
+        s.serialize_field("longitude", &self.longitude)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GpsCoordinates {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GpsCoordinates;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GpsCoordinates struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GpsCoordinates::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GpsCoordinates", GPS_COORDINATES_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GpsCoordinates {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GpsCoordinates", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum InvalidPropertyGroupError {
+    /// Property template does not exist for given identifier.
+    TemplateNotFound(super::properties::TemplateId),
+    /// You do not have the permissions to modify this property template.
+    RestrictedContent,
+    Other,
+    Path(LookupError),
+    /// A field value in this property group is too large.
+    PropertyFieldTooLarge,
+    /// The property group specified does not conform to the property template.
+    DoesNotFitTemplate,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = InvalidPropertyGroupError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a InvalidPropertyGroupError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "template_not_found" => {
+                        if map.next_key()? != Some("template_not_found") {
+                            return Err(de::Error::missing_field("template_not_found"));
+                        }
+                        Ok(InvalidPropertyGroupError::TemplateNotFound(map.next_value()?))
+                    }
+                    "restricted_content" => Ok(InvalidPropertyGroupError::RestrictedContent),
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(InvalidPropertyGroupError::Path(map.next_value()?))
+                    }
+                    "property_field_too_large" => Ok(InvalidPropertyGroupError::PropertyFieldTooLarge),
+                    "does_not_fit_template" => Ok(InvalidPropertyGroupError::DoesNotFitTemplate),
+                    _ => Ok(InvalidPropertyGroupError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["template_not_found",
+                                                    "restricted_content",
+                                                    "other",
+                                                    "path",
+                                                    "property_field_too_large",
+                                                    "does_not_fit_template"];
+        deserializer.deserialize_struct("InvalidPropertyGroupError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for InvalidPropertyGroupError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            InvalidPropertyGroupError::TemplateNotFound(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "template_not_found")?;
+                s.serialize_field("template_not_found", x)?;
+                s.end()
+            }
+            InvalidPropertyGroupError::RestrictedContent => {
+                // unit
+                let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 1)?;
+                s.serialize_field(".tag", "restricted_content")?;
+                s.end()
+            }
+            InvalidPropertyGroupError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            InvalidPropertyGroupError::PropertyFieldTooLarge => {
+                // unit
+                let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 1)?;
+                s.serialize_field(".tag", "property_field_too_large")?;
+                s.end()
+            }
+            InvalidPropertyGroupError::DoesNotFitTemplate => {
+                // unit
+                let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 1)?;
+                s.serialize_field(".tag", "does_not_fit_template")?;
+                s.end()
+            }
+            InvalidPropertyGroupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for InvalidPropertyGroupError {
+    fn description(&self) -> &str {
+        "InvalidPropertyGroupError"
+    }
+}
+
+impl ::std::fmt::Display for InvalidPropertyGroupError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
     }
 }
 
@@ -3760,98 +4097,94 @@ impl ::serde::ser::Serialize for ListFolderArg {
 }
 
 #[derive(Debug)]
-pub struct CreateFolderResult {
-    /// Metadata of the created folder.
-    pub metadata: FolderMetadata,
+pub struct ListFolderContinueArg {
+    /// The cursor returned by your last call to :route:`list_folder` or
+    /// :route:`list_folder/continue`.
+    pub cursor: ListFolderCursor,
 }
 
-impl CreateFolderResult {
-    pub fn new(metadata: FolderMetadata) -> Self {
-        CreateFolderResult {
-            metadata,
+impl ListFolderContinueArg {
+    pub fn new(cursor: ListFolderCursor) -> Self {
+        ListFolderContinueArg {
+            cursor,
         }
     }
 
 }
 
-const CREATE_FOLDER_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
-impl CreateFolderResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CreateFolderResult, V::Error> {
+const LIST_FOLDER_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+impl ListFolderContinueArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderContinueArg, V::Error> {
         use serde::de;
-        let mut field_metadata = None;
+        let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "metadata" => {
-                    if field_metadata.is_some() {
-                        return Err(de::Error::duplicate_field("metadata"));
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
                     }
-                    field_metadata = Some(map.next_value()?);
+                    field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, CREATE_FOLDER_RESULT_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_CONTINUE_ARG_FIELDS))
             }
         }
-        Ok(CreateFolderResult {
-            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+        Ok(ListFolderContinueArg {
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
+        s.serialize_field("cursor", &self.cursor)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for CreateFolderResult {
+impl<'de> ::serde::de::Deserialize<'de> for ListFolderContinueArg {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = CreateFolderResult;
+            type Value = ListFolderContinueArg;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a CreateFolderResult struct")
+                f.write_str("a ListFolderContinueArg struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                CreateFolderResult::internal_deserialize(map)
+                ListFolderContinueArg::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("CreateFolderResult", CREATE_FOLDER_RESULT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ListFolderContinueArg", LIST_FOLDER_CONTINUE_ARG_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for CreateFolderResult {
+impl ::serde::ser::Serialize for ListFolderContinueArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("CreateFolderResult", 1)?;
+        let mut s = serializer.serialize_struct("ListFolderContinueArg", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
 }
 
 #[derive(Debug)]
-pub enum InvalidPropertyGroupError {
-    /// Property template does not exist for given identifier.
-    TemplateNotFound(super::properties::TemplateId),
-    /// You do not have the permissions to modify this property template.
-    RestrictedContent,
-    Other,
+pub enum ListFolderContinueError {
     Path(LookupError),
-    /// A field value in this property group is too large.
-    PropertyFieldTooLarge,
-    /// The property group specified does not conform to the property template.
-    DoesNotFitTemplate,
+    /// Indicates that the cursor has been invalidated. Call :route:`list_folder` to obtain a new
+    /// cursor.
+    Reset,
+    Other,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
+impl<'de> ::serde::de::Deserialize<'de> for ListFolderContinueError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = InvalidPropertyGroupError;
+            type Value = ListFolderContinueError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a InvalidPropertyGroupError structure")
+                f.write_str("a ListFolderContinueError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -3859,84 +4192,850 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "template_not_found" => {
-                        if map.next_key()? != Some("template_not_found") {
-                            return Err(de::Error::missing_field("template_not_found"));
-                        }
-                        Ok(InvalidPropertyGroupError::TemplateNotFound(map.next_value()?))
-                    }
-                    "restricted_content" => Ok(InvalidPropertyGroupError::RestrictedContent),
                     "path" => {
                         if map.next_key()? != Some("path") {
                             return Err(de::Error::missing_field("path"));
                         }
-                        Ok(InvalidPropertyGroupError::Path(map.next_value()?))
+                        Ok(ListFolderContinueError::Path(map.next_value()?))
                     }
-                    "property_field_too_large" => Ok(InvalidPropertyGroupError::PropertyFieldTooLarge),
-                    "does_not_fit_template" => Ok(InvalidPropertyGroupError::DoesNotFitTemplate),
-                    _ => Ok(InvalidPropertyGroupError::Other)
+                    "reset" => Ok(ListFolderContinueError::Reset),
+                    _ => Ok(ListFolderContinueError::Other)
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path",
-                                                    "property_field_too_large",
-                                                    "does_not_fit_template"];
-        deserializer.deserialize_struct("InvalidPropertyGroupError", VARIANTS, EnumVisitor)
+        const VARIANTS: &'static [&'static str] = &["path",
+                                                    "reset",
+                                                    "other"];
+        deserializer.deserialize_struct("ListFolderContinueError", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for InvalidPropertyGroupError {
+impl ::serde::ser::Serialize for ListFolderContinueError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            InvalidPropertyGroupError::TemplateNotFound(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "template_not_found")?;
-                s.serialize_field("template_not_found", x)?;
-                s.end()
-            }
-            InvalidPropertyGroupError::RestrictedContent => {
-                // unit
-                let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 1)?;
-                s.serialize_field(".tag", "restricted_content")?;
-                s.end()
-            }
-            InvalidPropertyGroupError::Path(ref x) => {
+            ListFolderContinueError::Path(ref x) => {
                 // union or polymporphic struct
                 let mut s = serializer.serialize_struct("{}", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
             }
-            InvalidPropertyGroupError::PropertyFieldTooLarge => {
+            ListFolderContinueError::Reset => {
                 // unit
-                let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 1)?;
-                s.serialize_field(".tag", "property_field_too_large")?;
+                let mut s = serializer.serialize_struct("ListFolderContinueError", 1)?;
+                s.serialize_field(".tag", "reset")?;
                 s.end()
             }
-            InvalidPropertyGroupError::DoesNotFitTemplate => {
-                // unit
-                let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 1)?;
-                s.serialize_field(".tag", "does_not_fit_template")?;
-                s.end()
-            }
-            InvalidPropertyGroupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            ListFolderContinueError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
 
-impl ::std::error::Error for InvalidPropertyGroupError {
+impl ::std::error::Error for ListFolderContinueError {
     fn description(&self) -> &str {
-        "InvalidPropertyGroupError"
+        "ListFolderContinueError"
     }
 }
 
-impl ::std::fmt::Display for InvalidPropertyGroupError {
+impl ::std::fmt::Display for ListFolderContinueError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum ListFolderError {
+    Path(LookupError),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListFolderError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ListFolderError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListFolderError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(ListFolderError::Path(map.next_value()?))
+                    }
+                    _ => Ok(ListFolderError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path",
+                                                    "other"];
+        deserializer.deserialize_struct("ListFolderError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListFolderError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ListFolderError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            ListFolderError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for ListFolderError {
+    fn description(&self) -> &str {
+        "ListFolderError"
+    }
+}
+
+impl ::std::fmt::Display for ListFolderError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct ListFolderGetLatestCursorResult {
+    /// Pass the cursor into :route:`list_folder/continue` to see what's changed in the folder since
+    /// your previous query.
+    pub cursor: ListFolderCursor,
+}
+
+impl ListFolderGetLatestCursorResult {
+    pub fn new(cursor: ListFolderCursor) -> Self {
+        ListFolderGetLatestCursorResult {
+            cursor,
+        }
+    }
+
+}
+
+const LIST_FOLDER_GET_LATEST_CURSOR_RESULT_FIELDS: &'static [&'static str] = &["cursor"];
+impl ListFolderGetLatestCursorResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderGetLatestCursorResult, V::Error> {
+        use serde::de;
+        let mut field_cursor = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_GET_LATEST_CURSOR_RESULT_FIELDS))
+            }
+        }
+        Ok(ListFolderGetLatestCursorResult {
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("cursor", &self.cursor)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListFolderGetLatestCursorResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListFolderGetLatestCursorResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListFolderGetLatestCursorResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListFolderGetLatestCursorResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListFolderGetLatestCursorResult", LIST_FOLDER_GET_LATEST_CURSOR_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListFolderGetLatestCursorResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListFolderGetLatestCursorResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ListFolderLongpollArg {
+    /// A cursor as returned by :route:`list_folder` or :route:`list_folder/continue`. Cursors
+    /// retrieved by setting :field:`ListFolderArg.include_media_info` to :val:`true` are not
+    /// supported.
+    pub cursor: ListFolderCursor,
+    /// A timeout in seconds. The request will block for at most this length of time, plus up to 90
+    /// seconds of random jitter added to avoid the thundering herd problem. Care should be taken
+    /// when using this parameter, as some network infrastructure does not support long timeouts.
+    pub timeout: u64,
+}
+
+impl ListFolderLongpollArg {
+    pub fn new(cursor: ListFolderCursor) -> Self {
+        ListFolderLongpollArg {
+            cursor,
+            timeout: 30,
+        }
+    }
+
+    pub fn with_timeout(mut self, value: u64) -> Self {
+        self.timeout = value;
+        self
+    }
+
+}
+
+const LIST_FOLDER_LONGPOLL_ARG_FIELDS: &'static [&'static str] = &["cursor",
+                                                                   "timeout"];
+impl ListFolderLongpollArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderLongpollArg, V::Error> {
+        use serde::de;
+        let mut field_cursor = None;
+        let mut field_timeout = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                "timeout" => {
+                    if field_timeout.is_some() {
+                        return Err(de::Error::duplicate_field("timeout"));
+                    }
+                    field_timeout = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_LONGPOLL_ARG_FIELDS))
+            }
+        }
+        Ok(ListFolderLongpollArg {
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            timeout: field_timeout.unwrap_or(30),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("cursor", &self.cursor)?;
+        s.serialize_field("timeout", &self.timeout)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListFolderLongpollArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListFolderLongpollArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListFolderLongpollArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListFolderLongpollArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListFolderLongpollArg", LIST_FOLDER_LONGPOLL_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListFolderLongpollArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListFolderLongpollArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum ListFolderLongpollError {
+    /// Indicates that the cursor has been invalidated. Call :route:`list_folder` to obtain a new
+    /// cursor.
+    Reset,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListFolderLongpollError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ListFolderLongpollError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListFolderLongpollError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "reset" => Ok(ListFolderLongpollError::Reset),
+                    _ => Ok(ListFolderLongpollError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["reset",
+                                                    "other"];
+        deserializer.deserialize_struct("ListFolderLongpollError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListFolderLongpollError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ListFolderLongpollError::Reset => {
+                // unit
+                let mut s = serializer.serialize_struct("ListFolderLongpollError", 1)?;
+                s.serialize_field(".tag", "reset")?;
+                s.end()
+            }
+            ListFolderLongpollError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for ListFolderLongpollError {
+    fn description(&self) -> &str {
+        "ListFolderLongpollError"
+    }
+}
+
+impl ::std::fmt::Display for ListFolderLongpollError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct ListFolderLongpollResult {
+    /// Indicates whether new changes are available. If true, call :route:`list_folder/continue` to
+    /// retrieve the changes.
+    pub changes: bool,
+    /// If present, backoff for at least this many seconds before calling
+    /// :route:`list_folder/longpoll` again.
+    pub backoff: Option<u64>,
+}
+
+impl ListFolderLongpollResult {
+    pub fn new(changes: bool) -> Self {
+        ListFolderLongpollResult {
+            changes,
+            backoff: None,
+        }
+    }
+
+    pub fn with_backoff(mut self, value: Option<u64>) -> Self {
+        self.backoff = value;
+        self
+    }
+
+}
+
+const LIST_FOLDER_LONGPOLL_RESULT_FIELDS: &'static [&'static str] = &["changes",
+                                                                      "backoff"];
+impl ListFolderLongpollResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderLongpollResult, V::Error> {
+        use serde::de;
+        let mut field_changes = None;
+        let mut field_backoff = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "changes" => {
+                    if field_changes.is_some() {
+                        return Err(de::Error::duplicate_field("changes"));
+                    }
+                    field_changes = Some(map.next_value()?);
+                }
+                "backoff" => {
+                    if field_backoff.is_some() {
+                        return Err(de::Error::duplicate_field("backoff"));
+                    }
+                    field_backoff = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_LONGPOLL_RESULT_FIELDS))
+            }
+        }
+        Ok(ListFolderLongpollResult {
+            changes: field_changes.ok_or_else(|| de::Error::missing_field("changes"))?,
+            backoff: field_backoff,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("changes", &self.changes)?;
+        s.serialize_field("backoff", &self.backoff)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListFolderLongpollResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListFolderLongpollResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListFolderLongpollResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListFolderLongpollResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListFolderLongpollResult", LIST_FOLDER_LONGPOLL_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListFolderLongpollResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListFolderLongpollResult", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ListFolderResult {
+    /// The files and (direct) subfolders in the folder.
+    pub entries: Vec<Metadata>,
+    /// Pass the cursor into :route:`list_folder/continue` to see what's changed in the folder since
+    /// your previous query.
+    pub cursor: ListFolderCursor,
+    /// If true, then there are more entries available. Pass the cursor to
+    /// :route:`list_folder/continue` to retrieve the rest.
+    pub has_more: bool,
+}
+
+impl ListFolderResult {
+    pub fn new(entries: Vec<Metadata>, cursor: ListFolderCursor, has_more: bool) -> Self {
+        ListFolderResult {
+            entries,
+            cursor,
+            has_more,
+        }
+    }
+
+}
+
+const LIST_FOLDER_RESULT_FIELDS: &'static [&'static str] = &["entries",
+                                                             "cursor",
+                                                             "has_more"];
+impl ListFolderResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderResult, V::Error> {
+        use serde::de;
+        let mut field_entries = None;
+        let mut field_cursor = None;
+        let mut field_has_more = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                "has_more" => {
+                    if field_has_more.is_some() {
+                        return Err(de::Error::duplicate_field("has_more"));
+                    }
+                    field_has_more = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_RESULT_FIELDS))
+            }
+        }
+        Ok(ListFolderResult {
+            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)?;
+        s.serialize_field("cursor", &self.cursor)?;
+        s.serialize_field("has_more", &self.has_more)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListFolderResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListFolderResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListFolderResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListFolderResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListFolderResult", LIST_FOLDER_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListFolderResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListFolderResult", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ListRevisionsArg {
+    /// The path to the file you want to see the revisions of.
+    pub path: PathOrId,
+    /// The maximum number of revision entries returned.
+    pub limit: u64,
+}
+
+impl ListRevisionsArg {
+    pub fn new(path: PathOrId) -> Self {
+        ListRevisionsArg {
+            path,
+            limit: 10,
+        }
+    }
+
+    pub fn with_limit(mut self, value: u64) -> Self {
+        self.limit = value;
+        self
+    }
+
+}
+
+const LIST_REVISIONS_ARG_FIELDS: &'static [&'static str] = &["path",
+                                                             "limit"];
+impl ListRevisionsArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListRevisionsArg, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        let mut field_limit = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "limit" => {
+                    if field_limit.is_some() {
+                        return Err(de::Error::duplicate_field("limit"));
+                    }
+                    field_limit = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_REVISIONS_ARG_FIELDS))
+            }
+        }
+        Ok(ListRevisionsArg {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            limit: field_limit.unwrap_or(10),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("limit", &self.limit)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListRevisionsArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListRevisionsArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListRevisionsArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListRevisionsArg", LIST_REVISIONS_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListRevisionsArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListRevisionsArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum ListRevisionsError {
+    Path(LookupError),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ListRevisionsError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListRevisionsError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(ListRevisionsError::Path(map.next_value()?))
+                    }
+                    _ => Ok(ListRevisionsError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path",
+                                                    "other"];
+        deserializer.deserialize_struct("ListRevisionsError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListRevisionsError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ListRevisionsError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            ListRevisionsError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for ListRevisionsError {
+    fn description(&self) -> &str {
+        "ListRevisionsError"
+    }
+}
+
+impl ::std::fmt::Display for ListRevisionsError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct ListRevisionsResult {
+    /// If the file is deleted.
+    pub is_deleted: bool,
+    /// The revisions for the file. Only revisions that are not deleted will show up here.
+    pub entries: Vec<FileMetadata>,
+    /// The time of deletion if the file was deleted.
+    pub server_deleted: Option<super::common::DropboxTimestamp>,
+}
+
+impl ListRevisionsResult {
+    pub fn new(is_deleted: bool, entries: Vec<FileMetadata>) -> Self {
+        ListRevisionsResult {
+            is_deleted,
+            entries,
+            server_deleted: None,
+        }
+    }
+
+    pub fn with_server_deleted(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.server_deleted = value;
+        self
+    }
+
+}
+
+const LIST_REVISIONS_RESULT_FIELDS: &'static [&'static str] = &["is_deleted",
+                                                                "entries",
+                                                                "server_deleted"];
+impl ListRevisionsResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListRevisionsResult, V::Error> {
+        use serde::de;
+        let mut field_is_deleted = None;
+        let mut field_entries = None;
+        let mut field_server_deleted = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "is_deleted" => {
+                    if field_is_deleted.is_some() {
+                        return Err(de::Error::duplicate_field("is_deleted"));
+                    }
+                    field_is_deleted = Some(map.next_value()?);
+                }
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                "server_deleted" => {
+                    if field_server_deleted.is_some() {
+                        return Err(de::Error::duplicate_field("server_deleted"));
+                    }
+                    field_server_deleted = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_REVISIONS_RESULT_FIELDS))
+            }
+        }
+        Ok(ListRevisionsResult {
+            is_deleted: field_is_deleted.ok_or_else(|| de::Error::missing_field("is_deleted"))?,
+            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
+            server_deleted: field_server_deleted,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("is_deleted", &self.is_deleted)?;
+        s.serialize_field("entries", &self.entries)?;
+        s.serialize_field("server_deleted", &self.server_deleted)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListRevisionsResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListRevisionsResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListRevisionsResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListRevisionsResult", LIST_REVISIONS_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListRevisionsResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListRevisionsResult", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum LookUpPropertiesError {
+    /// This property group does not exist for this file.
+    PropertyGroupNotFound,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LookUpPropertiesError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = LookUpPropertiesError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a LookUpPropertiesError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "property_group_not_found" => Ok(LookUpPropertiesError::PropertyGroupNotFound),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["property_group_not_found"];
+        deserializer.deserialize_struct("LookUpPropertiesError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LookUpPropertiesError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            LookUpPropertiesError::PropertyGroupNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("LookUpPropertiesError", 1)?;
+                s.serialize_field(".tag", "property_group_not_found")?;
+                s.end()
+            }
+        }
+    }
+}
+
+impl ::std::error::Error for LookUpPropertiesError {
+    fn description(&self) -> &str {
+        "LookUpPropertiesError"
+    }
+}
+
+impl ::std::fmt::Display for LookUpPropertiesError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
     }
@@ -4051,6 +5150,2442 @@ impl ::std::fmt::Display for LookupError {
 }
 
 #[derive(Debug)]
+pub enum MediaInfo {
+    /// Indicate the photo/video is still under processing and metadata is not available yet.
+    Pending,
+    /// The metadata for the photo/video.
+    Metadata(MediaMetadata),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MediaInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MediaInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MediaInfo structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "pending" => Ok(MediaInfo::Pending),
+                    "metadata" => {
+                        if map.next_key()? != Some("metadata") {
+                            return Err(de::Error::missing_field("metadata"));
+                        }
+                        Ok(MediaInfo::Metadata(map.next_value()?))
+                    }
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["pending",
+                                                    "metadata"];
+        deserializer.deserialize_struct("MediaInfo", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MediaInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MediaInfo::Pending => {
+                // unit
+                let mut s = serializer.serialize_struct("MediaInfo", 1)?;
+                s.serialize_field(".tag", "pending")?;
+                s.end()
+            }
+            MediaInfo::Metadata(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "metadata")?;
+                s.serialize_field("metadata", x)?;
+                s.end()
+            }
+        }
+    }
+}
+
+/// Metadata for a photo or video.
+#[derive(Debug)]
+pub enum MediaMetadata {
+    Photo(PhotoMetadata),
+    Video(VideoMetadata),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MediaMetadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // polymorphic struct deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MediaMetadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MediaMetadata structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "photo" => Ok(MediaMetadata::Photo(PhotoMetadata::internal_deserialize(map)?)),
+                    "video" => Ok(MediaMetadata::Video(VideoMetadata::internal_deserialize(map)?)),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["video",
+                                                    "video"];
+        deserializer.deserialize_struct("MediaMetadata", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MediaMetadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // polymorphic struct serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MediaMetadata::Photo(ref x) => {
+                let mut s = serializer.serialize_struct("MediaMetadata", 4)?;
+                s.serialize_field(".tag", "photo")?;
+                s.serialize_field("dimensions", &x.dimensions)?;
+                s.serialize_field("location", &x.location)?;
+                s.serialize_field("time_taken", &x.time_taken)?;
+                s.end()
+            }
+            MediaMetadata::Video(ref x) => {
+                let mut s = serializer.serialize_struct("MediaMetadata", 5)?;
+                s.serialize_field(".tag", "video")?;
+                s.serialize_field("dimensions", &x.dimensions)?;
+                s.serialize_field("location", &x.location)?;
+                s.serialize_field("time_taken", &x.time_taken)?;
+                s.serialize_field("duration", &x.duration)?;
+                s.end()
+            }
+        }
+    }
+}
+
+/// Metadata for a file or folder.
+#[derive(Debug)]
+pub enum Metadata {
+    File(FileMetadata),
+    Folder(FolderMetadata),
+    Deleted(DeletedMetadata),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for Metadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // polymorphic struct deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = Metadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a Metadata structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "file" => Ok(Metadata::File(FileMetadata::internal_deserialize(map)?)),
+                    "folder" => Ok(Metadata::Folder(FolderMetadata::internal_deserialize(map)?)),
+                    "deleted" => Ok(Metadata::Deleted(DeletedMetadata::internal_deserialize(map)?)),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["deleted",
+                                                    "deleted",
+                                                    "deleted"];
+        deserializer.deserialize_struct("Metadata", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for Metadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // polymorphic struct serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            Metadata::File(ref x) => {
+                let mut s = serializer.serialize_struct("Metadata", 15)?;
+                s.serialize_field(".tag", "file")?;
+                s.serialize_field("name", &x.name)?;
+                s.serialize_field("id", &x.id)?;
+                s.serialize_field("client_modified", &x.client_modified)?;
+                s.serialize_field("server_modified", &x.server_modified)?;
+                s.serialize_field("rev", &x.rev)?;
+                s.serialize_field("size", &x.size)?;
+                s.serialize_field("path_lower", &x.path_lower)?;
+                s.serialize_field("path_display", &x.path_display)?;
+                s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
+                s.serialize_field("media_info", &x.media_info)?;
+                s.serialize_field("sharing_info", &x.sharing_info)?;
+                s.serialize_field("property_groups", &x.property_groups)?;
+                s.serialize_field("has_explicit_shared_members", &x.has_explicit_shared_members)?;
+                s.serialize_field("content_hash", &x.content_hash)?;
+                s.end()
+            }
+            Metadata::Folder(ref x) => {
+                let mut s = serializer.serialize_struct("Metadata", 9)?;
+                s.serialize_field(".tag", "folder")?;
+                s.serialize_field("name", &x.name)?;
+                s.serialize_field("id", &x.id)?;
+                s.serialize_field("path_lower", &x.path_lower)?;
+                s.serialize_field("path_display", &x.path_display)?;
+                s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
+                s.serialize_field("shared_folder_id", &x.shared_folder_id)?;
+                s.serialize_field("sharing_info", &x.sharing_info)?;
+                s.serialize_field("property_groups", &x.property_groups)?;
+                s.end()
+            }
+            Metadata::Deleted(ref x) => {
+                let mut s = serializer.serialize_struct("Metadata", 5)?;
+                s.serialize_field(".tag", "deleted")?;
+                s.serialize_field("name", &x.name)?;
+                s.serialize_field("path_lower", &x.path_lower)?;
+                s.serialize_field("path_display", &x.path_display)?;
+                s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
+                s.end()
+            }
+        }
+    }
+}
+
+/// Metadata for a photo.
+#[derive(Debug)]
+pub struct PhotoMetadata {
+    /// Dimension of the photo/video.
+    pub dimensions: Option<Dimensions>,
+    /// The GPS coordinate of the photo/video.
+    pub location: Option<GpsCoordinates>,
+    /// The timestamp when the photo/video is taken.
+    pub time_taken: Option<super::common::DropboxTimestamp>,
+}
+
+impl Default for PhotoMetadata {
+    fn default() -> Self {
+        PhotoMetadata {
+            dimensions: None,
+            location: None,
+            time_taken: None,
+        }
+    }
+}
+
+const PHOTO_METADATA_FIELDS: &'static [&'static str] = &["dimensions",
+                                                         "location",
+                                                         "time_taken"];
+impl PhotoMetadata {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PhotoMetadata, V::Error> {
+        use serde::de;
+        let mut field_dimensions = None;
+        let mut field_location = None;
+        let mut field_time_taken = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "dimensions" => {
+                    if field_dimensions.is_some() {
+                        return Err(de::Error::duplicate_field("dimensions"));
+                    }
+                    field_dimensions = Some(map.next_value()?);
+                }
+                "location" => {
+                    if field_location.is_some() {
+                        return Err(de::Error::duplicate_field("location"));
+                    }
+                    field_location = Some(map.next_value()?);
+                }
+                "time_taken" => {
+                    if field_time_taken.is_some() {
+                        return Err(de::Error::duplicate_field("time_taken"));
+                    }
+                    field_time_taken = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PHOTO_METADATA_FIELDS))
+            }
+        }
+        Ok(PhotoMetadata {
+            dimensions: field_dimensions,
+            location: field_location,
+            time_taken: field_time_taken,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("dimensions", &self.dimensions)?;
+        s.serialize_field("location", &self.location)?;
+        s.serialize_field("time_taken", &self.time_taken)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PhotoMetadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PhotoMetadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PhotoMetadata struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PhotoMetadata::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PhotoMetadata", PHOTO_METADATA_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PhotoMetadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PhotoMetadata", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct PreviewArg {
+    /// The path of the file to preview.
+    pub path: ReadPath,
+    /// Deprecated. Please specify revision in :field:`path` instead.
+    pub rev: Option<Rev>,
+}
+
+impl PreviewArg {
+    pub fn new(path: ReadPath) -> Self {
+        PreviewArg {
+            path,
+            rev: None,
+        }
+    }
+
+    pub fn with_rev(mut self, value: Option<Rev>) -> Self {
+        self.rev = value;
+        self
+    }
+
+}
+
+const PREVIEW_ARG_FIELDS: &'static [&'static str] = &["path",
+                                                      "rev"];
+impl PreviewArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PreviewArg, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        let mut field_rev = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "rev" => {
+                    if field_rev.is_some() {
+                        return Err(de::Error::duplicate_field("rev"));
+                    }
+                    field_rev = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PREVIEW_ARG_FIELDS))
+            }
+        }
+        Ok(PreviewArg {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            rev: field_rev,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("rev", &self.rev)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PreviewArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PreviewArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PreviewArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PreviewArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PreviewArg", PREVIEW_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PreviewArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PreviewArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum PreviewError {
+    /// An error occurs when downloading metadata for the file.
+    Path(LookupError),
+    /// This preview generation is still in progress and the file is not ready  for preview yet.
+    InProgress,
+    /// The file extension is not supported preview generation.
+    UnsupportedExtension,
+    /// The file content is not supported for preview generation.
+    UnsupportedContent,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PreviewError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PreviewError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PreviewError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(PreviewError::Path(map.next_value()?))
+                    }
+                    "in_progress" => Ok(PreviewError::InProgress),
+                    "unsupported_extension" => Ok(PreviewError::UnsupportedExtension),
+                    "unsupported_content" => Ok(PreviewError::UnsupportedContent),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path",
+                                                    "in_progress",
+                                                    "unsupported_extension",
+                                                    "unsupported_content"];
+        deserializer.deserialize_struct("PreviewError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PreviewError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PreviewError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            PreviewError::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("PreviewError", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            PreviewError::UnsupportedExtension => {
+                // unit
+                let mut s = serializer.serialize_struct("PreviewError", 1)?;
+                s.serialize_field(".tag", "unsupported_extension")?;
+                s.end()
+            }
+            PreviewError::UnsupportedContent => {
+                // unit
+                let mut s = serializer.serialize_struct("PreviewError", 1)?;
+                s.serialize_field(".tag", "unsupported_content")?;
+                s.end()
+            }
+        }
+    }
+}
+
+impl ::std::error::Error for PreviewError {
+    fn description(&self) -> &str {
+        "PreviewError"
+    }
+}
+
+impl ::std::fmt::Display for PreviewError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum PropertiesError {
+    /// Property template does not exist for given identifier.
+    TemplateNotFound(super::properties::TemplateId),
+    /// You do not have the permissions to modify this property template.
+    RestrictedContent,
+    Other,
+    Path(LookupError),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PropertiesError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PropertiesError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PropertiesError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "template_not_found" => {
+                        if map.next_key()? != Some("template_not_found") {
+                            return Err(de::Error::missing_field("template_not_found"));
+                        }
+                        Ok(PropertiesError::TemplateNotFound(map.next_value()?))
+                    }
+                    "restricted_content" => Ok(PropertiesError::RestrictedContent),
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(PropertiesError::Path(map.next_value()?))
+                    }
+                    _ => Ok(PropertiesError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["template_not_found",
+                                                    "restricted_content",
+                                                    "other",
+                                                    "path"];
+        deserializer.deserialize_struct("PropertiesError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PropertiesError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PropertiesError::TemplateNotFound(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "template_not_found")?;
+                s.serialize_field("template_not_found", x)?;
+                s.end()
+            }
+            PropertiesError::RestrictedContent => {
+                // unit
+                let mut s = serializer.serialize_struct("PropertiesError", 1)?;
+                s.serialize_field(".tag", "restricted_content")?;
+                s.end()
+            }
+            PropertiesError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            PropertiesError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for PropertiesError {
+    fn description(&self) -> &str {
+        "PropertiesError"
+    }
+}
+
+impl ::std::fmt::Display for PropertiesError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct PropertyGroupUpdate {
+    /// A unique identifier for a property template.
+    pub template_id: super::properties::TemplateId,
+    /// List of property fields to update if the field already exists. If the field doesn't exist,
+    /// add the field to the property group.
+    pub add_or_update_fields: Option<Vec<super::properties::PropertyField>>,
+    /// List of property field names to remove from property group if the field exists.
+    pub remove_fields: Option<Vec<String>>,
+}
+
+impl PropertyGroupUpdate {
+    pub fn new(template_id: super::properties::TemplateId) -> Self {
+        PropertyGroupUpdate {
+            template_id,
+            add_or_update_fields: None,
+            remove_fields: None,
+        }
+    }
+
+    pub fn with_add_or_update_fields(mut self, value: Option<Vec<super::properties::PropertyField>>) -> Self {
+        self.add_or_update_fields = value;
+        self
+    }
+
+    pub fn with_remove_fields(mut self, value: Option<Vec<String>>) -> Self {
+        self.remove_fields = value;
+        self
+    }
+
+}
+
+const PROPERTY_GROUP_UPDATE_FIELDS: &'static [&'static str] = &["template_id",
+                                                                "add_or_update_fields",
+                                                                "remove_fields"];
+impl PropertyGroupUpdate {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroupUpdate, V::Error> {
+        use serde::de;
+        let mut field_template_id = None;
+        let mut field_add_or_update_fields = None;
+        let mut field_remove_fields = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "template_id" => {
+                    if field_template_id.is_some() {
+                        return Err(de::Error::duplicate_field("template_id"));
+                    }
+                    field_template_id = Some(map.next_value()?);
+                }
+                "add_or_update_fields" => {
+                    if field_add_or_update_fields.is_some() {
+                        return Err(de::Error::duplicate_field("add_or_update_fields"));
+                    }
+                    field_add_or_update_fields = Some(map.next_value()?);
+                }
+                "remove_fields" => {
+                    if field_remove_fields.is_some() {
+                        return Err(de::Error::duplicate_field("remove_fields"));
+                    }
+                    field_remove_fields = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_UPDATE_FIELDS))
+            }
+        }
+        Ok(PropertyGroupUpdate {
+            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
+            add_or_update_fields: field_add_or_update_fields,
+            remove_fields: field_remove_fields,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("template_id", &self.template_id)?;
+        s.serialize_field("add_or_update_fields", &self.add_or_update_fields)?;
+        s.serialize_field("remove_fields", &self.remove_fields)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PropertyGroupUpdate {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PropertyGroupUpdate;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PropertyGroupUpdate struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PropertyGroupUpdate::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PropertyGroupUpdate", PROPERTY_GROUP_UPDATE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PropertyGroupUpdate {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PropertyGroupUpdate", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct PropertyGroupWithPath {
+    /// A unique identifier for the file.
+    pub path: PathOrId,
+    /// Filled custom property templates associated with a file.
+    pub property_groups: Vec<super::properties::PropertyGroup>,
+}
+
+impl PropertyGroupWithPath {
+    pub fn new(path: PathOrId, property_groups: Vec<super::properties::PropertyGroup>) -> Self {
+        PropertyGroupWithPath {
+            path,
+            property_groups,
+        }
+    }
+
+}
+
+const PROPERTY_GROUP_WITH_PATH_FIELDS: &'static [&'static str] = &["path",
+                                                                   "property_groups"];
+impl PropertyGroupWithPath {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroupWithPath, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        let mut field_property_groups = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "property_groups" => {
+                    if field_property_groups.is_some() {
+                        return Err(de::Error::duplicate_field("property_groups"));
+                    }
+                    field_property_groups = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_WITH_PATH_FIELDS))
+            }
+        }
+        Ok(PropertyGroupWithPath {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            property_groups: field_property_groups.ok_or_else(|| de::Error::missing_field("property_groups"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("property_groups", &self.property_groups)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PropertyGroupWithPath {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PropertyGroupWithPath;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PropertyGroupWithPath struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PropertyGroupWithPath::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PropertyGroupWithPath", PROPERTY_GROUP_WITH_PATH_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PropertyGroupWithPath {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PropertyGroupWithPath", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct RelocationArg {
+    /// Path in the user's Dropbox to be copied or moved.
+    pub from_path: WritePathOrId,
+    /// Path in the user's Dropbox that is the destination.
+    pub to_path: WritePathOrId,
+    /// If true, :route:`copy` will copy contents in shared folder, otherwise
+    /// :field:`RelocationError.cant_copy_shared_folder` will be returned if :field:`from_path`
+    /// contains shared folder. This field is always true for :route:`move`.
+    pub allow_shared_folder: bool,
+    /// If there's a conflict, have the Dropbox server try to autorename the file to avoid the
+    /// conflict.
+    pub autorename: bool,
+    /// Allow moves by owner even if it would result in an ownership transfer for the content being
+    /// moved. This does not apply to copies.
+    pub allow_ownership_transfer: bool,
+}
+
+impl RelocationArg {
+    pub fn new(from_path: WritePathOrId, to_path: WritePathOrId) -> Self {
+        RelocationArg {
+            from_path,
+            to_path,
+            allow_shared_folder: false,
+            autorename: false,
+            allow_ownership_transfer: false,
+        }
+    }
+
+    pub fn with_allow_shared_folder(mut self, value: bool) -> Self {
+        self.allow_shared_folder = value;
+        self
+    }
+
+    pub fn with_autorename(mut self, value: bool) -> Self {
+        self.autorename = value;
+        self
+    }
+
+    pub fn with_allow_ownership_transfer(mut self, value: bool) -> Self {
+        self.allow_ownership_transfer = value;
+        self
+    }
+
+}
+
+const RELOCATION_ARG_FIELDS: &'static [&'static str] = &["from_path",
+                                                         "to_path",
+                                                         "allow_shared_folder",
+                                                         "autorename",
+                                                         "allow_ownership_transfer"];
+impl RelocationArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationArg, V::Error> {
+        use serde::de;
+        let mut field_from_path = None;
+        let mut field_to_path = None;
+        let mut field_allow_shared_folder = None;
+        let mut field_autorename = None;
+        let mut field_allow_ownership_transfer = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "from_path" => {
+                    if field_from_path.is_some() {
+                        return Err(de::Error::duplicate_field("from_path"));
+                    }
+                    field_from_path = Some(map.next_value()?);
+                }
+                "to_path" => {
+                    if field_to_path.is_some() {
+                        return Err(de::Error::duplicate_field("to_path"));
+                    }
+                    field_to_path = Some(map.next_value()?);
+                }
+                "allow_shared_folder" => {
+                    if field_allow_shared_folder.is_some() {
+                        return Err(de::Error::duplicate_field("allow_shared_folder"));
+                    }
+                    field_allow_shared_folder = Some(map.next_value()?);
+                }
+                "autorename" => {
+                    if field_autorename.is_some() {
+                        return Err(de::Error::duplicate_field("autorename"));
+                    }
+                    field_autorename = Some(map.next_value()?);
+                }
+                "allow_ownership_transfer" => {
+                    if field_allow_ownership_transfer.is_some() {
+                        return Err(de::Error::duplicate_field("allow_ownership_transfer"));
+                    }
+                    field_allow_ownership_transfer = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, RELOCATION_ARG_FIELDS))
+            }
+        }
+        Ok(RelocationArg {
+            from_path: field_from_path.ok_or_else(|| de::Error::missing_field("from_path"))?,
+            to_path: field_to_path.ok_or_else(|| de::Error::missing_field("to_path"))?,
+            allow_shared_folder: field_allow_shared_folder.unwrap_or(false),
+            autorename: field_autorename.unwrap_or(false),
+            allow_ownership_transfer: field_allow_ownership_transfer.unwrap_or(false),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("from_path", &self.from_path)?;
+        s.serialize_field("to_path", &self.to_path)?;
+        s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
+        s.serialize_field("autorename", &self.autorename)?;
+        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RelocationArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RelocationArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RelocationArg", RELOCATION_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RelocationArg", 5)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct RelocationBatchArg {
+    /// List of entries to be moved or copied. Each entry is :type:`RelocationPath`.
+    pub entries: Vec<RelocationPath>,
+    /// If true, :route:`copy_batch` will copy contents in shared folder, otherwise
+    /// :field:`RelocationError.cant_copy_shared_folder` will be returned if
+    /// :field:`RelocationPath.from_path` contains shared folder.  This field is always true for
+    /// :route:`move_batch`.
+    pub allow_shared_folder: bool,
+    /// If there's a conflict with any file, have the Dropbox server try to autorename that file to
+    /// avoid the conflict.
+    pub autorename: bool,
+    /// Allow moves by owner even if it would result in an ownership transfer for the content being
+    /// moved. This does not apply to copies.
+    pub allow_ownership_transfer: bool,
+}
+
+impl RelocationBatchArg {
+    pub fn new(entries: Vec<RelocationPath>) -> Self {
+        RelocationBatchArg {
+            entries,
+            allow_shared_folder: false,
+            autorename: false,
+            allow_ownership_transfer: false,
+        }
+    }
+
+    pub fn with_allow_shared_folder(mut self, value: bool) -> Self {
+        self.allow_shared_folder = value;
+        self
+    }
+
+    pub fn with_autorename(mut self, value: bool) -> Self {
+        self.autorename = value;
+        self
+    }
+
+    pub fn with_allow_ownership_transfer(mut self, value: bool) -> Self {
+        self.allow_ownership_transfer = value;
+        self
+    }
+
+}
+
+const RELOCATION_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries",
+                                                               "allow_shared_folder",
+                                                               "autorename",
+                                                               "allow_ownership_transfer"];
+impl RelocationBatchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationBatchArg, V::Error> {
+        use serde::de;
+        let mut field_entries = None;
+        let mut field_allow_shared_folder = None;
+        let mut field_autorename = None;
+        let mut field_allow_ownership_transfer = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                "allow_shared_folder" => {
+                    if field_allow_shared_folder.is_some() {
+                        return Err(de::Error::duplicate_field("allow_shared_folder"));
+                    }
+                    field_allow_shared_folder = Some(map.next_value()?);
+                }
+                "autorename" => {
+                    if field_autorename.is_some() {
+                        return Err(de::Error::duplicate_field("autorename"));
+                    }
+                    field_autorename = Some(map.next_value()?);
+                }
+                "allow_ownership_transfer" => {
+                    if field_allow_ownership_transfer.is_some() {
+                        return Err(de::Error::duplicate_field("allow_ownership_transfer"));
+                    }
+                    field_allow_ownership_transfer = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, RELOCATION_BATCH_ARG_FIELDS))
+            }
+        }
+        Ok(RelocationBatchArg {
+            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
+            allow_shared_folder: field_allow_shared_folder.unwrap_or(false),
+            autorename: field_autorename.unwrap_or(false),
+            allow_ownership_transfer: field_allow_ownership_transfer.unwrap_or(false),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)?;
+        s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
+        s.serialize_field("autorename", &self.autorename)?;
+        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RelocationBatchArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationBatchArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RelocationBatchArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RelocationBatchArg", RELOCATION_BATCH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationBatchArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RelocationBatchArg", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum RelocationBatchError {
+    FromLookup(LookupError),
+    FromWrite(WriteError),
+    To(WriteError),
+    /// Shared folders can't be copied.
+    CantCopySharedFolder,
+    /// Your move operation would result in nested shared folders.  This is not allowed.
+    CantNestSharedFolder,
+    /// You cannot move a folder into itself.
+    CantMoveFolderIntoItself,
+    /// The operation would involve more than 10,000 files and folders.
+    TooManyFiles,
+    /// There are duplicated/nested paths among :field:`RelocationArg.from_path` and
+    /// :field:`RelocationArg.to_path`.
+    DuplicatedOrNestedPaths,
+    /// Your move operation would result in an ownership transfer. You may reissue the request with
+    /// the field :field:`RelocationArg.allow_ownership_transfer` to true.
+    CantTransferOwnership,
+    Other,
+    /// There are too many write operations in user's Dropbox. Please retry this request.
+    TooManyWriteOperations,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RelocationBatchError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationBatchError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "from_lookup" => {
+                        if map.next_key()? != Some("from_lookup") {
+                            return Err(de::Error::missing_field("from_lookup"));
+                        }
+                        Ok(RelocationBatchError::FromLookup(map.next_value()?))
+                    }
+                    "from_write" => {
+                        if map.next_key()? != Some("from_write") {
+                            return Err(de::Error::missing_field("from_write"));
+                        }
+                        Ok(RelocationBatchError::FromWrite(map.next_value()?))
+                    }
+                    "to" => {
+                        if map.next_key()? != Some("to") {
+                            return Err(de::Error::missing_field("to"));
+                        }
+                        Ok(RelocationBatchError::To(map.next_value()?))
+                    }
+                    "cant_copy_shared_folder" => Ok(RelocationBatchError::CantCopySharedFolder),
+                    "cant_nest_shared_folder" => Ok(RelocationBatchError::CantNestSharedFolder),
+                    "cant_move_folder_into_itself" => Ok(RelocationBatchError::CantMoveFolderIntoItself),
+                    "too_many_files" => Ok(RelocationBatchError::TooManyFiles),
+                    "duplicated_or_nested_paths" => Ok(RelocationBatchError::DuplicatedOrNestedPaths),
+                    "cant_transfer_ownership" => Ok(RelocationBatchError::CantTransferOwnership),
+                    "too_many_write_operations" => Ok(RelocationBatchError::TooManyWriteOperations),
+                    _ => Ok(RelocationBatchError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["from_lookup",
+                                                    "from_write",
+                                                    "to",
+                                                    "cant_copy_shared_folder",
+                                                    "cant_nest_shared_folder",
+                                                    "cant_move_folder_into_itself",
+                                                    "too_many_files",
+                                                    "duplicated_or_nested_paths",
+                                                    "cant_transfer_ownership",
+                                                    "other",
+                                                    "too_many_write_operations"];
+        deserializer.deserialize_struct("RelocationBatchError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationBatchError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RelocationBatchError::FromLookup(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "from_lookup")?;
+                s.serialize_field("from_lookup", x)?;
+                s.end()
+            }
+            RelocationBatchError::FromWrite(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "from_write")?;
+                s.serialize_field("from_write", x)?;
+                s.end()
+            }
+            RelocationBatchError::To(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "to")?;
+                s.serialize_field("to", x)?;
+                s.end()
+            }
+            RelocationBatchError::CantCopySharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
+                s.serialize_field(".tag", "cant_copy_shared_folder")?;
+                s.end()
+            }
+            RelocationBatchError::CantNestSharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
+                s.serialize_field(".tag", "cant_nest_shared_folder")?;
+                s.end()
+            }
+            RelocationBatchError::CantMoveFolderIntoItself => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
+                s.serialize_field(".tag", "cant_move_folder_into_itself")?;
+                s.end()
+            }
+            RelocationBatchError::TooManyFiles => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
+                s.serialize_field(".tag", "too_many_files")?;
+                s.end()
+            }
+            RelocationBatchError::DuplicatedOrNestedPaths => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
+                s.serialize_field(".tag", "duplicated_or_nested_paths")?;
+                s.end()
+            }
+            RelocationBatchError::CantTransferOwnership => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
+                s.serialize_field(".tag", "cant_transfer_ownership")?;
+                s.end()
+            }
+            RelocationBatchError::TooManyWriteOperations => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
+                s.serialize_field(".tag", "too_many_write_operations")?;
+                s.end()
+            }
+            RelocationBatchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for RelocationBatchError {
+    fn description(&self) -> &str {
+        "RelocationBatchError"
+    }
+}
+
+impl ::std::fmt::Display for RelocationBatchError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum RelocationBatchJobStatus {
+    /// The asynchronous job is still in progress.
+    InProgress,
+    /// The copy or move batch job has finished.
+    Complete(RelocationBatchResult),
+    /// The copy or move batch job has failed with exception.
+    Failed(RelocationBatchError),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchJobStatus {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RelocationBatchJobStatus;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationBatchJobStatus structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "in_progress" => Ok(RelocationBatchJobStatus::InProgress),
+                    "complete" => Ok(RelocationBatchJobStatus::Complete(RelocationBatchResult::internal_deserialize(map)?)),
+                    "failed" => {
+                        if map.next_key()? != Some("failed") {
+                            return Err(de::Error::missing_field("failed"));
+                        }
+                        Ok(RelocationBatchJobStatus::Failed(map.next_value()?))
+                    }
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["in_progress",
+                                                    "complete",
+                                                    "failed"];
+        deserializer.deserialize_struct("RelocationBatchJobStatus", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationBatchJobStatus {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RelocationBatchJobStatus::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchJobStatus", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            RelocationBatchJobStatus::Complete(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("RelocationBatchJobStatus", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            RelocationBatchJobStatus::Failed(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "failed")?;
+                s.serialize_field("failed", x)?;
+                s.end()
+            }
+        }
+    }
+}
+
+/// Result returned by :route:`copy_batch` or :route:`move_batch` that may either launch an
+/// asynchronous job or complete synchronously.
+#[derive(Debug)]
+pub enum RelocationBatchLaunch {
+    /// This response indicates that the processing is asynchronous. The string is an id that can be
+    /// used to obtain the status of the asynchronous job.
+    AsyncJobId(super::async::AsyncJobId),
+    Complete(RelocationBatchResult),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchLaunch {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RelocationBatchLaunch;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationBatchLaunch structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "async_job_id" => {
+                        if map.next_key()? != Some("async_job_id") {
+                            return Err(de::Error::missing_field("async_job_id"));
+                        }
+                        Ok(RelocationBatchLaunch::AsyncJobId(map.next_value()?))
+                    }
+                    "complete" => Ok(RelocationBatchLaunch::Complete(RelocationBatchResult::internal_deserialize(map)?)),
+                    _ => Ok(RelocationBatchLaunch::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["async_job_id",
+                                                    "complete",
+                                                    "other"];
+        deserializer.deserialize_struct("RelocationBatchLaunch", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationBatchLaunch {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RelocationBatchLaunch::AsyncJobId(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "async_job_id")?;
+                s.serialize_field("async_job_id", x)?;
+                s.end()
+            }
+            RelocationBatchLaunch::Complete(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("RelocationBatchLaunch", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            RelocationBatchLaunch::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct RelocationBatchResult {
+    pub entries: Vec<RelocationBatchResultData>,
+}
+
+impl RelocationBatchResult {
+    pub fn new(entries: Vec<RelocationBatchResultData>) -> Self {
+        RelocationBatchResult {
+            entries,
+        }
+    }
+
+}
+
+const RELOCATION_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
+impl RelocationBatchResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationBatchResult, V::Error> {
+        use serde::de;
+        let mut field_entries = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, RELOCATION_BATCH_RESULT_FIELDS))
+            }
+        }
+        Ok(RelocationBatchResult {
+            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RelocationBatchResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationBatchResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RelocationBatchResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RelocationBatchResult", RELOCATION_BATCH_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationBatchResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RelocationBatchResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct RelocationBatchResultData {
+    /// Metadata of the relocated object.
+    pub metadata: Metadata,
+}
+
+impl RelocationBatchResultData {
+    pub fn new(metadata: Metadata) -> Self {
+        RelocationBatchResultData {
+            metadata,
+        }
+    }
+
+}
+
+const RELOCATION_BATCH_RESULT_DATA_FIELDS: &'static [&'static str] = &["metadata"];
+impl RelocationBatchResultData {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationBatchResultData, V::Error> {
+        use serde::de;
+        let mut field_metadata = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, RELOCATION_BATCH_RESULT_DATA_FIELDS))
+            }
+        }
+        Ok(RelocationBatchResultData {
+            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("metadata", &self.metadata)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchResultData {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RelocationBatchResultData;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationBatchResultData struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RelocationBatchResultData::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RelocationBatchResultData", RELOCATION_BATCH_RESULT_DATA_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationBatchResultData {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RelocationBatchResultData", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum RelocationError {
+    FromLookup(LookupError),
+    FromWrite(WriteError),
+    To(WriteError),
+    /// Shared folders can't be copied.
+    CantCopySharedFolder,
+    /// Your move operation would result in nested shared folders.  This is not allowed.
+    CantNestSharedFolder,
+    /// You cannot move a folder into itself.
+    CantMoveFolderIntoItself,
+    /// The operation would involve more than 10,000 files and folders.
+    TooManyFiles,
+    /// There are duplicated/nested paths among :field:`RelocationArg.from_path` and
+    /// :field:`RelocationArg.to_path`.
+    DuplicatedOrNestedPaths,
+    /// Your move operation would result in an ownership transfer. You may reissue the request with
+    /// the field :field:`RelocationArg.allow_ownership_transfer` to true.
+    CantTransferOwnership,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RelocationError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "from_lookup" => {
+                        if map.next_key()? != Some("from_lookup") {
+                            return Err(de::Error::missing_field("from_lookup"));
+                        }
+                        Ok(RelocationError::FromLookup(map.next_value()?))
+                    }
+                    "from_write" => {
+                        if map.next_key()? != Some("from_write") {
+                            return Err(de::Error::missing_field("from_write"));
+                        }
+                        Ok(RelocationError::FromWrite(map.next_value()?))
+                    }
+                    "to" => {
+                        if map.next_key()? != Some("to") {
+                            return Err(de::Error::missing_field("to"));
+                        }
+                        Ok(RelocationError::To(map.next_value()?))
+                    }
+                    "cant_copy_shared_folder" => Ok(RelocationError::CantCopySharedFolder),
+                    "cant_nest_shared_folder" => Ok(RelocationError::CantNestSharedFolder),
+                    "cant_move_folder_into_itself" => Ok(RelocationError::CantMoveFolderIntoItself),
+                    "too_many_files" => Ok(RelocationError::TooManyFiles),
+                    "duplicated_or_nested_paths" => Ok(RelocationError::DuplicatedOrNestedPaths),
+                    "cant_transfer_ownership" => Ok(RelocationError::CantTransferOwnership),
+                    _ => Ok(RelocationError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["from_lookup",
+                                                    "from_write",
+                                                    "to",
+                                                    "cant_copy_shared_folder",
+                                                    "cant_nest_shared_folder",
+                                                    "cant_move_folder_into_itself",
+                                                    "too_many_files",
+                                                    "duplicated_or_nested_paths",
+                                                    "cant_transfer_ownership",
+                                                    "other"];
+        deserializer.deserialize_struct("RelocationError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RelocationError::FromLookup(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "from_lookup")?;
+                s.serialize_field("from_lookup", x)?;
+                s.end()
+            }
+            RelocationError::FromWrite(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "from_write")?;
+                s.serialize_field("from_write", x)?;
+                s.end()
+            }
+            RelocationError::To(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "to")?;
+                s.serialize_field("to", x)?;
+                s.end()
+            }
+            RelocationError::CantCopySharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationError", 1)?;
+                s.serialize_field(".tag", "cant_copy_shared_folder")?;
+                s.end()
+            }
+            RelocationError::CantNestSharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationError", 1)?;
+                s.serialize_field(".tag", "cant_nest_shared_folder")?;
+                s.end()
+            }
+            RelocationError::CantMoveFolderIntoItself => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationError", 1)?;
+                s.serialize_field(".tag", "cant_move_folder_into_itself")?;
+                s.end()
+            }
+            RelocationError::TooManyFiles => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationError", 1)?;
+                s.serialize_field(".tag", "too_many_files")?;
+                s.end()
+            }
+            RelocationError::DuplicatedOrNestedPaths => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationError", 1)?;
+                s.serialize_field(".tag", "duplicated_or_nested_paths")?;
+                s.end()
+            }
+            RelocationError::CantTransferOwnership => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationError", 1)?;
+                s.serialize_field(".tag", "cant_transfer_ownership")?;
+                s.end()
+            }
+            RelocationError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for RelocationError {
+    fn description(&self) -> &str {
+        "RelocationError"
+    }
+}
+
+impl ::std::fmt::Display for RelocationError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct RelocationPath {
+    /// Path in the user's Dropbox to be copied or moved.
+    pub from_path: WritePathOrId,
+    /// Path in the user's Dropbox that is the destination.
+    pub to_path: WritePathOrId,
+}
+
+impl RelocationPath {
+    pub fn new(from_path: WritePathOrId, to_path: WritePathOrId) -> Self {
+        RelocationPath {
+            from_path,
+            to_path,
+        }
+    }
+
+}
+
+const RELOCATION_PATH_FIELDS: &'static [&'static str] = &["from_path",
+                                                          "to_path"];
+impl RelocationPath {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationPath, V::Error> {
+        use serde::de;
+        let mut field_from_path = None;
+        let mut field_to_path = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "from_path" => {
+                    if field_from_path.is_some() {
+                        return Err(de::Error::duplicate_field("from_path"));
+                    }
+                    field_from_path = Some(map.next_value()?);
+                }
+                "to_path" => {
+                    if field_to_path.is_some() {
+                        return Err(de::Error::duplicate_field("to_path"));
+                    }
+                    field_to_path = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, RELOCATION_PATH_FIELDS))
+            }
+        }
+        Ok(RelocationPath {
+            from_path: field_from_path.ok_or_else(|| de::Error::missing_field("from_path"))?,
+            to_path: field_to_path.ok_or_else(|| de::Error::missing_field("to_path"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("from_path", &self.from_path)?;
+        s.serialize_field("to_path", &self.to_path)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationPath {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RelocationPath;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationPath struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RelocationPath::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RelocationPath", RELOCATION_PATH_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationPath {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RelocationPath", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct RelocationResult {
+    /// Metadata of the relocated object.
+    pub metadata: Metadata,
+}
+
+impl RelocationResult {
+    pub fn new(metadata: Metadata) -> Self {
+        RelocationResult {
+            metadata,
+        }
+    }
+
+}
+
+const RELOCATION_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
+impl RelocationResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationResult, V::Error> {
+        use serde::de;
+        let mut field_metadata = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, RELOCATION_RESULT_FIELDS))
+            }
+        }
+        Ok(RelocationResult {
+            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("metadata", &self.metadata)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RelocationResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RelocationResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RelocationResult", RELOCATION_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RelocationResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct RemovePropertiesArg {
+    /// A unique identifier for the file.
+    pub path: PathOrId,
+    /// A list of identifiers for a property template created by route properties/template/add.
+    pub property_template_ids: Vec<super::properties::TemplateId>,
+}
+
+impl RemovePropertiesArg {
+    pub fn new(path: PathOrId, property_template_ids: Vec<super::properties::TemplateId>) -> Self {
+        RemovePropertiesArg {
+            path,
+            property_template_ids,
+        }
+    }
+
+}
+
+const REMOVE_PROPERTIES_ARG_FIELDS: &'static [&'static str] = &["path",
+                                                                "property_template_ids"];
+impl RemovePropertiesArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RemovePropertiesArg, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        let mut field_property_template_ids = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "property_template_ids" => {
+                    if field_property_template_ids.is_some() {
+                        return Err(de::Error::duplicate_field("property_template_ids"));
+                    }
+                    field_property_template_ids = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, REMOVE_PROPERTIES_ARG_FIELDS))
+            }
+        }
+        Ok(RemovePropertiesArg {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            property_template_ids: field_property_template_ids.ok_or_else(|| de::Error::missing_field("property_template_ids"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("property_template_ids", &self.property_template_ids)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RemovePropertiesArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RemovePropertiesArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RemovePropertiesArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RemovePropertiesArg", REMOVE_PROPERTIES_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RemovePropertiesArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RemovePropertiesArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum RemovePropertiesError {
+    /// Property template does not exist for given identifier.
+    TemplateNotFound(super::properties::TemplateId),
+    /// You do not have the permissions to modify this property template.
+    RestrictedContent,
+    Other,
+    Path(LookupError),
+    PropertyGroupLookup(LookUpPropertiesError),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RemovePropertiesError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RemovePropertiesError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "template_not_found" => {
+                        if map.next_key()? != Some("template_not_found") {
+                            return Err(de::Error::missing_field("template_not_found"));
+                        }
+                        Ok(RemovePropertiesError::TemplateNotFound(map.next_value()?))
+                    }
+                    "restricted_content" => Ok(RemovePropertiesError::RestrictedContent),
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(RemovePropertiesError::Path(map.next_value()?))
+                    }
+                    "property_group_lookup" => {
+                        if map.next_key()? != Some("property_group_lookup") {
+                            return Err(de::Error::missing_field("property_group_lookup"));
+                        }
+                        Ok(RemovePropertiesError::PropertyGroupLookup(map.next_value()?))
+                    }
+                    _ => Ok(RemovePropertiesError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["template_not_found",
+                                                    "restricted_content",
+                                                    "other",
+                                                    "path",
+                                                    "property_group_lookup"];
+        deserializer.deserialize_struct("RemovePropertiesError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RemovePropertiesError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RemovePropertiesError::TemplateNotFound(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "template_not_found")?;
+                s.serialize_field("template_not_found", x)?;
+                s.end()
+            }
+            RemovePropertiesError::RestrictedContent => {
+                // unit
+                let mut s = serializer.serialize_struct("RemovePropertiesError", 1)?;
+                s.serialize_field(".tag", "restricted_content")?;
+                s.end()
+            }
+            RemovePropertiesError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            RemovePropertiesError::PropertyGroupLookup(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "property_group_lookup")?;
+                s.serialize_field("property_group_lookup", x)?;
+                s.end()
+            }
+            RemovePropertiesError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for RemovePropertiesError {
+    fn description(&self) -> &str {
+        "RemovePropertiesError"
+    }
+}
+
+impl ::std::fmt::Display for RemovePropertiesError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct RestoreArg {
+    /// The path to the file you want to restore.
+    pub path: WritePath,
+    /// The revision to restore for the file.
+    pub rev: Rev,
+}
+
+impl RestoreArg {
+    pub fn new(path: WritePath, rev: Rev) -> Self {
+        RestoreArg {
+            path,
+            rev,
+        }
+    }
+
+}
+
+const RESTORE_ARG_FIELDS: &'static [&'static str] = &["path",
+                                                      "rev"];
+impl RestoreArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RestoreArg, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        let mut field_rev = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "rev" => {
+                    if field_rev.is_some() {
+                        return Err(de::Error::duplicate_field("rev"));
+                    }
+                    field_rev = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, RESTORE_ARG_FIELDS))
+            }
+        }
+        Ok(RestoreArg {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            rev: field_rev.ok_or_else(|| de::Error::missing_field("rev"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("rev", &self.rev)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RestoreArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RestoreArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RestoreArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RestoreArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RestoreArg", RESTORE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RestoreArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RestoreArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum RestoreError {
+    /// An error occurs when downloading metadata for the file.
+    PathLookup(LookupError),
+    /// An error occurs when trying to restore the file to that path.
+    PathWrite(WriteError),
+    /// The revision is invalid. It may point to a different file.
+    InvalidRevision,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RestoreError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RestoreError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RestoreError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path_lookup" => {
+                        if map.next_key()? != Some("path_lookup") {
+                            return Err(de::Error::missing_field("path_lookup"));
+                        }
+                        Ok(RestoreError::PathLookup(map.next_value()?))
+                    }
+                    "path_write" => {
+                        if map.next_key()? != Some("path_write") {
+                            return Err(de::Error::missing_field("path_write"));
+                        }
+                        Ok(RestoreError::PathWrite(map.next_value()?))
+                    }
+                    "invalid_revision" => Ok(RestoreError::InvalidRevision),
+                    _ => Ok(RestoreError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path_lookup",
+                                                    "path_write",
+                                                    "invalid_revision",
+                                                    "other"];
+        deserializer.deserialize_struct("RestoreError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RestoreError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RestoreError::PathLookup(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path_lookup")?;
+                s.serialize_field("path_lookup", x)?;
+                s.end()
+            }
+            RestoreError::PathWrite(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path_write")?;
+                s.serialize_field("path_write", x)?;
+                s.end()
+            }
+            RestoreError::InvalidRevision => {
+                // unit
+                let mut s = serializer.serialize_struct("RestoreError", 1)?;
+                s.serialize_field(".tag", "invalid_revision")?;
+                s.end()
+            }
+            RestoreError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for RestoreError {
+    fn description(&self) -> &str {
+        "RestoreError"
+    }
+}
+
+impl ::std::fmt::Display for RestoreError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct SaveCopyReferenceArg {
+    /// A copy reference returned by :route:`copy_reference/get`.
+    pub copy_reference: String,
+    /// Path in the user's Dropbox that is the destination.
+    pub path: Path,
+}
+
+impl SaveCopyReferenceArg {
+    pub fn new(copy_reference: String, path: Path) -> Self {
+        SaveCopyReferenceArg {
+            copy_reference,
+            path,
+        }
+    }
+
+}
+
+const SAVE_COPY_REFERENCE_ARG_FIELDS: &'static [&'static str] = &["copy_reference",
+                                                                  "path"];
+impl SaveCopyReferenceArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SaveCopyReferenceArg, V::Error> {
+        use serde::de;
+        let mut field_copy_reference = None;
+        let mut field_path = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "copy_reference" => {
+                    if field_copy_reference.is_some() {
+                        return Err(de::Error::duplicate_field("copy_reference"));
+                    }
+                    field_copy_reference = Some(map.next_value()?);
+                }
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SAVE_COPY_REFERENCE_ARG_FIELDS))
+            }
+        }
+        Ok(SaveCopyReferenceArg {
+            copy_reference: field_copy_reference.ok_or_else(|| de::Error::missing_field("copy_reference"))?,
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("copy_reference", &self.copy_reference)?;
+        s.serialize_field("path", &self.path)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SaveCopyReferenceArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SaveCopyReferenceArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SaveCopyReferenceArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SaveCopyReferenceArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SaveCopyReferenceArg", SAVE_COPY_REFERENCE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SaveCopyReferenceArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SaveCopyReferenceArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum SaveCopyReferenceError {
+    Path(WriteError),
+    /// The copy reference is invalid.
+    InvalidCopyReference,
+    /// You don't have permission to save the given copy reference. Please make sure this app is
+    /// same app which created the copy reference and the source user is still linked to the app.
+    NoPermission,
+    /// The file referenced by the copy reference cannot be found.
+    NotFound,
+    /// The operation would involve more than 10,000 files and folders.
+    TooManyFiles,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SaveCopyReferenceError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SaveCopyReferenceError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SaveCopyReferenceError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(SaveCopyReferenceError::Path(map.next_value()?))
+                    }
+                    "invalid_copy_reference" => Ok(SaveCopyReferenceError::InvalidCopyReference),
+                    "no_permission" => Ok(SaveCopyReferenceError::NoPermission),
+                    "not_found" => Ok(SaveCopyReferenceError::NotFound),
+                    "too_many_files" => Ok(SaveCopyReferenceError::TooManyFiles),
+                    _ => Ok(SaveCopyReferenceError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path",
+                                                    "invalid_copy_reference",
+                                                    "no_permission",
+                                                    "not_found",
+                                                    "too_many_files",
+                                                    "other"];
+        deserializer.deserialize_struct("SaveCopyReferenceError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SaveCopyReferenceError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SaveCopyReferenceError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            SaveCopyReferenceError::InvalidCopyReference => {
+                // unit
+                let mut s = serializer.serialize_struct("SaveCopyReferenceError", 1)?;
+                s.serialize_field(".tag", "invalid_copy_reference")?;
+                s.end()
+            }
+            SaveCopyReferenceError::NoPermission => {
+                // unit
+                let mut s = serializer.serialize_struct("SaveCopyReferenceError", 1)?;
+                s.serialize_field(".tag", "no_permission")?;
+                s.end()
+            }
+            SaveCopyReferenceError::NotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("SaveCopyReferenceError", 1)?;
+                s.serialize_field(".tag", "not_found")?;
+                s.end()
+            }
+            SaveCopyReferenceError::TooManyFiles => {
+                // unit
+                let mut s = serializer.serialize_struct("SaveCopyReferenceError", 1)?;
+                s.serialize_field(".tag", "too_many_files")?;
+                s.end()
+            }
+            SaveCopyReferenceError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for SaveCopyReferenceError {
+    fn description(&self) -> &str {
+        "SaveCopyReferenceError"
+    }
+}
+
+impl ::std::fmt::Display for SaveCopyReferenceError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct SaveCopyReferenceResult {
+    /// The metadata of the saved file or folder in the user's Dropbox.
+    pub metadata: Metadata,
+}
+
+impl SaveCopyReferenceResult {
+    pub fn new(metadata: Metadata) -> Self {
+        SaveCopyReferenceResult {
+            metadata,
+        }
+    }
+
+}
+
+const SAVE_COPY_REFERENCE_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
+impl SaveCopyReferenceResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SaveCopyReferenceResult, V::Error> {
+        use serde::de;
+        let mut field_metadata = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SAVE_COPY_REFERENCE_RESULT_FIELDS))
+            }
+        }
+        Ok(SaveCopyReferenceResult {
+            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("metadata", &self.metadata)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SaveCopyReferenceResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SaveCopyReferenceResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SaveCopyReferenceResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SaveCopyReferenceResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SaveCopyReferenceResult", SAVE_COPY_REFERENCE_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SaveCopyReferenceResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SaveCopyReferenceResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub struct SaveUrlArg {
     /// The path in Dropbox where the URL will be saved to.
     pub path: Path,
@@ -4130,6 +7665,666 @@ impl ::serde::ser::Serialize for SaveUrlArg {
         let mut s = serializer.serialize_struct("SaveUrlArg", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum SaveUrlError {
+    Path(WriteError),
+    /// Failed downloading the given URL.
+    DownloadFailed,
+    /// The given URL is invalid.
+    InvalidUrl,
+    /// The file where the URL is saved to no longer exists.
+    NotFound,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SaveUrlError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SaveUrlError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SaveUrlError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(SaveUrlError::Path(map.next_value()?))
+                    }
+                    "download_failed" => Ok(SaveUrlError::DownloadFailed),
+                    "invalid_url" => Ok(SaveUrlError::InvalidUrl),
+                    "not_found" => Ok(SaveUrlError::NotFound),
+                    _ => Ok(SaveUrlError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path",
+                                                    "download_failed",
+                                                    "invalid_url",
+                                                    "not_found",
+                                                    "other"];
+        deserializer.deserialize_struct("SaveUrlError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SaveUrlError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SaveUrlError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            SaveUrlError::DownloadFailed => {
+                // unit
+                let mut s = serializer.serialize_struct("SaveUrlError", 1)?;
+                s.serialize_field(".tag", "download_failed")?;
+                s.end()
+            }
+            SaveUrlError::InvalidUrl => {
+                // unit
+                let mut s = serializer.serialize_struct("SaveUrlError", 1)?;
+                s.serialize_field(".tag", "invalid_url")?;
+                s.end()
+            }
+            SaveUrlError::NotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("SaveUrlError", 1)?;
+                s.serialize_field(".tag", "not_found")?;
+                s.end()
+            }
+            SaveUrlError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for SaveUrlError {
+    fn description(&self) -> &str {
+        "SaveUrlError"
+    }
+}
+
+impl ::std::fmt::Display for SaveUrlError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum SaveUrlJobStatus {
+    /// The asynchronous job is still in progress.
+    InProgress,
+    /// Metadata of the file where the URL is saved to.
+    Complete(FileMetadata),
+    Failed(SaveUrlError),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SaveUrlJobStatus {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SaveUrlJobStatus;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SaveUrlJobStatus structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "in_progress" => Ok(SaveUrlJobStatus::InProgress),
+                    "complete" => Ok(SaveUrlJobStatus::Complete(FileMetadata::internal_deserialize(map)?)),
+                    "failed" => {
+                        if map.next_key()? != Some("failed") {
+                            return Err(de::Error::missing_field("failed"));
+                        }
+                        Ok(SaveUrlJobStatus::Failed(map.next_value()?))
+                    }
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["in_progress",
+                                                    "complete",
+                                                    "failed"];
+        deserializer.deserialize_struct("SaveUrlJobStatus", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SaveUrlJobStatus {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SaveUrlJobStatus::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            SaveUrlJobStatus::Complete(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 15)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            SaveUrlJobStatus::Failed(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "failed")?;
+                s.serialize_field("failed", x)?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum SaveUrlResult {
+    /// This response indicates that the processing is asynchronous. The string is an id that can be
+    /// used to obtain the status of the asynchronous job.
+    AsyncJobId(super::async::AsyncJobId),
+    /// Metadata of the file where the URL is saved to.
+    Complete(FileMetadata),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SaveUrlResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SaveUrlResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SaveUrlResult structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "async_job_id" => {
+                        if map.next_key()? != Some("async_job_id") {
+                            return Err(de::Error::missing_field("async_job_id"));
+                        }
+                        Ok(SaveUrlResult::AsyncJobId(map.next_value()?))
+                    }
+                    "complete" => Ok(SaveUrlResult::Complete(FileMetadata::internal_deserialize(map)?)),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["async_job_id",
+                                                    "complete"];
+        deserializer.deserialize_struct("SaveUrlResult", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SaveUrlResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SaveUrlResult::AsyncJobId(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "async_job_id")?;
+                s.serialize_field("async_job_id", x)?;
+                s.end()
+            }
+            SaveUrlResult::Complete(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("SaveUrlResult", 15)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct SearchArg {
+    /// The path in the user's Dropbox to search. Should probably be a folder.
+    pub path: PathROrId,
+    /// The string to search for. The search string is split on spaces into multiple tokens. For
+    /// file name searching, the last token is used for prefix matching (i.e. "bat c" matches "bat
+    /// cave" but not "batman car").
+    pub query: String,
+    /// The starting index within the search results (used for paging).
+    pub start: u64,
+    /// The maximum number of search results to return.
+    pub max_results: u64,
+    /// The search mode (filename, filename_and_content, or deleted_filename). Note that searching
+    /// file content is only available for Dropbox Business accounts.
+    pub mode: SearchMode,
+}
+
+impl SearchArg {
+    pub fn new(path: PathROrId, query: String) -> Self {
+        SearchArg {
+            path,
+            query,
+            start: 0,
+            max_results: 100,
+            mode: SearchMode::Filename,
+        }
+    }
+
+    pub fn with_start(mut self, value: u64) -> Self {
+        self.start = value;
+        self
+    }
+
+    pub fn with_max_results(mut self, value: u64) -> Self {
+        self.max_results = value;
+        self
+    }
+
+    pub fn with_mode(mut self, value: SearchMode) -> Self {
+        self.mode = value;
+        self
+    }
+
+}
+
+const SEARCH_ARG_FIELDS: &'static [&'static str] = &["path",
+                                                     "query",
+                                                     "start",
+                                                     "max_results",
+                                                     "mode"];
+impl SearchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SearchArg, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        let mut field_query = None;
+        let mut field_start = None;
+        let mut field_max_results = None;
+        let mut field_mode = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "query" => {
+                    if field_query.is_some() {
+                        return Err(de::Error::duplicate_field("query"));
+                    }
+                    field_query = Some(map.next_value()?);
+                }
+                "start" => {
+                    if field_start.is_some() {
+                        return Err(de::Error::duplicate_field("start"));
+                    }
+                    field_start = Some(map.next_value()?);
+                }
+                "max_results" => {
+                    if field_max_results.is_some() {
+                        return Err(de::Error::duplicate_field("max_results"));
+                    }
+                    field_max_results = Some(map.next_value()?);
+                }
+                "mode" => {
+                    if field_mode.is_some() {
+                        return Err(de::Error::duplicate_field("mode"));
+                    }
+                    field_mode = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SEARCH_ARG_FIELDS))
+            }
+        }
+        Ok(SearchArg {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            query: field_query.ok_or_else(|| de::Error::missing_field("query"))?,
+            start: field_start.unwrap_or(0),
+            max_results: field_max_results.unwrap_or(100),
+            mode: field_mode.unwrap_or_else(|| SearchMode::Filename),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("query", &self.query)?;
+        s.serialize_field("start", &self.start)?;
+        s.serialize_field("max_results", &self.max_results)?;
+        s.serialize_field("mode", &self.mode)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SearchArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SearchArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SearchArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SearchArg", SEARCH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SearchArg", 5)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum SearchError {
+    Path(LookupError),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SearchError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SearchError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(SearchError::Path(map.next_value()?))
+                    }
+                    _ => Ok(SearchError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path",
+                                                    "other"];
+        deserializer.deserialize_struct("SearchError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SearchError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            SearchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for SearchError {
+    fn description(&self) -> &str {
+        "SearchError"
+    }
+}
+
+impl ::std::fmt::Display for SearchError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct SearchMatch {
+    /// The type of the match.
+    pub match_type: SearchMatchType,
+    /// The metadata for the matched file or folder.
+    pub metadata: Metadata,
+}
+
+impl SearchMatch {
+    pub fn new(match_type: SearchMatchType, metadata: Metadata) -> Self {
+        SearchMatch {
+            match_type,
+            metadata,
+        }
+    }
+
+}
+
+const SEARCH_MATCH_FIELDS: &'static [&'static str] = &["match_type",
+                                                       "metadata"];
+impl SearchMatch {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SearchMatch, V::Error> {
+        use serde::de;
+        let mut field_match_type = None;
+        let mut field_metadata = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "match_type" => {
+                    if field_match_type.is_some() {
+                        return Err(de::Error::duplicate_field("match_type"));
+                    }
+                    field_match_type = Some(map.next_value()?);
+                }
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SEARCH_MATCH_FIELDS))
+            }
+        }
+        Ok(SearchMatch {
+            match_type: field_match_type.ok_or_else(|| de::Error::missing_field("match_type"))?,
+            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("match_type", &self.match_type)?;
+        s.serialize_field("metadata", &self.metadata)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchMatch {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SearchMatch;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SearchMatch struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SearchMatch::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SearchMatch", SEARCH_MATCH_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchMatch {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SearchMatch", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Indicates what type of match was found for a given item.
+#[derive(Debug)]
+pub enum SearchMatchType {
+    /// This item was matched on its file or folder name.
+    Filename,
+    /// This item was matched based on its file contents.
+    Content,
+    /// This item was matched based on both its contents and its file name.
+    Both,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchMatchType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SearchMatchType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SearchMatchType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "filename" => Ok(SearchMatchType::Filename),
+                    "content" => Ok(SearchMatchType::Content),
+                    "both" => Ok(SearchMatchType::Both),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["filename",
+                                                    "content",
+                                                    "both"];
+        deserializer.deserialize_struct("SearchMatchType", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchMatchType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SearchMatchType::Filename => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchMatchType", 1)?;
+                s.serialize_field(".tag", "filename")?;
+                s.end()
+            }
+            SearchMatchType::Content => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchMatchType", 1)?;
+                s.serialize_field(".tag", "content")?;
+                s.end()
+            }
+            SearchMatchType::Both => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchMatchType", 1)?;
+                s.serialize_field(".tag", "both")?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum SearchMode {
+    /// Search file and folder names.
+    Filename,
+    /// Search file and folder names as well as file contents.
+    FilenameAndContent,
+    /// Search for deleted file and folder names.
+    DeletedFilename,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchMode {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SearchMode;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SearchMode structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "filename" => Ok(SearchMode::Filename),
+                    "filename_and_content" => Ok(SearchMode::FilenameAndContent),
+                    "deleted_filename" => Ok(SearchMode::DeletedFilename),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["filename",
+                                                    "filename_and_content",
+                                                    "deleted_filename"];
+        deserializer.deserialize_struct("SearchMode", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchMode {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SearchMode::Filename => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchMode", 1)?;
+                s.serialize_field(".tag", "filename")?;
+                s.end()
+            }
+            SearchMode::FilenameAndContent => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchMode", 1)?;
+                s.serialize_field(".tag", "filename_and_content")?;
+                s.end()
+            }
+            SearchMode::DeletedFilename => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchMode", 1)?;
+                s.serialize_field(".tag", "deleted_filename")?;
+                s.end()
+            }
+        }
     }
 }
 
@@ -4231,106 +8426,118 @@ impl ::serde::ser::Serialize for SearchResult {
     }
 }
 
+/// Sharing info for a file or folder.
 #[derive(Debug)]
-pub struct RelocationBatchResultData {
-    /// Metadata of the relocated object.
-    pub metadata: Metadata,
+pub struct SharingInfo {
+    /// True if the file or folder is inside a read-only shared folder.
+    pub read_only: bool,
 }
 
-impl RelocationBatchResultData {
-    pub fn new(metadata: Metadata) -> Self {
-        RelocationBatchResultData {
-            metadata,
+impl SharingInfo {
+    pub fn new(read_only: bool) -> Self {
+        SharingInfo {
+            read_only,
         }
     }
 
 }
 
-const RELOCATION_BATCH_RESULT_DATA_FIELDS: &'static [&'static str] = &["metadata"];
-impl RelocationBatchResultData {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationBatchResultData, V::Error> {
+const SHARING_INFO_FIELDS: &'static [&'static str] = &["read_only"];
+impl SharingInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharingInfo, V::Error> {
         use serde::de;
-        let mut field_metadata = None;
+        let mut field_read_only = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "metadata" => {
-                    if field_metadata.is_some() {
-                        return Err(de::Error::duplicate_field("metadata"));
+                "read_only" => {
+                    if field_read_only.is_some() {
+                        return Err(de::Error::duplicate_field("read_only"));
                     }
-                    field_metadata = Some(map.next_value()?);
+                    field_read_only = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, RELOCATION_BATCH_RESULT_DATA_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, SHARING_INFO_FIELDS))
             }
         }
-        Ok(RelocationBatchResultData {
-            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+        Ok(SharingInfo {
+            read_only: field_read_only.ok_or_else(|| de::Error::missing_field("read_only"))?,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
+        s.serialize_field("read_only", &self.read_only)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchResultData {
+impl<'de> ::serde::de::Deserialize<'de> for SharingInfo {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = RelocationBatchResultData;
+            type Value = SharingInfo;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RelocationBatchResultData struct")
+                f.write_str("a SharingInfo struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                RelocationBatchResultData::internal_deserialize(map)
+                SharingInfo::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("RelocationBatchResultData", RELOCATION_BATCH_RESULT_DATA_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharingInfo", SHARING_INFO_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for RelocationBatchResultData {
+impl ::serde::ser::Serialize for SharingInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("RelocationBatchResultData", 1)?;
+        let mut s = serializer.serialize_struct("SharingInfo", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
 }
 
 #[derive(Debug)]
-pub struct DownloadArg {
-    /// The path of the file to download.
+pub struct ThumbnailArg {
+    /// The path to the image file you want to thumbnail.
     pub path: ReadPath,
-    /// Deprecated. Please specify revision in :field:`path` instead.
-    pub rev: Option<Rev>,
+    /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
+    /// should be preferred, while png is  better for screenshots and digital arts.
+    pub format: ThumbnailFormat,
+    /// The size for the thumbnail image.
+    pub size: ThumbnailSize,
 }
 
-impl DownloadArg {
+impl ThumbnailArg {
     pub fn new(path: ReadPath) -> Self {
-        DownloadArg {
+        ThumbnailArg {
             path,
-            rev: None,
+            format: ThumbnailFormat::Jpeg,
+            size: ThumbnailSize::W64h64,
         }
     }
 
-    pub fn with_rev(mut self, value: Option<Rev>) -> Self {
-        self.rev = value;
+    pub fn with_format(mut self, value: ThumbnailFormat) -> Self {
+        self.format = value;
+        self
+    }
+
+    pub fn with_size(mut self, value: ThumbnailSize) -> Self {
+        self.size = value;
         self
     }
 
 }
 
-const DOWNLOAD_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                       "rev"];
-impl DownloadArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DownloadArg, V::Error> {
+const THUMBNAIL_ARG_FIELDS: &'static [&'static str] = &["path",
+                                                        "format",
+                                                        "size"];
+impl ThumbnailArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ThumbnailArg, V::Error> {
         use serde::de;
         let mut field_path = None;
-        let mut field_rev = None;
+        let mut field_format = None;
+        let mut field_size = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "path" => {
@@ -4339,1171 +8546,61 @@ impl DownloadArg {
                     }
                     field_path = Some(map.next_value()?);
                 }
-                "rev" => {
-                    if field_rev.is_some() {
-                        return Err(de::Error::duplicate_field("rev"));
+                "format" => {
+                    if field_format.is_some() {
+                        return Err(de::Error::duplicate_field("format"));
                     }
-                    field_rev = Some(map.next_value()?);
+                    field_format = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, DOWNLOAD_ARG_FIELDS))
+                "size" => {
+                    if field_size.is_some() {
+                        return Err(de::Error::duplicate_field("size"));
+                    }
+                    field_size = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, THUMBNAIL_ARG_FIELDS))
             }
         }
-        Ok(DownloadArg {
+        Ok(ThumbnailArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            rev: field_rev,
+            format: field_format.unwrap_or_else(|| ThumbnailFormat::Jpeg),
+            size: field_size.unwrap_or_else(|| ThumbnailSize::W64h64),
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
-        s.serialize_field("rev", &self.rev)
+        s.serialize_field("format", &self.format)?;
+        s.serialize_field("size", &self.size)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for DownloadArg {
+impl<'de> ::serde::de::Deserialize<'de> for ThumbnailArg {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = DownloadArg;
+            type Value = ThumbnailArg;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DownloadArg struct")
+                f.write_str("a ThumbnailArg struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                DownloadArg::internal_deserialize(map)
+                ThumbnailArg::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("DownloadArg", DOWNLOAD_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ThumbnailArg", THUMBNAIL_ARG_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for DownloadArg {
+impl ::serde::ser::Serialize for ThumbnailArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DownloadArg", 2)?;
+        let mut s = serializer.serialize_struct("ThumbnailArg", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct PropertyGroupWithPath {
-    /// A unique identifier for the file.
-    pub path: PathOrId,
-    /// Filled custom property templates associated with a file.
-    pub property_groups: Vec<super::properties::PropertyGroup>,
-}
-
-impl PropertyGroupWithPath {
-    pub fn new(path: PathOrId, property_groups: Vec<super::properties::PropertyGroup>) -> Self {
-        PropertyGroupWithPath {
-            path,
-            property_groups,
-        }
-    }
-
-}
-
-const PROPERTY_GROUP_WITH_PATH_FIELDS: &'static [&'static str] = &["path",
-                                                                   "property_groups"];
-impl PropertyGroupWithPath {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroupWithPath, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_property_groups = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "property_groups" => {
-                    if field_property_groups.is_some() {
-                        return Err(de::Error::duplicate_field("property_groups"));
-                    }
-                    field_property_groups = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_WITH_PATH_FIELDS))
-            }
-        }
-        Ok(PropertyGroupWithPath {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            property_groups: field_property_groups.ok_or_else(|| de::Error::missing_field("property_groups"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("property_groups", &self.property_groups)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PropertyGroupWithPath {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = PropertyGroupWithPath;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PropertyGroupWithPath struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                PropertyGroupWithPath::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("PropertyGroupWithPath", PROPERTY_GROUP_WITH_PATH_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PropertyGroupWithPath {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PropertyGroupWithPath", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct ListFolderResult {
-    /// The files and (direct) subfolders in the folder.
-    pub entries: Vec<Metadata>,
-    /// Pass the cursor into :route:`list_folder/continue` to see what's changed in the folder since
-    /// your previous query.
-    pub cursor: ListFolderCursor,
-    /// If true, then there are more entries available. Pass the cursor to
-    /// :route:`list_folder/continue` to retrieve the rest.
-    pub has_more: bool,
-}
-
-impl ListFolderResult {
-    pub fn new(entries: Vec<Metadata>, cursor: ListFolderCursor, has_more: bool) -> Self {
-        ListFolderResult {
-            entries,
-            cursor,
-            has_more,
-        }
-    }
-
-}
-
-const LIST_FOLDER_RESULT_FIELDS: &'static [&'static str] = &["entries",
-                                                             "cursor",
-                                                             "has_more"];
-impl ListFolderResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderResult, V::Error> {
-        use serde::de;
-        let mut field_entries = None;
-        let mut field_cursor = None;
-        let mut field_has_more = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "entries" => {
-                    if field_entries.is_some() {
-                        return Err(de::Error::duplicate_field("entries"));
-                    }
-                    field_entries = Some(map.next_value()?);
-                }
-                "cursor" => {
-                    if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
-                    }
-                    field_cursor = Some(map.next_value()?);
-                }
-                "has_more" => {
-                    if field_has_more.is_some() {
-                        return Err(de::Error::duplicate_field("has_more"));
-                    }
-                    field_has_more = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_RESULT_FIELDS))
-            }
-        }
-        Ok(ListFolderResult {
-            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-            has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)?;
-        s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("has_more", &self.has_more)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListFolderResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListFolderResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListFolderResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListFolderResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListFolderResult", LIST_FOLDER_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListFolderResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListFolderResult", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum DeleteError {
-    PathLookup(LookupError),
-    PathWrite(WriteError),
-    /// There are too many write operations in user's Dropbox. Please retry this request.
-    TooManyWriteOperations,
-    /// There are too many files in one request. Please retry with fewer files.
-    TooManyFiles,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for DeleteError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = DeleteError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DeleteError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path_lookup" => {
-                        if map.next_key()? != Some("path_lookup") {
-                            return Err(de::Error::missing_field("path_lookup"));
-                        }
-                        Ok(DeleteError::PathLookup(map.next_value()?))
-                    }
-                    "path_write" => {
-                        if map.next_key()? != Some("path_write") {
-                            return Err(de::Error::missing_field("path_write"));
-                        }
-                        Ok(DeleteError::PathWrite(map.next_value()?))
-                    }
-                    "too_many_write_operations" => Ok(DeleteError::TooManyWriteOperations),
-                    "too_many_files" => Ok(DeleteError::TooManyFiles),
-                    _ => Ok(DeleteError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path_lookup",
-                                                    "path_write",
-                                                    "too_many_write_operations",
-                                                    "too_many_files",
-                                                    "other"];
-        deserializer.deserialize_struct("DeleteError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for DeleteError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            DeleteError::PathLookup(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path_lookup")?;
-                s.serialize_field("path_lookup", x)?;
-                s.end()
-            }
-            DeleteError::PathWrite(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path_write")?;
-                s.serialize_field("path_write", x)?;
-                s.end()
-            }
-            DeleteError::TooManyWriteOperations => {
-                // unit
-                let mut s = serializer.serialize_struct("DeleteError", 1)?;
-                s.serialize_field(".tag", "too_many_write_operations")?;
-                s.end()
-            }
-            DeleteError::TooManyFiles => {
-                // unit
-                let mut s = serializer.serialize_struct("DeleteError", 1)?;
-                s.serialize_field(".tag", "too_many_files")?;
-                s.end()
-            }
-            DeleteError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for DeleteError {
-    fn description(&self) -> &str {
-        "DeleteError"
-    }
-}
-
-impl ::std::fmt::Display for DeleteError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct CreateFolderArg {
-    /// Path in the user's Dropbox to create.
-    pub path: WritePath,
-    /// If there's a conflict, have the Dropbox server try to autorename the folder to avoid the
-    /// conflict.
-    pub autorename: bool,
-}
-
-impl CreateFolderArg {
-    pub fn new(path: WritePath) -> Self {
-        CreateFolderArg {
-            path,
-            autorename: false,
-        }
-    }
-
-    pub fn with_autorename(mut self, value: bool) -> Self {
-        self.autorename = value;
-        self
-    }
-
-}
-
-const CREATE_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                            "autorename"];
-impl CreateFolderArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CreateFolderArg, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_autorename = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "autorename" => {
-                    if field_autorename.is_some() {
-                        return Err(de::Error::duplicate_field("autorename"));
-                    }
-                    field_autorename = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, CREATE_FOLDER_ARG_FIELDS))
-            }
-        }
-        Ok(CreateFolderArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            autorename: field_autorename.unwrap_or(false),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("autorename", &self.autorename)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for CreateFolderArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = CreateFolderArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a CreateFolderArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                CreateFolderArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("CreateFolderArg", CREATE_FOLDER_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for CreateFolderArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("CreateFolderArg", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Your intent when writing a file to some path. This is used to determine what constitutes a
-/// conflict and what the autorename strategy is. In some situations, the conflict behavior is
-/// identical: (a) If the target path doesn't refer to anything, the file is always written; no
-/// conflict. (b) If the target path refers to a folder, it's always a conflict. (c) If the target
-/// path refers to a file with identical contents, nothing gets written; no conflict. The conflict
-/// checking differs in the case where there's a file at the target path with contents different
-/// from the contents you're trying to write.
-#[derive(Debug)]
-pub enum WriteMode {
-    /// Do not overwrite an existing file if there is a conflict. The autorename strategy is to
-    /// append a number to the file name. For example, "document.txt" might become "document
-    /// (2).txt".
-    Add,
-    /// Always overwrite the existing file. The autorename strategy is the same as it is for
-    /// :field:`add`.
-    Overwrite,
-    /// Overwrite if the given "rev" matches the existing file's "rev". The autorename strategy is
-    /// to append the string "conflicted copy" to the file name. For example, "document.txt" might
-    /// become "document (conflicted copy).txt" or "document (Panda's conflicted copy).txt".
-    Update(Rev),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for WriteMode {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = WriteMode;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a WriteMode structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "add" => Ok(WriteMode::Add),
-                    "overwrite" => Ok(WriteMode::Overwrite),
-                    "update" => {
-                        if map.next_key()? != Some("update") {
-                            return Err(de::Error::missing_field("update"));
-                        }
-                        Ok(WriteMode::Update(map.next_value()?))
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["add",
-                                                    "overwrite",
-                                                    "update"];
-        deserializer.deserialize_struct("WriteMode", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for WriteMode {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            WriteMode::Add => {
-                // unit
-                let mut s = serializer.serialize_struct("WriteMode", 1)?;
-                s.serialize_field(".tag", "add")?;
-                s.end()
-            }
-            WriteMode::Overwrite => {
-                // unit
-                let mut s = serializer.serialize_struct("WriteMode", 1)?;
-                s.serialize_field(".tag", "overwrite")?;
-                s.end()
-            }
-            WriteMode::Update(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "update")?;
-                s.serialize_field("update", x)?;
-                s.end()
-            }
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum ListFolderContinueError {
-    Path(LookupError),
-    /// Indicates that the cursor has been invalidated. Call :route:`list_folder` to obtain a new
-    /// cursor.
-    Reset,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListFolderContinueError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ListFolderContinueError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListFolderContinueError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(ListFolderContinueError::Path(map.next_value()?))
-                    }
-                    "reset" => Ok(ListFolderContinueError::Reset),
-                    _ => Ok(ListFolderContinueError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "reset",
-                                                    "other"];
-        deserializer.deserialize_struct("ListFolderContinueError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListFolderContinueError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            ListFolderContinueError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            ListFolderContinueError::Reset => {
-                // unit
-                let mut s = serializer.serialize_struct("ListFolderContinueError", 1)?;
-                s.serialize_field(".tag", "reset")?;
-                s.end()
-            }
-            ListFolderContinueError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for ListFolderContinueError {
-    fn description(&self) -> &str {
-        "ListFolderContinueError"
-    }
-}
-
-impl ::std::fmt::Display for ListFolderContinueError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct UploadSessionFinishArg {
-    /// Contains the upload session ID and the offset.
-    pub cursor: UploadSessionCursor,
-    /// Contains the path and other optional modifiers for the commit.
-    pub commit: CommitInfo,
-}
-
-impl UploadSessionFinishArg {
-    pub fn new(cursor: UploadSessionCursor, commit: CommitInfo) -> Self {
-        UploadSessionFinishArg {
-            cursor,
-            commit,
-        }
-    }
-
-}
-
-const UPLOAD_SESSION_FINISH_ARG_FIELDS: &'static [&'static str] = &["cursor",
-                                                                    "commit"];
-impl UploadSessionFinishArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionFinishArg, V::Error> {
-        use serde::de;
-        let mut field_cursor = None;
-        let mut field_commit = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "cursor" => {
-                    if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
-                    }
-                    field_cursor = Some(map.next_value()?);
-                }
-                "commit" => {
-                    if field_commit.is_some() {
-                        return Err(de::Error::duplicate_field("commit"));
-                    }
-                    field_commit = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_FINISH_ARG_FIELDS))
-            }
-        }
-        Ok(UploadSessionFinishArg {
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-            commit: field_commit.ok_or_else(|| de::Error::missing_field("commit"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("commit", &self.commit)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = UploadSessionFinishArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadSessionFinishArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UploadSessionFinishArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("UploadSessionFinishArg", UPLOAD_SESSION_FINISH_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UploadSessionFinishArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UploadSessionFinishArg", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum WriteConflictError {
-    /// There's a file in the way.
-    File,
-    /// There's a folder in the way.
-    Folder,
-    /// There's a file at an ancestor path, so we couldn't create the required parent folders.
-    FileAncestor,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for WriteConflictError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = WriteConflictError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a WriteConflictError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "file" => Ok(WriteConflictError::File),
-                    "folder" => Ok(WriteConflictError::Folder),
-                    "file_ancestor" => Ok(WriteConflictError::FileAncestor),
-                    _ => Ok(WriteConflictError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["file",
-                                                    "folder",
-                                                    "file_ancestor",
-                                                    "other"];
-        deserializer.deserialize_struct("WriteConflictError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for WriteConflictError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            WriteConflictError::File => {
-                // unit
-                let mut s = serializer.serialize_struct("WriteConflictError", 1)?;
-                s.serialize_field(".tag", "file")?;
-                s.end()
-            }
-            WriteConflictError::Folder => {
-                // unit
-                let mut s = serializer.serialize_struct("WriteConflictError", 1)?;
-                s.serialize_field(".tag", "folder")?;
-                s.end()
-            }
-            WriteConflictError::FileAncestor => {
-                // unit
-                let mut s = serializer.serialize_struct("WriteConflictError", 1)?;
-                s.serialize_field(".tag", "file_ancestor")?;
-                s.end()
-            }
-            WriteConflictError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for WriteConflictError {
-    fn description(&self) -> &str {
-        "WriteConflictError"
-    }
-}
-
-impl ::std::fmt::Display for WriteConflictError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub enum SaveUrlResult {
-    /// This response indicates that the processing is asynchronous. The string is an id that can be
-    /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::async::AsyncJobId),
-    /// Metadata of the file where the URL is saved to.
-    Complete(FileMetadata),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SaveUrlResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SaveUrlResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SaveUrlResult structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "async_job_id" => {
-                        if map.next_key()? != Some("async_job_id") {
-                            return Err(de::Error::missing_field("async_job_id"));
-                        }
-                        Ok(SaveUrlResult::AsyncJobId(map.next_value()?))
-                    }
-                    "complete" => Ok(SaveUrlResult::Complete(FileMetadata::internal_deserialize(map)?)),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["async_job_id",
-                                                    "complete"];
-        deserializer.deserialize_struct("SaveUrlResult", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SaveUrlResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SaveUrlResult::AsyncJobId(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "async_job_id")?;
-                s.serialize_field("async_job_id", x)?;
-                s.end()
-            }
-            SaveUrlResult::Complete(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("SaveUrlResult", 15)?;
-                s.serialize_field(".tag", "complete")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct DeleteResult {
-    /// Metadata of the deleted object.
-    pub metadata: Metadata,
-}
-
-impl DeleteResult {
-    pub fn new(metadata: Metadata) -> Self {
-        DeleteResult {
-            metadata,
-        }
-    }
-
-}
-
-const DELETE_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
-impl DeleteResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeleteResult, V::Error> {
-        use serde::de;
-        let mut field_metadata = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "metadata" => {
-                    if field_metadata.is_some() {
-                        return Err(de::Error::duplicate_field("metadata"));
-                    }
-                    field_metadata = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, DELETE_RESULT_FIELDS))
-            }
-        }
-        Ok(DeleteResult {
-            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for DeleteResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = DeleteResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DeleteResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                DeleteResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("DeleteResult", DELETE_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for DeleteResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DeleteResult", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct SearchMatch {
-    /// The type of the match.
-    pub match_type: SearchMatchType,
-    /// The metadata for the matched file or folder.
-    pub metadata: Metadata,
-}
-
-impl SearchMatch {
-    pub fn new(match_type: SearchMatchType, metadata: Metadata) -> Self {
-        SearchMatch {
-            match_type,
-            metadata,
-        }
-    }
-
-}
-
-const SEARCH_MATCH_FIELDS: &'static [&'static str] = &["match_type",
-                                                       "metadata"];
-impl SearchMatch {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SearchMatch, V::Error> {
-        use serde::de;
-        let mut field_match_type = None;
-        let mut field_metadata = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "match_type" => {
-                    if field_match_type.is_some() {
-                        return Err(de::Error::duplicate_field("match_type"));
-                    }
-                    field_match_type = Some(map.next_value()?);
-                }
-                "metadata" => {
-                    if field_metadata.is_some() {
-                        return Err(de::Error::duplicate_field("metadata"));
-                    }
-                    field_metadata = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SEARCH_MATCH_FIELDS))
-            }
-        }
-        Ok(SearchMatch {
-            match_type: field_match_type.ok_or_else(|| de::Error::missing_field("match_type"))?,
-            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("match_type", &self.match_type)?;
-        s.serialize_field("metadata", &self.metadata)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SearchMatch {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SearchMatch;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SearchMatch struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SearchMatch::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("SearchMatch", SEARCH_MATCH_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SearchMatch {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SearchMatch", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct GetTemporaryLinkArg {
-    /// The path to the file you want a temporary link to.
-    pub path: ReadPath,
-}
-
-impl GetTemporaryLinkArg {
-    pub fn new(path: ReadPath) -> Self {
-        GetTemporaryLinkArg {
-            path,
-        }
-    }
-
-}
-
-const GET_TEMPORARY_LINK_ARG_FIELDS: &'static [&'static str] = &["path"];
-impl GetTemporaryLinkArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetTemporaryLinkArg, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, GET_TEMPORARY_LINK_ARG_FIELDS))
-            }
-        }
-        Ok(GetTemporaryLinkArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GetTemporaryLinkArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetTemporaryLinkArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GetTemporaryLinkArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("GetTemporaryLinkArg", GET_TEMPORARY_LINK_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetTemporaryLinkArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetTemporaryLinkArg", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum GetCopyReferenceError {
-    Path(LookupError),
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetCopyReferenceError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = GetCopyReferenceError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetCopyReferenceError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(GetCopyReferenceError::Path(map.next_value()?))
-                    }
-                    _ => Ok(GetCopyReferenceError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
-        deserializer.deserialize_struct("GetCopyReferenceError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetCopyReferenceError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            GetCopyReferenceError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            GetCopyReferenceError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for GetCopyReferenceError {
-    fn description(&self) -> &str {
-        "GetCopyReferenceError"
-    }
-}
-
-impl ::std::fmt::Display for GetCopyReferenceError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub enum ListFolderLongpollError {
-    /// Indicates that the cursor has been invalidated. Call :route:`list_folder` to obtain a new
-    /// cursor.
-    Reset,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListFolderLongpollError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ListFolderLongpollError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListFolderLongpollError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "reset" => Ok(ListFolderLongpollError::Reset),
-                    _ => Ok(ListFolderLongpollError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["reset",
-                                                    "other"];
-        deserializer.deserialize_struct("ListFolderLongpollError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListFolderLongpollError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            ListFolderLongpollError::Reset => {
-                // unit
-                let mut s = serializer.serialize_struct("ListFolderLongpollError", 1)?;
-                s.serialize_field(".tag", "reset")?;
-                s.end()
-            }
-            ListFolderLongpollError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for ListFolderLongpollError {
-    fn description(&self) -> &str {
-        "ListFolderLongpollError"
-    }
-}
-
-impl ::std::fmt::Display for ListFolderLongpollError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
     }
 }
 
@@ -5602,26 +8699,21 @@ impl ::std::fmt::Display for ThumbnailError {
     }
 }
 
-/// Result returned by :route:`copy_batch` or :route:`move_batch` that may either launch an
-/// asynchronous job or complete synchronously.
 #[derive(Debug)]
-pub enum RelocationBatchLaunch {
-    /// This response indicates that the processing is asynchronous. The string is an id that can be
-    /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::async::AsyncJobId),
-    Complete(RelocationBatchResult),
-    Other,
+pub enum ThumbnailFormat {
+    Jpeg,
+    Png,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchLaunch {
+impl<'de> ::serde::de::Deserialize<'de> for ThumbnailFormat {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = RelocationBatchLaunch;
+            type Value = ThumbnailFormat;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RelocationBatchLaunch structure")
+                f.write_str("a ThumbnailFormat structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -5629,357 +8721,62 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchLaunch {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "async_job_id" => {
-                        if map.next_key()? != Some("async_job_id") {
-                            return Err(de::Error::missing_field("async_job_id"));
-                        }
-                        Ok(RelocationBatchLaunch::AsyncJobId(map.next_value()?))
-                    }
-                    "complete" => Ok(RelocationBatchLaunch::Complete(RelocationBatchResult::internal_deserialize(map)?)),
-                    _ => Ok(RelocationBatchLaunch::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["async_job_id",
-                                                    "complete",
-                                                    "other"];
-        deserializer.deserialize_struct("RelocationBatchLaunch", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for RelocationBatchLaunch {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            RelocationBatchLaunch::AsyncJobId(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "async_job_id")?;
-                s.serialize_field("async_job_id", x)?;
-                s.end()
-            }
-            RelocationBatchLaunch::Complete(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("RelocationBatchLaunch", 2)?;
-                s.serialize_field(".tag", "complete")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            RelocationBatchLaunch::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum UploadErrorWithProperties {
-    /// Unable to save the uploaded contents to a file.
-    Path(UploadWriteFailed),
-    Other,
-    PropertiesError(InvalidPropertyGroupError),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UploadErrorWithProperties {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = UploadErrorWithProperties;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadErrorWithProperties structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => Ok(UploadErrorWithProperties::Path(UploadWriteFailed::internal_deserialize(map)?)),
-                    "properties_error" => {
-                        if map.next_key()? != Some("properties_error") {
-                            return Err(de::Error::missing_field("properties_error"));
-                        }
-                        Ok(UploadErrorWithProperties::PropertiesError(map.next_value()?))
-                    }
-                    _ => Ok(UploadErrorWithProperties::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other",
-                                                    "properties_error"];
-        deserializer.deserialize_struct("UploadErrorWithProperties", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UploadErrorWithProperties {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            UploadErrorWithProperties::Path(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("UploadErrorWithProperties", 3)?;
-                s.serialize_field(".tag", "path")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            UploadErrorWithProperties::PropertiesError(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "properties_error")?;
-                s.serialize_field("properties_error", x)?;
-                s.end()
-            }
-            UploadErrorWithProperties::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct UploadSessionFinishBatchArg {
-    /// Commit information for each file in the batch.
-    pub entries: Vec<UploadSessionFinishArg>,
-}
-
-impl UploadSessionFinishBatchArg {
-    pub fn new(entries: Vec<UploadSessionFinishArg>) -> Self {
-        UploadSessionFinishBatchArg {
-            entries,
-        }
-    }
-
-}
-
-const UPLOAD_SESSION_FINISH_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries"];
-impl UploadSessionFinishBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionFinishBatchArg, V::Error> {
-        use serde::de;
-        let mut field_entries = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "entries" => {
-                    if field_entries.is_some() {
-                        return Err(de::Error::duplicate_field("entries"));
-                    }
-                    field_entries = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_FINISH_BATCH_ARG_FIELDS))
-            }
-        }
-        Ok(UploadSessionFinishBatchArg {
-            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = UploadSessionFinishBatchArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadSessionFinishBatchArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UploadSessionFinishBatchArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("UploadSessionFinishBatchArg", UPLOAD_SESSION_FINISH_BATCH_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UploadSessionFinishBatchArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UploadSessionFinishBatchArg", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum GetMetadataError {
-    Path(LookupError),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetMetadataError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = GetMetadataError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetMetadataError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(GetMetadataError::Path(map.next_value()?))
-                    }
+                    "jpeg" => Ok(ThumbnailFormat::Jpeg),
+                    "png" => Ok(ThumbnailFormat::Png),
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path"];
-        deserializer.deserialize_struct("GetMetadataError", VARIANTS, EnumVisitor)
+        const VARIANTS: &'static [&'static str] = &["jpeg",
+                                                    "png"];
+        deserializer.deserialize_struct("ThumbnailFormat", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for GetMetadataError {
+impl ::serde::ser::Serialize for ThumbnailFormat {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            GetMetadataError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
+            ThumbnailFormat::Jpeg => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailFormat", 1)?;
+                s.serialize_field(".tag", "jpeg")?;
+                s.end()
+            }
+            ThumbnailFormat::Png => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailFormat", 1)?;
+                s.serialize_field(".tag", "png")?;
                 s.end()
             }
         }
     }
 }
 
-impl ::std::error::Error for GetMetadataError {
-    fn description(&self) -> &str {
-        "GetMetadataError"
-    }
-}
-
-impl ::std::fmt::Display for GetMetadataError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-/// Dimensions for a photo or video.
 #[derive(Debug)]
-pub struct Dimensions {
-    /// Height of the photo/video.
-    pub height: u64,
-    /// Width of the photo/video.
-    pub width: u64,
+pub enum ThumbnailSize {
+    /// 32 by 32 px.
+    W32h32,
+    /// 64 by 64 px.
+    W64h64,
+    /// 128 by 128 px.
+    W128h128,
+    /// 640 by 480 px.
+    W640h480,
+    /// 1024 by 768.
+    W1024h768,
 }
 
-impl Dimensions {
-    pub fn new(height: u64, width: u64) -> Self {
-        Dimensions {
-            height,
-            width,
-        }
-    }
-
-}
-
-const DIMENSIONS_FIELDS: &'static [&'static str] = &["height",
-                                                     "width"];
-impl Dimensions {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Dimensions, V::Error> {
-        use serde::de;
-        let mut field_height = None;
-        let mut field_width = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "height" => {
-                    if field_height.is_some() {
-                        return Err(de::Error::duplicate_field("height"));
-                    }
-                    field_height = Some(map.next_value()?);
-                }
-                "width" => {
-                    if field_width.is_some() {
-                        return Err(de::Error::duplicate_field("width"));
-                    }
-                    field_width = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, DIMENSIONS_FIELDS))
-            }
-        }
-        Ok(Dimensions {
-            height: field_height.ok_or_else(|| de::Error::missing_field("height"))?,
-            width: field_width.ok_or_else(|| de::Error::missing_field("width"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("height", &self.height)?;
-        s.serialize_field("width", &self.width)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for Dimensions {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = Dimensions;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a Dimensions struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                Dimensions::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("Dimensions", DIMENSIONS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for Dimensions {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("Dimensions", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum UploadSessionLookupError {
-    /// The upload session ID was not found or has expired. Upload sessions are valid for 48 hours.
-    NotFound,
-    /// The specified offset was incorrect. See the value for the correct offset. This error may
-    /// occur when a previous request was received and processed successfully but the client did not
-    /// receive the response, e.g. due to a network error.
-    IncorrectOffset(UploadSessionOffsetError),
-    /// You are attempting to append data to an upload session that has alread been closed (i.e.
-    /// committed).
-    Closed,
-    /// The session must be closed before calling upload_session/finish_batch.
-    NotClosed,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UploadSessionLookupError {
+impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = UploadSessionLookupError;
+            type Value = ThumbnailSize;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadSessionLookupError structure")
+                f.write_str("a ThumbnailSize structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -5987,67 +8784,60 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionLookupError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "not_found" => Ok(UploadSessionLookupError::NotFound),
-                    "incorrect_offset" => Ok(UploadSessionLookupError::IncorrectOffset(UploadSessionOffsetError::internal_deserialize(map)?)),
-                    "closed" => Ok(UploadSessionLookupError::Closed),
-                    "not_closed" => Ok(UploadSessionLookupError::NotClosed),
-                    _ => Ok(UploadSessionLookupError::Other)
+                    "w32h32" => Ok(ThumbnailSize::W32h32),
+                    "w64h64" => Ok(ThumbnailSize::W64h64),
+                    "w128h128" => Ok(ThumbnailSize::W128h128),
+                    "w640h480" => Ok(ThumbnailSize::W640h480),
+                    "w1024h768" => Ok(ThumbnailSize::W1024h768),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["not_found",
-                                                    "incorrect_offset",
-                                                    "closed",
-                                                    "not_closed",
-                                                    "other"];
-        deserializer.deserialize_struct("UploadSessionLookupError", VARIANTS, EnumVisitor)
+        const VARIANTS: &'static [&'static str] = &["w32h32",
+                                                    "w64h64",
+                                                    "w128h128",
+                                                    "w640h480",
+                                                    "w1024h768"];
+        deserializer.deserialize_struct("ThumbnailSize", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for UploadSessionLookupError {
+impl ::serde::ser::Serialize for ThumbnailSize {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            UploadSessionLookupError::NotFound => {
+            ThumbnailSize::W32h32 => {
                 // unit
-                let mut s = serializer.serialize_struct("UploadSessionLookupError", 1)?;
-                s.serialize_field(".tag", "not_found")?;
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w32h32")?;
                 s.end()
             }
-            UploadSessionLookupError::IncorrectOffset(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("UploadSessionLookupError", 2)?;
-                s.serialize_field(".tag", "incorrect_offset")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            UploadSessionLookupError::Closed => {
+            ThumbnailSize::W64h64 => {
                 // unit
-                let mut s = serializer.serialize_struct("UploadSessionLookupError", 1)?;
-                s.serialize_field(".tag", "closed")?;
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w64h64")?;
                 s.end()
             }
-            UploadSessionLookupError::NotClosed => {
+            ThumbnailSize::W128h128 => {
                 // unit
-                let mut s = serializer.serialize_struct("UploadSessionLookupError", 1)?;
-                s.serialize_field(".tag", "not_closed")?;
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w128h128")?;
                 s.end()
             }
-            UploadSessionLookupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            ThumbnailSize::W640h480 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w640h480")?;
+                s.end()
+            }
+            ThumbnailSize::W1024h768 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w1024h768")?;
+                s.end()
+            }
         }
-    }
-}
-
-impl ::std::error::Error for UploadSessionLookupError {
-    fn description(&self) -> &str {
-        "UploadSessionLookupError"
-    }
-}
-
-impl ::std::fmt::Display for UploadSessionLookupError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
     }
 }
 
@@ -6263,376 +9053,6 @@ impl ::serde::ser::Serialize for UpdatePropertyGroupArg {
 }
 
 #[derive(Debug)]
-pub enum ThumbnailFormat {
-    Jpeg,
-    Png,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ThumbnailFormat {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ThumbnailFormat;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ThumbnailFormat structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "jpeg" => Ok(ThumbnailFormat::Jpeg),
-                    "png" => Ok(ThumbnailFormat::Png),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["jpeg",
-                                                    "png"];
-        deserializer.deserialize_struct("ThumbnailFormat", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ThumbnailFormat {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            ThumbnailFormat::Jpeg => {
-                // unit
-                let mut s = serializer.serialize_struct("ThumbnailFormat", 1)?;
-                s.serialize_field(".tag", "jpeg")?;
-                s.end()
-            }
-            ThumbnailFormat::Png => {
-                // unit
-                let mut s = serializer.serialize_struct("ThumbnailFormat", 1)?;
-                s.serialize_field(".tag", "png")?;
-                s.end()
-            }
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct ListFolderLongpollArg {
-    /// A cursor as returned by :route:`list_folder` or :route:`list_folder/continue`. Cursors
-    /// retrieved by setting :field:`ListFolderArg.include_media_info` to :val:`true` are not
-    /// supported.
-    pub cursor: ListFolderCursor,
-    /// A timeout in seconds. The request will block for at most this length of time, plus up to 90
-    /// seconds of random jitter added to avoid the thundering herd problem. Care should be taken
-    /// when using this parameter, as some network infrastructure does not support long timeouts.
-    pub timeout: u64,
-}
-
-impl ListFolderLongpollArg {
-    pub fn new(cursor: ListFolderCursor) -> Self {
-        ListFolderLongpollArg {
-            cursor,
-            timeout: 30,
-        }
-    }
-
-    pub fn with_timeout(mut self, value: u64) -> Self {
-        self.timeout = value;
-        self
-    }
-
-}
-
-const LIST_FOLDER_LONGPOLL_ARG_FIELDS: &'static [&'static str] = &["cursor",
-                                                                   "timeout"];
-impl ListFolderLongpollArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderLongpollArg, V::Error> {
-        use serde::de;
-        let mut field_cursor = None;
-        let mut field_timeout = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "cursor" => {
-                    if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
-                    }
-                    field_cursor = Some(map.next_value()?);
-                }
-                "timeout" => {
-                    if field_timeout.is_some() {
-                        return Err(de::Error::duplicate_field("timeout"));
-                    }
-                    field_timeout = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_LONGPOLL_ARG_FIELDS))
-            }
-        }
-        Ok(ListFolderLongpollArg {
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-            timeout: field_timeout.unwrap_or(30),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)?;
-        s.serialize_field("timeout", &self.timeout)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListFolderLongpollArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListFolderLongpollArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListFolderLongpollArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListFolderLongpollArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListFolderLongpollArg", LIST_FOLDER_LONGPOLL_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListFolderLongpollArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListFolderLongpollArg", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct GetMetadataArg {
-    /// The path of a file or folder on Dropbox.
-    pub path: ReadPath,
-    /// If true, :field:`FileMetadata.media_info` is set for photo and video.
-    pub include_media_info: bool,
-    /// If true, :type:`DeletedMetadata` will be returned for deleted file or folder, otherwise
-    /// :field:`LookupError.not_found` will be returned.
-    pub include_deleted: bool,
-    /// If true, the results will include a flag for each file indicating whether or not  that file
-    /// has any explicit members.
-    pub include_has_explicit_shared_members: bool,
-}
-
-impl GetMetadataArg {
-    pub fn new(path: ReadPath) -> Self {
-        GetMetadataArg {
-            path,
-            include_media_info: false,
-            include_deleted: false,
-            include_has_explicit_shared_members: false,
-        }
-    }
-
-    pub fn with_include_media_info(mut self, value: bool) -> Self {
-        self.include_media_info = value;
-        self
-    }
-
-    pub fn with_include_deleted(mut self, value: bool) -> Self {
-        self.include_deleted = value;
-        self
-    }
-
-    pub fn with_include_has_explicit_shared_members(mut self, value: bool) -> Self {
-        self.include_has_explicit_shared_members = value;
-        self
-    }
-
-}
-
-const GET_METADATA_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                           "include_media_info",
-                                                           "include_deleted",
-                                                           "include_has_explicit_shared_members"];
-impl GetMetadataArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetMetadataArg, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_include_media_info = None;
-        let mut field_include_deleted = None;
-        let mut field_include_has_explicit_shared_members = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "include_media_info" => {
-                    if field_include_media_info.is_some() {
-                        return Err(de::Error::duplicate_field("include_media_info"));
-                    }
-                    field_include_media_info = Some(map.next_value()?);
-                }
-                "include_deleted" => {
-                    if field_include_deleted.is_some() {
-                        return Err(de::Error::duplicate_field("include_deleted"));
-                    }
-                    field_include_deleted = Some(map.next_value()?);
-                }
-                "include_has_explicit_shared_members" => {
-                    if field_include_has_explicit_shared_members.is_some() {
-                        return Err(de::Error::duplicate_field("include_has_explicit_shared_members"));
-                    }
-                    field_include_has_explicit_shared_members = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, GET_METADATA_ARG_FIELDS))
-            }
-        }
-        Ok(GetMetadataArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            include_media_info: field_include_media_info.unwrap_or(false),
-            include_deleted: field_include_deleted.unwrap_or(false),
-            include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("include_media_info", &self.include_media_info)?;
-        s.serialize_field("include_deleted", &self.include_deleted)?;
-        s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetMetadataArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GetMetadataArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetMetadataArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GetMetadataArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("GetMetadataArg", GET_METADATA_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetMetadataArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetMetadataArg", 4)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct GetCopyReferenceResult {
-    /// Metadata of the file or folder.
-    pub metadata: Metadata,
-    /// A copy reference to the file or folder.
-    pub copy_reference: String,
-    /// The expiration date of the copy reference. This value is currently set to be far enough in
-    /// the future so that expiration is effectively not an issue.
-    pub expires: super::common::DropboxTimestamp,
-}
-
-impl GetCopyReferenceResult {
-    pub fn new(metadata: Metadata, copy_reference: String, expires: super::common::DropboxTimestamp) -> Self {
-        GetCopyReferenceResult {
-            metadata,
-            copy_reference,
-            expires,
-        }
-    }
-
-}
-
-const GET_COPY_REFERENCE_RESULT_FIELDS: &'static [&'static str] = &["metadata",
-                                                                    "copy_reference",
-                                                                    "expires"];
-impl GetCopyReferenceResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetCopyReferenceResult, V::Error> {
-        use serde::de;
-        let mut field_metadata = None;
-        let mut field_copy_reference = None;
-        let mut field_expires = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "metadata" => {
-                    if field_metadata.is_some() {
-                        return Err(de::Error::duplicate_field("metadata"));
-                    }
-                    field_metadata = Some(map.next_value()?);
-                }
-                "copy_reference" => {
-                    if field_copy_reference.is_some() {
-                        return Err(de::Error::duplicate_field("copy_reference"));
-                    }
-                    field_copy_reference = Some(map.next_value()?);
-                }
-                "expires" => {
-                    if field_expires.is_some() {
-                        return Err(de::Error::duplicate_field("expires"));
-                    }
-                    field_expires = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, GET_COPY_REFERENCE_RESULT_FIELDS))
-            }
-        }
-        Ok(GetCopyReferenceResult {
-            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
-            copy_reference: field_copy_reference.ok_or_else(|| de::Error::missing_field("copy_reference"))?,
-            expires: field_expires.ok_or_else(|| de::Error::missing_field("expires"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)?;
-        s.serialize_field("copy_reference", &self.copy_reference)?;
-        s.serialize_field("expires", &self.expires)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetCopyReferenceResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GetCopyReferenceResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetCopyReferenceResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GetCopyReferenceResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("GetCopyReferenceResult", GET_COPY_REFERENCE_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetCopyReferenceResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetCopyReferenceResult", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
 pub enum UploadError {
     /// Unable to save the uploaded contents to a file.
     Path(UploadWriteFailed),
@@ -6696,22 +9116,22 @@ impl ::std::fmt::Display for UploadError {
 }
 
 #[derive(Debug)]
-pub enum DeleteBatchError {
-    /// Deprecated by :field:`DeleteError.too_many_write_operations`. :route:`delete_batch` now
-    /// provides smaller granularity about which entry has failed because of this.
-    TooManyWriteOperations,
+pub enum UploadErrorWithProperties {
+    /// Unable to save the uploaded contents to a file.
+    Path(UploadWriteFailed),
     Other,
+    PropertiesError(InvalidPropertyGroupError),
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchError {
+impl<'de> ::serde::de::Deserialize<'de> for UploadErrorWithProperties {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = DeleteBatchError;
+            type Value = UploadErrorWithProperties;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DeleteBatchError structure")
+                f.write_str("a UploadErrorWithProperties structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -6719,795 +9139,134 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "too_many_write_operations" => Ok(DeleteBatchError::TooManyWriteOperations),
-                    _ => Ok(DeleteBatchError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["too_many_write_operations",
-                                                    "other"];
-        deserializer.deserialize_struct("DeleteBatchError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for DeleteBatchError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            DeleteBatchError::TooManyWriteOperations => {
-                // unit
-                let mut s = serializer.serialize_struct("DeleteBatchError", 1)?;
-                s.serialize_field(".tag", "too_many_write_operations")?;
-                s.end()
-            }
-            DeleteBatchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for DeleteBatchError {
-    fn description(&self) -> &str {
-        "DeleteBatchError"
-    }
-}
-
-impl ::std::fmt::Display for DeleteBatchError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct SaveCopyReferenceResult {
-    /// The metadata of the saved file or folder in the user's Dropbox.
-    pub metadata: Metadata,
-}
-
-impl SaveCopyReferenceResult {
-    pub fn new(metadata: Metadata) -> Self {
-        SaveCopyReferenceResult {
-            metadata,
-        }
-    }
-
-}
-
-const SAVE_COPY_REFERENCE_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
-impl SaveCopyReferenceResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SaveCopyReferenceResult, V::Error> {
-        use serde::de;
-        let mut field_metadata = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "metadata" => {
-                    if field_metadata.is_some() {
-                        return Err(de::Error::duplicate_field("metadata"));
-                    }
-                    field_metadata = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SAVE_COPY_REFERENCE_RESULT_FIELDS))
-            }
-        }
-        Ok(SaveCopyReferenceResult {
-            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("metadata", &self.metadata)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SaveCopyReferenceResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SaveCopyReferenceResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SaveCopyReferenceResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SaveCopyReferenceResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("SaveCopyReferenceResult", SAVE_COPY_REFERENCE_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SaveCopyReferenceResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SaveCopyReferenceResult", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum SaveUrlJobStatus {
-    /// The asynchronous job is still in progress.
-    InProgress,
-    /// Metadata of the file where the URL is saved to.
-    Complete(FileMetadata),
-    Failed(SaveUrlError),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SaveUrlJobStatus {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SaveUrlJobStatus;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SaveUrlJobStatus structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "in_progress" => Ok(SaveUrlJobStatus::InProgress),
-                    "complete" => Ok(SaveUrlJobStatus::Complete(FileMetadata::internal_deserialize(map)?)),
-                    "failed" => {
-                        if map.next_key()? != Some("failed") {
-                            return Err(de::Error::missing_field("failed"));
+                    "path" => Ok(UploadErrorWithProperties::Path(UploadWriteFailed::internal_deserialize(map)?)),
+                    "properties_error" => {
+                        if map.next_key()? != Some("properties_error") {
+                            return Err(de::Error::missing_field("properties_error"));
                         }
-                        Ok(SaveUrlJobStatus::Failed(map.next_value()?))
+                        Ok(UploadErrorWithProperties::PropertiesError(map.next_value()?))
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete",
-                                                    "failed"];
-        deserializer.deserialize_struct("SaveUrlJobStatus", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SaveUrlJobStatus {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SaveUrlJobStatus::InProgress => {
-                // unit
-                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 1)?;
-                s.serialize_field(".tag", "in_progress")?;
-                s.end()
-            }
-            SaveUrlJobStatus::Complete(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 15)?;
-                s.serialize_field(".tag", "complete")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            SaveUrlJobStatus::Failed(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "failed")?;
-                s.serialize_field("failed", x)?;
-                s.end()
-            }
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum PreviewError {
-    /// An error occurs when downloading metadata for the file.
-    Path(LookupError),
-    /// This preview generation is still in progress and the file is not ready  for preview yet.
-    InProgress,
-    /// The file extension is not supported preview generation.
-    UnsupportedExtension,
-    /// The file content is not supported for preview generation.
-    UnsupportedContent,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PreviewError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = PreviewError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PreviewError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(PreviewError::Path(map.next_value()?))
-                    }
-                    "in_progress" => Ok(PreviewError::InProgress),
-                    "unsupported_extension" => Ok(PreviewError::UnsupportedExtension),
-                    "unsupported_content" => Ok(PreviewError::UnsupportedContent),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                    _ => Ok(UploadErrorWithProperties::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["path",
-                                                    "in_progress",
-                                                    "unsupported_extension",
-                                                    "unsupported_content"];
-        deserializer.deserialize_struct("PreviewError", VARIANTS, EnumVisitor)
+                                                    "other",
+                                                    "properties_error"];
+        deserializer.deserialize_struct("UploadErrorWithProperties", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for PreviewError {
+impl ::serde::ser::Serialize for UploadErrorWithProperties {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            PreviewError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            PreviewError::InProgress => {
-                // unit
-                let mut s = serializer.serialize_struct("PreviewError", 1)?;
-                s.serialize_field(".tag", "in_progress")?;
-                s.end()
-            }
-            PreviewError::UnsupportedExtension => {
-                // unit
-                let mut s = serializer.serialize_struct("PreviewError", 1)?;
-                s.serialize_field(".tag", "unsupported_extension")?;
-                s.end()
-            }
-            PreviewError::UnsupportedContent => {
-                // unit
-                let mut s = serializer.serialize_struct("PreviewError", 1)?;
-                s.serialize_field(".tag", "unsupported_content")?;
-                s.end()
-            }
-        }
-    }
-}
-
-impl ::std::error::Error for PreviewError {
-    fn description(&self) -> &str {
-        "PreviewError"
-    }
-}
-
-impl ::std::fmt::Display for PreviewError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct RelocationArg {
-    /// Path in the user's Dropbox to be copied or moved.
-    pub from_path: WritePathOrId,
-    /// Path in the user's Dropbox that is the destination.
-    pub to_path: WritePathOrId,
-    /// If true, :route:`copy` will copy contents in shared folder, otherwise
-    /// :field:`RelocationError.cant_copy_shared_folder` will be returned if :field:`from_path`
-    /// contains shared folder. This field is always true for :route:`move`.
-    pub allow_shared_folder: bool,
-    /// If there's a conflict, have the Dropbox server try to autorename the file to avoid the
-    /// conflict.
-    pub autorename: bool,
-    /// Allow moves by owner even if it would result in an ownership transfer for the content being
-    /// moved. This does not apply to copies.
-    pub allow_ownership_transfer: bool,
-}
-
-impl RelocationArg {
-    pub fn new(from_path: WritePathOrId, to_path: WritePathOrId) -> Self {
-        RelocationArg {
-            from_path,
-            to_path,
-            allow_shared_folder: false,
-            autorename: false,
-            allow_ownership_transfer: false,
-        }
-    }
-
-    pub fn with_allow_shared_folder(mut self, value: bool) -> Self {
-        self.allow_shared_folder = value;
-        self
-    }
-
-    pub fn with_autorename(mut self, value: bool) -> Self {
-        self.autorename = value;
-        self
-    }
-
-    pub fn with_allow_ownership_transfer(mut self, value: bool) -> Self {
-        self.allow_ownership_transfer = value;
-        self
-    }
-
-}
-
-const RELOCATION_ARG_FIELDS: &'static [&'static str] = &["from_path",
-                                                         "to_path",
-                                                         "allow_shared_folder",
-                                                         "autorename",
-                                                         "allow_ownership_transfer"];
-impl RelocationArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationArg, V::Error> {
-        use serde::de;
-        let mut field_from_path = None;
-        let mut field_to_path = None;
-        let mut field_allow_shared_folder = None;
-        let mut field_autorename = None;
-        let mut field_allow_ownership_transfer = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "from_path" => {
-                    if field_from_path.is_some() {
-                        return Err(de::Error::duplicate_field("from_path"));
-                    }
-                    field_from_path = Some(map.next_value()?);
-                }
-                "to_path" => {
-                    if field_to_path.is_some() {
-                        return Err(de::Error::duplicate_field("to_path"));
-                    }
-                    field_to_path = Some(map.next_value()?);
-                }
-                "allow_shared_folder" => {
-                    if field_allow_shared_folder.is_some() {
-                        return Err(de::Error::duplicate_field("allow_shared_folder"));
-                    }
-                    field_allow_shared_folder = Some(map.next_value()?);
-                }
-                "autorename" => {
-                    if field_autorename.is_some() {
-                        return Err(de::Error::duplicate_field("autorename"));
-                    }
-                    field_autorename = Some(map.next_value()?);
-                }
-                "allow_ownership_transfer" => {
-                    if field_allow_ownership_transfer.is_some() {
-                        return Err(de::Error::duplicate_field("allow_ownership_transfer"));
-                    }
-                    field_allow_ownership_transfer = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, RELOCATION_ARG_FIELDS))
-            }
-        }
-        Ok(RelocationArg {
-            from_path: field_from_path.ok_or_else(|| de::Error::missing_field("from_path"))?,
-            to_path: field_to_path.ok_or_else(|| de::Error::missing_field("to_path"))?,
-            allow_shared_folder: field_allow_shared_folder.unwrap_or(false),
-            autorename: field_autorename.unwrap_or(false),
-            allow_ownership_transfer: field_allow_ownership_transfer.unwrap_or(false),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("from_path", &self.from_path)?;
-        s.serialize_field("to_path", &self.to_path)?;
-        s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
-        s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for RelocationArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = RelocationArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RelocationArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                RelocationArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("RelocationArg", RELOCATION_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for RelocationArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("RelocationArg", 5)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Result returned by :route:`delete_batch` that may either launch an asynchronous job or complete
-/// synchronously.
-#[derive(Debug)]
-pub enum DeleteBatchLaunch {
-    /// This response indicates that the processing is asynchronous. The string is an id that can be
-    /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::async::AsyncJobId),
-    Complete(DeleteBatchResult),
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchLaunch {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = DeleteBatchLaunch;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DeleteBatchLaunch structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "async_job_id" => {
-                        if map.next_key()? != Some("async_job_id") {
-                            return Err(de::Error::missing_field("async_job_id"));
-                        }
-                        Ok(DeleteBatchLaunch::AsyncJobId(map.next_value()?))
-                    }
-                    "complete" => Ok(DeleteBatchLaunch::Complete(DeleteBatchResult::internal_deserialize(map)?)),
-                    _ => Ok(DeleteBatchLaunch::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["async_job_id",
-                                                    "complete",
-                                                    "other"];
-        deserializer.deserialize_struct("DeleteBatchLaunch", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for DeleteBatchLaunch {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            DeleteBatchLaunch::AsyncJobId(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "async_job_id")?;
-                s.serialize_field("async_job_id", x)?;
-                s.end()
-            }
-            DeleteBatchLaunch::Complete(ref x) => {
+            UploadErrorWithProperties::Path(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("DeleteBatchLaunch", 2)?;
-                s.serialize_field(".tag", "complete")?;
+                let mut s = serializer.serialize_struct("UploadErrorWithProperties", 3)?;
+                s.serialize_field(".tag", "path")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            DeleteBatchLaunch::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            UploadErrorWithProperties::PropertiesError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "properties_error")?;
+                s.serialize_field("properties_error", x)?;
+                s.end()
+            }
+            UploadErrorWithProperties::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
 
 #[derive(Debug)]
-pub struct AlphaGetMetadataArg {
-    /// The path of a file or folder on Dropbox.
-    pub path: ReadPath,
-    /// If true, :field:`FileMetadata.media_info` is set for photo and video.
-    pub include_media_info: bool,
-    /// If true, :type:`DeletedMetadata` will be returned for deleted file or folder, otherwise
-    /// :field:`LookupError.not_found` will be returned.
-    pub include_deleted: bool,
-    /// If true, the results will include a flag for each file indicating whether or not  that file
-    /// has any explicit members.
-    pub include_has_explicit_shared_members: bool,
-    /// If set to a valid list of template IDs, :field:`FileMetadata.property_groups` is set for
-    /// files with custom properties.
-    pub include_property_templates: Option<Vec<super::properties::TemplateId>>,
+pub struct UploadSessionAppendArg {
+    /// Contains the upload session ID and the offset.
+    pub cursor: UploadSessionCursor,
+    /// If true, the current session will be closed, at which point you won't be able to call
+    /// :route:`upload_session/append_v2` anymore with the current session.
+    pub close: bool,
 }
 
-impl AlphaGetMetadataArg {
-    pub fn new(path: ReadPath) -> Self {
-        AlphaGetMetadataArg {
-            path,
-            include_media_info: false,
-            include_deleted: false,
-            include_has_explicit_shared_members: false,
-            include_property_templates: None,
+impl UploadSessionAppendArg {
+    pub fn new(cursor: UploadSessionCursor) -> Self {
+        UploadSessionAppendArg {
+            cursor,
+            close: false,
         }
     }
 
-    pub fn with_include_media_info(mut self, value: bool) -> Self {
-        self.include_media_info = value;
-        self
-    }
-
-    pub fn with_include_deleted(mut self, value: bool) -> Self {
-        self.include_deleted = value;
-        self
-    }
-
-    pub fn with_include_has_explicit_shared_members(mut self, value: bool) -> Self {
-        self.include_has_explicit_shared_members = value;
-        self
-    }
-
-    pub fn with_include_property_templates(mut self, value: Option<Vec<super::properties::TemplateId>>) -> Self {
-        self.include_property_templates = value;
+    pub fn with_close(mut self, value: bool) -> Self {
+        self.close = value;
         self
     }
 
 }
 
-const ALPHA_GET_METADATA_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                                 "include_media_info",
-                                                                 "include_deleted",
-                                                                 "include_has_explicit_shared_members",
-                                                                 "include_property_templates"];
-impl AlphaGetMetadataArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AlphaGetMetadataArg, V::Error> {
+const UPLOAD_SESSION_APPEND_ARG_FIELDS: &'static [&'static str] = &["cursor",
+                                                                    "close"];
+impl UploadSessionAppendArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionAppendArg, V::Error> {
         use serde::de;
-        let mut field_path = None;
-        let mut field_include_media_info = None;
-        let mut field_include_deleted = None;
-        let mut field_include_has_explicit_shared_members = None;
-        let mut field_include_property_templates = None;
+        let mut field_cursor = None;
+        let mut field_close = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
                     }
-                    field_path = Some(map.next_value()?);
+                    field_cursor = Some(map.next_value()?);
                 }
-                "include_media_info" => {
-                    if field_include_media_info.is_some() {
-                        return Err(de::Error::duplicate_field("include_media_info"));
+                "close" => {
+                    if field_close.is_some() {
+                        return Err(de::Error::duplicate_field("close"));
                     }
-                    field_include_media_info = Some(map.next_value()?);
+                    field_close = Some(map.next_value()?);
                 }
-                "include_deleted" => {
-                    if field_include_deleted.is_some() {
-                        return Err(de::Error::duplicate_field("include_deleted"));
-                    }
-                    field_include_deleted = Some(map.next_value()?);
-                }
-                "include_has_explicit_shared_members" => {
-                    if field_include_has_explicit_shared_members.is_some() {
-                        return Err(de::Error::duplicate_field("include_has_explicit_shared_members"));
-                    }
-                    field_include_has_explicit_shared_members = Some(map.next_value()?);
-                }
-                "include_property_templates" => {
-                    if field_include_property_templates.is_some() {
-                        return Err(de::Error::duplicate_field("include_property_templates"));
-                    }
-                    field_include_property_templates = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, ALPHA_GET_METADATA_ARG_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_APPEND_ARG_FIELDS))
             }
         }
-        Ok(AlphaGetMetadataArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            include_media_info: field_include_media_info.unwrap_or(false),
-            include_deleted: field_include_deleted.unwrap_or(false),
-            include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
-            include_property_templates: field_include_property_templates,
+        Ok(UploadSessionAppendArg {
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            close: field_close.unwrap_or(false),
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("include_media_info", &self.include_media_info)?;
-        s.serialize_field("include_deleted", &self.include_deleted)?;
-        s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
-        s.serialize_field("include_property_templates", &self.include_property_templates)
+        s.serialize_field("cursor", &self.cursor)?;
+        s.serialize_field("close", &self.close)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for AlphaGetMetadataArg {
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionAppendArg {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = AlphaGetMetadataArg;
+            type Value = UploadSessionAppendArg;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a AlphaGetMetadataArg struct")
+                f.write_str("a UploadSessionAppendArg struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                AlphaGetMetadataArg::internal_deserialize(map)
+                UploadSessionAppendArg::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("AlphaGetMetadataArg", ALPHA_GET_METADATA_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("UploadSessionAppendArg", UPLOAD_SESSION_APPEND_ARG_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for AlphaGetMetadataArg {
+impl ::serde::ser::Serialize for UploadSessionAppendArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("AlphaGetMetadataArg", 5)?;
+        let mut s = serializer.serialize_struct("UploadSessionAppendArg", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum SearchMode {
-    /// Search file and folder names.
-    Filename,
-    /// Search file and folder names as well as file contents.
-    FilenameAndContent,
-    /// Search for deleted file and folder names.
-    DeletedFilename,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SearchMode {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SearchMode;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SearchMode structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "filename" => Ok(SearchMode::Filename),
-                    "filename_and_content" => Ok(SearchMode::FilenameAndContent),
-                    "deleted_filename" => Ok(SearchMode::DeletedFilename),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["filename",
-                                                    "filename_and_content",
-                                                    "deleted_filename"];
-        deserializer.deserialize_struct("SearchMode", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SearchMode {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SearchMode::Filename => {
-                // unit
-                let mut s = serializer.serialize_struct("SearchMode", 1)?;
-                s.serialize_field(".tag", "filename")?;
-                s.end()
-            }
-            SearchMode::FilenameAndContent => {
-                // unit
-                let mut s = serializer.serialize_struct("SearchMode", 1)?;
-                s.serialize_field(".tag", "filename_and_content")?;
-                s.end()
-            }
-            SearchMode::DeletedFilename => {
-                // unit
-                let mut s = serializer.serialize_struct("SearchMode", 1)?;
-                s.serialize_field(".tag", "deleted_filename")?;
-                s.end()
-            }
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum PropertiesError {
-    /// Property template does not exist for given identifier.
-    TemplateNotFound(super::properties::TemplateId),
-    /// You do not have the permissions to modify this property template.
-    RestrictedContent,
-    Other,
-    Path(LookupError),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PropertiesError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = PropertiesError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PropertiesError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "template_not_found" => {
-                        if map.next_key()? != Some("template_not_found") {
-                            return Err(de::Error::missing_field("template_not_found"));
-                        }
-                        Ok(PropertiesError::TemplateNotFound(map.next_value()?))
-                    }
-                    "restricted_content" => Ok(PropertiesError::RestrictedContent),
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(PropertiesError::Path(map.next_value()?))
-                    }
-                    _ => Ok(PropertiesError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path"];
-        deserializer.deserialize_struct("PropertiesError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PropertiesError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            PropertiesError::TemplateNotFound(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "template_not_found")?;
-                s.serialize_field("template_not_found", x)?;
-                s.end()
-            }
-            PropertiesError::RestrictedContent => {
-                // unit
-                let mut s = serializer.serialize_struct("PropertiesError", 1)?;
-                s.serialize_field(".tag", "restricted_content")?;
-                s.end()
-            }
-            PropertiesError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            PropertiesError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for PropertiesError {
-    fn description(&self) -> &str {
-        "PropertiesError"
-    }
-}
-
-impl ::std::fmt::Display for PropertiesError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
     }
 }
 
@@ -7595,6 +9354,217 @@ impl ::serde::ser::Serialize for UploadSessionCursor {
     }
 }
 
+#[derive(Debug)]
+pub struct UploadSessionFinishArg {
+    /// Contains the upload session ID and the offset.
+    pub cursor: UploadSessionCursor,
+    /// Contains the path and other optional modifiers for the commit.
+    pub commit: CommitInfo,
+}
+
+impl UploadSessionFinishArg {
+    pub fn new(cursor: UploadSessionCursor, commit: CommitInfo) -> Self {
+        UploadSessionFinishArg {
+            cursor,
+            commit,
+        }
+    }
+
+}
+
+const UPLOAD_SESSION_FINISH_ARG_FIELDS: &'static [&'static str] = &["cursor",
+                                                                    "commit"];
+impl UploadSessionFinishArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionFinishArg, V::Error> {
+        use serde::de;
+        let mut field_cursor = None;
+        let mut field_commit = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                "commit" => {
+                    if field_commit.is_some() {
+                        return Err(de::Error::duplicate_field("commit"));
+                    }
+                    field_commit = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_FINISH_ARG_FIELDS))
+            }
+        }
+        Ok(UploadSessionFinishArg {
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            commit: field_commit.ok_or_else(|| de::Error::missing_field("commit"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("cursor", &self.cursor)?;
+        s.serialize_field("commit", &self.commit)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UploadSessionFinishArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionFinishArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UploadSessionFinishArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UploadSessionFinishArg", UPLOAD_SESSION_FINISH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionFinishArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UploadSessionFinishArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct UploadSessionFinishBatchArg {
+    /// Commit information for each file in the batch.
+    pub entries: Vec<UploadSessionFinishArg>,
+}
+
+impl UploadSessionFinishBatchArg {
+    pub fn new(entries: Vec<UploadSessionFinishArg>) -> Self {
+        UploadSessionFinishBatchArg {
+            entries,
+        }
+    }
+
+}
+
+const UPLOAD_SESSION_FINISH_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries"];
+impl UploadSessionFinishBatchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionFinishBatchArg, V::Error> {
+        use serde::de;
+        let mut field_entries = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_FINISH_BATCH_ARG_FIELDS))
+            }
+        }
+        Ok(UploadSessionFinishBatchArg {
+            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UploadSessionFinishBatchArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionFinishBatchArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UploadSessionFinishBatchArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UploadSessionFinishBatchArg", UPLOAD_SESSION_FINISH_BATCH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionFinishBatchArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UploadSessionFinishBatchArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum UploadSessionFinishBatchJobStatus {
+    /// The asynchronous job is still in progress.
+    InProgress,
+    /// The :route:`upload_session/finish_batch` has finished.
+    Complete(UploadSessionFinishBatchResult),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchJobStatus {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UploadSessionFinishBatchJobStatus;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionFinishBatchJobStatus structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "in_progress" => Ok(UploadSessionFinishBatchJobStatus::InProgress),
+                    "complete" => Ok(UploadSessionFinishBatchJobStatus::Complete(UploadSessionFinishBatchResult::internal_deserialize(map)?)),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["in_progress",
+                                                    "complete"];
+        deserializer.deserialize_struct("UploadSessionFinishBatchJobStatus", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionFinishBatchJobStatus {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            UploadSessionFinishBatchJobStatus::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionFinishBatchJobStatus", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            UploadSessionFinishBatchJobStatus::Complete(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("UploadSessionFinishBatchJobStatus", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+        }
+    }
+}
+
 /// Result returned by :route:`upload_session/finish_batch` that may either launch an asynchronous
 /// job or complete synchronously.
 #[derive(Debug)]
@@ -7665,330 +9635,23 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchLaunch {
 }
 
 #[derive(Debug)]
-pub enum RestoreError {
-    /// An error occurs when downloading metadata for the file.
-    PathLookup(LookupError),
-    /// An error occurs when trying to restore the file to that path.
-    PathWrite(WriteError),
-    /// The revision is invalid. It may point to a different file.
-    InvalidRevision,
-    Other,
+pub struct UploadSessionFinishBatchResult {
+    /// Commit result for each file in the batch.
+    pub entries: Vec<UploadSessionFinishBatchResultEntry>,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for RestoreError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = RestoreError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RestoreError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path_lookup" => {
-                        if map.next_key()? != Some("path_lookup") {
-                            return Err(de::Error::missing_field("path_lookup"));
-                        }
-                        Ok(RestoreError::PathLookup(map.next_value()?))
-                    }
-                    "path_write" => {
-                        if map.next_key()? != Some("path_write") {
-                            return Err(de::Error::missing_field("path_write"));
-                        }
-                        Ok(RestoreError::PathWrite(map.next_value()?))
-                    }
-                    "invalid_revision" => Ok(RestoreError::InvalidRevision),
-                    _ => Ok(RestoreError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path_lookup",
-                                                    "path_write",
-                                                    "invalid_revision",
-                                                    "other"];
-        deserializer.deserialize_struct("RestoreError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for RestoreError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            RestoreError::PathLookup(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path_lookup")?;
-                s.serialize_field("path_lookup", x)?;
-                s.end()
-            }
-            RestoreError::PathWrite(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path_write")?;
-                s.serialize_field("path_write", x)?;
-                s.end()
-            }
-            RestoreError::InvalidRevision => {
-                // unit
-                let mut s = serializer.serialize_struct("RestoreError", 1)?;
-                s.serialize_field(".tag", "invalid_revision")?;
-                s.end()
-            }
-            RestoreError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for RestoreError {
-    fn description(&self) -> &str {
-        "RestoreError"
-    }
-}
-
-impl ::std::fmt::Display for RestoreError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct RelocationPath {
-    /// Path in the user's Dropbox to be copied or moved.
-    pub from_path: WritePathOrId,
-    /// Path in the user's Dropbox that is the destination.
-    pub to_path: WritePathOrId,
-}
-
-impl RelocationPath {
-    pub fn new(from_path: WritePathOrId, to_path: WritePathOrId) -> Self {
-        RelocationPath {
-            from_path,
-            to_path,
-        }
-    }
-
-}
-
-const RELOCATION_PATH_FIELDS: &'static [&'static str] = &["from_path",
-                                                          "to_path"];
-impl RelocationPath {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationPath, V::Error> {
-        use serde::de;
-        let mut field_from_path = None;
-        let mut field_to_path = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "from_path" => {
-                    if field_from_path.is_some() {
-                        return Err(de::Error::duplicate_field("from_path"));
-                    }
-                    field_from_path = Some(map.next_value()?);
-                }
-                "to_path" => {
-                    if field_to_path.is_some() {
-                        return Err(de::Error::duplicate_field("to_path"));
-                    }
-                    field_to_path = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, RELOCATION_PATH_FIELDS))
-            }
-        }
-        Ok(RelocationPath {
-            from_path: field_from_path.ok_or_else(|| de::Error::missing_field("from_path"))?,
-            to_path: field_to_path.ok_or_else(|| de::Error::missing_field("to_path"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("from_path", &self.from_path)?;
-        s.serialize_field("to_path", &self.to_path)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for RelocationPath {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = RelocationPath;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RelocationPath struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                RelocationPath::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("RelocationPath", RELOCATION_PATH_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for RelocationPath {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("RelocationPath", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Indicates that there used to be a file or folder at this path, but it no longer exists.
-#[derive(Debug)]
-pub struct DeletedMetadata {
-    /// The last component of the path (including extension). This never contains a slash.
-    pub name: String,
-    /// The lowercased full path in the user's Dropbox. This always starts with a slash. This field
-    /// will be null if the file or folder is not mounted.
-    pub path_lower: Option<String>,
-    /// The cased path to be used for display purposes only. In rare instances the casing will not
-    /// correctly match the user's filesystem, but this behavior will match the path provided in the
-    /// Core API v1, and at least the last path component will have the correct casing. Changes to
-    /// only the casing of paths won't be returned by :route:`list_folder/continue`. This field will
-    /// be null if the file or folder is not mounted.
-    pub path_display: Option<String>,
-    /// Deprecated. Please use :field:`FileSharingInfo.parent_shared_folder_id` or
-    /// :field:`FolderSharingInfo.parent_shared_folder_id` instead.
-    pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
-}
-
-impl DeletedMetadata {
-    pub fn new(name: String) -> Self {
-        DeletedMetadata {
-            name,
-            path_lower: None,
-            path_display: None,
-            parent_shared_folder_id: None,
-        }
-    }
-
-    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
-        self.path_lower = value;
-        self
-    }
-
-    pub fn with_path_display(mut self, value: Option<String>) -> Self {
-        self.path_display = value;
-        self
-    }
-
-    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
-        self.parent_shared_folder_id = value;
-        self
-    }
-
-}
-
-const DELETED_METADATA_FIELDS: &'static [&'static str] = &["name",
-                                                           "path_lower",
-                                                           "path_display",
-                                                           "parent_shared_folder_id"];
-impl DeletedMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeletedMetadata, V::Error> {
-        use serde::de;
-        let mut field_name = None;
-        let mut field_path_lower = None;
-        let mut field_path_display = None;
-        let mut field_parent_shared_folder_id = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "name" => {
-                    if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
-                    }
-                    field_name = Some(map.next_value()?);
-                }
-                "path_lower" => {
-                    if field_path_lower.is_some() {
-                        return Err(de::Error::duplicate_field("path_lower"));
-                    }
-                    field_path_lower = Some(map.next_value()?);
-                }
-                "path_display" => {
-                    if field_path_display.is_some() {
-                        return Err(de::Error::duplicate_field("path_display"));
-                    }
-                    field_path_display = Some(map.next_value()?);
-                }
-                "parent_shared_folder_id" => {
-                    if field_parent_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("parent_shared_folder_id"));
-                    }
-                    field_parent_shared_folder_id = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, DELETED_METADATA_FIELDS))
-            }
-        }
-        Ok(DeletedMetadata {
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            path_lower: field_path_lower,
-            path_display: field_path_display,
-            parent_shared_folder_id: field_parent_shared_folder_id,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("name", &self.name)?;
-        s.serialize_field("path_lower", &self.path_lower)?;
-        s.serialize_field("path_display", &self.path_display)?;
-        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for DeletedMetadata {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = DeletedMetadata;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DeletedMetadata struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                DeletedMetadata::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("DeletedMetadata", DELETED_METADATA_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for DeletedMetadata {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DeletedMetadata", 4)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct RelocationBatchResult {
-    pub entries: Vec<RelocationBatchResultData>,
-}
-
-impl RelocationBatchResult {
-    pub fn new(entries: Vec<RelocationBatchResultData>) -> Self {
-        RelocationBatchResult {
+impl UploadSessionFinishBatchResult {
+    pub fn new(entries: Vec<UploadSessionFinishBatchResultEntry>) -> Self {
+        UploadSessionFinishBatchResult {
             entries,
         }
     }
 
 }
 
-const RELOCATION_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
-impl RelocationBatchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationBatchResult, V::Error> {
+const UPLOAD_SESSION_FINISH_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
+impl UploadSessionFinishBatchResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionFinishBatchResult, V::Error> {
         use serde::de;
         let mut field_entries = None;
         while let Some(key) = map.next_key()? {
@@ -7999,10 +9662,10 @@ impl RelocationBatchResult {
                     }
                     field_entries = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, RELOCATION_BATCH_RESULT_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_FINISH_BATCH_RESULT_FIELDS))
             }
         }
-        Ok(RelocationBatchResult {
+        Ok(UploadSessionFinishBatchResult {
             entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
         })
     }
@@ -8013,57 +9676,49 @@ impl RelocationBatchResult {
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchResult {
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchResult {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = RelocationBatchResult;
+            type Value = UploadSessionFinishBatchResult;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RelocationBatchResult struct")
+                f.write_str("a UploadSessionFinishBatchResult struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                RelocationBatchResult::internal_deserialize(map)
+                UploadSessionFinishBatchResult::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("RelocationBatchResult", RELOCATION_BATCH_RESULT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("UploadSessionFinishBatchResult", UPLOAD_SESSION_FINISH_BATCH_RESULT_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for RelocationBatchResult {
+impl ::serde::ser::Serialize for UploadSessionFinishBatchResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("RelocationBatchResult", 1)?;
+        let mut s = serializer.serialize_struct("UploadSessionFinishBatchResult", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
 }
 
 #[derive(Debug)]
-pub enum ThumbnailSize {
-    /// 32 by 32 px.
-    W32h32,
-    /// 64 by 64 px.
-    W64h64,
-    /// 128 by 128 px.
-    W128h128,
-    /// 640 by 480 px.
-    W640h480,
-    /// 1024 by 768.
-    W1024h768,
+pub enum UploadSessionFinishBatchResultEntry {
+    Success(FileMetadata),
+    Failure(UploadSessionFinishError),
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchResultEntry {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ThumbnailSize;
+            type Value = UploadSessionFinishBatchResultEntry;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ThumbnailSize structure")
+                f.write_str("a UploadSessionFinishBatchResultEntry structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -8071,57 +9726,40 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "w32h32" => Ok(ThumbnailSize::W32h32),
-                    "w64h64" => Ok(ThumbnailSize::W64h64),
-                    "w128h128" => Ok(ThumbnailSize::W128h128),
-                    "w640h480" => Ok(ThumbnailSize::W640h480),
-                    "w1024h768" => Ok(ThumbnailSize::W1024h768),
+                    "success" => Ok(UploadSessionFinishBatchResultEntry::Success(FileMetadata::internal_deserialize(map)?)),
+                    "failure" => {
+                        if map.next_key()? != Some("failure") {
+                            return Err(de::Error::missing_field("failure"));
+                        }
+                        Ok(UploadSessionFinishBatchResultEntry::Failure(map.next_value()?))
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["w32h32",
-                                                    "w64h64",
-                                                    "w128h128",
-                                                    "w640h480",
-                                                    "w1024h768"];
-        deserializer.deserialize_struct("ThumbnailSize", VARIANTS, EnumVisitor)
+        const VARIANTS: &'static [&'static str] = &["success",
+                                                    "failure"];
+        deserializer.deserialize_struct("UploadSessionFinishBatchResultEntry", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for ThumbnailSize {
+impl ::serde::ser::Serialize for UploadSessionFinishBatchResultEntry {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            ThumbnailSize::W32h32 => {
-                // unit
-                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
-                s.serialize_field(".tag", "w32h32")?;
+            UploadSessionFinishBatchResultEntry::Success(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 15)?;
+                s.serialize_field(".tag", "success")?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            ThumbnailSize::W64h64 => {
-                // unit
-                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
-                s.serialize_field(".tag", "w64h64")?;
-                s.end()
-            }
-            ThumbnailSize::W128h128 => {
-                // unit
-                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
-                s.serialize_field(".tag", "w128h128")?;
-                s.end()
-            }
-            ThumbnailSize::W640h480 => {
-                // unit
-                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
-                s.serialize_field(".tag", "w640h480")?;
-                s.end()
-            }
-            ThumbnailSize::W1024h768 => {
-                // unit
-                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
-                s.serialize_field(".tag", "w1024h768")?;
+            UploadSessionFinishBatchResultEntry::Failure(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "failure")?;
+                s.serialize_field("failure", x)?;
                 s.end()
             }
         }
@@ -8129,400 +9767,498 @@ impl ::serde::ser::Serialize for ThumbnailSize {
 }
 
 #[derive(Debug)]
-pub struct RestoreArg {
-    /// The path to the file you want to restore.
-    pub path: WritePath,
-    /// The revision to restore for the file.
-    pub rev: Rev,
+pub enum UploadSessionFinishError {
+    /// The session arguments are incorrect; the value explains the reason.
+    LookupFailed(UploadSessionLookupError),
+    /// Unable to save the uploaded contents to a file.
+    Path(WriteError),
+    /// The batch request commits files into too many different shared folders. Please limit your
+    /// batch request to files contained in a single shared folder.
+    TooManySharedFolderTargets,
+    /// There are too many write operations happening in the user's Dropbox. You should retry
+    /// uploading this file.
+    TooManyWriteOperations,
+    Other,
 }
 
-impl RestoreArg {
-    pub fn new(path: WritePath, rev: Rev) -> Self {
-        RestoreArg {
-            path,
-            rev,
-        }
-    }
-
-}
-
-const RESTORE_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                      "rev"];
-impl RestoreArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RestoreArg, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_rev = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "rev" => {
-                    if field_rev.is_some() {
-                        return Err(de::Error::duplicate_field("rev"));
-                    }
-                    field_rev = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, RESTORE_ARG_FIELDS))
-            }
-        }
-        Ok(RestoreArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            rev: field_rev.ok_or_else(|| de::Error::missing_field("rev"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("rev", &self.rev)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for RestoreArg {
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = RestoreArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RestoreArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                RestoreArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("RestoreArg", RESTORE_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for RestoreArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("RestoreArg", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct ListRevisionsArg {
-    /// The path to the file you want to see the revisions of.
-    pub path: PathOrId,
-    /// The maximum number of revision entries returned.
-    pub limit: u64,
-}
-
-impl ListRevisionsArg {
-    pub fn new(path: PathOrId) -> Self {
-        ListRevisionsArg {
-            path,
-            limit: 10,
-        }
-    }
-
-    pub fn with_limit(mut self, value: u64) -> Self {
-        self.limit = value;
-        self
-    }
-
-}
-
-const LIST_REVISIONS_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                             "limit"];
-impl ListRevisionsArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListRevisionsArg, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_limit = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "limit" => {
-                    if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
-                    }
-                    field_limit = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_REVISIONS_ARG_FIELDS))
-            }
-        }
-        Ok(ListRevisionsArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            limit: field_limit.unwrap_or(10),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("limit", &self.limit)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListRevisionsArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListRevisionsArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListRevisionsArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListRevisionsArg", LIST_REVISIONS_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListRevisionsArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListRevisionsArg", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct CommitInfoWithProperties {
-    /// Path in the user's Dropbox to save the file.
-    pub path: WritePathOrId,
-    /// Selects what to do if the file already exists.
-    pub mode: WriteMode,
-    /// If there's a conflict, as determined by :field:`mode`, have the Dropbox server try to
-    /// autorename the file to avoid conflict.
-    pub autorename: bool,
-    /// The value to store as the :field:`client_modified` timestamp. Dropbox automatically records
-    /// the time at which the file was written to the Dropbox servers. It can also record an
-    /// additional timestamp, provided by Dropbox desktop clients, mobile clients, and API apps of
-    /// when the file was actually created or modified.
-    pub client_modified: Option<super::common::DropboxTimestamp>,
-    /// Normally, users are made aware of any file modifications in their Dropbox account via
-    /// notifications in the client software. If :val:`true`, this tells the clients that this
-    /// modification shouldn't result in a user notification.
-    pub mute: bool,
-    /// List of custom properties to add to file.
-    pub property_groups: Option<Vec<super::properties::PropertyGroup>>,
-}
-
-impl CommitInfoWithProperties {
-    pub fn new(path: WritePathOrId) -> Self {
-        CommitInfoWithProperties {
-            path,
-            mode: WriteMode::Add,
-            autorename: false,
-            client_modified: None,
-            mute: false,
-            property_groups: None,
-        }
-    }
-
-    pub fn with_mode(mut self, value: WriteMode) -> Self {
-        self.mode = value;
-        self
-    }
-
-    pub fn with_autorename(mut self, value: bool) -> Self {
-        self.autorename = value;
-        self
-    }
-
-    pub fn with_client_modified(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.client_modified = value;
-        self
-    }
-
-    pub fn with_mute(mut self, value: bool) -> Self {
-        self.mute = value;
-        self
-    }
-
-    pub fn with_property_groups(mut self, value: Option<Vec<super::properties::PropertyGroup>>) -> Self {
-        self.property_groups = value;
-        self
-    }
-
-}
-
-const COMMIT_INFO_WITH_PROPERTIES_FIELDS: &'static [&'static str] = &["path",
-                                                                      "mode",
-                                                                      "autorename",
-                                                                      "client_modified",
-                                                                      "mute",
-                                                                      "property_groups"];
-impl CommitInfoWithProperties {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CommitInfoWithProperties, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_mode = None;
-        let mut field_autorename = None;
-        let mut field_client_modified = None;
-        let mut field_mute = None;
-        let mut field_property_groups = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "mode" => {
-                    if field_mode.is_some() {
-                        return Err(de::Error::duplicate_field("mode"));
-                    }
-                    field_mode = Some(map.next_value()?);
-                }
-                "autorename" => {
-                    if field_autorename.is_some() {
-                        return Err(de::Error::duplicate_field("autorename"));
-                    }
-                    field_autorename = Some(map.next_value()?);
-                }
-                "client_modified" => {
-                    if field_client_modified.is_some() {
-                        return Err(de::Error::duplicate_field("client_modified"));
-                    }
-                    field_client_modified = Some(map.next_value()?);
-                }
-                "mute" => {
-                    if field_mute.is_some() {
-                        return Err(de::Error::duplicate_field("mute"));
-                    }
-                    field_mute = Some(map.next_value()?);
-                }
-                "property_groups" => {
-                    if field_property_groups.is_some() {
-                        return Err(de::Error::duplicate_field("property_groups"));
-                    }
-                    field_property_groups = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, COMMIT_INFO_WITH_PROPERTIES_FIELDS))
-            }
-        }
-        Ok(CommitInfoWithProperties {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            mode: field_mode.unwrap_or_else(|| WriteMode::Add),
-            autorename: field_autorename.unwrap_or(false),
-            client_modified: field_client_modified,
-            mute: field_mute.unwrap_or(false),
-            property_groups: field_property_groups,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("mode", &self.mode)?;
-        s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("client_modified", &self.client_modified)?;
-        s.serialize_field("mute", &self.mute)?;
-        s.serialize_field("property_groups", &self.property_groups)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for CommitInfoWithProperties {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = CommitInfoWithProperties;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a CommitInfoWithProperties struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                CommitInfoWithProperties::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("CommitInfoWithProperties", COMMIT_INFO_WITH_PROPERTIES_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for CommitInfoWithProperties {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("CommitInfoWithProperties", 6)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Metadata for a photo or video.
-#[derive(Debug)]
-pub enum MediaMetadata {
-    Photo(PhotoMetadata),
-    Video(VideoMetadata),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for MediaMetadata {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // polymorphic struct deserializer
+        // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = MediaMetadata;
+            type Value = UploadSessionFinishError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a MediaMetadata structure")
+                f.write_str("a UploadSessionFinishError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "photo" => Ok(MediaMetadata::Photo(PhotoMetadata::internal_deserialize(map)?)),
-                    "video" => Ok(MediaMetadata::Video(VideoMetadata::internal_deserialize(map)?)),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                    "lookup_failed" => {
+                        if map.next_key()? != Some("lookup_failed") {
+                            return Err(de::Error::missing_field("lookup_failed"));
+                        }
+                        Ok(UploadSessionFinishError::LookupFailed(map.next_value()?))
+                    }
+                    "path" => {
+                        if map.next_key()? != Some("path") {
+                            return Err(de::Error::missing_field("path"));
+                        }
+                        Ok(UploadSessionFinishError::Path(map.next_value()?))
+                    }
+                    "too_many_shared_folder_targets" => Ok(UploadSessionFinishError::TooManySharedFolderTargets),
+                    "too_many_write_operations" => Ok(UploadSessionFinishError::TooManyWriteOperations),
+                    _ => Ok(UploadSessionFinishError::Other)
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["video",
-                                                    "video"];
-        deserializer.deserialize_struct("MediaMetadata", VARIANTS, EnumVisitor)
+        const VARIANTS: &'static [&'static str] = &["lookup_failed",
+                                                    "path",
+                                                    "too_many_shared_folder_targets",
+                                                    "too_many_write_operations",
+                                                    "other"];
+        deserializer.deserialize_struct("UploadSessionFinishError", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for MediaMetadata {
+impl ::serde::ser::Serialize for UploadSessionFinishError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // polymorphic struct serializer
+        // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            MediaMetadata::Photo(ref x) => {
-                let mut s = serializer.serialize_struct("MediaMetadata", 4)?;
-                s.serialize_field(".tag", "photo")?;
-                s.serialize_field("dimensions", &x.dimensions)?;
-                s.serialize_field("location", &x.location)?;
-                s.serialize_field("time_taken", &x.time_taken)?;
+            UploadSessionFinishError::LookupFailed(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "lookup_failed")?;
+                s.serialize_field("lookup_failed", x)?;
                 s.end()
             }
-            MediaMetadata::Video(ref x) => {
-                let mut s = serializer.serialize_struct("MediaMetadata", 5)?;
-                s.serialize_field(".tag", "video")?;
-                s.serialize_field("dimensions", &x.dimensions)?;
-                s.serialize_field("location", &x.location)?;
-                s.serialize_field("time_taken", &x.time_taken)?;
-                s.serialize_field("duration", &x.duration)?;
+            UploadSessionFinishError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
                 s.end()
+            }
+            UploadSessionFinishError::TooManySharedFolderTargets => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionFinishError", 1)?;
+                s.serialize_field(".tag", "too_many_shared_folder_targets")?;
+                s.end()
+            }
+            UploadSessionFinishError::TooManyWriteOperations => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionFinishError", 1)?;
+                s.serialize_field(".tag", "too_many_write_operations")?;
+                s.end()
+            }
+            UploadSessionFinishError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for UploadSessionFinishError {
+    fn description(&self) -> &str {
+        "UploadSessionFinishError"
+    }
+}
+
+impl ::std::fmt::Display for UploadSessionFinishError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum UploadSessionLookupError {
+    /// The upload session ID was not found or has expired. Upload sessions are valid for 48 hours.
+    NotFound,
+    /// The specified offset was incorrect. See the value for the correct offset. This error may
+    /// occur when a previous request was received and processed successfully but the client did not
+    /// receive the response, e.g. due to a network error.
+    IncorrectOffset(UploadSessionOffsetError),
+    /// You are attempting to append data to an upload session that has alread been closed (i.e.
+    /// committed).
+    Closed,
+    /// The session must be closed before calling upload_session/finish_batch.
+    NotClosed,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionLookupError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UploadSessionLookupError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionLookupError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "not_found" => Ok(UploadSessionLookupError::NotFound),
+                    "incorrect_offset" => Ok(UploadSessionLookupError::IncorrectOffset(UploadSessionOffsetError::internal_deserialize(map)?)),
+                    "closed" => Ok(UploadSessionLookupError::Closed),
+                    "not_closed" => Ok(UploadSessionLookupError::NotClosed),
+                    _ => Ok(UploadSessionLookupError::Other)
+                }
             }
         }
+        const VARIANTS: &'static [&'static str] = &["not_found",
+                                                    "incorrect_offset",
+                                                    "closed",
+                                                    "not_closed",
+                                                    "other"];
+        deserializer.deserialize_struct("UploadSessionLookupError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionLookupError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            UploadSessionLookupError::NotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionLookupError", 1)?;
+                s.serialize_field(".tag", "not_found")?;
+                s.end()
+            }
+            UploadSessionLookupError::IncorrectOffset(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("UploadSessionLookupError", 2)?;
+                s.serialize_field(".tag", "incorrect_offset")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            UploadSessionLookupError::Closed => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionLookupError", 1)?;
+                s.serialize_field(".tag", "closed")?;
+                s.end()
+            }
+            UploadSessionLookupError::NotClosed => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionLookupError", 1)?;
+                s.serialize_field(".tag", "not_closed")?;
+                s.end()
+            }
+            UploadSessionLookupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for UploadSessionLookupError {
+    fn description(&self) -> &str {
+        "UploadSessionLookupError"
+    }
+}
+
+impl ::std::fmt::Display for UploadSessionLookupError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct UploadSessionOffsetError {
+    /// The offset up to which data has been collected.
+    pub correct_offset: u64,
+}
+
+impl UploadSessionOffsetError {
+    pub fn new(correct_offset: u64) -> Self {
+        UploadSessionOffsetError {
+            correct_offset,
+        }
+    }
+
+}
+
+const UPLOAD_SESSION_OFFSET_ERROR_FIELDS: &'static [&'static str] = &["correct_offset"];
+impl UploadSessionOffsetError {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionOffsetError, V::Error> {
+        use serde::de;
+        let mut field_correct_offset = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "correct_offset" => {
+                    if field_correct_offset.is_some() {
+                        return Err(de::Error::duplicate_field("correct_offset"));
+                    }
+                    field_correct_offset = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_OFFSET_ERROR_FIELDS))
+            }
+        }
+        Ok(UploadSessionOffsetError {
+            correct_offset: field_correct_offset.ok_or_else(|| de::Error::missing_field("correct_offset"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("correct_offset", &self.correct_offset)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionOffsetError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UploadSessionOffsetError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionOffsetError struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UploadSessionOffsetError::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UploadSessionOffsetError", UPLOAD_SESSION_OFFSET_ERROR_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionOffsetError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UploadSessionOffsetError", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct UploadSessionStartArg {
+    /// If true, the current session will be closed, at which point you won't be able to call
+    /// :route:`upload_session/append_v2` anymore with the current session.
+    pub close: bool,
+}
+
+impl Default for UploadSessionStartArg {
+    fn default() -> Self {
+        UploadSessionStartArg {
+            close: false,
+        }
+    }
+}
+
+const UPLOAD_SESSION_START_ARG_FIELDS: &'static [&'static str] = &["close"];
+impl UploadSessionStartArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionStartArg, V::Error> {
+        use serde::de;
+        let mut field_close = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "close" => {
+                    if field_close.is_some() {
+                        return Err(de::Error::duplicate_field("close"));
+                    }
+                    field_close = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_START_ARG_FIELDS))
+            }
+        }
+        Ok(UploadSessionStartArg {
+            close: field_close.unwrap_or(false),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("close", &self.close)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionStartArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UploadSessionStartArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionStartArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UploadSessionStartArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UploadSessionStartArg", UPLOAD_SESSION_START_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionStartArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UploadSessionStartArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct UploadSessionStartResult {
+    /// A unique identifier for the upload session. Pass this to :route:`upload_session/append_v2`
+    /// and :route:`upload_session/finish`.
+    pub session_id: String,
+}
+
+impl UploadSessionStartResult {
+    pub fn new(session_id: String) -> Self {
+        UploadSessionStartResult {
+            session_id,
+        }
+    }
+
+}
+
+const UPLOAD_SESSION_START_RESULT_FIELDS: &'static [&'static str] = &["session_id"];
+impl UploadSessionStartResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionStartResult, V::Error> {
+        use serde::de;
+        let mut field_session_id = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "session_id" => {
+                    if field_session_id.is_some() {
+                        return Err(de::Error::duplicate_field("session_id"));
+                    }
+                    field_session_id = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_START_RESULT_FIELDS))
+            }
+        }
+        Ok(UploadSessionStartResult {
+            session_id: field_session_id.ok_or_else(|| de::Error::missing_field("session_id"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("session_id", &self.session_id)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionStartResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UploadSessionStartResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionStartResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UploadSessionStartResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UploadSessionStartResult", UPLOAD_SESSION_START_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionStartResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UploadSessionStartResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct UploadWriteFailed {
+    /// The reason why the file couldn't be saved.
+    pub reason: WriteError,
+    /// The upload session ID; this may be used to retry the commit.
+    pub upload_session_id: String,
+}
+
+impl UploadWriteFailed {
+    pub fn new(reason: WriteError, upload_session_id: String) -> Self {
+        UploadWriteFailed {
+            reason,
+            upload_session_id,
+        }
+    }
+
+}
+
+const UPLOAD_WRITE_FAILED_FIELDS: &'static [&'static str] = &["reason",
+                                                              "upload_session_id"];
+impl UploadWriteFailed {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadWriteFailed, V::Error> {
+        use serde::de;
+        let mut field_reason = None;
+        let mut field_upload_session_id = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "reason" => {
+                    if field_reason.is_some() {
+                        return Err(de::Error::duplicate_field("reason"));
+                    }
+                    field_reason = Some(map.next_value()?);
+                }
+                "upload_session_id" => {
+                    if field_upload_session_id.is_some() {
+                        return Err(de::Error::duplicate_field("upload_session_id"));
+                    }
+                    field_upload_session_id = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, UPLOAD_WRITE_FAILED_FIELDS))
+            }
+        }
+        Ok(UploadWriteFailed {
+            reason: field_reason.ok_or_else(|| de::Error::missing_field("reason"))?,
+            upload_session_id: field_upload_session_id.ok_or_else(|| de::Error::missing_field("upload_session_id"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("reason", &self.reason)?;
+        s.serialize_field("upload_session_id", &self.upload_session_id)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadWriteFailed {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UploadWriteFailed;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UploadWriteFailed struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UploadWriteFailed::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UploadWriteFailed", UPLOAD_WRITE_FAILED_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadWriteFailed {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UploadWriteFailed", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -8636,154 +10372,25 @@ impl ::serde::ser::Serialize for VideoMetadata {
 }
 
 #[derive(Debug)]
-pub struct RelocationBatchArg {
-    /// List of entries to be moved or copied. Each entry is :type:`RelocationPath`.
-    pub entries: Vec<RelocationPath>,
-    /// If true, :route:`copy_batch` will copy contents in shared folder, otherwise
-    /// :field:`RelocationError.cant_copy_shared_folder` will be returned if
-    /// :field:`RelocationPath.from_path` contains shared folder.  This field is always true for
-    /// :route:`move_batch`.
-    pub allow_shared_folder: bool,
-    /// If there's a conflict with any file, have the Dropbox server try to autorename that file to
-    /// avoid the conflict.
-    pub autorename: bool,
-    /// Allow moves by owner even if it would result in an ownership transfer for the content being
-    /// moved. This does not apply to copies.
-    pub allow_ownership_transfer: bool,
-}
-
-impl RelocationBatchArg {
-    pub fn new(entries: Vec<RelocationPath>) -> Self {
-        RelocationBatchArg {
-            entries,
-            allow_shared_folder: false,
-            autorename: false,
-            allow_ownership_transfer: false,
-        }
-    }
-
-    pub fn with_allow_shared_folder(mut self, value: bool) -> Self {
-        self.allow_shared_folder = value;
-        self
-    }
-
-    pub fn with_autorename(mut self, value: bool) -> Self {
-        self.autorename = value;
-        self
-    }
-
-    pub fn with_allow_ownership_transfer(mut self, value: bool) -> Self {
-        self.allow_ownership_transfer = value;
-        self
-    }
-
-}
-
-const RELOCATION_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries",
-                                                               "allow_shared_folder",
-                                                               "autorename",
-                                                               "allow_ownership_transfer"];
-impl RelocationBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationBatchArg, V::Error> {
-        use serde::de;
-        let mut field_entries = None;
-        let mut field_allow_shared_folder = None;
-        let mut field_autorename = None;
-        let mut field_allow_ownership_transfer = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "entries" => {
-                    if field_entries.is_some() {
-                        return Err(de::Error::duplicate_field("entries"));
-                    }
-                    field_entries = Some(map.next_value()?);
-                }
-                "allow_shared_folder" => {
-                    if field_allow_shared_folder.is_some() {
-                        return Err(de::Error::duplicate_field("allow_shared_folder"));
-                    }
-                    field_allow_shared_folder = Some(map.next_value()?);
-                }
-                "autorename" => {
-                    if field_autorename.is_some() {
-                        return Err(de::Error::duplicate_field("autorename"));
-                    }
-                    field_autorename = Some(map.next_value()?);
-                }
-                "allow_ownership_transfer" => {
-                    if field_allow_ownership_transfer.is_some() {
-                        return Err(de::Error::duplicate_field("allow_ownership_transfer"));
-                    }
-                    field_allow_ownership_transfer = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, RELOCATION_BATCH_ARG_FIELDS))
-            }
-        }
-        Ok(RelocationBatchArg {
-            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
-            allow_shared_folder: field_allow_shared_folder.unwrap_or(false),
-            autorename: field_autorename.unwrap_or(false),
-            allow_ownership_transfer: field_allow_ownership_transfer.unwrap_or(false),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)?;
-        s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
-        s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = RelocationBatchArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RelocationBatchArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                RelocationBatchArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("RelocationBatchArg", RELOCATION_BATCH_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for RelocationBatchArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("RelocationBatchArg", 4)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum DeleteBatchJobStatus {
-    /// The asynchronous job is still in progress.
-    InProgress,
-    /// The batch delete has finished.
-    Complete(DeleteBatchResult),
-    /// The batch delete has failed.
-    Failed(DeleteBatchError),
+pub enum WriteConflictError {
+    /// There's a file in the way.
+    File,
+    /// There's a folder in the way.
+    Folder,
+    /// There's a file at an ancestor path, so we couldn't create the required parent folders.
+    FileAncestor,
     Other,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchJobStatus {
+impl<'de> ::serde::de::Deserialize<'de> for WriteConflictError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = DeleteBatchJobStatus;
+            type Value = WriteConflictError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DeleteBatchJobStatus structure")
+                f.write_str("a WriteConflictError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -8791,70 +10398,86 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchJobStatus {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "in_progress" => Ok(DeleteBatchJobStatus::InProgress),
-                    "complete" => Ok(DeleteBatchJobStatus::Complete(DeleteBatchResult::internal_deserialize(map)?)),
-                    "failed" => {
-                        if map.next_key()? != Some("failed") {
-                            return Err(de::Error::missing_field("failed"));
-                        }
-                        Ok(DeleteBatchJobStatus::Failed(map.next_value()?))
-                    }
-                    _ => Ok(DeleteBatchJobStatus::Other)
+                    "file" => Ok(WriteConflictError::File),
+                    "folder" => Ok(WriteConflictError::Folder),
+                    "file_ancestor" => Ok(WriteConflictError::FileAncestor),
+                    _ => Ok(WriteConflictError::Other)
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete",
-                                                    "failed",
+        const VARIANTS: &'static [&'static str] = &["file",
+                                                    "folder",
+                                                    "file_ancestor",
                                                     "other"];
-        deserializer.deserialize_struct("DeleteBatchJobStatus", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("WriteConflictError", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for DeleteBatchJobStatus {
+impl ::serde::ser::Serialize for WriteConflictError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            DeleteBatchJobStatus::InProgress => {
+            WriteConflictError::File => {
                 // unit
-                let mut s = serializer.serialize_struct("DeleteBatchJobStatus", 1)?;
-                s.serialize_field(".tag", "in_progress")?;
+                let mut s = serializer.serialize_struct("WriteConflictError", 1)?;
+                s.serialize_field(".tag", "file")?;
                 s.end()
             }
-            DeleteBatchJobStatus::Complete(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("DeleteBatchJobStatus", 2)?;
-                s.serialize_field(".tag", "complete")?;
-                x.internal_serialize::<S>(&mut s)?;
+            WriteConflictError::Folder => {
+                // unit
+                let mut s = serializer.serialize_struct("WriteConflictError", 1)?;
+                s.serialize_field(".tag", "folder")?;
                 s.end()
             }
-            DeleteBatchJobStatus::Failed(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "failed")?;
-                s.serialize_field("failed", x)?;
+            WriteConflictError::FileAncestor => {
+                // unit
+                let mut s = serializer.serialize_struct("WriteConflictError", 1)?;
+                s.serialize_field(".tag", "file_ancestor")?;
                 s.end()
             }
-            DeleteBatchJobStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            WriteConflictError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
 
-#[derive(Debug)]
-pub enum CreateFolderError {
-    Path(WriteError),
+impl ::std::error::Error for WriteConflictError {
+    fn description(&self) -> &str {
+        "WriteConflictError"
+    }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for CreateFolderError {
+impl ::std::fmt::Display for WriteConflictError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum WriteError {
+    MalformedPath(MalformedPathError),
+    /// Couldn't write to the target path because there was something in the way.
+    Conflict(WriteConflictError),
+    /// The user doesn't have permissions to write to the target location.
+    NoWritePermission,
+    /// The user doesn't have enough available space (bytes) to write more data.
+    InsufficientSpace,
+    /// Dropbox will not save the file or folder because of its name.
+    DisallowedName,
+    /// This endpoint cannot modify or delete team folders.
+    TeamFolder,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for WriteError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = CreateFolderError;
+            type Value = WriteError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a CreateFolderError structure")
+                f.write_str("a WriteError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -8862,1799 +10485,176 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                    "malformed_path" => {
+                        if map.next_key()? != Some("malformed_path") {
+                            return Err(de::Error::missing_field("malformed_path"));
                         }
-                        Ok(CreateFolderError::Path(map.next_value()?))
+                        Ok(WriteError::MalformedPath(map.next_value()?))
+                    }
+                    "conflict" => {
+                        if map.next_key()? != Some("conflict") {
+                            return Err(de::Error::missing_field("conflict"));
+                        }
+                        Ok(WriteError::Conflict(map.next_value()?))
+                    }
+                    "no_write_permission" => Ok(WriteError::NoWritePermission),
+                    "insufficient_space" => Ok(WriteError::InsufficientSpace),
+                    "disallowed_name" => Ok(WriteError::DisallowedName),
+                    "team_folder" => Ok(WriteError::TeamFolder),
+                    _ => Ok(WriteError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["malformed_path",
+                                                    "conflict",
+                                                    "no_write_permission",
+                                                    "insufficient_space",
+                                                    "disallowed_name",
+                                                    "team_folder",
+                                                    "other"];
+        deserializer.deserialize_struct("WriteError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for WriteError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            WriteError::MalformedPath(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "malformed_path")?;
+                s.serialize_field("malformed_path", x)?;
+                s.end()
+            }
+            WriteError::Conflict(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "conflict")?;
+                s.serialize_field("conflict", x)?;
+                s.end()
+            }
+            WriteError::NoWritePermission => {
+                // unit
+                let mut s = serializer.serialize_struct("WriteError", 1)?;
+                s.serialize_field(".tag", "no_write_permission")?;
+                s.end()
+            }
+            WriteError::InsufficientSpace => {
+                // unit
+                let mut s = serializer.serialize_struct("WriteError", 1)?;
+                s.serialize_field(".tag", "insufficient_space")?;
+                s.end()
+            }
+            WriteError::DisallowedName => {
+                // unit
+                let mut s = serializer.serialize_struct("WriteError", 1)?;
+                s.serialize_field(".tag", "disallowed_name")?;
+                s.end()
+            }
+            WriteError::TeamFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("WriteError", 1)?;
+                s.serialize_field(".tag", "team_folder")?;
+                s.end()
+            }
+            WriteError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for WriteError {
+    fn description(&self) -> &str {
+        "WriteError"
+    }
+}
+
+impl ::std::fmt::Display for WriteError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// Your intent when writing a file to some path. This is used to determine what constitutes a
+/// conflict and what the autorename strategy is. In some situations, the conflict behavior is
+/// identical: (a) If the target path doesn't refer to anything, the file is always written; no
+/// conflict. (b) If the target path refers to a folder, it's always a conflict. (c) If the target
+/// path refers to a file with identical contents, nothing gets written; no conflict. The conflict
+/// checking differs in the case where there's a file at the target path with contents different
+/// from the contents you're trying to write.
+#[derive(Debug)]
+pub enum WriteMode {
+    /// Do not overwrite an existing file if there is a conflict. The autorename strategy is to
+    /// append a number to the file name. For example, "document.txt" might become "document
+    /// (2).txt".
+    Add,
+    /// Always overwrite the existing file. The autorename strategy is the same as it is for
+    /// :field:`add`.
+    Overwrite,
+    /// Overwrite if the given "rev" matches the existing file's "rev". The autorename strategy is
+    /// to append the string "conflicted copy" to the file name. For example, "document.txt" might
+    /// become "document (conflicted copy).txt" or "document (Panda's conflicted copy).txt".
+    Update(Rev),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for WriteMode {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = WriteMode;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a WriteMode structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "add" => Ok(WriteMode::Add),
+                    "overwrite" => Ok(WriteMode::Overwrite),
+                    "update" => {
+                        if map.next_key()? != Some("update") {
+                            return Err(de::Error::missing_field("update"));
+                        }
+                        Ok(WriteMode::Update(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path"];
-        deserializer.deserialize_struct("CreateFolderError", VARIANTS, EnumVisitor)
+        const VARIANTS: &'static [&'static str] = &["add",
+                                                    "overwrite",
+                                                    "update"];
+        deserializer.deserialize_struct("WriteMode", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for CreateFolderError {
+impl ::serde::ser::Serialize for WriteMode {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            CreateFolderError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-        }
-    }
-}
-
-impl ::std::error::Error for CreateFolderError {
-    fn description(&self) -> &str {
-        "CreateFolderError"
-    }
-}
-
-impl ::std::fmt::Display for CreateFolderError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct SaveCopyReferenceArg {
-    /// A copy reference returned by :route:`copy_reference/get`.
-    pub copy_reference: String,
-    /// Path in the user's Dropbox that is the destination.
-    pub path: Path,
-}
-
-impl SaveCopyReferenceArg {
-    pub fn new(copy_reference: String, path: Path) -> Self {
-        SaveCopyReferenceArg {
-            copy_reference,
-            path,
-        }
-    }
-
-}
-
-const SAVE_COPY_REFERENCE_ARG_FIELDS: &'static [&'static str] = &["copy_reference",
-                                                                  "path"];
-impl SaveCopyReferenceArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SaveCopyReferenceArg, V::Error> {
-        use serde::de;
-        let mut field_copy_reference = None;
-        let mut field_path = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "copy_reference" => {
-                    if field_copy_reference.is_some() {
-                        return Err(de::Error::duplicate_field("copy_reference"));
-                    }
-                    field_copy_reference = Some(map.next_value()?);
-                }
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SAVE_COPY_REFERENCE_ARG_FIELDS))
-            }
-        }
-        Ok(SaveCopyReferenceArg {
-            copy_reference: field_copy_reference.ok_or_else(|| de::Error::missing_field("copy_reference"))?,
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("copy_reference", &self.copy_reference)?;
-        s.serialize_field("path", &self.path)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SaveCopyReferenceArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SaveCopyReferenceArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SaveCopyReferenceArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SaveCopyReferenceArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("SaveCopyReferenceArg", SAVE_COPY_REFERENCE_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SaveCopyReferenceArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SaveCopyReferenceArg", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct RemovePropertiesArg {
-    /// A unique identifier for the file.
-    pub path: PathOrId,
-    /// A list of identifiers for a property template created by route properties/template/add.
-    pub property_template_ids: Vec<super::properties::TemplateId>,
-}
-
-impl RemovePropertiesArg {
-    pub fn new(path: PathOrId, property_template_ids: Vec<super::properties::TemplateId>) -> Self {
-        RemovePropertiesArg {
-            path,
-            property_template_ids,
-        }
-    }
-
-}
-
-const REMOVE_PROPERTIES_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                                "property_template_ids"];
-impl RemovePropertiesArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RemovePropertiesArg, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_property_template_ids = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "property_template_ids" => {
-                    if field_property_template_ids.is_some() {
-                        return Err(de::Error::duplicate_field("property_template_ids"));
-                    }
-                    field_property_template_ids = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, REMOVE_PROPERTIES_ARG_FIELDS))
-            }
-        }
-        Ok(RemovePropertiesArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            property_template_ids: field_property_template_ids.ok_or_else(|| de::Error::missing_field("property_template_ids"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("property_template_ids", &self.property_template_ids)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = RemovePropertiesArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RemovePropertiesArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                RemovePropertiesArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("RemovePropertiesArg", REMOVE_PROPERTIES_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for RemovePropertiesArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("RemovePropertiesArg", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct GetCopyReferenceArg {
-    /// The path to the file or folder you want to get a copy reference to.
-    pub path: ReadPath,
-}
-
-impl GetCopyReferenceArg {
-    pub fn new(path: ReadPath) -> Self {
-        GetCopyReferenceArg {
-            path,
-        }
-    }
-
-}
-
-const GET_COPY_REFERENCE_ARG_FIELDS: &'static [&'static str] = &["path"];
-impl GetCopyReferenceArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetCopyReferenceArg, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, GET_COPY_REFERENCE_ARG_FIELDS))
-            }
-        }
-        Ok(GetCopyReferenceArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetCopyReferenceArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GetCopyReferenceArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetCopyReferenceArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GetCopyReferenceArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("GetCopyReferenceArg", GET_COPY_REFERENCE_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetCopyReferenceArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetCopyReferenceArg", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Sharing info for a file or folder.
-#[derive(Debug)]
-pub struct SharingInfo {
-    /// True if the file or folder is inside a read-only shared folder.
-    pub read_only: bool,
-}
-
-impl SharingInfo {
-    pub fn new(read_only: bool) -> Self {
-        SharingInfo {
-            read_only,
-        }
-    }
-
-}
-
-const SHARING_INFO_FIELDS: &'static [&'static str] = &["read_only"];
-impl SharingInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharingInfo, V::Error> {
-        use serde::de;
-        let mut field_read_only = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "read_only" => {
-                    if field_read_only.is_some() {
-                        return Err(de::Error::duplicate_field("read_only"));
-                    }
-                    field_read_only = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SHARING_INFO_FIELDS))
-            }
-        }
-        Ok(SharingInfo {
-            read_only: field_read_only.ok_or_else(|| de::Error::missing_field("read_only"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("read_only", &self.read_only)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SharingInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SharingInfo;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharingInfo struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SharingInfo::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("SharingInfo", SHARING_INFO_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SharingInfo {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharingInfo", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum AlphaGetMetadataError {
-    Path(LookupError),
-    PropertiesError(LookUpPropertiesError),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for AlphaGetMetadataError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = AlphaGetMetadataError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a AlphaGetMetadataError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(AlphaGetMetadataError::Path(map.next_value()?))
-                    }
-                    "properties_error" => {
-                        if map.next_key()? != Some("properties_error") {
-                            return Err(de::Error::missing_field("properties_error"));
-                        }
-                        Ok(AlphaGetMetadataError::PropertiesError(map.next_value()?))
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "properties_error"];
-        deserializer.deserialize_struct("AlphaGetMetadataError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for AlphaGetMetadataError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            AlphaGetMetadataError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            AlphaGetMetadataError::PropertiesError(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "properties_error")?;
-                s.serialize_field("properties_error", x)?;
-                s.end()
-            }
-        }
-    }
-}
-
-impl ::std::error::Error for AlphaGetMetadataError {
-    fn description(&self) -> &str {
-        "AlphaGetMetadataError"
-    }
-}
-
-impl ::std::fmt::Display for AlphaGetMetadataError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-/// Metadata for a photo.
-#[derive(Debug)]
-pub struct PhotoMetadata {
-    /// Dimension of the photo/video.
-    pub dimensions: Option<Dimensions>,
-    /// The GPS coordinate of the photo/video.
-    pub location: Option<GpsCoordinates>,
-    /// The timestamp when the photo/video is taken.
-    pub time_taken: Option<super::common::DropboxTimestamp>,
-}
-
-impl Default for PhotoMetadata {
-    fn default() -> Self {
-        PhotoMetadata {
-            dimensions: None,
-            location: None,
-            time_taken: None,
-        }
-    }
-}
-
-const PHOTO_METADATA_FIELDS: &'static [&'static str] = &["dimensions",
-                                                         "location",
-                                                         "time_taken"];
-impl PhotoMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PhotoMetadata, V::Error> {
-        use serde::de;
-        let mut field_dimensions = None;
-        let mut field_location = None;
-        let mut field_time_taken = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "dimensions" => {
-                    if field_dimensions.is_some() {
-                        return Err(de::Error::duplicate_field("dimensions"));
-                    }
-                    field_dimensions = Some(map.next_value()?);
-                }
-                "location" => {
-                    if field_location.is_some() {
-                        return Err(de::Error::duplicate_field("location"));
-                    }
-                    field_location = Some(map.next_value()?);
-                }
-                "time_taken" => {
-                    if field_time_taken.is_some() {
-                        return Err(de::Error::duplicate_field("time_taken"));
-                    }
-                    field_time_taken = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, PHOTO_METADATA_FIELDS))
-            }
-        }
-        Ok(PhotoMetadata {
-            dimensions: field_dimensions,
-            location: field_location,
-            time_taken: field_time_taken,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("dimensions", &self.dimensions)?;
-        s.serialize_field("location", &self.location)?;
-        s.serialize_field("time_taken", &self.time_taken)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PhotoMetadata {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = PhotoMetadata;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PhotoMetadata struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                PhotoMetadata::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("PhotoMetadata", PHOTO_METADATA_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PhotoMetadata {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PhotoMetadata", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum SaveUrlError {
-    Path(WriteError),
-    /// Failed downloading the given URL.
-    DownloadFailed,
-    /// The given URL is invalid.
-    InvalidUrl,
-    /// The file where the URL is saved to no longer exists.
-    NotFound,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SaveUrlError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SaveUrlError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SaveUrlError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(SaveUrlError::Path(map.next_value()?))
-                    }
-                    "download_failed" => Ok(SaveUrlError::DownloadFailed),
-                    "invalid_url" => Ok(SaveUrlError::InvalidUrl),
-                    "not_found" => Ok(SaveUrlError::NotFound),
-                    _ => Ok(SaveUrlError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "download_failed",
-                                                    "invalid_url",
-                                                    "not_found",
-                                                    "other"];
-        deserializer.deserialize_struct("SaveUrlError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SaveUrlError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SaveUrlError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            SaveUrlError::DownloadFailed => {
+            WriteMode::Add => {
                 // unit
-                let mut s = serializer.serialize_struct("SaveUrlError", 1)?;
-                s.serialize_field(".tag", "download_failed")?;
+                let mut s = serializer.serialize_struct("WriteMode", 1)?;
+                s.serialize_field(".tag", "add")?;
                 s.end()
             }
-            SaveUrlError::InvalidUrl => {
+            WriteMode::Overwrite => {
                 // unit
-                let mut s = serializer.serialize_struct("SaveUrlError", 1)?;
-                s.serialize_field(".tag", "invalid_url")?;
+                let mut s = serializer.serialize_struct("WriteMode", 1)?;
+                s.serialize_field(".tag", "overwrite")?;
                 s.end()
             }
-            SaveUrlError::NotFound => {
-                // unit
-                let mut s = serializer.serialize_struct("SaveUrlError", 1)?;
-                s.serialize_field(".tag", "not_found")?;
-                s.end()
-            }
-            SaveUrlError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for SaveUrlError {
-    fn description(&self) -> &str {
-        "SaveUrlError"
-    }
-}
-
-impl ::std::fmt::Display for SaveUrlError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub enum GetTemporaryLinkError {
-    Path(LookupError),
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = GetTemporaryLinkError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetTemporaryLinkError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(GetTemporaryLinkError::Path(map.next_value()?))
-                    }
-                    _ => Ok(GetTemporaryLinkError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
-        deserializer.deserialize_struct("GetTemporaryLinkError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetTemporaryLinkError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            GetTemporaryLinkError::Path(ref x) => {
-                // union or polymporphic struct
+            WriteMode::Update(ref x) => {
+                // primitive
                 let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            GetTemporaryLinkError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for GetTemporaryLinkError {
-    fn description(&self) -> &str {
-        "GetTemporaryLinkError"
-    }
-}
-
-impl ::std::fmt::Display for GetTemporaryLinkError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub enum ListRevisionsError {
-    Path(LookupError),
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ListRevisionsError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListRevisionsError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(ListRevisionsError::Path(map.next_value()?))
-                    }
-                    _ => Ok(ListRevisionsError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
-        deserializer.deserialize_struct("ListRevisionsError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListRevisionsError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            ListRevisionsError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            ListRevisionsError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for ListRevisionsError {
-    fn description(&self) -> &str {
-        "ListRevisionsError"
-    }
-}
-
-impl ::std::fmt::Display for ListRevisionsError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct ListFolderGetLatestCursorResult {
-    /// Pass the cursor into :route:`list_folder/continue` to see what's changed in the folder since
-    /// your previous query.
-    pub cursor: ListFolderCursor,
-}
-
-impl ListFolderGetLatestCursorResult {
-    pub fn new(cursor: ListFolderCursor) -> Self {
-        ListFolderGetLatestCursorResult {
-            cursor,
-        }
-    }
-
-}
-
-const LIST_FOLDER_GET_LATEST_CURSOR_RESULT_FIELDS: &'static [&'static str] = &["cursor"];
-impl ListFolderGetLatestCursorResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderGetLatestCursorResult, V::Error> {
-        use serde::de;
-        let mut field_cursor = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "cursor" => {
-                    if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
-                    }
-                    field_cursor = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_GET_LATEST_CURSOR_RESULT_FIELDS))
-            }
-        }
-        Ok(ListFolderGetLatestCursorResult {
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("cursor", &self.cursor)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListFolderGetLatestCursorResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListFolderGetLatestCursorResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListFolderGetLatestCursorResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListFolderGetLatestCursorResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListFolderGetLatestCursorResult", LIST_FOLDER_GET_LATEST_CURSOR_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListFolderGetLatestCursorResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListFolderGetLatestCursorResult", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct ListFolderLongpollResult {
-    /// Indicates whether new changes are available. If true, call :route:`list_folder/continue` to
-    /// retrieve the changes.
-    pub changes: bool,
-    /// If present, backoff for at least this many seconds before calling
-    /// :route:`list_folder/longpoll` again.
-    pub backoff: Option<u64>,
-}
-
-impl ListFolderLongpollResult {
-    pub fn new(changes: bool) -> Self {
-        ListFolderLongpollResult {
-            changes,
-            backoff: None,
-        }
-    }
-
-    pub fn with_backoff(mut self, value: Option<u64>) -> Self {
-        self.backoff = value;
-        self
-    }
-
-}
-
-const LIST_FOLDER_LONGPOLL_RESULT_FIELDS: &'static [&'static str] = &["changes",
-                                                                      "backoff"];
-impl ListFolderLongpollResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderLongpollResult, V::Error> {
-        use serde::de;
-        let mut field_changes = None;
-        let mut field_backoff = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "changes" => {
-                    if field_changes.is_some() {
-                        return Err(de::Error::duplicate_field("changes"));
-                    }
-                    field_changes = Some(map.next_value()?);
-                }
-                "backoff" => {
-                    if field_backoff.is_some() {
-                        return Err(de::Error::duplicate_field("backoff"));
-                    }
-                    field_backoff = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_LONGPOLL_RESULT_FIELDS))
-            }
-        }
-        Ok(ListFolderLongpollResult {
-            changes: field_changes.ok_or_else(|| de::Error::missing_field("changes"))?,
-            backoff: field_backoff,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("changes", &self.changes)?;
-        s.serialize_field("backoff", &self.backoff)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListFolderLongpollResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListFolderLongpollResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListFolderLongpollResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListFolderLongpollResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ListFolderLongpollResult", LIST_FOLDER_LONGPOLL_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ListFolderLongpollResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListFolderLongpollResult", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct PropertyGroupUpdate {
-    /// A unique identifier for a property template.
-    pub template_id: super::properties::TemplateId,
-    /// List of property fields to update if the field already exists. If the field doesn't exist,
-    /// add the field to the property group.
-    pub add_or_update_fields: Option<Vec<super::properties::PropertyField>>,
-    /// List of property field names to remove from property group if the field exists.
-    pub remove_fields: Option<Vec<String>>,
-}
-
-impl PropertyGroupUpdate {
-    pub fn new(template_id: super::properties::TemplateId) -> Self {
-        PropertyGroupUpdate {
-            template_id,
-            add_or_update_fields: None,
-            remove_fields: None,
-        }
-    }
-
-    pub fn with_add_or_update_fields(mut self, value: Option<Vec<super::properties::PropertyField>>) -> Self {
-        self.add_or_update_fields = value;
-        self
-    }
-
-    pub fn with_remove_fields(mut self, value: Option<Vec<String>>) -> Self {
-        self.remove_fields = value;
-        self
-    }
-
-}
-
-const PROPERTY_GROUP_UPDATE_FIELDS: &'static [&'static str] = &["template_id",
-                                                                "add_or_update_fields",
-                                                                "remove_fields"];
-impl PropertyGroupUpdate {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroupUpdate, V::Error> {
-        use serde::de;
-        let mut field_template_id = None;
-        let mut field_add_or_update_fields = None;
-        let mut field_remove_fields = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "template_id" => {
-                    if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
-                    }
-                    field_template_id = Some(map.next_value()?);
-                }
-                "add_or_update_fields" => {
-                    if field_add_or_update_fields.is_some() {
-                        return Err(de::Error::duplicate_field("add_or_update_fields"));
-                    }
-                    field_add_or_update_fields = Some(map.next_value()?);
-                }
-                "remove_fields" => {
-                    if field_remove_fields.is_some() {
-                        return Err(de::Error::duplicate_field("remove_fields"));
-                    }
-                    field_remove_fields = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_UPDATE_FIELDS))
-            }
-        }
-        Ok(PropertyGroupUpdate {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
-            add_or_update_fields: field_add_or_update_fields,
-            remove_fields: field_remove_fields,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("template_id", &self.template_id)?;
-        s.serialize_field("add_or_update_fields", &self.add_or_update_fields)?;
-        s.serialize_field("remove_fields", &self.remove_fields)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PropertyGroupUpdate {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = PropertyGroupUpdate;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PropertyGroupUpdate struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                PropertyGroupUpdate::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("PropertyGroupUpdate", PROPERTY_GROUP_UPDATE_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PropertyGroupUpdate {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PropertyGroupUpdate", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum UploadSessionFinishBatchJobStatus {
-    /// The asynchronous job is still in progress.
-    InProgress,
-    /// The :route:`upload_session/finish_batch` has finished.
-    Complete(UploadSessionFinishBatchResult),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchJobStatus {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = UploadSessionFinishBatchJobStatus;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadSessionFinishBatchJobStatus structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "in_progress" => Ok(UploadSessionFinishBatchJobStatus::InProgress),
-                    "complete" => Ok(UploadSessionFinishBatchJobStatus::Complete(UploadSessionFinishBatchResult::internal_deserialize(map)?)),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete"];
-        deserializer.deserialize_struct("UploadSessionFinishBatchJobStatus", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UploadSessionFinishBatchJobStatus {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            UploadSessionFinishBatchJobStatus::InProgress => {
-                // unit
-                let mut s = serializer.serialize_struct("UploadSessionFinishBatchJobStatus", 1)?;
-                s.serialize_field(".tag", "in_progress")?;
-                s.end()
-            }
-            UploadSessionFinishBatchJobStatus::Complete(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("UploadSessionFinishBatchJobStatus", 2)?;
-                s.serialize_field(".tag", "complete")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-        }
-    }
-}
-
-/// Sharing info for a file which is contained by a shared folder.
-#[derive(Debug)]
-pub struct FileSharingInfo {
-    /// True if the file or folder is inside a read-only shared folder.
-    pub read_only: bool,
-    /// ID of shared folder that holds this file.
-    pub parent_shared_folder_id: super::common::SharedFolderId,
-    /// The last user who modified the file. This field will be null if the user's account has been
-    /// deleted.
-    pub modified_by: Option<super::users_common::AccountId>,
-}
-
-impl FileSharingInfo {
-    pub fn new(read_only: bool, parent_shared_folder_id: super::common::SharedFolderId) -> Self {
-        FileSharingInfo {
-            read_only,
-            parent_shared_folder_id,
-            modified_by: None,
-        }
-    }
-
-    pub fn with_modified_by(mut self, value: Option<super::users_common::AccountId>) -> Self {
-        self.modified_by = value;
-        self
-    }
-
-}
-
-const FILE_SHARING_INFO_FIELDS: &'static [&'static str] = &["read_only",
-                                                            "parent_shared_folder_id",
-                                                            "modified_by"];
-impl FileSharingInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileSharingInfo, V::Error> {
-        use serde::de;
-        let mut field_read_only = None;
-        let mut field_parent_shared_folder_id = None;
-        let mut field_modified_by = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "read_only" => {
-                    if field_read_only.is_some() {
-                        return Err(de::Error::duplicate_field("read_only"));
-                    }
-                    field_read_only = Some(map.next_value()?);
-                }
-                "parent_shared_folder_id" => {
-                    if field_parent_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("parent_shared_folder_id"));
-                    }
-                    field_parent_shared_folder_id = Some(map.next_value()?);
-                }
-                "modified_by" => {
-                    if field_modified_by.is_some() {
-                        return Err(de::Error::duplicate_field("modified_by"));
-                    }
-                    field_modified_by = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FILE_SHARING_INFO_FIELDS))
-            }
-        }
-        Ok(FileSharingInfo {
-            read_only: field_read_only.ok_or_else(|| de::Error::missing_field("read_only"))?,
-            parent_shared_folder_id: field_parent_shared_folder_id.ok_or_else(|| de::Error::missing_field("parent_shared_folder_id"))?,
-            modified_by: field_modified_by,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("read_only", &self.read_only)?;
-        s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
-        s.serialize_field("modified_by", &self.modified_by)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FileSharingInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FileSharingInfo;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FileSharingInfo struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FileSharingInfo::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("FileSharingInfo", FILE_SHARING_INFO_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FileSharingInfo {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileSharingInfo", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum SaveCopyReferenceError {
-    Path(WriteError),
-    /// The copy reference is invalid.
-    InvalidCopyReference,
-    /// You don't have permission to save the given copy reference. Please make sure this app is
-    /// same app which created the copy reference and the source user is still linked to the app.
-    NoPermission,
-    /// The file referenced by the copy reference cannot be found.
-    NotFound,
-    /// The operation would involve more than 10,000 files and folders.
-    TooManyFiles,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SaveCopyReferenceError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SaveCopyReferenceError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SaveCopyReferenceError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(SaveCopyReferenceError::Path(map.next_value()?))
-                    }
-                    "invalid_copy_reference" => Ok(SaveCopyReferenceError::InvalidCopyReference),
-                    "no_permission" => Ok(SaveCopyReferenceError::NoPermission),
-                    "not_found" => Ok(SaveCopyReferenceError::NotFound),
-                    "too_many_files" => Ok(SaveCopyReferenceError::TooManyFiles),
-                    _ => Ok(SaveCopyReferenceError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "invalid_copy_reference",
-                                                    "no_permission",
-                                                    "not_found",
-                                                    "too_many_files",
-                                                    "other"];
-        deserializer.deserialize_struct("SaveCopyReferenceError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SaveCopyReferenceError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SaveCopyReferenceError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            SaveCopyReferenceError::InvalidCopyReference => {
-                // unit
-                let mut s = serializer.serialize_struct("SaveCopyReferenceError", 1)?;
-                s.serialize_field(".tag", "invalid_copy_reference")?;
-                s.end()
-            }
-            SaveCopyReferenceError::NoPermission => {
-                // unit
-                let mut s = serializer.serialize_struct("SaveCopyReferenceError", 1)?;
-                s.serialize_field(".tag", "no_permission")?;
-                s.end()
-            }
-            SaveCopyReferenceError::NotFound => {
-                // unit
-                let mut s = serializer.serialize_struct("SaveCopyReferenceError", 1)?;
-                s.serialize_field(".tag", "not_found")?;
-                s.end()
-            }
-            SaveCopyReferenceError::TooManyFiles => {
-                // unit
-                let mut s = serializer.serialize_struct("SaveCopyReferenceError", 1)?;
-                s.serialize_field(".tag", "too_many_files")?;
-                s.end()
-            }
-            SaveCopyReferenceError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for SaveCopyReferenceError {
-    fn description(&self) -> &str {
-        "SaveCopyReferenceError"
-    }
-}
-
-impl ::std::fmt::Display for SaveCopyReferenceError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub enum DownloadError {
-    Path(LookupError),
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for DownloadError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = DownloadError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DownloadError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
-                        }
-                        Ok(DownloadError::Path(map.next_value()?))
-                    }
-                    _ => Ok(DownloadError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
-        deserializer.deserialize_struct("DownloadError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for DownloadError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            DownloadError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            DownloadError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for DownloadError {
-    fn description(&self) -> &str {
-        "DownloadError"
-    }
-}
-
-impl ::std::fmt::Display for DownloadError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct UploadSessionFinishBatchResult {
-    /// Commit result for each file in the batch.
-    pub entries: Vec<UploadSessionFinishBatchResultEntry>,
-}
-
-impl UploadSessionFinishBatchResult {
-    pub fn new(entries: Vec<UploadSessionFinishBatchResultEntry>) -> Self {
-        UploadSessionFinishBatchResult {
-            entries,
-        }
-    }
-
-}
-
-const UPLOAD_SESSION_FINISH_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
-impl UploadSessionFinishBatchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionFinishBatchResult, V::Error> {
-        use serde::de;
-        let mut field_entries = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "entries" => {
-                    if field_entries.is_some() {
-                        return Err(de::Error::duplicate_field("entries"));
-                    }
-                    field_entries = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, UPLOAD_SESSION_FINISH_BATCH_RESULT_FIELDS))
-            }
-        }
-        Ok(UploadSessionFinishBatchResult {
-            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("entries", &self.entries)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = UploadSessionFinishBatchResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UploadSessionFinishBatchResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UploadSessionFinishBatchResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("UploadSessionFinishBatchResult", UPLOAD_SESSION_FINISH_BATCH_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UploadSessionFinishBatchResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UploadSessionFinishBatchResult", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct CommitInfo {
-    /// Path in the user's Dropbox to save the file.
-    pub path: WritePathOrId,
-    /// Selects what to do if the file already exists.
-    pub mode: WriteMode,
-    /// If there's a conflict, as determined by :field:`mode`, have the Dropbox server try to
-    /// autorename the file to avoid conflict.
-    pub autorename: bool,
-    /// The value to store as the :field:`client_modified` timestamp. Dropbox automatically records
-    /// the time at which the file was written to the Dropbox servers. It can also record an
-    /// additional timestamp, provided by Dropbox desktop clients, mobile clients, and API apps of
-    /// when the file was actually created or modified.
-    pub client_modified: Option<super::common::DropboxTimestamp>,
-    /// Normally, users are made aware of any file modifications in their Dropbox account via
-    /// notifications in the client software. If :val:`true`, this tells the clients that this
-    /// modification shouldn't result in a user notification.
-    pub mute: bool,
-}
-
-impl CommitInfo {
-    pub fn new(path: WritePathOrId) -> Self {
-        CommitInfo {
-            path,
-            mode: WriteMode::Add,
-            autorename: false,
-            client_modified: None,
-            mute: false,
-        }
-    }
-
-    pub fn with_mode(mut self, value: WriteMode) -> Self {
-        self.mode = value;
-        self
-    }
-
-    pub fn with_autorename(mut self, value: bool) -> Self {
-        self.autorename = value;
-        self
-    }
-
-    pub fn with_client_modified(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.client_modified = value;
-        self
-    }
-
-    pub fn with_mute(mut self, value: bool) -> Self {
-        self.mute = value;
-        self
-    }
-
-}
-
-const COMMIT_INFO_FIELDS: &'static [&'static str] = &["path",
-                                                      "mode",
-                                                      "autorename",
-                                                      "client_modified",
-                                                      "mute"];
-impl CommitInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CommitInfo, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_mode = None;
-        let mut field_autorename = None;
-        let mut field_client_modified = None;
-        let mut field_mute = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "mode" => {
-                    if field_mode.is_some() {
-                        return Err(de::Error::duplicate_field("mode"));
-                    }
-                    field_mode = Some(map.next_value()?);
-                }
-                "autorename" => {
-                    if field_autorename.is_some() {
-                        return Err(de::Error::duplicate_field("autorename"));
-                    }
-                    field_autorename = Some(map.next_value()?);
-                }
-                "client_modified" => {
-                    if field_client_modified.is_some() {
-                        return Err(de::Error::duplicate_field("client_modified"));
-                    }
-                    field_client_modified = Some(map.next_value()?);
-                }
-                "mute" => {
-                    if field_mute.is_some() {
-                        return Err(de::Error::duplicate_field("mute"));
-                    }
-                    field_mute = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, COMMIT_INFO_FIELDS))
-            }
-        }
-        Ok(CommitInfo {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            mode: field_mode.unwrap_or_else(|| WriteMode::Add),
-            autorename: field_autorename.unwrap_or(false),
-            client_modified: field_client_modified,
-            mute: field_mute.unwrap_or(false),
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("mode", &self.mode)?;
-        s.serialize_field("autorename", &self.autorename)?;
-        s.serialize_field("client_modified", &self.client_modified)?;
-        s.serialize_field("mute", &self.mute)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for CommitInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = CommitInfo;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a CommitInfo struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                CommitInfo::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("CommitInfo", COMMIT_INFO_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for CommitInfo {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("CommitInfo", 5)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum MediaInfo {
-    /// Indicate the photo/video is still under processing and metadata is not available yet.
-    Pending,
-    /// The metadata for the photo/video.
-    Metadata(MediaMetadata),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for MediaInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = MediaInfo;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a MediaInfo structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "pending" => Ok(MediaInfo::Pending),
-                    "metadata" => {
-                        if map.next_key()? != Some("metadata") {
-                            return Err(de::Error::missing_field("metadata"));
-                        }
-                        Ok(MediaInfo::Metadata(map.next_value()?))
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["pending",
-                                                    "metadata"];
-        deserializer.deserialize_struct("MediaInfo", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for MediaInfo {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            MediaInfo::Pending => {
-                // unit
-                let mut s = serializer.serialize_struct("MediaInfo", 1)?;
-                s.serialize_field(".tag", "pending")?;
-                s.end()
-            }
-            MediaInfo::Metadata(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "metadata")?;
-                s.serialize_field("metadata", x)?;
-                s.end()
-            }
-        }
-    }
-}
-
-/// GPS coordinates for a photo or video.
-#[derive(Debug)]
-pub struct GpsCoordinates {
-    /// Latitude of the GPS coordinates.
-    pub latitude: f64,
-    /// Longitude of the GPS coordinates.
-    pub longitude: f64,
-}
-
-impl GpsCoordinates {
-    pub fn new(latitude: f64, longitude: f64) -> Self {
-        GpsCoordinates {
-            latitude,
-            longitude,
-        }
-    }
-
-}
-
-const GPS_COORDINATES_FIELDS: &'static [&'static str] = &["latitude",
-                                                          "longitude"];
-impl GpsCoordinates {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GpsCoordinates, V::Error> {
-        use serde::de;
-        let mut field_latitude = None;
-        let mut field_longitude = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "latitude" => {
-                    if field_latitude.is_some() {
-                        return Err(de::Error::duplicate_field("latitude"));
-                    }
-                    field_latitude = Some(map.next_value()?);
-                }
-                "longitude" => {
-                    if field_longitude.is_some() {
-                        return Err(de::Error::duplicate_field("longitude"));
-                    }
-                    field_longitude = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, GPS_COORDINATES_FIELDS))
-            }
-        }
-        Ok(GpsCoordinates {
-            latitude: field_latitude.ok_or_else(|| de::Error::missing_field("latitude"))?,
-            longitude: field_longitude.ok_or_else(|| de::Error::missing_field("longitude"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("latitude", &self.latitude)?;
-        s.serialize_field("longitude", &self.longitude)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GpsCoordinates {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GpsCoordinates;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GpsCoordinates struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GpsCoordinates::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("GpsCoordinates", GPS_COORDINATES_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GpsCoordinates {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GpsCoordinates", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum RelocationBatchJobStatus {
-    /// The asynchronous job is still in progress.
-    InProgress,
-    /// The copy or move batch job has finished.
-    Complete(RelocationBatchResult),
-    /// The copy or move batch job has failed with exception.
-    Failed(RelocationBatchError),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchJobStatus {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = RelocationBatchJobStatus;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RelocationBatchJobStatus structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "in_progress" => Ok(RelocationBatchJobStatus::InProgress),
-                    "complete" => Ok(RelocationBatchJobStatus::Complete(RelocationBatchResult::internal_deserialize(map)?)),
-                    "failed" => {
-                        if map.next_key()? != Some("failed") {
-                            return Err(de::Error::missing_field("failed"));
-                        }
-                        Ok(RelocationBatchJobStatus::Failed(map.next_value()?))
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete",
-                                                    "failed"];
-        deserializer.deserialize_struct("RelocationBatchJobStatus", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for RelocationBatchJobStatus {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            RelocationBatchJobStatus::InProgress => {
-                // unit
-                let mut s = serializer.serialize_struct("RelocationBatchJobStatus", 1)?;
-                s.serialize_field(".tag", "in_progress")?;
-                s.end()
-            }
-            RelocationBatchJobStatus::Complete(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("RelocationBatchJobStatus", 2)?;
-                s.serialize_field(".tag", "complete")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            RelocationBatchJobStatus::Failed(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "failed")?;
-                s.serialize_field("failed", x)?;
+                s.serialize_field(".tag", "update")?;
+                s.serialize_field("update", x)?;
                 s.end()
             }
         }

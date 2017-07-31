@@ -13,80 +13,241 @@
 pub type TemplateId = String;
 
 #[derive(Debug)]
-pub enum PropertyTemplateError {
-    /// Property template does not exist for given identifier.
-    TemplateNotFound(TemplateId),
-    /// You do not have the permissions to modify this property template.
-    RestrictedContent,
-    Other,
+pub struct GetPropertyTemplateArg {
+    /// An identifier for property template added by route properties/template/add.
+    pub template_id: TemplateId,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for PropertyTemplateError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = PropertyTemplateError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PropertyTemplateError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "template_not_found" => {
-                        if map.next_key()? != Some("template_not_found") {
-                            return Err(de::Error::missing_field("template_not_found"));
-                        }
-                        Ok(PropertyTemplateError::TemplateNotFound(map.next_value()?))
+impl GetPropertyTemplateArg {
+    pub fn new(template_id: TemplateId) -> Self {
+        GetPropertyTemplateArg {
+            template_id,
+        }
+    }
+
+}
+
+const GET_PROPERTY_TEMPLATE_ARG_FIELDS: &'static [&'static str] = &["template_id"];
+impl GetPropertyTemplateArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetPropertyTemplateArg, V::Error> {
+        use serde::de;
+        let mut field_template_id = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "template_id" => {
+                    if field_template_id.is_some() {
+                        return Err(de::Error::duplicate_field("template_id"));
                     }
-                    "restricted_content" => Ok(PropertyTemplateError::RestrictedContent),
-                    _ => Ok(PropertyTemplateError::Other)
+                    field_template_id = Some(map.next_value()?);
                 }
+                _ => return Err(de::Error::unknown_field(key, GET_PROPERTY_TEMPLATE_ARG_FIELDS))
             }
         }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other"];
-        deserializer.deserialize_struct("PropertyTemplateError", VARIANTS, EnumVisitor)
+        Ok(GetPropertyTemplateArg {
+            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
+        })
     }
-}
 
-impl ::serde::ser::Serialize for PropertyTemplateError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        match *self {
-            PropertyTemplateError::TemplateNotFound(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "template_not_found")?;
-                s.serialize_field("template_not_found", x)?;
-                s.end()
+        s.serialize_field("template_id", &self.template_id)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetPropertyTemplateArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetPropertyTemplateArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetPropertyTemplateArg struct")
             }
-            PropertyTemplateError::RestrictedContent => {
-                // unit
-                let mut s = serializer.serialize_struct("PropertyTemplateError", 1)?;
-                s.serialize_field(".tag", "restricted_content")?;
-                s.end()
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetPropertyTemplateArg::internal_deserialize(map)
             }
-            PropertyTemplateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+        deserializer.deserialize_struct("GetPropertyTemplateArg", GET_PROPERTY_TEMPLATE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetPropertyTemplateArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetPropertyTemplateArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// The Property template for the specified template.
+#[derive(Debug)]
+pub struct GetPropertyTemplateResult {
+    /// A display name for the property template. Property template names can be up to 256 bytes.
+    pub name: String,
+    /// Description for new property template. Property template descriptions can be up to 1024
+    /// bytes.
+    pub description: String,
+    /// This is a list of custom properties associated with a property template. There can be up to
+    /// 64 properties in a single property template.
+    pub fields: Vec<PropertyFieldTemplate>,
+}
+
+impl GetPropertyTemplateResult {
+    pub fn new(name: String, description: String, fields: Vec<PropertyFieldTemplate>) -> Self {
+        GetPropertyTemplateResult {
+            name,
+            description,
+            fields,
         }
     }
+
 }
 
-impl ::std::error::Error for PropertyTemplateError {
-    fn description(&self) -> &str {
-        "PropertyTemplateError"
+const GET_PROPERTY_TEMPLATE_RESULT_FIELDS: &'static [&'static str] = &["name",
+                                                                       "description",
+                                                                       "fields"];
+impl GetPropertyTemplateResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetPropertyTemplateResult, V::Error> {
+        use serde::de;
+        let mut field_name = None;
+        let mut field_description = None;
+        let mut field_fields = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "name" => {
+                    if field_name.is_some() {
+                        return Err(de::Error::duplicate_field("name"));
+                    }
+                    field_name = Some(map.next_value()?);
+                }
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                "fields" => {
+                    if field_fields.is_some() {
+                        return Err(de::Error::duplicate_field("fields"));
+                    }
+                    field_fields = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GET_PROPERTY_TEMPLATE_RESULT_FIELDS))
+            }
+        }
+        Ok(GetPropertyTemplateResult {
+            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+            fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("description", &self.description)?;
+        s.serialize_field("fields", &self.fields)
     }
 }
 
-impl ::std::fmt::Display for PropertyTemplateError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+impl<'de> ::serde::de::Deserialize<'de> for GetPropertyTemplateResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetPropertyTemplateResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetPropertyTemplateResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetPropertyTemplateResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetPropertyTemplateResult", GET_PROPERTY_TEMPLATE_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetPropertyTemplateResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetPropertyTemplateResult", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ListPropertyTemplateIds {
+    /// List of identifiers for templates added by route properties/template/add.
+    pub template_ids: Vec<TemplateId>,
+}
+
+impl ListPropertyTemplateIds {
+    pub fn new(template_ids: Vec<TemplateId>) -> Self {
+        ListPropertyTemplateIds {
+            template_ids,
+        }
+    }
+
+}
+
+const LIST_PROPERTY_TEMPLATE_IDS_FIELDS: &'static [&'static str] = &["template_ids"];
+impl ListPropertyTemplateIds {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListPropertyTemplateIds, V::Error> {
+        use serde::de;
+        let mut field_template_ids = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "template_ids" => {
+                    if field_template_ids.is_some() {
+                        return Err(de::Error::duplicate_field("template_ids"));
+                    }
+                    field_template_ids = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LIST_PROPERTY_TEMPLATE_IDS_FIELDS))
+            }
+        }
+        Ok(ListPropertyTemplateIds {
+            template_ids: field_template_ids.ok_or_else(|| de::Error::missing_field("template_ids"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("template_ids", &self.template_ids)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListPropertyTemplateIds {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListPropertyTemplateIds;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListPropertyTemplateIds struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListPropertyTemplateIds::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListPropertyTemplateIds", LIST_PROPERTY_TEMPLATE_IDS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListPropertyTemplateIds {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListPropertyTemplateIds", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -209,39 +370,32 @@ impl ::std::fmt::Display for ModifyPropertyTemplateError {
     }
 }
 
-/// Describes property templates that can be filled and associated with a file.
 #[derive(Debug)]
-pub struct PropertyGroupTemplate {
-    /// A display name for the property template. Property template names can be up to 256 bytes.
+pub struct PropertyField {
+    /// This is the name or key of a custom property in a property template. File property names can
+    /// be up to 256 bytes.
     pub name: String,
-    /// Description for new property template. Property template descriptions can be up to 1024
-    /// bytes.
-    pub description: String,
-    /// This is a list of custom properties associated with a property template. There can be up to
-    /// 64 properties in a single property template.
-    pub fields: Vec<PropertyFieldTemplate>,
+    /// Value of a custom property attached to a file. Values can be up to 1024 bytes.
+    pub value: String,
 }
 
-impl PropertyGroupTemplate {
-    pub fn new(name: String, description: String, fields: Vec<PropertyFieldTemplate>) -> Self {
-        PropertyGroupTemplate {
+impl PropertyField {
+    pub fn new(name: String, value: String) -> Self {
+        PropertyField {
             name,
-            description,
-            fields,
+            value,
         }
     }
 
 }
 
-const PROPERTY_GROUP_TEMPLATE_FIELDS: &'static [&'static str] = &["name",
-                                                                  "description",
-                                                                  "fields"];
-impl PropertyGroupTemplate {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroupTemplate, V::Error> {
+const PROPERTY_FIELD_FIELDS: &'static [&'static str] = &["name",
+                                                         "value"];
+impl PropertyField {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyField, V::Error> {
         use serde::de;
         let mut field_name = None;
-        let mut field_description = None;
-        let mut field_fields = None;
+        let mut field_value = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "name" => {
@@ -250,144 +404,51 @@ impl PropertyGroupTemplate {
                     }
                     field_name = Some(map.next_value()?);
                 }
-                "description" => {
-                    if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
+                "value" => {
+                    if field_value.is_some() {
+                        return Err(de::Error::duplicate_field("value"));
                     }
-                    field_description = Some(map.next_value()?);
+                    field_value = Some(map.next_value()?);
                 }
-                "fields" => {
-                    if field_fields.is_some() {
-                        return Err(de::Error::duplicate_field("fields"));
-                    }
-                    field_fields = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_TEMPLATE_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, PROPERTY_FIELD_FIELDS))
             }
         }
-        Ok(PropertyGroupTemplate {
+        Ok(PropertyField {
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
-            fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
+            value: field_value.ok_or_else(|| de::Error::missing_field("value"))?,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
-        s.serialize_field("description", &self.description)?;
-        s.serialize_field("fields", &self.fields)
+        s.serialize_field("value", &self.value)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for PropertyGroupTemplate {
+impl<'de> ::serde::de::Deserialize<'de> for PropertyField {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = PropertyGroupTemplate;
+            type Value = PropertyField;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PropertyGroupTemplate struct")
+                f.write_str("a PropertyField struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                PropertyGroupTemplate::internal_deserialize(map)
+                PropertyField::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("PropertyGroupTemplate", PROPERTY_GROUP_TEMPLATE_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PropertyField", PROPERTY_FIELD_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for PropertyGroupTemplate {
+impl ::serde::ser::Serialize for PropertyField {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PropertyGroupTemplate", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Collection of custom properties in filled property templates.
-#[derive(Debug)]
-pub struct PropertyGroup {
-    /// A unique identifier for a property template type.
-    pub template_id: TemplateId,
-    /// This is a list of custom properties associated with a file. There can be up to 32 properties
-    /// for a template.
-    pub fields: Vec<PropertyField>,
-}
-
-impl PropertyGroup {
-    pub fn new(template_id: TemplateId, fields: Vec<PropertyField>) -> Self {
-        PropertyGroup {
-            template_id,
-            fields,
-        }
-    }
-
-}
-
-const PROPERTY_GROUP_FIELDS: &'static [&'static str] = &["template_id",
-                                                         "fields"];
-impl PropertyGroup {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroup, V::Error> {
-        use serde::de;
-        let mut field_template_id = None;
-        let mut field_fields = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "template_id" => {
-                    if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
-                    }
-                    field_template_id = Some(map.next_value()?);
-                }
-                "fields" => {
-                    if field_fields.is_some() {
-                        return Err(de::Error::duplicate_field("fields"));
-                    }
-                    field_fields = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_FIELDS))
-            }
-        }
-        Ok(PropertyGroup {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
-            fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("template_id", &self.template_id)?;
-        s.serialize_field("fields", &self.fields)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PropertyGroup {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = PropertyGroup;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PropertyGroup struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                PropertyGroup::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("PropertyGroup", PROPERTY_GROUP_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PropertyGroup {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PropertyGroup", 2)?;
+        let mut s = serializer.serialize_struct("PropertyField", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -493,26 +554,33 @@ impl ::serde::ser::Serialize for PropertyFieldTemplate {
     }
 }
 
+/// Collection of custom properties in filled property templates.
 #[derive(Debug)]
-pub struct GetPropertyTemplateArg {
-    /// An identifier for property template added by route properties/template/add.
+pub struct PropertyGroup {
+    /// A unique identifier for a property template type.
     pub template_id: TemplateId,
+    /// This is a list of custom properties associated with a file. There can be up to 32 properties
+    /// for a template.
+    pub fields: Vec<PropertyField>,
 }
 
-impl GetPropertyTemplateArg {
-    pub fn new(template_id: TemplateId) -> Self {
-        GetPropertyTemplateArg {
+impl PropertyGroup {
+    pub fn new(template_id: TemplateId, fields: Vec<PropertyField>) -> Self {
+        PropertyGroup {
             template_id,
+            fields,
         }
     }
 
 }
 
-const GET_PROPERTY_TEMPLATE_ARG_FIELDS: &'static [&'static str] = &["template_id"];
-impl GetPropertyTemplateArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetPropertyTemplateArg, V::Error> {
+const PROPERTY_GROUP_FIELDS: &'static [&'static str] = &["template_id",
+                                                         "fields"];
+impl PropertyGroup {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroup, V::Error> {
         use serde::de;
         let mut field_template_id = None;
+        let mut field_fields = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "template_id" => {
@@ -521,115 +589,230 @@ impl GetPropertyTemplateArg {
                     }
                     field_template_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GET_PROPERTY_TEMPLATE_ARG_FIELDS))
+                "fields" => {
+                    if field_fields.is_some() {
+                        return Err(de::Error::duplicate_field("fields"));
+                    }
+                    field_fields = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_FIELDS))
             }
         }
-        Ok(GetPropertyTemplateArg {
+        Ok(PropertyGroup {
             template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
+            fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("template_id", &self.template_id)
+        s.serialize_field("template_id", &self.template_id)?;
+        s.serialize_field("fields", &self.fields)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for GetPropertyTemplateArg {
+impl<'de> ::serde::de::Deserialize<'de> for PropertyGroup {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GetPropertyTemplateArg;
+            type Value = PropertyGroup;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetPropertyTemplateArg struct")
+                f.write_str("a PropertyGroup struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GetPropertyTemplateArg::internal_deserialize(map)
+                PropertyGroup::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("GetPropertyTemplateArg", GET_PROPERTY_TEMPLATE_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PropertyGroup", PROPERTY_GROUP_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for GetPropertyTemplateArg {
+impl ::serde::ser::Serialize for PropertyGroup {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetPropertyTemplateArg", 1)?;
+        let mut s = serializer.serialize_struct("PropertyGroup", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Describes property templates that can be filled and associated with a file.
+#[derive(Debug)]
+pub struct PropertyGroupTemplate {
+    /// A display name for the property template. Property template names can be up to 256 bytes.
+    pub name: String,
+    /// Description for new property template. Property template descriptions can be up to 1024
+    /// bytes.
+    pub description: String,
+    /// This is a list of custom properties associated with a property template. There can be up to
+    /// 64 properties in a single property template.
+    pub fields: Vec<PropertyFieldTemplate>,
+}
+
+impl PropertyGroupTemplate {
+    pub fn new(name: String, description: String, fields: Vec<PropertyFieldTemplate>) -> Self {
+        PropertyGroupTemplate {
+            name,
+            description,
+            fields,
+        }
+    }
+
+}
+
+const PROPERTY_GROUP_TEMPLATE_FIELDS: &'static [&'static str] = &["name",
+                                                                  "description",
+                                                                  "fields"];
+impl PropertyGroupTemplate {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroupTemplate, V::Error> {
+        use serde::de;
+        let mut field_name = None;
+        let mut field_description = None;
+        let mut field_fields = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "name" => {
+                    if field_name.is_some() {
+                        return Err(de::Error::duplicate_field("name"));
+                    }
+                    field_name = Some(map.next_value()?);
+                }
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                "fields" => {
+                    if field_fields.is_some() {
+                        return Err(de::Error::duplicate_field("fields"));
+                    }
+                    field_fields = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_TEMPLATE_FIELDS))
+            }
+        }
+        Ok(PropertyGroupTemplate {
+            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+            fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("description", &self.description)?;
+        s.serialize_field("fields", &self.fields)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PropertyGroupTemplate {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PropertyGroupTemplate;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PropertyGroupTemplate struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PropertyGroupTemplate::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PropertyGroupTemplate", PROPERTY_GROUP_TEMPLATE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PropertyGroupTemplate {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PropertyGroupTemplate", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
 }
 
 #[derive(Debug)]
-pub struct ListPropertyTemplateIds {
-    /// List of identifiers for templates added by route properties/template/add.
-    pub template_ids: Vec<TemplateId>,
+pub enum PropertyTemplateError {
+    /// Property template does not exist for given identifier.
+    TemplateNotFound(TemplateId),
+    /// You do not have the permissions to modify this property template.
+    RestrictedContent,
+    Other,
 }
 
-impl ListPropertyTemplateIds {
-    pub fn new(template_ids: Vec<TemplateId>) -> Self {
-        ListPropertyTemplateIds {
-            template_ids,
-        }
-    }
-
-}
-
-const LIST_PROPERTY_TEMPLATE_IDS_FIELDS: &'static [&'static str] = &["template_ids"];
-impl ListPropertyTemplateIds {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListPropertyTemplateIds, V::Error> {
-        use serde::de;
-        let mut field_template_ids = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "template_ids" => {
-                    if field_template_ids.is_some() {
-                        return Err(de::Error::duplicate_field("template_ids"));
-                    }
-                    field_template_ids = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, LIST_PROPERTY_TEMPLATE_IDS_FIELDS))
-            }
-        }
-        Ok(ListPropertyTemplateIds {
-            template_ids: field_template_ids.ok_or_else(|| de::Error::missing_field("template_ids"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("template_ids", &self.template_ids)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ListPropertyTemplateIds {
+impl<'de> ::serde::de::Deserialize<'de> for PropertyTemplateError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ListPropertyTemplateIds;
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PropertyTemplateError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a ListPropertyTemplateIds struct")
+                f.write_str("a PropertyTemplateError structure")
             }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ListPropertyTemplateIds::internal_deserialize(map)
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "template_not_found" => {
+                        if map.next_key()? != Some("template_not_found") {
+                            return Err(de::Error::missing_field("template_not_found"));
+                        }
+                        Ok(PropertyTemplateError::TemplateNotFound(map.next_value()?))
+                    }
+                    "restricted_content" => Ok(PropertyTemplateError::RestrictedContent),
+                    _ => Ok(PropertyTemplateError::Other)
+                }
             }
         }
-        deserializer.deserialize_struct("ListPropertyTemplateIds", LIST_PROPERTY_TEMPLATE_IDS_FIELDS, StructVisitor)
+        const VARIANTS: &'static [&'static str] = &["template_not_found",
+                                                    "restricted_content",
+                                                    "other"];
+        deserializer.deserialize_struct("PropertyTemplateError", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for ListPropertyTemplateIds {
+impl ::serde::ser::Serialize for PropertyTemplateError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
+        // union serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListPropertyTemplateIds", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
+        match *self {
+            PropertyTemplateError::TemplateNotFound(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "template_not_found")?;
+                s.serialize_field("template_not_found", x)?;
+                s.end()
+            }
+            PropertyTemplateError::RestrictedContent => {
+                // unit
+                let mut s = serializer.serialize_struct("PropertyTemplateError", 1)?;
+                s.serialize_field(".tag", "restricted_content")?;
+                s.end()
+            }
+            PropertyTemplateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for PropertyTemplateError {
+    fn description(&self) -> &str {
+        "PropertyTemplateError"
+    }
+}
+
+impl ::std::fmt::Display for PropertyTemplateError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
     }
 }
 
@@ -682,189 +865,6 @@ impl ::serde::ser::Serialize for PropertyType {
             }
             PropertyType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
-    }
-}
-
-#[derive(Debug)]
-pub struct PropertyField {
-    /// This is the name or key of a custom property in a property template. File property names can
-    /// be up to 256 bytes.
-    pub name: String,
-    /// Value of a custom property attached to a file. Values can be up to 1024 bytes.
-    pub value: String,
-}
-
-impl PropertyField {
-    pub fn new(name: String, value: String) -> Self {
-        PropertyField {
-            name,
-            value,
-        }
-    }
-
-}
-
-const PROPERTY_FIELD_FIELDS: &'static [&'static str] = &["name",
-                                                         "value"];
-impl PropertyField {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyField, V::Error> {
-        use serde::de;
-        let mut field_name = None;
-        let mut field_value = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "name" => {
-                    if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
-                    }
-                    field_name = Some(map.next_value()?);
-                }
-                "value" => {
-                    if field_value.is_some() {
-                        return Err(de::Error::duplicate_field("value"));
-                    }
-                    field_value = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, PROPERTY_FIELD_FIELDS))
-            }
-        }
-        Ok(PropertyField {
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            value: field_value.ok_or_else(|| de::Error::missing_field("value"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("name", &self.name)?;
-        s.serialize_field("value", &self.value)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PropertyField {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = PropertyField;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PropertyField struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                PropertyField::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("PropertyField", PROPERTY_FIELD_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PropertyField {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PropertyField", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// The Property template for the specified template.
-#[derive(Debug)]
-pub struct GetPropertyTemplateResult {
-    /// A display name for the property template. Property template names can be up to 256 bytes.
-    pub name: String,
-    /// Description for new property template. Property template descriptions can be up to 1024
-    /// bytes.
-    pub description: String,
-    /// This is a list of custom properties associated with a property template. There can be up to
-    /// 64 properties in a single property template.
-    pub fields: Vec<PropertyFieldTemplate>,
-}
-
-impl GetPropertyTemplateResult {
-    pub fn new(name: String, description: String, fields: Vec<PropertyFieldTemplate>) -> Self {
-        GetPropertyTemplateResult {
-            name,
-            description,
-            fields,
-        }
-    }
-
-}
-
-const GET_PROPERTY_TEMPLATE_RESULT_FIELDS: &'static [&'static str] = &["name",
-                                                                       "description",
-                                                                       "fields"];
-impl GetPropertyTemplateResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetPropertyTemplateResult, V::Error> {
-        use serde::de;
-        let mut field_name = None;
-        let mut field_description = None;
-        let mut field_fields = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "name" => {
-                    if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
-                    }
-                    field_name = Some(map.next_value()?);
-                }
-                "description" => {
-                    if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
-                    }
-                    field_description = Some(map.next_value()?);
-                }
-                "fields" => {
-                    if field_fields.is_some() {
-                        return Err(de::Error::duplicate_field("fields"));
-                    }
-                    field_fields = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, GET_PROPERTY_TEMPLATE_RESULT_FIELDS))
-            }
-        }
-        Ok(GetPropertyTemplateResult {
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
-            fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("name", &self.name)?;
-        s.serialize_field("description", &self.description)?;
-        s.serialize_field("fields", &self.fields)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GetPropertyTemplateResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GetPropertyTemplateResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GetPropertyTemplateResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GetPropertyTemplateResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("GetPropertyTemplateResult", GET_PROPERTY_TEMPLATE_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GetPropertyTemplateResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetPropertyTemplateResult", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
     }
 }
 
