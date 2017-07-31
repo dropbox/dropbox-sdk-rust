@@ -253,10 +253,8 @@ const PAPER_ENABLED_USERS_GROUP_REMOVAL_DETAILS_FIELDS: &'static [&'static str] 
 impl PaperEnabledUsersGroupRemovalDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperEnabledUsersGroupRemovalDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, PAPER_ENABLED_USERS_GROUP_REMOVAL_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, PAPER_ENABLED_USERS_GROUP_REMOVAL_DETAILS_FIELDS));
         }
         Ok(PaperEnabledUsersGroupRemovalDetails {
         })
@@ -304,10 +302,8 @@ const FILE_REQUESTS_EMAILS_RESTRICTED_TO_TEAM_ONLY_DETAILS_FIELDS: &'static [&'s
 impl FileRequestsEmailsRestrictedToTeamOnlyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestsEmailsRestrictedToTeamOnlyDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_REQUESTS_EMAILS_RESTRICTED_TO_TEAM_ONLY_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_REQUESTS_EMAILS_RESTRICTED_TO_TEAM_ONLY_DETAILS_FIELDS));
         }
         Ok(FileRequestsEmailsRestrictedToTeamOnlyDetails {
         })
@@ -465,10 +461,8 @@ const SHARED_NOTE_OPENED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SharedNoteOpenedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedNoteOpenedDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SHARED_NOTE_OPENED_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHARED_NOTE_OPENED_DETAILS_FIELDS));
         }
         Ok(SharedNoteOpenedDetails {
         })
@@ -658,10 +652,8 @@ const MEMBER_SPACE_LIMITS_ADD_EXCEPTION_DETAILS_FIELDS: &'static [&'static str] 
 impl MemberSpaceLimitsAddExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberSpaceLimitsAddExceptionDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_ADD_EXCEPTION_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_ADD_EXCEPTION_DETAILS_FIELDS));
         }
         Ok(MemberSpaceLimitsAddExceptionDetails {
         })
@@ -709,10 +701,8 @@ const MEMBER_SPACE_LIMITS_REMOVE_EXCEPTION_DETAILS_FIELDS: &'static [&'static st
 impl MemberSpaceLimitsRemoveExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberSpaceLimitsRemoveExceptionDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_REMOVE_EXCEPTION_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_REMOVE_EXCEPTION_DETAILS_FIELDS));
         }
         Ok(MemberSpaceLimitsRemoveExceptionDetails {
         })
@@ -760,10 +750,8 @@ const TFA_CHANGE_BACKUP_PHONE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TfaChangeBackupPhoneDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaChangeBackupPhoneDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, TFA_CHANGE_BACKUP_PHONE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, TFA_CHANGE_BACKUP_PHONE_DETAILS_FIELDS));
         }
         Ok(TfaChangeBackupPhoneDetails {
         })
@@ -966,10 +954,8 @@ const FILE_REVERT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileRevertDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRevertDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_REVERT_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_REVERT_DETAILS_FIELDS));
         }
         Ok(FileRevertDetails {
         })
@@ -1172,10 +1158,8 @@ const TFA_REMOVE_BACKUP_PHONE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TfaRemoveBackupPhoneDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaRemoveBackupPhoneDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, TFA_REMOVE_BACKUP_PHONE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, TFA_REMOVE_BACKUP_PHONE_DETAILS_FIELDS));
         }
         Ok(TfaRemoveBackupPhoneDetails {
         })
@@ -1774,10 +1758,8 @@ const SHMODEL_VISIBILITY_TEAM_ONLY_DETAILS_FIELDS: &'static [&'static str] = &[]
 impl ShmodelVisibilityTeamOnlyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelVisibilityTeamOnlyDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SHMODEL_VISIBILITY_TEAM_ONLY_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHMODEL_VISIBILITY_TEAM_ONLY_DETAILS_FIELDS));
         }
         Ok(ShmodelVisibilityTeamOnlyDetails {
         })
@@ -2152,10 +2134,8 @@ const EMM_REMOVE_EXCEPTION_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EmmRemoveExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmRemoveExceptionDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, EMM_REMOVE_EXCEPTION_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, EMM_REMOVE_EXCEPTION_DETAILS_FIELDS));
         }
         Ok(EmmRemoveExceptionDetails {
         })
@@ -2488,10 +2468,8 @@ const MEMBER_SUGGEST_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl MemberSuggestDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberSuggestDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, MEMBER_SUGGEST_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, MEMBER_SUGGEST_DETAILS_FIELDS));
         }
         Ok(MemberSuggestDetails {
         })
@@ -2849,10 +2827,8 @@ const PAPER_ENABLED_USERS_GROUP_ADDITION_DETAILS_FIELDS: &'static [&'static str]
 impl PaperEnabledUsersGroupAdditionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperEnabledUsersGroupAdditionDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, PAPER_ENABLED_USERS_GROUP_ADDITION_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, PAPER_ENABLED_USERS_GROUP_ADDITION_DETAILS_FIELDS));
         }
         Ok(PaperEnabledUsersGroupAdditionDetails {
         })
@@ -2900,10 +2876,8 @@ const GROUP_REMOVE_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl GroupRemoveMemberDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupRemoveMemberDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, GROUP_REMOVE_MEMBER_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, GROUP_REMOVE_MEMBER_DETAILS_FIELDS));
         }
         Ok(GroupRemoveMemberDetails {
         })
@@ -3911,10 +3885,8 @@ const TFA_ADD_BACKUP_PHONE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TfaAddBackupPhoneDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaAddBackupPhoneDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, TFA_ADD_BACKUP_PHONE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, TFA_ADD_BACKUP_PHONE_DETAILS_FIELDS));
         }
         Ok(TfaAddBackupPhoneDetails {
         })
@@ -4020,10 +3992,8 @@ const TEAM_FOLDER_CREATE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TeamFolderCreateDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderCreateDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_CREATE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, TEAM_FOLDER_CREATE_DETAILS_FIELDS));
         }
         Ok(TeamFolderCreateDetails {
         })
@@ -4071,10 +4041,8 @@ const SIGN_IN_AS_SESSION_START_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SignInAsSessionStartDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SignInAsSessionStartDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SIGN_IN_AS_SESSION_START_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SIGN_IN_AS_SESSION_START_DETAILS_FIELDS));
         }
         Ok(SignInAsSessionStartDetails {
         })
@@ -7258,10 +7226,8 @@ const FILE_REQUESTS_EMAILS_ENABLED_DETAILS_FIELDS: &'static [&'static str] = &[]
 impl FileRequestsEmailsEnabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestsEmailsEnabledDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_REQUESTS_EMAILS_ENABLED_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_REQUESTS_EMAILS_ENABLED_DETAILS_FIELDS));
         }
         Ok(FileRequestsEmailsEnabledDetails {
         })
@@ -7977,10 +7943,8 @@ const GROUP_DESCRIPTION_UPDATED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl GroupDescriptionUpdatedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupDescriptionUpdatedDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, GROUP_DESCRIPTION_UPDATED_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, GROUP_DESCRIPTION_UPDATED_DETAILS_FIELDS));
         }
         Ok(GroupDescriptionUpdatedDetails {
         })
@@ -8707,10 +8671,8 @@ const DEVICE_MANAGEMENT_DISABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl DeviceManagementDisabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceManagementDisabledDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, DEVICE_MANAGEMENT_DISABLED_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, DEVICE_MANAGEMENT_DISABLED_DETAILS_FIELDS));
         }
         Ok(DeviceManagementDisabledDetails {
         })
@@ -8842,10 +8804,8 @@ const ALLOW_DOWNLOAD_ENABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl AllowDownloadEnabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AllowDownloadEnabledDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, ALLOW_DOWNLOAD_ENABLED_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, ALLOW_DOWNLOAD_ENABLED_DETAILS_FIELDS));
         }
         Ok(AllowDownloadEnabledDetails {
         })
@@ -10049,10 +10009,8 @@ const FILE_DOWNLOAD_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileDownloadDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileDownloadDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_DOWNLOAD_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_DOWNLOAD_DETAILS_FIELDS));
         }
         Ok(FileDownloadDetails {
         })
@@ -10100,10 +10058,8 @@ const SHMODEL_TEAM_VIEW_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelTeamViewDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelTeamViewDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SHMODEL_TEAM_VIEW_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHMODEL_TEAM_VIEW_DETAILS_FIELDS));
         }
         Ok(ShmodelTeamViewDetails {
         })
@@ -10489,10 +10445,8 @@ const LOGOUT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl LogoutDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<LogoutDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, LOGOUT_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, LOGOUT_DETAILS_FIELDS));
         }
         Ok(LogoutDetails {
         })
@@ -10971,10 +10925,8 @@ const SIGN_IN_AS_SESSION_END_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SignInAsSessionEndDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SignInAsSessionEndDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SIGN_IN_AS_SESSION_END_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SIGN_IN_AS_SESSION_END_DETAILS_FIELDS));
         }
         Ok(SignInAsSessionEndDetails {
         })
@@ -11105,10 +11057,8 @@ const RESELLER_SUPPORT_SESSION_END_DETAILS_FIELDS: &'static [&'static str] = &[]
 impl ResellerSupportSessionEndDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ResellerSupportSessionEndDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, RESELLER_SUPPORT_SESSION_END_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, RESELLER_SUPPORT_SESSION_END_DETAILS_FIELDS));
         }
         Ok(ResellerSupportSessionEndDetails {
         })
@@ -11491,10 +11441,8 @@ const DISABLED_DOMAIN_INVITES_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl DisabledDomainInvitesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DisabledDomainInvitesDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, DISABLED_DOMAIN_INVITES_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, DISABLED_DOMAIN_INVITES_DETAILS_FIELDS));
         }
         Ok(DisabledDomainInvitesDetails {
         })
@@ -11542,10 +11490,8 @@ const SMART_SYNC_CREATE_ADMIN_PRIVILEGE_REPORT_DETAILS_FIELDS: &'static [&'stati
 impl SmartSyncCreateAdminPrivilegeReportDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SmartSyncCreateAdminPrivilegeReportDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SMART_SYNC_CREATE_ADMIN_PRIVILEGE_REPORT_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SMART_SYNC_CREATE_ADMIN_PRIVILEGE_REPORT_DETAILS_FIELDS));
         }
         Ok(SmartSyncCreateAdminPrivilegeReportDetails {
         })
@@ -12207,10 +12153,8 @@ const FILE_PERMANENTLY_DELETE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FilePermanentlyDeleteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FilePermanentlyDeleteDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_PERMANENTLY_DELETE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_PERMANENTLY_DELETE_DETAILS_FIELDS));
         }
         Ok(FilePermanentlyDeleteDetails {
         })
@@ -12673,10 +12617,8 @@ const EMM_LOGIN_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EmmLoginSuccessDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmLoginSuccessDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, EMM_LOGIN_SUCCESS_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, EMM_LOGIN_SUCCESS_DETAILS_FIELDS));
         }
         Ok(EmmLoginSuccessDetails {
         })
@@ -13216,10 +13158,8 @@ const DOMAIN_INVITES_DECLINE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS: &'static [&'st
 impl DomainInvitesDeclineRequestToJoinTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainInvitesDeclineRequestToJoinTeamDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, DOMAIN_INVITES_DECLINE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, DOMAIN_INVITES_DECLINE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS));
         }
         Ok(DomainInvitesDeclineRequestToJoinTeamDetails {
         })
@@ -13394,10 +13334,8 @@ const MISSING_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl MissingDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MissingDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, MISSING_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, MISSING_DETAILS_FIELDS));
         }
         Ok(MissingDetails {
         })
@@ -13904,10 +13842,8 @@ const TEAM_PROFILE_CHANGE_LOGO_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TeamProfileChangeLogoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamProfileChangeLogoDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, TEAM_PROFILE_CHANGE_LOGO_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, TEAM_PROFILE_CHANGE_LOGO_DETAILS_FIELDS));
         }
         Ok(TeamProfileChangeLogoDetails {
         })
@@ -14224,10 +14160,8 @@ const SHMODEL_TEAM_COPY_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelTeamCopyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelTeamCopyDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SHMODEL_TEAM_COPY_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHMODEL_TEAM_COPY_DETAILS_FIELDS));
         }
         Ok(ShmodelTeamCopyDetails {
         })
@@ -14359,10 +14293,8 @@ const TEAM_PROFILE_REMOVE_LOGO_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TeamProfileRemoveLogoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamProfileRemoveLogoDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, TEAM_PROFILE_REMOVE_LOGO_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, TEAM_PROFILE_REMOVE_LOGO_DETAILS_FIELDS));
         }
         Ok(TeamProfileRemoveLogoDetails {
         })
@@ -14553,10 +14485,8 @@ const GROUP_MOVED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl GroupMovedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupMovedDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, GROUP_MOVED_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, GROUP_MOVED_DETAILS_FIELDS));
         }
         Ok(GroupMovedDetails {
         })
@@ -14807,10 +14737,8 @@ const ALLOW_DOWNLOAD_DISABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl AllowDownloadDisabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AllowDownloadDisabledDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, ALLOW_DOWNLOAD_DISABLED_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, ALLOW_DOWNLOAD_DISABLED_DETAILS_FIELDS));
         }
         Ok(AllowDownloadDisabledDetails {
         })
@@ -14996,10 +14924,8 @@ const TFA_ADD_SECURITY_KEY_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TfaAddSecurityKeyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaAddSecurityKeyDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, TFA_ADD_SECURITY_KEY_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, TFA_ADD_SECURITY_KEY_DETAILS_FIELDS));
         }
         Ok(TfaAddSecurityKeyDetails {
         })
@@ -15540,10 +15466,8 @@ const FILE_EDIT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileEditDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileEditDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_EDIT_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_EDIT_DETAILS_FIELDS));
         }
         Ok(FileEditDetails {
         })
@@ -15662,10 +15586,8 @@ const FILE_ROLLBACK_CHANGES_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileRollbackChangesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRollbackChangesDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_ROLLBACK_CHANGES_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_ROLLBACK_CHANGES_DETAILS_FIELDS));
         }
         Ok(FileRollbackChangesDetails {
         })
@@ -19274,10 +19196,8 @@ const DEVICE_MANAGEMENT_ENABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl DeviceManagementEnabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceManagementEnabledDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, DEVICE_MANAGEMENT_ENABLED_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, DEVICE_MANAGEMENT_ENABLED_DETAILS_FIELDS));
         }
         Ok(DeviceManagementEnabledDetails {
         })
@@ -19699,10 +19619,8 @@ const NOTE_ACL_TEAM_LINK_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl NoteAclTeamLinkDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NoteAclTeamLinkDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, NOTE_ACL_TEAM_LINK_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, NOTE_ACL_TEAM_LINK_DETAILS_FIELDS));
         }
         Ok(NoteAclTeamLinkDetails {
         })
@@ -19750,10 +19668,8 @@ const PAPER_EXTERNAL_VIEW_FORBID_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PaperExternalViewForbidDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperExternalViewForbidDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, PAPER_EXTERNAL_VIEW_FORBID_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, PAPER_EXTERNAL_VIEW_FORBID_DETAILS_FIELDS));
         }
         Ok(PaperExternalViewForbidDetails {
         })
@@ -20350,10 +20266,8 @@ const NOTE_ACL_INVITE_ONLY_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl NoteAclInviteOnlyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NoteAclInviteOnlyDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, NOTE_ACL_INVITE_ONLY_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, NOTE_ACL_INVITE_ONLY_DETAILS_FIELDS));
         }
         Ok(NoteAclInviteOnlyDetails {
         })
@@ -21935,10 +21849,8 @@ const NOTE_ACL_LINK_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl NoteAclLinkDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NoteAclLinkDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, NOTE_ACL_LINK_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, NOTE_ACL_LINK_DETAILS_FIELDS));
         }
         Ok(NoteAclLinkDetails {
         })
@@ -22135,10 +22047,8 @@ const SF_EXTERNAL_INVITE_WARN_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SfExternalInviteWarnDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfExternalInviteWarnDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SF_EXTERNAL_INVITE_WARN_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SF_EXTERNAL_INVITE_WARN_DETAILS_FIELDS));
         }
         Ok(SfExternalInviteWarnDetails {
         })
@@ -22493,10 +22403,8 @@ const MEMBER_PERMANENTLY_DELETE_ACCOUNT_CONTENTS_DETAILS_FIELDS: &'static [&'sta
 impl MemberPermanentlyDeleteAccountContentsDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberPermanentlyDeleteAccountContentsDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, MEMBER_PERMANENTLY_DELETE_ACCOUNT_CONTENTS_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, MEMBER_PERMANENTLY_DELETE_ACCOUNT_CONTENTS_DETAILS_FIELDS));
         }
         Ok(MemberPermanentlyDeleteAccountContentsDetails {
         })
@@ -22544,10 +22452,8 @@ const SHMODEL_TEAM_DOWNLOAD_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelTeamDownloadDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelTeamDownloadDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SHMODEL_TEAM_DOWNLOAD_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHMODEL_TEAM_DOWNLOAD_DETAILS_FIELDS));
         }
         Ok(ShmodelTeamDownloadDetails {
         })
@@ -22595,10 +22501,8 @@ const EMM_CREATE_EXCEPTIONS_REPORT_DETAILS_FIELDS: &'static [&'static str] = &[]
 impl EmmCreateExceptionsReportDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmCreateExceptionsReportDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, EMM_CREATE_EXCEPTIONS_REPORT_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, EMM_CREATE_EXCEPTIONS_REPORT_DETAILS_FIELDS));
         }
         Ok(EmmCreateExceptionsReportDetails {
         })
@@ -22867,10 +22771,8 @@ const EMM_CREATE_USAGE_REPORT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EmmCreateUsageReportDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmCreateUsageReportDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, EMM_CREATE_USAGE_REPORT_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, EMM_CREATE_USAGE_REPORT_DETAILS_FIELDS));
         }
         Ok(EmmCreateUsageReportDetails {
         })
@@ -22918,10 +22820,8 @@ const SHMODEL_VISIBILITY_PUBLIC_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelVisibilityPublicDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelVisibilityPublicDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SHMODEL_VISIBILITY_PUBLIC_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHMODEL_VISIBILITY_PUBLIC_DETAILS_FIELDS));
         }
         Ok(ShmodelVisibilityPublicDetails {
         })
@@ -23454,10 +23354,8 @@ const PASSWORD_RESET_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PasswordResetDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PasswordResetDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, PASSWORD_RESET_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, PASSWORD_RESET_DETAILS_FIELDS));
         }
         Ok(PasswordResetDetails {
         })
@@ -23505,10 +23403,8 @@ const FILE_GET_COPY_REFERENCE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileGetCopyReferenceDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileGetCopyReferenceDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_GET_COPY_REFERENCE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_GET_COPY_REFERENCE_DETAILS_FIELDS));
         }
         Ok(FileGetCopyReferenceDetails {
         })
@@ -23787,10 +23683,8 @@ const OPEN_NOTE_SHARED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl OpenNoteSharedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<OpenNoteSharedDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, OPEN_NOTE_SHARED_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, OPEN_NOTE_SHARED_DETAILS_FIELDS));
         }
         Ok(OpenNoteSharedDetails {
         })
@@ -23992,10 +23886,8 @@ const ENABLED_DOMAIN_INVITES_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EnabledDomainInvitesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EnabledDomainInvitesDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, ENABLED_DOMAIN_INVITES_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, ENABLED_DOMAIN_INVITES_DETAILS_FIELDS));
         }
         Ok(EnabledDomainInvitesDetails {
         })
@@ -24043,10 +23935,8 @@ const TFA_REMOVE_SECURITY_KEY_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TfaRemoveSecurityKeyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaRemoveSecurityKeyDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, TFA_REMOVE_SECURITY_KEY_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, TFA_REMOVE_SECURITY_KEY_DETAILS_FIELDS));
         }
         Ok(TfaRemoveSecurityKeyDetails {
         })
@@ -24573,10 +24463,8 @@ const SHMODEL_VISIBILITY_PASSWORD_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelVisibilityPasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelVisibilityPasswordDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SHMODEL_VISIBILITY_PASSWORD_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHMODEL_VISIBILITY_PASSWORD_DETAILS_FIELDS));
         }
         Ok(ShmodelVisibilityPasswordDetails {
         })
@@ -24713,10 +24601,8 @@ const TFA_RESET_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TfaResetDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaResetDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, TFA_RESET_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, TFA_RESET_DETAILS_FIELDS));
         }
         Ok(TfaResetDetails {
         })
@@ -25206,10 +25092,8 @@ const PAPER_EXTERNAL_VIEW_ALLOW_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PaperExternalViewAllowDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperExternalViewAllowDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, PAPER_EXTERNAL_VIEW_ALLOW_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, PAPER_EXTERNAL_VIEW_ALLOW_DETAILS_FIELDS));
         }
         Ok(PaperExternalViewAllowDetails {
         })
@@ -25987,10 +25871,8 @@ const PASSWORD_CHANGE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PasswordChangeDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PasswordChangeDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, PASSWORD_CHANGE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, PASSWORD_CHANGE_DETAILS_FIELDS));
         }
         Ok(PasswordChangeDetails {
         })
@@ -26193,10 +26075,8 @@ const DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_YES_DETAILS_FIELDS: &'static [&
 impl DomainInvitesSetInviteNewUserPrefToYesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainInvitesSetInviteNewUserPrefToYesDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_YES_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_YES_DETAILS_FIELDS));
         }
         Ok(DomainInvitesSetInviteNewUserPrefToYesDetails {
         })
@@ -26327,10 +26207,8 @@ const EMM_REFRESH_AUTH_TOKEN_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EmmRefreshAuthTokenDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmRefreshAuthTokenDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, EMM_REFRESH_AUTH_TOKEN_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, EMM_REFRESH_AUTH_TOKEN_DETAILS_FIELDS));
         }
         Ok(EmmRefreshAuthTokenDetails {
         })
@@ -26378,10 +26256,8 @@ const FILE_ADD_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileAddDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileAddDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_ADD_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_ADD_DETAILS_FIELDS));
         }
         Ok(FileAddDetails {
         })
@@ -26500,10 +26376,8 @@ const NOTE_SHARED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl NoteSharedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NoteSharedDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, NOTE_SHARED_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, NOTE_SHARED_DETAILS_FIELDS));
         }
         Ok(NoteSharedDetails {
         })
@@ -27300,10 +27174,8 @@ const DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_NO_DETAILS_FIELDS: &'static [&'
 impl DomainInvitesSetInviteNewUserPrefToNoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainInvitesSetInviteNewUserPrefToNoDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_NO_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_NO_DETAILS_FIELDS));
         }
         Ok(DomainInvitesSetInviteNewUserPrefToNoDetails {
         })
@@ -27564,10 +27436,8 @@ const SHMODEL_REMOVE_EXPIRATION_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelRemoveExpirationDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelRemoveExpirationDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SHMODEL_REMOVE_EXPIRATION_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHMODEL_REMOVE_EXPIRATION_DETAILS_FIELDS));
         }
         Ok(ShmodelRemoveExpirationDetails {
         })
@@ -28394,10 +28264,8 @@ const EMM_ADD_EXCEPTION_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EmmAddExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmAddExceptionDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, EMM_ADD_EXCEPTION_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, EMM_ADD_EXCEPTION_DETAILS_FIELDS));
         }
         Ok(EmmAddExceptionDetails {
         })
@@ -28515,10 +28383,8 @@ const NOTE_SHARE_RECEIVE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl NoteShareReceiveDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NoteShareReceiveDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, NOTE_SHARE_RECEIVE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, NOTE_SHARE_RECEIVE_DETAILS_FIELDS));
         }
         Ok(NoteShareReceiveDetails {
         })
@@ -28824,10 +28690,8 @@ const PAPER_EXTERNAL_VIEW_DEFAULT_TEAM_DETAILS_FIELDS: &'static [&'static str] =
 impl PaperExternalViewDefaultTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperExternalViewDefaultTeamDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, PAPER_EXTERNAL_VIEW_DEFAULT_TEAM_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, PAPER_EXTERNAL_VIEW_DEFAULT_TEAM_DETAILS_FIELDS));
         }
         Ok(PaperExternalViewDefaultTeamDetails {
         })
@@ -29155,10 +29019,8 @@ const SHMODEL_TEAM_SHARE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelTeamShareDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelTeamShareDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SHMODEL_TEAM_SHARE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHMODEL_TEAM_SHARE_DETAILS_FIELDS));
         }
         Ok(ShmodelTeamShareDetails {
         })
@@ -29761,10 +29623,8 @@ const FILE_RESTORE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileRestoreDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRestoreDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_RESTORE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_RESTORE_DETAILS_FIELDS));
         }
         Ok(FileRestoreDetails {
         })
@@ -30013,10 +29873,8 @@ const DOMAIN_INVITES_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS: &'static [&'static str
 impl DomainInvitesRequestToJoinTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainInvitesRequestToJoinTeamDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, DOMAIN_INVITES_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, DOMAIN_INVITES_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS));
         }
         Ok(DomainInvitesRequestToJoinTeamDetails {
         })
@@ -30363,10 +30221,8 @@ const RESELLER_SUPPORT_SESSION_START_DETAILS_FIELDS: &'static [&'static str] = &
 impl ResellerSupportSessionStartDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ResellerSupportSessionStartDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, RESELLER_SUPPORT_SESSION_START_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, RESELLER_SUPPORT_SESSION_START_DETAILS_FIELDS));
         }
         Ok(ResellerSupportSessionStartDetails {
         })
@@ -30414,10 +30270,8 @@ const PASSWORD_RESET_ALL_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PasswordResetAllDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PasswordResetAllDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, PASSWORD_RESET_ALL_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, PASSWORD_RESET_ALL_DETAILS_FIELDS));
         }
         Ok(PasswordResetAllDetails {
         })
@@ -30465,10 +30319,8 @@ const CREATE_FOLDER_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl CreateFolderDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CreateFolderDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, CREATE_FOLDER_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, CREATE_FOLDER_DETAILS_FIELDS));
         }
         Ok(CreateFolderDetails {
         })
@@ -30689,10 +30541,8 @@ const SHMODEL_GROUP_SHARE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelGroupShareDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelGroupShareDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, SHMODEL_GROUP_SHARE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHMODEL_GROUP_SHARE_DETAILS_FIELDS));
         }
         Ok(ShmodelGroupShareDetails {
         })
@@ -30895,10 +30745,8 @@ const PASSWORD_LOGIN_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PasswordLoginSuccessDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PasswordLoginSuccessDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, PASSWORD_LOGIN_SUCCESS_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, PASSWORD_LOGIN_SUCCESS_DETAILS_FIELDS));
         }
         Ok(PasswordLoginSuccessDetails {
         })
@@ -31226,10 +31074,8 @@ const FILE_DELETE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileDeleteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileDeleteDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_DELETE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_DELETE_DETAILS_FIELDS));
         }
         Ok(FileDeleteDetails {
         })
@@ -31361,10 +31207,8 @@ const FILE_PREVIEW_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FilePreviewDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FilePreviewDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_PREVIEW_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_PREVIEW_DETAILS_FIELDS));
         }
         Ok(FilePreviewDetails {
         })
@@ -31885,10 +31729,8 @@ const TEAM_FOLDER_PERMANENTLY_DELETE_DETAILS_FIELDS: &'static [&'static str] = &
 impl TeamFolderPermanentlyDeleteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderPermanentlyDeleteDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_PERMANENTLY_DELETE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, TEAM_FOLDER_PERMANENTLY_DELETE_DETAILS_FIELDS));
         }
         Ok(TeamFolderPermanentlyDeleteDetails {
         })
@@ -32247,10 +32089,8 @@ const DOMAIN_INVITES_APPROVE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS: &'static [&'st
 impl DomainInvitesApproveRequestToJoinTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainInvitesApproveRequestToJoinTeamDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, DOMAIN_INVITES_APPROVE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, DOMAIN_INVITES_APPROVE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS));
         }
         Ok(DomainInvitesApproveRequestToJoinTeamDetails {
         })
@@ -32382,10 +32222,8 @@ const TEAM_PROFILE_ADD_LOGO_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TeamProfileAddLogoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamProfileAddLogoDetails, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, TEAM_PROFILE_ADD_LOGO_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, TEAM_PROFILE_ADD_LOGO_DETAILS_FIELDS));
         }
         Ok(TeamProfileAddLogoDetails {
         })

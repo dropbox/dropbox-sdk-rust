@@ -218,16 +218,20 @@ class RustGenerator(CodeGenerator):
         with self._impl_struct(struct):
             with self.block(u'pub(crate) fn internal_deserialize<\'de, V: ::serde::de::MapAccess<\'de>>(mut map: V) -> Result<{}, V::Error>'.format(type_name)):
                 self.emit(u'use serde::de;')
-                for field in struct.all_fields:
-                    self.emit(u'let mut field_{} = None;'.format(self._field_name(field)))
-                with nested(self.block(u'while let Some(key) = map.next_key()?'), self.block(u'match key')):
+                if not struct.all_fields:
+                    with self.block(u'if let Some(key) = map.next_key()?'):
+                        self.emit(u'return Err(de::Error::unknown_field(key, {}));'.format(field_list_name))
+                else:
                     for field in struct.all_fields:
-                        field_name = self._field_name(field)
-                        with self.block(u'"{}" =>'.format(field.name)):
-                            with self.block(u'if field_{}.is_some()'.format(field_name)):
-                                self.emit(u'return Err(de::Error::duplicate_field("{}"));'.format(field.name))
-                            self.emit(u'field_{} = Some(map.next_value()?);'.format(field_name))
-                    self.emit(u'_ => return Err(de::Error::unknown_field(key, {}))'.format(field_list_name))
+                        self.emit(u'let mut field_{} = None;'.format(self._field_name(field)))
+                    with nested(self.block(u'while let Some(key) = map.next_key()?'), self.block(u'match key')):
+                        for field in struct.all_fields:
+                            field_name = self._field_name(field)
+                            with self.block(u'"{}" =>'.format(field.name)):
+                                with self.block(u'if field_{}.is_some()'.format(field_name)):
+                                    self.emit(u'return Err(de::Error::duplicate_field("{}"));'.format(field.name))
+                                self.emit(u'field_{} = Some(map.next_value()?);'.format(field_name))
+                        self.emit(u'_ => return Err(de::Error::unknown_field(key, {}))'.format(field_list_name))
                 with self.block(u'Ok({}'.format(type_name), delim=(u'{',u'})')):
                     for field in struct.all_fields:
                         field_name = self._field_name(field)

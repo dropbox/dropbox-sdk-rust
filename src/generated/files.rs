@@ -490,10 +490,8 @@ const FILE_OPS_RESULT_FIELDS: &'static [&'static str] = &[];
 impl FileOpsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileOpsResult, V::Error> {
         use serde::de;
-        while let Some(key) = map.next_key()? {
-            match key {
-                _ => return Err(de::Error::unknown_field(key, FILE_OPS_RESULT_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, FILE_OPS_RESULT_FIELDS));
         }
         Ok(FileOpsResult {
         })
