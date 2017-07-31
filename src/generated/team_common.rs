@@ -23,11 +23,10 @@ pub enum GroupType {
     /// A group is created and managed by a user.
     UserManaged,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -37,22 +36,21 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupType {
                 f.write_str("a GroupType structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "team" => Ok(GroupType::Team),
                     "user_managed" => Ok(GroupType::UserManaged),
-                    "other" => Ok(GroupType::Other),
-                    _ => Ok(GroupType::_Unknown)
+                    _ => Ok(GroupType::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["team",
                                                     "user_managed",
                                                     "other"];
-        _deserializer.deserialize_struct("GroupType", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("GroupType", VARIANTS, EnumVisitor)
     }
 }
 
@@ -73,13 +71,7 @@ impl ::serde::ser::Serialize for GroupType {
                 s.serialize_field(".tag", "user_managed")?;
                 s.end()
             }
-            GroupType::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("GroupType", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            GroupType::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            GroupType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -94,11 +86,10 @@ pub enum GroupManagementType {
     /// A group which is managed automatically by Dropbox.
     SystemManaged,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupManagementType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -108,7 +99,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupManagementType {
                 f.write_str("a GroupManagementType structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -116,8 +107,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupManagementType {
                     "user_managed" => Ok(GroupManagementType::UserManaged),
                     "company_managed" => Ok(GroupManagementType::CompanyManaged),
                     "system_managed" => Ok(GroupManagementType::SystemManaged),
-                    "other" => Ok(GroupManagementType::Other),
-                    _ => Ok(GroupManagementType::_Unknown)
+                    _ => Ok(GroupManagementType::Other)
                 }
             }
         }
@@ -125,7 +115,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupManagementType {
                                                     "company_managed",
                                                     "system_managed",
                                                     "other"];
-        _deserializer.deserialize_struct("GroupManagementType", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("GroupManagementType", VARIANTS, EnumVisitor)
     }
 }
 
@@ -152,13 +142,7 @@ impl ::serde::ser::Serialize for GroupManagementType {
                 s.serialize_field(".tag", "system_managed")?;
                 s.end()
             }
-            GroupManagementType::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("GroupManagementType", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            GroupManagementType::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            GroupManagementType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -267,7 +251,7 @@ impl GroupSummary {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupSummary {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -280,7 +264,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupSummary {
                 GroupSummary::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupSummary", GROUP_SUMMARY_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupSummary", GROUP_SUMMARY_FIELDS, StructVisitor)
     }
 }
 
@@ -350,7 +334,7 @@ impl TimeRange {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TimeRange {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -363,7 +347,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TimeRange {
                 TimeRange::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TimeRange", TIME_RANGE_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TimeRange", TIME_RANGE_FIELDS, StructVisitor)
     }
 }
 

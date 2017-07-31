@@ -16,11 +16,10 @@ pub enum SharedFolderJoinPolicy {
     /// Team members can join any shared folder, including those shared by users outside the team.
     FromAnyone,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderJoinPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -30,22 +29,21 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderJoinPolicy {
                 f.write_str("a SharedFolderJoinPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "from_team_only" => Ok(SharedFolderJoinPolicy::FromTeamOnly),
                     "from_anyone" => Ok(SharedFolderJoinPolicy::FromAnyone),
-                    "other" => Ok(SharedFolderJoinPolicy::Other),
-                    _ => Ok(SharedFolderJoinPolicy::_Unknown)
+                    _ => Ok(SharedFolderJoinPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["from_team_only",
                                                     "from_anyone",
                                                     "other"];
-        _deserializer.deserialize_struct("SharedFolderJoinPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SharedFolderJoinPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -66,13 +64,7 @@ impl ::serde::ser::Serialize for SharedFolderJoinPolicy {
                 s.serialize_field(".tag", "from_anyone")?;
                 s.end()
             }
-            SharedFolderJoinPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedFolderJoinPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SharedFolderJoinPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SharedFolderJoinPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -86,11 +78,10 @@ pub enum EmmState {
     /// Emm token is required
     Required,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EmmState {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -100,7 +91,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmState {
                 f.write_str("a EmmState structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -108,8 +99,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmState {
                     "disabled" => Ok(EmmState::Disabled),
                     "optional" => Ok(EmmState::Optional),
                     "required" => Ok(EmmState::Required),
-                    "other" => Ok(EmmState::Other),
-                    _ => Ok(EmmState::_Unknown)
+                    _ => Ok(EmmState::Other)
                 }
             }
         }
@@ -117,7 +107,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmState {
                                                     "optional",
                                                     "required",
                                                     "other"];
-        _deserializer.deserialize_struct("EmmState", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("EmmState", VARIANTS, EnumVisitor)
     }
 }
 
@@ -144,13 +134,7 @@ impl ::serde::ser::Serialize for EmmState {
                 s.serialize_field(".tag", "required")?;
                 s.end()
             }
-            EmmState::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("EmmState", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            EmmState::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            EmmState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -163,11 +147,10 @@ pub enum SharedFolderMemberPolicy {
     /// Anyone can be a member of a folder shared by a team member.
     Anyone,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -177,22 +160,21 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberPolicy {
                 f.write_str("a SharedFolderMemberPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "team" => Ok(SharedFolderMemberPolicy::Team),
                     "anyone" => Ok(SharedFolderMemberPolicy::Anyone),
-                    "other" => Ok(SharedFolderMemberPolicy::Other),
-                    _ => Ok(SharedFolderMemberPolicy::_Unknown)
+                    _ => Ok(SharedFolderMemberPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["team",
                                                     "anyone",
                                                     "other"];
-        _deserializer.deserialize_struct("SharedFolderMemberPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SharedFolderMemberPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -213,13 +195,7 @@ impl ::serde::ser::Serialize for SharedFolderMemberPolicy {
                 s.serialize_field(".tag", "anyone")?;
                 s.end()
             }
-            SharedFolderMemberPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedFolderMemberPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SharedFolderMemberPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SharedFolderMemberPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -298,7 +274,7 @@ impl TeamMemberPolicies {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamMemberPolicies {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -311,7 +287,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamMemberPolicies {
                 TeamMemberPolicies::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamMemberPolicies", TEAM_MEMBER_POLICIES_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamMemberPolicies", TEAM_MEMBER_POLICIES_FIELDS, StructVisitor)
     }
 }
 
@@ -332,11 +308,10 @@ pub enum OfficeAddInPolicy {
     /// Office Add-In is enabled
     Enabled,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for OfficeAddInPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -346,22 +321,21 @@ impl<'de> ::serde::de::Deserialize<'de> for OfficeAddInPolicy {
                 f.write_str("a OfficeAddInPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "disabled" => Ok(OfficeAddInPolicy::Disabled),
                     "enabled" => Ok(OfficeAddInPolicy::Enabled),
-                    "other" => Ok(OfficeAddInPolicy::Other),
-                    _ => Ok(OfficeAddInPolicy::_Unknown)
+                    _ => Ok(OfficeAddInPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["disabled",
                                                     "enabled",
                                                     "other"];
-        _deserializer.deserialize_struct("OfficeAddInPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("OfficeAddInPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -382,13 +356,7 @@ impl ::serde::ser::Serialize for OfficeAddInPolicy {
                 s.serialize_field(".tag", "enabled")?;
                 s.end()
             }
-            OfficeAddInPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("OfficeAddInPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            OfficeAddInPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            OfficeAddInPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -463,7 +431,7 @@ impl TeamSharingPolicies {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamSharingPolicies {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -476,7 +444,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamSharingPolicies {
                 TeamSharingPolicies::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamSharingPolicies", TEAM_SHARING_POLICIES_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamSharingPolicies", TEAM_SHARING_POLICIES_FIELDS, StructVisitor)
     }
 }
 
@@ -504,11 +472,10 @@ pub enum SharedLinkCreatePolicy {
     /// all shared links.
     TeamOnly,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedLinkCreatePolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -518,7 +485,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkCreatePolicy {
                 f.write_str("a SharedLinkCreatePolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -526,8 +493,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkCreatePolicy {
                     "default_public" => Ok(SharedLinkCreatePolicy::DefaultPublic),
                     "default_team_only" => Ok(SharedLinkCreatePolicy::DefaultTeamOnly),
                     "team_only" => Ok(SharedLinkCreatePolicy::TeamOnly),
-                    "other" => Ok(SharedLinkCreatePolicy::Other),
-                    _ => Ok(SharedLinkCreatePolicy::_Unknown)
+                    _ => Ok(SharedLinkCreatePolicy::Other)
                 }
             }
         }
@@ -535,7 +501,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkCreatePolicy {
                                                     "default_team_only",
                                                     "team_only",
                                                     "other"];
-        _deserializer.deserialize_struct("SharedLinkCreatePolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SharedLinkCreatePolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -562,13 +528,7 @@ impl ::serde::ser::Serialize for SharedLinkCreatePolicy {
                 s.serialize_field(".tag", "team_only")?;
                 s.end()
             }
-            SharedLinkCreatePolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedLinkCreatePolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SharedLinkCreatePolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SharedLinkCreatePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }

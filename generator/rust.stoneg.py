@@ -142,8 +142,6 @@ class RustGenerator(CodeGenerator):
                     self.emit(u'{},'.format(variant_name))
                 else:
                     self.emit(u'{}({}),'.format(variant_name, self._rust_type(field.data_type)))
-            if not union.closed:
-                self.emit(u'_Unknown')
         self.emit()
 
         self._impl_serde_for_union(union)
@@ -262,7 +260,7 @@ class RustGenerator(CodeGenerator):
                     self.emit(u'f.write_str("a {} struct")'.format(struct.name))
                 with self.block(u'fn visit_map<V: MapAccess<\'de>>(self, map: V) -> Result<Self::Value, V::Error>'):
                     self.emit(u'{}::internal_deserialize(map)'.format(type_name))
-            self.emit(u'_deserializer.deserialize_struct("{}", {}, StructVisitor)'.format(
+            self.emit(u'deserializer.deserialize_struct("{}", {}, StructVisitor)'.format(
                 struct.name,
                 field_list_name))
         self.emit()
@@ -319,7 +317,7 @@ class RustGenerator(CodeGenerator):
                     before='const VARIANTS: &\'static [&\'static str] = &',
                     after=';',
                     delim=(u'[',u']'),)
-            self.emit(u'_deserializer.deserialize_struct("{}", VARIANTS, EnumVisitor)'.format(
+            self.emit(u'deserializer.deserialize_struct("{}", VARIANTS, EnumVisitor)'.format(
                 struct.name))
         self.emit()
         with self._impl_serialize(type_name):
@@ -354,11 +352,13 @@ class RustGenerator(CodeGenerator):
                 with self.block(u'fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result'):
                     self.emit(u'f.write_str("a {} structure")'.format(union.name))
                 with self.block(u'fn visit_map<V: MapAccess<\'de>>(self, mut map: V) -> Result<Self::Value, V::Error>'):
-                    with self.block(u'let tag = match map.next_key()?', after=';'):
+                    with self.block(u'let tag: &str = match map.next_key()?', after=';'):
                         self.emit(u'Some(".tag") => map.next_value()?,')
                         self.emit(u'_ => return Err(de::Error::missing_field(".tag"))')
                     with self.block(u'match tag'):
                         for field in union.all_fields:
+                            if field.catch_all:
+                                continue # Handle the 'Other' variant at the end.
                             variant_name = self._enum_variant_name(field)
                             if isinstance(field.data_type, data_type.Void):
                                 self.emit(u'"{}" => Ok({}::{}),'.format(field.name, type_name, variant_name))
@@ -375,8 +375,7 @@ class RustGenerator(CodeGenerator):
                                         self.emit(u'return Err(de::Error::missing_field("{}"));'.format(field.name))
                                     self.emit(u'Ok({}::{}(map.next_value()?))'.format(type_name, variant_name))
                         if not union.closed:
-                            #self.emit(u'_ => unimplemented!("open unions")')
-                            self.emit(u'_ => Ok({}::_Unknown)'.format(type_name))
+                            self.emit(u'_ => Ok({}::Other)'.format(type_name))
                         else:
                             self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(
@@ -384,51 +383,58 @@ class RustGenerator(CodeGenerator):
                     before='const VARIANTS: &\'static [&\'static str] = &',
                     after=';',
                     delim=(u'[',u']'),)
-            self.emit(u'_deserializer.deserialize_struct("{}", VARIANTS, EnumVisitor)'.format(
+            self.emit(u'deserializer.deserialize_struct("{}", VARIANTS, EnumVisitor)'.format(
                 union.name))
         self.emit()
         with self._impl_serialize(type_name):
             self.emit(u'// union serializer')
-            self.emit(u'use serde::ser::SerializeStruct;')
-            with self.block(u'match *self'):
-                for field in union.all_fields:
-                    variant_name = self._enum_variant_name(field)
-                    if isinstance(field.data_type, data_type.Void):
-                        with self.block(u'{}::{} =>'.format(type_name, variant_name)):
-                            self.emit(u'// unit')
-                            self.emit(u'let mut s = serializer.serialize_struct("{}", 1)?;'.format(union.name))
-                            self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
-                            self.emit(u's.end()')
-                    else:
-                        needs_x = not (isinstance(field.data_type, data_type.Struct) and not field.data_type.all_fields)
-                        ref_x = 'ref x' if needs_x else '_'
-                        with self.block(u'{}::{}({}) =>'.format(type_name, variant_name, ref_x)):
-                            if isinstance(field.data_type, data_type.Union) or \
-                                    (isinstance(field.data_type, data_type.Struct) and \
-                                        field.data_type.has_enumerated_subtypes()):
-                                self.emit(u'// union or polymporphic struct')
-                                self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;')
+            if len(union.all_fields) == 1 and union.all_fields[0].catch_all:
+                # special case: an open union with no variants defined.
+                self.emit(u'#![allow(unused_variables)]')
+                self.emit(u'Err(::serde::ser::Error::custom("cannot serialize an open union with no defined variants"))')
+            else:
+                self.emit(u'use serde::ser::SerializeStruct;')
+                with self.block(u'match *self'):
+                    for field in union.all_fields:
+                        if field.catch_all:
+                            continue # Handle the 'Other' variant at the end.
+                        variant_name = self._enum_variant_name(field)
+                        if isinstance(field.data_type, data_type.Void):
+                            with self.block(u'{}::{} =>'.format(type_name, variant_name)):
+                                self.emit(u'// unit')
+                                self.emit(u'let mut s = serializer.serialize_struct("{}", 1)?;'.format(union.name))
                                 self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
-                                self.emit(u's.serialize_field("{}", x)?;'.format(field.name))
                                 self.emit(u's.end()')
-                            elif isinstance(field.data_type, data_type.Struct):
-                                self.emit(u'// struct')
-                                self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
-                                    union.name,
-                                    len(field.data_type.all_fields) + 1))
-                                self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
-                                if field.data_type.all_fields:
-                                    self.emit(u'x.internal_serialize::<S>(&mut s)?;')
-                                self.emit(u's.end()')
-                            else:
-                                self.emit(u'// primitive')
-                                self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;')
-                                self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
-                                self.emit(u's.serialize_field("{}", x)?;'.format(field.name))
-                                self.emit(u's.end()')
-                if not union.closed:
-                    self.emit(u'{}::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))'.format(
-                        type_name))
+                        else:
+                            needs_x = not (isinstance(field.data_type, data_type.Struct) and not field.data_type.all_fields)
+                            ref_x = 'ref x' if needs_x else '_'
+                            with self.block(u'{}::{}({}) =>'.format(type_name, variant_name, ref_x)):
+                                if isinstance(field.data_type, data_type.Union) or \
+                                        (isinstance(field.data_type, data_type.Struct) and \
+                                            field.data_type.has_enumerated_subtypes()):
+                                    self.emit(u'// union or polymporphic struct')
+                                    self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;')
+                                    self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
+                                    self.emit(u's.serialize_field("{}", x)?;'.format(field.name))
+                                    self.emit(u's.end()')
+                                elif isinstance(field.data_type, data_type.Struct):
+                                    self.emit(u'// struct')
+                                    self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
+                                        union.name,
+                                        len(field.data_type.all_fields) + 1))
+                                    self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
+                                    if field.data_type.all_fields:
+                                        self.emit(u'x.internal_serialize::<S>(&mut s)?;')
+                                    self.emit(u's.end()')
+                                else:
+                                    self.emit(u'// primitive')
+                                    self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;')
+                                    self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
+                                    self.emit(u's.serialize_field("{}", x)?;'.format(field.name))
+                                    self.emit(u's.end()')
+                    if not union.closed:
+                        self.emit(u'{}::Other => Err(::serde::ser::Error::custom("cannot serialize \'Other\' variant"))'.format(
+                            type_name))
         self.emit()
 
     # Helpers
@@ -439,7 +445,7 @@ class RustGenerator(CodeGenerator):
 
     def _impl_deserialize(self, type_name):
         return nested(self.block(u'impl<\'de> ::serde::de::Deserialize<\'de> for {}'.format(type_name)),
-            self.block(u'fn deserialize<D: ::serde::de::Deserializer<\'de>>(_deserializer: D) -> Result<Self, D::Error>'))
+            self.block(u'fn deserialize<D: ::serde::de::Deserializer<\'de>>(deserializer: D) -> Result<Self, D::Error>'))
 
     def _impl_serialize(self, type_name):
         return nested(self.block(u'impl ::serde::ser::Serialize for {}'.format(type_name)),

@@ -24,7 +24,7 @@ pub enum AccountType {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AccountType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -34,7 +34,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountType {
                 f.write_str("a AccountType structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -49,7 +49,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountType {
         const VARIANTS: &'static [&'static str] = &["basic",
                                                     "pro",
                                                     "business"];
-        _deserializer.deserialize_struct("AccountType", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("AccountType", VARIANTS, EnumVisitor)
     }
 }
 

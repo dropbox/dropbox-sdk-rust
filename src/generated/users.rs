@@ -89,7 +89,7 @@ impl SpaceUsage {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SpaceUsage {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -102,7 +102,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceUsage {
                 SpaceUsage::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SpaceUsage", SPACE_USAGE_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SpaceUsage", SPACE_USAGE_FIELDS, StructVisitor)
     }
 }
 
@@ -232,7 +232,7 @@ impl Account {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for Account {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -245,7 +245,7 @@ impl<'de> ::serde::de::Deserialize<'de> for Account {
                 Account::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("Account", ACCOUNT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("Account", ACCOUNT_FIELDS, StructVisitor)
     }
 }
 
@@ -265,11 +265,10 @@ pub enum GetAccountBatchError {
     /// not exist.
     NoAccount(super::users_common::AccountId),
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -279,7 +278,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchError {
                 f.write_str("a GetAccountBatchError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -290,14 +289,13 @@ impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchError {
                         }
                         Ok(GetAccountBatchError::NoAccount(map.next_value()?))
                     }
-                    "other" => Ok(GetAccountBatchError::Other),
-                    _ => Ok(GetAccountBatchError::_Unknown)
+                    _ => Ok(GetAccountBatchError::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["no_account",
                                                     "other"];
-        _deserializer.deserialize_struct("GetAccountBatchError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("GetAccountBatchError", VARIANTS, EnumVisitor)
     }
 }
 
@@ -313,13 +311,7 @@ impl ::serde::ser::Serialize for GetAccountBatchError {
                 s.serialize_field("no_account", x)?;
                 s.end()
             }
-            GetAccountBatchError::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("GetAccountBatchError", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            GetAccountBatchError::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            GetAccountBatchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -379,7 +371,7 @@ impl GetAccountArg {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetAccountArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -392,7 +384,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetAccountArg {
                 GetAccountArg::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GetAccountArg", GET_ACCOUNT_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GetAccountArg", GET_ACCOUNT_ARG_FIELDS, StructVisitor)
     }
 }
 
@@ -411,11 +403,10 @@ pub enum GetAccountError {
     /// The specified :field:`GetAccountArg.account_id` does not exist.
     NoAccount,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetAccountError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -425,20 +416,19 @@ impl<'de> ::serde::de::Deserialize<'de> for GetAccountError {
                 f.write_str("a GetAccountError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "no_account" => Ok(GetAccountError::NoAccount),
-                    "other" => Ok(GetAccountError::Other),
-                    _ => Ok(GetAccountError::_Unknown)
+                    _ => Ok(GetAccountError::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["no_account",
                                                     "other"];
-        _deserializer.deserialize_struct("GetAccountError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("GetAccountError", VARIANTS, EnumVisitor)
     }
 }
 
@@ -453,13 +443,7 @@ impl ::serde::ser::Serialize for GetAccountError {
                 s.serialize_field(".tag", "no_account")?;
                 s.end()
             }
-            GetAccountError::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("GetAccountError", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            GetAccountError::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            GetAccountError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -519,7 +503,7 @@ impl IndividualSpaceAllocation {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for IndividualSpaceAllocation {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -532,7 +516,7 @@ impl<'de> ::serde::de::Deserialize<'de> for IndividualSpaceAllocation {
                 IndividualSpaceAllocation::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("IndividualSpaceAllocation", INDIVIDUAL_SPACE_ALLOCATION_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("IndividualSpaceAllocation", INDIVIDUAL_SPACE_ALLOCATION_FIELDS, StructVisitor)
     }
 }
 
@@ -589,7 +573,7 @@ impl GetAccountBatchArg {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -602,7 +586,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchArg {
                 GetAccountBatchArg::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GetAccountBatchArg", GET_ACCOUNT_BATCH_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GetAccountBatchArg", GET_ACCOUNT_BATCH_ARG_FIELDS, StructVisitor)
     }
 }
 
@@ -842,7 +826,7 @@ impl FullAccount {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FullAccount {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -855,7 +839,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FullAccount {
                 FullAccount::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FullAccount", FULL_ACCOUNT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FullAccount", FULL_ACCOUNT_FIELDS, StructVisitor)
     }
 }
 
@@ -926,7 +910,7 @@ impl Team {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for Team {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -939,7 +923,7 @@ impl<'de> ::serde::de::Deserialize<'de> for Team {
                 Team::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("Team", TEAM_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("Team", TEAM_FIELDS, StructVisitor)
     }
 }
 
@@ -1051,7 +1035,7 @@ impl Name {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for Name {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1064,7 +1048,7 @@ impl<'de> ::serde::de::Deserialize<'de> for Name {
                 Name::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("Name", NAME_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("Name", NAME_FIELDS, StructVisitor)
     }
 }
 
@@ -1086,11 +1070,10 @@ pub enum SpaceAllocation {
     /// The user shares space with other members of their team.
     Team(TeamSpaceAllocation),
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SpaceAllocation {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -1100,22 +1083,21 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceAllocation {
                 f.write_str("a SpaceAllocation structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "individual" => Ok(SpaceAllocation::Individual(IndividualSpaceAllocation::internal_deserialize(map)?)),
                     "team" => Ok(SpaceAllocation::Team(TeamSpaceAllocation::internal_deserialize(map)?)),
-                    "other" => Ok(SpaceAllocation::Other),
-                    _ => Ok(SpaceAllocation::_Unknown)
+                    _ => Ok(SpaceAllocation::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["individual",
                                                     "team",
                                                     "other"];
-        _deserializer.deserialize_struct("SpaceAllocation", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SpaceAllocation", VARIANTS, EnumVisitor)
     }
 }
 
@@ -1138,13 +1120,7 @@ impl ::serde::ser::Serialize for SpaceAllocation {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            SpaceAllocation::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SpaceAllocation", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SpaceAllocation::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SpaceAllocation::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -1232,7 +1208,7 @@ impl FullTeam {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FullTeam {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1245,7 +1221,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FullTeam {
                 FullTeam::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FullTeam", FULL_TEAM_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FullTeam", FULL_TEAM_FIELDS, StructVisitor)
     }
 }
 
@@ -1315,7 +1291,7 @@ impl TeamSpaceAllocation {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamSpaceAllocation {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1328,7 +1304,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamSpaceAllocation {
                 TeamSpaceAllocation::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamSpaceAllocation", TEAM_SPACE_ALLOCATION_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamSpaceAllocation", TEAM_SPACE_ALLOCATION_FIELDS, StructVisitor)
     }
 }
 
@@ -1490,7 +1466,7 @@ impl BasicAccount {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for BasicAccount {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1503,7 +1479,7 @@ impl<'de> ::serde::de::Deserialize<'de> for BasicAccount {
                 BasicAccount::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("BasicAccount", BASIC_ACCOUNT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("BasicAccount", BASIC_ACCOUNT_FIELDS, StructVisitor)
     }
 }
 

@@ -20,7 +20,7 @@ pub enum PollResultBase {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PollResultBase {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -30,7 +30,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PollResultBase {
                 f.write_str("a PollResultBase structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -41,7 +41,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PollResultBase {
             }
         }
         const VARIANTS: &'static [&'static str] = &["in_progress"];
-        _deserializer.deserialize_struct("PollResultBase", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PollResultBase", VARIANTS, EnumVisitor)
     }
 }
 
@@ -72,7 +72,7 @@ pub enum LaunchEmptyResult {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for LaunchEmptyResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -82,7 +82,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LaunchEmptyResult {
                 f.write_str("a LaunchEmptyResult structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -100,7 +100,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LaunchEmptyResult {
         }
         const VARIANTS: &'static [&'static str] = &["async_job_id",
                                                     "complete"];
-        _deserializer.deserialize_struct("LaunchEmptyResult", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("LaunchEmptyResult", VARIANTS, EnumVisitor)
     }
 }
 
@@ -135,11 +135,10 @@ pub enum PollError {
     /// you were taking succeeded, and if not, try again. This should happen very rarely.
     InternalError,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PollError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -149,22 +148,21 @@ impl<'de> ::serde::de::Deserialize<'de> for PollError {
                 f.write_str("a PollError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "invalid_async_job_id" => Ok(PollError::InvalidAsyncJobId),
                     "internal_error" => Ok(PollError::InternalError),
-                    "other" => Ok(PollError::Other),
-                    _ => Ok(PollError::_Unknown)
+                    _ => Ok(PollError::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["invalid_async_job_id",
                                                     "internal_error",
                                                     "other"];
-        _deserializer.deserialize_struct("PollError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PollError", VARIANTS, EnumVisitor)
     }
 }
 
@@ -185,13 +183,7 @@ impl ::serde::ser::Serialize for PollError {
                 s.serialize_field(".tag", "internal_error")?;
                 s.end()
             }
-            PollError::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("PollError", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            PollError::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            PollError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -220,7 +212,7 @@ pub enum LaunchResultBase {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for LaunchResultBase {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -230,7 +222,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LaunchResultBase {
                 f.write_str("a LaunchResultBase structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -246,7 +238,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LaunchResultBase {
             }
         }
         const VARIANTS: &'static [&'static str] = &["async_job_id"];
-        _deserializer.deserialize_struct("LaunchResultBase", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("LaunchResultBase", VARIANTS, EnumVisitor)
     }
 }
 
@@ -311,7 +303,7 @@ impl PollArg {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PollArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -324,7 +316,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PollArg {
                 PollArg::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PollArg", POLL_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PollArg", POLL_ARG_FIELDS, StructVisitor)
     }
 }
 
@@ -349,7 +341,7 @@ pub enum PollEmptyResult {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PollEmptyResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -359,7 +351,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PollEmptyResult {
                 f.write_str("a PollEmptyResult structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -372,7 +364,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PollEmptyResult {
         }
         const VARIANTS: &'static [&'static str] = &["in_progress",
                                                     "complete"];
-        _deserializer.deserialize_struct("PollEmptyResult", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PollEmptyResult", VARIANTS, EnumVisitor)
     }
 }
 

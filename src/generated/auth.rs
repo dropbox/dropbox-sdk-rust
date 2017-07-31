@@ -30,11 +30,10 @@ pub enum AuthError {
     /// The user has been suspended.
     UserSuspended,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AuthError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -44,7 +43,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                 f.write_str("a AuthError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -53,8 +52,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                     "invalid_select_user" => Ok(AuthError::InvalidSelectUser),
                     "invalid_select_admin" => Ok(AuthError::InvalidSelectAdmin),
                     "user_suspended" => Ok(AuthError::UserSuspended),
-                    "other" => Ok(AuthError::Other),
-                    _ => Ok(AuthError::_Unknown)
+                    _ => Ok(AuthError::Other)
                 }
             }
         }
@@ -63,7 +61,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                                                     "invalid_select_admin",
                                                     "user_suspended",
                                                     "other"];
-        _deserializer.deserialize_struct("AuthError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("AuthError", VARIANTS, EnumVisitor)
     }
 }
 
@@ -96,13 +94,7 @@ impl ::serde::ser::Serialize for AuthError {
                 s.serialize_field(".tag", "user_suspended")?;
                 s.end()
             }
-            AuthError::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("AuthError", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            AuthError::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            AuthError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -181,7 +173,7 @@ impl RateLimitError {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for RateLimitError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -194,7 +186,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RateLimitError {
                 RateLimitError::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("RateLimitError", RATE_LIMIT_ERROR_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("RateLimitError", RATE_LIMIT_ERROR_FIELDS, StructVisitor)
     }
 }
 
@@ -216,11 +208,10 @@ pub enum AccessError {
     /// Current account cannot access Paper.
     PaperAccessDenied(PaperAccessError),
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AccessError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -230,7 +221,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessError {
                 f.write_str("a AccessError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -247,15 +238,14 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessError {
                         }
                         Ok(AccessError::PaperAccessDenied(map.next_value()?))
                     }
-                    "other" => Ok(AccessError::Other),
-                    _ => Ok(AccessError::_Unknown)
+                    _ => Ok(AccessError::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["invalid_account_type",
                                                     "paper_access_denied",
                                                     "other"];
-        _deserializer.deserialize_struct("AccessError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("AccessError", VARIANTS, EnumVisitor)
     }
 }
 
@@ -278,13 +268,7 @@ impl ::serde::ser::Serialize for AccessError {
                 s.serialize_field("paper_access_denied", x)?;
                 s.end()
             }
-            AccessError::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("AccessError", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            AccessError::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            AccessError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -357,7 +341,7 @@ impl TokenFromOAuth1Arg {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TokenFromOAuth1Arg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -370,7 +354,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TokenFromOAuth1Arg {
                 TokenFromOAuth1Arg::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TokenFromOAuth1Arg", TOKEN_FROM_O_AUTH1_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TokenFromOAuth1Arg", TOKEN_FROM_O_AUTH1_ARG_FIELDS, StructVisitor)
     }
 }
 
@@ -391,11 +375,10 @@ pub enum InvalidAccountTypeError {
     /// Current account type doesn't have permission to access this feature.
     Feature,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for InvalidAccountTypeError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -405,22 +388,21 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidAccountTypeError {
                 f.write_str("a InvalidAccountTypeError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "endpoint" => Ok(InvalidAccountTypeError::Endpoint),
                     "feature" => Ok(InvalidAccountTypeError::Feature),
-                    "other" => Ok(InvalidAccountTypeError::Other),
-                    _ => Ok(InvalidAccountTypeError::_Unknown)
+                    _ => Ok(InvalidAccountTypeError::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["endpoint",
                                                     "feature",
                                                     "other"];
-        _deserializer.deserialize_struct("InvalidAccountTypeError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("InvalidAccountTypeError", VARIANTS, EnumVisitor)
     }
 }
 
@@ -441,13 +423,7 @@ impl ::serde::ser::Serialize for InvalidAccountTypeError {
                 s.serialize_field(".tag", "feature")?;
                 s.end()
             }
-            InvalidAccountTypeError::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("InvalidAccountTypeError", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            InvalidAccountTypeError::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            InvalidAccountTypeError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -471,11 +447,10 @@ pub enum RateLimitReason {
     /// There are currently too many write operations happening in the user's Dropbox.
     TooManyWriteOperations,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for RateLimitReason {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -485,22 +460,21 @@ impl<'de> ::serde::de::Deserialize<'de> for RateLimitReason {
                 f.write_str("a RateLimitReason structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "too_many_requests" => Ok(RateLimitReason::TooManyRequests),
                     "too_many_write_operations" => Ok(RateLimitReason::TooManyWriteOperations),
-                    "other" => Ok(RateLimitReason::Other),
-                    _ => Ok(RateLimitReason::_Unknown)
+                    _ => Ok(RateLimitReason::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["too_many_requests",
                                                     "too_many_write_operations",
                                                     "other"];
-        _deserializer.deserialize_struct("RateLimitReason", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("RateLimitReason", VARIANTS, EnumVisitor)
     }
 }
 
@@ -521,13 +495,7 @@ impl ::serde::ser::Serialize for RateLimitReason {
                 s.serialize_field(".tag", "too_many_write_operations")?;
                 s.end()
             }
-            RateLimitReason::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("RateLimitReason", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            RateLimitReason::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            RateLimitReason::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -539,11 +507,10 @@ pub enum TokenFromOAuth1Error {
     /// The authorized app does not match the app associated with the supplied access token.
     AppIdMismatch,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TokenFromOAuth1Error {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -553,22 +520,21 @@ impl<'de> ::serde::de::Deserialize<'de> for TokenFromOAuth1Error {
                 f.write_str("a TokenFromOAuth1Error structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "invalid_oauth1_token_info" => Ok(TokenFromOAuth1Error::InvalidOauth1TokenInfo),
                     "app_id_mismatch" => Ok(TokenFromOAuth1Error::AppIdMismatch),
-                    "other" => Ok(TokenFromOAuth1Error::Other),
-                    _ => Ok(TokenFromOAuth1Error::_Unknown)
+                    _ => Ok(TokenFromOAuth1Error::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["invalid_oauth1_token_info",
                                                     "app_id_mismatch",
                                                     "other"];
-        _deserializer.deserialize_struct("TokenFromOAuth1Error", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("TokenFromOAuth1Error", VARIANTS, EnumVisitor)
     }
 }
 
@@ -589,13 +555,7 @@ impl ::serde::ser::Serialize for TokenFromOAuth1Error {
                 s.serialize_field(".tag", "app_id_mismatch")?;
                 s.end()
             }
-            TokenFromOAuth1Error::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("TokenFromOAuth1Error", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            TokenFromOAuth1Error::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            TokenFromOAuth1Error::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -619,11 +579,10 @@ pub enum PaperAccessError {
     /// The provided user has not used Paper yet.
     NotPaperUser,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperAccessError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -633,22 +592,21 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperAccessError {
                 f.write_str("a PaperAccessError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "paper_disabled" => Ok(PaperAccessError::PaperDisabled),
                     "not_paper_user" => Ok(PaperAccessError::NotPaperUser),
-                    "other" => Ok(PaperAccessError::Other),
-                    _ => Ok(PaperAccessError::_Unknown)
+                    _ => Ok(PaperAccessError::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["paper_disabled",
                                                     "not_paper_user",
                                                     "other"];
-        _deserializer.deserialize_struct("PaperAccessError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PaperAccessError", VARIANTS, EnumVisitor)
     }
 }
 
@@ -669,13 +627,7 @@ impl ::serde::ser::Serialize for PaperAccessError {
                 s.serialize_field(".tag", "not_paper_user")?;
                 s.end()
             }
-            PaperAccessError::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperAccessError", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            PaperAccessError::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            PaperAccessError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -735,7 +687,7 @@ impl TokenFromOAuth1Result {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TokenFromOAuth1Result {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -748,7 +700,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TokenFromOAuth1Result {
                 TokenFromOAuth1Result::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TokenFromOAuth1Result", TOKEN_FROM_O_AUTH1_RESULT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TokenFromOAuth1Result", TOKEN_FROM_O_AUTH1_RESULT_FIELDS, StructVisitor)
     }
 }
 

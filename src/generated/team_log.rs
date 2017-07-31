@@ -67,7 +67,7 @@ impl PasswordLoginFailDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PasswordLoginFailDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -80,7 +80,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordLoginFailDetails {
                 PasswordLoginFailDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PasswordLoginFailDetails", PASSWORD_LOGIN_FAIL_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PasswordLoginFailDetails", PASSWORD_LOGIN_FAIL_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -99,11 +99,10 @@ pub enum DeviceApprovalsPolicy {
     Unlimited,
     Limited,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -113,22 +112,21 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsPolicy {
                 f.write_str("a DeviceApprovalsPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "unlimited" => Ok(DeviceApprovalsPolicy::Unlimited),
                     "limited" => Ok(DeviceApprovalsPolicy::Limited),
-                    "other" => Ok(DeviceApprovalsPolicy::Other),
-                    _ => Ok(DeviceApprovalsPolicy::_Unknown)
+                    _ => Ok(DeviceApprovalsPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["unlimited",
                                                     "limited",
                                                     "other"];
-        _deserializer.deserialize_struct("DeviceApprovalsPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("DeviceApprovalsPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -149,13 +147,7 @@ impl ::serde::ser::Serialize for DeviceApprovalsPolicy {
                 s.serialize_field(".tag", "limited")?;
                 s.end()
             }
-            DeviceApprovalsPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("DeviceApprovalsPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            DeviceApprovalsPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            DeviceApprovalsPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -218,7 +210,7 @@ impl MemberChangeAdminRoleDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberChangeAdminRoleDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -231,7 +223,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberChangeAdminRoleDetails {
                 MemberChangeAdminRoleDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberChangeAdminRoleDetails", MEMBER_CHANGE_ADMIN_ROLE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberChangeAdminRoleDetails", MEMBER_CHANGE_ADMIN_ROLE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -272,7 +264,7 @@ impl PaperEnabledUsersGroupRemovalDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperEnabledUsersGroupRemovalDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -285,7 +277,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperEnabledUsersGroupRemovalDetails
                 PaperEnabledUsersGroupRemovalDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperEnabledUsersGroupRemovalDetails", PAPER_ENABLED_USERS_GROUP_REMOVAL_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperEnabledUsersGroupRemovalDetails", PAPER_ENABLED_USERS_GROUP_REMOVAL_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -323,7 +315,7 @@ impl FileRequestsEmailsRestrictedToTeamOnlyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestsEmailsRestrictedToTeamOnlyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -336,7 +328,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestsEmailsRestrictedToTeamOn
                 FileRequestsEmailsRestrictedToTeamOnlyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRequestsEmailsRestrictedToTeamOnlyDetails", FILE_REQUESTS_EMAILS_RESTRICTED_TO_TEAM_ONLY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRequestsEmailsRestrictedToTeamOnlyDetails", FILE_REQUESTS_EMAILS_RESTRICTED_TO_TEAM_ONLY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -361,11 +353,10 @@ pub enum ActorLogInfo {
     /// Action done by Dropbox.
     Dropbox,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ActorLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -375,7 +366,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ActorLogInfo {
                 f.write_str("a ActorLogInfo structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -400,8 +391,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ActorLogInfo {
                     }
                     "reseller" => Ok(ActorLogInfo::Reseller(ResellerLogInfo::internal_deserialize(map)?)),
                     "dropbox" => Ok(ActorLogInfo::Dropbox),
-                    "other" => Ok(ActorLogInfo::Other),
-                    _ => Ok(ActorLogInfo::_Unknown)
+                    _ => Ok(ActorLogInfo::Other)
                 }
             }
         }
@@ -411,7 +401,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ActorLogInfo {
                                                     "reseller",
                                                     "dropbox",
                                                     "other"];
-        _deserializer.deserialize_struct("ActorLogInfo", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("ActorLogInfo", VARIANTS, EnumVisitor)
     }
 }
 
@@ -454,13 +444,7 @@ impl ::serde::ser::Serialize for ActorLogInfo {
                 s.serialize_field(".tag", "dropbox")?;
                 s.end()
             }
-            ActorLogInfo::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("ActorLogInfo", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            ActorLogInfo::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            ActorLogInfo::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -492,7 +476,7 @@ impl SharedNoteOpenedDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedNoteOpenedDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -505,7 +489,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedNoteOpenedDetails {
                 SharedNoteOpenedDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedNoteOpenedDetails", SHARED_NOTE_OPENED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedNoteOpenedDetails", SHARED_NOTE_OPENED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -560,7 +544,7 @@ impl PaperContentRemoveMemberDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperContentRemoveMemberDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -573,7 +557,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperContentRemoveMemberDetails {
                 PaperContentRemoveMemberDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperContentRemoveMemberDetails", PAPER_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperContentRemoveMemberDetails", PAPER_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -631,7 +615,7 @@ impl PaperDocDeletedDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocDeletedDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -644,7 +628,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocDeletedDetails {
                 PaperDocDeletedDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocDeletedDetails", PAPER_DOC_DELETED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocDeletedDetails", PAPER_DOC_DELETED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -685,7 +669,7 @@ impl MemberSpaceLimitsAddExceptionDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsAddExceptionDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -698,7 +682,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsAddExceptionDetails
                 MemberSpaceLimitsAddExceptionDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberSpaceLimitsAddExceptionDetails", MEMBER_SPACE_LIMITS_ADD_EXCEPTION_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberSpaceLimitsAddExceptionDetails", MEMBER_SPACE_LIMITS_ADD_EXCEPTION_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -736,7 +720,7 @@ impl MemberSpaceLimitsRemoveExceptionDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsRemoveExceptionDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -749,7 +733,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsRemoveExceptionDeta
                 MemberSpaceLimitsRemoveExceptionDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberSpaceLimitsRemoveExceptionDetails", MEMBER_SPACE_LIMITS_REMOVE_EXCEPTION_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberSpaceLimitsRemoveExceptionDetails", MEMBER_SPACE_LIMITS_REMOVE_EXCEPTION_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -787,7 +771,7 @@ impl TfaChangeBackupPhoneDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TfaChangeBackupPhoneDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -800,7 +784,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaChangeBackupPhoneDetails {
                 TfaChangeBackupPhoneDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TfaChangeBackupPhoneDetails", TFA_CHANGE_BACKUP_PHONE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TfaChangeBackupPhoneDetails", TFA_CHANGE_BACKUP_PHONE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -868,7 +852,7 @@ impl SmartSyncOptOutDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SmartSyncOptOutDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -881,7 +865,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncOptOutDetails {
                 SmartSyncOptOutDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SmartSyncOptOutDetails", SMART_SYNC_OPT_OUT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SmartSyncOptOutDetails", SMART_SYNC_OPT_OUT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -939,7 +923,7 @@ impl MemberAddNameDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberAddNameDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -952,7 +936,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberAddNameDetails {
                 MemberAddNameDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberAddNameDetails", MEMBER_ADD_NAME_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberAddNameDetails", MEMBER_ADD_NAME_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -993,7 +977,7 @@ impl FileRevertDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRevertDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1006,7 +990,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRevertDetails {
                 FileRevertDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRevertDetails", FILE_REVERT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRevertDetails", FILE_REVERT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -1062,7 +1046,7 @@ impl AccountCaptureRelinquishAccountDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureRelinquishAccountDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1075,7 +1059,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureRelinquishAccountDetai
                 AccountCaptureRelinquishAccountDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("AccountCaptureRelinquishAccountDetails", ACCOUNT_CAPTURE_RELINQUISH_ACCOUNT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("AccountCaptureRelinquishAccountDetails", ACCOUNT_CAPTURE_RELINQUISH_ACCOUNT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -1145,7 +1129,7 @@ impl UserLinkedAppLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for UserLinkedAppLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1158,7 +1142,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UserLinkedAppLogInfo {
                 UserLinkedAppLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("UserLinkedAppLogInfo", USER_LINKED_APP_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("UserLinkedAppLogInfo", USER_LINKED_APP_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -1199,7 +1183,7 @@ impl TfaRemoveBackupPhoneDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TfaRemoveBackupPhoneDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1212,7 +1196,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaRemoveBackupPhoneDetails {
                 TfaRemoveBackupPhoneDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TfaRemoveBackupPhoneDetails", TFA_REMOVE_BACKUP_PHONE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TfaRemoveBackupPhoneDetails", TFA_REMOVE_BACKUP_PHONE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -1267,7 +1251,7 @@ impl DeviceChangeIpMobileDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceChangeIpMobileDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1280,7 +1264,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceChangeIpMobileDetails {
                 DeviceChangeIpMobileDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceChangeIpMobileDetails", DEVICE_CHANGE_IP_MOBILE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceChangeIpMobileDetails", DEVICE_CHANGE_IP_MOBILE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -1374,7 +1358,7 @@ impl GroupLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1387,7 +1371,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupLogInfo {
                 GroupLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupLogInfo", GROUP_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupLogInfo", GROUP_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -1457,7 +1441,7 @@ impl ShmodelCreateDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelCreateDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1470,7 +1454,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelCreateDetails {
                 ShmodelCreateDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelCreateDetails", SHMODEL_CREATE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelCreateDetails", SHMODEL_CREATE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -1490,11 +1474,10 @@ pub enum TwoAccountPolicy {
     Disabled,
     Enabled,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TwoAccountPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -1504,22 +1487,21 @@ impl<'de> ::serde::de::Deserialize<'de> for TwoAccountPolicy {
                 f.write_str("a TwoAccountPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "disabled" => Ok(TwoAccountPolicy::Disabled),
                     "enabled" => Ok(TwoAccountPolicy::Enabled),
-                    "other" => Ok(TwoAccountPolicy::Other),
-                    _ => Ok(TwoAccountPolicy::_Unknown)
+                    _ => Ok(TwoAccountPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["disabled",
                                                     "enabled",
                                                     "other"];
-        _deserializer.deserialize_struct("TwoAccountPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("TwoAccountPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -1540,13 +1522,7 @@ impl ::serde::ser::Serialize for TwoAccountPolicy {
                 s.serialize_field(".tag", "enabled")?;
                 s.end()
             }
-            TwoAccountPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("TwoAccountPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            TwoAccountPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            TwoAccountPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -1613,7 +1589,7 @@ impl TeamProfileChangeNameDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamProfileChangeNameDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1626,7 +1602,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamProfileChangeNameDetails {
                 TeamProfileChangeNameDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamProfileChangeNameDetails", TEAM_PROFILE_CHANGE_NAME_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamProfileChangeNameDetails", TEAM_PROFILE_CHANGE_NAME_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -1697,7 +1673,7 @@ impl ShmodelSetExpirationDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelSetExpirationDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1710,7 +1686,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelSetExpirationDetails {
                 ShmodelSetExpirationDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelSetExpirationDetails", SHMODEL_SET_EXPIRATION_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelSetExpirationDetails", SHMODEL_SET_EXPIRATION_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -1729,11 +1705,10 @@ pub enum TeamFolderStatus {
     Archive,
     Unarchive,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamFolderStatus {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -1743,22 +1718,21 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderStatus {
                 f.write_str("a TeamFolderStatus structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "archive" => Ok(TeamFolderStatus::Archive),
                     "unarchive" => Ok(TeamFolderStatus::Unarchive),
-                    "other" => Ok(TeamFolderStatus::Other),
-                    _ => Ok(TeamFolderStatus::_Unknown)
+                    _ => Ok(TeamFolderStatus::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["archive",
                                                     "unarchive",
                                                     "other"];
-        _deserializer.deserialize_struct("TeamFolderStatus", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("TeamFolderStatus", VARIANTS, EnumVisitor)
     }
 }
 
@@ -1779,13 +1753,7 @@ impl ::serde::ser::Serialize for TeamFolderStatus {
                 s.serialize_field(".tag", "unarchive")?;
                 s.end()
             }
-            TeamFolderStatus::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("TeamFolderStatus", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            TeamFolderStatus::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            TeamFolderStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -1817,7 +1785,7 @@ impl ShmodelVisibilityTeamOnlyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelVisibilityTeamOnlyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -1830,7 +1798,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelVisibilityTeamOnlyDetails {
                 ShmodelVisibilityTeamOnlyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelVisibilityTeamOnlyDetails", SHMODEL_VISIBILITY_TEAM_ONLY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelVisibilityTeamOnlyDetails", SHMODEL_VISIBILITY_TEAM_ONLY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -1846,11 +1814,10 @@ pub enum SharedFolderMembershipManagementPolicy {
     Owner,
     Editors,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMembershipManagementPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -1860,22 +1827,21 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMembershipManagementPoli
                 f.write_str("a SharedFolderMembershipManagementPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "owner" => Ok(SharedFolderMembershipManagementPolicy::Owner),
                     "editors" => Ok(SharedFolderMembershipManagementPolicy::Editors),
-                    "other" => Ok(SharedFolderMembershipManagementPolicy::Other),
-                    _ => Ok(SharedFolderMembershipManagementPolicy::_Unknown)
+                    _ => Ok(SharedFolderMembershipManagementPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["owner",
                                                     "editors",
                                                     "other"];
-        _deserializer.deserialize_struct("SharedFolderMembershipManagementPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SharedFolderMembershipManagementPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -1896,13 +1862,7 @@ impl ::serde::ser::Serialize for SharedFolderMembershipManagementPolicy {
                 s.serialize_field(".tag", "editors")?;
                 s.end()
             }
-            SharedFolderMembershipManagementPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedFolderMembershipManagementPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SharedFolderMembershipManagementPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SharedFolderMembershipManagementPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -1987,7 +1947,7 @@ impl SharedContentClaimInvitationDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentClaimInvitationDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2000,7 +1960,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentClaimInvitationDetails 
                 SharedContentClaimInvitationDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentClaimInvitationDetails", SHARED_CONTENT_CLAIM_INVITATION_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentClaimInvitationDetails", SHARED_CONTENT_CLAIM_INVITATION_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -2058,7 +2018,7 @@ impl SsoLoginFailDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SsoLoginFailDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2071,7 +2031,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoLoginFailDetails {
                 SsoLoginFailDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SsoLoginFailDetails", SSO_LOGIN_FAIL_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SsoLoginFailDetails", SSO_LOGIN_FAIL_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -2148,7 +2108,7 @@ impl TwoAccountChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TwoAccountChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2161,7 +2121,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TwoAccountChangePolicyDetails {
                 TwoAccountChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TwoAccountChangePolicyDetails", TWO_ACCOUNT_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TwoAccountChangePolicyDetails", TWO_ACCOUNT_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -2203,7 +2163,7 @@ impl EmmRemoveExceptionDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EmmRemoveExceptionDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2216,7 +2176,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmRemoveExceptionDetails {
                 EmmRemoveExceptionDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("EmmRemoveExceptionDetails", EMM_REMOVE_EXCEPTION_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("EmmRemoveExceptionDetails", EMM_REMOVE_EXCEPTION_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -2284,7 +2244,7 @@ impl PaperDocChangeMemberRoleDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocChangeMemberRoleDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2297,7 +2257,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocChangeMemberRoleDetails {
                 PaperDocChangeMemberRoleDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocChangeMemberRoleDetails", PAPER_DOC_CHANGE_MEMBER_ROLE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocChangeMemberRoleDetails", PAPER_DOC_CHANGE_MEMBER_ROLE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -2317,11 +2277,10 @@ pub enum SharedFolderMemberPolicy {
     TeamOnly,
     Anyone,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -2331,22 +2290,21 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberPolicy {
                 f.write_str("a SharedFolderMemberPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "team_only" => Ok(SharedFolderMemberPolicy::TeamOnly),
                     "anyone" => Ok(SharedFolderMemberPolicy::Anyone),
-                    "other" => Ok(SharedFolderMemberPolicy::Other),
-                    _ => Ok(SharedFolderMemberPolicy::_Unknown)
+                    _ => Ok(SharedFolderMemberPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["team_only",
                                                     "anyone",
                                                     "other"];
-        _deserializer.deserialize_struct("SharedFolderMemberPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SharedFolderMemberPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -2367,13 +2325,7 @@ impl ::serde::ser::Serialize for SharedFolderMemberPolicy {
                 s.serialize_field(".tag", "anyone")?;
                 s.end()
             }
-            SharedFolderMemberPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedFolderMemberPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SharedFolderMemberPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SharedFolderMemberPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -2422,7 +2374,7 @@ impl PaperContentRestoreDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperContentRestoreDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2435,7 +2387,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperContentRestoreDetails {
                 PaperContentRestoreDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperContentRestoreDetails", PAPER_CONTENT_RESTORE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperContentRestoreDetails", PAPER_CONTENT_RESTORE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -2493,7 +2445,7 @@ impl PaperDocFollowedDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocFollowedDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2506,7 +2458,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocFollowedDetails {
                 PaperDocFollowedDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocFollowedDetails", PAPER_DOC_FOLLOWED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocFollowedDetails", PAPER_DOC_FOLLOWED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -2547,7 +2499,7 @@ impl MemberSuggestDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberSuggestDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2560,7 +2512,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSuggestDetails {
                 MemberSuggestDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberSuggestDetails", MEMBER_SUGGEST_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberSuggestDetails", MEMBER_SUGGEST_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -2641,7 +2593,7 @@ impl GetTeamEventsResult {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetTeamEventsResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2654,7 +2606,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTeamEventsResult {
                 GetTeamEventsResult::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GetTeamEventsResult", GET_TEAM_EVENTS_RESULT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GetTeamEventsResult", GET_TEAM_EVENTS_RESULT_FIELDS, StructVisitor)
     }
 }
 
@@ -2712,7 +2664,7 @@ impl PaperDocRevertDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocRevertDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2725,7 +2677,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocRevertDetails {
                 PaperDocRevertDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocRevertDetails", PAPER_DOC_REVERT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocRevertDetails", PAPER_DOC_REVERT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -2783,7 +2735,7 @@ impl FileMoveDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileMoveDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2796,7 +2748,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMoveDetails {
                 FileMoveDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileMoveDetails", FILE_MOVE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileMoveDetails", FILE_MOVE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -2854,7 +2806,7 @@ impl FileSaveCopyReferenceDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileSaveCopyReferenceDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2867,7 +2819,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileSaveCopyReferenceDetails {
                 FileSaveCopyReferenceDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileSaveCopyReferenceDetails", FILE_SAVE_COPY_REFERENCE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileSaveCopyReferenceDetails", FILE_SAVE_COPY_REFERENCE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -2908,7 +2860,7 @@ impl PaperEnabledUsersGroupAdditionDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperEnabledUsersGroupAdditionDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2921,7 +2873,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperEnabledUsersGroupAdditionDetail
                 PaperEnabledUsersGroupAdditionDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperEnabledUsersGroupAdditionDetails", PAPER_ENABLED_USERS_GROUP_ADDITION_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperEnabledUsersGroupAdditionDetails", PAPER_ENABLED_USERS_GROUP_ADDITION_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -2959,7 +2911,7 @@ impl GroupRemoveMemberDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupRemoveMemberDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -2972,7 +2924,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupRemoveMemberDetails {
                 GroupRemoveMemberDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupRemoveMemberDetails", GROUP_REMOVE_MEMBER_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupRemoveMemberDetails", GROUP_REMOVE_MEMBER_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -3077,7 +3029,7 @@ impl SharedContentChangeInviteeRoleDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeInviteeRoleDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -3090,7 +3042,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeInviteeRoleDetail
                 SharedContentChangeInviteeRoleDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentChangeInviteeRoleDetails", SHARED_CONTENT_CHANGE_INVITEE_ROLE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentChangeInviteeRoleDetails", SHARED_CONTENT_CHANGE_INVITEE_ROLE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -3161,7 +3113,7 @@ impl PaperFolderLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperFolderLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -3174,7 +3126,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperFolderLogInfo {
                 PaperFolderLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperFolderLogInfo", PAPER_FOLDER_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperFolderLogInfo", PAPER_FOLDER_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -3196,11 +3148,10 @@ pub enum AdminRole {
     UserManagementAdmin,
     TeamAdmin,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AdminRole {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -3210,7 +3161,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AdminRole {
                 f.write_str("a AdminRole structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -3220,8 +3171,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AdminRole {
                     "support_admin" => Ok(AdminRole::SupportAdmin),
                     "user_management_admin" => Ok(AdminRole::UserManagementAdmin),
                     "team_admin" => Ok(AdminRole::TeamAdmin),
-                    "other" => Ok(AdminRole::Other),
-                    _ => Ok(AdminRole::_Unknown)
+                    _ => Ok(AdminRole::Other)
                 }
             }
         }
@@ -3231,7 +3181,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AdminRole {
                                                     "user_management_admin",
                                                     "team_admin",
                                                     "other"];
-        _deserializer.deserialize_struct("AdminRole", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("AdminRole", VARIANTS, EnumVisitor)
     }
 }
 
@@ -3270,13 +3220,7 @@ impl ::serde::ser::Serialize for AdminRole {
                 s.serialize_field(".tag", "team_admin")?;
                 s.end()
             }
-            AdminRole::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("AdminRole", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            AdminRole::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            AdminRole::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -3338,7 +3282,7 @@ impl MemberChangeMembershipTypeDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberChangeMembershipTypeDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -3351,7 +3295,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberChangeMembershipTypeDetails {
                 MemberChangeMembershipTypeDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberChangeMembershipTypeDetails", MEMBER_CHANGE_MEMBERSHIP_TYPE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberChangeMembershipTypeDetails", MEMBER_CHANGE_MEMBERSHIP_TYPE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -3371,11 +3315,10 @@ pub enum PaperAccessType {
     Commenter,
     Editor,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperAccessType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -3385,7 +3328,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperAccessType {
                 f.write_str("a PaperAccessType structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -3393,8 +3336,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperAccessType {
                     "viewer" => Ok(PaperAccessType::Viewer),
                     "commenter" => Ok(PaperAccessType::Commenter),
                     "editor" => Ok(PaperAccessType::Editor),
-                    "other" => Ok(PaperAccessType::Other),
-                    _ => Ok(PaperAccessType::_Unknown)
+                    _ => Ok(PaperAccessType::Other)
                 }
             }
         }
@@ -3402,7 +3344,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperAccessType {
                                                     "commenter",
                                                     "editor",
                                                     "other"];
-        _deserializer.deserialize_struct("PaperAccessType", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PaperAccessType", VARIANTS, EnumVisitor)
     }
 }
 
@@ -3429,13 +3371,7 @@ impl ::serde::ser::Serialize for PaperAccessType {
                 s.serialize_field(".tag", "editor")?;
                 s.end()
             }
-            PaperAccessType::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperAccessType", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            PaperAccessType::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            PaperAccessType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -3497,7 +3433,7 @@ impl PaperDocumentLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocumentLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -3510,7 +3446,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocumentLogInfo {
                 PaperDocumentLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocumentLogInfo", PAPER_DOCUMENT_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocumentLogInfo", PAPER_DOCUMENT_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -3534,7 +3470,7 @@ pub enum AppLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AppLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // polymorphic struct deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -3559,7 +3495,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AppLogInfo {
         const VARIANTS: &'static [&'static str] = &["team_linked_app",
                                                     "team_linked_app",
                                                     "team_linked_app"];
-        _deserializer.deserialize_struct("AppLogInfo", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("AppLogInfo", VARIANTS, EnumVisitor)
     }
 }
 
@@ -3601,11 +3537,10 @@ pub enum SharingLinkPolicy {
     DefaultTeamOnly,
     DefaultAnyone,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharingLinkPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -3615,7 +3550,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingLinkPolicy {
                 f.write_str("a SharingLinkPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -3623,8 +3558,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingLinkPolicy {
                     "team_only" => Ok(SharingLinkPolicy::TeamOnly),
                     "default_team_only" => Ok(SharingLinkPolicy::DefaultTeamOnly),
                     "default_anyone" => Ok(SharingLinkPolicy::DefaultAnyone),
-                    "other" => Ok(SharingLinkPolicy::Other),
-                    _ => Ok(SharingLinkPolicy::_Unknown)
+                    _ => Ok(SharingLinkPolicy::Other)
                 }
             }
         }
@@ -3632,7 +3566,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingLinkPolicy {
                                                     "default_team_only",
                                                     "default_anyone",
                                                     "other"];
-        _deserializer.deserialize_struct("SharingLinkPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SharingLinkPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -3659,13 +3593,7 @@ impl ::serde::ser::Serialize for SharingLinkPolicy {
                 s.serialize_field(".tag", "default_anyone")?;
                 s.end()
             }
-            SharingLinkPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SharingLinkPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SharingLinkPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SharingLinkPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -3732,7 +3660,7 @@ impl TfaChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TfaChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -3745,7 +3673,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaChangePolicyDetails {
                 TfaChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TfaChangePolicyDetails", TFA_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TfaChangePolicyDetails", TFA_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -3765,11 +3693,10 @@ pub enum FileCommentsPolicy {
     Disabled,
     Enabled,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileCommentsPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -3779,22 +3706,21 @@ impl<'de> ::serde::de::Deserialize<'de> for FileCommentsPolicy {
                 f.write_str("a FileCommentsPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "disabled" => Ok(FileCommentsPolicy::Disabled),
                     "enabled" => Ok(FileCommentsPolicy::Enabled),
-                    "other" => Ok(FileCommentsPolicy::Other),
-                    _ => Ok(FileCommentsPolicy::_Unknown)
+                    _ => Ok(FileCommentsPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["disabled",
                                                     "enabled",
                                                     "other"];
-        _deserializer.deserialize_struct("FileCommentsPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("FileCommentsPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -3815,13 +3741,7 @@ impl ::serde::ser::Serialize for FileCommentsPolicy {
                 s.serialize_field(".tag", "enabled")?;
                 s.end()
             }
-            FileCommentsPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("FileCommentsPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            FileCommentsPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            FileCommentsPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -3948,7 +3868,7 @@ impl Certificate {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for Certificate {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -3961,7 +3881,7 @@ impl<'de> ::serde::de::Deserialize<'de> for Certificate {
                 Certificate::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("Certificate", CERTIFICATE_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("Certificate", CERTIFICATE_FIELDS, StructVisitor)
     }
 }
 
@@ -4002,7 +3922,7 @@ impl TfaAddBackupPhoneDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TfaAddBackupPhoneDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -4015,7 +3935,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaAddBackupPhoneDetails {
                 TfaAddBackupPhoneDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TfaAddBackupPhoneDetails", TFA_ADD_BACKUP_PHONE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TfaAddBackupPhoneDetails", TFA_ADD_BACKUP_PHONE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -4031,11 +3951,10 @@ pub enum ExtendedVersionHistoryPolicy {
     Limited,
     Unlimited,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ExtendedVersionHistoryPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -4045,22 +3964,21 @@ impl<'de> ::serde::de::Deserialize<'de> for ExtendedVersionHistoryPolicy {
                 f.write_str("a ExtendedVersionHistoryPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "limited" => Ok(ExtendedVersionHistoryPolicy::Limited),
                     "unlimited" => Ok(ExtendedVersionHistoryPolicy::Unlimited),
-                    "other" => Ok(ExtendedVersionHistoryPolicy::Other),
-                    _ => Ok(ExtendedVersionHistoryPolicy::_Unknown)
+                    _ => Ok(ExtendedVersionHistoryPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["limited",
                                                     "unlimited",
                                                     "other"];
-        _deserializer.deserialize_struct("ExtendedVersionHistoryPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("ExtendedVersionHistoryPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -4081,13 +3999,7 @@ impl ::serde::ser::Serialize for ExtendedVersionHistoryPolicy {
                 s.serialize_field(".tag", "unlimited")?;
                 s.end()
             }
-            ExtendedVersionHistoryPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("ExtendedVersionHistoryPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            ExtendedVersionHistoryPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            ExtendedVersionHistoryPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -4119,7 +4031,7 @@ impl TeamFolderCreateDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamFolderCreateDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -4132,7 +4044,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderCreateDetails {
                 TeamFolderCreateDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamFolderCreateDetails", TEAM_FOLDER_CREATE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamFolderCreateDetails", TEAM_FOLDER_CREATE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -4170,7 +4082,7 @@ impl SignInAsSessionStartDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SignInAsSessionStartDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -4183,7 +4095,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SignInAsSessionStartDetails {
                 SignInAsSessionStartDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SignInAsSessionStartDetails", SIGN_IN_AS_SESSION_START_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SignInAsSessionStartDetails", SIGN_IN_AS_SESSION_START_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -4264,7 +4176,7 @@ impl JoinTeamDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for JoinTeamDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -4277,7 +4189,7 @@ impl<'de> ::serde::de::Deserialize<'de> for JoinTeamDetails {
                 JoinTeamDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("JoinTeamDetails", JOIN_TEAM_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("JoinTeamDetails", JOIN_TEAM_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -4353,7 +4265,7 @@ impl DomainVerificationAddDomainSuccessDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DomainVerificationAddDomainSuccessDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -4366,7 +4278,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainVerificationAddDomainSuccessDe
                 DomainVerificationAddDomainSuccessDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DomainVerificationAddDomainSuccessDetails", DOMAIN_VERIFICATION_ADD_DOMAIN_SUCCESS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DomainVerificationAddDomainSuccessDetails", DOMAIN_VERIFICATION_ADD_DOMAIN_SUCCESS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -4960,11 +4872,10 @@ pub enum EventType {
     /// Reset two-step verification for team member.
     TfaReset,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EventType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -4974,7 +4885,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                 f.write_str("a EventType structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -5237,8 +5148,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "tfa_remove_backup_phone" => Ok(EventType::TfaRemoveBackupPhone),
                     "tfa_remove_security_key" => Ok(EventType::TfaRemoveSecurityKey),
                     "tfa_reset" => Ok(EventType::TfaReset),
-                    "other" => Ok(EventType::Other),
-                    _ => Ok(EventType::_Unknown)
+                    _ => Ok(EventType::Other)
                 }
             }
         }
@@ -5501,7 +5411,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "tfa_remove_security_key",
                                                     "tfa_reset",
                                                     "other"];
-        _deserializer.deserialize_struct("EventType", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("EventType", VARIANTS, EnumVisitor)
     }
 }
 
@@ -7058,13 +6968,7 @@ impl ::serde::ser::Serialize for EventType {
                 s.serialize_field(".tag", "tfa_reset")?;
                 s.end()
             }
-            EventType::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("EventType", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            EventType::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            EventType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -7113,7 +7017,7 @@ impl PaperContentCreateDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperContentCreateDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -7126,7 +7030,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperContentCreateDetails {
                 PaperContentCreateDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperContentCreateDetails", PAPER_CONTENT_CREATE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperContentCreateDetails", PAPER_CONTENT_CREATE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -7222,7 +7126,7 @@ impl GetTeamEventsArg {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetTeamEventsArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -7235,7 +7139,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTeamEventsArg {
                 GetTeamEventsArg::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GetTeamEventsArg", GET_TEAM_EVENTS_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GetTeamEventsArg", GET_TEAM_EVENTS_ARG_FIELDS, StructVisitor)
     }
 }
 
@@ -7311,7 +7215,7 @@ impl SsoChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SsoChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -7324,7 +7228,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoChangePolicyDetails {
                 SsoChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SsoChangePolicyDetails", SSO_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SsoChangePolicyDetails", SSO_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -7365,7 +7269,7 @@ impl FileRequestsEmailsEnabledDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestsEmailsEnabledDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -7378,7 +7282,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestsEmailsEnabledDetails {
                 FileRequestsEmailsEnabledDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRequestsEmailsEnabledDetails", FILE_REQUESTS_EMAILS_ENABLED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRequestsEmailsEnabledDetails", FILE_REQUESTS_EMAILS_ENABLED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -7446,7 +7350,7 @@ impl SharedFolderTransferOwnershipDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderTransferOwnershipDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -7459,7 +7363,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderTransferOwnershipDetails
                 SharedFolderTransferOwnershipDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedFolderTransferOwnershipDetails", SHARED_FOLDER_TRANSFER_OWNERSHIP_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedFolderTransferOwnershipDetails", SHARED_FOLDER_TRANSFER_OWNERSHIP_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -7517,7 +7421,7 @@ impl PaperTaggedValue {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperTaggedValue {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -7530,7 +7434,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperTaggedValue {
                 PaperTaggedValue::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperTaggedValue", PAPER_TAGGED_VALUE_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperTaggedValue", PAPER_TAGGED_VALUE_FIELDS, StructVisitor)
     }
 }
 
@@ -7601,7 +7505,7 @@ impl FileRequestReceiveFileDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestReceiveFileDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -7614,7 +7518,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestReceiveFileDetails {
                 FileRequestReceiveFileDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRequestReceiveFileDetails", FILE_REQUEST_RECEIVE_FILE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRequestReceiveFileDetails", FILE_REQUEST_RECEIVE_FILE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -7690,7 +7594,7 @@ impl RemoveLogoutUrlDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for RemoveLogoutUrlDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -7703,7 +7607,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveLogoutUrlDetails {
                 RemoveLogoutUrlDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("RemoveLogoutUrlDetails", REMOVE_LOGOUT_URL_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("RemoveLogoutUrlDetails", REMOVE_LOGOUT_URL_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -7761,7 +7665,7 @@ impl TeamMergeToDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamMergeToDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -7774,7 +7678,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamMergeToDetails {
                 TeamMergeToDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamMergeToDetails", TEAM_MERGE_TO_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamMergeToDetails", TEAM_MERGE_TO_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -7857,7 +7761,7 @@ impl NonTeamMemberLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for NonTeamMemberLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -7870,7 +7774,7 @@ impl<'de> ::serde::de::Deserialize<'de> for NonTeamMemberLogInfo {
                 NonTeamMemberLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("NonTeamMemberLogInfo", NON_TEAM_MEMBER_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("NonTeamMemberLogInfo", NON_TEAM_MEMBER_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -7946,7 +7850,7 @@ impl DeviceLinkFailDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceLinkFailDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -7959,7 +7863,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceLinkFailDetails {
                 DeviceLinkFailDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceLinkFailDetails", DEVICE_LINK_FAIL_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceLinkFailDetails", DEVICE_LINK_FAIL_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -8030,7 +7934,7 @@ impl SfTeamJoinDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SfTeamJoinDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -8043,7 +7947,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SfTeamJoinDetails {
                 SfTeamJoinDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SfTeamJoinDetails", SF_TEAM_JOIN_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SfTeamJoinDetails", SF_TEAM_JOIN_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -8084,7 +7988,7 @@ impl GroupDescriptionUpdatedDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupDescriptionUpdatedDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -8097,7 +8001,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupDescriptionUpdatedDetails {
                 GroupDescriptionUpdatedDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupDescriptionUpdatedDetails", GROUP_DESCRIPTION_UPDATED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupDescriptionUpdatedDetails", GROUP_DESCRIPTION_UPDATED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -8152,7 +8056,7 @@ impl GroupChangeMemberRoleDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupChangeMemberRoleDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -8165,7 +8069,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupChangeMemberRoleDetails {
                 GroupChangeMemberRoleDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupChangeMemberRoleDetails", GROUP_CHANGE_MEMBER_ROLE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupChangeMemberRoleDetails", GROUP_CHANGE_MEMBER_ROLE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -8185,11 +8089,10 @@ pub enum MicrosoftOfficeAddinPolicy {
     Disabled,
     Enabled,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MicrosoftOfficeAddinPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -8199,22 +8102,21 @@ impl<'de> ::serde::de::Deserialize<'de> for MicrosoftOfficeAddinPolicy {
                 f.write_str("a MicrosoftOfficeAddinPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "disabled" => Ok(MicrosoftOfficeAddinPolicy::Disabled),
                     "enabled" => Ok(MicrosoftOfficeAddinPolicy::Enabled),
-                    "other" => Ok(MicrosoftOfficeAddinPolicy::Other),
-                    _ => Ok(MicrosoftOfficeAddinPolicy::_Unknown)
+                    _ => Ok(MicrosoftOfficeAddinPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["disabled",
                                                     "enabled",
                                                     "other"];
-        _deserializer.deserialize_struct("MicrosoftOfficeAddinPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("MicrosoftOfficeAddinPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -8235,13 +8137,7 @@ impl ::serde::ser::Serialize for MicrosoftOfficeAddinPolicy {
                 s.serialize_field(".tag", "enabled")?;
                 s.end()
             }
-            MicrosoftOfficeAddinPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("MicrosoftOfficeAddinPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            MicrosoftOfficeAddinPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            MicrosoftOfficeAddinPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -8290,7 +8186,7 @@ impl AppLinkUserDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AppLinkUserDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -8303,7 +8199,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AppLinkUserDetails {
                 AppLinkUserDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("AppLinkUserDetails", APP_LINK_USER_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("AppLinkUserDetails", APP_LINK_USER_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -8379,7 +8275,7 @@ impl PaperDocDeleteCommentDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocDeleteCommentDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -8392,7 +8288,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocDeleteCommentDetails {
                 PaperDocDeleteCommentDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocDeleteCommentDetails", PAPER_DOC_DELETE_COMMENT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocDeleteCommentDetails", PAPER_DOC_DELETE_COMMENT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -8411,11 +8307,10 @@ pub enum GroupJoinPolicy {
     Open,
     RequestToJoin,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupJoinPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -8425,22 +8320,21 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupJoinPolicy {
                 f.write_str("a GroupJoinPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "open" => Ok(GroupJoinPolicy::Open),
                     "request_to_join" => Ok(GroupJoinPolicy::RequestToJoin),
-                    "other" => Ok(GroupJoinPolicy::Other),
-                    _ => Ok(GroupJoinPolicy::_Unknown)
+                    _ => Ok(GroupJoinPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["open",
                                                     "request_to_join",
                                                     "other"];
-        _deserializer.deserialize_struct("GroupJoinPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("GroupJoinPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -8461,13 +8355,7 @@ impl ::serde::ser::Serialize for GroupJoinPolicy {
                 s.serialize_field(".tag", "request_to_join")?;
                 s.end()
             }
-            GroupJoinPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("GroupJoinPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            GroupJoinPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            GroupJoinPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -8578,7 +8466,7 @@ impl SharedFolderChangeLinkPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeLinkPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -8591,7 +8479,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeLinkPolicyDetails 
                 SharedFolderChangeLinkPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedFolderChangeLinkPolicyDetails", SHARED_FOLDER_CHANGE_LINK_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedFolderChangeLinkPolicyDetails", SHARED_FOLDER_CHANGE_LINK_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -8667,7 +8555,7 @@ impl FileLikeCommentDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileLikeCommentDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -8680,7 +8568,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileLikeCommentDetails {
                 FileLikeCommentDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileLikeCommentDetails", FILE_LIKE_COMMENT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileLikeCommentDetails", FILE_LIKE_COMMENT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -8776,7 +8664,7 @@ impl TfaChangeStatusDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TfaChangeStatusDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -8789,7 +8677,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaChangeStatusDetails {
                 TfaChangeStatusDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TfaChangeStatusDetails", TFA_CHANGE_STATUS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TfaChangeStatusDetails", TFA_CHANGE_STATUS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -8830,7 +8718,7 @@ impl DeviceManagementDisabledDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceManagementDisabledDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -8843,7 +8731,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceManagementDisabledDetails {
                 DeviceManagementDisabledDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceManagementDisabledDetails", DEVICE_MANAGEMENT_DISABLED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceManagementDisabledDetails", DEVICE_MANAGEMENT_DISABLED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -8911,7 +8799,7 @@ impl SfTeamGrantAccessDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SfTeamGrantAccessDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -8924,7 +8812,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SfTeamGrantAccessDetails {
                 SfTeamGrantAccessDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SfTeamGrantAccessDetails", SF_TEAM_GRANT_ACCESS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SfTeamGrantAccessDetails", SF_TEAM_GRANT_ACCESS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -8965,7 +8853,7 @@ impl AllowDownloadEnabledDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AllowDownloadEnabledDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -8978,7 +8866,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AllowDownloadEnabledDetails {
                 AllowDownloadEnabledDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("AllowDownloadEnabledDetails", ALLOW_DOWNLOAD_ENABLED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("AllowDownloadEnabledDetails", ALLOW_DOWNLOAD_ENABLED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -9064,11 +8952,10 @@ pub enum EventCategory {
     /// policies concerning two factor authentication.
     Tfa,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EventCategory {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -9078,7 +8965,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventCategory {
                 f.write_str("a EventCategory structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -9114,8 +9001,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventCategory {
                     "team_policies" => Ok(EventCategory::TeamPolicies),
                     "team_profile" => Ok(EventCategory::TeamProfile),
                     "tfa" => Ok(EventCategory::Tfa),
-                    "other" => Ok(EventCategory::Other),
-                    _ => Ok(EventCategory::_Unknown)
+                    _ => Ok(EventCategory::Other)
                 }
             }
         }
@@ -9151,7 +9037,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventCategory {
                                                     "team_profile",
                                                     "tfa",
                                                     "other"];
-        _deserializer.deserialize_struct("EventCategory", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("EventCategory", VARIANTS, EnumVisitor)
     }
 }
 
@@ -9346,13 +9232,7 @@ impl ::serde::ser::Serialize for EventCategory {
                 s.serialize_field(".tag", "tfa")?;
                 s.end()
             }
-            EventCategory::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("EventCategory", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            EventCategory::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            EventCategory::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -9420,7 +9300,7 @@ impl PaperChangeDeploymentPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperChangeDeploymentPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -9433,7 +9313,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperChangeDeploymentPolicyDetails {
                 PaperChangeDeploymentPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperChangeDeploymentPolicyDetails", PAPER_CHANGE_DEPLOYMENT_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperChangeDeploymentPolicyDetails", PAPER_CHANGE_DEPLOYMENT_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -9503,7 +9383,7 @@ impl ShmodelDisableDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelDisableDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -9516,7 +9396,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelDisableDetails {
                 ShmodelDisableDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelDisableDetails", SHMODEL_DISABLE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelDisableDetails", SHMODEL_DISABLE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -9605,7 +9485,7 @@ impl SfTeamInviteDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SfTeamInviteDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -9618,7 +9498,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SfTeamInviteDetails {
                 SfTeamInviteDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SfTeamInviteDetails", SF_TEAM_INVITE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SfTeamInviteDetails", SF_TEAM_INVITE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -9695,7 +9575,7 @@ impl PathLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PathLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -9708,7 +9588,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PathLogInfo {
                 PathLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PathLogInfo", PATH_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PathLogInfo", PATH_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -9784,7 +9664,7 @@ impl PaperDocResolveCommentDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocResolveCommentDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -9797,7 +9677,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocResolveCommentDetails {
                 PaperDocResolveCommentDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocResolveCommentDetails", PAPER_DOC_RESOLVE_COMMENT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocResolveCommentDetails", PAPER_DOC_RESOLVE_COMMENT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -9816,11 +9696,10 @@ pub enum PaperDeploymentPolicy {
     Partial,
     Full,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDeploymentPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -9830,22 +9709,21 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDeploymentPolicy {
                 f.write_str("a PaperDeploymentPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "partial" => Ok(PaperDeploymentPolicy::Partial),
                     "full" => Ok(PaperDeploymentPolicy::Full),
-                    "other" => Ok(PaperDeploymentPolicy::Other),
-                    _ => Ok(PaperDeploymentPolicy::_Unknown)
+                    _ => Ok(PaperDeploymentPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["partial",
                                                     "full",
                                                     "other"];
-        _deserializer.deserialize_struct("PaperDeploymentPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PaperDeploymentPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -9866,13 +9744,7 @@ impl ::serde::ser::Serialize for PaperDeploymentPolicy {
                 s.serialize_field(".tag", "full")?;
                 s.end()
             }
-            PaperDeploymentPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperDeploymentPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            PaperDeploymentPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            PaperDeploymentPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -9920,7 +9792,7 @@ impl WebSessionLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for WebSessionLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -9933,7 +9805,7 @@ impl<'de> ::serde::de::Deserialize<'de> for WebSessionLogInfo {
                 WebSessionLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("WebSessionLogInfo", WEB_SESSION_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("WebSessionLogInfo", WEB_SESSION_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -10045,7 +9917,7 @@ impl GeoLocationLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GeoLocationLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -10058,7 +9930,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GeoLocationLogInfo {
                 GeoLocationLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GeoLocationLogInfo", GEO_LOCATION_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GeoLocationLogInfo", GEO_LOCATION_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -10134,7 +10006,7 @@ impl DeviceChangeIpWebDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceChangeIpWebDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -10147,7 +10019,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceChangeIpWebDetails {
                 DeviceChangeIpWebDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceChangeIpWebDetails", DEVICE_CHANGE_IP_WEB_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceChangeIpWebDetails", DEVICE_CHANGE_IP_WEB_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -10188,7 +10060,7 @@ impl FileDownloadDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileDownloadDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -10201,7 +10073,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileDownloadDetails {
                 FileDownloadDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileDownloadDetails", FILE_DOWNLOAD_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileDownloadDetails", FILE_DOWNLOAD_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -10239,7 +10111,7 @@ impl ShmodelTeamViewDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelTeamViewDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -10252,7 +10124,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelTeamViewDetails {
                 ShmodelTeamViewDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelTeamViewDetails", SHMODEL_TEAM_VIEW_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelTeamViewDetails", SHMODEL_TEAM_VIEW_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -10325,7 +10197,7 @@ impl FileUnlikeCommentDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileUnlikeCommentDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -10338,7 +10210,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileUnlikeCommentDetails {
                 FileUnlikeCommentDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileUnlikeCommentDetails", FILE_UNLIKE_COMMENT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileUnlikeCommentDetails", FILE_UNLIKE_COMMENT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -10414,7 +10286,7 @@ impl GroupChangeManagementTypeDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupChangeManagementTypeDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -10427,7 +10299,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupChangeManagementTypeDetails {
                 GroupChangeManagementTypeDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupChangeManagementTypeDetails", GROUP_CHANGE_MANAGEMENT_TYPE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupChangeManagementTypeDetails", GROUP_CHANGE_MANAGEMENT_TYPE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -10503,7 +10375,7 @@ impl AccountCaptureChangeAvailabilityDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureChangeAvailabilityDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -10516,7 +10388,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureChangeAvailabilityDeta
                 AccountCaptureChangeAvailabilityDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("AccountCaptureChangeAvailabilityDetails", ACCOUNT_CAPTURE_CHANGE_AVAILABILITY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("AccountCaptureChangeAvailabilityDetails", ACCOUNT_CAPTURE_CHANGE_AVAILABILITY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -10574,7 +10446,7 @@ impl PaperFolderTeamInviteDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperFolderTeamInviteDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -10587,7 +10459,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperFolderTeamInviteDetails {
                 PaperFolderTeamInviteDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperFolderTeamInviteDetails", PAPER_FOLDER_TEAM_INVITE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperFolderTeamInviteDetails", PAPER_FOLDER_TEAM_INVITE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -10628,7 +10500,7 @@ impl LogoutDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for LogoutDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -10641,7 +10513,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LogoutDetails {
                 LogoutDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("LogoutDetails", LOGOUT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("LogoutDetails", LOGOUT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -10758,7 +10630,7 @@ impl SharedContentChangeLinkExpiryDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeLinkExpiryDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -10771,7 +10643,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeLinkExpiryDetails
                 SharedContentChangeLinkExpiryDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentChangeLinkExpiryDetails", SHARED_CONTENT_CHANGE_LINK_EXPIRY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentChangeLinkExpiryDetails", SHARED_CONTENT_CHANGE_LINK_EXPIRY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -10878,7 +10750,7 @@ impl SfNestDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SfNestDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -10891,7 +10763,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SfNestDetails {
                 SfNestDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SfNestDetails", SF_NEST_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SfNestDetails", SF_NEST_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -10949,7 +10821,7 @@ impl PaperFolderFollowedDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperFolderFollowedDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -10962,7 +10834,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperFolderFollowedDetails {
                 PaperFolderFollowedDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperFolderFollowedDetails", PAPER_FOLDER_FOLLOWED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperFolderFollowedDetails", PAPER_FOLDER_FOLLOWED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -11056,7 +10928,7 @@ impl SharedContentRemoveLinkPasswordDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentRemoveLinkPasswordDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -11069,7 +10941,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentRemoveLinkPasswordDetai
                 SharedContentRemoveLinkPasswordDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentRemoveLinkPasswordDetails", SHARED_CONTENT_REMOVE_LINK_PASSWORD_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentRemoveLinkPasswordDetails", SHARED_CONTENT_REMOVE_LINK_PASSWORD_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -11110,7 +10982,7 @@ impl SignInAsSessionEndDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SignInAsSessionEndDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -11123,7 +10995,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SignInAsSessionEndDetails {
                 SignInAsSessionEndDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SignInAsSessionEndDetails", SIGN_IN_AS_SESSION_END_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SignInAsSessionEndDetails", SIGN_IN_AS_SESSION_END_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -11190,7 +11062,7 @@ impl UserOrTeamLinkedAppLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for UserOrTeamLinkedAppLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -11203,7 +11075,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UserOrTeamLinkedAppLogInfo {
                 UserOrTeamLinkedAppLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("UserOrTeamLinkedAppLogInfo", USER_OR_TEAM_LINKED_APP_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("UserOrTeamLinkedAppLogInfo", USER_OR_TEAM_LINKED_APP_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -11244,7 +11116,7 @@ impl ResellerSupportSessionEndDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ResellerSupportSessionEndDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -11257,7 +11129,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ResellerSupportSessionEndDetails {
                 ResellerSupportSessionEndDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ResellerSupportSessionEndDetails", RESELLER_SUPPORT_SESSION_END_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ResellerSupportSessionEndDetails", RESELLER_SUPPORT_SESSION_END_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -11312,7 +11184,7 @@ impl RemoveSsoUrlDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for RemoveSsoUrlDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -11325,7 +11197,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveSsoUrlDetails {
                 RemoveSsoUrlDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("RemoveSsoUrlDetails", REMOVE_SSO_URL_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("RemoveSsoUrlDetails", REMOVE_SSO_URL_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -11383,7 +11255,7 @@ impl DeviceDeleteOnUnlinkSuccessDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceDeleteOnUnlinkSuccessDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -11396,7 +11268,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceDeleteOnUnlinkSuccessDetails {
                 DeviceDeleteOnUnlinkSuccessDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceDeleteOnUnlinkSuccessDetails", DEVICE_DELETE_ON_UNLINK_SUCCESS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceDeleteOnUnlinkSuccessDetails", DEVICE_DELETE_ON_UNLINK_SUCCESS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -11454,7 +11326,7 @@ impl AppUnlinkTeamDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AppUnlinkTeamDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -11467,7 +11339,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AppUnlinkTeamDetails {
                 AppUnlinkTeamDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("AppUnlinkTeamDetails", APP_UNLINK_TEAM_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("AppUnlinkTeamDetails", APP_UNLINK_TEAM_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -11576,7 +11448,7 @@ impl TeamMemberLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamMemberLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -11589,7 +11461,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamMemberLogInfo {
                 TeamMemberLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamMemberLogInfo", TEAM_MEMBER_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamMemberLogInfo", TEAM_MEMBER_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -11630,7 +11502,7 @@ impl DisabledDomainInvitesDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DisabledDomainInvitesDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -11643,7 +11515,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DisabledDomainInvitesDetails {
                 DisabledDomainInvitesDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DisabledDomainInvitesDetails", DISABLED_DOMAIN_INVITES_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DisabledDomainInvitesDetails", DISABLED_DOMAIN_INVITES_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -11681,7 +11553,7 @@ impl SmartSyncCreateAdminPrivilegeReportDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SmartSyncCreateAdminPrivilegeReportDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -11694,7 +11566,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncCreateAdminPrivilegeReportD
                 SmartSyncCreateAdminPrivilegeReportDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SmartSyncCreateAdminPrivilegeReportDetails", SMART_SYNC_CREATE_ADMIN_PRIVILEGE_REPORT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SmartSyncCreateAdminPrivilegeReportDetails", SMART_SYNC_CREATE_ADMIN_PRIVILEGE_REPORT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -11780,7 +11652,7 @@ impl SfAllowNonMembersToViewSharedLinksDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SfAllowNonMembersToViewSharedLinksDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -11793,7 +11665,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SfAllowNonMembersToViewSharedLinksDe
                 SfAllowNonMembersToViewSharedLinksDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SfAllowNonMembersToViewSharedLinksDetails", SF_ALLOW_NON_MEMBERS_TO_VIEW_SHARED_LINKS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SfAllowNonMembersToViewSharedLinksDetails", SF_ALLOW_NON_MEMBERS_TO_VIEW_SHARED_LINKS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -11864,7 +11736,7 @@ impl DeviceApprovalsChangeOverageActionDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsChangeOverageActionDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -11877,7 +11749,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsChangeOverageActionDe
                 DeviceApprovalsChangeOverageActionDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceApprovalsChangeOverageActionDetails", DEVICE_APPROVALS_CHANGE_OVERAGE_ACTION_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceApprovalsChangeOverageActionDetails", DEVICE_APPROVALS_CHANGE_OVERAGE_ACTION_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -11896,11 +11768,10 @@ pub enum TeamMembershipType {
     Free,
     Full,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamMembershipType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -11910,22 +11781,21 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamMembershipType {
                 f.write_str("a TeamMembershipType structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "free" => Ok(TeamMembershipType::Free),
                     "full" => Ok(TeamMembershipType::Full),
-                    "other" => Ok(TeamMembershipType::Other),
-                    _ => Ok(TeamMembershipType::_Unknown)
+                    _ => Ok(TeamMembershipType::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["free",
                                                     "full",
                                                     "other"];
-        _deserializer.deserialize_struct("TeamMembershipType", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("TeamMembershipType", VARIANTS, EnumVisitor)
     }
 }
 
@@ -11946,13 +11816,7 @@ impl ::serde::ser::Serialize for TeamMembershipType {
                 s.serialize_field(".tag", "full")?;
                 s.end()
             }
-            TeamMembershipType::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("TeamMembershipType", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            TeamMembershipType::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            TeamMembershipType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -12019,7 +11883,7 @@ impl SharedFolderCreateDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderCreateDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -12032,7 +11896,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderCreateDetails {
                 SharedFolderCreateDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedFolderCreateDetails", SHARED_FOLDER_CREATE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedFolderCreateDetails", SHARED_FOLDER_CREATE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -12052,11 +11916,10 @@ pub enum PaperDownloadFormat {
     Html,
     Markdown,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDownloadFormat {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -12066,7 +11929,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDownloadFormat {
                 f.write_str("a PaperDownloadFormat structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -12074,8 +11937,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDownloadFormat {
                     "docx" => Ok(PaperDownloadFormat::Docx),
                     "html" => Ok(PaperDownloadFormat::Html),
                     "markdown" => Ok(PaperDownloadFormat::Markdown),
-                    "other" => Ok(PaperDownloadFormat::Other),
-                    _ => Ok(PaperDownloadFormat::_Unknown)
+                    _ => Ok(PaperDownloadFormat::Other)
                 }
             }
         }
@@ -12083,7 +11945,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDownloadFormat {
                                                     "html",
                                                     "markdown",
                                                     "other"];
-        _deserializer.deserialize_struct("PaperDownloadFormat", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PaperDownloadFormat", VARIANTS, EnumVisitor)
     }
 }
 
@@ -12110,13 +11972,7 @@ impl ::serde::ser::Serialize for PaperDownloadFormat {
                 s.serialize_field(".tag", "markdown")?;
                 s.end()
             }
-            PaperDownloadFormat::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperDownloadFormat", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            PaperDownloadFormat::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            PaperDownloadFormat::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -12201,7 +12057,7 @@ impl SharedContentChangeLinkPasswordDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeLinkPasswordDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -12214,7 +12070,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeLinkPasswordDetai
                 SharedContentChangeLinkPasswordDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentChangeLinkPasswordDetails", SHARED_CONTENT_CHANGE_LINK_PASSWORD_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentChangeLinkPasswordDetails", SHARED_CONTENT_CHANGE_LINK_PASSWORD_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -12308,7 +12164,7 @@ impl SharedContentAddInviteesDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentAddInviteesDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -12321,7 +12177,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentAddInviteesDetails {
                 SharedContentAddInviteesDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentAddInviteesDetails", SHARED_CONTENT_ADD_INVITEES_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentAddInviteesDetails", SHARED_CONTENT_ADD_INVITEES_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -12362,7 +12218,7 @@ impl FilePermanentlyDeleteDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FilePermanentlyDeleteDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -12375,7 +12231,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FilePermanentlyDeleteDetails {
                 FilePermanentlyDeleteDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FilePermanentlyDeleteDetails", FILE_PERMANENTLY_DELETE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FilePermanentlyDeleteDetails", FILE_PERMANENTLY_DELETE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -12392,11 +12248,10 @@ pub enum SpaceLimitsStatus {
     NearQuota,
     OverQuota,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SpaceLimitsStatus {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -12406,7 +12261,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceLimitsStatus {
                 f.write_str("a SpaceLimitsStatus structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -12414,8 +12269,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceLimitsStatus {
                     "within_quota" => Ok(SpaceLimitsStatus::WithinQuota),
                     "near_quota" => Ok(SpaceLimitsStatus::NearQuota),
                     "over_quota" => Ok(SpaceLimitsStatus::OverQuota),
-                    "other" => Ok(SpaceLimitsStatus::Other),
-                    _ => Ok(SpaceLimitsStatus::_Unknown)
+                    _ => Ok(SpaceLimitsStatus::Other)
                 }
             }
         }
@@ -12423,7 +12277,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceLimitsStatus {
                                                     "near_quota",
                                                     "over_quota",
                                                     "other"];
-        _deserializer.deserialize_struct("SpaceLimitsStatus", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SpaceLimitsStatus", VARIANTS, EnumVisitor)
     }
 }
 
@@ -12450,13 +12304,7 @@ impl ::serde::ser::Serialize for SpaceLimitsStatus {
                 s.serialize_field(".tag", "over_quota")?;
                 s.end()
             }
-            SpaceLimitsStatus::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SpaceLimitsStatus", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SpaceLimitsStatus::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SpaceLimitsStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -12622,7 +12470,7 @@ impl DeviceLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -12635,7 +12483,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceLogInfo {
                 DeviceLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceLogInfo", DEVICE_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceLogInfo", DEVICE_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -12693,7 +12541,7 @@ impl PaperContentAddMemberDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperContentAddMemberDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -12706,7 +12554,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperContentAddMemberDetails {
                 PaperContentAddMemberDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperContentAddMemberDetails", PAPER_CONTENT_ADD_MEMBER_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperContentAddMemberDetails", PAPER_CONTENT_ADD_MEMBER_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -12782,7 +12630,7 @@ impl SharingChangeMemberPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharingChangeMemberPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -12795,7 +12643,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingChangeMemberPolicyDetails {
                 SharingChangeMemberPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharingChangeMemberPolicyDetails", SHARING_CHANGE_MEMBER_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharingChangeMemberPolicyDetails", SHARING_CHANGE_MEMBER_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -12836,7 +12684,7 @@ impl EmmLoginSuccessDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EmmLoginSuccessDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -12849,7 +12697,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmLoginSuccessDetails {
                 EmmLoginSuccessDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("EmmLoginSuccessDetails", EMM_LOGIN_SUCCESS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("EmmLoginSuccessDetails", EMM_LOGIN_SUCCESS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -12874,11 +12722,10 @@ pub enum AccessMethodLogInfo {
     /// Api session details.
     Api(ApiSessionLogInfo),
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AccessMethodLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -12888,7 +12735,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessMethodLogInfo {
                 f.write_str("a AccessMethodLogInfo structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -12903,8 +12750,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessMethodLogInfo {
                     "content_manager" => Ok(AccessMethodLogInfo::ContentManager(WebSessionLogInfo::internal_deserialize(map)?)),
                     "admin_console" => Ok(AccessMethodLogInfo::AdminConsole(WebSessionLogInfo::internal_deserialize(map)?)),
                     "api" => Ok(AccessMethodLogInfo::Api(ApiSessionLogInfo::internal_deserialize(map)?)),
-                    "other" => Ok(AccessMethodLogInfo::Other),
-                    _ => Ok(AccessMethodLogInfo::_Unknown)
+                    _ => Ok(AccessMethodLogInfo::Other)
                 }
             }
         }
@@ -12914,7 +12760,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessMethodLogInfo {
                                                     "admin_console",
                                                     "api",
                                                     "other"];
-        _deserializer.deserialize_struct("AccessMethodLogInfo", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("AccessMethodLogInfo", VARIANTS, EnumVisitor)
     }
 }
 
@@ -12958,13 +12804,7 @@ impl ::serde::ser::Serialize for AccessMethodLogInfo {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            AccessMethodLogInfo::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("AccessMethodLogInfo", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            AccessMethodLogInfo::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            AccessMethodLogInfo::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -13013,7 +12853,7 @@ impl TeamFolderDowngradeDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamFolderDowngradeDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -13026,7 +12866,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderDowngradeDetails {
                 TeamFolderDowngradeDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamFolderDowngradeDetails", TEAM_FOLDER_DOWNGRADE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamFolderDowngradeDetails", TEAM_FOLDER_DOWNGRADE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -13084,7 +12924,7 @@ impl PaperDocMentionDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocMentionDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -13097,7 +12937,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocMentionDetails {
                 PaperDocMentionDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocMentionDetails", PAPER_DOC_MENTION_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocMentionDetails", PAPER_DOC_MENTION_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -13173,7 +13013,7 @@ impl GroupCreateDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupCreateDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -13186,7 +13026,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupCreateDetails {
                 GroupCreateDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupCreateDetails", GROUP_CREATE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupCreateDetails", GROUP_CREATE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -13262,7 +13102,7 @@ impl MemberChangeEmailDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberChangeEmailDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -13275,7 +13115,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberChangeEmailDetails {
                 MemberChangeEmailDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberChangeEmailDetails", MEMBER_CHANGE_EMAIL_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberChangeEmailDetails", MEMBER_CHANGE_EMAIL_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -13333,7 +13173,7 @@ impl PaperContentPermanentlyDeleteDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperContentPermanentlyDeleteDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -13346,7 +13186,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperContentPermanentlyDeleteDetails
                 PaperContentPermanentlyDeleteDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperContentPermanentlyDeleteDetails", PAPER_CONTENT_PERMANENTLY_DELETE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperContentPermanentlyDeleteDetails", PAPER_CONTENT_PERMANENTLY_DELETE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -13387,7 +13227,7 @@ impl DomainInvitesDeclineRequestToJoinTeamDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesDeclineRequestToJoinTeamDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -13400,7 +13240,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesDeclineRequestToJoinTea
                 DomainInvitesDeclineRequestToJoinTeamDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DomainInvitesDeclineRequestToJoinTeamDetails", DOMAIN_INVITES_DECLINE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DomainInvitesDeclineRequestToJoinTeamDetails", DOMAIN_INVITES_DECLINE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -13419,11 +13259,10 @@ pub enum ParticipantLogInfo {
     /// Group details.
     Group(GroupLogInfo),
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ParticipantLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -13433,7 +13272,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ParticipantLogInfo {
                 f.write_str("a ParticipantLogInfo structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -13445,15 +13284,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ParticipantLogInfo {
                         Ok(ParticipantLogInfo::User(map.next_value()?))
                     }
                     "group" => Ok(ParticipantLogInfo::Group(GroupLogInfo::internal_deserialize(map)?)),
-                    "other" => Ok(ParticipantLogInfo::Other),
-                    _ => Ok(ParticipantLogInfo::_Unknown)
+                    _ => Ok(ParticipantLogInfo::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["user",
                                                     "group",
                                                     "other"];
-        _deserializer.deserialize_struct("ParticipantLogInfo", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("ParticipantLogInfo", VARIANTS, EnumVisitor)
     }
 }
 
@@ -13476,13 +13314,7 @@ impl ::serde::ser::Serialize for ParticipantLogInfo {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            ParticipantLogInfo::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("ParticipantLogInfo", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            ParticipantLogInfo::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            ParticipantLogInfo::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -13493,11 +13325,10 @@ pub enum NetworkControlPolicy {
     Disabled,
     Enabled,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for NetworkControlPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -13507,22 +13338,21 @@ impl<'de> ::serde::de::Deserialize<'de> for NetworkControlPolicy {
                 f.write_str("a NetworkControlPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "disabled" => Ok(NetworkControlPolicy::Disabled),
                     "enabled" => Ok(NetworkControlPolicy::Enabled),
-                    "other" => Ok(NetworkControlPolicy::Other),
-                    _ => Ok(NetworkControlPolicy::_Unknown)
+                    _ => Ok(NetworkControlPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["disabled",
                                                     "enabled",
                                                     "other"];
-        _deserializer.deserialize_struct("NetworkControlPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("NetworkControlPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -13543,13 +13373,7 @@ impl ::serde::ser::Serialize for NetworkControlPolicy {
                 s.serialize_field(".tag", "enabled")?;
                 s.end()
             }
-            NetworkControlPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("NetworkControlPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            NetworkControlPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            NetworkControlPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -13581,7 +13405,7 @@ impl MissingDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MissingDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -13594,7 +13418,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MissingDetails {
                 MissingDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MissingDetails", MISSING_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MissingDetails", MISSING_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -13667,7 +13491,7 @@ impl FileRequestsChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestsChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -13680,7 +13504,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestsChangePolicyDetails {
                 FileRequestsChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRequestsChangePolicyDetails", FILE_REQUESTS_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRequestsChangePolicyDetails", FILE_REQUESTS_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -13805,7 +13629,7 @@ impl SharedContentChangeLinkAudienceDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeLinkAudienceDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -13818,7 +13642,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeLinkAudienceDetai
                 SharedContentChangeLinkAudienceDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentChangeLinkAudienceDetails", SHARED_CONTENT_CHANGE_LINK_AUDIENCE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentChangeLinkAudienceDetails", SHARED_CONTENT_CHANGE_LINK_AUDIENCE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -13889,7 +13713,7 @@ impl DataPlacementRestrictionChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DataPlacementRestrictionChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -13902,7 +13726,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DataPlacementRestrictionChangePolicy
                 DataPlacementRestrictionChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DataPlacementRestrictionChangePolicyDetails", DATA_PLACEMENT_RESTRICTION_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DataPlacementRestrictionChangePolicyDetails", DATA_PLACEMENT_RESTRICTION_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -13921,11 +13745,10 @@ pub enum GroupManagementType {
     AdminManagementGroup,
     MemberManagementGroup,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupManagementType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -13935,22 +13758,21 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupManagementType {
                 f.write_str("a GroupManagementType structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "admin_management_group" => Ok(GroupManagementType::AdminManagementGroup),
                     "member_management_group" => Ok(GroupManagementType::MemberManagementGroup),
-                    "other" => Ok(GroupManagementType::Other),
-                    _ => Ok(GroupManagementType::_Unknown)
+                    _ => Ok(GroupManagementType::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["admin_management_group",
                                                     "member_management_group",
                                                     "other"];
-        _deserializer.deserialize_struct("GroupManagementType", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("GroupManagementType", VARIANTS, EnumVisitor)
     }
 }
 
@@ -13971,13 +13793,7 @@ impl ::serde::ser::Serialize for GroupManagementType {
                 s.serialize_field(".tag", "member_management_group")?;
                 s.end()
             }
-            GroupManagementType::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("GroupManagementType", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            GroupManagementType::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            GroupManagementType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -14045,7 +13861,7 @@ impl PaperChangeMemberPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperChangeMemberPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -14058,7 +13874,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperChangeMemberPolicyDetails {
                 PaperChangeMemberPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperChangeMemberPolicyDetails", PAPER_CHANGE_MEMBER_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperChangeMemberPolicyDetails", PAPER_CHANGE_MEMBER_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -14099,7 +13915,7 @@ impl TeamProfileChangeLogoDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamProfileChangeLogoDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -14112,7 +13928,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamProfileChangeLogoDetails {
                 TeamProfileChangeLogoDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamProfileChangeLogoDetails", TEAM_PROFILE_CHANGE_LOGO_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamProfileChangeLogoDetails", TEAM_PROFILE_CHANGE_LOGO_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -14130,11 +13946,10 @@ pub enum SpaceLimitsLevel {
     NoLimit,
     Strict,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SpaceLimitsLevel {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -14144,7 +13959,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceLimitsLevel {
                 f.write_str("a SpaceLimitsLevel structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -14153,8 +13968,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceLimitsLevel {
                     "moderate" => Ok(SpaceLimitsLevel::Moderate),
                     "no_limit" => Ok(SpaceLimitsLevel::NoLimit),
                     "strict" => Ok(SpaceLimitsLevel::Strict),
-                    "other" => Ok(SpaceLimitsLevel::Other),
-                    _ => Ok(SpaceLimitsLevel::_Unknown)
+                    _ => Ok(SpaceLimitsLevel::Other)
                 }
             }
         }
@@ -14163,7 +13977,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceLimitsLevel {
                                                     "no_limit",
                                                     "strict",
                                                     "other"];
-        _deserializer.deserialize_struct("SpaceLimitsLevel", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SpaceLimitsLevel", VARIANTS, EnumVisitor)
     }
 }
 
@@ -14196,13 +14010,7 @@ impl ::serde::ser::Serialize for SpaceLimitsLevel {
                 s.serialize_field(".tag", "strict")?;
                 s.end()
             }
-            SpaceLimitsLevel::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SpaceLimitsLevel", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SpaceLimitsLevel::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SpaceLimitsLevel::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -14251,7 +14059,7 @@ impl PaperFolderDeletedDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperFolderDeletedDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -14264,7 +14072,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperFolderDeletedDetails {
                 PaperFolderDeletedDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperFolderDeletedDetails", PAPER_FOLDER_DELETED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperFolderDeletedDetails", PAPER_FOLDER_DELETED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -14284,11 +14092,10 @@ pub enum GetTeamEventsContinueError {
     /// Bad cursor.
     BadCursor,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetTeamEventsContinueError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -14298,20 +14105,19 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTeamEventsContinueError {
                 f.write_str("a GetTeamEventsContinueError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "bad_cursor" => Ok(GetTeamEventsContinueError::BadCursor),
-                    "other" => Ok(GetTeamEventsContinueError::Other),
-                    _ => Ok(GetTeamEventsContinueError::_Unknown)
+                    _ => Ok(GetTeamEventsContinueError::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["bad_cursor",
                                                     "other"];
-        _deserializer.deserialize_struct("GetTeamEventsContinueError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("GetTeamEventsContinueError", VARIANTS, EnumVisitor)
     }
 }
 
@@ -14326,13 +14132,7 @@ impl ::serde::ser::Serialize for GetTeamEventsContinueError {
                 s.serialize_field(".tag", "bad_cursor")?;
                 s.end()
             }
-            GetTeamEventsContinueError::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("GetTeamEventsContinueError", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            GetTeamEventsContinueError::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            GetTeamEventsContinueError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -14355,11 +14155,10 @@ pub enum SharingMemberPolicy {
     TeamOnly,
     Anyone,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharingMemberPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -14369,22 +14168,21 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingMemberPolicy {
                 f.write_str("a SharingMemberPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "team_only" => Ok(SharingMemberPolicy::TeamOnly),
                     "anyone" => Ok(SharingMemberPolicy::Anyone),
-                    "other" => Ok(SharingMemberPolicy::Other),
-                    _ => Ok(SharingMemberPolicy::_Unknown)
+                    _ => Ok(SharingMemberPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["team_only",
                                                     "anyone",
                                                     "other"];
-        _deserializer.deserialize_struct("SharingMemberPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SharingMemberPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -14405,13 +14203,7 @@ impl ::serde::ser::Serialize for SharingMemberPolicy {
                 s.serialize_field(".tag", "anyone")?;
                 s.end()
             }
-            SharingMemberPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SharingMemberPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SharingMemberPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SharingMemberPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -14443,7 +14235,7 @@ impl ShmodelTeamCopyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelTeamCopyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -14456,7 +14248,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelTeamCopyDetails {
                 ShmodelTeamCopyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelTeamCopyDetails", SHMODEL_TEAM_COPY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelTeamCopyDetails", SHMODEL_TEAM_COPY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -14524,7 +14316,7 @@ impl GroupChangeExternalIdDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupChangeExternalIdDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -14537,7 +14329,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupChangeExternalIdDetails {
                 GroupChangeExternalIdDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupChangeExternalIdDetails", GROUP_CHANGE_EXTERNAL_ID_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupChangeExternalIdDetails", GROUP_CHANGE_EXTERNAL_ID_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -14578,7 +14370,7 @@ impl TeamProfileRemoveLogoDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamProfileRemoveLogoDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -14591,7 +14383,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamProfileRemoveLogoDetails {
                 TeamProfileRemoveLogoDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamProfileRemoveLogoDetails", TEAM_PROFILE_REMOVE_LOGO_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamProfileRemoveLogoDetails", TEAM_PROFILE_REMOVE_LOGO_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -14647,7 +14439,7 @@ impl DataPlacementRestrictionSatisfyPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DataPlacementRestrictionSatisfyPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -14660,7 +14452,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DataPlacementRestrictionSatisfyPolic
                 DataPlacementRestrictionSatisfyPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DataPlacementRestrictionSatisfyPolicyDetails", DATA_PLACEMENT_RESTRICTION_SATISFY_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DataPlacementRestrictionSatisfyPolicyDetails", DATA_PLACEMENT_RESTRICTION_SATISFY_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -14718,7 +14510,7 @@ impl FileRequestChangeTitleDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestChangeTitleDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -14731,7 +14523,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestChangeTitleDetails {
                 FileRequestChangeTitleDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRequestChangeTitleDetails", FILE_REQUEST_CHANGE_TITLE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRequestChangeTitleDetails", FILE_REQUEST_CHANGE_TITLE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -14772,7 +14564,7 @@ impl GroupMovedDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupMovedDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -14785,7 +14577,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMovedDetails {
                 GroupMovedDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupMovedDetails", GROUP_MOVED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupMovedDetails", GROUP_MOVED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -14840,7 +14632,7 @@ impl AppUnlinkUserDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AppUnlinkUserDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -14853,7 +14645,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AppUnlinkUserDetails {
                 AppUnlinkUserDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("AppUnlinkUserDetails", APP_UNLINK_USER_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("AppUnlinkUserDetails", APP_UNLINK_USER_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -14873,11 +14665,10 @@ pub enum GoogleSsoPolicy {
     Disabled,
     Enabled,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GoogleSsoPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -14887,22 +14678,21 @@ impl<'de> ::serde::de::Deserialize<'de> for GoogleSsoPolicy {
                 f.write_str("a GoogleSsoPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "disabled" => Ok(GoogleSsoPolicy::Disabled),
                     "enabled" => Ok(GoogleSsoPolicy::Enabled),
-                    "other" => Ok(GoogleSsoPolicy::Other),
-                    _ => Ok(GoogleSsoPolicy::_Unknown)
+                    _ => Ok(GoogleSsoPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["disabled",
                                                     "enabled",
                                                     "other"];
-        _deserializer.deserialize_struct("GoogleSsoPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("GoogleSsoPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -14923,13 +14713,7 @@ impl ::serde::ser::Serialize for GoogleSsoPolicy {
                 s.serialize_field(".tag", "enabled")?;
                 s.end()
             }
-            GoogleSsoPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("GoogleSsoPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            GoogleSsoPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            GoogleSsoPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -14944,11 +14728,10 @@ pub enum ContextLogInfo {
     /// Action was done on behalf of the team.
     Team,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ContextLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -14958,7 +14741,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ContextLogInfo {
                 f.write_str("a ContextLogInfo structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -14966,8 +14749,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ContextLogInfo {
                     "team_member" => Ok(ContextLogInfo::TeamMember(TeamMemberLogInfo::internal_deserialize(map)?)),
                     "non_team_member" => Ok(ContextLogInfo::NonTeamMember(NonTeamMemberLogInfo::internal_deserialize(map)?)),
                     "team" => Ok(ContextLogInfo::Team),
-                    "other" => Ok(ContextLogInfo::Other),
-                    _ => Ok(ContextLogInfo::_Unknown)
+                    _ => Ok(ContextLogInfo::Other)
                 }
             }
         }
@@ -14975,7 +14757,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ContextLogInfo {
                                                     "non_team_member",
                                                     "team",
                                                     "other"];
-        _deserializer.deserialize_struct("ContextLogInfo", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("ContextLogInfo", VARIANTS, EnumVisitor)
     }
 }
 
@@ -15004,13 +14786,7 @@ impl ::serde::ser::Serialize for ContextLogInfo {
                 s.serialize_field(".tag", "team")?;
                 s.end()
             }
-            ContextLogInfo::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("ContextLogInfo", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            ContextLogInfo::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            ContextLogInfo::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -15042,7 +14818,7 @@ impl AllowDownloadDisabledDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AllowDownloadDisabledDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -15055,7 +14831,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AllowDownloadDisabledDetails {
                 AllowDownloadDisabledDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("AllowDownloadDisabledDetails", ALLOW_DOWNLOAD_DISABLED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("AllowDownloadDisabledDetails", ALLOW_DOWNLOAD_DISABLED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -15072,11 +14848,10 @@ pub enum LinkAudience {
     Team,
     Members,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -15086,7 +14861,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
                 f.write_str("a LinkAudience structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -15094,8 +14869,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
                     "public" => Ok(LinkAudience::Public),
                     "team" => Ok(LinkAudience::Team),
                     "members" => Ok(LinkAudience::Members),
-                    "other" => Ok(LinkAudience::Other),
-                    _ => Ok(LinkAudience::_Unknown)
+                    _ => Ok(LinkAudience::Other)
                 }
             }
         }
@@ -15103,7 +14877,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
                                                     "team",
                                                     "members",
                                                     "other"];
-        _deserializer.deserialize_struct("LinkAudience", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("LinkAudience", VARIANTS, EnumVisitor)
     }
 }
 
@@ -15130,13 +14904,7 @@ impl ::serde::ser::Serialize for LinkAudience {
                 s.serialize_field(".tag", "members")?;
                 s.end()
             }
-            LinkAudience::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("LinkAudience", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            LinkAudience::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            LinkAudience::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -15185,7 +14953,7 @@ impl PaperDocEditDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocEditDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -15198,7 +14966,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocEditDetails {
                 PaperDocEditDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocEditDetails", PAPER_DOC_EDIT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocEditDetails", PAPER_DOC_EDIT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -15239,7 +15007,7 @@ impl TfaAddSecurityKeyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TfaAddSecurityKeyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -15252,7 +15020,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaAddSecurityKeyDetails {
                 TfaAddSecurityKeyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TfaAddSecurityKeyDetails", TFA_ADD_SECURITY_KEY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TfaAddSecurityKeyDetails", TFA_ADD_SECURITY_KEY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -15307,7 +15075,7 @@ impl GroupRemoveExternalIdDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupRemoveExternalIdDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -15320,7 +15088,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupRemoveExternalIdDetails {
                 GroupRemoveExternalIdDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupRemoveExternalIdDetails", GROUP_REMOVE_EXTERNAL_ID_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupRemoveExternalIdDetails", GROUP_REMOVE_EXTERNAL_ID_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -15396,7 +15164,7 @@ impl DomainVerificationRemoveDomainDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DomainVerificationRemoveDomainDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -15409,7 +15177,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainVerificationRemoveDomainDetail
                 DomainVerificationRemoveDomainDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DomainVerificationRemoveDomainDetails", DOMAIN_VERIFICATION_REMOVE_DOMAIN_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DomainVerificationRemoveDomainDetails", DOMAIN_VERIFICATION_REMOVE_DOMAIN_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -15467,7 +15235,7 @@ impl DeviceChangeIpDesktopDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceChangeIpDesktopDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -15480,7 +15248,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceChangeIpDesktopDetails {
                 DeviceChangeIpDesktopDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceChangeIpDesktopDetails", DEVICE_CHANGE_IP_DESKTOP_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceChangeIpDesktopDetails", DEVICE_CHANGE_IP_DESKTOP_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -15551,7 +15319,7 @@ impl SharedFolderUnmountDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderUnmountDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -15564,7 +15332,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderUnmountDetails {
                 SharedFolderUnmountDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedFolderUnmountDetails", SHARED_FOLDER_UNMOUNT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedFolderUnmountDetails", SHARED_FOLDER_UNMOUNT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -15671,7 +15439,7 @@ impl SfTeamJoinFromOobLinkDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SfTeamJoinFromOobLinkDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -15684,7 +15452,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SfTeamJoinFromOobLinkDetails {
                 SfTeamJoinFromOobLinkDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SfTeamJoinFromOobLinkDetails", SF_TEAM_JOIN_FROM_OOB_LINK_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SfTeamJoinFromOobLinkDetails", SF_TEAM_JOIN_FROM_OOB_LINK_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -15703,11 +15471,10 @@ pub enum GroupUserManagementPolicy {
     AllUsers,
     OnlyAdmins,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupUserManagementPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -15717,22 +15484,21 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupUserManagementPolicy {
                 f.write_str("a GroupUserManagementPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "all_users" => Ok(GroupUserManagementPolicy::AllUsers),
                     "only_admins" => Ok(GroupUserManagementPolicy::OnlyAdmins),
-                    "other" => Ok(GroupUserManagementPolicy::Other),
-                    _ => Ok(GroupUserManagementPolicy::_Unknown)
+                    _ => Ok(GroupUserManagementPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["all_users",
                                                     "only_admins",
                                                     "other"];
-        _deserializer.deserialize_struct("GroupUserManagementPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("GroupUserManagementPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -15753,13 +15519,7 @@ impl ::serde::ser::Serialize for GroupUserManagementPolicy {
                 s.serialize_field(".tag", "only_admins")?;
                 s.end()
             }
-            GroupUserManagementPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("GroupUserManagementPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            GroupUserManagementPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            GroupUserManagementPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -15791,7 +15551,7 @@ impl FileEditDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileEditDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -15804,7 +15564,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileEditDetails {
                 FileEditDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileEditDetails", FILE_EDIT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileEditDetails", FILE_EDIT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -15859,7 +15619,7 @@ impl FileRequestRemoveDeadlineDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestRemoveDeadlineDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -15872,7 +15632,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestRemoveDeadlineDetails {
                 FileRequestRemoveDeadlineDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRequestRemoveDeadlineDetails", FILE_REQUEST_REMOVE_DEADLINE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRequestRemoveDeadlineDetails", FILE_REQUEST_REMOVE_DEADLINE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -15913,7 +15673,7 @@ impl FileRollbackChangesDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRollbackChangesDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -15926,7 +15686,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRollbackChangesDetails {
                 FileRollbackChangesDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRollbackChangesDetails", FILE_ROLLBACK_CHANGES_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRollbackChangesDetails", FILE_ROLLBACK_CHANGES_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -15942,11 +15702,10 @@ pub enum SmartSyncPolicy {
     LocalOnly,
     Synced,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SmartSyncPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -15956,22 +15715,21 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncPolicy {
                 f.write_str("a SmartSyncPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "local_only" => Ok(SmartSyncPolicy::LocalOnly),
                     "synced" => Ok(SmartSyncPolicy::Synced),
-                    "other" => Ok(SmartSyncPolicy::Other),
-                    _ => Ok(SmartSyncPolicy::_Unknown)
+                    _ => Ok(SmartSyncPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["local_only",
                                                     "synced",
                                                     "other"];
-        _deserializer.deserialize_struct("SmartSyncPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SmartSyncPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -15992,13 +15750,7 @@ impl ::serde::ser::Serialize for SmartSyncPolicy {
                 s.serialize_field(".tag", "synced")?;
                 s.end()
             }
-            SmartSyncPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SmartSyncPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SmartSyncPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SmartSyncPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -16065,7 +15817,7 @@ impl PaperDocEditCommentDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocEditCommentDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -16078,7 +15830,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocEditCommentDetails {
                 PaperDocEditCommentDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocEditCommentDetails", PAPER_DOC_EDIT_COMMENT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocEditCommentDetails", PAPER_DOC_EDIT_COMMENT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -16136,7 +15888,7 @@ impl AccountCaptureMigrateAccountDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureMigrateAccountDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -16149,7 +15901,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureMigrateAccountDetails 
                 AccountCaptureMigrateAccountDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("AccountCaptureMigrateAccountDetails", ACCOUNT_CAPTURE_MIGRATE_ACCOUNT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("AccountCaptureMigrateAccountDetails", ACCOUNT_CAPTURE_MIGRATE_ACCOUNT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -16168,11 +15920,10 @@ pub enum DeviceUnlinkPolicy {
     Remove,
     Keep,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceUnlinkPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -16182,22 +15933,21 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceUnlinkPolicy {
                 f.write_str("a DeviceUnlinkPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "remove" => Ok(DeviceUnlinkPolicy::Remove),
                     "keep" => Ok(DeviceUnlinkPolicy::Keep),
-                    "other" => Ok(DeviceUnlinkPolicy::Other),
-                    _ => Ok(DeviceUnlinkPolicy::_Unknown)
+                    _ => Ok(DeviceUnlinkPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["remove",
                                                     "keep",
                                                     "other"];
-        _deserializer.deserialize_struct("DeviceUnlinkPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("DeviceUnlinkPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -16218,13 +15968,7 @@ impl ::serde::ser::Serialize for DeviceUnlinkPolicy {
                 s.serialize_field(".tag", "keep")?;
                 s.end()
             }
-            DeviceUnlinkPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("DeviceUnlinkPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            DeviceUnlinkPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            DeviceUnlinkPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -16273,7 +16017,7 @@ impl CollectionShareDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for CollectionShareDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -16286,7 +16030,7 @@ impl<'de> ::serde::de::Deserialize<'de> for CollectionShareDetails {
                 CollectionShareDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("CollectionShareDetails", COLLECTION_SHARE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("CollectionShareDetails", COLLECTION_SHARE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -16839,11 +16583,10 @@ pub enum EventDetails {
     /// Hints that this event was returned with missing details due to an internal error.
     MissingDetails(MissingDetails),
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -16853,7 +16596,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                 f.write_str("a EventDetails structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -17117,8 +16860,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "tfa_remove_security_key_details" => Ok(EventDetails::TfaRemoveSecurityKeyDetails(TfaRemoveSecurityKeyDetails::internal_deserialize(map)?)),
                     "tfa_reset_details" => Ok(EventDetails::TfaResetDetails(TfaResetDetails::internal_deserialize(map)?)),
                     "missing_details" => Ok(EventDetails::MissingDetails(MissingDetails::internal_deserialize(map)?)),
-                    "other" => Ok(EventDetails::Other),
-                    _ => Ok(EventDetails::_Unknown)
+                    _ => Ok(EventDetails::Other)
                 }
             }
         }
@@ -17382,7 +17124,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "tfa_reset_details",
                                                     "missing_details",
                                                     "other"];
-        _deserializer.deserialize_struct("EventDetails", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("EventDetails", VARIANTS, EnumVisitor)
     }
 }
 
@@ -19123,13 +18865,7 @@ impl ::serde::ser::Serialize for EventDetails {
                 s.serialize_field(".tag", "missing_details")?;
                 s.end()
             }
-            EventDetails::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("EventDetails", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            EventDetails::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            EventDetails::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -19209,7 +18945,7 @@ impl SharedContentDownloadDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentDownloadDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -19222,7 +18958,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentDownloadDetails {
                 SharedContentDownloadDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentDownloadDetails", SHARED_CONTENT_DOWNLOAD_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentDownloadDetails", SHARED_CONTENT_DOWNLOAD_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -19342,7 +19078,7 @@ impl SharedFolderChangeMemberPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMemberPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -19355,7 +19091,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMemberPolicyDetail
                 SharedFolderChangeMemberPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedFolderChangeMemberPolicyDetails", SHARED_FOLDER_CHANGE_MEMBER_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedFolderChangeMemberPolicyDetails", SHARED_FOLDER_CHANGE_MEMBER_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -19425,7 +19161,7 @@ impl FailureDetailsLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FailureDetailsLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -19438,7 +19174,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FailureDetailsLogInfo {
                 FailureDetailsLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FailureDetailsLogInfo", FAILURE_DETAILS_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FailureDetailsLogInfo", FAILURE_DETAILS_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -19495,7 +19231,7 @@ impl GroupDeleteDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupDeleteDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -19508,7 +19244,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupDeleteDetails {
                 GroupDeleteDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupDeleteDetails", GROUP_DELETE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupDeleteDetails", GROUP_DELETE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -19549,7 +19285,7 @@ impl DeviceManagementEnabledDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceManagementEnabledDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -19562,7 +19298,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceManagementEnabledDetails {
                 DeviceManagementEnabledDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceManagementEnabledDetails", DEVICE_MANAGEMENT_ENABLED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceManagementEnabledDetails", DEVICE_MANAGEMENT_ENABLED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -19579,11 +19315,10 @@ pub enum AccountCapturePolicy {
     InvitedUsers,
     AllUsers,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AccountCapturePolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -19593,7 +19328,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountCapturePolicy {
                 f.write_str("a AccountCapturePolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -19601,8 +19336,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountCapturePolicy {
                     "disabled" => Ok(AccountCapturePolicy::Disabled),
                     "invited_users" => Ok(AccountCapturePolicy::InvitedUsers),
                     "all_users" => Ok(AccountCapturePolicy::AllUsers),
-                    "other" => Ok(AccountCapturePolicy::Other),
-                    _ => Ok(AccountCapturePolicy::_Unknown)
+                    _ => Ok(AccountCapturePolicy::Other)
                 }
             }
         }
@@ -19610,7 +19344,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountCapturePolicy {
                                                     "invited_users",
                                                     "all_users",
                                                     "other"];
-        _deserializer.deserialize_struct("AccountCapturePolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("AccountCapturePolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -19637,13 +19371,7 @@ impl ::serde::ser::Serialize for AccountCapturePolicy {
                 s.serialize_field(".tag", "all_users")?;
                 s.end()
             }
-            AccountCapturePolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("AccountCapturePolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            AccountCapturePolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            AccountCapturePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -19723,7 +19451,7 @@ impl SharedContentViewDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentViewDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -19736,7 +19464,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentViewDetails {
                 SharedContentViewDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentViewDetails", SHARED_CONTENT_VIEW_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentViewDetails", SHARED_CONTENT_VIEW_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -19861,7 +19589,7 @@ impl SharedContentChangeViewerInfoPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeViewerInfoPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -19874,7 +19602,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeViewerInfoPolicyD
                 SharedContentChangeViewerInfoPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentChangeViewerInfoPolicyDetails", SHARED_CONTENT_CHANGE_VIEWER_INFO_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentChangeViewerInfoPolicyDetails", SHARED_CONTENT_CHANGE_VIEWER_INFO_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -19894,11 +19622,10 @@ pub enum SharedFolderLinkPolicy {
     MembersAndTeam,
     Anyone,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderLinkPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -19908,7 +19635,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderLinkPolicy {
                 f.write_str("a SharedFolderLinkPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -19916,8 +19643,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderLinkPolicy {
                     "members_only" => Ok(SharedFolderLinkPolicy::MembersOnly),
                     "members_and_team" => Ok(SharedFolderLinkPolicy::MembersAndTeam),
                     "anyone" => Ok(SharedFolderLinkPolicy::Anyone),
-                    "other" => Ok(SharedFolderLinkPolicy::Other),
-                    _ => Ok(SharedFolderLinkPolicy::_Unknown)
+                    _ => Ok(SharedFolderLinkPolicy::Other)
                 }
             }
         }
@@ -19925,7 +19651,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderLinkPolicy {
                                                     "members_and_team",
                                                     "anyone",
                                                     "other"];
-        _deserializer.deserialize_struct("SharedFolderLinkPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SharedFolderLinkPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -19952,13 +19678,7 @@ impl ::serde::ser::Serialize for SharedFolderLinkPolicy {
                 s.serialize_field(".tag", "anyone")?;
                 s.end()
             }
-            SharedFolderLinkPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedFolderLinkPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SharedFolderLinkPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SharedFolderLinkPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -19990,7 +19710,7 @@ impl NoteAclTeamLinkDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for NoteAclTeamLinkDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -20003,7 +19723,7 @@ impl<'de> ::serde::de::Deserialize<'de> for NoteAclTeamLinkDetails {
                 NoteAclTeamLinkDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("NoteAclTeamLinkDetails", NOTE_ACL_TEAM_LINK_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("NoteAclTeamLinkDetails", NOTE_ACL_TEAM_LINK_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -20041,7 +19761,7 @@ impl PaperExternalViewForbidDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperExternalViewForbidDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -20054,7 +19774,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperExternalViewForbidDetails {
                 PaperExternalViewForbidDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperExternalViewForbidDetails", PAPER_EXTERNAL_VIEW_FORBID_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperExternalViewForbidDetails", PAPER_EXTERNAL_VIEW_FORBID_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -20109,7 +19829,7 @@ impl ApiSessionLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ApiSessionLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -20122,7 +19842,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ApiSessionLogInfo {
                 ApiSessionLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ApiSessionLogInfo", API_SESSION_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ApiSessionLogInfo", API_SESSION_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -20180,7 +19900,7 @@ impl DeviceLinkSuccessDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceLinkSuccessDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -20193,7 +19913,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceLinkSuccessDetails {
                 DeviceLinkSuccessDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceLinkSuccessDetails", DEVICE_LINK_SUCCESS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceLinkSuccessDetails", DEVICE_LINK_SUCCESS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -20214,11 +19934,10 @@ pub enum SsoPolicy {
     Optional,
     Required,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SsoPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -20228,7 +19947,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoPolicy {
                 f.write_str("a SsoPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -20236,8 +19955,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoPolicy {
                     "disabled" => Ok(SsoPolicy::Disabled),
                     "optional" => Ok(SsoPolicy::Optional),
                     "required" => Ok(SsoPolicy::Required),
-                    "other" => Ok(SsoPolicy::Other),
-                    _ => Ok(SsoPolicy::_Unknown)
+                    _ => Ok(SsoPolicy::Other)
                 }
             }
         }
@@ -20245,7 +19963,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoPolicy {
                                                     "optional",
                                                     "required",
                                                     "other"];
-        _deserializer.deserialize_struct("SsoPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SsoPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -20272,13 +19990,7 @@ impl ::serde::ser::Serialize for SsoPolicy {
                 s.serialize_field(".tag", "required")?;
                 s.end()
             }
-            SsoPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SsoPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SsoPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SsoPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -20345,7 +20057,7 @@ impl SharingChangeFolderJoinPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharingChangeFolderJoinPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -20358,7 +20070,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingChangeFolderJoinPolicyDetails
                 SharingChangeFolderJoinPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharingChangeFolderJoinPolicyDetails", SHARING_CHANGE_FOLDER_JOIN_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharingChangeFolderJoinPolicyDetails", SHARING_CHANGE_FOLDER_JOIN_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -20429,7 +20141,7 @@ impl MemberChangeNameDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberChangeNameDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -20442,7 +20154,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberChangeNameDetails {
                 MemberChangeNameDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberChangeNameDetails", MEMBER_CHANGE_NAME_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberChangeNameDetails", MEMBER_CHANGE_NAME_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -20536,7 +20248,7 @@ impl MemberChangeStatusDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberChangeStatusDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -20549,7 +20261,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberChangeStatusDetails {
                 MemberChangeStatusDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberChangeStatusDetails", MEMBER_CHANGE_STATUS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberChangeStatusDetails", MEMBER_CHANGE_STATUS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -20569,11 +20281,10 @@ pub enum PaperPolicy {
     Disabled,
     Enabled,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -20583,22 +20294,21 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperPolicy {
                 f.write_str("a PaperPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "disabled" => Ok(PaperPolicy::Disabled),
                     "enabled" => Ok(PaperPolicy::Enabled),
-                    "other" => Ok(PaperPolicy::Other),
-                    _ => Ok(PaperPolicy::_Unknown)
+                    _ => Ok(PaperPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["disabled",
                                                     "enabled",
                                                     "other"];
-        _deserializer.deserialize_struct("PaperPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PaperPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -20619,13 +20329,7 @@ impl ::serde::ser::Serialize for PaperPolicy {
                 s.serialize_field(".tag", "enabled")?;
                 s.end()
             }
-            PaperPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            PaperPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            PaperPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -20657,7 +20361,7 @@ impl NoteAclInviteOnlyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for NoteAclInviteOnlyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -20670,7 +20374,7 @@ impl<'de> ::serde::de::Deserialize<'de> for NoteAclInviteOnlyDetails {
                 NoteAclInviteOnlyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("NoteAclInviteOnlyDetails", NOTE_ACL_INVITE_ONLY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("NoteAclInviteOnlyDetails", NOTE_ACL_INVITE_ONLY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -20725,7 +20429,7 @@ impl ShmodelFbShareDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelFbShareDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -20738,7 +20442,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelFbShareDetails {
                 ShmodelFbShareDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelFbShareDetails", SHMODEL_FB_SHARE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelFbShareDetails", SHMODEL_FB_SHARE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -20814,7 +20518,7 @@ impl PaperDocUnresolveCommentDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocUnresolveCommentDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -20827,7 +20531,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocUnresolveCommentDetails {
                 PaperDocUnresolveCommentDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocUnresolveCommentDetails", PAPER_DOC_UNRESOLVE_COMMENT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocUnresolveCommentDetails", PAPER_DOC_UNRESOLVE_COMMENT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -20916,7 +20620,7 @@ impl UserNameLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for UserNameLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -20929,7 +20633,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UserNameLogInfo {
                 UserNameLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("UserNameLogInfo", USER_NAME_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("UserNameLogInfo", USER_NAME_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -20951,11 +20655,10 @@ pub enum WebSessionsIdleLengthPolicy {
     /// Undefined idle session length.
     Undefined,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for WebSessionsIdleLengthPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -20965,22 +20668,21 @@ impl<'de> ::serde::de::Deserialize<'de> for WebSessionsIdleLengthPolicy {
                 f.write_str("a WebSessionsIdleLengthPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "defined" => Ok(WebSessionsIdleLengthPolicy::Defined(DurationLogInfo::internal_deserialize(map)?)),
                     "undefined" => Ok(WebSessionsIdleLengthPolicy::Undefined),
-                    "other" => Ok(WebSessionsIdleLengthPolicy::Other),
-                    _ => Ok(WebSessionsIdleLengthPolicy::_Unknown)
+                    _ => Ok(WebSessionsIdleLengthPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["defined",
                                                     "undefined",
                                                     "other"];
-        _deserializer.deserialize_struct("WebSessionsIdleLengthPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("WebSessionsIdleLengthPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -21002,13 +20704,7 @@ impl ::serde::ser::Serialize for WebSessionsIdleLengthPolicy {
                 s.serialize_field(".tag", "undefined")?;
                 s.end()
             }
-            WebSessionsIdleLengthPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("WebSessionsIdleLengthPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            WebSessionsIdleLengthPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            WebSessionsIdleLengthPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -21101,7 +20797,7 @@ impl SfAddGroupDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SfAddGroupDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -21114,7 +20810,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SfAddGroupDetails {
                 SfAddGroupDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SfAddGroupDetails", SF_ADD_GROUP_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SfAddGroupDetails", SF_ADD_GROUP_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -21185,7 +20881,7 @@ impl SsoChangeLoginUrlDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SsoChangeLoginUrlDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -21198,7 +20894,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoChangeLoginUrlDetails {
                 SsoChangeLoginUrlDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SsoChangeLoginUrlDetails", SSO_CHANGE_LOGIN_URL_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SsoChangeLoginUrlDetails", SSO_CHANGE_LOGIN_URL_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -21274,7 +20970,7 @@ impl SsoChangeLogoutUrlDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SsoChangeLogoutUrlDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -21287,7 +20983,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoChangeLogoutUrlDetails {
                 SsoChangeLogoutUrlDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SsoChangeLogoutUrlDetails", SSO_CHANGE_LOGOUT_URL_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SsoChangeLogoutUrlDetails", SSO_CHANGE_LOGOUT_URL_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -21394,7 +21090,7 @@ impl SfTeamInviteChangeRoleDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SfTeamInviteChangeRoleDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -21407,7 +21103,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SfTeamInviteChangeRoleDetails {
                 SfTeamInviteChangeRoleDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SfTeamInviteChangeRoleDetails", SF_TEAM_INVITE_CHANGE_ROLE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SfTeamInviteChangeRoleDetails", SF_TEAM_INVITE_CHANGE_ROLE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -21483,7 +21179,7 @@ impl ExtendedVersionHistoryChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ExtendedVersionHistoryChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -21496,7 +21192,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ExtendedVersionHistoryChangePolicyDe
                 ExtendedVersionHistoryChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ExtendedVersionHistoryChangePolicyDetails", EXTENDED_VERSION_HISTORY_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ExtendedVersionHistoryChangePolicyDetails", EXTENDED_VERSION_HISTORY_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -21608,7 +21304,7 @@ impl SharedContentAddMemberDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentAddMemberDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -21621,7 +21317,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentAddMemberDetails {
                 SharedContentAddMemberDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentAddMemberDetails", SHARED_CONTENT_ADD_MEMBER_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentAddMemberDetails", SHARED_CONTENT_ADD_MEMBER_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -21647,11 +21343,10 @@ pub enum AssetLogInfo {
     /// Paper folder's details.
     PaperFolder(PaperFolderLogInfo),
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AssetLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -21661,7 +21356,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AssetLogInfo {
                 f.write_str("a AssetLogInfo structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -21670,8 +21365,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AssetLogInfo {
                     "folder" => Ok(AssetLogInfo::Folder(FolderLogInfo::internal_deserialize(map)?)),
                     "paper_document" => Ok(AssetLogInfo::PaperDocument(PaperDocumentLogInfo::internal_deserialize(map)?)),
                     "paper_folder" => Ok(AssetLogInfo::PaperFolder(PaperFolderLogInfo::internal_deserialize(map)?)),
-                    "other" => Ok(AssetLogInfo::Other),
-                    _ => Ok(AssetLogInfo::_Unknown)
+                    _ => Ok(AssetLogInfo::Other)
                 }
             }
         }
@@ -21680,7 +21374,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AssetLogInfo {
                                                     "paper_document",
                                                     "paper_folder",
                                                     "other"];
-        _deserializer.deserialize_struct("AssetLogInfo", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("AssetLogInfo", VARIANTS, EnumVisitor)
     }
 }
 
@@ -21717,13 +21411,7 @@ impl ::serde::ser::Serialize for AssetLogInfo {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            AssetLogInfo::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("AssetLogInfo", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            AssetLogInfo::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            AssetLogInfo::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -21785,7 +21473,7 @@ impl SfTeamUninviteDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SfTeamUninviteDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -21798,7 +21486,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SfTeamUninviteDetails {
                 SfTeamUninviteDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SfTeamUninviteDetails", SF_TEAM_UNINVITE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SfTeamUninviteDetails", SF_TEAM_UNINVITE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -21817,11 +21505,10 @@ pub enum AccountCaptureAvailability {
     Unavailable,
     Available,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureAvailability {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -21831,22 +21518,21 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureAvailability {
                 f.write_str("a AccountCaptureAvailability structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "unavailable" => Ok(AccountCaptureAvailability::Unavailable),
                     "available" => Ok(AccountCaptureAvailability::Available),
-                    "other" => Ok(AccountCaptureAvailability::Other),
-                    _ => Ok(AccountCaptureAvailability::_Unknown)
+                    _ => Ok(AccountCaptureAvailability::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["unavailable",
                                                     "available",
                                                     "other"];
-        _deserializer.deserialize_struct("AccountCaptureAvailability", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("AccountCaptureAvailability", VARIANTS, EnumVisitor)
     }
 }
 
@@ -21867,13 +21553,7 @@ impl ::serde::ser::Serialize for AccountCaptureAvailability {
                 s.serialize_field(".tag", "available")?;
                 s.end()
             }
-            AccountCaptureAvailability::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("AccountCaptureAvailability", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            AccountCaptureAvailability::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            AccountCaptureAvailability::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -21994,7 +21674,7 @@ impl SharedContentChangeMemberRoleDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeMemberRoleDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -22007,7 +21687,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeMemberRoleDetails
                 SharedContentChangeMemberRoleDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentChangeMemberRoleDetails", SHARED_CONTENT_CHANGE_MEMBER_ROLE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentChangeMemberRoleDetails", SHARED_CONTENT_CHANGE_MEMBER_ROLE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -22083,7 +21763,7 @@ impl EmmChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EmmChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -22096,7 +21776,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmChangePolicyDetails {
                 EmmChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("EmmChangePolicyDetails", EMM_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("EmmChangePolicyDetails", EMM_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -22115,11 +21795,10 @@ pub enum SmartSyncOptOutPolicy {
     OptedOut,
     DefaultVariant,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SmartSyncOptOutPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -22129,22 +21808,21 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncOptOutPolicy {
                 f.write_str("a SmartSyncOptOutPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "opted_out" => Ok(SmartSyncOptOutPolicy::OptedOut),
                     "default" => Ok(SmartSyncOptOutPolicy::DefaultVariant),
-                    "other" => Ok(SmartSyncOptOutPolicy::Other),
-                    _ => Ok(SmartSyncOptOutPolicy::_Unknown)
+                    _ => Ok(SmartSyncOptOutPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["opted_out",
                                                     "default",
                                                     "other"];
-        _deserializer.deserialize_struct("SmartSyncOptOutPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SmartSyncOptOutPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -22165,13 +21843,7 @@ impl ::serde::ser::Serialize for SmartSyncOptOutPolicy {
                 s.serialize_field(".tag", "default")?;
                 s.end()
             }
-            SmartSyncOptOutPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SmartSyncOptOutPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SmartSyncOptOutPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SmartSyncOptOutPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -22220,7 +21892,7 @@ impl FileRequestChangeFolderDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestChangeFolderDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -22233,7 +21905,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestChangeFolderDetails {
                 FileRequestChangeFolderDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRequestChangeFolderDetails", FILE_REQUEST_CHANGE_FOLDER_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRequestChangeFolderDetails", FILE_REQUEST_CHANGE_FOLDER_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -22274,7 +21946,7 @@ impl NoteAclLinkDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for NoteAclLinkDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -22287,7 +21959,7 @@ impl<'de> ::serde::de::Deserialize<'de> for NoteAclLinkDetails {
                 NoteAclLinkDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("NoteAclLinkDetails", NOTE_ACL_LINK_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("NoteAclLinkDetails", NOTE_ACL_LINK_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -22304,11 +21976,10 @@ pub enum MemberSuggestionsPolicy {
     Disabled,
     Enabled,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberSuggestionsPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -22318,22 +21989,21 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSuggestionsPolicy {
                 f.write_str("a MemberSuggestionsPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "disabled" => Ok(MemberSuggestionsPolicy::Disabled),
                     "enabled" => Ok(MemberSuggestionsPolicy::Enabled),
-                    "other" => Ok(MemberSuggestionsPolicy::Other),
-                    _ => Ok(MemberSuggestionsPolicy::_Unknown)
+                    _ => Ok(MemberSuggestionsPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["disabled",
                                                     "enabled",
                                                     "other"];
-        _deserializer.deserialize_struct("MemberSuggestionsPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("MemberSuggestionsPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -22354,13 +22024,7 @@ impl ::serde::ser::Serialize for MemberSuggestionsPolicy {
                 s.serialize_field(".tag", "enabled")?;
                 s.end()
             }
-            MemberSuggestionsPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("MemberSuggestionsPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            MemberSuggestionsPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            MemberSuggestionsPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -22427,7 +22091,7 @@ impl GroupUserManagementChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupUserManagementChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -22440,7 +22104,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupUserManagementChangePolicyDetai
                 GroupUserManagementChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupUserManagementChangePolicyDetails", GROUP_USER_MANAGEMENT_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupUserManagementChangePolicyDetails", GROUP_USER_MANAGEMENT_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -22482,7 +22146,7 @@ impl SfExternalInviteWarnDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SfExternalInviteWarnDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -22495,7 +22159,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SfExternalInviteWarnDetails {
                 SfExternalInviteWarnDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SfExternalInviteWarnDetails", SF_EXTERNAL_INVITE_WARN_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SfExternalInviteWarnDetails", SF_EXTERNAL_INVITE_WARN_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -22514,11 +22178,10 @@ pub enum WebSessionsFixedLengthPolicy {
     /// Undefined fixed session length.
     Undefined,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for WebSessionsFixedLengthPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -22528,22 +22191,21 @@ impl<'de> ::serde::de::Deserialize<'de> for WebSessionsFixedLengthPolicy {
                 f.write_str("a WebSessionsFixedLengthPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "defined" => Ok(WebSessionsFixedLengthPolicy::Defined(DurationLogInfo::internal_deserialize(map)?)),
                     "undefined" => Ok(WebSessionsFixedLengthPolicy::Undefined),
-                    "other" => Ok(WebSessionsFixedLengthPolicy::Other),
-                    _ => Ok(WebSessionsFixedLengthPolicy::_Unknown)
+                    _ => Ok(WebSessionsFixedLengthPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["defined",
                                                     "undefined",
                                                     "other"];
-        _deserializer.deserialize_struct("WebSessionsFixedLengthPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("WebSessionsFixedLengthPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -22565,13 +22227,7 @@ impl ::serde::ser::Serialize for WebSessionsFixedLengthPolicy {
                 s.serialize_field(".tag", "undefined")?;
                 s.end()
             }
-            WebSessionsFixedLengthPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("WebSessionsFixedLengthPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            WebSessionsFixedLengthPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            WebSessionsFixedLengthPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -22587,11 +22243,10 @@ pub enum TimeUnit {
     Months,
     Years,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TimeUnit {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -22601,7 +22256,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TimeUnit {
                 f.write_str("a TimeUnit structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -22614,8 +22269,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TimeUnit {
                     "weeks" => Ok(TimeUnit::Weeks),
                     "months" => Ok(TimeUnit::Months),
                     "years" => Ok(TimeUnit::Years),
-                    "other" => Ok(TimeUnit::Other),
-                    _ => Ok(TimeUnit::_Unknown)
+                    _ => Ok(TimeUnit::Other)
                 }
             }
         }
@@ -22628,7 +22282,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TimeUnit {
                                                     "months",
                                                     "years",
                                                     "other"];
-        _deserializer.deserialize_struct("TimeUnit", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("TimeUnit", VARIANTS, EnumVisitor)
     }
 }
 
@@ -22685,13 +22339,7 @@ impl ::serde::ser::Serialize for TimeUnit {
                 s.serialize_field(".tag", "years")?;
                 s.end()
             }
-            TimeUnit::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("TimeUnit", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            TimeUnit::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            TimeUnit::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -22802,7 +22450,7 @@ impl SharedContentAddLinkExpiryDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentAddLinkExpiryDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -22815,7 +22463,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentAddLinkExpiryDetails {
                 SharedContentAddLinkExpiryDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentAddLinkExpiryDetails", SHARED_CONTENT_ADD_LINK_EXPIRY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentAddLinkExpiryDetails", SHARED_CONTENT_ADD_LINK_EXPIRY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -22856,7 +22504,7 @@ impl MemberPermanentlyDeleteAccountContentsDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberPermanentlyDeleteAccountContentsDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -22869,7 +22517,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberPermanentlyDeleteAccountConten
                 MemberPermanentlyDeleteAccountContentsDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberPermanentlyDeleteAccountContentsDetails", MEMBER_PERMANENTLY_DELETE_ACCOUNT_CONTENTS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberPermanentlyDeleteAccountContentsDetails", MEMBER_PERMANENTLY_DELETE_ACCOUNT_CONTENTS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -22907,7 +22555,7 @@ impl ShmodelTeamDownloadDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelTeamDownloadDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -22920,7 +22568,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelTeamDownloadDetails {
                 ShmodelTeamDownloadDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelTeamDownloadDetails", SHMODEL_TEAM_DOWNLOAD_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelTeamDownloadDetails", SHMODEL_TEAM_DOWNLOAD_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -22958,7 +22606,7 @@ impl EmmCreateExceptionsReportDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EmmCreateExceptionsReportDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -22971,7 +22619,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmCreateExceptionsReportDetails {
                 EmmCreateExceptionsReportDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("EmmCreateExceptionsReportDetails", EMM_CREATE_EXCEPTIONS_REPORT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("EmmCreateExceptionsReportDetails", EMM_CREATE_EXCEPTIONS_REPORT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -22988,11 +22636,10 @@ pub enum DeviceApprovalsRolloutPolicy {
     RemoveAll,
     AddException,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsRolloutPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -23002,7 +22649,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsRolloutPolicy {
                 f.write_str("a DeviceApprovalsRolloutPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -23010,8 +22657,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsRolloutPolicy {
                     "remove_oldest" => Ok(DeviceApprovalsRolloutPolicy::RemoveOldest),
                     "remove_all" => Ok(DeviceApprovalsRolloutPolicy::RemoveAll),
                     "add_exception" => Ok(DeviceApprovalsRolloutPolicy::AddException),
-                    "other" => Ok(DeviceApprovalsRolloutPolicy::Other),
-                    _ => Ok(DeviceApprovalsRolloutPolicy::_Unknown)
+                    _ => Ok(DeviceApprovalsRolloutPolicy::Other)
                 }
             }
         }
@@ -23019,7 +22665,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsRolloutPolicy {
                                                     "remove_all",
                                                     "add_exception",
                                                     "other"];
-        _deserializer.deserialize_struct("DeviceApprovalsRolloutPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("DeviceApprovalsRolloutPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -23046,13 +22692,7 @@ impl ::serde::ser::Serialize for DeviceApprovalsRolloutPolicy {
                 s.serialize_field(".tag", "add_exception")?;
                 s.end()
             }
-            DeviceApprovalsRolloutPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("DeviceApprovalsRolloutPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            DeviceApprovalsRolloutPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            DeviceApprovalsRolloutPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -23101,7 +22741,7 @@ impl PaperDocViewDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocViewDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -23114,7 +22754,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocViewDetails {
                 PaperDocViewDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocViewDetails", PAPER_DOC_VIEW_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocViewDetails", PAPER_DOC_VIEW_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -23184,7 +22824,7 @@ impl HostLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for HostLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -23197,7 +22837,7 @@ impl<'de> ::serde::de::Deserialize<'de> for HostLogInfo {
                 HostLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("HostLogInfo", HOST_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("HostLogInfo", HOST_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -23238,7 +22878,7 @@ impl EmmCreateUsageReportDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EmmCreateUsageReportDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -23251,7 +22891,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmCreateUsageReportDetails {
                 EmmCreateUsageReportDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("EmmCreateUsageReportDetails", EMM_CREATE_USAGE_REPORT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("EmmCreateUsageReportDetails", EMM_CREATE_USAGE_REPORT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -23289,7 +22929,7 @@ impl ShmodelVisibilityPublicDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelVisibilityPublicDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -23302,7 +22942,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelVisibilityPublicDetails {
                 ShmodelVisibilityPublicDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelVisibilityPublicDetails", SHMODEL_VISIBILITY_PUBLIC_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelVisibilityPublicDetails", SHMODEL_VISIBILITY_PUBLIC_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -23375,7 +23015,7 @@ impl PermanentDeleteChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PermanentDeleteChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -23388,7 +23028,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PermanentDeleteChangePolicyDetails {
                 PermanentDeleteChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PermanentDeleteChangePolicyDetails", PERMANENT_DELETE_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PermanentDeleteChangePolicyDetails", PERMANENT_DELETE_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -23446,7 +23086,7 @@ impl TeamMergeFromDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamMergeFromDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -23459,7 +23099,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamMergeFromDetails {
                 TeamMergeFromDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamMergeFromDetails", TEAM_MERGE_FROM_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamMergeFromDetails", TEAM_MERGE_FROM_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -23517,7 +23157,7 @@ impl GroupRenameDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupRenameDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -23530,7 +23170,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupRenameDetails {
                 GroupRenameDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupRenameDetails", GROUP_RENAME_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupRenameDetails", GROUP_RENAME_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -23624,7 +23264,7 @@ impl PaperDocChangeSharingPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocChangeSharingPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -23637,7 +23277,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocChangeSharingPolicyDetails {
                 PaperDocChangeSharingPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocChangeSharingPolicyDetails", PAPER_DOC_CHANGE_SHARING_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocChangeSharingPolicyDetails", PAPER_DOC_CHANGE_SHARING_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -23713,7 +23353,7 @@ impl PaperDocAddCommentDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocAddCommentDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -23726,7 +23366,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocAddCommentDetails {
                 PaperDocAddCommentDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocAddCommentDetails", PAPER_DOC_ADD_COMMENT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocAddCommentDetails", PAPER_DOC_ADD_COMMENT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -23745,11 +23385,10 @@ pub enum PlacementRestriction {
     EuropeOnly,
     NoneVariant,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PlacementRestriction {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -23759,22 +23398,21 @@ impl<'de> ::serde::de::Deserialize<'de> for PlacementRestriction {
                 f.write_str("a PlacementRestriction structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "europe_only" => Ok(PlacementRestriction::EuropeOnly),
                     "none" => Ok(PlacementRestriction::NoneVariant),
-                    "other" => Ok(PlacementRestriction::Other),
-                    _ => Ok(PlacementRestriction::_Unknown)
+                    _ => Ok(PlacementRestriction::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["europe_only",
                                                     "none",
                                                     "other"];
-        _deserializer.deserialize_struct("PlacementRestriction", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PlacementRestriction", VARIANTS, EnumVisitor)
     }
 }
 
@@ -23795,13 +23433,7 @@ impl ::serde::ser::Serialize for PlacementRestriction {
                 s.serialize_field(".tag", "none")?;
                 s.end()
             }
-            PlacementRestriction::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("PlacementRestriction", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            PlacementRestriction::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            PlacementRestriction::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -23833,7 +23465,7 @@ impl PasswordResetDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PasswordResetDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -23846,7 +23478,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordResetDetails {
                 PasswordResetDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PasswordResetDetails", PASSWORD_RESET_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PasswordResetDetails", PASSWORD_RESET_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -23884,7 +23516,7 @@ impl FileGetCopyReferenceDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileGetCopyReferenceDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -23897,7 +23529,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileGetCopyReferenceDetails {
                 FileGetCopyReferenceDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileGetCopyReferenceDetails", FILE_GET_COPY_REFERENCE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileGetCopyReferenceDetails", FILE_GET_COPY_REFERENCE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -23965,7 +23597,7 @@ impl MemberSpaceLimitsChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -23978,7 +23610,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsChangePolicyDetails
                 MemberSpaceLimitsChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberSpaceLimitsChangePolicyDetails", MEMBER_SPACE_LIMITS_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberSpaceLimitsChangePolicyDetails", MEMBER_SPACE_LIMITS_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -24054,7 +23686,7 @@ impl MemberRequestsChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberRequestsChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -24067,7 +23699,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberRequestsChangePolicyDetails {
                 MemberRequestsChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberRequestsChangePolicyDetails", MEMBER_REQUESTS_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberRequestsChangePolicyDetails", MEMBER_REQUESTS_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -24086,11 +23718,10 @@ pub enum DeviceType {
     Desktop,
     Mobile,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -24100,22 +23731,21 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceType {
                 f.write_str("a DeviceType structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "desktop" => Ok(DeviceType::Desktop),
                     "mobile" => Ok(DeviceType::Mobile),
-                    "other" => Ok(DeviceType::Other),
-                    _ => Ok(DeviceType::_Unknown)
+                    _ => Ok(DeviceType::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["desktop",
                                                     "mobile",
                                                     "other"];
-        _deserializer.deserialize_struct("DeviceType", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("DeviceType", VARIANTS, EnumVisitor)
     }
 }
 
@@ -24136,13 +23766,7 @@ impl ::serde::ser::Serialize for DeviceType {
                 s.serialize_field(".tag", "mobile")?;
                 s.end()
             }
-            DeviceType::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("DeviceType", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            DeviceType::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            DeviceType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -24174,7 +23798,7 @@ impl OpenNoteSharedDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for OpenNoteSharedDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -24187,7 +23811,7 @@ impl<'de> ::serde::de::Deserialize<'de> for OpenNoteSharedDetails {
                 OpenNoteSharedDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("OpenNoteSharedDetails", OPEN_NOTE_SHARED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("OpenNoteSharedDetails", OPEN_NOTE_SHARED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -24255,7 +23879,7 @@ impl DeviceApprovalsChangeUnlinkActionDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsChangeUnlinkActionDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -24268,7 +23892,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsChangeUnlinkActionDet
                 DeviceApprovalsChangeUnlinkActionDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceApprovalsChangeUnlinkActionDetails", DEVICE_APPROVALS_CHANGE_UNLINK_ACTION_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceApprovalsChangeUnlinkActionDetails", DEVICE_APPROVALS_CHANGE_UNLINK_ACTION_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -24325,7 +23949,7 @@ impl GetTeamEventsContinueArg {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetTeamEventsContinueArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -24338,7 +23962,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTeamEventsContinueArg {
                 GetTeamEventsContinueArg::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GetTeamEventsContinueArg", GET_TEAM_EVENTS_CONTINUE_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GetTeamEventsContinueArg", GET_TEAM_EVENTS_CONTINUE_ARG_FIELDS, StructVisitor)
     }
 }
 
@@ -24379,7 +24003,7 @@ impl EnabledDomainInvitesDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EnabledDomainInvitesDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -24392,7 +24016,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EnabledDomainInvitesDetails {
                 EnabledDomainInvitesDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("EnabledDomainInvitesDetails", ENABLED_DOMAIN_INVITES_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("EnabledDomainInvitesDetails", ENABLED_DOMAIN_INVITES_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -24430,7 +24054,7 @@ impl TfaRemoveSecurityKeyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TfaRemoveSecurityKeyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -24443,7 +24067,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaRemoveSecurityKeyDetails {
                 TfaRemoveSecurityKeyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TfaRemoveSecurityKeyDetails", TFA_REMOVE_SECURITY_KEY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TfaRemoveSecurityKeyDetails", TFA_REMOVE_SECURITY_KEY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -24516,7 +24140,7 @@ impl GroupJoinPolicyUpdatedDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupJoinPolicyUpdatedDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -24529,7 +24153,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupJoinPolicyUpdatedDetails {
                 GroupJoinPolicyUpdatedDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupJoinPolicyUpdatedDetails", GROUP_JOIN_POLICY_UPDATED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupJoinPolicyUpdatedDetails", GROUP_JOIN_POLICY_UPDATED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -24600,7 +24224,7 @@ impl DurationLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DurationLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -24613,7 +24237,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DurationLogInfo {
                 DurationLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DurationLogInfo", DURATION_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DurationLogInfo", DURATION_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -24684,7 +24308,7 @@ impl DeviceDeleteOnUnlinkFailDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceDeleteOnUnlinkFailDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -24697,7 +24321,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceDeleteOnUnlinkFailDetails {
                 DeviceDeleteOnUnlinkFailDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceDeleteOnUnlinkFailDetails", DEVICE_DELETE_ON_UNLINK_FAIL_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceDeleteOnUnlinkFailDetails", DEVICE_DELETE_ON_UNLINK_FAIL_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -24822,7 +24446,7 @@ impl SharedContentChangeDownloadsPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeDownloadsPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -24835,7 +24459,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentChangeDownloadsPolicyDe
                 SharedContentChangeDownloadsPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentChangeDownloadsPolicyDetails", SHARED_CONTENT_CHANGE_DOWNLOADS_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentChangeDownloadsPolicyDetails", SHARED_CONTENT_CHANGE_DOWNLOADS_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -24906,7 +24530,7 @@ impl SharedContentRelinquishMembershipDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentRelinquishMembershipDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -24919,7 +24543,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentRelinquishMembershipDet
                 SharedContentRelinquishMembershipDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentRelinquishMembershipDetails", SHARED_CONTENT_RELINQUISH_MEMBERSHIP_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentRelinquishMembershipDetails", SHARED_CONTENT_RELINQUISH_MEMBERSHIP_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -24960,7 +24584,7 @@ impl ShmodelVisibilityPasswordDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelVisibilityPasswordDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -24973,7 +24597,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelVisibilityPasswordDetails {
                 ShmodelVisibilityPasswordDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelVisibilityPasswordDetails", SHMODEL_VISIBILITY_PASSWORD_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelVisibilityPasswordDetails", SHMODEL_VISIBILITY_PASSWORD_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -25046,7 +24670,7 @@ impl DomainVerificationAddDomainFailDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DomainVerificationAddDomainFailDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -25059,7 +24683,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainVerificationAddDomainFailDetai
                 DomainVerificationAddDomainFailDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DomainVerificationAddDomainFailDetails", DOMAIN_VERIFICATION_ADD_DOMAIN_FAIL_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DomainVerificationAddDomainFailDetails", DOMAIN_VERIFICATION_ADD_DOMAIN_FAIL_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -25100,7 +24724,7 @@ impl TfaResetDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TfaResetDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -25113,7 +24737,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaResetDetails {
                 TfaResetDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TfaResetDetails", TFA_RESET_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TfaResetDetails", TFA_RESET_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -25186,7 +24810,7 @@ impl GoogleSsoChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GoogleSsoChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -25199,7 +24823,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GoogleSsoChangePolicyDetails {
                 GoogleSsoChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GoogleSsoChangePolicyDetails", GOOGLE_SSO_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GoogleSsoChangePolicyDetails", GOOGLE_SSO_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -25293,7 +24917,7 @@ impl FileOrFolderLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileOrFolderLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -25306,7 +24930,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileOrFolderLogInfo {
                 FileOrFolderLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileOrFolderLogInfo", FILE_OR_FOLDER_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileOrFolderLogInfo", FILE_OR_FOLDER_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -25328,11 +24952,10 @@ pub enum GetTeamEventsError {
     /// Invalid time range.
     InvalidTimeRange,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetTeamEventsError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -25342,22 +24965,21 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTeamEventsError {
                 f.write_str("a GetTeamEventsError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "account_id_not_found" => Ok(GetTeamEventsError::AccountIdNotFound),
                     "invalid_time_range" => Ok(GetTeamEventsError::InvalidTimeRange),
-                    "other" => Ok(GetTeamEventsError::Other),
-                    _ => Ok(GetTeamEventsError::_Unknown)
+                    _ => Ok(GetTeamEventsError::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["account_id_not_found",
                                                     "invalid_time_range",
                                                     "other"];
-        _deserializer.deserialize_struct("GetTeamEventsError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("GetTeamEventsError", VARIANTS, EnumVisitor)
     }
 }
 
@@ -25378,13 +25000,7 @@ impl ::serde::ser::Serialize for GetTeamEventsError {
                 s.serialize_field(".tag", "invalid_time_range")?;
                 s.end()
             }
-            GetTeamEventsError::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("GetTeamEventsError", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            GetTeamEventsError::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            GetTeamEventsError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -25458,7 +25074,7 @@ impl PaperDocDownloadDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocDownloadDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -25471,7 +25087,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocDownloadDetails {
                 PaperDocDownloadDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocDownloadDetails", PAPER_DOC_DOWNLOAD_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocDownloadDetails", PAPER_DOC_DOWNLOAD_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -25547,7 +25163,7 @@ impl MemberSuggestionsChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberSuggestionsChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -25560,7 +25176,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSuggestionsChangePolicyDetails
                 MemberSuggestionsChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberSuggestionsChangePolicyDetails", MEMBER_SUGGESTIONS_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberSuggestionsChangePolicyDetails", MEMBER_SUGGESTIONS_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -25601,7 +25217,7 @@ impl PaperExternalViewAllowDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperExternalViewAllowDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -25614,7 +25230,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperExternalViewAllowDetails {
                 PaperExternalViewAllowDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperExternalViewAllowDetails", PAPER_EXTERNAL_VIEW_ALLOW_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperExternalViewAllowDetails", PAPER_EXTERNAL_VIEW_ALLOW_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -25682,7 +25298,7 @@ impl ResellerLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ResellerLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -25695,7 +25311,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ResellerLogInfo {
                 ResellerLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ResellerLogInfo", RESELLER_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ResellerLogInfo", RESELLER_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -25753,7 +25369,7 @@ impl AppLinkTeamDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AppLinkTeamDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -25766,7 +25382,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AppLinkTeamDetails {
                 AppLinkTeamDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("AppLinkTeamDetails", APP_LINK_TEAM_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("AppLinkTeamDetails", APP_LINK_TEAM_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -25855,7 +25471,7 @@ impl PaperContentChangeSubscriptionDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperContentChangeSubscriptionDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -25868,7 +25484,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperContentChangeSubscriptionDetail
                 PaperContentChangeSubscriptionDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperContentChangeSubscriptionDetails", PAPER_CONTENT_CHANGE_SUBSCRIPTION_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperContentChangeSubscriptionDetails", PAPER_CONTENT_CHANGE_SUBSCRIPTION_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -25988,7 +25604,7 @@ impl SharedFolderChangeMemberManagementPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMemberManagementPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -26001,7 +25617,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMemberManagementPo
                 SharedFolderChangeMemberManagementPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedFolderChangeMemberManagementPolicyDetails", SHARED_FOLDER_CHANGE_MEMBER_MANAGEMENT_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedFolderChangeMemberManagementPolicyDetails", SHARED_FOLDER_CHANGE_MEMBER_MANAGEMENT_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -26021,11 +25637,10 @@ pub enum ContentPermanentDeletePolicy {
     Disabled,
     Enabled,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ContentPermanentDeletePolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -26035,22 +25650,21 @@ impl<'de> ::serde::de::Deserialize<'de> for ContentPermanentDeletePolicy {
                 f.write_str("a ContentPermanentDeletePolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "disabled" => Ok(ContentPermanentDeletePolicy::Disabled),
                     "enabled" => Ok(ContentPermanentDeletePolicy::Enabled),
-                    "other" => Ok(ContentPermanentDeletePolicy::Other),
-                    _ => Ok(ContentPermanentDeletePolicy::_Unknown)
+                    _ => Ok(ContentPermanentDeletePolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["disabled",
                                                     "enabled",
                                                     "other"];
-        _deserializer.deserialize_struct("ContentPermanentDeletePolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("ContentPermanentDeletePolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -26071,13 +25685,7 @@ impl ::serde::ser::Serialize for ContentPermanentDeletePolicy {
                 s.serialize_field(".tag", "enabled")?;
                 s.end()
             }
-            ContentPermanentDeletePolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("ContentPermanentDeletePolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            ContentPermanentDeletePolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            ContentPermanentDeletePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -26139,7 +25747,7 @@ impl DomainInvitesEmailExistingUsersDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesEmailExistingUsersDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -26152,7 +25760,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesEmailExistingUsersDetai
                 DomainInvitesEmailExistingUsersDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DomainInvitesEmailExistingUsersDetails", DOMAIN_INVITES_EMAIL_EXISTING_USERS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DomainInvitesEmailExistingUsersDetails", DOMAIN_INVITES_EMAIL_EXISTING_USERS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -26173,11 +25781,10 @@ pub enum TfaPolicy {
     Optional,
     Required,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TfaPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -26187,7 +25794,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaPolicy {
                 f.write_str("a TfaPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -26195,8 +25802,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaPolicy {
                     "disabled" => Ok(TfaPolicy::Disabled),
                     "optional" => Ok(TfaPolicy::Optional),
                     "required" => Ok(TfaPolicy::Required),
-                    "other" => Ok(TfaPolicy::Other),
-                    _ => Ok(TfaPolicy::_Unknown)
+                    _ => Ok(TfaPolicy::Other)
                 }
             }
         }
@@ -26204,7 +25810,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaPolicy {
                                                     "optional",
                                                     "required",
                                                     "other"];
-        _deserializer.deserialize_struct("TfaPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("TfaPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -26231,13 +25837,7 @@ impl ::serde::ser::Serialize for TfaPolicy {
                 s.serialize_field(".tag", "required")?;
                 s.end()
             }
-            TfaPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("TfaPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            TfaPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            TfaPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -26286,7 +25886,7 @@ impl PaperDocTeamInviteDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocTeamInviteDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -26299,7 +25899,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocTeamInviteDetails {
                 PaperDocTeamInviteDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocTeamInviteDetails", PAPER_DOC_TEAM_INVITE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocTeamInviteDetails", PAPER_DOC_TEAM_INVITE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -26318,11 +25918,10 @@ pub enum Confidentiality {
     Confidential,
     NonConfidential,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for Confidentiality {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -26332,22 +25931,21 @@ impl<'de> ::serde::de::Deserialize<'de> for Confidentiality {
                 f.write_str("a Confidentiality structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "confidential" => Ok(Confidentiality::Confidential),
                     "non_confidential" => Ok(Confidentiality::NonConfidential),
-                    "other" => Ok(Confidentiality::Other),
-                    _ => Ok(Confidentiality::_Unknown)
+                    _ => Ok(Confidentiality::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["confidential",
                                                     "non_confidential",
                                                     "other"];
-        _deserializer.deserialize_struct("Confidentiality", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("Confidentiality", VARIANTS, EnumVisitor)
     }
 }
 
@@ -26368,13 +25966,7 @@ impl ::serde::ser::Serialize for Confidentiality {
                 s.serialize_field(".tag", "non_confidential")?;
                 s.end()
             }
-            Confidentiality::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("Confidentiality", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            Confidentiality::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            Confidentiality::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -26406,7 +25998,7 @@ impl PasswordChangeDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PasswordChangeDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -26419,7 +26011,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordChangeDetails {
                 PasswordChangeDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PasswordChangeDetails", PASSWORD_CHANGE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PasswordChangeDetails", PASSWORD_CHANGE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -26487,7 +26079,7 @@ impl SsoChangeSamlIdentityModeDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SsoChangeSamlIdentityModeDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -26500,7 +26092,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoChangeSamlIdentityModeDetails {
                 SsoChangeSamlIdentityModeDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SsoChangeSamlIdentityModeDetails", SSO_CHANGE_SAML_IDENTITY_MODE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SsoChangeSamlIdentityModeDetails", SSO_CHANGE_SAML_IDENTITY_MODE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -26558,7 +26150,7 @@ impl FileRenameDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRenameDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -26571,7 +26163,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRenameDetails {
                 FileRenameDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRenameDetails", FILE_RENAME_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRenameDetails", FILE_RENAME_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -26612,7 +26204,7 @@ impl DomainInvitesSetInviteNewUserPrefToYesDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesSetInviteNewUserPrefToYesDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -26625,7 +26217,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesSetInviteNewUserPrefToY
                 DomainInvitesSetInviteNewUserPrefToYesDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DomainInvitesSetInviteNewUserPrefToYesDetails", DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_YES_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DomainInvitesSetInviteNewUserPrefToYesDetails", DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_YES_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -26692,7 +26284,7 @@ impl NamespaceRelativePathLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for NamespaceRelativePathLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -26705,7 +26297,7 @@ impl<'de> ::serde::de::Deserialize<'de> for NamespaceRelativePathLogInfo {
                 NamespaceRelativePathLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("NamespaceRelativePathLogInfo", NAMESPACE_RELATIVE_PATH_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("NamespaceRelativePathLogInfo", NAMESPACE_RELATIVE_PATH_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -26746,7 +26338,7 @@ impl EmmRefreshAuthTokenDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EmmRefreshAuthTokenDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -26759,7 +26351,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmRefreshAuthTokenDetails {
                 EmmRefreshAuthTokenDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("EmmRefreshAuthTokenDetails", EMM_REFRESH_AUTH_TOKEN_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("EmmRefreshAuthTokenDetails", EMM_REFRESH_AUTH_TOKEN_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -26797,7 +26389,7 @@ impl FileAddDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileAddDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -26810,7 +26402,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileAddDetails {
                 FileAddDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileAddDetails", FILE_ADD_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileAddDetails", FILE_ADD_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -26865,7 +26457,7 @@ impl PaperDocSlackShareDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocSlackShareDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -26878,7 +26470,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocSlackShareDetails {
                 PaperDocSlackShareDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocSlackShareDetails", PAPER_DOC_SLACK_SHARE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocSlackShareDetails", PAPER_DOC_SLACK_SHARE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -26919,7 +26511,7 @@ impl NoteSharedDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for NoteSharedDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -26932,7 +26524,7 @@ impl<'de> ::serde::de::Deserialize<'de> for NoteSharedDetails {
                 NoteSharedDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("NoteSharedDetails", NOTE_SHARED_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("NoteSharedDetails", NOTE_SHARED_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -27000,7 +26592,7 @@ impl WebSessionsChangeFixedLengthPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for WebSessionsChangeFixedLengthPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -27013,7 +26605,7 @@ impl<'de> ::serde::de::Deserialize<'de> for WebSessionsChangeFixedLengthPolicyDe
                 WebSessionsChangeFixedLengthPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("WebSessionsChangeFixedLengthPolicyDetails", WEB_SESSIONS_CHANGE_FIXED_LENGTH_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("WebSessionsChangeFixedLengthPolicyDetails", WEB_SESSIONS_CHANGE_FIXED_LENGTH_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -27107,7 +26699,7 @@ impl SharedContentAddLinkPasswordDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentAddLinkPasswordDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -27120,7 +26712,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentAddLinkPasswordDetails 
                 SharedContentAddLinkPasswordDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentAddLinkPasswordDetails", SHARED_CONTENT_ADD_LINK_PASSWORD_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentAddLinkPasswordDetails", SHARED_CONTENT_ADD_LINK_PASSWORD_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -27140,11 +26732,10 @@ pub enum SharedContentViewerInfoPolicy {
     Disabled,
     Enabled,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentViewerInfoPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -27154,22 +26745,21 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentViewerInfoPolicy {
                 f.write_str("a SharedContentViewerInfoPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "disabled" => Ok(SharedContentViewerInfoPolicy::Disabled),
                     "enabled" => Ok(SharedContentViewerInfoPolicy::Enabled),
-                    "other" => Ok(SharedContentViewerInfoPolicy::Other),
-                    _ => Ok(SharedContentViewerInfoPolicy::_Unknown)
+                    _ => Ok(SharedContentViewerInfoPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["disabled",
                                                     "enabled",
                                                     "other"];
-        _deserializer.deserialize_struct("SharedContentViewerInfoPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SharedContentViewerInfoPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -27190,13 +26780,7 @@ impl ::serde::ser::Serialize for SharedContentViewerInfoPolicy {
                 s.serialize_field(".tag", "enabled")?;
                 s.end()
             }
-            SharedContentViewerInfoPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedContentViewerInfoPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SharedContentViewerInfoPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SharedContentViewerInfoPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -27207,11 +26791,10 @@ pub enum FileRequestsPolicy {
     Disabled,
     Enabled,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestsPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -27221,22 +26804,21 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestsPolicy {
                 f.write_str("a FileRequestsPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "disabled" => Ok(FileRequestsPolicy::Disabled),
                     "enabled" => Ok(FileRequestsPolicy::Enabled),
-                    "other" => Ok(FileRequestsPolicy::Other),
-                    _ => Ok(FileRequestsPolicy::_Unknown)
+                    _ => Ok(FileRequestsPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["disabled",
                                                     "enabled",
                                                     "other"];
-        _deserializer.deserialize_struct("FileRequestsPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("FileRequestsPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -27257,13 +26839,7 @@ impl ::serde::ser::Serialize for FileRequestsPolicy {
                 s.serialize_field(".tag", "enabled")?;
                 s.end()
             }
-            FileRequestsPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("FileRequestsPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            FileRequestsPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            FileRequestsPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -27348,7 +26924,7 @@ impl SharedContentRemoveLinkExpiryDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentRemoveLinkExpiryDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -27361,7 +26937,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentRemoveLinkExpiryDetails
                 SharedContentRemoveLinkExpiryDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentRemoveLinkExpiryDetails", SHARED_CONTENT_REMOVE_LINK_EXPIRY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentRemoveLinkExpiryDetails", SHARED_CONTENT_REMOVE_LINK_EXPIRY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -27455,7 +27031,7 @@ impl OriginLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for OriginLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -27468,7 +27044,7 @@ impl<'de> ::serde::de::Deserialize<'de> for OriginLogInfo {
                 OriginLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("OriginLogInfo", ORIGIN_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("OriginLogInfo", ORIGIN_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -27526,7 +27102,7 @@ impl TeamFolderRenameDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamFolderRenameDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -27539,7 +27115,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderRenameDetails {
                 TeamFolderRenameDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamFolderRenameDetails", TEAM_FOLDER_RENAME_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamFolderRenameDetails", TEAM_FOLDER_RENAME_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -27610,7 +27186,7 @@ impl TeamActivityCreateReportDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamActivityCreateReportDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -27623,7 +27199,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamActivityCreateReportDetails {
                 TeamActivityCreateReportDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamActivityCreateReportDetails", TEAM_ACTIVITY_CREATE_REPORT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamActivityCreateReportDetails", TEAM_ACTIVITY_CREATE_REPORT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -27681,7 +27257,7 @@ impl FileRequestCloseDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestCloseDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -27694,7 +27270,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestCloseDetails {
                 FileRequestCloseDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRequestCloseDetails", FILE_REQUEST_CLOSE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRequestCloseDetails", FILE_REQUEST_CLOSE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -27735,7 +27311,7 @@ impl DomainInvitesSetInviteNewUserPrefToNoDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesSetInviteNewUserPrefToNoDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -27748,7 +27324,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesSetInviteNewUserPrefToN
                 DomainInvitesSetInviteNewUserPrefToNoDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DomainInvitesSetInviteNewUserPrefToNoDetails", DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_NO_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DomainInvitesSetInviteNewUserPrefToNoDetails", DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_NO_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -27803,7 +27379,7 @@ impl FileRequestSendDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestSendDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -27816,7 +27392,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestSendDetails {
                 FileRequestSendDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRequestSendDetails", FILE_REQUEST_SEND_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRequestSendDetails", FILE_REQUEST_SEND_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -27874,7 +27450,7 @@ impl GroupAddExternalIdDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupAddExternalIdDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -27887,7 +27463,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupAddExternalIdDetails {
                 GroupAddExternalIdDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupAddExternalIdDetails", GROUP_ADD_EXTERNAL_ID_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupAddExternalIdDetails", GROUP_ADD_EXTERNAL_ID_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -27945,7 +27521,7 @@ impl FileCopyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileCopyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -27958,7 +27534,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileCopyDetails {
                 FileCopyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileCopyDetails", FILE_COPY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileCopyDetails", FILE_COPY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -27999,7 +27575,7 @@ impl ShmodelRemoveExpirationDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelRemoveExpirationDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -28012,7 +27588,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelRemoveExpirationDetails {
                 ShmodelRemoveExpirationDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelRemoveExpirationDetails", SHMODEL_REMOVE_EXPIRATION_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelRemoveExpirationDetails", SHMODEL_REMOVE_EXPIRATION_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -28081,7 +27657,7 @@ impl MemberSpaceLimitsChangeStatusDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsChangeStatusDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -28094,7 +27670,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsChangeStatusDetails
                 MemberSpaceLimitsChangeStatusDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberSpaceLimitsChangeStatusDetails", MEMBER_SPACE_LIMITS_CHANGE_STATUS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberSpaceLimitsChangeStatusDetails", MEMBER_SPACE_LIMITS_CHANGE_STATUS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -28152,7 +27728,7 @@ impl PaperContentRenameDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperContentRenameDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -28165,7 +27741,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperContentRenameDetails {
                 PaperContentRenameDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperContentRenameDetails", PAPER_CONTENT_RENAME_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperContentRenameDetails", PAPER_CONTENT_RENAME_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -28267,7 +27843,7 @@ impl SharedFolderChangeConfidentialityDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeConfidentialityDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -28280,7 +27856,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeConfidentialityDet
                 SharedFolderChangeConfidentialityDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedFolderChangeConfidentialityDetails", SHARED_FOLDER_CHANGE_CONFIDENTIALITY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedFolderChangeConfidentialityDetails", SHARED_FOLDER_CHANGE_CONFIDENTIALITY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -28374,7 +27950,7 @@ impl FolderLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FolderLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -28387,7 +27963,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderLogInfo {
                 FolderLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FolderLogInfo", FOLDER_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FolderLogInfo", FOLDER_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -28408,11 +27984,10 @@ pub enum PaperMemberPolicy {
     DefaultTeamOnly,
     DefaultAnyone,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperMemberPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -28422,7 +27997,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperMemberPolicy {
                 f.write_str("a PaperMemberPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -28430,8 +28005,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperMemberPolicy {
                     "team_only" => Ok(PaperMemberPolicy::TeamOnly),
                     "default_team_only" => Ok(PaperMemberPolicy::DefaultTeamOnly),
                     "default_anyone" => Ok(PaperMemberPolicy::DefaultAnyone),
-                    "other" => Ok(PaperMemberPolicy::Other),
-                    _ => Ok(PaperMemberPolicy::_Unknown)
+                    _ => Ok(PaperMemberPolicy::Other)
                 }
             }
         }
@@ -28439,7 +28013,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperMemberPolicy {
                                                     "default_team_only",
                                                     "default_anyone",
                                                     "other"];
-        _deserializer.deserialize_struct("PaperMemberPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PaperMemberPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -28466,13 +28040,7 @@ impl ::serde::ser::Serialize for PaperMemberPolicy {
                 s.serialize_field(".tag", "default_anyone")?;
                 s.end()
             }
-            PaperMemberPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperMemberPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            PaperMemberPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            PaperMemberPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -28521,7 +28089,7 @@ impl GroupAddMemberDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupAddMemberDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -28534,7 +28102,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupAddMemberDetails {
                 GroupAddMemberDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GroupAddMemberDetails", GROUP_ADD_MEMBER_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GroupAddMemberDetails", GROUP_ADD_MEMBER_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -28604,7 +28172,7 @@ impl ShmodelAppCreateDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelAppCreateDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -28617,7 +28185,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelAppCreateDetails {
                 ShmodelAppCreateDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelAppCreateDetails", SHMODEL_APP_CREATE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelAppCreateDetails", SHMODEL_APP_CREATE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -28693,7 +28261,7 @@ impl PaperChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -28706,7 +28274,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperChangePolicyDetails {
                 PaperChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperChangePolicyDetails", PAPER_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperChangePolicyDetails", PAPER_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -28782,7 +28350,7 @@ impl TeamFolderChangeStatusDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamFolderChangeStatusDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -28795,7 +28363,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderChangeStatusDetails {
                 TeamFolderChangeStatusDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamFolderChangeStatusDetails", TEAM_FOLDER_CHANGE_STATUS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamFolderChangeStatusDetails", TEAM_FOLDER_CHANGE_STATUS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -28837,7 +28405,7 @@ impl EmmAddExceptionDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EmmAddExceptionDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -28850,7 +28418,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmAddExceptionDetails {
                 EmmAddExceptionDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("EmmAddExceptionDetails", EMM_ADD_EXCEPTION_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("EmmAddExceptionDetails", EMM_ADD_EXCEPTION_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -28904,7 +28472,7 @@ impl DesktopSessionLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DesktopSessionLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -28917,7 +28485,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DesktopSessionLogInfo {
                 DesktopSessionLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DesktopSessionLogInfo", DESKTOP_SESSION_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DesktopSessionLogInfo", DESKTOP_SESSION_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -28958,7 +28526,7 @@ impl NoteShareReceiveDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for NoteShareReceiveDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -28971,7 +28539,7 @@ impl<'de> ::serde::de::Deserialize<'de> for NoteShareReceiveDetails {
                 NoteShareReceiveDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("NoteShareReceiveDetails", NOTE_SHARE_RECEIVE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("NoteShareReceiveDetails", NOTE_SHARE_RECEIVE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -29045,7 +28613,7 @@ impl SharingChangeLinkPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharingChangeLinkPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -29058,7 +28626,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingChangeLinkPolicyDetails {
                 SharingChangeLinkPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharingChangeLinkPolicyDetails", SHARING_CHANGE_LINK_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharingChangeLinkPolicyDetails", SHARING_CHANGE_LINK_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -29129,7 +28697,7 @@ impl SmartSyncNotOptOutDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SmartSyncNotOptOutDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -29142,7 +28710,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncNotOptOutDetails {
                 SmartSyncNotOptOutDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SmartSyncNotOptOutDetails", SMART_SYNC_NOT_OPT_OUT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SmartSyncNotOptOutDetails", SMART_SYNC_NOT_OPT_OUT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -29213,7 +28781,7 @@ impl SharedFolderMountDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMountDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -29226,7 +28794,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMountDetails {
                 SharedFolderMountDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedFolderMountDetails", SHARED_FOLDER_MOUNT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedFolderMountDetails", SHARED_FOLDER_MOUNT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -29267,7 +28835,7 @@ impl PaperExternalViewDefaultTeamDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperExternalViewDefaultTeamDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -29280,7 +28848,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperExternalViewDefaultTeamDetails 
                 PaperExternalViewDefaultTeamDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperExternalViewDefaultTeamDetails", PAPER_EXTERNAL_VIEW_DEFAULT_TEAM_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperExternalViewDefaultTeamDetails", PAPER_EXTERNAL_VIEW_DEFAULT_TEAM_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -29389,7 +28957,7 @@ impl SharedContentRemoveMemberDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentRemoveMemberDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -29402,7 +28970,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentRemoveMemberDetails {
                 SharedContentRemoveMemberDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentRemoveMemberDetails", SHARED_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentRemoveMemberDetails", SHARED_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -29460,7 +29028,7 @@ impl PaperContentArchiveDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperContentArchiveDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -29473,7 +29041,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperContentArchiveDetails {
                 PaperContentArchiveDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperContentArchiveDetails", PAPER_CONTENT_ARCHIVE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperContentArchiveDetails", PAPER_CONTENT_ARCHIVE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -29544,7 +29112,7 @@ impl DeviceUnlinkDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceUnlinkDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -29557,7 +29125,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceUnlinkDetails {
                 DeviceUnlinkDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceUnlinkDetails", DEVICE_UNLINK_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceUnlinkDetails", DEVICE_UNLINK_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -29598,7 +29166,7 @@ impl ShmodelTeamShareDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelTeamShareDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -29611,7 +29179,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelTeamShareDetails {
                 ShmodelTeamShareDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelTeamShareDetails", SHMODEL_TEAM_SHARE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelTeamShareDetails", SHMODEL_TEAM_SHARE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -29630,11 +29198,10 @@ pub enum MemberStatus {
     Suspended,
     Removed,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberStatus {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -29644,7 +29211,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberStatus {
                 f.write_str("a MemberStatus structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -29654,8 +29221,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberStatus {
                     "active" => Ok(MemberStatus::Active),
                     "suspended" => Ok(MemberStatus::Suspended),
                     "removed" => Ok(MemberStatus::Removed),
-                    "other" => Ok(MemberStatus::Other),
-                    _ => Ok(MemberStatus::_Unknown)
+                    _ => Ok(MemberStatus::Other)
                 }
             }
         }
@@ -29665,7 +29231,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberStatus {
                                                     "suspended",
                                                     "removed",
                                                     "other"];
-        _deserializer.deserialize_struct("MemberStatus", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("MemberStatus", VARIANTS, EnumVisitor)
     }
 }
 
@@ -29704,13 +29270,7 @@ impl ::serde::ser::Serialize for MemberStatus {
                 s.serialize_field(".tag", "removed")?;
                 s.end()
             }
-            MemberStatus::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("MemberStatus", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            MemberStatus::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            MemberStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -29721,11 +29281,10 @@ pub enum SharingFolderJoinPolicy {
     TeamOnly,
     Anyone,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharingFolderJoinPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -29735,22 +29294,21 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingFolderJoinPolicy {
                 f.write_str("a SharingFolderJoinPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "team_only" => Ok(SharingFolderJoinPolicy::TeamOnly),
                     "anyone" => Ok(SharingFolderJoinPolicy::Anyone),
-                    "other" => Ok(SharingFolderJoinPolicy::Other),
-                    _ => Ok(SharingFolderJoinPolicy::_Unknown)
+                    _ => Ok(SharingFolderJoinPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["team_only",
                                                     "anyone",
                                                     "other"];
-        _deserializer.deserialize_struct("SharingFolderJoinPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SharingFolderJoinPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -29771,13 +29329,7 @@ impl ::serde::ser::Serialize for SharingFolderJoinPolicy {
                 s.serialize_field(".tag", "anyone")?;
                 s.end()
             }
-            SharingFolderJoinPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SharingFolderJoinPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SharingFolderJoinPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SharingFolderJoinPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -29852,7 +29404,7 @@ impl PaperContentAddToFolderDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperContentAddToFolderDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -29865,7 +29417,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperContentAddToFolderDetails {
                 PaperContentAddToFolderDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperContentAddToFolderDetails", PAPER_CONTENT_ADD_TO_FOLDER_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperContentAddToFolderDetails", PAPER_CONTENT_ADD_TO_FOLDER_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -29941,7 +29493,7 @@ impl SharedContentUnshareDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentUnshareDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -29954,7 +29506,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentUnshareDetails {
                 SharedContentUnshareDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentUnshareDetails", SHARED_CONTENT_UNSHARE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentUnshareDetails", SHARED_CONTENT_UNSHARE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -29976,11 +29528,10 @@ pub enum TfaConfiguration {
     Sms,
     Authenticator,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TfaConfiguration {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -29990,7 +29541,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaConfiguration {
                 f.write_str("a TfaConfiguration structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -29999,8 +29550,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaConfiguration {
                     "enabled" => Ok(TfaConfiguration::Enabled),
                     "sms" => Ok(TfaConfiguration::Sms),
                     "authenticator" => Ok(TfaConfiguration::Authenticator),
-                    "other" => Ok(TfaConfiguration::Other),
-                    _ => Ok(TfaConfiguration::_Unknown)
+                    _ => Ok(TfaConfiguration::Other)
                 }
             }
         }
@@ -30009,7 +29559,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaConfiguration {
                                                     "sms",
                                                     "authenticator",
                                                     "other"];
-        _deserializer.deserialize_struct("TfaConfiguration", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("TfaConfiguration", VARIANTS, EnumVisitor)
     }
 }
 
@@ -30042,13 +29592,7 @@ impl ::serde::ser::Serialize for TfaConfiguration {
                 s.serialize_field(".tag", "authenticator")?;
                 s.end()
             }
-            TfaConfiguration::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("TfaConfiguration", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            TfaConfiguration::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            TfaConfiguration::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -30062,7 +29606,7 @@ pub enum UserLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for UserLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // polymorphic struct deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -30085,7 +29629,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UserLogInfo {
         }
         const VARIANTS: &'static [&'static str] = &["non_team_member",
                                                     "non_team_member"];
-        _deserializer.deserialize_struct("UserLogInfo", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("UserLogInfo", VARIANTS, EnumVisitor)
     }
 }
 
@@ -30174,7 +29718,7 @@ impl WebSessionsChangeIdleLengthPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for WebSessionsChangeIdleLengthPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -30187,7 +29731,7 @@ impl<'de> ::serde::de::Deserialize<'de> for WebSessionsChangeIdleLengthPolicyDet
                 WebSessionsChangeIdleLengthPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("WebSessionsChangeIdleLengthPolicyDetails", WEB_SESSIONS_CHANGE_IDLE_LENGTH_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("WebSessionsChangeIdleLengthPolicyDetails", WEB_SESSIONS_CHANGE_IDLE_LENGTH_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -30228,7 +29772,7 @@ impl FileRestoreDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRestoreDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -30241,7 +29785,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRestoreDetails {
                 FileRestoreDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRestoreDetails", FILE_RESTORE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRestoreDetails", FILE_RESTORE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -30296,7 +29840,7 @@ impl PaperDocRequestAccessDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocRequestAccessDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -30309,7 +29853,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocRequestAccessDetails {
                 PaperDocRequestAccessDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperDocRequestAccessDetails", PAPER_DOC_REQUEST_ACCESS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperDocRequestAccessDetails", PAPER_DOC_REQUEST_ACCESS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -30367,7 +29911,7 @@ impl SfInviteGroupDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SfInviteGroupDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -30380,7 +29924,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SfInviteGroupDetails {
                 SfInviteGroupDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SfInviteGroupDetails", SF_INVITE_GROUP_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SfInviteGroupDetails", SF_INVITE_GROUP_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -30400,11 +29944,10 @@ pub enum SharedContentDownloadsPolicy {
     Disabled,
     Enabled,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentDownloadsPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -30414,22 +29957,21 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentDownloadsPolicy {
                 f.write_str("a SharedContentDownloadsPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "disabled" => Ok(SharedContentDownloadsPolicy::Disabled),
                     "enabled" => Ok(SharedContentDownloadsPolicy::Enabled),
-                    "other" => Ok(SharedContentDownloadsPolicy::Other),
-                    _ => Ok(SharedContentDownloadsPolicy::_Unknown)
+                    _ => Ok(SharedContentDownloadsPolicy::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["disabled",
                                                     "enabled",
                                                     "other"];
-        _deserializer.deserialize_struct("SharedContentDownloadsPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SharedContentDownloadsPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -30450,13 +29992,7 @@ impl ::serde::ser::Serialize for SharedContentDownloadsPolicy {
                 s.serialize_field(".tag", "enabled")?;
                 s.end()
             }
-            SharedContentDownloadsPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedContentDownloadsPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            SharedContentDownloadsPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SharedContentDownloadsPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -30488,7 +30024,7 @@ impl DomainInvitesRequestToJoinTeamDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesRequestToJoinTeamDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -30501,7 +30037,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesRequestToJoinTeamDetail
                 DomainInvitesRequestToJoinTeamDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DomainInvitesRequestToJoinTeamDetails", DOMAIN_INVITES_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DomainInvitesRequestToJoinTeamDetails", DOMAIN_INVITES_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -30556,7 +30092,7 @@ impl PaperContentRemoveFromFolderDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperContentRemoveFromFolderDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -30569,7 +30105,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperContentRemoveFromFolderDetails 
                 PaperContentRemoveFromFolderDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PaperContentRemoveFromFolderDetails", PAPER_CONTENT_REMOVE_FROM_FOLDER_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PaperContentRemoveFromFolderDetails", PAPER_CONTENT_REMOVE_FROM_FOLDER_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -30646,7 +30182,7 @@ impl MicrosoftOfficeAddinChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MicrosoftOfficeAddinChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -30659,7 +30195,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MicrosoftOfficeAddinChangePolicyDeta
                 MicrosoftOfficeAddinChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MicrosoftOfficeAddinChangePolicyDetails", MICROSOFT_OFFICE_ADDIN_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MicrosoftOfficeAddinChangePolicyDetails", MICROSOFT_OFFICE_ADDIN_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -30716,7 +30252,7 @@ impl MobileSessionLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MobileSessionLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -30729,7 +30265,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MobileSessionLogInfo {
                 MobileSessionLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MobileSessionLogInfo", MOBILE_SESSION_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MobileSessionLogInfo", MOBILE_SESSION_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -30750,11 +30286,10 @@ pub enum EmmPolicy {
     Optional,
     Required,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for EmmPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -30764,7 +30299,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmPolicy {
                 f.write_str("a EmmPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -30772,8 +30307,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmPolicy {
                     "disabled" => Ok(EmmPolicy::Disabled),
                     "optional" => Ok(EmmPolicy::Optional),
                     "required" => Ok(EmmPolicy::Required),
-                    "other" => Ok(EmmPolicy::Other),
-                    _ => Ok(EmmPolicy::_Unknown)
+                    _ => Ok(EmmPolicy::Other)
                 }
             }
         }
@@ -30781,7 +30315,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmPolicy {
                                                     "optional",
                                                     "required",
                                                     "other"];
-        _deserializer.deserialize_struct("EmmPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("EmmPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -30808,13 +30342,7 @@ impl ::serde::ser::Serialize for EmmPolicy {
                 s.serialize_field(".tag", "required")?;
                 s.end()
             }
-            EmmPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("EmmPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            EmmPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            EmmPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -30846,7 +30374,7 @@ impl ResellerSupportSessionStartDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ResellerSupportSessionStartDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -30859,7 +30387,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ResellerSupportSessionStartDetails {
                 ResellerSupportSessionStartDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ResellerSupportSessionStartDetails", RESELLER_SUPPORT_SESSION_START_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ResellerSupportSessionStartDetails", RESELLER_SUPPORT_SESSION_START_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -30897,7 +30425,7 @@ impl PasswordResetAllDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PasswordResetAllDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -30910,7 +30438,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordResetAllDetails {
                 PasswordResetAllDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PasswordResetAllDetails", PASSWORD_RESET_ALL_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PasswordResetAllDetails", PASSWORD_RESET_ALL_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -30948,7 +30476,7 @@ impl CreateFolderDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for CreateFolderDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -30961,7 +30489,7 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderDetails {
                 CreateFolderDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("CreateFolderDetails", CREATE_FOLDER_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("CreateFolderDetails", CREATE_FOLDER_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -31034,7 +30562,7 @@ impl SmartSyncChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SmartSyncChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -31047,7 +30575,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncChangePolicyDetails {
                 SmartSyncChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SmartSyncChangePolicyDetails", SMART_SYNC_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SmartSyncChangePolicyDetails", SMART_SYNC_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -31118,7 +30646,7 @@ impl TeamName {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamName {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -31131,7 +30659,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamName {
                 TeamName::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamName", TEAM_NAME_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamName", TEAM_NAME_FIELDS, StructVisitor)
     }
 }
 
@@ -31172,7 +30700,7 @@ impl ShmodelGroupShareDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShmodelGroupShareDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -31185,7 +30713,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelGroupShareDetails {
                 ShmodelGroupShareDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ShmodelGroupShareDetails", SHMODEL_GROUP_SHARE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ShmodelGroupShareDetails", SHMODEL_GROUP_SHARE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -31240,7 +30768,7 @@ impl FileRequestCreateDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestCreateDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -31253,7 +30781,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestCreateDetails {
                 FileRequestCreateDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRequestCreateDetails", FILE_REQUEST_CREATE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRequestCreateDetails", FILE_REQUEST_CREATE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -31324,7 +30852,7 @@ impl RelocateAssetReferencesLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for RelocateAssetReferencesLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -31337,7 +30865,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocateAssetReferencesLogInfo {
                 RelocateAssetReferencesLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("RelocateAssetReferencesLogInfo", RELOCATE_ASSET_REFERENCES_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("RelocateAssetReferencesLogInfo", RELOCATE_ASSET_REFERENCES_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -31378,7 +30906,7 @@ impl PasswordLoginSuccessDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PasswordLoginSuccessDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -31391,7 +30919,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordLoginSuccessDetails {
                 PasswordLoginSuccessDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PasswordLoginSuccessDetails", PASSWORD_LOGIN_SUCCESS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PasswordLoginSuccessDetails", PASSWORD_LOGIN_SUCCESS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -31464,7 +30992,7 @@ impl AccountCaptureChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -31477,7 +31005,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureChangePolicyDetails {
                 AccountCaptureChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("AccountCaptureChangePolicyDetails", ACCOUNT_CAPTURE_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("AccountCaptureChangePolicyDetails", ACCOUNT_CAPTURE_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -31571,7 +31099,7 @@ impl FileLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -31584,7 +31112,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileLogInfo {
                 FileLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileLogInfo", FILE_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileLogInfo", FILE_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -31655,7 +31183,7 @@ impl SharedContentRemoveInviteeDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentRemoveInviteeDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -31668,7 +31196,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentRemoveInviteeDetails {
                 SharedContentRemoveInviteeDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentRemoveInviteeDetails", SHARED_CONTENT_REMOVE_INVITEE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentRemoveInviteeDetails", SHARED_CONTENT_REMOVE_INVITEE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -31709,7 +31237,7 @@ impl FileDeleteDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileDeleteDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -31722,7 +31250,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileDeleteDetails {
                 FileDeleteDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileDeleteDetails", FILE_DELETE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileDeleteDetails", FILE_DELETE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -31790,7 +31318,7 @@ impl DeviceApprovalsChangeDesktopPolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsChangeDesktopPolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -31803,7 +31331,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsChangeDesktopPolicyDe
                 DeviceApprovalsChangeDesktopPolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceApprovalsChangeDesktopPolicyDetails", DEVICE_APPROVALS_CHANGE_DESKTOP_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceApprovalsChangeDesktopPolicyDetails", DEVICE_APPROVALS_CHANGE_DESKTOP_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -31844,7 +31372,7 @@ impl FilePreviewDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FilePreviewDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -31857,7 +31385,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FilePreviewDetails {
                 FilePreviewDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FilePreviewDetails", FILE_PREVIEW_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FilePreviewDetails", FILE_PREVIEW_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -31874,11 +31402,10 @@ pub enum MemberRequestsPolicy {
     RequireApproval,
     AutoApproval,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberRequestsPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -31888,7 +31415,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberRequestsPolicy {
                 f.write_str("a MemberRequestsPolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -31896,8 +31423,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberRequestsPolicy {
                     "disabled" => Ok(MemberRequestsPolicy::Disabled),
                     "require_approval" => Ok(MemberRequestsPolicy::RequireApproval),
                     "auto_approval" => Ok(MemberRequestsPolicy::AutoApproval),
-                    "other" => Ok(MemberRequestsPolicy::Other),
-                    _ => Ok(MemberRequestsPolicy::_Unknown)
+                    _ => Ok(MemberRequestsPolicy::Other)
                 }
             }
         }
@@ -31905,7 +31431,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberRequestsPolicy {
                                                     "require_approval",
                                                     "auto_approval",
                                                     "other"];
-        _deserializer.deserialize_struct("MemberRequestsPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("MemberRequestsPolicy", VARIANTS, EnumVisitor)
     }
 }
 
@@ -31932,13 +31458,7 @@ impl ::serde::ser::Serialize for MemberRequestsPolicy {
                 s.serialize_field(".tag", "auto_approval")?;
                 s.end()
             }
-            MemberRequestsPolicy::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("MemberRequestsPolicy", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            MemberRequestsPolicy::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            MemberRequestsPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -32023,7 +31543,7 @@ impl SharedContentRequestAccessDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentRequestAccessDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -32036,7 +31556,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentRequestAccessDetails {
                 SharedContentRequestAccessDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentRequestAccessDetails", SHARED_CONTENT_REQUEST_ACCESS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentRequestAccessDetails", SHARED_CONTENT_REQUEST_ACCESS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -32233,7 +31753,7 @@ impl TeamEvent {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamEvent {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -32246,7 +31766,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamEvent {
                 TeamEvent::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamEvent", TEAM_EVENT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamEvent", TEAM_EVENT_FIELDS, StructVisitor)
     }
 }
 
@@ -32322,7 +31842,7 @@ impl FileAddCommentDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileAddCommentDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -32335,7 +31855,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileAddCommentDetails {
                 FileAddCommentDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileAddCommentDetails", FILE_ADD_COMMENT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileAddCommentDetails", FILE_ADD_COMMENT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -32376,7 +31896,7 @@ impl TeamFolderPermanentlyDeleteDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamFolderPermanentlyDeleteDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -32389,7 +31909,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderPermanentlyDeleteDetails {
                 TeamFolderPermanentlyDeleteDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamFolderPermanentlyDeleteDetails", TEAM_FOLDER_PERMANENTLY_DELETE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamFolderPermanentlyDeleteDetails", TEAM_FOLDER_PERMANENTLY_DELETE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -32444,7 +31964,7 @@ impl SsoChangeCertDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SsoChangeCertDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -32457,7 +31977,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoChangeCertDetails {
                 SsoChangeCertDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SsoChangeCertDetails", SSO_CHANGE_CERT_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SsoChangeCertDetails", SSO_CHANGE_CERT_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -32528,7 +32048,7 @@ impl SfTeamDeclineDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SfTeamDeclineDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -32541,7 +32061,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SfTeamDeclineDetails {
                 SfTeamDeclineDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SfTeamDeclineDetails", SF_TEAM_DECLINE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SfTeamDeclineDetails", SF_TEAM_DECLINE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -32565,7 +32085,7 @@ pub enum SessionLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SessionLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // polymorphic struct deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -32590,7 +32110,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SessionLogInfo {
         const VARIANTS: &'static [&'static str] = &["mobile",
                                                     "mobile",
                                                     "mobile"];
-        _deserializer.deserialize_struct("SessionLogInfo", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SessionLogInfo", VARIANTS, EnumVisitor)
     }
 }
 
@@ -32684,7 +32204,7 @@ impl NetworkControlChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for NetworkControlChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -32697,7 +32217,7 @@ impl<'de> ::serde::de::Deserialize<'de> for NetworkControlChangePolicyDetails {
                 NetworkControlChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("NetworkControlChangePolicyDetails", NETWORK_CONTROL_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("NetworkControlChangePolicyDetails", NETWORK_CONTROL_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -32738,7 +32258,7 @@ impl DomainInvitesApproveRequestToJoinTeamDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesApproveRequestToJoinTeamDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -32751,7 +32271,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesApproveRequestToJoinTea
                 DomainInvitesApproveRequestToJoinTeamDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DomainInvitesApproveRequestToJoinTeamDetails", DOMAIN_INVITES_APPROVE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DomainInvitesApproveRequestToJoinTeamDetails", DOMAIN_INVITES_APPROVE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -32819,7 +32339,7 @@ impl MemberTransferAccountContentsDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberTransferAccountContentsDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -32832,7 +32352,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberTransferAccountContentsDetails
                 MemberTransferAccountContentsDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("MemberTransferAccountContentsDetails", MEMBER_TRANSFER_ACCOUNT_CONTENTS_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberTransferAccountContentsDetails", MEMBER_TRANSFER_ACCOUNT_CONTENTS_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -32873,7 +32393,7 @@ impl TeamProfileAddLogoDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamProfileAddLogoDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -32886,7 +32406,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamProfileAddLogoDetails {
                 TeamProfileAddLogoDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamProfileAddLogoDetails", TEAM_PROFILE_ADD_LOGO_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamProfileAddLogoDetails", TEAM_PROFILE_ADD_LOGO_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -32941,7 +32461,7 @@ impl FileRequestAddDeadlineDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestAddDeadlineDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -32954,7 +32474,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestAddDeadlineDetails {
                 FileRequestAddDeadlineDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileRequestAddDeadlineDetails", FILE_REQUEST_ADD_DEADLINE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileRequestAddDeadlineDetails", FILE_REQUEST_ADD_DEADLINE_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -33024,7 +32544,7 @@ impl TeamLinkedAppLogInfo {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamLinkedAppLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -33037,7 +32557,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamLinkedAppLogInfo {
                 TeamLinkedAppLogInfo::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("TeamLinkedAppLogInfo", TEAM_LINKED_APP_LOG_INFO_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("TeamLinkedAppLogInfo", TEAM_LINKED_APP_LOG_INFO_FIELDS, StructVisitor)
     }
 }
 
@@ -33113,7 +32633,7 @@ impl FileCommentsChangePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileCommentsChangePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -33126,7 +32646,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileCommentsChangePolicyDetails {
                 FileCommentsChangePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("FileCommentsChangePolicyDetails", FILE_COMMENTS_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("FileCommentsChangePolicyDetails", FILE_COMMENTS_CHANGE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -33197,7 +32717,7 @@ impl DeviceApprovalsChangeMobilePolicyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsChangeMobilePolicyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -33210,7 +32730,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsChangeMobilePolicyDet
                 DeviceApprovalsChangeMobilePolicyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("DeviceApprovalsChangeMobilePolicyDetails", DEVICE_APPROVALS_CHANGE_MOBILE_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("DeviceApprovalsChangeMobilePolicyDetails", DEVICE_APPROVALS_CHANGE_MOBILE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
@@ -33312,7 +32832,7 @@ impl SharedContentCopyDetails {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedContentCopyDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -33325,7 +32845,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedContentCopyDetails {
                 SharedContentCopyDetails::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("SharedContentCopyDetails", SHARED_CONTENT_COPY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentCopyDetails", SHARED_CONTENT_COPY_DETAILS_FIELDS, StructVisitor)
     }
 }
 

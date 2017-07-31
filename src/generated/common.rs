@@ -37,11 +37,10 @@ pub enum PathRoot {
     /// :field:`PathRootError.no_permission` if you don't have access to this namespace.)
     NamespaceId(PathRootId),
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PathRoot {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -51,7 +50,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRoot {
                 f.write_str("a PathRoot structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -71,8 +70,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRoot {
                         }
                         Ok(PathRoot::NamespaceId(map.next_value()?))
                     }
-                    "other" => Ok(PathRoot::Other),
-                    _ => Ok(PathRoot::_Unknown)
+                    _ => Ok(PathRoot::Other)
                 }
             }
         }
@@ -82,7 +80,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRoot {
                                                     "user_home",
                                                     "namespace_id",
                                                     "other"];
-        _deserializer.deserialize_struct("PathRoot", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PathRoot", VARIANTS, EnumVisitor)
     }
 }
 
@@ -123,13 +121,7 @@ impl ::serde::ser::Serialize for PathRoot {
                 s.serialize_field("namespace_id", x)?;
                 s.end()
             }
-            PathRoot::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("PathRoot", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            PathRoot::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            PathRoot::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -176,7 +168,7 @@ impl InvalidPathRootError {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for InvalidPathRootError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -189,7 +181,7 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidPathRootError {
                 InvalidPathRootError::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("InvalidPathRootError", INVALID_PATH_ROOT_ERROR_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("InvalidPathRootError", INVALID_PATH_ROOT_ERROR_FIELDS, StructVisitor)
     }
 }
 
@@ -210,11 +202,10 @@ pub enum PathRootError {
     /// You don't have permission to access the path root id in Dropbox-API-Path-Root  header.
     NoPermission,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PathRootError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -224,22 +215,21 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRootError {
                 f.write_str("a PathRootError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "invalid" => Ok(PathRootError::Invalid(InvalidPathRootError::internal_deserialize(map)?)),
                     "no_permission" => Ok(PathRootError::NoPermission),
-                    "other" => Ok(PathRootError::Other),
-                    _ => Ok(PathRootError::_Unknown)
+                    _ => Ok(PathRootError::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["invalid",
                                                     "no_permission",
                                                     "other"];
-        _deserializer.deserialize_struct("PathRootError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PathRootError", VARIANTS, EnumVisitor)
     }
 }
 
@@ -261,13 +251,7 @@ impl ::serde::ser::Serialize for PathRootError {
                 s.serialize_field(".tag", "no_permission")?;
                 s.end()
             }
-            PathRootError::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("PathRootError", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            PathRootError::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            PathRootError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }

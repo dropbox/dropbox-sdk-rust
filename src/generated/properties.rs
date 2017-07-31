@@ -19,11 +19,10 @@ pub enum PropertyTemplateError {
     /// You do not have the permissions to modify this property template.
     RestrictedContent,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PropertyTemplateError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -33,7 +32,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyTemplateError {
                 f.write_str("a PropertyTemplateError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -45,15 +44,14 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyTemplateError {
                         Ok(PropertyTemplateError::TemplateNotFound(map.next_value()?))
                     }
                     "restricted_content" => Ok(PropertyTemplateError::RestrictedContent),
-                    "other" => Ok(PropertyTemplateError::Other),
-                    _ => Ok(PropertyTemplateError::_Unknown)
+                    _ => Ok(PropertyTemplateError::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["template_not_found",
                                                     "restricted_content",
                                                     "other"];
-        _deserializer.deserialize_struct("PropertyTemplateError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PropertyTemplateError", VARIANTS, EnumVisitor)
     }
 }
 
@@ -75,13 +73,7 @@ impl ::serde::ser::Serialize for PropertyTemplateError {
                 s.serialize_field(".tag", "restricted_content")?;
                 s.end()
             }
-            PropertyTemplateError::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("PropertyTemplateError", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            PropertyTemplateError::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            PropertyTemplateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -114,11 +106,10 @@ pub enum ModifyPropertyTemplateError {
     TooManyTemplates,
     /// The template name, description or field names is too large.
     TemplateAttributeTooLarge,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ModifyPropertyTemplateError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -128,7 +119,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifyPropertyTemplateError {
                 f.write_str("a ModifyPropertyTemplateError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
@@ -140,12 +131,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifyPropertyTemplateError {
                         Ok(ModifyPropertyTemplateError::TemplateNotFound(map.next_value()?))
                     }
                     "restricted_content" => Ok(ModifyPropertyTemplateError::RestrictedContent),
-                    "other" => Ok(ModifyPropertyTemplateError::Other),
                     "conflicting_property_names" => Ok(ModifyPropertyTemplateError::ConflictingPropertyNames),
                     "too_many_properties" => Ok(ModifyPropertyTemplateError::TooManyProperties),
                     "too_many_templates" => Ok(ModifyPropertyTemplateError::TooManyTemplates),
                     "template_attribute_too_large" => Ok(ModifyPropertyTemplateError::TemplateAttributeTooLarge),
-                    _ => Ok(ModifyPropertyTemplateError::_Unknown)
+                    _ => Ok(ModifyPropertyTemplateError::Other)
                 }
             }
         }
@@ -156,7 +146,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifyPropertyTemplateError {
                                                     "too_many_properties",
                                                     "too_many_templates",
                                                     "template_attribute_too_large"];
-        _deserializer.deserialize_struct("ModifyPropertyTemplateError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("ModifyPropertyTemplateError", VARIANTS, EnumVisitor)
     }
 }
 
@@ -176,12 +166,6 @@ impl ::serde::ser::Serialize for ModifyPropertyTemplateError {
                 // unit
                 let mut s = serializer.serialize_struct("ModifyPropertyTemplateError", 1)?;
                 s.serialize_field(".tag", "restricted_content")?;
-                s.end()
-            }
-            ModifyPropertyTemplateError::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("ModifyPropertyTemplateError", 1)?;
-                s.serialize_field(".tag", "other")?;
                 s.end()
             }
             ModifyPropertyTemplateError::ConflictingPropertyNames => {
@@ -208,7 +192,7 @@ impl ::serde::ser::Serialize for ModifyPropertyTemplateError {
                 s.serialize_field(".tag", "template_attribute_too_large")?;
                 s.end()
             }
-            ModifyPropertyTemplateError::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            ModifyPropertyTemplateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -297,7 +281,7 @@ impl PropertyGroupTemplate {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PropertyGroupTemplate {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -310,7 +294,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyGroupTemplate {
                 PropertyGroupTemplate::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PropertyGroupTemplate", PROPERTY_GROUP_TEMPLATE_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PropertyGroupTemplate", PROPERTY_GROUP_TEMPLATE_FIELDS, StructVisitor)
     }
 }
 
@@ -382,7 +366,7 @@ impl PropertyGroup {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PropertyGroup {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -395,7 +379,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyGroup {
                 PropertyGroup::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PropertyGroup", PROPERTY_GROUP_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PropertyGroup", PROPERTY_GROUP_FIELDS, StructVisitor)
     }
 }
 
@@ -482,7 +466,7 @@ impl PropertyFieldTemplate {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PropertyFieldTemplate {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -495,7 +479,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyFieldTemplate {
                 PropertyFieldTemplate::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PropertyFieldTemplate", PROPERTY_FIELD_TEMPLATE_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PropertyFieldTemplate", PROPERTY_FIELD_TEMPLATE_FIELDS, StructVisitor)
     }
 }
 
@@ -552,7 +536,7 @@ impl GetPropertyTemplateArg {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetPropertyTemplateArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -565,7 +549,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetPropertyTemplateArg {
                 GetPropertyTemplateArg::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GetPropertyTemplateArg", GET_PROPERTY_TEMPLATE_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GetPropertyTemplateArg", GET_PROPERTY_TEMPLATE_ARG_FIELDS, StructVisitor)
     }
 }
 
@@ -622,7 +606,7 @@ impl ListPropertyTemplateIds {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ListPropertyTemplateIds {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -635,7 +619,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPropertyTemplateIds {
                 ListPropertyTemplateIds::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("ListPropertyTemplateIds", LIST_PROPERTY_TEMPLATE_IDS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("ListPropertyTemplateIds", LIST_PROPERTY_TEMPLATE_IDS_FIELDS, StructVisitor)
     }
 }
 
@@ -656,11 +640,10 @@ pub enum PropertyType {
     /// The associated property will be of type string. Unicode is supported.
     StringVariant,
     Other,
-    _Unknown
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PropertyType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
@@ -670,20 +653,19 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyType {
                 f.write_str("a PropertyType structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag = match map.next_key()? {
+                let tag: &str = match map.next_key()? {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
                     "string" => Ok(PropertyType::StringVariant),
-                    "other" => Ok(PropertyType::Other),
-                    _ => Ok(PropertyType::_Unknown)
+                    _ => Ok(PropertyType::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["string",
                                                     "other"];
-        _deserializer.deserialize_struct("PropertyType", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("PropertyType", VARIANTS, EnumVisitor)
     }
 }
 
@@ -698,13 +680,7 @@ impl ::serde::ser::Serialize for PropertyType {
                 s.serialize_field(".tag", "string")?;
                 s.end()
             }
-            PropertyType::Other => {
-                // unit
-                let mut s = serializer.serialize_struct("PropertyType", 1)?;
-                s.serialize_field(".tag", "other")?;
-                s.end()
-            }
-            PropertyType::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            PropertyType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -766,7 +742,7 @@ impl PropertyField {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PropertyField {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -779,7 +755,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyField {
                 PropertyField::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("PropertyField", PROPERTY_FIELD_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("PropertyField", PROPERTY_FIELD_FIELDS, StructVisitor)
     }
 }
 
@@ -865,7 +841,7 @@ impl GetPropertyTemplateResult {
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetPropertyTemplateResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(_deserializer: D) -> Result<Self, D::Error> {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
@@ -878,7 +854,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetPropertyTemplateResult {
                 GetPropertyTemplateResult::internal_deserialize(map)
             }
         }
-        _deserializer.deserialize_struct("GetPropertyTemplateResult", GET_PROPERTY_TEMPLATE_RESULT_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("GetPropertyTemplateResult", GET_PROPERTY_TEMPLATE_RESULT_FIELDS, StructVisitor)
     }
 }
 
