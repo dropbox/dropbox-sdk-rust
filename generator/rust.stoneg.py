@@ -239,8 +239,16 @@ class RustGenerator(CodeGenerator):
                             self.emit(u'{}: field_{},'.format(field_name, field_name))
                         elif field.has_default:
                             # TODO: check if the default is a copy type (i.e. primitive) and don't make a lambda
-                            self.emit(u'{}: field_{}.unwrap_or_else(|| {}),'.format(
-                                field_name, field_name, self._default_value(field)))
+                            if isinstance(field.data_type, data_type.String) \
+                                    and not field.default:
+                                self.emit(u'{}: field_{}.unwrap_or_else(String::new),'.format(
+                                    field_name, field_name))
+                            elif data_type.is_primitive_type(data_type.unwrap_aliases(field.data_type)[0]):
+                                self.emit(u'{}: field_{}.unwrap_or({}),'.format(
+                                    field_name, field_name, self._default_value(field)))
+                            else:
+                                self.emit(u'{}: field_{}.unwrap_or_else(|| {}),'.format(
+                                    field_name, field_name, self._default_value(field)))
                         else:
                             self.emit(u'{}: field_{}.ok_or_else(|| de::Error::missing_field("{}"))?,'.format(
                                 field_name, field_name, field.name))

@@ -610,7 +610,7 @@ impl ListPaperDocsArgs {
             filter_by: field_filter_by.unwrap_or_else(|| ListPaperDocsFilterBy::DocsAccessed),
             sort_by: field_sort_by.unwrap_or_else(|| ListPaperDocsSortBy::Accessed),
             sort_order: field_sort_order.unwrap_or_else(|| ListPaperDocsSortOrder::Ascending),
-            limit: field_limit.unwrap_or_else(|| 1000),
+            limit: field_limit.unwrap_or(1000),
         })
     }
 
@@ -730,7 +730,7 @@ impl AddPaperDocUser {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
             members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
             custom_message: field_custom_message,
-            quiet: field_quiet.unwrap_or_else(|| false),
+            quiet: field_quiet.unwrap_or(false),
         })
     }
 
@@ -2616,7 +2616,7 @@ impl ListUsersOnFolderArgs {
         }
         Ok(ListUsersOnFolderArgs {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            limit: field_limit.unwrap_or_else(|| 1000),
+            limit: field_limit.unwrap_or(1000),
         })
     }
 
@@ -3043,7 +3043,7 @@ impl ListUsersOnPaperDocArgs {
         }
         Ok(ListUsersOnPaperDocArgs {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            limit: field_limit.unwrap_or_else(|| 1000),
+            limit: field_limit.unwrap_or(1000),
             filter_by: field_filter_by.unwrap_or_else(|| UserOnPaperDocFilter::Shared),
         })
     }

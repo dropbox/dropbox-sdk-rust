@@ -1892,8 +1892,8 @@ impl FolderSharingInfo {
             read_only: field_read_only.ok_or_else(|| de::Error::missing_field("read_only"))?,
             parent_shared_folder_id: field_parent_shared_folder_id,
             shared_folder_id: field_shared_folder_id,
-            traverse_only: field_traverse_only.unwrap_or_else(|| false),
-            no_access: field_no_access.unwrap_or_else(|| false),
+            traverse_only: field_traverse_only.unwrap_or(false),
+            no_access: field_no_access.unwrap_or(false),
         })
     }
 
@@ -2484,7 +2484,7 @@ impl UploadSessionAppendArg {
         }
         Ok(UploadSessionAppendArg {
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-            close: field_close.unwrap_or_else(|| false),
+            close: field_close.unwrap_or(false),
         })
     }
 
@@ -3039,7 +3039,7 @@ impl UploadSessionStartArg {
             }
         }
         Ok(UploadSessionStartArg {
-            close: field_close.unwrap_or_else(|| false),
+            close: field_close.unwrap_or(false),
         })
     }
 
@@ -3570,8 +3570,8 @@ impl SearchArg {
         Ok(SearchArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
             query: field_query.ok_or_else(|| de::Error::missing_field("query"))?,
-            start: field_start.unwrap_or_else(|| 0),
-            max_results: field_max_results.unwrap_or_else(|| 100),
+            start: field_start.unwrap_or(0),
+            max_results: field_max_results.unwrap_or(100),
             mode: field_mode.unwrap_or_else(|| SearchMode::Filename),
         })
     }
@@ -3714,10 +3714,10 @@ impl ListFolderArg {
         }
         Ok(ListFolderArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            recursive: field_recursive.unwrap_or_else(|| false),
-            include_media_info: field_include_media_info.unwrap_or_else(|| false),
-            include_deleted: field_include_deleted.unwrap_or_else(|| false),
-            include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or_else(|| false),
+            recursive: field_recursive.unwrap_or(false),
+            include_media_info: field_include_media_info.unwrap_or(false),
+            include_deleted: field_include_deleted.unwrap_or(false),
+            include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
         })
     }
 
@@ -4722,7 +4722,7 @@ impl CreateFolderArg {
         }
         Ok(CreateFolderArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            autorename: field_autorename.unwrap_or_else(|| false),
+            autorename: field_autorename.unwrap_or(false),
         })
     }
 
@@ -6370,7 +6370,7 @@ impl ListFolderLongpollArg {
         }
         Ok(ListFolderLongpollArg {
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-            timeout: field_timeout.unwrap_or_else(|| 30),
+            timeout: field_timeout.unwrap_or(30),
         })
     }
 
@@ -6492,9 +6492,9 @@ impl GetMetadataArg {
         }
         Ok(GetMetadataArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            include_media_info: field_include_media_info.unwrap_or_else(|| false),
-            include_deleted: field_include_deleted.unwrap_or_else(|| false),
-            include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or_else(|| false),
+            include_media_info: field_include_media_info.unwrap_or(false),
+            include_deleted: field_include_deleted.unwrap_or(false),
+            include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
         })
     }
 
@@ -7093,9 +7093,9 @@ impl RelocationArg {
         Ok(RelocationArg {
             from_path: field_from_path.ok_or_else(|| de::Error::missing_field("from_path"))?,
             to_path: field_to_path.ok_or_else(|| de::Error::missing_field("to_path"))?,
-            allow_shared_folder: field_allow_shared_folder.unwrap_or_else(|| false),
-            autorename: field_autorename.unwrap_or_else(|| false),
-            allow_ownership_transfer: field_allow_ownership_transfer.unwrap_or_else(|| false),
+            allow_shared_folder: field_allow_shared_folder.unwrap_or(false),
+            autorename: field_autorename.unwrap_or(false),
+            allow_ownership_transfer: field_allow_ownership_transfer.unwrap_or(false),
         })
     }
 
@@ -7306,9 +7306,9 @@ impl AlphaGetMetadataArg {
         }
         Ok(AlphaGetMetadataArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            include_media_info: field_include_media_info.unwrap_or_else(|| false),
-            include_deleted: field_include_deleted.unwrap_or_else(|| false),
-            include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or_else(|| false),
+            include_media_info: field_include_media_info.unwrap_or(false),
+            include_deleted: field_include_deleted.unwrap_or(false),
+            include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
             include_property_templates: field_include_property_templates,
         })
     }
@@ -8260,7 +8260,7 @@ impl ListRevisionsArg {
         }
         Ok(ListRevisionsArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            limit: field_limit.unwrap_or_else(|| 10),
+            limit: field_limit.unwrap_or(10),
         })
     }
 
@@ -8419,9 +8419,9 @@ impl CommitInfoWithProperties {
         Ok(CommitInfoWithProperties {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
             mode: field_mode.unwrap_or_else(|| WriteMode::Add),
-            autorename: field_autorename.unwrap_or_else(|| false),
+            autorename: field_autorename.unwrap_or(false),
             client_modified: field_client_modified,
-            mute: field_mute.unwrap_or_else(|| false),
+            mute: field_mute.unwrap_or(false),
             property_groups: field_property_groups,
         })
     }
@@ -8721,9 +8721,9 @@ impl RelocationBatchArg {
         }
         Ok(RelocationBatchArg {
             entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
-            allow_shared_folder: field_allow_shared_folder.unwrap_or_else(|| false),
-            autorename: field_autorename.unwrap_or_else(|| false),
-            allow_ownership_transfer: field_allow_ownership_transfer.unwrap_or_else(|| false),
+            allow_shared_folder: field_allow_shared_folder.unwrap_or(false),
+            autorename: field_autorename.unwrap_or(false),
+            allow_ownership_transfer: field_allow_ownership_transfer.unwrap_or(false),
         })
     }
 
@@ -10396,9 +10396,9 @@ impl CommitInfo {
         Ok(CommitInfo {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
             mode: field_mode.unwrap_or_else(|| WriteMode::Add),
-            autorename: field_autorename.unwrap_or_else(|| false),
+            autorename: field_autorename.unwrap_or(false),
             client_modified: field_client_modified,
-            mute: field_mute.unwrap_or_else(|| false),
+            mute: field_mute.unwrap_or(false),
         })
     }
 

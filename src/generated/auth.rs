@@ -161,7 +161,7 @@ impl RateLimitError {
         }
         Ok(RateLimitError {
             reason: field_reason.ok_or_else(|| de::Error::missing_field("reason"))?,
-            retry_after: field_retry_after.unwrap_or_else(|| 1),
+            retry_after: field_retry_after.unwrap_or(1),
         })
     }
 

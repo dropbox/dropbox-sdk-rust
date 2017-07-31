@@ -976,7 +976,7 @@ impl ShareFolderArg {
         Ok(ShareFolderArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
             acl_update_policy: field_acl_update_policy,
-            force_async: field_force_async.unwrap_or_else(|| false),
+            force_async: field_force_async.unwrap_or(false),
             member_policy: field_member_policy,
             shared_link_policy: field_shared_link_policy,
             viewer_info_policy: field_viewer_info_policy,
@@ -1608,7 +1608,7 @@ impl ModifySharedLinkSettingsArgs {
         Ok(ModifySharedLinkSettingsArgs {
             url: field_url.ok_or_else(|| de::Error::missing_field("url"))?,
             settings: field_settings.ok_or_else(|| de::Error::missing_field("settings"))?,
-            remove_expiration: field_remove_expiration.unwrap_or_else(|| false),
+            remove_expiration: field_remove_expiration.unwrap_or(false),
         })
     }
 
@@ -2375,8 +2375,8 @@ impl ListFileMembersArg {
         Ok(ListFileMembersArg {
             file: field_file.ok_or_else(|| de::Error::missing_field("file"))?,
             actions: field_actions,
-            include_inherited: field_include_inherited.unwrap_or_else(|| true),
-            limit: field_limit.unwrap_or_else(|| 100),
+            include_inherited: field_include_inherited.unwrap_or(true),
+            limit: field_limit.unwrap_or(100),
         })
     }
 
@@ -4365,7 +4365,7 @@ impl MembershipInfo {
             access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
             permissions: field_permissions,
             initials: field_initials,
-            is_inherited: field_is_inherited.unwrap_or_else(|| false),
+            is_inherited: field_is_inherited.unwrap_or(false),
         })
     }
 
@@ -4707,7 +4707,7 @@ impl ListFileMembersBatchArg {
         }
         Ok(ListFileMembersBatchArg {
             files: field_files.ok_or_else(|| de::Error::missing_field("files"))?,
-            limit: field_limit.unwrap_or_else(|| 10),
+            limit: field_limit.unwrap_or(10),
         })
     }
 
@@ -5619,7 +5619,7 @@ impl InviteeMembershipInfo {
             invitee: field_invitee.ok_or_else(|| de::Error::missing_field("invitee"))?,
             permissions: field_permissions,
             initials: field_initials,
-            is_inherited: field_is_inherited.unwrap_or_else(|| false),
+            is_inherited: field_is_inherited.unwrap_or(false),
             user: field_user,
         })
     }
@@ -5714,7 +5714,7 @@ impl UnshareFolderArg {
         }
         Ok(UnshareFolderArg {
             shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
-            leave_a_copy: field_leave_a_copy.unwrap_or_else(|| false),
+            leave_a_copy: field_leave_a_copy.unwrap_or(false),
         })
     }
 
@@ -7944,7 +7944,7 @@ impl CreateSharedLinkArg {
         }
         Ok(CreateSharedLinkArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            short_url: field_short_url.unwrap_or_else(|| false),
+            short_url: field_short_url.unwrap_or(false),
             pending_upload: field_pending_upload,
         })
     }
@@ -8736,7 +8736,7 @@ impl AddFolderMemberArg {
         Ok(AddFolderMemberArg {
             shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
             members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
-            quiet: field_quiet.unwrap_or_else(|| false),
+            quiet: field_quiet.unwrap_or(false),
             custom_message: field_custom_message,
         })
     }
@@ -9483,7 +9483,7 @@ impl ShareFolderArgBase {
         Ok(ShareFolderArgBase {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
             acl_update_policy: field_acl_update_policy,
-            force_async: field_force_async.unwrap_or_else(|| false),
+            force_async: field_force_async.unwrap_or(false),
             member_policy: field_member_policy,
             shared_link_policy: field_shared_link_policy,
             viewer_info_policy: field_viewer_info_policy,
@@ -9904,7 +9904,7 @@ impl ListFolderMembersCursorArg {
         }
         Ok(ListFolderMembersCursorArg {
             actions: field_actions,
-            limit: field_limit.unwrap_or_else(|| 1000),
+            limit: field_limit.unwrap_or(1000),
         })
     }
 
@@ -10484,9 +10484,9 @@ impl AddFileMemberArgs {
             file: field_file.ok_or_else(|| de::Error::missing_field("file"))?,
             members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
             custom_message: field_custom_message,
-            quiet: field_quiet.unwrap_or_else(|| false),
+            quiet: field_quiet.unwrap_or(false),
             access_level: field_access_level.unwrap_or_else(|| AccessLevel::Viewer),
-            add_message_as_comment: field_add_message_as_comment.unwrap_or_else(|| false),
+            add_message_as_comment: field_add_message_as_comment.unwrap_or(false),
         })
     }
 
@@ -11267,7 +11267,7 @@ impl ListFilesArg {
             }
         }
         Ok(ListFilesArg {
-            limit: field_limit.unwrap_or_else(|| 100),
+            limit: field_limit.unwrap_or(100),
             actions: field_actions,
         })
     }
@@ -11515,7 +11515,7 @@ impl ListFolderMembersArgs {
         Ok(ListFolderMembersArgs {
             shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
             actions: field_actions,
-            limit: field_limit.unwrap_or_else(|| 1000),
+            limit: field_limit.unwrap_or(1000),
         })
     }
 
@@ -12186,7 +12186,7 @@ impl RelinquishFolderMembershipArg {
         }
         Ok(RelinquishFolderMembershipArg {
             shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
-            leave_a_copy: field_leave_a_copy.unwrap_or_else(|| false),
+            leave_a_copy: field_leave_a_copy.unwrap_or(false),
         })
     }
 
@@ -14463,7 +14463,7 @@ impl ListFoldersArgs {
             }
         }
         Ok(ListFoldersArgs {
-            limit: field_limit.unwrap_or_else(|| 1000),
+            limit: field_limit.unwrap_or(1000),
             actions: field_actions,
         })
     }
@@ -14788,7 +14788,7 @@ impl UserMembershipInfo {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
             permissions: field_permissions,
             initials: field_initials,
-            is_inherited: field_is_inherited.unwrap_or_else(|| false),
+            is_inherited: field_is_inherited.unwrap_or(false),
         })
     }
 
@@ -15129,7 +15129,7 @@ impl GroupMembershipInfo {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
             permissions: field_permissions,
             initials: field_initials,
-            is_inherited: field_is_inherited.unwrap_or_else(|| false),
+            is_inherited: field_is_inherited.unwrap_or(false),
         })
     }
 

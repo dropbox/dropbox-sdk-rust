@@ -7077,7 +7077,7 @@ impl GetTeamEventsArg {
             }
         }
         Ok(GetTeamEventsArg {
-            limit: field_limit.unwrap_or_else(|| 1000),
+            limit: field_limit.unwrap_or(1000),
             account_id: field_account_id,
             time: field_time,
             category: field_category,

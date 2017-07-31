@@ -895,7 +895,7 @@ impl GroupMembersRemoveArg {
         Ok(GroupMembersRemoveArg {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
             users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
-            return_members: field_return_members.unwrap_or_else(|| true),
+            return_members: field_return_members.unwrap_or(true),
         })
     }
 
@@ -1660,7 +1660,7 @@ impl GroupsListArg {
             }
         }
         Ok(GroupsListArg {
-            limit: field_limit.unwrap_or_else(|| 1000),
+            limit: field_limit.unwrap_or(1000),
         })
     }
 
@@ -1828,9 +1828,9 @@ impl ListMembersDevicesArg {
         }
         Ok(ListMembersDevicesArg {
             cursor: field_cursor,
-            include_web_sessions: field_include_web_sessions.unwrap_or_else(|| true),
-            include_desktop_clients: field_include_desktop_clients.unwrap_or_else(|| true),
-            include_mobile_clients: field_include_mobile_clients.unwrap_or_else(|| true),
+            include_web_sessions: field_include_web_sessions.unwrap_or(true),
+            include_desktop_clients: field_include_desktop_clients.unwrap_or(true),
+            include_mobile_clients: field_include_mobile_clients.unwrap_or(true),
         })
     }
 
@@ -1904,7 +1904,7 @@ impl IncludeMembersArg {
             }
         }
         Ok(IncludeMembersArg {
-            return_members: field_return_members.unwrap_or_else(|| true),
+            return_members: field_return_members.unwrap_or(true),
         })
     }
 
@@ -2076,7 +2076,7 @@ impl MemberAddArg {
             member_surname: field_member_surname,
             member_external_id: field_member_external_id,
             member_persistent_id: field_member_persistent_id,
-            send_welcome_email: field_send_welcome_email.unwrap_or_else(|| true),
+            send_welcome_email: field_send_welcome_email.unwrap_or(true),
             role: field_role.unwrap_or_else(|| AdminTier::MemberOnly),
         })
     }
@@ -2500,7 +2500,7 @@ impl GroupMembersSetAccessTypeArg {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
             access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
-            return_members: field_return_members.unwrap_or_else(|| true),
+            return_members: field_return_members.unwrap_or(true),
         })
     }
 
@@ -5090,7 +5090,7 @@ impl TeamFolderArchiveArg {
         }
         Ok(TeamFolderArchiveArg {
             team_folder_id: field_team_folder_id.ok_or_else(|| de::Error::missing_field("team_folder_id"))?,
-            force_async_off: field_force_async_off.unwrap_or_else(|| false),
+            force_async_off: field_force_async_off.unwrap_or(false),
         })
     }
 
@@ -5391,7 +5391,7 @@ impl GroupUpdateArgs {
         }
         Ok(GroupUpdateArgs {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
-            return_members: field_return_members.unwrap_or_else(|| true),
+            return_members: field_return_members.unwrap_or(true),
             new_group_name: field_new_group_name,
             new_group_external_id: field_new_group_external_id,
             new_group_management_type: field_new_group_management_type,
@@ -5680,7 +5680,7 @@ impl GroupsMembersListArg {
         }
         Ok(GroupsMembersListArg {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
-            limit: field_limit.unwrap_or_else(|| 1000),
+            limit: field_limit.unwrap_or(1000),
         })
     }
 
@@ -5750,7 +5750,7 @@ impl TeamNamespacesListArg {
             }
         }
         Ok(TeamNamespacesListArg {
-            limit: field_limit.unwrap_or_else(|| 1000),
+            limit: field_limit.unwrap_or(1000),
         })
     }
 
@@ -6404,9 +6404,9 @@ impl ListTeamDevicesArg {
         }
         Ok(ListTeamDevicesArg {
             cursor: field_cursor,
-            include_web_sessions: field_include_web_sessions.unwrap_or_else(|| true),
-            include_desktop_clients: field_include_desktop_clients.unwrap_or_else(|| true),
-            include_mobile_clients: field_include_mobile_clients.unwrap_or_else(|| true),
+            include_web_sessions: field_include_web_sessions.unwrap_or(true),
+            include_desktop_clients: field_include_desktop_clients.unwrap_or(true),
+            include_mobile_clients: field_include_mobile_clients.unwrap_or(true),
         })
     }
 
@@ -6581,7 +6581,7 @@ impl MembersDeactivateArg {
         }
         Ok(MembersDeactivateArg {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
-            wipe_data: field_wipe_data.unwrap_or_else(|| true),
+            wipe_data: field_wipe_data.unwrap_or(true),
         })
     }
 
@@ -6990,7 +6990,7 @@ impl GroupMembersAddArg {
         Ok(GroupMembersAddArg {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
             members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
-            return_members: field_return_members.unwrap_or_else(|| true),
+            return_members: field_return_members.unwrap_or(true),
         })
     }
 
@@ -8362,9 +8362,9 @@ impl ListMemberDevicesArg {
         }
         Ok(ListMemberDevicesArg {
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
-            include_web_sessions: field_include_web_sessions.unwrap_or_else(|| true),
-            include_desktop_clients: field_include_desktop_clients.unwrap_or_else(|| true),
-            include_mobile_clients: field_include_mobile_clients.unwrap_or_else(|| true),
+            include_web_sessions: field_include_web_sessions.unwrap_or(true),
+            include_desktop_clients: field_include_desktop_clients.unwrap_or(true),
+            include_mobile_clients: field_include_mobile_clients.unwrap_or(true),
         })
     }
 
@@ -8466,7 +8466,7 @@ impl RevokeLinkedApiAppArg {
         Ok(RevokeLinkedApiAppArg {
             app_id: field_app_id.ok_or_else(|| de::Error::missing_field("app_id"))?,
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
-            keep_app_folder: field_keep_app_folder.unwrap_or_else(|| true),
+            keep_app_folder: field_keep_app_folder.unwrap_or(true),
         })
     }
 
@@ -10034,7 +10034,7 @@ impl RevokeDesktopClientArg {
         Ok(RevokeDesktopClientArg {
             session_id: field_session_id.ok_or_else(|| de::Error::missing_field("session_id"))?,
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
-            delete_on_unlink: field_delete_on_unlink.unwrap_or_else(|| false),
+            delete_on_unlink: field_delete_on_unlink.unwrap_or(false),
         })
     }
 
@@ -10952,7 +10952,7 @@ impl TeamFolderListArg {
             }
         }
         Ok(TeamFolderListArg {
-            limit: field_limit.unwrap_or_else(|| 1000),
+            limit: field_limit.unwrap_or(1000),
         })
     }
 
@@ -12497,7 +12497,7 @@ impl MembersAddArg {
         }
         Ok(MembersAddArg {
             new_members: field_new_members.ok_or_else(|| de::Error::missing_field("new_members"))?,
-            force_async: field_force_async.unwrap_or_else(|| false),
+            force_async: field_force_async.unwrap_or(false),
         })
     }
 
@@ -12760,8 +12760,8 @@ impl MembersListArg {
             }
         }
         Ok(MembersListArg {
-            limit: field_limit.unwrap_or_else(|| 1000),
-            include_removed: field_include_removed.unwrap_or_else(|| false),
+            limit: field_limit.unwrap_or(1000),
+            include_removed: field_include_removed.unwrap_or(false),
         })
     }
 
@@ -15897,10 +15897,10 @@ impl MembersRemoveArg {
         }
         Ok(MembersRemoveArg {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
-            wipe_data: field_wipe_data.unwrap_or_else(|| true),
+            wipe_data: field_wipe_data.unwrap_or(true),
             transfer_dest_id: field_transfer_dest_id,
             transfer_admin_id: field_transfer_admin_id,
-            keep_account: field_keep_account.unwrap_or_else(|| false),
+            keep_account: field_keep_account.unwrap_or(false),
         })
     }
 
