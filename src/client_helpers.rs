@@ -1,12 +1,15 @@
+use std::fmt::Debug;
 use std::marker::PhantomData;
-use ResultExt;
+use ::{Error, ErrorKind, ResultExt};
 use client_trait::*;
 use serde::de::{self, Deserialize, DeserializeOwned, Deserializer, MapAccess, Visitor};
 use serde::ser::Serialize;
 use serde_json;
 
+// When Dropbox returns an error with HTTP 409, it uses an implicit JSON object with the following
+// structure, which contains the acutal error as a field.
 #[derive(Debug)]
-pub struct TopLevelError<T> {
+struct TopLevelError<T> {
     pub error_summary: String,
     pub user_message: Option<String>,
     pub error: T,
@@ -65,7 +68,7 @@ impl<'de, T: DeserializeOwned> Deserialize<'de> for TopLevelError<T> {
 /// went horribly wrong (I/O errors, parse errors, server 500 errors, etc.). The inner result has
 /// an error if the server returned one for the request, otherwise it has the deserialized JSON
 /// response and the body stream (if any).
-pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned, P: Serialize>(
+pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
     client: &HttpClient,
     endpoint: Endpoint,
     function: &str,
@@ -86,18 +89,60 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned, P: Serialize>
                 body,
             }))
         },
-        Err(super::Error(super::ErrorKind::ApiFailure(ref code, ref _status, ref json), _)) if *code == 409 => {
-            let err = serde_json::from_str::<TopLevelError<E>>(json)?;
-            Ok(Err(err.error))
-        },
         Err(e) => {
-            error!("{}", e);
-            Err(e).chain_err(|| super::ErrorKind::ApiError("API returned garbage"))
+            let innards = if let Error(ErrorKind::GeneralHttpError(
+                    ref code, ref status, ref response), _) = e {
+                Some((*code, status.clone(), response.clone()))
+            } else {
+                None
+            };
+
+            // Try to turn the error into a more specific one.
+            match innards {
+                Some((code, status, response)) => {
+                    error!("HTTP {} {}: {}", code, status, response);
+                    match code {
+                        400 => {
+                            Err(e).chain_err(|| ErrorKind::BadRequest(response))
+                        },
+                        401 => {
+                            Err(e).chain_err(|| ErrorKind::InvalidToken(response))
+                        },
+                        409 => {
+                            // Response should be JSON-deseraializable into the strongly-typed
+                            // error specified by type parameter E.
+                            match serde_json::from_str::<TopLevelError<E>>(&response) {
+                                Ok(deserialized) => {
+                                    error!("API error: {:?}", deserialized);
+                                    Ok(Err(deserialized.error))
+                                },
+                                Err(de_error) => {
+                                    error!("Failed to deserialize JSON from API error: {}", de_error);
+                                    Err(e).chain_err(|| ErrorKind::Json(de_error))
+                                }
+                            }
+                        },
+                        429 => {
+                            Err(e).chain_err(|| ErrorKind::RateLimited(response))
+                        },
+                        500...599 => {
+                            Err(e).chain_err(|| ErrorKind::ServerError(response))
+                        },
+                        _ => {
+                            Err(e)
+                        }
+                    }
+                },
+                None => {
+                    error!("HTTP request error: {}", e);
+                    Err(e)
+                }
+            }
         }
     }
 }
 
-pub fn request<T: DeserializeOwned, E: DeserializeOwned, P: Serialize>(
+pub fn request<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
     client: &HttpClient,
     endpoint: Endpoint,
     function: &str,

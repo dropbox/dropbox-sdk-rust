@@ -19,15 +19,39 @@ error_chain! {
 
     errors {
         /// The API returned something invalid.
-        ApiError(reason: &'static str) {
+        UnexpectedError(reason: &'static str) {
             description("Dropbox unexpected API error")
             display("Dropbox unexpected API error: {}", reason)
         }
 
-        /// The API returned an error code.
-        ApiFailure(code: u16, status: String, json: String) {
+        /// The API indicated that the request was malformed.
+        BadRequest(message: String) {
+            description("Dropbox returned 400 Bad Request")
+            display("Dropbox returned 400 Bad Request: {}", message)
+        }
+
+        /// The API indicated that the access token is bad.
+        InvalidToken(message: String) {
+            description("Dropbox API token is invalid, expired, or revoked")
+            display("Dropbox API token is invalid, expired, or revoked: {}", message)
+        }
+
+        /// The API declined the request due to rate-limiting.
+        RateLimited(reason: String) {
+            description("Dropbox denied the request due to rate-limiting")
+            display("Dropbox denied the request due to rate-limiting: {}", reason)
+        }
+
+        /// The API had an internal server error.
+        ServerError(message: String) {
+            description("Dropbox had an internal server error")
+            display("Dropbox had an internal server error: {}", message)
+        }
+
+        /// The API returned an unexpected HTTP error code.
+        GeneralHttpError(code: u16, status: String, json: String) {
             description("Dropbox API returned failure")
-            display("Dropbox API returned {} - {}", status, json)
+            display("Dropbox API returned HTTP {} {} - {}", code, status, json)
         }
     }
 }

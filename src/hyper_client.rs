@@ -104,7 +104,7 @@ impl HttpClient for HyperClient {
                 };
                 let mut json = String::new();
                 resp.read_to_string(&mut json)?;
-                return Err(ErrorKind::ApiFailure(code, status, json).into());
+                return Err(ErrorKind::GeneralHttpError(code, status, json).into());
             }
 
             return match endpoint {
@@ -125,7 +125,7 @@ impl HttpClient for HyperClient {
                             String::from_utf8(values[0].clone())?
                         },
                         None => {
-                            return Err(ErrorKind::ApiError("missing Dropbox-API-Result header").into());
+                            bail!(ErrorKind::UnexpectedError("missing Dropbox-API-Result header"));
                         }
                     };
 
