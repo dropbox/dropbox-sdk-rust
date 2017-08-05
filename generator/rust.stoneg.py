@@ -383,9 +383,17 @@ class RustGenerator(CodeGenerator):
                                     self._rust_type(field.data_type)))
                             else:
                                 with self.block(u'"{}" =>'.format(field.name)):
-                                    with self.block(u'if map.next_key()? != Some("{}")'.format(field.name)):
-                                        self.emit(u'return Err(de::Error::missing_field("{}"));'.format(field.name))
-                                    self.emit(u'Ok({}::{}(map.next_value()?))'.format(type_name, variant_name))
+                                    with self.block(u'match map.next_key()?'):
+                                        self.emit(u'Some("{}") => Ok({}::{}(map.next_value()?)),'.format(
+                                            field.name,
+                                            type_name,
+                                            variant_name))
+                                        if isinstance(data_type.unwrap_aliases(field.data_type)[0], data_type.Nullable):
+                                            # if it's null, the field can be omitted entirely
+                                            self.emit(u'None => Ok({}::{}(None)),'.format(type_name, variant_name))
+                                        else:
+                                            self.emit(u'None => Err(de::Error::missing_field("{}")),'.format(field.name))
+                                        self.emit(u'_ => Err(de::Error::unknown_field(tag, VARIANTS))')
                         if not union.closed:
                             self.emit(u'_ => Ok({}::Other)'.format(type_name))
                         else:

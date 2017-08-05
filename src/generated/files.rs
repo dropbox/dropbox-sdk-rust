@@ -377,17 +377,19 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPropertiesError {
                 };
                 match tag {
                     "template_not_found" => {
-                        if map.next_key()? != Some("template_not_found") {
-                            return Err(de::Error::missing_field("template_not_found"));
+                        match map.next_key()? {
+                            Some("template_not_found") => Ok(AddPropertiesError::TemplateNotFound(map.next_value()?)),
+                            None => Err(de::Error::missing_field("template_not_found")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(AddPropertiesError::TemplateNotFound(map.next_value()?))
                     }
                     "restricted_content" => Ok(AddPropertiesError::RestrictedContent),
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(AddPropertiesError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(AddPropertiesError::Path(map.next_value()?))
                     }
                     "property_field_too_large" => Ok(AddPropertiesError::PropertyFieldTooLarge),
                     "does_not_fit_template" => Ok(AddPropertiesError::DoesNotFitTemplate),
@@ -635,16 +637,18 @@ impl<'de> ::serde::de::Deserialize<'de> for AlphaGetMetadataError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(AlphaGetMetadataError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(AlphaGetMetadataError::Path(map.next_value()?))
                     }
                     "properties_error" => {
-                        if map.next_key()? != Some("properties_error") {
-                            return Err(de::Error::missing_field("properties_error"));
+                        match map.next_key()? {
+                            Some("properties_error") => Ok(AlphaGetMetadataError::PropertiesError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("properties_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(AlphaGetMetadataError::PropertiesError(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -1116,10 +1120,11 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(CreateFolderError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(CreateFolderError::Path(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -1460,10 +1465,11 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchJobStatus {
                     "in_progress" => Ok(DeleteBatchJobStatus::InProgress),
                     "complete" => Ok(DeleteBatchJobStatus::Complete(DeleteBatchResult::internal_deserialize(map)?)),
                     "failed" => {
-                        if map.next_key()? != Some("failed") {
-                            return Err(de::Error::missing_field("failed"));
+                        match map.next_key()? {
+                            Some("failed") => Ok(DeleteBatchJobStatus::Failed(map.next_value()?)),
+                            None => Err(de::Error::missing_field("failed")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(DeleteBatchJobStatus::Failed(map.next_value()?))
                     }
                     _ => Ok(DeleteBatchJobStatus::Other)
                 }
@@ -1535,10 +1541,11 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchLaunch {
                 };
                 match tag {
                     "async_job_id" => {
-                        if map.next_key()? != Some("async_job_id") {
-                            return Err(de::Error::missing_field("async_job_id"));
+                        match map.next_key()? {
+                            Some("async_job_id") => Ok(DeleteBatchLaunch::AsyncJobId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("async_job_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(DeleteBatchLaunch::AsyncJobId(map.next_value()?))
                     }
                     "complete" => Ok(DeleteBatchLaunch::Complete(DeleteBatchResult::internal_deserialize(map)?)),
                     _ => Ok(DeleteBatchLaunch::Other)
@@ -1739,10 +1746,11 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchResultEntry {
                 match tag {
                     "success" => Ok(DeleteBatchResultEntry::Success(DeleteBatchResultData::internal_deserialize(map)?)),
                     "failure" => {
-                        if map.next_key()? != Some("failure") {
-                            return Err(de::Error::missing_field("failure"));
+                        match map.next_key()? {
+                            Some("failure") => Ok(DeleteBatchResultEntry::Failure(map.next_value()?)),
+                            None => Err(de::Error::missing_field("failure")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(DeleteBatchResultEntry::Failure(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -1805,16 +1813,18 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteError {
                 };
                 match tag {
                     "path_lookup" => {
-                        if map.next_key()? != Some("path_lookup") {
-                            return Err(de::Error::missing_field("path_lookup"));
+                        match map.next_key()? {
+                            Some("path_lookup") => Ok(DeleteError::PathLookup(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path_lookup")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(DeleteError::PathLookup(map.next_value()?))
                     }
                     "path_write" => {
-                        if map.next_key()? != Some("path_write") {
-                            return Err(de::Error::missing_field("path_write"));
+                        match map.next_key()? {
+                            Some("path_write") => Ok(DeleteError::PathWrite(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path_write")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(DeleteError::PathWrite(map.next_value()?))
                     }
                     "too_many_write_operations" => Ok(DeleteError::TooManyWriteOperations),
                     "too_many_files" => Ok(DeleteError::TooManyFiles),
@@ -2275,10 +2285,11 @@ impl<'de> ::serde::de::Deserialize<'de> for DownloadError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(DownloadError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(DownloadError::Path(map.next_value()?))
                     }
                     _ => Ok(DownloadError::Other)
                 }
@@ -3203,10 +3214,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GetCopyReferenceError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(GetCopyReferenceError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GetCopyReferenceError::Path(map.next_value()?))
                     }
                     _ => Ok(GetCopyReferenceError::Other)
                 }
@@ -3492,10 +3504,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GetMetadataError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(GetMetadataError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GetMetadataError::Path(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -3627,10 +3640,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(GetTemporaryLinkError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GetTemporaryLinkError::Path(map.next_value()?))
                     }
                     _ => Ok(GetTemporaryLinkError::Other)
                 }
@@ -3869,17 +3883,19 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
                 };
                 match tag {
                     "template_not_found" => {
-                        if map.next_key()? != Some("template_not_found") {
-                            return Err(de::Error::missing_field("template_not_found"));
+                        match map.next_key()? {
+                            Some("template_not_found") => Ok(InvalidPropertyGroupError::TemplateNotFound(map.next_value()?)),
+                            None => Err(de::Error::missing_field("template_not_found")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(InvalidPropertyGroupError::TemplateNotFound(map.next_value()?))
                     }
                     "restricted_content" => Ok(InvalidPropertyGroupError::RestrictedContent),
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(InvalidPropertyGroupError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(InvalidPropertyGroupError::Path(map.next_value()?))
                     }
                     "property_field_too_large" => Ok(InvalidPropertyGroupError::PropertyFieldTooLarge),
                     "does_not_fit_template" => Ok(InvalidPropertyGroupError::DoesNotFitTemplate),
@@ -4193,10 +4209,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderContinueError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(ListFolderContinueError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(ListFolderContinueError::Path(map.next_value()?))
                     }
                     "reset" => Ok(ListFolderContinueError::Reset),
                     _ => Ok(ListFolderContinueError::Other)
@@ -4268,10 +4285,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(ListFolderError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(ListFolderError::Path(map.next_value()?))
                     }
                     _ => Ok(ListFolderError::Other)
                 }
@@ -4837,10 +4855,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(ListRevisionsError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(ListRevisionsError::Path(map.next_value()?))
                     }
                     _ => Ok(ListRevisionsError::Other)
                 }
@@ -5073,10 +5092,11 @@ impl<'de> ::serde::de::Deserialize<'de> for LookupError {
                 };
                 match tag {
                     "malformed_path" => {
-                        if map.next_key()? != Some("malformed_path") {
-                            return Err(de::Error::missing_field("malformed_path"));
+                        match map.next_key()? {
+                            Some("malformed_path") => Ok(LookupError::MalformedPath(map.next_value()?)),
+                            None => Ok(LookupError::MalformedPath(None)),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(LookupError::MalformedPath(map.next_value()?))
                     }
                     "not_found" => Ok(LookupError::NotFound),
                     "not_file" => Ok(LookupError::NotFile),
@@ -5175,10 +5195,11 @@ impl<'de> ::serde::de::Deserialize<'de> for MediaInfo {
                 match tag {
                     "pending" => Ok(MediaInfo::Pending),
                     "metadata" => {
-                        if map.next_key()? != Some("metadata") {
-                            return Err(de::Error::missing_field("metadata"));
+                        match map.next_key()? {
+                            Some("metadata") => Ok(MediaInfo::Metadata(map.next_value()?)),
+                            None => Err(de::Error::missing_field("metadata")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MediaInfo::Metadata(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -5574,10 +5595,11 @@ impl<'de> ::serde::de::Deserialize<'de> for PreviewError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(PreviewError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(PreviewError::Path(map.next_value()?))
                     }
                     "in_progress" => Ok(PreviewError::InProgress),
                     "unsupported_extension" => Ok(PreviewError::UnsupportedExtension),
@@ -5667,17 +5689,19 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesError {
                 };
                 match tag {
                     "template_not_found" => {
-                        if map.next_key()? != Some("template_not_found") {
-                            return Err(de::Error::missing_field("template_not_found"));
+                        match map.next_key()? {
+                            Some("template_not_found") => Ok(PropertiesError::TemplateNotFound(map.next_value()?)),
+                            None => Err(de::Error::missing_field("template_not_found")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(PropertiesError::TemplateNotFound(map.next_value()?))
                     }
                     "restricted_content" => Ok(PropertiesError::RestrictedContent),
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(PropertiesError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(PropertiesError::Path(map.next_value()?))
                     }
                     _ => Ok(PropertiesError::Other)
                 }
@@ -6234,22 +6258,25 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                 };
                 match tag {
                     "from_lookup" => {
-                        if map.next_key()? != Some("from_lookup") {
-                            return Err(de::Error::missing_field("from_lookup"));
+                        match map.next_key()? {
+                            Some("from_lookup") => Ok(RelocationBatchError::FromLookup(map.next_value()?)),
+                            None => Err(de::Error::missing_field("from_lookup")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RelocationBatchError::FromLookup(map.next_value()?))
                     }
                     "from_write" => {
-                        if map.next_key()? != Some("from_write") {
-                            return Err(de::Error::missing_field("from_write"));
+                        match map.next_key()? {
+                            Some("from_write") => Ok(RelocationBatchError::FromWrite(map.next_value()?)),
+                            None => Err(de::Error::missing_field("from_write")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RelocationBatchError::FromWrite(map.next_value()?))
                     }
                     "to" => {
-                        if map.next_key()? != Some("to") {
-                            return Err(de::Error::missing_field("to"));
+                        match map.next_key()? {
+                            Some("to") => Ok(RelocationBatchError::To(map.next_value()?)),
+                            None => Err(de::Error::missing_field("to")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RelocationBatchError::To(map.next_value()?))
                     }
                     "cant_copy_shared_folder" => Ok(RelocationBatchError::CantCopySharedFolder),
                     "cant_nest_shared_folder" => Ok(RelocationBatchError::CantNestSharedFolder),
@@ -6391,10 +6418,11 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchJobStatus {
                     "in_progress" => Ok(RelocationBatchJobStatus::InProgress),
                     "complete" => Ok(RelocationBatchJobStatus::Complete(RelocationBatchResult::internal_deserialize(map)?)),
                     "failed" => {
-                        if map.next_key()? != Some("failed") {
-                            return Err(de::Error::missing_field("failed"));
+                        match map.next_key()? {
+                            Some("failed") => Ok(RelocationBatchJobStatus::Failed(map.next_value()?)),
+                            None => Err(de::Error::missing_field("failed")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RelocationBatchJobStatus::Failed(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -6464,10 +6492,11 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchLaunch {
                 };
                 match tag {
                     "async_job_id" => {
-                        if map.next_key()? != Some("async_job_id") {
-                            return Err(de::Error::missing_field("async_job_id"));
+                        match map.next_key()? {
+                            Some("async_job_id") => Ok(RelocationBatchLaunch::AsyncJobId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("async_job_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RelocationBatchLaunch::AsyncJobId(map.next_value()?))
                     }
                     "complete" => Ok(RelocationBatchLaunch::Complete(RelocationBatchResult::internal_deserialize(map)?)),
                     _ => Ok(RelocationBatchLaunch::Other)
@@ -6683,22 +6712,25 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                 };
                 match tag {
                     "from_lookup" => {
-                        if map.next_key()? != Some("from_lookup") {
-                            return Err(de::Error::missing_field("from_lookup"));
+                        match map.next_key()? {
+                            Some("from_lookup") => Ok(RelocationError::FromLookup(map.next_value()?)),
+                            None => Err(de::Error::missing_field("from_lookup")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RelocationError::FromLookup(map.next_value()?))
                     }
                     "from_write" => {
-                        if map.next_key()? != Some("from_write") {
-                            return Err(de::Error::missing_field("from_write"));
+                        match map.next_key()? {
+                            Some("from_write") => Ok(RelocationError::FromWrite(map.next_value()?)),
+                            None => Err(de::Error::missing_field("from_write")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RelocationError::FromWrite(map.next_value()?))
                     }
                     "to" => {
-                        if map.next_key()? != Some("to") {
-                            return Err(de::Error::missing_field("to"));
+                        match map.next_key()? {
+                            Some("to") => Ok(RelocationError::To(map.next_value()?)),
+                            None => Err(de::Error::missing_field("to")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RelocationError::To(map.next_value()?))
                     }
                     "cant_copy_shared_folder" => Ok(RelocationError::CantCopySharedFolder),
                     "cant_nest_shared_folder" => Ok(RelocationError::CantNestSharedFolder),
@@ -7067,23 +7099,26 @@ impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
                 };
                 match tag {
                     "template_not_found" => {
-                        if map.next_key()? != Some("template_not_found") {
-                            return Err(de::Error::missing_field("template_not_found"));
+                        match map.next_key()? {
+                            Some("template_not_found") => Ok(RemovePropertiesError::TemplateNotFound(map.next_value()?)),
+                            None => Err(de::Error::missing_field("template_not_found")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RemovePropertiesError::TemplateNotFound(map.next_value()?))
                     }
                     "restricted_content" => Ok(RemovePropertiesError::RestrictedContent),
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(RemovePropertiesError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RemovePropertiesError::Path(map.next_value()?))
                     }
                     "property_group_lookup" => {
-                        if map.next_key()? != Some("property_group_lookup") {
-                            return Err(de::Error::missing_field("property_group_lookup"));
+                        match map.next_key()? {
+                            Some("property_group_lookup") => Ok(RemovePropertiesError::PropertyGroupLookup(map.next_value()?)),
+                            None => Err(de::Error::missing_field("property_group_lookup")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RemovePropertiesError::PropertyGroupLookup(map.next_value()?))
                     }
                     _ => Ok(RemovePropertiesError::Other)
                 }
@@ -7258,16 +7293,18 @@ impl<'de> ::serde::de::Deserialize<'de> for RestoreError {
                 };
                 match tag {
                     "path_lookup" => {
-                        if map.next_key()? != Some("path_lookup") {
-                            return Err(de::Error::missing_field("path_lookup"));
+                        match map.next_key()? {
+                            Some("path_lookup") => Ok(RestoreError::PathLookup(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path_lookup")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RestoreError::PathLookup(map.next_value()?))
                     }
                     "path_write" => {
-                        if map.next_key()? != Some("path_write") {
-                            return Err(de::Error::missing_field("path_write"));
+                        match map.next_key()? {
+                            Some("path_write") => Ok(RestoreError::PathWrite(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path_write")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(RestoreError::PathWrite(map.next_value()?))
                     }
                     "invalid_revision" => Ok(RestoreError::InvalidRevision),
                     _ => Ok(RestoreError::Other)
@@ -7439,10 +7476,11 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveCopyReferenceError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(SaveCopyReferenceError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(SaveCopyReferenceError::Path(map.next_value()?))
                     }
                     "invalid_copy_reference" => Ok(SaveCopyReferenceError::InvalidCopyReference),
                     "no_permission" => Ok(SaveCopyReferenceError::NoPermission),
@@ -7697,10 +7735,11 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveUrlError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(SaveUrlError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(SaveUrlError::Path(map.next_value()?))
                     }
                     "download_failed" => Ok(SaveUrlError::DownloadFailed),
                     "invalid_url" => Ok(SaveUrlError::InvalidUrl),
@@ -7793,10 +7832,11 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveUrlJobStatus {
                     "in_progress" => Ok(SaveUrlJobStatus::InProgress),
                     "complete" => Ok(SaveUrlJobStatus::Complete(FileMetadata::internal_deserialize(map)?)),
                     "failed" => {
-                        if map.next_key()? != Some("failed") {
-                            return Err(de::Error::missing_field("failed"));
+                        match map.next_key()? {
+                            Some("failed") => Ok(SaveUrlJobStatus::Failed(map.next_value()?)),
+                            None => Err(de::Error::missing_field("failed")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(SaveUrlJobStatus::Failed(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -7864,10 +7904,11 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveUrlResult {
                 };
                 match tag {
                     "async_job_id" => {
-                        if map.next_key()? != Some("async_job_id") {
-                            return Err(de::Error::missing_field("async_job_id"));
+                        match map.next_key()? {
+                            Some("async_job_id") => Ok(SaveUrlResult::AsyncJobId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("async_job_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(SaveUrlResult::AsyncJobId(map.next_value()?))
                     }
                     "complete" => Ok(SaveUrlResult::Complete(FileMetadata::internal_deserialize(map)?)),
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -8066,10 +8107,11 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(SearchError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(SearchError::Path(map.next_value()?))
                     }
                     _ => Ok(SearchError::Other)
                 }
@@ -8633,10 +8675,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailError {
                 };
                 match tag {
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(ThumbnailError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(ThumbnailError::Path(map.next_value()?))
                     }
                     "unsupported_extension" => Ok(ThumbnailError::UnsupportedExtension),
                     "unsupported_image" => Ok(ThumbnailError::UnsupportedImage),
@@ -8873,25 +8916,28 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {
                 };
                 match tag {
                     "template_not_found" => {
-                        if map.next_key()? != Some("template_not_found") {
-                            return Err(de::Error::missing_field("template_not_found"));
+                        match map.next_key()? {
+                            Some("template_not_found") => Ok(UpdatePropertiesError::TemplateNotFound(map.next_value()?)),
+                            None => Err(de::Error::missing_field("template_not_found")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UpdatePropertiesError::TemplateNotFound(map.next_value()?))
                     }
                     "restricted_content" => Ok(UpdatePropertiesError::RestrictedContent),
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(UpdatePropertiesError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UpdatePropertiesError::Path(map.next_value()?))
                     }
                     "property_field_too_large" => Ok(UpdatePropertiesError::PropertyFieldTooLarge),
                     "does_not_fit_template" => Ok(UpdatePropertiesError::DoesNotFitTemplate),
                     "property_group_lookup" => {
-                        if map.next_key()? != Some("property_group_lookup") {
-                            return Err(de::Error::missing_field("property_group_lookup"));
+                        match map.next_key()? {
+                            Some("property_group_lookup") => Ok(UpdatePropertiesError::PropertyGroupLookup(map.next_value()?)),
+                            None => Err(de::Error::missing_field("property_group_lookup")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UpdatePropertiesError::PropertyGroupLookup(map.next_value()?))
                     }
                     _ => Ok(UpdatePropertiesError::Other)
                 }
@@ -9141,10 +9187,11 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadErrorWithProperties {
                 match tag {
                     "path" => Ok(UploadErrorWithProperties::Path(UploadWriteFailed::internal_deserialize(map)?)),
                     "properties_error" => {
-                        if map.next_key()? != Some("properties_error") {
-                            return Err(de::Error::missing_field("properties_error"));
+                        match map.next_key()? {
+                            Some("properties_error") => Ok(UploadErrorWithProperties::PropertiesError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("properties_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UploadErrorWithProperties::PropertiesError(map.next_value()?))
                     }
                     _ => Ok(UploadErrorWithProperties::Other)
                 }
@@ -9593,10 +9640,11 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchLaunch {
                 };
                 match tag {
                     "async_job_id" => {
-                        if map.next_key()? != Some("async_job_id") {
-                            return Err(de::Error::missing_field("async_job_id"));
+                        match map.next_key()? {
+                            Some("async_job_id") => Ok(UploadSessionFinishBatchLaunch::AsyncJobId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("async_job_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UploadSessionFinishBatchLaunch::AsyncJobId(map.next_value()?))
                     }
                     "complete" => Ok(UploadSessionFinishBatchLaunch::Complete(UploadSessionFinishBatchResult::internal_deserialize(map)?)),
                     _ => Ok(UploadSessionFinishBatchLaunch::Other)
@@ -9728,10 +9776,11 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchResultEntry 
                 match tag {
                     "success" => Ok(UploadSessionFinishBatchResultEntry::Success(FileMetadata::internal_deserialize(map)?)),
                     "failure" => {
-                        if map.next_key()? != Some("failure") {
-                            return Err(de::Error::missing_field("failure"));
+                        match map.next_key()? {
+                            Some("failure") => Ok(UploadSessionFinishBatchResultEntry::Failure(map.next_value()?)),
+                            None => Err(de::Error::missing_field("failure")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UploadSessionFinishBatchResultEntry::Failure(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -9798,16 +9847,18 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                 };
                 match tag {
                     "lookup_failed" => {
-                        if map.next_key()? != Some("lookup_failed") {
-                            return Err(de::Error::missing_field("lookup_failed"));
+                        match map.next_key()? {
+                            Some("lookup_failed") => Ok(UploadSessionFinishError::LookupFailed(map.next_value()?)),
+                            None => Err(de::Error::missing_field("lookup_failed")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UploadSessionFinishError::LookupFailed(map.next_value()?))
                     }
                     "path" => {
-                        if map.next_key()? != Some("path") {
-                            return Err(de::Error::missing_field("path"));
+                        match map.next_key()? {
+                            Some("path") => Ok(UploadSessionFinishError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UploadSessionFinishError::Path(map.next_value()?))
                     }
                     "too_many_shared_folder_targets" => Ok(UploadSessionFinishError::TooManySharedFolderTargets),
                     "too_many_write_operations" => Ok(UploadSessionFinishError::TooManyWriteOperations),
@@ -10486,16 +10537,18 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteError {
                 };
                 match tag {
                     "malformed_path" => {
-                        if map.next_key()? != Some("malformed_path") {
-                            return Err(de::Error::missing_field("malformed_path"));
+                        match map.next_key()? {
+                            Some("malformed_path") => Ok(WriteError::MalformedPath(map.next_value()?)),
+                            None => Ok(WriteError::MalformedPath(None)),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(WriteError::MalformedPath(map.next_value()?))
                     }
                     "conflict" => {
-                        if map.next_key()? != Some("conflict") {
-                            return Err(de::Error::missing_field("conflict"));
+                        match map.next_key()? {
+                            Some("conflict") => Ok(WriteError::Conflict(map.next_value()?)),
+                            None => Err(de::Error::missing_field("conflict")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(WriteError::Conflict(map.next_value()?))
                     }
                     "no_write_permission" => Ok(WriteError::NoWritePermission),
                     "insufficient_space" => Ok(WriteError::InsufficientSpace),
@@ -10617,10 +10670,11 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteMode {
                     "add" => Ok(WriteMode::Add),
                     "overwrite" => Ok(WriteMode::Overwrite),
                     "update" => {
-                        if map.next_key()? != Some("update") {
-                            return Err(de::Error::missing_field("update"));
+                        match map.next_key()? {
+                            Some("update") => Ok(WriteMode::Update(map.next_value()?)),
+                            None => Err(de::Error::missing_field("update")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(WriteMode::Update(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }

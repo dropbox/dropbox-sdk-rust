@@ -1046,22 +1046,25 @@ impl<'de> ::serde::de::Deserialize<'de> for BaseTeamFolderError {
                 };
                 match tag {
                     "access_error" => {
-                        if map.next_key()? != Some("access_error") {
-                            return Err(de::Error::missing_field("access_error"));
+                        match map.next_key()? {
+                            Some("access_error") => Ok(BaseTeamFolderError::AccessError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("access_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(BaseTeamFolderError::AccessError(map.next_value()?))
                     }
                     "status_error" => {
-                        if map.next_key()? != Some("status_error") {
-                            return Err(de::Error::missing_field("status_error"));
+                        match map.next_key()? {
+                            Some("status_error") => Ok(BaseTeamFolderError::StatusError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("status_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(BaseTeamFolderError::StatusError(map.next_value()?))
                     }
                     "team_shared_dropbox_error" => {
-                        if map.next_key()? != Some("team_shared_dropbox_error") {
-                            return Err(de::Error::missing_field("team_shared_dropbox_error"));
+                        match map.next_key()? {
+                            Some("team_shared_dropbox_error") => Ok(BaseTeamFolderError::TeamSharedDropboxError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("team_shared_dropbox_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(BaseTeamFolderError::TeamSharedDropboxError(map.next_value()?))
                     }
                     _ => Ok(BaseTeamFolderError::Other)
                 }
@@ -1993,16 +1996,18 @@ impl<'de> ::serde::de::Deserialize<'de> for FeatureValue {
                 };
                 match tag {
                     "upload_api_rate_limit" => {
-                        if map.next_key()? != Some("upload_api_rate_limit") {
-                            return Err(de::Error::missing_field("upload_api_rate_limit"));
+                        match map.next_key()? {
+                            Some("upload_api_rate_limit") => Ok(FeatureValue::UploadApiRateLimit(map.next_value()?)),
+                            None => Err(de::Error::missing_field("upload_api_rate_limit")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(FeatureValue::UploadApiRateLimit(map.next_value()?))
                     }
                     "has_team_shared_dropbox" => {
-                        if map.next_key()? != Some("has_team_shared_dropbox") {
-                            return Err(de::Error::missing_field("has_team_shared_dropbox"));
+                        match map.next_key()? {
+                            Some("has_team_shared_dropbox") => Ok(FeatureValue::HasTeamSharedDropbox(map.next_value()?)),
+                            None => Err(de::Error::missing_field("has_team_shared_dropbox")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(FeatureValue::HasTeamSharedDropbox(map.next_value()?))
                     }
                     _ => Ok(FeatureValue::Other)
                 }
@@ -3879,23 +3884,26 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMembersAddError {
                     "duplicate_user" => Ok(GroupMembersAddError::DuplicateUser),
                     "group_not_in_team" => Ok(GroupMembersAddError::GroupNotInTeam),
                     "members_not_in_team" => {
-                        if map.next_key()? != Some("members_not_in_team") {
-                            return Err(de::Error::missing_field("members_not_in_team"));
+                        match map.next_key()? {
+                            Some("members_not_in_team") => Ok(GroupMembersAddError::MembersNotInTeam(map.next_value()?)),
+                            None => Err(de::Error::missing_field("members_not_in_team")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GroupMembersAddError::MembersNotInTeam(map.next_value()?))
                     }
                     "users_not_found" => {
-                        if map.next_key()? != Some("users_not_found") {
-                            return Err(de::Error::missing_field("users_not_found"));
+                        match map.next_key()? {
+                            Some("users_not_found") => Ok(GroupMembersAddError::UsersNotFound(map.next_value()?)),
+                            None => Err(de::Error::missing_field("users_not_found")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GroupMembersAddError::UsersNotFound(map.next_value()?))
                     }
                     "user_must_be_active_to_be_owner" => Ok(GroupMembersAddError::UserMustBeActiveToBeOwner),
                     "user_cannot_be_manager_of_company_managed_group" => {
-                        if map.next_key()? != Some("user_cannot_be_manager_of_company_managed_group") {
-                            return Err(de::Error::missing_field("user_cannot_be_manager_of_company_managed_group"));
+                        match map.next_key()? {
+                            Some("user_cannot_be_manager_of_company_managed_group") => Ok(GroupMembersAddError::UserCannotBeManagerOfCompanyManagedGroup(map.next_value()?)),
+                            None => Err(de::Error::missing_field("user_cannot_be_manager_of_company_managed_group")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GroupMembersAddError::UserCannotBeManagerOfCompanyManagedGroup(map.next_value()?))
                     }
                     _ => Ok(GroupMembersAddError::Other)
                 }
@@ -4213,16 +4221,18 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMembersRemoveError {
                     "member_not_in_group" => Ok(GroupMembersRemoveError::MemberNotInGroup),
                     "group_not_in_team" => Ok(GroupMembersRemoveError::GroupNotInTeam),
                     "members_not_in_team" => {
-                        if map.next_key()? != Some("members_not_in_team") {
-                            return Err(de::Error::missing_field("members_not_in_team"));
+                        match map.next_key()? {
+                            Some("members_not_in_team") => Ok(GroupMembersRemoveError::MembersNotInTeam(map.next_value()?)),
+                            None => Err(de::Error::missing_field("members_not_in_team")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GroupMembersRemoveError::MembersNotInTeam(map.next_value()?))
                     }
                     "users_not_found" => {
-                        if map.next_key()? != Some("users_not_found") {
-                            return Err(de::Error::missing_field("users_not_found"));
+                        match map.next_key()? {
+                            Some("users_not_found") => Ok(GroupMembersRemoveError::UsersNotFound(map.next_value()?)),
+                            None => Err(de::Error::missing_field("users_not_found")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GroupMembersRemoveError::UsersNotFound(map.next_value()?))
                     }
                     _ => Ok(GroupMembersRemoveError::Other)
                 }
@@ -4609,16 +4619,18 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupSelector {
                 };
                 match tag {
                     "group_id" => {
-                        if map.next_key()? != Some("group_id") {
-                            return Err(de::Error::missing_field("group_id"));
+                        match map.next_key()? {
+                            Some("group_id") => Ok(GroupSelector::GroupId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("group_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GroupSelector::GroupId(map.next_value()?))
                     }
                     "group_external_id" => {
-                        if map.next_key()? != Some("group_external_id") {
-                            return Err(de::Error::missing_field("group_external_id"));
+                        match map.next_key()? {
+                            Some("group_external_id") => Ok(GroupSelector::GroupExternalId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("group_external_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GroupSelector::GroupExternalId(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -5126,10 +5138,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupsGetInfoItem {
                 };
                 match tag {
                     "id_not_found" => {
-                        if map.next_key()? != Some("id_not_found") {
-                            return Err(de::Error::missing_field("id_not_found"));
+                        match map.next_key()? {
+                            Some("id_not_found") => Ok(GroupsGetInfoItem::IdNotFound(map.next_value()?)),
+                            None => Err(de::Error::missing_field("id_not_found")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GroupsGetInfoItem::IdNotFound(map.next_value()?))
                     }
                     "group_info" => Ok(GroupsGetInfoItem::GroupInfo(GroupFullInfo::internal_deserialize(map)?)),
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -5888,16 +5901,18 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupsSelector {
                 };
                 match tag {
                     "group_ids" => {
-                        if map.next_key()? != Some("group_ids") {
-                            return Err(de::Error::missing_field("group_ids"));
+                        match map.next_key()? {
+                            Some("group_ids") => Ok(GroupsSelector::GroupIds(map.next_value()?)),
+                            None => Err(de::Error::missing_field("group_ids")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GroupsSelector::GroupIds(map.next_value()?))
                     }
                     "group_external_ids" => {
-                        if map.next_key()? != Some("group_external_ids") {
-                            return Err(de::Error::missing_field("group_external_ids"));
+                        match map.next_key()? {
+                            Some("group_external_ids") => Ok(GroupsSelector::GroupExternalIds(map.next_value()?)),
+                            None => Err(de::Error::missing_field("group_external_ids")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GroupsSelector::GroupExternalIds(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -5957,10 +5972,11 @@ impl<'de> ::serde::de::Deserialize<'de> for HasTeamSharedDropboxValue {
                 };
                 match tag {
                     "has_team_shared_dropbox" => {
-                        if map.next_key()? != Some("has_team_shared_dropbox") {
-                            return Err(de::Error::missing_field("has_team_shared_dropbox"));
+                        match map.next_key()? {
+                            Some("has_team_shared_dropbox") => Ok(HasTeamSharedDropboxValue::HasTeamSharedDropbox(map.next_value()?)),
+                            None => Err(de::Error::missing_field("has_team_shared_dropbox")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(HasTeamSharedDropboxValue::HasTeamSharedDropbox(map.next_value()?))
                     }
                     _ => Ok(HasTeamSharedDropboxValue::Other)
                 }
@@ -7893,64 +7909,74 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberAddResult {
                 match tag {
                     "success" => Ok(MemberAddResult::Success(TeamMemberInfo::internal_deserialize(map)?)),
                     "team_license_limit" => {
-                        if map.next_key()? != Some("team_license_limit") {
-                            return Err(de::Error::missing_field("team_license_limit"));
+                        match map.next_key()? {
+                            Some("team_license_limit") => Ok(MemberAddResult::TeamLicenseLimit(map.next_value()?)),
+                            None => Err(de::Error::missing_field("team_license_limit")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MemberAddResult::TeamLicenseLimit(map.next_value()?))
                     }
                     "free_team_member_limit_reached" => {
-                        if map.next_key()? != Some("free_team_member_limit_reached") {
-                            return Err(de::Error::missing_field("free_team_member_limit_reached"));
+                        match map.next_key()? {
+                            Some("free_team_member_limit_reached") => Ok(MemberAddResult::FreeTeamMemberLimitReached(map.next_value()?)),
+                            None => Err(de::Error::missing_field("free_team_member_limit_reached")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MemberAddResult::FreeTeamMemberLimitReached(map.next_value()?))
                     }
                     "user_already_on_team" => {
-                        if map.next_key()? != Some("user_already_on_team") {
-                            return Err(de::Error::missing_field("user_already_on_team"));
+                        match map.next_key()? {
+                            Some("user_already_on_team") => Ok(MemberAddResult::UserAlreadyOnTeam(map.next_value()?)),
+                            None => Err(de::Error::missing_field("user_already_on_team")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MemberAddResult::UserAlreadyOnTeam(map.next_value()?))
                     }
                     "user_on_another_team" => {
-                        if map.next_key()? != Some("user_on_another_team") {
-                            return Err(de::Error::missing_field("user_on_another_team"));
+                        match map.next_key()? {
+                            Some("user_on_another_team") => Ok(MemberAddResult::UserOnAnotherTeam(map.next_value()?)),
+                            None => Err(de::Error::missing_field("user_on_another_team")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MemberAddResult::UserOnAnotherTeam(map.next_value()?))
                     }
                     "user_already_paired" => {
-                        if map.next_key()? != Some("user_already_paired") {
-                            return Err(de::Error::missing_field("user_already_paired"));
+                        match map.next_key()? {
+                            Some("user_already_paired") => Ok(MemberAddResult::UserAlreadyPaired(map.next_value()?)),
+                            None => Err(de::Error::missing_field("user_already_paired")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MemberAddResult::UserAlreadyPaired(map.next_value()?))
                     }
                     "user_migration_failed" => {
-                        if map.next_key()? != Some("user_migration_failed") {
-                            return Err(de::Error::missing_field("user_migration_failed"));
+                        match map.next_key()? {
+                            Some("user_migration_failed") => Ok(MemberAddResult::UserMigrationFailed(map.next_value()?)),
+                            None => Err(de::Error::missing_field("user_migration_failed")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MemberAddResult::UserMigrationFailed(map.next_value()?))
                     }
                     "duplicate_external_member_id" => {
-                        if map.next_key()? != Some("duplicate_external_member_id") {
-                            return Err(de::Error::missing_field("duplicate_external_member_id"));
+                        match map.next_key()? {
+                            Some("duplicate_external_member_id") => Ok(MemberAddResult::DuplicateExternalMemberId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("duplicate_external_member_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MemberAddResult::DuplicateExternalMemberId(map.next_value()?))
                     }
                     "duplicate_member_persistent_id" => {
-                        if map.next_key()? != Some("duplicate_member_persistent_id") {
-                            return Err(de::Error::missing_field("duplicate_member_persistent_id"));
+                        match map.next_key()? {
+                            Some("duplicate_member_persistent_id") => Ok(MemberAddResult::DuplicateMemberPersistentId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("duplicate_member_persistent_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MemberAddResult::DuplicateMemberPersistentId(map.next_value()?))
                     }
                     "persistent_id_disabled" => {
-                        if map.next_key()? != Some("persistent_id_disabled") {
-                            return Err(de::Error::missing_field("persistent_id_disabled"));
+                        match map.next_key()? {
+                            Some("persistent_id_disabled") => Ok(MemberAddResult::PersistentIdDisabled(map.next_value()?)),
+                            None => Err(de::Error::missing_field("persistent_id_disabled")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MemberAddResult::PersistentIdDisabled(map.next_value()?))
                     }
                     "user_creation_failed" => {
-                        if map.next_key()? != Some("user_creation_failed") {
-                            return Err(de::Error::missing_field("user_creation_failed"));
+                        match map.next_key()? {
+                            Some("user_creation_failed") => Ok(MemberAddResult::UserCreationFailed(map.next_value()?)),
+                            None => Err(de::Error::missing_field("user_creation_failed")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MemberAddResult::UserCreationFailed(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -8665,16 +8691,18 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersAddJobStatus {
                 match tag {
                     "in_progress" => Ok(MembersAddJobStatus::InProgress),
                     "complete" => {
-                        if map.next_key()? != Some("complete") {
-                            return Err(de::Error::missing_field("complete"));
+                        match map.next_key()? {
+                            Some("complete") => Ok(MembersAddJobStatus::Complete(map.next_value()?)),
+                            None => Err(de::Error::missing_field("complete")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MembersAddJobStatus::Complete(map.next_value()?))
                     }
                     "failed" => {
-                        if map.next_key()? != Some("failed") {
-                            return Err(de::Error::missing_field("failed"));
+                        match map.next_key()? {
+                            Some("failed") => Ok(MembersAddJobStatus::Failed(map.next_value()?)),
+                            None => Err(de::Error::missing_field("failed")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MembersAddJobStatus::Failed(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -8741,16 +8769,18 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersAddLaunch {
                 };
                 match tag {
                     "async_job_id" => {
-                        if map.next_key()? != Some("async_job_id") {
-                            return Err(de::Error::missing_field("async_job_id"));
+                        match map.next_key()? {
+                            Some("async_job_id") => Ok(MembersAddLaunch::AsyncJobId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("async_job_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MembersAddLaunch::AsyncJobId(map.next_value()?))
                     }
                     "complete" => {
-                        if map.next_key()? != Some("complete") {
-                            return Err(de::Error::missing_field("complete"));
+                        match map.next_key()? {
+                            Some("complete") => Ok(MembersAddLaunch::Complete(map.next_value()?)),
+                            None => Err(de::Error::missing_field("complete")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MembersAddLaunch::Complete(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -9098,10 +9128,11 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersGetInfoItem {
                 };
                 match tag {
                     "id_not_found" => {
-                        if map.next_key()? != Some("id_not_found") {
-                            return Err(de::Error::missing_field("id_not_found"));
+                        match map.next_key()? {
+                            Some("id_not_found") => Ok(MembersGetInfoItem::IdNotFound(map.next_value()?)),
+                            None => Err(de::Error::missing_field("id_not_found")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(MembersGetInfoItem::IdNotFound(map.next_value()?))
                     }
                     "member_info" => Ok(MembersGetInfoItem::MemberInfo(TeamMemberInfo::internal_deserialize(map)?)),
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -12668,22 +12699,25 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderActivateError {
                 };
                 match tag {
                     "access_error" => {
-                        if map.next_key()? != Some("access_error") {
-                            return Err(de::Error::missing_field("access_error"));
+                        match map.next_key()? {
+                            Some("access_error") => Ok(TeamFolderActivateError::AccessError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("access_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderActivateError::AccessError(map.next_value()?))
                     }
                     "status_error" => {
-                        if map.next_key()? != Some("status_error") {
-                            return Err(de::Error::missing_field("status_error"));
+                        match map.next_key()? {
+                            Some("status_error") => Ok(TeamFolderActivateError::StatusError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("status_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderActivateError::StatusError(map.next_value()?))
                     }
                     "team_shared_dropbox_error" => {
-                        if map.next_key()? != Some("team_shared_dropbox_error") {
-                            return Err(de::Error::missing_field("team_shared_dropbox_error"));
+                        match map.next_key()? {
+                            Some("team_shared_dropbox_error") => Ok(TeamFolderActivateError::TeamSharedDropboxError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("team_shared_dropbox_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderActivateError::TeamSharedDropboxError(map.next_value()?))
                     }
                     _ => Ok(TeamFolderActivateError::Other)
                 }
@@ -12854,22 +12888,25 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderArchiveError {
                 };
                 match tag {
                     "access_error" => {
-                        if map.next_key()? != Some("access_error") {
-                            return Err(de::Error::missing_field("access_error"));
+                        match map.next_key()? {
+                            Some("access_error") => Ok(TeamFolderArchiveError::AccessError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("access_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderArchiveError::AccessError(map.next_value()?))
                     }
                     "status_error" => {
-                        if map.next_key()? != Some("status_error") {
-                            return Err(de::Error::missing_field("status_error"));
+                        match map.next_key()? {
+                            Some("status_error") => Ok(TeamFolderArchiveError::StatusError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("status_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderArchiveError::StatusError(map.next_value()?))
                     }
                     "team_shared_dropbox_error" => {
-                        if map.next_key()? != Some("team_shared_dropbox_error") {
-                            return Err(de::Error::missing_field("team_shared_dropbox_error"));
+                        match map.next_key()? {
+                            Some("team_shared_dropbox_error") => Ok(TeamFolderArchiveError::TeamSharedDropboxError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("team_shared_dropbox_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderArchiveError::TeamSharedDropboxError(map.next_value()?))
                     }
                     _ => Ok(TeamFolderArchiveError::Other)
                 }
@@ -12955,10 +12992,11 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderArchiveJobStatus {
                     "in_progress" => Ok(TeamFolderArchiveJobStatus::InProgress),
                     "complete" => Ok(TeamFolderArchiveJobStatus::Complete(TeamFolderMetadata::internal_deserialize(map)?)),
                     "failed" => {
-                        if map.next_key()? != Some("failed") {
-                            return Err(de::Error::missing_field("failed"));
+                        match map.next_key()? {
+                            Some("failed") => Ok(TeamFolderArchiveJobStatus::Failed(map.next_value()?)),
+                            None => Err(de::Error::missing_field("failed")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderArchiveJobStatus::Failed(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -13025,10 +13063,11 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderArchiveLaunch {
                 };
                 match tag {
                     "async_job_id" => {
-                        if map.next_key()? != Some("async_job_id") {
-                            return Err(de::Error::missing_field("async_job_id"));
+                        match map.next_key()? {
+                            Some("async_job_id") => Ok(TeamFolderArchiveLaunch::AsyncJobId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("async_job_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderArchiveLaunch::AsyncJobId(map.next_value()?))
                     }
                     "complete" => Ok(TeamFolderArchiveLaunch::Complete(TeamFolderMetadata::internal_deserialize(map)?)),
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -13242,10 +13281,11 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderGetInfoItem {
                 };
                 match tag {
                     "id_not_found" => {
-                        if map.next_key()? != Some("id_not_found") {
-                            return Err(de::Error::missing_field("id_not_found"));
+                        match map.next_key()? {
+                            Some("id_not_found") => Ok(TeamFolderGetInfoItem::IdNotFound(map.next_value()?)),
+                            None => Err(de::Error::missing_field("id_not_found")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderGetInfoItem::IdNotFound(map.next_value()?))
                     }
                     "team_folder_metadata" => Ok(TeamFolderGetInfoItem::TeamFolderMetadata(TeamFolderMetadata::internal_deserialize(map)?)),
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -14007,22 +14047,25 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderPermanentlyDeleteError {
                 };
                 match tag {
                     "access_error" => {
-                        if map.next_key()? != Some("access_error") {
-                            return Err(de::Error::missing_field("access_error"));
+                        match map.next_key()? {
+                            Some("access_error") => Ok(TeamFolderPermanentlyDeleteError::AccessError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("access_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderPermanentlyDeleteError::AccessError(map.next_value()?))
                     }
                     "status_error" => {
-                        if map.next_key()? != Some("status_error") {
-                            return Err(de::Error::missing_field("status_error"));
+                        match map.next_key()? {
+                            Some("status_error") => Ok(TeamFolderPermanentlyDeleteError::StatusError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("status_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderPermanentlyDeleteError::StatusError(map.next_value()?))
                     }
                     "team_shared_dropbox_error" => {
-                        if map.next_key()? != Some("team_shared_dropbox_error") {
-                            return Err(de::Error::missing_field("team_shared_dropbox_error"));
+                        match map.next_key()? {
+                            Some("team_shared_dropbox_error") => Ok(TeamFolderPermanentlyDeleteError::TeamSharedDropboxError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("team_shared_dropbox_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderPermanentlyDeleteError::TeamSharedDropboxError(map.next_value()?))
                     }
                     _ => Ok(TeamFolderPermanentlyDeleteError::Other)
                 }
@@ -14193,22 +14236,25 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderRenameError {
                 };
                 match tag {
                     "access_error" => {
-                        if map.next_key()? != Some("access_error") {
-                            return Err(de::Error::missing_field("access_error"));
+                        match map.next_key()? {
+                            Some("access_error") => Ok(TeamFolderRenameError::AccessError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("access_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderRenameError::AccessError(map.next_value()?))
                     }
                     "status_error" => {
-                        if map.next_key()? != Some("status_error") {
-                            return Err(de::Error::missing_field("status_error"));
+                        match map.next_key()? {
+                            Some("status_error") => Ok(TeamFolderRenameError::StatusError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("status_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderRenameError::StatusError(map.next_value()?))
                     }
                     "team_shared_dropbox_error" => {
-                        if map.next_key()? != Some("team_shared_dropbox_error") {
-                            return Err(de::Error::missing_field("team_shared_dropbox_error"));
+                        match map.next_key()? {
+                            Some("team_shared_dropbox_error") => Ok(TeamFolderRenameError::TeamSharedDropboxError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("team_shared_dropbox_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(TeamFolderRenameError::TeamSharedDropboxError(map.next_value()?))
                     }
                     "invalid_folder_name" => Ok(TeamFolderRenameError::InvalidFolderName),
                     "folder_name_already_used" => Ok(TeamFolderRenameError::FolderNameAlreadyUsed),
@@ -15673,10 +15719,11 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadApiRateLimitValue {
                 match tag {
                     "unlimited" => Ok(UploadApiRateLimitValue::Unlimited),
                     "limit" => {
-                        if map.next_key()? != Some("limit") {
-                            return Err(de::Error::missing_field("limit"));
+                        match map.next_key()? {
+                            Some("limit") => Ok(UploadApiRateLimitValue::Limit(map.next_value()?)),
+                            None => Err(de::Error::missing_field("limit")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UploadApiRateLimitValue::Limit(map.next_value()?))
                     }
                     _ => Ok(UploadApiRateLimitValue::Other)
                 }
@@ -15737,22 +15784,25 @@ impl<'de> ::serde::de::Deserialize<'de> for UserSelectorArg {
                 };
                 match tag {
                     "team_member_id" => {
-                        if map.next_key()? != Some("team_member_id") {
-                            return Err(de::Error::missing_field("team_member_id"));
+                        match map.next_key()? {
+                            Some("team_member_id") => Ok(UserSelectorArg::TeamMemberId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("team_member_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UserSelectorArg::TeamMemberId(map.next_value()?))
                     }
                     "external_id" => {
-                        if map.next_key()? != Some("external_id") {
-                            return Err(de::Error::missing_field("external_id"));
+                        match map.next_key()? {
+                            Some("external_id") => Ok(UserSelectorArg::ExternalId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("external_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UserSelectorArg::ExternalId(map.next_value()?))
                     }
                     "email" => {
-                        if map.next_key()? != Some("email") {
-                            return Err(de::Error::missing_field("email"));
+                        match map.next_key()? {
+                            Some("email") => Ok(UserSelectorArg::Email(map.next_value()?)),
+                            None => Err(de::Error::missing_field("email")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UserSelectorArg::Email(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
@@ -15884,22 +15934,25 @@ impl<'de> ::serde::de::Deserialize<'de> for UsersSelectorArg {
                 };
                 match tag {
                     "team_member_ids" => {
-                        if map.next_key()? != Some("team_member_ids") {
-                            return Err(de::Error::missing_field("team_member_ids"));
+                        match map.next_key()? {
+                            Some("team_member_ids") => Ok(UsersSelectorArg::TeamMemberIds(map.next_value()?)),
+                            None => Err(de::Error::missing_field("team_member_ids")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UsersSelectorArg::TeamMemberIds(map.next_value()?))
                     }
                     "external_ids" => {
-                        if map.next_key()? != Some("external_ids") {
-                            return Err(de::Error::missing_field("external_ids"));
+                        match map.next_key()? {
+                            Some("external_ids") => Ok(UsersSelectorArg::ExternalIds(map.next_value()?)),
+                            None => Err(de::Error::missing_field("external_ids")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UsersSelectorArg::ExternalIds(map.next_value()?))
                     }
                     "emails" => {
-                        if map.next_key()? != Some("emails") {
-                            return Err(de::Error::missing_field("emails"));
+                        match map.next_key()? {
+                            Some("emails") => Ok(UsersSelectorArg::Emails(map.next_value()?)),
+                            None => Err(de::Error::missing_field("emails")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(UsersSelectorArg::Emails(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }

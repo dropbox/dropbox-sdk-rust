@@ -1223,10 +1223,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListDocsCursorError {
                 };
                 match tag {
                     "cursor_error" => {
-                        if map.next_key()? != Some("cursor_error") {
-                            return Err(de::Error::missing_field("cursor_error"));
+                        match map.next_key()? {
+                            Some("cursor_error") => Ok(ListDocsCursorError::CursorError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("cursor_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(ListDocsCursorError::CursorError(map.next_value()?))
                     }
                     _ => Ok(ListDocsCursorError::Other)
                 }
@@ -1767,10 +1768,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListUsersCursorError {
                     "insufficient_permissions" => Ok(ListUsersCursorError::InsufficientPermissions),
                     "doc_not_found" => Ok(ListUsersCursorError::DocNotFound),
                     "cursor_error" => {
-                        if map.next_key()? != Some("cursor_error") {
-                            return Err(de::Error::missing_field("cursor_error"));
+                        match map.next_key()? {
+                            Some("cursor_error") => Ok(ListUsersCursorError::CursorError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("cursor_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(ListUsersCursorError::CursorError(map.next_value()?))
                     }
                     _ => Ok(ListUsersCursorError::Other)
                 }

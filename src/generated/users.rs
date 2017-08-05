@@ -878,10 +878,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchError {
                 };
                 match tag {
                     "no_account" => {
-                        if map.next_key()? != Some("no_account") {
-                            return Err(de::Error::missing_field("no_account"));
+                        match map.next_key()? {
+                            Some("no_account") => Ok(GetAccountBatchError::NoAccount(map.next_value()?)),
+                            None => Err(de::Error::missing_field("no_account")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(GetAccountBatchError::NoAccount(map.next_value()?))
                     }
                     _ => Ok(GetAccountBatchError::Other)
                 }

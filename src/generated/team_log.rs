@@ -56,10 +56,11 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessMethodLogInfo {
                 };
                 match tag {
                     "end_user" => {
-                        if map.next_key()? != Some("end_user") {
-                            return Err(de::Error::missing_field("end_user"));
+                        match map.next_key()? {
+                            Some("end_user") => Ok(AccessMethodLogInfo::EndUser(map.next_value()?)),
+                            None => Err(de::Error::missing_field("end_user")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(AccessMethodLogInfo::EndUser(map.next_value()?))
                     }
                     "sign_in_as" => Ok(AccessMethodLogInfo::SignInAs(WebSessionLogInfo::internal_deserialize(map)?)),
                     "content_manager" => Ok(AccessMethodLogInfo::ContentManager(WebSessionLogInfo::internal_deserialize(map)?)),
@@ -603,22 +604,25 @@ impl<'de> ::serde::de::Deserialize<'de> for ActorLogInfo {
                 };
                 match tag {
                     "user" => {
-                        if map.next_key()? != Some("user") {
-                            return Err(de::Error::missing_field("user"));
+                        match map.next_key()? {
+                            Some("user") => Ok(ActorLogInfo::User(map.next_value()?)),
+                            None => Err(de::Error::missing_field("user")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(ActorLogInfo::User(map.next_value()?))
                     }
                     "admin" => {
-                        if map.next_key()? != Some("admin") {
-                            return Err(de::Error::missing_field("admin"));
+                        match map.next_key()? {
+                            Some("admin") => Ok(ActorLogInfo::Admin(map.next_value()?)),
+                            None => Err(de::Error::missing_field("admin")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(ActorLogInfo::Admin(map.next_value()?))
                     }
                     "app" => {
-                        if map.next_key()? != Some("app") {
-                            return Err(de::Error::missing_field("app"));
+                        match map.next_key()? {
+                            Some("app") => Ok(ActorLogInfo::App(map.next_value()?)),
+                            None => Err(de::Error::missing_field("app")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(ActorLogInfo::App(map.next_value()?))
                     }
                     "reseller" => Ok(ActorLogInfo::Reseller(ResellerLogInfo::internal_deserialize(map)?)),
                     "dropbox" => Ok(ActorLogInfo::Dropbox),
@@ -21282,10 +21286,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ParticipantLogInfo {
                 };
                 match tag {
                     "user" => {
-                        if map.next_key()? != Some("user") {
-                            return Err(de::Error::missing_field("user"));
+                        match map.next_key()? {
+                            Some("user") => Ok(ParticipantLogInfo::User(map.next_value()?)),
+                            None => Err(de::Error::missing_field("user")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(ParticipantLogInfo::User(map.next_value()?))
                     }
                     "group" => Ok(ParticipantLogInfo::Group(GroupLogInfo::internal_deserialize(map)?)),
                     _ => Ok(ParticipantLogInfo::Other)

@@ -286,10 +286,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifyPropertyTemplateError {
                 };
                 match tag {
                     "template_not_found" => {
-                        if map.next_key()? != Some("template_not_found") {
-                            return Err(de::Error::missing_field("template_not_found"));
+                        match map.next_key()? {
+                            Some("template_not_found") => Ok(ModifyPropertyTemplateError::TemplateNotFound(map.next_value()?)),
+                            None => Err(de::Error::missing_field("template_not_found")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(ModifyPropertyTemplateError::TemplateNotFound(map.next_value()?))
                     }
                     "restricted_content" => Ok(ModifyPropertyTemplateError::RestrictedContent),
                     "conflicting_property_names" => Ok(ModifyPropertyTemplateError::ConflictingPropertyNames),
@@ -764,10 +765,11 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyTemplateError {
                 };
                 match tag {
                     "template_not_found" => {
-                        if map.next_key()? != Some("template_not_found") {
-                            return Err(de::Error::missing_field("template_not_found"));
+                        match map.next_key()? {
+                            Some("template_not_found") => Ok(PropertyTemplateError::TemplateNotFound(map.next_value()?)),
+                            None => Err(de::Error::missing_field("template_not_found")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(PropertyTemplateError::TemplateNotFound(map.next_value()?))
                     }
                     "restricted_content" => Ok(PropertyTemplateError::RestrictedContent),
                     _ => Ok(PropertyTemplateError::Other)

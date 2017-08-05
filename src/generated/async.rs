@@ -38,10 +38,11 @@ impl<'de> ::serde::de::Deserialize<'de> for LaunchEmptyResult {
                 };
                 match tag {
                     "async_job_id" => {
-                        if map.next_key()? != Some("async_job_id") {
-                            return Err(de::Error::missing_field("async_job_id"));
+                        match map.next_key()? {
+                            Some("async_job_id") => Ok(LaunchEmptyResult::AsyncJobId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("async_job_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(LaunchEmptyResult::AsyncJobId(map.next_value()?))
                     }
                     "complete" => Ok(LaunchEmptyResult::Complete),
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -104,10 +105,11 @@ impl<'de> ::serde::de::Deserialize<'de> for LaunchResultBase {
                 };
                 match tag {
                     "async_job_id" => {
-                        if map.next_key()? != Some("async_job_id") {
-                            return Err(de::Error::missing_field("async_job_id"));
+                        match map.next_key()? {
+                            Some("async_job_id") => Ok(LaunchResultBase::AsyncJobId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("async_job_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(LaunchResultBase::AsyncJobId(map.next_value()?))
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }

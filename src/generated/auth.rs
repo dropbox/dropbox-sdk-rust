@@ -45,16 +45,18 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessError {
                 };
                 match tag {
                     "invalid_account_type" => {
-                        if map.next_key()? != Some("invalid_account_type") {
-                            return Err(de::Error::missing_field("invalid_account_type"));
+                        match map.next_key()? {
+                            Some("invalid_account_type") => Ok(AccessError::InvalidAccountType(map.next_value()?)),
+                            None => Err(de::Error::missing_field("invalid_account_type")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(AccessError::InvalidAccountType(map.next_value()?))
                     }
                     "paper_access_denied" => {
-                        if map.next_key()? != Some("paper_access_denied") {
-                            return Err(de::Error::missing_field("paper_access_denied"));
+                        match map.next_key()? {
+                            Some("paper_access_denied") => Ok(AccessError::PaperAccessDenied(map.next_value()?)),
+                            None => Err(de::Error::missing_field("paper_access_denied")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(AccessError::PaperAccessDenied(map.next_value()?))
                     }
                     _ => Ok(AccessError::Other)
                 }

@@ -127,17 +127,19 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRoot {
                     "home" => Ok(PathRoot::Home),
                     "member_home" => Ok(PathRoot::MemberHome),
                     "team" => {
-                        if map.next_key()? != Some("team") {
-                            return Err(de::Error::missing_field("team"));
+                        match map.next_key()? {
+                            Some("team") => Ok(PathRoot::Team(map.next_value()?)),
+                            None => Err(de::Error::missing_field("team")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(PathRoot::Team(map.next_value()?))
                     }
                     "user_home" => Ok(PathRoot::UserHome),
                     "namespace_id" => {
-                        if map.next_key()? != Some("namespace_id") {
-                            return Err(de::Error::missing_field("namespace_id"));
+                        match map.next_key()? {
+                            Some("namespace_id") => Ok(PathRoot::NamespaceId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("namespace_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
-                        Ok(PathRoot::NamespaceId(map.next_value()?))
                     }
                     _ => Ok(PathRoot::Other)
                 }
