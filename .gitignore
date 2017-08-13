@@ -4,3 +4,4 @@ Cargo.lock
 *.pyc
 .env
 .vscode/
+tests/generated/
