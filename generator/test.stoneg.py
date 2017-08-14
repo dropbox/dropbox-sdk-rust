@@ -58,51 +58,60 @@ class TestGenerator(CodeGenerator):
                     # Alternatively, it might be sufficient to do the deserializer test, and just
                     # make sure that the data can round-trip through the serializer unchanged.
 
-                    with self._test_fn(type_name):
-                        # walk the fields down to the primitive leaves
-                        # for each leaf, figure out if it's a boolean, string, or number
-                        #   and generate a value and a path expression
-                        # assemble a python object from these
-                        # serialize the python object to json
-                        # emit the json to the test
-                        # emit a deserialize expression to the test
-                        # for each leaf path generated, emit an assertion
-                        # emit a serialize expression followed by another deserialize
-                        # call the leaf assertions again
+                    # walk the fields down to the primitive leaves
+                    # for each leaf, figure out if it's a boolean, string, or number
+                    #   and generate a value and a path expression
+                    # assemble a python object from these
+                    # serialize the python object to json
+                    # emit the json to the test
+                    # emit a deserialize expression to the test
+                    # for each leaf path generated, emit an assertion
+                    # emit a serialize expression followed by another deserialize
+                    # call the leaf assertions again
 
-                        test_value = None
-                        if data_type.is_struct_type(typ):
-                            test_value = TestStruct(self.rust, typ, self.reference_impls)
-                        elif data_type.is_union_type(typ):
-                            pass
-                        else:
-                            print(u'ERROR: type {} is neither struct nor union'.format(typ))
+                    test_value = None
+                    if data_type.is_struct_type(typ):
+                        test_value = TestStruct(self.rust, typ, self.reference_impls)
+                    elif data_type.is_union_type(typ):
+                        pass
+                    else:
+                        print(u'ERROR: type {} is neither struct nor union'.format(typ))
 
-                        if test_value is None or test_value.value is None:
+                    if test_value is None or test_value.value is None:
+                        self.emit(u'#[ignore]')
+                        with self._test_fn(type_name):
                             self.emit(u'// test not implemented')
-                        else:
-                            try:
-                                json = json_encode(
-                                    self.reference_impls[ns.name].__dict__[typ.name + '_validator'],
-                                    test_value.value)
-                            except Exception as e:
-                                print(u'Error serializing {}.{}: {}'.format(
-                                    ns.name, typ.name, e))
+                        self.emit()
+                    else:
+                        try:
+                            json = json_encode(
+                                self.reference_impls[ns.name].__dict__[typ.name + '_validator'],
+                                test_value.value)
+                            with self._test_fn(type_name):
+                                self.emit(u'let json = r#"{}"#;'.format(json))
+                                de = u'serde_json::from_str::<dropbox_sdk::{}::{}>(json).unwrap()'.format(
+                                    ns.name,
+                                    self.rust._struct_name(typ))
+                                if typ.all_fields:
+                                    self.emit(u'let x = {};'.format(de))
+                                    for expr, value in test_value.leaves:
+                                        self.emit(u'assert_eq!(x.{}, {});'.format(
+                                            expr,
+                                            value))
+                                else:
+                                    self.emit(u'{};'.format(de))
+                            self.emit()
+                        except Exception as e:
+                            print(u'Error serializing {}.{}: {}'.format(
+                                ns.name, typ.name, e))
+                            self.emit(u'#[ignore]')
+                            with self._test_fn(type_name):
                                 self.emit(u'// error generating test: {}'.format(e))
-                                continue # Sad!
-                            self.emit(u'let json = r#"{}"#;'.format(json))
-                            de = u'serde_json::from_str::<dropbox_sdk::{}::{}>(json).unwrap()'.format(
-                                ns.name,
-                                self.rust._struct_name(typ))
-                            if typ.all_fields:
-                                self.emit(u'let x = {};'.format(de))
-                                for expr, value in test_value.leaves:
-                                    self.emit(u'assert_eq!(x.{}, {});'.format(
-                                        expr,
-                                        value))
-                            else:
-                                self.emit(u'{};'.format(de))
-                    self.emit()
+                            self.emit()
+
+                # for typ
+            # .rs test file
+        # for ns
 
         with self.output_to_relative_path('mod.rs'):
             self._emit_header()
@@ -185,7 +194,7 @@ class TestStruct:
             value = True
             self.leaves.append((rust_expr, 'true'))
         elif data_type.is_timestamp_type(typ):
-            value = datetime.datetime.utcfromtimestamp(0)
+            value = datetime.datetime.utcfromtimestamp(2**33 - 1)
             rust_value = u'"{}"'.format(value.strftime(typ.format))
             self.leaves.append((rust_expr + '.as_str()', rust_value))
         elif data_type.is_list_type(typ):
