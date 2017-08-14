@@ -44,30 +44,12 @@ class TestGenerator(CodeGenerator):
                 for typ in ns.data_types:
                     type_name = self.rust._struct_name(typ)
 
-                    # TODO
                     # the general idea here is to instantiate each type using the reference Python
                     # code, put some random data in the fields, serialize it to JSON, emit the
                     # JSON into the Rust test, have Rust deserialize it, and emit assertions that
                     # the fields match.
-
-                    # For testing the serializer, emit code that instantiates each type in Rust,
-                    # fills the fields with random data, serializes to JSON, then calls out to the
-                    # reference Python code to deserialize and assert the fields match, and check
-                    # the result of calling Python.
-
-                    # Alternatively, it might be sufficient to do the deserializer test, and just
-                    # make sure that the data can round-trip through the serializer unchanged.
-
-                    # walk the fields down to the primitive leaves
-                    # for each leaf, figure out if it's a boolean, string, or number
-                    #   and generate a value and a path expression
-                    # assemble a python object from these
-                    # serialize the python object to json
-                    # emit the json to the test
-                    # emit a deserialize expression to the test
-                    # for each leaf path generated, emit an assertion
-                    # emit a serialize expression followed by another deserialize
-                    # call the leaf assertions again
+                    # Then have Rust re-serialize to JSON and desereialize it again, then check the
+                    # fields of the newly-deserialized struct. This verifies Rust's serializer.
 
                     test_value = None
                     if data_type.is_struct_type(typ):
@@ -89,15 +71,21 @@ class TestGenerator(CodeGenerator):
                                 test_value.value)
                             with self._test_fn(type_name):
                                 self.emit(u'let json = r#"{}"#;'.format(json))
-                                de = u'serde_json::from_str::<dropbox_sdk::{}::{}>(json).unwrap()'.format(
+                                self.emit(u'let x = serde_json::from_str::<dropbox_sdk::{}::{}>(json).unwrap();'.format(
+                                    ns.name,
+                                    self.rust._struct_name(typ)))
+                                for expr, value in test_value.leaves:
+                                    self.emit(u'assert_eq!(x.{}, {});'.format(expr, value))
+
+                                # now serialize it back to JSON, deserialize it again, and test it again.
+                                self.emit(u'let json2 = serde_json::to_string(&x).unwrap();')
+                                de = u'serde_json::from_str::<dropbox_sdk::{}::{}>(&json2).unwrap()'.format(
                                     ns.name,
                                     self.rust._struct_name(typ))
                                 if typ.all_fields:
-                                    self.emit(u'let x = {};'.format(de))
+                                    self.emit(u'let x2 = {};'.format(de))
                                     for expr, value in test_value.leaves:
-                                        self.emit(u'assert_eq!(x.{}, {});'.format(
-                                            expr,
-                                            value))
+                                        self.emit(u'assert_eq!(x2.{}, {});'.format(expr, value))
                                 else:
                                     self.emit(u'{};'.format(de))
                             self.emit()

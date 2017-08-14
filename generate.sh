@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 function usage() {
     echo "usage: $0 <spec path> [rust | test]"
     exit -1
