@@ -814,7 +814,8 @@ impl<'de> ::serde::de::Deserialize<'de> for AllowDownloadDisabledDetails {
 impl ::serde::ser::Serialize for AllowDownloadDisabledDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("AllowDownloadDisabledDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("AllowDownloadDisabledDetails", 0)?.end()
     }
 }
 
@@ -863,7 +864,8 @@ impl<'de> ::serde::de::Deserialize<'de> for AllowDownloadEnabledDetails {
 impl ::serde::ser::Serialize for AllowDownloadEnabledDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("AllowDownloadEnabledDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("AllowDownloadEnabledDetails", 0)?.end()
     }
 }
 
@@ -1832,7 +1834,8 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderDetails {
 impl ::serde::ser::Serialize for CreateFolderDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("CreateFolderDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("CreateFolderDetails", 0)?.end()
     }
 }
 
@@ -3302,7 +3305,8 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceManagementDisabledDetails {
 impl ::serde::ser::Serialize for DeviceManagementDisabledDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("DeviceManagementDisabledDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("DeviceManagementDisabledDetails", 0)?.end()
     }
 }
 
@@ -3351,7 +3355,8 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceManagementEnabledDetails {
 impl ::serde::ser::Serialize for DeviceManagementEnabledDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("DeviceManagementEnabledDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("DeviceManagementEnabledDetails", 0)?.end()
     }
 }
 
@@ -3600,7 +3605,8 @@ impl<'de> ::serde::de::Deserialize<'de> for DisabledDomainInvitesDetails {
 impl ::serde::ser::Serialize for DisabledDomainInvitesDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("DisabledDomainInvitesDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("DisabledDomainInvitesDetails", 0)?.end()
     }
 }
 
@@ -3649,7 +3655,8 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesApproveRequestToJoinTea
 impl ::serde::ser::Serialize for DomainInvitesApproveRequestToJoinTeamDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("DomainInvitesApproveRequestToJoinTeamDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("DomainInvitesApproveRequestToJoinTeamDetails", 0)?.end()
     }
 }
 
@@ -3698,7 +3705,8 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesDeclineRequestToJoinTea
 impl ::serde::ser::Serialize for DomainInvitesDeclineRequestToJoinTeamDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("DomainInvitesDeclineRequestToJoinTeamDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("DomainInvitesDeclineRequestToJoinTeamDetails", 0)?.end()
     }
 }
 
@@ -3831,7 +3839,8 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesRequestToJoinTeamDetail
 impl ::serde::ser::Serialize for DomainInvitesRequestToJoinTeamDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("DomainInvitesRequestToJoinTeamDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("DomainInvitesRequestToJoinTeamDetails", 0)?.end()
     }
 }
 
@@ -3880,7 +3889,8 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesSetInviteNewUserPrefToN
 impl ::serde::ser::Serialize for DomainInvitesSetInviteNewUserPrefToNoDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("DomainInvitesSetInviteNewUserPrefToNoDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("DomainInvitesSetInviteNewUserPrefToNoDetails", 0)?.end()
     }
 }
 
@@ -3929,7 +3939,8 @@ impl<'de> ::serde::de::Deserialize<'de> for DomainInvitesSetInviteNewUserPrefToY
 impl ::serde::ser::Serialize for DomainInvitesSetInviteNewUserPrefToYesDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("DomainInvitesSetInviteNewUserPrefToYesDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("DomainInvitesSetInviteNewUserPrefToYesDetails", 0)?.end()
     }
 }
 
@@ -4330,7 +4341,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmAddExceptionDetails {
 impl ::serde::ser::Serialize for EmmAddExceptionDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("EmmAddExceptionDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("EmmAddExceptionDetails", 0)?.end()
     }
 }
 
@@ -4468,7 +4480,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmCreateExceptionsReportDetails {
 impl ::serde::ser::Serialize for EmmCreateExceptionsReportDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("EmmCreateExceptionsReportDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("EmmCreateExceptionsReportDetails", 0)?.end()
     }
 }
 
@@ -4517,7 +4530,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmCreateUsageReportDetails {
 impl ::serde::ser::Serialize for EmmCreateUsageReportDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("EmmCreateUsageReportDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("EmmCreateUsageReportDetails", 0)?.end()
     }
 }
 
@@ -4566,7 +4580,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmLoginSuccessDetails {
 impl ::serde::ser::Serialize for EmmLoginSuccessDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("EmmLoginSuccessDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("EmmLoginSuccessDetails", 0)?.end()
     }
 }
 
@@ -4683,7 +4698,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmRefreshAuthTokenDetails {
 impl ::serde::ser::Serialize for EmmRefreshAuthTokenDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("EmmRefreshAuthTokenDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("EmmRefreshAuthTokenDetails", 0)?.end()
     }
 }
 
@@ -4733,7 +4749,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmRemoveExceptionDetails {
 impl ::serde::ser::Serialize for EmmRemoveExceptionDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("EmmRemoveExceptionDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("EmmRemoveExceptionDetails", 0)?.end()
     }
 }
 
@@ -4782,7 +4799,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EnabledDomainInvitesDetails {
 impl ::serde::ser::Serialize for EnabledDomainInvitesDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("EnabledDomainInvitesDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("EnabledDomainInvitesDetails", 0)?.end()
     }
 }
 
@@ -11017,7 +11035,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileAddDetails {
 impl ::serde::ser::Serialize for FileAddDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FileAddDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FileAddDetails", 0)?.end()
     }
 }
 
@@ -11285,7 +11304,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileDeleteDetails {
 impl ::serde::ser::Serialize for FileDeleteDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FileDeleteDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FileDeleteDetails", 0)?.end()
     }
 }
 
@@ -11334,7 +11354,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileDownloadDetails {
 impl ::serde::ser::Serialize for FileDownloadDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FileDownloadDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FileDownloadDetails", 0)?.end()
     }
 }
 
@@ -11383,7 +11404,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileEditDetails {
 impl ::serde::ser::Serialize for FileEditDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FileEditDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FileEditDetails", 0)?.end()
     }
 }
 
@@ -11432,7 +11454,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileGetCopyReferenceDetails {
 impl ::serde::ser::Serialize for FileGetCopyReferenceDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FileGetCopyReferenceDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FileGetCopyReferenceDetails", 0)?.end()
     }
 }
 
@@ -11855,7 +11878,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FilePermanentlyDeleteDetails {
 impl ::serde::ser::Serialize for FilePermanentlyDeleteDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FilePermanentlyDeleteDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FilePermanentlyDeleteDetails", 0)?.end()
     }
 }
 
@@ -11904,7 +11928,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FilePreviewDetails {
 impl ::serde::ser::Serialize for FilePreviewDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FilePreviewDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FilePreviewDetails", 0)?.end()
     }
 }
 
@@ -12694,7 +12719,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestsEmailsEnabledDetails {
 impl ::serde::ser::Serialize for FileRequestsEmailsEnabledDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FileRequestsEmailsEnabledDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FileRequestsEmailsEnabledDetails", 0)?.end()
     }
 }
 
@@ -12743,7 +12769,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestsEmailsRestrictedToTeamOn
 impl ::serde::ser::Serialize for FileRequestsEmailsRestrictedToTeamOnlyDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FileRequestsEmailsRestrictedToTeamOnlyDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FileRequestsEmailsRestrictedToTeamOnlyDetails", 0)?.end()
     }
 }
 
@@ -12851,7 +12878,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRestoreDetails {
 impl ::serde::ser::Serialize for FileRestoreDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FileRestoreDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FileRestoreDetails", 0)?.end()
     }
 }
 
@@ -12900,7 +12928,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRevertDetails {
 impl ::serde::ser::Serialize for FileRevertDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FileRevertDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FileRevertDetails", 0)?.end()
     }
 }
 
@@ -12949,7 +12978,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRollbackChangesDetails {
 impl ::serde::ser::Serialize for FileRollbackChangesDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FileRollbackChangesDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FileRollbackChangesDetails", 0)?.end()
     }
 }
 
@@ -14495,7 +14525,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupDescriptionUpdatedDetails {
 impl ::serde::ser::Serialize for GroupDescriptionUpdatedDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("GroupDescriptionUpdatedDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("GroupDescriptionUpdatedDetails", 0)?.end()
     }
 }
 
@@ -14856,7 +14887,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMovedDetails {
 impl ::serde::ser::Serialize for GroupMovedDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("GroupMovedDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("GroupMovedDetails", 0)?.end()
     }
 }
 
@@ -14976,7 +15008,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupRemoveMemberDetails {
 impl ::serde::ser::Serialize for GroupRemoveMemberDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("GroupRemoveMemberDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("GroupRemoveMemberDetails", 0)?.end()
     }
 }
 
@@ -15490,7 +15523,8 @@ impl<'de> ::serde::de::Deserialize<'de> for LogoutDetails {
 impl ::serde::ser::Serialize for LogoutDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("LogoutDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("LogoutDetails", 0)?.end()
     }
 }
 
@@ -16059,7 +16093,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberPermanentlyDeleteAccountConten
 impl ::serde::ser::Serialize for MemberPermanentlyDeleteAccountContentsDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("MemberPermanentlyDeleteAccountContentsDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("MemberPermanentlyDeleteAccountContentsDetails", 0)?.end()
     }
 }
 
@@ -16264,7 +16299,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsAddExceptionDetails
 impl ::serde::ser::Serialize for MemberSpaceLimitsAddExceptionDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("MemberSpaceLimitsAddExceptionDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("MemberSpaceLimitsAddExceptionDetails", 0)?.end()
     }
 }
 
@@ -16482,7 +16518,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsRemoveExceptionDeta
 impl ::serde::ser::Serialize for MemberSpaceLimitsRemoveExceptionDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("MemberSpaceLimitsRemoveExceptionDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("MemberSpaceLimitsRemoveExceptionDetails", 0)?.end()
     }
 }
 
@@ -16616,7 +16653,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSuggestDetails {
 impl ::serde::ser::Serialize for MemberSuggestDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("MemberSuggestDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("MemberSuggestDetails", 0)?.end()
     }
 }
 
@@ -17046,7 +17084,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MissingDetails {
 impl ::serde::ser::Serialize for MissingDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("MissingDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("MissingDetails", 0)?.end()
     }
 }
 
@@ -17492,7 +17531,8 @@ impl<'de> ::serde::de::Deserialize<'de> for NoteAclInviteOnlyDetails {
 impl ::serde::ser::Serialize for NoteAclInviteOnlyDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("NoteAclInviteOnlyDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("NoteAclInviteOnlyDetails", 0)?.end()
     }
 }
 
@@ -17541,7 +17581,8 @@ impl<'de> ::serde::de::Deserialize<'de> for NoteAclLinkDetails {
 impl ::serde::ser::Serialize for NoteAclLinkDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("NoteAclLinkDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("NoteAclLinkDetails", 0)?.end()
     }
 }
 
@@ -17590,7 +17631,8 @@ impl<'de> ::serde::de::Deserialize<'de> for NoteAclTeamLinkDetails {
 impl ::serde::ser::Serialize for NoteAclTeamLinkDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("NoteAclTeamLinkDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("NoteAclTeamLinkDetails", 0)?.end()
     }
 }
 
@@ -17639,7 +17681,8 @@ impl<'de> ::serde::de::Deserialize<'de> for NoteShareReceiveDetails {
 impl ::serde::ser::Serialize for NoteShareReceiveDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("NoteShareReceiveDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("NoteShareReceiveDetails", 0)?.end()
     }
 }
 
@@ -17688,7 +17731,8 @@ impl<'de> ::serde::de::Deserialize<'de> for NoteSharedDetails {
 impl ::serde::ser::Serialize for NoteSharedDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("NoteSharedDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("NoteSharedDetails", 0)?.end()
     }
 }
 
@@ -17737,7 +17781,8 @@ impl<'de> ::serde::de::Deserialize<'de> for OpenNoteSharedDetails {
 impl ::serde::ser::Serialize for OpenNoteSharedDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("OpenNoteSharedDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("OpenNoteSharedDetails", 0)?.end()
     }
 }
 
@@ -20564,7 +20609,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperEnabledUsersGroupAdditionDetail
 impl ::serde::ser::Serialize for PaperEnabledUsersGroupAdditionDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("PaperEnabledUsersGroupAdditionDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("PaperEnabledUsersGroupAdditionDetails", 0)?.end()
     }
 }
 
@@ -20613,7 +20659,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperEnabledUsersGroupRemovalDetails
 impl ::serde::ser::Serialize for PaperEnabledUsersGroupRemovalDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("PaperEnabledUsersGroupRemovalDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("PaperEnabledUsersGroupRemovalDetails", 0)?.end()
     }
 }
 
@@ -20662,7 +20709,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperExternalViewAllowDetails {
 impl ::serde::ser::Serialize for PaperExternalViewAllowDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("PaperExternalViewAllowDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("PaperExternalViewAllowDetails", 0)?.end()
     }
 }
 
@@ -20711,7 +20759,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperExternalViewDefaultTeamDetails 
 impl ::serde::ser::Serialize for PaperExternalViewDefaultTeamDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("PaperExternalViewDefaultTeamDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("PaperExternalViewDefaultTeamDetails", 0)?.end()
     }
 }
 
@@ -20760,7 +20809,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperExternalViewForbidDetails {
 impl ::serde::ser::Serialize for PaperExternalViewForbidDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("PaperExternalViewForbidDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("PaperExternalViewForbidDetails", 0)?.end()
     }
 }
 
@@ -21373,7 +21423,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordChangeDetails {
 impl ::serde::ser::Serialize for PasswordChangeDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("PasswordChangeDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("PasswordChangeDetails", 0)?.end()
     }
 }
 
@@ -21493,7 +21544,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordLoginSuccessDetails {
 impl ::serde::ser::Serialize for PasswordLoginSuccessDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("PasswordLoginSuccessDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("PasswordLoginSuccessDetails", 0)?.end()
     }
 }
 
@@ -21542,7 +21594,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordResetAllDetails {
 impl ::serde::ser::Serialize for PasswordResetAllDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("PasswordResetAllDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("PasswordResetAllDetails", 0)?.end()
     }
 }
 
@@ -21591,7 +21644,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordResetDetails {
 impl ::serde::ser::Serialize for PasswordResetDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("PasswordResetDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("PasswordResetDetails", 0)?.end()
     }
 }
 
@@ -22205,7 +22259,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ResellerSupportSessionEndDetails {
 impl ::serde::ser::Serialize for ResellerSupportSessionEndDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("ResellerSupportSessionEndDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("ResellerSupportSessionEndDetails", 0)?.end()
     }
 }
 
@@ -22254,7 +22309,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ResellerSupportSessionStartDetails {
 impl ::serde::ser::Serialize for ResellerSupportSessionStartDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("ResellerSupportSessionStartDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("ResellerSupportSessionStartDetails", 0)?.end()
     }
 }
 
@@ -22588,7 +22644,8 @@ impl<'de> ::serde::de::Deserialize<'de> for SfExternalInviteWarnDetails {
 impl ::serde::ser::Serialize for SfExternalInviteWarnDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("SfExternalInviteWarnDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("SfExternalInviteWarnDetails", 0)?.end()
     }
 }
 
@@ -27182,7 +27239,8 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedNoteOpenedDetails {
 impl ::serde::ser::Serialize for SharedNoteOpenedDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("SharedNoteOpenedDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("SharedNoteOpenedDetails", 0)?.end()
     }
 }
 
@@ -28005,7 +28063,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelGroupShareDetails {
 impl ::serde::ser::Serialize for ShmodelGroupShareDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("ShmodelGroupShareDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("ShmodelGroupShareDetails", 0)?.end()
     }
 }
 
@@ -28054,7 +28113,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelRemoveExpirationDetails {
 impl ::serde::ser::Serialize for ShmodelRemoveExpirationDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("ShmodelRemoveExpirationDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("ShmodelRemoveExpirationDetails", 0)?.end()
     }
 }
 
@@ -28187,7 +28247,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelTeamCopyDetails {
 impl ::serde::ser::Serialize for ShmodelTeamCopyDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("ShmodelTeamCopyDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("ShmodelTeamCopyDetails", 0)?.end()
     }
 }
 
@@ -28236,7 +28297,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelTeamDownloadDetails {
 impl ::serde::ser::Serialize for ShmodelTeamDownloadDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("ShmodelTeamDownloadDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("ShmodelTeamDownloadDetails", 0)?.end()
     }
 }
 
@@ -28285,7 +28347,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelTeamShareDetails {
 impl ::serde::ser::Serialize for ShmodelTeamShareDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("ShmodelTeamShareDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("ShmodelTeamShareDetails", 0)?.end()
     }
 }
 
@@ -28334,7 +28397,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelTeamViewDetails {
 impl ::serde::ser::Serialize for ShmodelTeamViewDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("ShmodelTeamViewDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("ShmodelTeamViewDetails", 0)?.end()
     }
 }
 
@@ -28383,7 +28447,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelVisibilityPasswordDetails {
 impl ::serde::ser::Serialize for ShmodelVisibilityPasswordDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("ShmodelVisibilityPasswordDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("ShmodelVisibilityPasswordDetails", 0)?.end()
     }
 }
 
@@ -28432,7 +28497,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelVisibilityPublicDetails {
 impl ::serde::ser::Serialize for ShmodelVisibilityPublicDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("ShmodelVisibilityPublicDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("ShmodelVisibilityPublicDetails", 0)?.end()
     }
 }
 
@@ -28481,7 +28547,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ShmodelVisibilityTeamOnlyDetails {
 impl ::serde::ser::Serialize for ShmodelVisibilityTeamOnlyDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("ShmodelVisibilityTeamOnlyDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("ShmodelVisibilityTeamOnlyDetails", 0)?.end()
     }
 }
 
@@ -28530,7 +28597,8 @@ impl<'de> ::serde::de::Deserialize<'de> for SignInAsSessionEndDetails {
 impl ::serde::ser::Serialize for SignInAsSessionEndDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("SignInAsSessionEndDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("SignInAsSessionEndDetails", 0)?.end()
     }
 }
 
@@ -28579,7 +28647,8 @@ impl<'de> ::serde::de::Deserialize<'de> for SignInAsSessionStartDetails {
 impl ::serde::ser::Serialize for SignInAsSessionStartDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("SignInAsSessionStartDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("SignInAsSessionStartDetails", 0)?.end()
     }
 }
 
@@ -28717,7 +28786,8 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncCreateAdminPrivilegeReportD
 impl ::serde::ser::Serialize for SmartSyncCreateAdminPrivilegeReportDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("SmartSyncCreateAdminPrivilegeReportDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("SmartSyncCreateAdminPrivilegeReportDetails", 0)?.end()
     }
 }
 
@@ -30132,7 +30202,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderCreateDetails {
 impl ::serde::ser::Serialize for TeamFolderCreateDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("TeamFolderCreateDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("TeamFolderCreateDetails", 0)?.end()
     }
 }
 
@@ -30252,7 +30323,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderPermanentlyDeleteDetails {
 impl ::serde::ser::Serialize for TeamFolderPermanentlyDeleteDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("TeamFolderPermanentlyDeleteDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("TeamFolderPermanentlyDeleteDetails", 0)?.end()
     }
 }
 
@@ -30919,7 +30991,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamProfileAddLogoDetails {
 impl ::serde::ser::Serialize for TeamProfileAddLogoDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("TeamProfileAddLogoDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("TeamProfileAddLogoDetails", 0)?.end()
     }
 }
 
@@ -30968,7 +31041,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamProfileChangeLogoDetails {
 impl ::serde::ser::Serialize for TeamProfileChangeLogoDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("TeamProfileChangeLogoDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("TeamProfileChangeLogoDetails", 0)?.end()
     }
 }
 
@@ -31106,7 +31180,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamProfileRemoveLogoDetails {
 impl ::serde::ser::Serialize for TeamProfileRemoveLogoDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("TeamProfileRemoveLogoDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("TeamProfileRemoveLogoDetails", 0)?.end()
     }
 }
 
@@ -31155,7 +31230,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaAddBackupPhoneDetails {
 impl ::serde::ser::Serialize for TfaAddBackupPhoneDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("TfaAddBackupPhoneDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("TfaAddBackupPhoneDetails", 0)?.end()
     }
 }
 
@@ -31204,7 +31280,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaAddSecurityKeyDetails {
 impl ::serde::ser::Serialize for TfaAddSecurityKeyDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("TfaAddSecurityKeyDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("TfaAddSecurityKeyDetails", 0)?.end()
     }
 }
 
@@ -31253,7 +31330,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaChangeBackupPhoneDetails {
 impl ::serde::ser::Serialize for TfaChangeBackupPhoneDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("TfaChangeBackupPhoneDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("TfaChangeBackupPhoneDetails", 0)?.end()
     }
 }
 
@@ -31645,7 +31723,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaRemoveBackupPhoneDetails {
 impl ::serde::ser::Serialize for TfaRemoveBackupPhoneDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("TfaRemoveBackupPhoneDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("TfaRemoveBackupPhoneDetails", 0)?.end()
     }
 }
 
@@ -31694,7 +31773,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaRemoveSecurityKeyDetails {
 impl ::serde::ser::Serialize for TfaRemoveSecurityKeyDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("TfaRemoveSecurityKeyDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("TfaRemoveSecurityKeyDetails", 0)?.end()
     }
 }
 
@@ -31743,7 +31823,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaResetDetails {
 impl ::serde::ser::Serialize for TfaResetDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("TfaResetDetails")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("TfaResetDetails", 0)?.end()
     }
 }
 

@@ -2669,7 +2669,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileOpsResult {
 impl ::serde::ser::Serialize for FileOpsResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
-        serializer.serialize_unit_struct("FileOpsResult")
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("FileOpsResult", 0)?.end()
     }
 }
 

@@ -278,10 +278,10 @@ class RustGenerator(CodeGenerator):
         self.emit()
         with self._impl_serialize(type_name):
             self.emit(u'// struct serializer')
+            self.emit(u'use serde::ser::SerializeStruct;')
             if not struct.all_fields:
-                self.emit(u'serializer.serialize_unit_struct("{}")'.format(struct.name))
+                self.emit(u'serializer.serialize_struct("{}", 0)?.end()'.format(struct.name))
             else:
-                self.emit(u'use serde::ser::SerializeStruct;')
                 self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
                     struct.name,
                     len(struct.all_fields)))
