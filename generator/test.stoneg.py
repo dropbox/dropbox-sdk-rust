@@ -26,7 +26,6 @@ class TestGenerator(CodeGenerator):
     def generate(self, api):
         print(u'Generating Python reference code')
         self.reference.generate(api)
-
         with self.output_to_relative_path('reference/__init__.py'):
             self.emit(u'# this is the Stone-generated reference Python SDK')
 
@@ -51,18 +50,30 @@ class TestGenerator(CodeGenerator):
                     # Then have Rust re-serialize to JSON and desereialize it again, then check the
                     # fields of the newly-deserialized struct. This verifies Rust's serializer.
 
+                    not_implemented_reason = None
                     test_value = None
                     if data_type.is_struct_type(typ):
-                        test_value = TestStruct(self.rust, typ, self.reference_impls)
+                        if typ.has_enumerated_subtypes():
+                            not_implemented_reason = "polymorphic struct"
+                        else:
+                            test_value = TestStruct(self.rust, typ, self.reference_impls)
                     elif data_type.is_union_type(typ):
-                        pass
+                        # for now, just pick the first variant
+                        # TODO: generate tests for all of them
+                        if len(typ.fields) == 0:
+                            # must be a parent type; go for it
+                            tag = typ.all_fields[0].name
+                        else:
+                            tag = typ.fields[0].name
+
+                        test_value = TestUnion(self.rust, typ, self.reference_impls, tag)
                     else:
                         print(u'ERROR: type {} is neither struct nor union'.format(typ))
 
                     if test_value is None or test_value.value is None:
                         self.emit(u'#[ignore]')
                         with self._test_fn(type_name):
-                            self.emit(u'// test not implemented')
+                            self.emit(u'// test not implemented: {}'.format(not_implemented_reason))
                         self.emit()
                     else:
                         try:
@@ -74,18 +85,17 @@ class TestGenerator(CodeGenerator):
                                 self.emit(u'let x = serde_json::from_str::<dropbox_sdk::{}::{}>(json).unwrap();'.format(
                                     ns.name,
                                     self.rust._struct_name(typ)))
-                                for expr, value in test_value.leaves:
-                                    self.emit(u'assert_eq!(x.{}, {});'.format(expr, value))
+                                test_value.emit_asserts(self, 'x')
 
                                 # now serialize it back to JSON, deserialize it again, and test it again.
                                 self.emit(u'let json2 = serde_json::to_string(&x).unwrap();')
                                 de = u'serde_json::from_str::<dropbox_sdk::{}::{}>(&json2).unwrap()'.format(
                                     ns.name,
                                     self.rust._struct_name(typ))
+
                                 if typ.all_fields:
                                     self.emit(u'let x2 = {};'.format(de))
-                                    for expr, value in test_value.leaves:
-                                        self.emit(u'assert_eq!(x2.{}, {});'.format(expr, value))
+                                    test_value.emit_asserts(self, 'x2')
                                 else:
                                     self.emit(u'{};'.format(de))
                             self.emit()
@@ -120,88 +130,183 @@ class TestGenerator(CodeGenerator):
         self.emit(u'#[test]')
         return self.block(u'fn test_{}()'.format(name))
 
-class TestStruct:
+class TestField(object):
+    def __init__(self, name, python_value, test_value, stone_type, option):
+        self.name = name
+        self.value = python_value
+        self.test_value = test_value
+        self.typ = stone_type
+        self.option = option
+
+    def emit_assert(self, codegen, expression_path):
+        extra = ('.' + self.name) if self.name else ''
+        if self.option:
+            expression = '(*' + expression_path + extra + '.as_ref().unwrap())'
+        else:
+            expression = expression_path + extra
+
+        if isinstance(self.test_value, TestValue):
+            self.test_value.emit_asserts(codegen, expression)
+        elif data_type.is_string_type(self.typ):
+            codegen.emit(u'assert_eq!({}.as_str(), r#"{}"#);'.format(
+                expression, self.value))
+        elif data_type.is_numeric_type(self.typ):
+            codegen.emit(u'assert_eq!({}, {});'.format(
+                expression, self.value))
+        elif data_type.is_boolean_type(self.typ):
+            codegen.emit(u'assert_eq!({}, {});'.format(
+                expression, 'true' if self.value else 'false'))
+        elif data_type.is_timestamp_type(self.typ):
+            codegen.emit(u'assert_eq!({}.as_str(), "{}");'.format(
+                expression, self.value.strftime(self.typ.format)))
+        else:
+            print(u'Error: assetion unhandled for type {} of field {}'.format(self.typ, self.name))
+
+class TestValue(object):
+    def __init__(self, rust_generator):
+        self.rust_generator = rust_generator
+        self.fields = []
+        self.value = None
+
+    def emit_asserts(self, codegen, expression_path):
+        raise NotImplementedError('you\'re supposed to implement TestValue.emit_asserts')
+
+class TestStruct(TestValue):
     def __init__(self, rust_generator, stone_type, reference_impls):
-        self._rust_generator = rust_generator
+        super(TestStruct, self).__init__(rust_generator)
         self._stone_type = stone_type
         self._reference_impls = reference_impls
+
         try:
             self.value = reference_impls[stone_type.namespace.name].__dict__[stone_type.name]()
         except Exception as e:
-            print(u'Error instantiating value for {}: {}'.format(
-                stone_type.name, e))
-            raise
-        self.leaves = []
+            print(u'Error instantiating value for {}: {}'.format(stone_type.name, e))
+            self.value = None
+            return
+
         for field in stone_type.all_fields:
-            value = self._generate_field_value(field, field.data_type)
-            if value is None:
-                self.value = None # we have an incomplete type
+            field_value = make_test_field(field.name, field.data_type, rust_generator, reference_impls)
+            if field_value is None:
+                print(u'Error: incomplete type generated: {}'.format(stone_type.name))
+                self.value = None
                 return
+            self.fields.append(field_value)
             try:
-                setattr(self.value, field.name, value)
+                setattr(self.value, field.name, field_value.value)
             except Exception as e:
                 print(u'Error generating value for {}.{}: {}'.format(
                     stone_type.name, field.name, e))
-                raise
+                self.value = None
+                return
 
-    def _generate_field_value(self, field, typ, rust_expr_extra = ''):
-        field_name = self._rust_generator._field_name(field)
-        typ, option = data_type.unwrap_nullable(typ)
-        if option:
-            if data_type.is_numeric_type(typ) or data_type.is_boolean_type(typ):
-                rust_expr = field_name + rust_expr_extra + '.unwrap()'
+    def emit_asserts(self, codegen, expression_path):
+        for field in self.fields:
+            field.emit_assert(codegen, expression_path)
+
+class TestUnion(TestValue):
+    def __init__(self, rust_generator, stone_type, reference_impls, tag_name):
+        super(TestUnion, self).__init__(rust_generator)
+        self._stone_type = stone_type
+        self._reference_impls = reference_impls
+        self._rust_name = rust_generator._enum_name(stone_type)
+        self._rust_variant_name = rust_generator._enum_variant_name_raw(tag_name)
+        self._variant_type = [typ.data_type for typ in stone_type.all_fields if typ.name == tag_name][0]
+        self._inner_value = make_test_field(None, self._variant_type, rust_generator, reference_impls)
+
+        if self._inner_value is None:
+            print(u'Error generating union variant value for {}.{}'.format(
+                stone_type.name, tag_name))
+            self.value = None
+            return
+
+        try:
+            self.value = reference_impls[stone_type.namespace.name].__dict__[stone_type.name](tag_name, self._inner_value.value)
+        except Exception as e:
+            print(u'Error generating value for {}.{}: {}'.format(
+                stone_type.name, tag_name, e))
+            self.value = None
+            return
+
+    def emit_asserts(self, codegen, expression_path):
+        if expression_path[0] == '(' and expression_path[-1] == ')':
+                expression_path = expression_path[1:-1] # strip off superfluous parens
+
+        with codegen.block(u'match {}'.format(expression_path)):
+            if data_type.is_void_type(self._variant_type):
+                codegen.emit(u'dropbox_sdk::{}::{}::{} => (),'.format(
+                    self._stone_type.namespace.name,
+                    self._rust_name,
+                    self._rust_variant_name))
             else:
-                rust_expr = field_name + rust_expr_extra + '.as_ref().unwrap()'
+                with codegen.block(u'dropbox_sdk::{}::{}::{}(ref v) =>'.format(
+                        self._stone_type.namespace.name,
+                        self._rust_name,
+                        self._rust_variant_name)):
+                    self._inner_value.emit_assert(codegen, '(*v)')
+
+            if len(self._stone_type.all_fields) > 1:
+                codegen.emit(u'_ => panic!("wrong variant")')
+
+class TestList(TestValue):
+    def __init__(self, rust_generator, stone_type, reference_impls):
+        super(TestList, self).__init__(rust_generator)
+        self._stone_type = stone_type
+        self._reference_impls = reference_impls
+
+        self._inner_value = make_test_field(None, stone_type, rust_generator, reference_impls)
+        if self._inner_value is None:
+            print(u'Error generating value for list of {}'.format(
+                stone_type.name))
+            self.value = None
+            return
+
+        self.value = self._inner_value.value
+
+    def emit_asserts(self, codegen, expression_path):
+        self._inner_value.emit_assert(codegen, '(*' + expression_path + '.get(0).unwrap())')
+
+def make_test_field(field_name, stone_type, rust_generator, reference_impls):
+    rust_name = rust_generator._field_name_raw(field_name) if field_name is not None else None
+    typ, option = data_type.unwrap_nullable(stone_type)
+
+    inner = None
+    value = None
+    if data_type.is_struct_type(typ):
+        inner = TestStruct(rust_generator, typ, reference_impls)
+        value = inner.value
+    elif data_type.is_union_type(typ):
+        # pick the first tag
+        if len(typ.fields) == 0:
+            # there must be a parent type; go for it
+            tag = typ.all_fields[0].name
         else:
-            rust_expr = field_name + rust_expr_extra
-
-        value = None
-        if data_type.is_struct_type(typ):
-            inner = TestStruct(self._rust_generator, typ, self._reference_impls)
-            if inner.value is None:
-                return None
-            for inner_rust_expr, inner_rust_value in inner.leaves:
-                self.leaves.append((rust_expr + '.' + inner_rust_expr, inner_rust_value))
-            value = inner.value
-        elif data_type.is_union_type(typ):
-            return None # TODO
-        elif data_type.is_numeric_type(typ):
-            value = typ.max_value or typ.maximum or 1e307
-            self.leaves.append((rust_expr, str(value)))
-        elif data_type.is_string_type(typ):
-            if typ.pattern:
-                value = Unregex(typ.pattern, typ.min_length).generate()
-            elif typ.min_length:
-                value = 'a' * typ.min_length
-            else:
-                value = 'something'
-
-            rust_value = u'r#"{}"#'.format(value)
-            self.leaves.append((rust_expr + '.as_str()', rust_value))
-        elif data_type.is_boolean_type(typ):
-            value = True
-            self.leaves.append((rust_expr, 'true'))
-        elif data_type.is_timestamp_type(typ):
-            value = datetime.datetime.utcfromtimestamp(2**33 - 1)
-            rust_value = u'"{}"'.format(value.strftime(typ.format))
-            self.leaves.append((rust_expr + '.as_str()', rust_value))
-        elif data_type.is_list_type(typ):
-            if option:
-                rust_expr_extra += '.as_ref().unwrap()'
-            rust_expr_extra += '.get(0).as_ref().unwrap()'
-            value = self._generate_field_value(field, typ.data_type, rust_expr_extra)
-            if value is None:
-                return None
-            value = [value]
+            tag = typ.fields[0].name
+        inner = TestUnion(rust_generator, typ, reference_impls, tag)
+        value = inner.value
+    elif data_type.is_list_type(typ):
+        inner = TestList(rust_generator, typ.data_type, reference_impls)
+        value = [inner.value]
+    elif data_type.is_string_type(typ):
+        if typ.pattern:
+            value = Unregex(typ.pattern, typ.min_length).generate()
+        elif typ.min_length:
+            value = 'a' * typ.min_length
         else:
-            print(u'Error: unhandled field type of {}.{}: {}'.format(
-                self._stone_type, field.name, typ))
-            return None
-
-        return value
+            value = 'something'
+    elif data_type.is_numeric_type(typ):
+        value = typ.max_value or typ.maximum or 1e307
+    elif data_type.is_boolean_type(typ):
+        value = True
+    elif data_type.is_timestamp_type(typ):
+        value = datetime.datetime.utcfromtimestamp(2**33 - 1)
+    elif not data_type.is_void_type(typ):
+        print(u'Error: unhandled field type of {}: {}'.format(
+            field_name, typ))
+        return None
+    return TestField(rust_name, value, inner, typ, option)
 
 # Generate a minimal string that passes a regex and optionally is of a given minimum length.
-class Unregex:
+class Unregex(object):
     def __init__(self, regex_string, min_len = None):
         self._min_len = min_len
         self._group_refs = {}

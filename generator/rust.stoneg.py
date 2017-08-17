@@ -622,13 +622,19 @@ class RustGenerator(CodeGenerator):
         return name
 
     def _field_name(self, field):
-        name = fmt_underscores(field.name)
+        return self._field_name_raw(field.name)
+
+    def _field_name_raw(self, name):
+        name = fmt_underscores(name)
         if name in RUST_RESERVED_WORDS:
             name += '_field'
         return name
 
     def _enum_variant_name(self, field):
-        name = fmt_pascal(field.name)
+        return self._enum_variant_name_raw(field.name)
+
+    def _enum_variant_name_raw(self, name):
+        name = fmt_pascal(name)
         if name in RUST_RESERVED_WORDS:
             name += 'Variant'
         return name
