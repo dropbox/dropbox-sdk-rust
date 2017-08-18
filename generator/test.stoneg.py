@@ -50,30 +50,32 @@ class TestGenerator(CodeGenerator):
                     # Then have Rust re-serialize to JSON and desereialize it again, then check the
                     # fields of the newly-deserialized struct. This verifies Rust's serializer.
 
-                    not_implemented_reason = None
                     test_value = None
                     if data_type.is_struct_type(typ):
                         if typ.has_enumerated_subtypes():
-                            not_implemented_reason = "polymorphic struct"
+                            # TODO: generate tests for all variants
+                            # for now, just pick the first variant
+                            variant = typ.get_enumerated_subtypes()[0]
+                            test_value = TestPolymorphicStruct(self.rust, typ, self.reference_impls, variant)
                         else:
                             test_value = TestStruct(self.rust, typ, self.reference_impls)
                     elif data_type.is_union_type(typ):
+                        # TODO: generate tests for all variants
                         # for now, just pick the first variant
-                        # TODO: generate tests for all of them
                         if len(typ.fields) == 0:
                             # must be a parent type; go for it
-                            tag = typ.all_fields[0].name
+                            variant = typ.all_fields[0]
                         else:
-                            tag = typ.fields[0].name
+                            variant = typ.fields[0]
 
-                        test_value = TestUnion(self.rust, typ, self.reference_impls, tag)
+                        test_value = TestUnion(self.rust, typ, self.reference_impls, variant)
                     else:
                         print(u'ERROR: type {} is neither struct nor union'.format(typ))
 
                     if test_value is None or test_value.value is None:
                         self.emit(u'#[ignore]')
                         with self._test_fn(type_name):
-                            self.emit(u'// test not implemented: {}'.format(not_implemented_reason))
+                            self.emit(u'// test not implemented')
                         self.emit()
                     else:
                         try:
@@ -174,6 +176,10 @@ class TestValue(object):
 class TestStruct(TestValue):
     def __init__(self, rust_generator, stone_type, reference_impls):
         super(TestStruct, self).__init__(rust_generator)
+
+        if stone_type.has_enumerated_subtypes():
+            stone_type = stone_type.get_enumerated_subtypes()[0].data_type
+
         self._stone_type = stone_type
         self._reference_impls = reference_impls
 
@@ -204,28 +210,34 @@ class TestStruct(TestValue):
             field.emit_assert(codegen, expression_path)
 
 class TestUnion(TestValue):
-    def __init__(self, rust_generator, stone_type, reference_impls, tag_name):
+    def __init__(self, rust_generator, stone_type, reference_impls, variant):
         super(TestUnion, self).__init__(rust_generator)
         self._stone_type = stone_type
         self._reference_impls = reference_impls
         self._rust_name = rust_generator._enum_name(stone_type)
-        self._rust_variant_name = rust_generator._enum_variant_name_raw(tag_name)
-        self._variant_type = [typ.data_type for typ in stone_type.all_fields if typ.name == tag_name][0]
+        self._rust_variant_name = rust_generator._enum_variant_name_raw(variant.name)
+        self._variant_type = variant.data_type
+
         self._inner_value = make_test_field(None, self._variant_type, rust_generator, reference_impls)
 
         if self._inner_value is None:
             print(u'Error generating union variant value for {}.{}'.format(
-                stone_type.name, tag_name))
+                stone_type.name, variant.name))
             self.value = None
             return
 
+        self.value = self.get_from_inner_value(variant.name, self._inner_value)
+
+    def get_from_inner_value(self, variant_name, generated_field):
         try:
-            self.value = reference_impls[stone_type.namespace.name].__dict__[stone_type.name](tag_name, self._inner_value.value)
+            return self._reference_impls[self._stone_type.namespace.name].__dict__[self._stone_type.name](variant_name, generated_field.value)
         except Exception as e:
             print(u'Error generating value for {}.{}: {}'.format(
-                stone_type.name, tag_name, e))
-            self.value = None
-            return
+                self._stone_type.name, variant_name, e))
+            return None
+
+    def is_open(self):
+        return len(self._stone_type.all_fields) > 1
 
     def emit_asserts(self, codegen, expression_path):
         if expression_path[0] == '(' and expression_path[-1] == ')':
@@ -244,8 +256,22 @@ class TestUnion(TestValue):
                         self._rust_variant_name)):
                     self._inner_value.emit_assert(codegen, '(*v)')
 
-            if len(self._stone_type.all_fields) > 1:
+            if self.is_open():
                 codegen.emit(u'_ => panic!("wrong variant")')
+
+class TestPolymorphicStruct(TestUnion):
+    def __init__(self, rust_generator, stone_type, reference_impls, variant):
+        super(TestPolymorphicStruct, self).__init__(
+            rust_generator,
+            stone_type,
+            reference_impls,
+            variant)
+
+    def get_from_inner_value(self, variant_name, generated_field):
+        return generated_field.value
+
+    def is_open(self):
+        return len(self._stone_type.get_enumerated_subtypes()) > 1
 
 class TestList(TestValue):
     def __init__(self, rust_generator, stone_type, reference_impls):
@@ -272,16 +298,20 @@ def make_test_field(field_name, stone_type, rust_generator, reference_impls):
     inner = None
     value = None
     if data_type.is_struct_type(typ):
-        inner = TestStruct(rust_generator, typ, reference_impls)
+        if typ.has_enumerated_subtypes():
+            variant = typ.get_enumerated_subtypes()[0]
+            inner = TestPolymorphicStruct(rust_generator, typ, reference_impls, variant)
+        else:
+            inner = TestStruct(rust_generator, typ, reference_impls)
         value = inner.value
     elif data_type.is_union_type(typ):
         # pick the first tag
         if len(typ.fields) == 0:
             # there must be a parent type; go for it
-            tag = typ.all_fields[0].name
+            variant = typ.all_fields[0]
         else:
-            tag = typ.fields[0].name
-        inner = TestUnion(rust_generator, typ, reference_impls, tag)
+            variant = typ.fields[0]
+        inner = TestUnion(rust_generator, typ, reference_impls, variant)
         value = inner.value
     elif data_type.is_list_type(typ):
         inner = TestList(rust_generator, typ.data_type, reference_impls)
