@@ -50,6 +50,7 @@ class TestGenerator(CodeGenerator):
                     # Then have Rust re-serialize to JSON and desereialize it again, then check the
                     # fields of the newly-deserialized struct. This verifies Rust's serializer.
 
+                    is_serializable = True
                     test_value = None
                     if data_type.is_struct_type(typ):
                         if typ.has_enumerated_subtypes():
@@ -62,11 +63,20 @@ class TestGenerator(CodeGenerator):
                     elif data_type.is_union_type(typ):
                         # TODO: generate tests for all variants
                         # for now, just pick the first variant
-                        if len(typ.fields) == 0:
-                            # must be a parent type; go for it
-                            variant = typ.all_fields[0]
+
+                        # prefer choosing from this type and not the parent if we can
+                        variants = [field for field in typ.fields if not field.catch_all]
+                        if len(variants) == 0:
+                            # fall back to parent type's variants
+                            variants = [field for field in typ.all_fields if not field.catch_all]
+
+                        if not variants:
+                            # Rust code will refuse to serialize a type with no variants (or only
+                            # the catch-all variant), so don't bother testing that
+                            is_serializable = False
+                            variant = typ.all_fields[0] # this assumes there's at least one
                         else:
-                            variant = typ.fields[0]
+                            variant = variants[0]
 
                         test_value = TestUnion(self.rust, typ, self.reference_impls, variant)
                     else:
@@ -89,17 +99,21 @@ class TestGenerator(CodeGenerator):
                                     self.rust._struct_name(typ)))
                                 test_value.emit_asserts(self, 'x')
 
-                                # now serialize it back to JSON, deserialize it again, and test it again.
-                                self.emit(u'let json2 = serde_json::to_string(&x).unwrap();')
-                                de = u'serde_json::from_str::<dropbox_sdk::{}::{}>(&json2).unwrap()'.format(
-                                    ns.name,
-                                    self.rust._struct_name(typ))
+                                if is_serializable:
+                                    # now serialize it back to JSON, deserialize it again, and test it again.
+                                    self.emit(u'let json2 = serde_json::to_string(&x).unwrap();')
+                                    de = u'serde_json::from_str::<dropbox_sdk::{}::{}>(&json2).unwrap()'.format(
+                                        ns.name,
+                                        self.rust._struct_name(typ))
 
-                                if typ.all_fields:
-                                    self.emit(u'let x2 = {};'.format(de))
-                                    test_value.emit_asserts(self, 'x2')
+                                    if typ.all_fields:
+                                        self.emit(u'let x2 = {};'.format(de))
+                                        test_value.emit_asserts(self, 'x2')
+                                    else:
+                                        self.emit(u'{};'.format(de))
                                 else:
-                                    self.emit(u'{};'.format(de))
+                                    # assert that serializing it returns an error
+                                    self.emit(u'assert!(serde_json::to_string(&x).is_err());')
                             self.emit()
                         except Exception as e:
                             print(u'Error serializing {}.{}: {}'.format(
@@ -289,7 +303,7 @@ class TestList(TestValue):
         self.value = self._inner_value.value
 
     def emit_asserts(self, codegen, expression_path):
-        self._inner_value.emit_assert(codegen, '(*' + expression_path + '.get(0).unwrap())')
+        self._inner_value.emit_assert(codegen, expression_path + '[0]')
 
 def make_test_field(field_name, stone_type, rust_generator, reference_impls):
     rust_name = rust_generator._field_name_raw(field_name) if field_name is not None else None
