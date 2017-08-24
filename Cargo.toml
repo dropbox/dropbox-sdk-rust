@@ -10,6 +10,7 @@ hyper-native-tls = { version = "0.2", optional = true }
 log = "0.3"
 serde = "1.0"
 serde_json = "1.0"
+url = "1.5"
 
 [features]
 hyper_client = ["hyper", "hyper-native-tls"]

@@ -4,6 +4,7 @@
 #[macro_use] extern crate log;
 extern crate serde;
 extern crate serde_json;
+extern crate url;
 
 error_chain! {
     types {
@@ -57,7 +58,11 @@ error_chain! {
 }
 
 #[cfg(feature = "hyper_client")] mod hyper_client;
-#[cfg(feature = "hyper_client")] pub use hyper_client::HyperClient;
+#[cfg(feature = "hyper_client")] pub use hyper_client::{
+    HyperClient,
+    Oauth2AuthorizeUrlBuilder,
+    Oauth2Type,
+};
 
 pub mod client_trait;
 pub(crate) mod client_helpers;
