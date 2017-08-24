@@ -12,5 +12,12 @@ serde = "1.0"
 serde_json = "1.0"
 url = "1.5"
 
+[dev-dependencies]
+env_logger = "*"
+
+[[example]]
+name = "demo"
+required-features = ["hyper_client"]
+
 [features]
 hyper_client = ["hyper", "hyper-native-tls"]
