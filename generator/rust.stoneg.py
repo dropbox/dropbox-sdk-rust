@@ -17,8 +17,10 @@ RUST_RESERVED_WORDS = [
     "macro", "match", "mod", "move", "mut", "offsetof", "override", "priv", "proc", "pub", "pure",
     "ref", "return", "Self", "self", "sizeof", "static", "struct", "super", "trait", "true", "type",
     "typeof", "unsafe", "unsized", "use", "virtual", "where", "while", "yield",
+]
 
-    # Also include names of types that are in the prelude:
+# Also avoid using names of types that are in the prelude for the names of our types.
+RUST_GLOBAL_NAMESPACE = [
     "Copy", "Send", "Sized", "Sync", "Drop", "Fn", "FnMut", "FnOnce", "drop", "Box", "ToOwned",
     "Clone", "PartialEq", "PartialOrd", "Eq", "Ord", "AsRef", "AsMut", "Into", "From", "Default",
     "Iterator", "Extend", "IntoIterator", "DoubleEndedIterator", "ExactSizeIterator", "Option",
@@ -605,19 +607,19 @@ class RustGenerator(CodeGenerator):
 
     def _namespace_name(self, ns):
         name = fmt_underscores(ns.name)
-        if name in RUST_RESERVED_WORDS:
+        if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
             name += '_namespace'
         return name
 
     def _struct_name(self, struct):
         name = fmt_pascal(struct.name)
-        if name in RUST_RESERVED_WORDS:
+        if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
             name += 'Struct'
         return name
 
     def _enum_name(self, union):
         name = fmt_pascal(union.name)
-        if name in RUST_RESERVED_WORDS:
+        if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
             name += 'Union'
         return name
 
@@ -642,11 +644,11 @@ class RustGenerator(CodeGenerator):
     def _route_name(self, route):
         name = fmt_underscores(route.name)
         if name in RUST_RESERVED_WORDS:
-            name += '_route'
+            name = 'do_' + name
         return name
 
     def _alias_name(self, alias):
         name = fmt_pascal(alias.name)
-        if name in RUST_RESERVED_WORDS:
+        if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
             name += 'Alias'
         return name

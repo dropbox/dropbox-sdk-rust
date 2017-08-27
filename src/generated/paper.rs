@@ -678,7 +678,7 @@ impl ::std::fmt::Display for DocLookupError {
 #[derive(Debug)]
 pub enum DocSubscriptionLevel {
     /// No change email messages unless you're the creator.
-    DefaultVariant,
+    Default,
     /// Ignored: Not shown in pad lists or activity and no email message is sent.
     Ignore,
     /// Subscribed: Shown in pad lists and activity and change email messages are sent.
@@ -703,7 +703,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DocSubscriptionLevel {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "default" => Ok(DocSubscriptionLevel::DefaultVariant),
+                    "default" => Ok(DocSubscriptionLevel::Default),
                     "ignore" => Ok(DocSubscriptionLevel::Ignore),
                     "every" => Ok(DocSubscriptionLevel::Every),
                     "no_email" => Ok(DocSubscriptionLevel::NoEmail),
@@ -724,7 +724,7 @@ impl ::serde::ser::Serialize for DocSubscriptionLevel {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            DocSubscriptionLevel::DefaultVariant => {
+            DocSubscriptionLevel::Default => {
                 // unit
                 let mut s = serializer.serialize_struct("DocSubscriptionLevel", 1)?;
                 s.serialize_field(".tag", "default")?;
@@ -960,7 +960,7 @@ impl ::serde::ser::Serialize for FolderSharingPolicyType {
 #[derive(Debug)]
 pub enum FolderSubscriptionLevel {
     /// Not shown in activity, no email messages.
-    NoneVariant,
+    None,
     /// Shown in activity, no email messages.
     ActivityOnly,
     /// Shown in activity, daily email messages.
@@ -985,7 +985,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderSubscriptionLevel {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "none" => Ok(FolderSubscriptionLevel::NoneVariant),
+                    "none" => Ok(FolderSubscriptionLevel::None),
                     "activity_only" => Ok(FolderSubscriptionLevel::ActivityOnly),
                     "daily_emails" => Ok(FolderSubscriptionLevel::DailyEmails),
                     "weekly_emails" => Ok(FolderSubscriptionLevel::WeeklyEmails),
@@ -1006,7 +1006,7 @@ impl ::serde::ser::Serialize for FolderSubscriptionLevel {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            FolderSubscriptionLevel::NoneVariant => {
+            FolderSubscriptionLevel::None => {
                 // unit
                 let mut s = serializer.serialize_struct("FolderSubscriptionLevel", 1)?;
                 s.serialize_field(".tag", "none")?;

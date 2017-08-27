@@ -823,7 +823,7 @@ impl ::std::fmt::Display for PropertyTemplateError {
 #[derive(Debug)]
 pub enum PropertyType {
     /// The associated property will be of type string. Unicode is supported.
-    StringVariant,
+    String,
     Other,
 }
 
@@ -843,7 +843,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyType {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "string" => Ok(PropertyType::StringVariant),
+                    "string" => Ok(PropertyType::String),
                     _ => Ok(PropertyType::Other)
                 }
             }
@@ -859,7 +859,7 @@ impl ::serde::ser::Serialize for PropertyType {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            PropertyType::StringVariant => {
+            PropertyType::String => {
                 // unit
                 let mut s = serializer.serialize_struct("PropertyType", 1)?;
                 s.serialize_field(".tag", "string")?;

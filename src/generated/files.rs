@@ -201,7 +201,7 @@ pub fn list_revisions(client: &::client_trait::HttpClient, arg: &ListRevisionsAr
 
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be moved.
-pub fn move_route(client: &::client_trait::HttpClient, arg: &RelocationArg) -> ::Result<Result<Metadata, RelocationError>> {
+pub fn do_move(client: &::client_trait::HttpClient, arg: &RelocationArg) -> ::Result<Result<Metadata, RelocationError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/move", arg, None)
 }
 

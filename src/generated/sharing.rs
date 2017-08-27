@@ -6903,7 +6903,7 @@ impl ::std::fmt::Display for ListFileMembersError {
 #[derive(Debug)]
 pub enum ListFileMembersIndividualResult {
     /// The results of the query for this file if it was successful.
-    ResultVariant(ListFileMembersCountResult),
+    Result(ListFileMembersCountResult),
     /// The result of the query for this file if it was an error.
     AccessError(SharingFileAccessError),
     Other,
@@ -6925,7 +6925,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersIndividualResult {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "result" => Ok(ListFileMembersIndividualResult::ResultVariant(ListFileMembersCountResult::internal_deserialize(map)?)),
+                    "result" => Ok(ListFileMembersIndividualResult::Result(ListFileMembersCountResult::internal_deserialize(map)?)),
                     "access_error" => {
                         match map.next_key()? {
                             Some("access_error") => Ok(ListFileMembersIndividualResult::AccessError(map.next_value()?)),
@@ -6949,7 +6949,7 @@ impl ::serde::ser::Serialize for ListFileMembersIndividualResult {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            ListFileMembersIndividualResult::ResultVariant(ref x) => {
+            ListFileMembersIndividualResult::Result(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("ListFileMembersIndividualResult", 3)?;
                 s.serialize_field(".tag", "result")?;

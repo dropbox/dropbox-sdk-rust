@@ -21831,7 +21831,7 @@ impl ::serde::ser::Serialize for PermanentDeleteChangePolicyDetails {
 #[derive(Debug)]
 pub enum PlacementRestriction {
     EuropeOnly,
-    NoneVariant,
+    None,
     Other,
 }
 
@@ -21852,7 +21852,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PlacementRestriction {
                 };
                 match tag {
                     "europe_only" => Ok(PlacementRestriction::EuropeOnly),
-                    "none" => Ok(PlacementRestriction::NoneVariant),
+                    "none" => Ok(PlacementRestriction::None),
                     _ => Ok(PlacementRestriction::Other)
                 }
             }
@@ -21875,7 +21875,7 @@ impl ::serde::ser::Serialize for PlacementRestriction {
                 s.serialize_field(".tag", "europe_only")?;
                 s.end()
             }
-            PlacementRestriction::NoneVariant => {
+            PlacementRestriction::None => {
                 // unit
                 let mut s = serializer.serialize_struct("PlacementRestriction", 1)?;
                 s.serialize_field(".tag", "none")?;
@@ -28962,7 +28962,7 @@ impl ::serde::ser::Serialize for SmartSyncOptOutDetails {
 #[derive(Debug)]
 pub enum SmartSyncOptOutPolicy {
     OptedOut,
-    DefaultVariant,
+    Default,
     Other,
 }
 
@@ -28983,7 +28983,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncOptOutPolicy {
                 };
                 match tag {
                     "opted_out" => Ok(SmartSyncOptOutPolicy::OptedOut),
-                    "default" => Ok(SmartSyncOptOutPolicy::DefaultVariant),
+                    "default" => Ok(SmartSyncOptOutPolicy::Default),
                     _ => Ok(SmartSyncOptOutPolicy::Other)
                 }
             }
@@ -29006,7 +29006,7 @@ impl ::serde::ser::Serialize for SmartSyncOptOutPolicy {
                 s.serialize_field(".tag", "opted_out")?;
                 s.end()
             }
-            SmartSyncOptOutPolicy::DefaultVariant => {
+            SmartSyncOptOutPolicy::Default => {
                 // unit
                 let mut s = serializer.serialize_struct("SmartSyncOptOutPolicy", 1)?;
                 s.serialize_field(".tag", "default")?;
