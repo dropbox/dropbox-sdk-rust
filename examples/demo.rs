@@ -1,8 +1,10 @@
 extern crate dropbox_sdk;
 use dropbox_sdk::{files, HyperClient, Oauth2AuthorizeUrlBuilder, Oauth2Type};
+use dropbox_sdk::client_trait::HttpClient;
 
 extern crate env_logger;
 
+use std::collections::VecDeque;
 use std::env;
 use std::io::{self, Read, Write};
 
@@ -43,30 +45,115 @@ fn main() {
     });
 
     let client = HyperClient::new(token);
-    let path = std::env::args().nth(1).expect("no filename given");
 
-    eprintln!("downloading file {}", path);
-    eprintln!();
-    let result = files::download(&client, &files::DownloadArg::new(path), None, None);
-    match result {
-        Ok(Ok(download_result)) => {
-            let mut body = download_result.body.expect("no body received!");
-            let mut buf = [0u8; 4096];
-            loop {
-                match body.read(&mut buf) {
-                    Ok(0) => { break; }
-                    Ok(len) => {
-                        io::stdout().write_all(&buf[0..len]).unwrap();
+    if let Some(path) = std::env::args().nth(1) {
+        eprintln!("downloading file {}", path);
+        eprintln!();
+        let result = files::download(&client, &files::DownloadArg::new(path), None, None);
+        match result {
+            Ok(Ok(download_result)) => {
+                let mut body = download_result.body.expect("no body received!");
+                let mut buf = [0u8; 4096];
+                loop {
+                    match body.read(&mut buf) {
+                        Ok(0) => { break; }
+                        Ok(len) => {
+                            io::stdout().write_all(&buf[0..len]).unwrap();
+                        }
+                        Err(e) => panic!("read error: {}", e)
                     }
-                    Err(e) => panic!("read error: {}", e)
                 }
+            },
+            Ok(Err(download_error)) => {
+                eprintln!("Download error: {}", download_error);
+            },
+            Err(request_error) => {
+                eprintln!("Failed to make the request: {}", request_error);
             }
+        }
+    } else {
+        eprintln!("listing all files");
+        match list_directory(&client, "/", true) {
+            Ok(Ok(iterator)) => {
+                for entry_result in iterator {
+                    match entry_result {
+                        Ok(Ok(files::Metadata::Folder(entry))) => {
+                            println!("Folder: {}", entry.path_display.unwrap_or(entry.name));
+                        },
+                        Ok(Ok(files::Metadata::File(entry))) => {
+                            println!("File: {}", entry.path_display.unwrap_or(entry.name));
+                        },
+                        Ok(Ok(files::Metadata::Deleted(entry))) => {
+                            panic!("unexpected deleted entry: {:?}", entry);
+                        },
+                        Ok(Err(e)) => {
+                            eprintln!("Error from files/list_folder_continue: {}", e);
+                            break;
+                        },
+                        Err(e) => {
+                            eprintln!("API request error: {}", e);
+                            break;
+                        },
+                    }
+                }
+            },
+            Ok(Err(e)) => {
+                eprintln!("Error from files/list_folder: {}", e);
+            },
+            Err(e) => {
+                eprintln!("API request error: {}", e);
+            }
+        }
+    }
+}
+
+fn list_directory<'a>(client: &'a HttpClient, path: &str, recursive: bool)
+    -> dropbox_sdk::Result<Result<DirectoryIterator<'a>, files::ListFolderError>>
+{
+    assert!(path.chars().next() == Some('/'), "path needs to be absolute (start with a '/')");
+    match files::list_folder(
+        client,
+        &files::ListFolderArg::new((&path[1..]).to_owned())
+            .with_recursive(recursive))
+    {
+        Ok(Ok(result)) => {
+            Ok(Ok(DirectoryIterator {
+                client,
+                buffer: result.entries.into(),
+                cursor: Some(result.cursor),
+            }))
         },
-        Ok(Err(download_error)) => {
-            eprintln!("Download error: {}", download_error);
-        },
-        Err(request_error) => {
-            eprintln!("Failed to make the request: {}", request_error);
+        Ok(Err(e)) => Ok(Err(e)),
+        Err(e) => Err(e),
+    }
+}
+
+struct DirectoryIterator<'a> {
+    client: &'a HttpClient,
+    buffer: VecDeque<files::Metadata>,
+    cursor: Option<String>,
+}
+
+impl<'a> Iterator for DirectoryIterator<'a> {
+    type Item = dropbox_sdk::Result<Result<files::Metadata, files::ListFolderContinueError>>;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        if let Some(entry) = self.buffer.pop_front() {
+            Some(Ok(Ok(entry)))
+        } else if let Some(cursor) = self.cursor.take() {
+            match files::list_folder_continue(self.client, &files::ListFolderContinueArg::new(cursor)) {
+                Ok(Ok(result)) => {
+                    self.buffer.extend(result.entries.into_iter());
+                    if result.has_more {
+                        self.cursor = Some(result.cursor);
+                    }
+                    self.buffer.pop_front().map(|entry| Ok(Ok(entry)))
+                },
+                Ok(Err(e)) => Some(Ok(Err(e))),
+                Err(e) => Some(Err(e)),
+            }
+        } else {
+            None
         }
     }
 }
