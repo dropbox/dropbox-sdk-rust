@@ -18,6 +18,11 @@ pub fn docs_archive(client: &::client_trait::HttpClient, arg: &RefPaperDoc) -> :
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/archive", arg, None)
 }
 
+/// Creates a new Paper doc with the provided content.
+pub fn docs_create(client: &::client_trait::HttpClient, arg: &PaperDocCreateArgs, body: Vec<u8>) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocCreateUpdateResult>, PaperDocCreateError>> {
+    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Api, "paper/docs/create", arg, Some(body), None, None)
+}
+
 /// Exports and downloads Paper doc either as HTML or markdown.
 pub fn docs_download(client: &::client_trait::HttpClient, arg: &PaperDocExport, range_start: Option<u64>, range_end: Option<u64>) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocExportResult>, DocLookupError>> {
     ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Api, "paper/docs/download", arg, None, range_start, range_end)
@@ -74,6 +79,11 @@ pub fn docs_sharing_policy_get(client: &::client_trait::HttpClient, arg: &RefPap
 /// admin console.
 pub fn docs_sharing_policy_set(client: &::client_trait::HttpClient, arg: &PaperDocSharingPolicy) -> ::Result<Result<(), DocLookupError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/sharing_policy/set", arg, None)
+}
+
+/// Updates an existing Paper doc with the provided content.
+pub fn docs_update(client: &::client_trait::HttpClient, arg: &PaperDocUpdateArgs, body: Vec<u8>) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocCreateUpdateResult>, PaperDocUpdateError>> {
+    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Api, "paper/docs/update", arg, Some(body), None, None)
 }
 
 /// Allows an owner or editor to add users to a Paper doc or change their permissions using their
@@ -1114,6 +1124,79 @@ impl ::serde::ser::Serialize for FoldersContainingPaperDoc {
         let mut s = serializer.serialize_struct("FoldersContainingPaperDoc", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+/// The import format of the incoming data.
+#[derive(Debug)]
+pub enum ImportFormat {
+    /// The provided data is interpreted as standard HTML.
+    Html,
+    /// The provided data is interpreted as markdown. Note: The first line of the provided document
+    /// will be used as the doc title.
+    Markdown,
+    /// The provided data is interpreted as plain text. Note: The first line of the provided
+    /// document will be used as the doc title.
+    PlainText,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ImportFormat {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ImportFormat;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ImportFormat structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "html" => Ok(ImportFormat::Html),
+                    "markdown" => Ok(ImportFormat::Markdown),
+                    "plain_text" => Ok(ImportFormat::PlainText),
+                    _ => Ok(ImportFormat::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["html",
+                                                    "markdown",
+                                                    "plain_text",
+                                                    "other"];
+        deserializer.deserialize_struct("ImportFormat", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ImportFormat {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ImportFormat::Html => {
+                // unit
+                let mut s = serializer.serialize_struct("ImportFormat", 1)?;
+                s.serialize_field(".tag", "html")?;
+                s.end()
+            }
+            ImportFormat::Markdown => {
+                // unit
+                let mut s = serializer.serialize_struct("ImportFormat", 1)?;
+                s.serialize_field(".tag", "markdown")?;
+                s.end()
+            }
+            ImportFormat::PlainText => {
+                // unit
+                let mut s = serializer.serialize_struct("ImportFormat", 1)?;
+                s.serialize_field(".tag", "plain_text")?;
+                s.end()
+            }
+            ImportFormat::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 
@@ -2588,6 +2671,294 @@ impl ::std::fmt::Display for PaperApiCursorError {
 }
 
 #[derive(Debug)]
+pub struct PaperDocCreateArgs {
+    /// The format of provided data.
+    pub import_format: ImportFormat,
+    /// The Paper folder ID where the Paper document should be created. The API user has to have
+    /// write access to this folder or error is thrown.
+    pub parent_folder_id: Option<String>,
+}
+
+impl PaperDocCreateArgs {
+    pub fn new(import_format: ImportFormat) -> Self {
+        PaperDocCreateArgs {
+            import_format,
+            parent_folder_id: None,
+        }
+    }
+
+    pub fn with_parent_folder_id(mut self, value: Option<String>) -> Self {
+        self.parent_folder_id = value;
+        self
+    }
+
+}
+
+const PAPER_DOC_CREATE_ARGS_FIELDS: &'static [&'static str] = &["import_format",
+                                                                "parent_folder_id"];
+impl PaperDocCreateArgs {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocCreateArgs, V::Error> {
+        use serde::de;
+        let mut field_import_format = None;
+        let mut field_parent_folder_id = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "import_format" => {
+                    if field_import_format.is_some() {
+                        return Err(de::Error::duplicate_field("import_format"));
+                    }
+                    field_import_format = Some(map.next_value()?);
+                }
+                "parent_folder_id" => {
+                    if field_parent_folder_id.is_some() {
+                        return Err(de::Error::duplicate_field("parent_folder_id"));
+                    }
+                    field_parent_folder_id = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_CREATE_ARGS_FIELDS))
+            }
+        }
+        Ok(PaperDocCreateArgs {
+            import_format: field_import_format.ok_or_else(|| de::Error::missing_field("import_format"))?,
+            parent_folder_id: field_parent_folder_id,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("import_format", &self.import_format)?;
+        s.serialize_field("parent_folder_id", &self.parent_folder_id)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocCreateArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperDocCreateArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperDocCreateArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperDocCreateArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperDocCreateArgs", PAPER_DOC_CREATE_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDocCreateArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperDocCreateArgs", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum PaperDocCreateError {
+    /// Your account does not have permissions to perform this action.
+    InsufficientPermissions,
+    Other,
+    /// The provided content was malformed and cannot be imported to Paper.
+    ContentMalformed,
+    /// The specified Paper folder is cannot be found.
+    FolderNotFound,
+    /// The newly created Paper doc would be too large. Please split the content into multiple docs.
+    DocLengthExceeded,
+    /// The imported document contains an image that is too large. The current limit is 1MB. Note:
+    /// This only applies to HTML with data uri.
+    ImageSizeExceeded,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocCreateError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PaperDocCreateError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperDocCreateError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "insufficient_permissions" => Ok(PaperDocCreateError::InsufficientPermissions),
+                    "content_malformed" => Ok(PaperDocCreateError::ContentMalformed),
+                    "folder_not_found" => Ok(PaperDocCreateError::FolderNotFound),
+                    "doc_length_exceeded" => Ok(PaperDocCreateError::DocLengthExceeded),
+                    "image_size_exceeded" => Ok(PaperDocCreateError::ImageSizeExceeded),
+                    _ => Ok(PaperDocCreateError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["insufficient_permissions",
+                                                    "other",
+                                                    "content_malformed",
+                                                    "folder_not_found",
+                                                    "doc_length_exceeded",
+                                                    "image_size_exceeded"];
+        deserializer.deserialize_struct("PaperDocCreateError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDocCreateError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PaperDocCreateError::InsufficientPermissions => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocCreateError", 1)?;
+                s.serialize_field(".tag", "insufficient_permissions")?;
+                s.end()
+            }
+            PaperDocCreateError::ContentMalformed => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocCreateError", 1)?;
+                s.serialize_field(".tag", "content_malformed")?;
+                s.end()
+            }
+            PaperDocCreateError::FolderNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocCreateError", 1)?;
+                s.serialize_field(".tag", "folder_not_found")?;
+                s.end()
+            }
+            PaperDocCreateError::DocLengthExceeded => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocCreateError", 1)?;
+                s.serialize_field(".tag", "doc_length_exceeded")?;
+                s.end()
+            }
+            PaperDocCreateError::ImageSizeExceeded => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocCreateError", 1)?;
+                s.serialize_field(".tag", "image_size_exceeded")?;
+                s.end()
+            }
+            PaperDocCreateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for PaperDocCreateError {
+    fn description(&self) -> &str {
+        "PaperDocCreateError"
+    }
+}
+
+impl ::std::fmt::Display for PaperDocCreateError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct PaperDocCreateUpdateResult {
+    /// Doc ID of the newly created doc.
+    pub doc_id: String,
+    /// The Paper doc revision. Simply an ever increasing number.
+    pub revision: i64,
+    /// The Paper doc title.
+    pub title: String,
+}
+
+impl PaperDocCreateUpdateResult {
+    pub fn new(doc_id: String, revision: i64, title: String) -> Self {
+        PaperDocCreateUpdateResult {
+            doc_id,
+            revision,
+            title,
+        }
+    }
+
+}
+
+const PAPER_DOC_CREATE_UPDATE_RESULT_FIELDS: &'static [&'static str] = &["doc_id",
+                                                                         "revision",
+                                                                         "title"];
+impl PaperDocCreateUpdateResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocCreateUpdateResult, V::Error> {
+        use serde::de;
+        let mut field_doc_id = None;
+        let mut field_revision = None;
+        let mut field_title = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "doc_id" => {
+                    if field_doc_id.is_some() {
+                        return Err(de::Error::duplicate_field("doc_id"));
+                    }
+                    field_doc_id = Some(map.next_value()?);
+                }
+                "revision" => {
+                    if field_revision.is_some() {
+                        return Err(de::Error::duplicate_field("revision"));
+                    }
+                    field_revision = Some(map.next_value()?);
+                }
+                "title" => {
+                    if field_title.is_some() {
+                        return Err(de::Error::duplicate_field("title"));
+                    }
+                    field_title = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_CREATE_UPDATE_RESULT_FIELDS))
+            }
+        }
+        Ok(PaperDocCreateUpdateResult {
+            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
+            revision: field_revision.ok_or_else(|| de::Error::missing_field("revision"))?,
+            title: field_title.ok_or_else(|| de::Error::missing_field("title"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("doc_id", &self.doc_id)?;
+        s.serialize_field("revision", &self.revision)?;
+        s.serialize_field("title", &self.title)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocCreateUpdateResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperDocCreateUpdateResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperDocCreateUpdateResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperDocCreateUpdateResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperDocCreateUpdateResult", PAPER_DOC_CREATE_UPDATE_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDocCreateUpdateResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperDocCreateUpdateResult", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub struct PaperDocExport {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
@@ -2918,6 +3289,319 @@ impl ::serde::ser::Serialize for PaperDocSharingPolicy {
         let mut s = serializer.serialize_struct("PaperDocSharingPolicy", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct PaperDocUpdateArgs {
+    /// The Paper doc ID.
+    pub doc_id: PaperDocId,
+    /// The policy used for the current update call.
+    pub doc_update_policy: PaperDocUpdatePolicy,
+    /// The latest doc revision. This value must match the head revision or an error code will be
+    /// returned. This is to prevent colliding writes.
+    pub revision: i64,
+    /// The format of provided data.
+    pub import_format: ImportFormat,
+}
+
+impl PaperDocUpdateArgs {
+    pub fn new(doc_id: PaperDocId, doc_update_policy: PaperDocUpdatePolicy, revision: i64, import_format: ImportFormat) -> Self {
+        PaperDocUpdateArgs {
+            doc_id,
+            doc_update_policy,
+            revision,
+            import_format,
+        }
+    }
+
+}
+
+const PAPER_DOC_UPDATE_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
+                                                                "doc_update_policy",
+                                                                "revision",
+                                                                "import_format"];
+impl PaperDocUpdateArgs {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocUpdateArgs, V::Error> {
+        use serde::de;
+        let mut field_doc_id = None;
+        let mut field_doc_update_policy = None;
+        let mut field_revision = None;
+        let mut field_import_format = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "doc_id" => {
+                    if field_doc_id.is_some() {
+                        return Err(de::Error::duplicate_field("doc_id"));
+                    }
+                    field_doc_id = Some(map.next_value()?);
+                }
+                "doc_update_policy" => {
+                    if field_doc_update_policy.is_some() {
+                        return Err(de::Error::duplicate_field("doc_update_policy"));
+                    }
+                    field_doc_update_policy = Some(map.next_value()?);
+                }
+                "revision" => {
+                    if field_revision.is_some() {
+                        return Err(de::Error::duplicate_field("revision"));
+                    }
+                    field_revision = Some(map.next_value()?);
+                }
+                "import_format" => {
+                    if field_import_format.is_some() {
+                        return Err(de::Error::duplicate_field("import_format"));
+                    }
+                    field_import_format = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_UPDATE_ARGS_FIELDS))
+            }
+        }
+        Ok(PaperDocUpdateArgs {
+            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
+            doc_update_policy: field_doc_update_policy.ok_or_else(|| de::Error::missing_field("doc_update_policy"))?,
+            revision: field_revision.ok_or_else(|| de::Error::missing_field("revision"))?,
+            import_format: field_import_format.ok_or_else(|| de::Error::missing_field("import_format"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("doc_id", &self.doc_id)?;
+        s.serialize_field("doc_update_policy", &self.doc_update_policy)?;
+        s.serialize_field("revision", &self.revision)?;
+        s.serialize_field("import_format", &self.import_format)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdateArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperDocUpdateArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperDocUpdateArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperDocUpdateArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperDocUpdateArgs", PAPER_DOC_UPDATE_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDocUpdateArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperDocUpdateArgs", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum PaperDocUpdateError {
+    /// Your account does not have permissions to perform this action.
+    InsufficientPermissions,
+    Other,
+    /// The required doc was not found.
+    DocNotFound,
+    /// The provided content was malformed and cannot be imported to Paper.
+    ContentMalformed,
+    /// The provided revision does not match the document head.
+    RevisionMismatch,
+    /// The newly created Paper doc would be too large, split the content into multiple docs.
+    DocLengthExceeded,
+    /// The imported document contains an image that is too large. The current limit is 1MB. Note:
+    /// This only applies to HTML with data uri.
+    ImageSizeExceeded,
+    /// This operation is not allowed on archived Paper docs.
+    DocArchived,
+    /// This operation is not allowed on deleted Paper docs.
+    DocDeleted,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdateError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PaperDocUpdateError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperDocUpdateError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "insufficient_permissions" => Ok(PaperDocUpdateError::InsufficientPermissions),
+                    "doc_not_found" => Ok(PaperDocUpdateError::DocNotFound),
+                    "content_malformed" => Ok(PaperDocUpdateError::ContentMalformed),
+                    "revision_mismatch" => Ok(PaperDocUpdateError::RevisionMismatch),
+                    "doc_length_exceeded" => Ok(PaperDocUpdateError::DocLengthExceeded),
+                    "image_size_exceeded" => Ok(PaperDocUpdateError::ImageSizeExceeded),
+                    "doc_archived" => Ok(PaperDocUpdateError::DocArchived),
+                    "doc_deleted" => Ok(PaperDocUpdateError::DocDeleted),
+                    _ => Ok(PaperDocUpdateError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["insufficient_permissions",
+                                                    "other",
+                                                    "doc_not_found",
+                                                    "content_malformed",
+                                                    "revision_mismatch",
+                                                    "doc_length_exceeded",
+                                                    "image_size_exceeded",
+                                                    "doc_archived",
+                                                    "doc_deleted"];
+        deserializer.deserialize_struct("PaperDocUpdateError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDocUpdateError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PaperDocUpdateError::InsufficientPermissions => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocUpdateError", 1)?;
+                s.serialize_field(".tag", "insufficient_permissions")?;
+                s.end()
+            }
+            PaperDocUpdateError::DocNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocUpdateError", 1)?;
+                s.serialize_field(".tag", "doc_not_found")?;
+                s.end()
+            }
+            PaperDocUpdateError::ContentMalformed => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocUpdateError", 1)?;
+                s.serialize_field(".tag", "content_malformed")?;
+                s.end()
+            }
+            PaperDocUpdateError::RevisionMismatch => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocUpdateError", 1)?;
+                s.serialize_field(".tag", "revision_mismatch")?;
+                s.end()
+            }
+            PaperDocUpdateError::DocLengthExceeded => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocUpdateError", 1)?;
+                s.serialize_field(".tag", "doc_length_exceeded")?;
+                s.end()
+            }
+            PaperDocUpdateError::ImageSizeExceeded => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocUpdateError", 1)?;
+                s.serialize_field(".tag", "image_size_exceeded")?;
+                s.end()
+            }
+            PaperDocUpdateError::DocArchived => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocUpdateError", 1)?;
+                s.serialize_field(".tag", "doc_archived")?;
+                s.end()
+            }
+            PaperDocUpdateError::DocDeleted => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocUpdateError", 1)?;
+                s.serialize_field(".tag", "doc_deleted")?;
+                s.end()
+            }
+            PaperDocUpdateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for PaperDocUpdateError {
+    fn description(&self) -> &str {
+        "PaperDocUpdateError"
+    }
+}
+
+impl ::std::fmt::Display for PaperDocUpdateError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum PaperDocUpdatePolicy {
+    /// The content will be appended to the doc.
+    Append,
+    /// The content will be prepended to the doc. Note: the doc title will not be affected.
+    Prepend,
+    /// The document will be overwitten at the head with the provided content.
+    OverwriteAll,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdatePolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PaperDocUpdatePolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperDocUpdatePolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "append" => Ok(PaperDocUpdatePolicy::Append),
+                    "prepend" => Ok(PaperDocUpdatePolicy::Prepend),
+                    "overwrite_all" => Ok(PaperDocUpdatePolicy::OverwriteAll),
+                    _ => Ok(PaperDocUpdatePolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["append",
+                                                    "prepend",
+                                                    "overwrite_all",
+                                                    "other"];
+        deserializer.deserialize_struct("PaperDocUpdatePolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDocUpdatePolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PaperDocUpdatePolicy::Append => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocUpdatePolicy", 1)?;
+                s.serialize_field(".tag", "append")?;
+                s.end()
+            }
+            PaperDocUpdatePolicy::Prepend => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocUpdatePolicy", 1)?;
+                s.serialize_field(".tag", "prepend")?;
+                s.end()
+            }
+            PaperDocUpdatePolicy::OverwriteAll => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDocUpdatePolicy", 1)?;
+                s.serialize_field(".tag", "overwrite_all")?;
+                s.end()
+            }
+            PaperDocUpdatePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 

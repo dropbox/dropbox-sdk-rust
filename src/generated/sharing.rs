@@ -1869,9 +1869,9 @@ impl ::std::fmt::Display for CreateSharedLinkError {
 
 #[derive(Debug)]
 pub struct CreateSharedLinkWithSettingsArg {
-    /// The path to be shared by the shared link
+    /// The path to be shared by the shared link.
     pub path: ReadPath,
-    /// The requested settings for the newly created shared link
+    /// The requested settings for the newly created shared link.
     pub settings: Option<SharedLinkSettings>,
 }
 
@@ -1958,14 +1958,14 @@ impl ::serde::ser::Serialize for CreateSharedLinkWithSettingsArg {
 #[derive(Debug)]
 pub enum CreateSharedLinkWithSettingsError {
     Path(super::files::LookupError),
-    /// User's email should be verified
+    /// User's email should be verified.
     EmailNotVerified,
     /// The shared link already exists. You can call :route:`list_shared_links` to get the existing
     /// link.
     SharedLinkAlreadyExists,
-    /// There is an error with the given settings
+    /// There is an error with the given settings.
     SettingsError(SharedLinkSettingsError),
-    /// Access to the requested path is forbidden
+    /// Access to the requested path is forbidden.
     AccessDenied,
 }
 
@@ -2254,7 +2254,7 @@ pub enum FileAction {
     Unshare,
     /// Relinquish one's own membership to the file.
     RelinquishMembership,
-    /// This action is deprecated. Use create_link instead.
+    /// Use create_link instead.
     ShareLink,
     /// Create a shared link to the file.
     CreateLink,
@@ -2459,7 +2459,7 @@ impl ::serde::ser::Serialize for FileErrorResult {
     }
 }
 
-/// The metadata of a file shared link
+/// The metadata of a file shared link.
 #[derive(Debug)]
 pub struct FileLinkMetadata {
     /// URL of the shared link.
@@ -3305,7 +3305,7 @@ impl ::serde::ser::Serialize for FolderAction {
     }
 }
 
-/// The metadata of a folder shared link
+/// The metadata of a folder shared link.
 #[derive(Debug)]
 pub struct FolderLinkMetadata {
     /// URL of the shared link.
@@ -6029,7 +6029,7 @@ impl ::serde::ser::Serialize for LinkPermission {
 
 #[derive(Debug)]
 pub struct LinkPermissions {
-    /// Whether the caller can revoke the shared link
+    /// Whether the caller can revoke the shared link.
     pub can_revoke: bool,
     /// The current visibility of the link after considering the shared links policies of the the
     /// team (in case the link's owner is part of a team) and the shared folder (in case the linked
@@ -8788,7 +8788,7 @@ impl ::serde::ser::Serialize for MembershipInfo {
 
 #[derive(Debug)]
 pub struct ModifySharedLinkSettingsArgs {
-    /// URL of the shared link to change its settings
+    /// URL of the shared link to change its settings.
     pub url: String,
     /// Set of settings for the shared link.
     pub settings: SharedLinkSettings,
@@ -8896,9 +8896,9 @@ pub enum ModifySharedLinkSettingsError {
     /// This type of link is not supported.
     UnsupportedLinkType,
     Other,
-    /// There is an error with the given settings
+    /// There is an error with the given settings.
     SettingsError(SharedLinkSettingsError),
-    /// The caller's email should be verified
+    /// The caller's email should be verified.
     EmailNotVerified,
 }
 
@@ -9498,6 +9498,8 @@ pub enum PermissionDeniedReason {
     UserNotOnTeam,
     /// Folder is inside of another shared folder.
     FolderIsInsideSharedFolder,
+    /// Policy cannot be changed due to restrictions from parent folder.
+    RestrictedByParentFolder,
     InsufficientPlan(InsufficientPlan),
     Other,
 }
@@ -9531,6 +9533,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PermissionDeniedReason {
                     "user_account_type" => Ok(PermissionDeniedReason::UserAccountType),
                     "user_not_on_team" => Ok(PermissionDeniedReason::UserNotOnTeam),
                     "folder_is_inside_shared_folder" => Ok(PermissionDeniedReason::FolderIsInsideSharedFolder),
+                    "restricted_by_parent_folder" => Ok(PermissionDeniedReason::RestrictedByParentFolder),
                     "insufficient_plan" => Ok(PermissionDeniedReason::InsufficientPlan(InsufficientPlan::internal_deserialize(map)?)),
                     _ => Ok(PermissionDeniedReason::Other)
                 }
@@ -9549,6 +9552,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PermissionDeniedReason {
                                                     "user_account_type",
                                                     "user_not_on_team",
                                                     "folder_is_inside_shared_folder",
+                                                    "restricted_by_parent_folder",
                                                     "insufficient_plan",
                                                     "other"];
         deserializer.deserialize_struct("PermissionDeniedReason", VARIANTS, EnumVisitor)
@@ -9636,6 +9640,12 @@ impl ::serde::ser::Serialize for PermissionDeniedReason {
                 // unit
                 let mut s = serializer.serialize_struct("PermissionDeniedReason", 1)?;
                 s.serialize_field(".tag", "folder_is_inside_shared_folder")?;
+                s.end()
+            }
+            PermissionDeniedReason::RestrictedByParentFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("PermissionDeniedReason", 1)?;
+                s.serialize_field(".tag", "restricted_by_parent_folder")?;
                 s.end()
             }
             PermissionDeniedReason::InsufficientPlan(ref x) => {
@@ -13418,7 +13428,7 @@ impl ::std::fmt::Display for SharedLinkError {
     }
 }
 
-/// The metadata of a shared link
+/// The metadata of a shared link.
 #[derive(Debug)]
 pub enum SharedLinkMetadata {
     File(FileLinkMetadata),
@@ -13670,7 +13680,7 @@ pub enum SharedLinkSettingsError {
     InvalidSettings,
     /// User is not allowed to modify the settings of this link. Note that basic users can only set
     /// :field:`RequestedVisibility.public` as the :field:`SharedLinkSettings.requested_visibility`
-    /// and cannot set :field:`SharedLinkSettings.expires`
+    /// and cannot set :field:`SharedLinkSettings.expires`.
     NotAuthorized,
 }
 
@@ -13904,7 +13914,7 @@ impl ::std::fmt::Display for SharingUserError {
 /// Information about a team member.
 #[derive(Debug)]
 pub struct TeamMemberInfo {
-    /// Information about the member's team
+    /// Information about the member's team.
     pub team_info: TeamInfo,
     /// The display name of the user.
     pub display_name: String,

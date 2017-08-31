@@ -8,7 +8,7 @@
     doc_markdown,
 )]
 
-//! This namespace contains common data types used within the users namespace
+//! This namespace contains common data types used within the users namespace.
 
 pub type AccountId = String;
 

@@ -147,6 +147,13 @@ pub fn get_thumbnail(client: &::client_trait::HttpClient, arg: &ThumbnailArg, ra
     ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Content, "files/get_thumbnail", arg, None, range_start, range_end)
 }
 
+/// Get thumbnails for a list of images. We allow up to 25 thumbnails in a single batch. This method
+/// currently supports files with the following file extensions: jpg, jpeg, png, tiff, tif, gif and
+/// bmp. Photos that are larger than 20MB in size won't be converted to a thumbnail.
+pub fn get_thumbnail_batch(client: &::client_trait::HttpClient, arg: &GetThumbnailBatchArg) -> ::Result<Result<GetThumbnailBatchResult, GetThumbnailBatchError>> {
+    ::client_helpers::request(client, ::client_trait::Endpoint::Content, "files/get_thumbnail_batch", arg, None)
+}
+
 /// Starts returning the contents of a folder. If the result's :field:`ListFolderResult.has_more`
 /// field is :val:`true`, call :route:`list_folder/continue` with the returned
 /// :field:`ListFolderResult.cursor` to retrieve more entries. If you're using
@@ -1374,8 +1381,8 @@ impl ::serde::ser::Serialize for DeleteBatchArg {
 
 #[derive(Debug)]
 pub enum DeleteBatchError {
-    /// Deprecated by :field:`DeleteError.too_many_write_operations`. :route:`delete_batch` now
-    /// provides smaller granularity about which entry has failed because of this.
+    /// Use :field:`DeleteError.too_many_write_operations`. :route:`delete_batch` now provides
+    /// smaller granularity about which entry has failed because of this.
     TooManyWriteOperations,
     Other,
 }
@@ -1973,7 +1980,7 @@ pub struct DeletedMetadata {
     /// only the casing of paths won't be returned by :route:`list_folder/continue`. This field will
     /// be null if the file or folder is not mounted.
     pub path_display: Option<String>,
-    /// Deprecated. Please use :field:`FileSharingInfo.parent_shared_folder_id` or
+    /// Please use :field:`FileSharingInfo.parent_shared_folder_id` or
     /// :field:`FolderSharingInfo.parent_shared_folder_id` instead.
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
 }
@@ -2178,7 +2185,7 @@ impl ::serde::ser::Serialize for Dimensions {
 pub struct DownloadArg {
     /// The path of the file to download.
     pub path: ReadPath,
-    /// Deprecated. Please specify revision in :field:`path` instead.
+    /// Please specify revision in :field:`path` instead.
     pub rev: Option<Rev>,
 }
 
@@ -2357,7 +2364,7 @@ pub struct FileMetadata {
     /// only the casing of paths won't be returned by :route:`list_folder/continue`. This field will
     /// be null if the file or folder is not mounted.
     pub path_display: Option<String>,
-    /// Deprecated. Please use :field:`FileSharingInfo.parent_shared_folder_id` or
+    /// Please use :field:`FileSharingInfo.parent_shared_folder_id` or
     /// :field:`FolderSharingInfo.parent_shared_folder_id` instead.
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
     /// Additional information if the file is a photo or video.
@@ -2792,10 +2799,10 @@ pub struct FolderMetadata {
     /// only the casing of paths won't be returned by :route:`list_folder/continue`. This field will
     /// be null if the file or folder is not mounted.
     pub path_display: Option<String>,
-    /// Deprecated. Please use :field:`FileSharingInfo.parent_shared_folder_id` or
+    /// Please use :field:`FileSharingInfo.parent_shared_folder_id` or
     /// :field:`FolderSharingInfo.parent_shared_folder_id` instead.
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
-    /// Deprecated. Please use :field:`sharing_info` instead.
+    /// Please use :field:`sharing_info` instead.
     pub shared_folder_id: Option<super::common::SharedFolderId>,
     /// Set if the folder is contained in a shared folder or is a shared folder mount point.
     pub sharing_info: Option<FolderSharingInfo>,
@@ -3769,6 +3776,357 @@ impl ::serde::ser::Serialize for GetTemporaryLinkResult {
     }
 }
 
+/// Arguments for :route:`get_thumbnail_batch`.
+#[derive(Debug)]
+pub struct GetThumbnailBatchArg {
+    /// List of files to get thumbnails.
+    pub entries: Vec<ThumbnailArg>,
+}
+
+impl GetThumbnailBatchArg {
+    pub fn new(entries: Vec<ThumbnailArg>) -> Self {
+        GetThumbnailBatchArg {
+            entries,
+        }
+    }
+
+}
+
+const GET_THUMBNAIL_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries"];
+impl GetThumbnailBatchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetThumbnailBatchArg, V::Error> {
+        use serde::de;
+        let mut field_entries = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GET_THUMBNAIL_BATCH_ARG_FIELDS))
+            }
+        }
+        Ok(GetThumbnailBatchArg {
+            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetThumbnailBatchArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetThumbnailBatchArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetThumbnailBatchArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetThumbnailBatchArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetThumbnailBatchArg", GET_THUMBNAIL_BATCH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetThumbnailBatchArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetThumbnailBatchArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum GetThumbnailBatchError {
+    /// The operation involves more than 25 files.
+    TooManyFiles,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetThumbnailBatchError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetThumbnailBatchError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetThumbnailBatchError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "too_many_files" => Ok(GetThumbnailBatchError::TooManyFiles),
+                    _ => Ok(GetThumbnailBatchError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["too_many_files",
+                                                    "other"];
+        deserializer.deserialize_struct("GetThumbnailBatchError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetThumbnailBatchError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            GetThumbnailBatchError::TooManyFiles => {
+                // unit
+                let mut s = serializer.serialize_struct("GetThumbnailBatchError", 1)?;
+                s.serialize_field(".tag", "too_many_files")?;
+                s.end()
+            }
+            GetThumbnailBatchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for GetThumbnailBatchError {
+    fn description(&self) -> &str {
+        "GetThumbnailBatchError"
+    }
+}
+
+impl ::std::fmt::Display for GetThumbnailBatchError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct GetThumbnailBatchResult {
+    /// List of files and their thumbnails.
+    pub entries: Vec<GetThumbnailBatchResultEntry>,
+}
+
+impl GetThumbnailBatchResult {
+    pub fn new(entries: Vec<GetThumbnailBatchResultEntry>) -> Self {
+        GetThumbnailBatchResult {
+            entries,
+        }
+    }
+
+}
+
+const GET_THUMBNAIL_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
+impl GetThumbnailBatchResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetThumbnailBatchResult, V::Error> {
+        use serde::de;
+        let mut field_entries = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GET_THUMBNAIL_BATCH_RESULT_FIELDS))
+            }
+        }
+        Ok(GetThumbnailBatchResult {
+            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetThumbnailBatchResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetThumbnailBatchResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetThumbnailBatchResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetThumbnailBatchResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetThumbnailBatchResult", GET_THUMBNAIL_BATCH_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetThumbnailBatchResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetThumbnailBatchResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct GetThumbnailBatchResultData {
+    pub metadata: FileMetadata,
+    pub thumbnail: String,
+}
+
+impl GetThumbnailBatchResultData {
+    pub fn new(metadata: FileMetadata, thumbnail: String) -> Self {
+        GetThumbnailBatchResultData {
+            metadata,
+            thumbnail,
+        }
+    }
+
+}
+
+const GET_THUMBNAIL_BATCH_RESULT_DATA_FIELDS: &'static [&'static str] = &["metadata",
+                                                                          "thumbnail"];
+impl GetThumbnailBatchResultData {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetThumbnailBatchResultData, V::Error> {
+        use serde::de;
+        let mut field_metadata = None;
+        let mut field_thumbnail = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                "thumbnail" => {
+                    if field_thumbnail.is_some() {
+                        return Err(de::Error::duplicate_field("thumbnail"));
+                    }
+                    field_thumbnail = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GET_THUMBNAIL_BATCH_RESULT_DATA_FIELDS))
+            }
+        }
+        Ok(GetThumbnailBatchResultData {
+            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+            thumbnail: field_thumbnail.ok_or_else(|| de::Error::missing_field("thumbnail"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("metadata", &self.metadata)?;
+        s.serialize_field("thumbnail", &self.thumbnail)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetThumbnailBatchResultData {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetThumbnailBatchResultData;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetThumbnailBatchResultData struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetThumbnailBatchResultData::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetThumbnailBatchResultData", GET_THUMBNAIL_BATCH_RESULT_DATA_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetThumbnailBatchResultData {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetThumbnailBatchResultData", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum GetThumbnailBatchResultEntry {
+    Success(GetThumbnailBatchResultData),
+    /// The result for this file if it was an error.
+    Failure(ThumbnailError),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetThumbnailBatchResultEntry {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GetThumbnailBatchResultEntry;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetThumbnailBatchResultEntry structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "success" => Ok(GetThumbnailBatchResultEntry::Success(GetThumbnailBatchResultData::internal_deserialize(map)?)),
+                    "failure" => {
+                        match map.next_key()? {
+                            Some("failure") => Ok(GetThumbnailBatchResultEntry::Failure(map.next_value()?)),
+                            None => Err(de::Error::missing_field("failure")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => Ok(GetThumbnailBatchResultEntry::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["success",
+                                                    "failure",
+                                                    "other"];
+        deserializer.deserialize_struct("GetThumbnailBatchResultEntry", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetThumbnailBatchResultEntry {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            GetThumbnailBatchResultEntry::Success(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("GetThumbnailBatchResultEntry", 3)?;
+                s.serialize_field(".tag", "success")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            GetThumbnailBatchResultEntry::Failure(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "failure")?;
+                s.serialize_field("failure", x)?;
+                s.end()
+            }
+            GetThumbnailBatchResultEntry::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// GPS coordinates for a photo or video.
 #[derive(Debug)]
 pub struct GpsCoordinates {
@@ -3983,6 +4341,12 @@ pub struct ListFolderArg {
     /// If true, the results will include a flag for each file indicating whether or not  that file
     /// has any explicit members.
     pub include_has_explicit_shared_members: bool,
+    /// If true, the results will include entries under mounted folders which includes app folder,
+    /// shared folder and team folder.
+    pub include_mounted_folders: bool,
+    /// The maximum number of results to return per request. Note: This is an approximate number and
+    /// there can be slightly more entries returned in some cases.
+    pub limit: Option<u32>,
 }
 
 impl ListFolderArg {
@@ -3993,6 +4357,8 @@ impl ListFolderArg {
             include_media_info: false,
             include_deleted: false,
             include_has_explicit_shared_members: false,
+            include_mounted_folders: true,
+            limit: None,
         }
     }
 
@@ -4016,13 +4382,25 @@ impl ListFolderArg {
         self
     }
 
+    pub fn with_include_mounted_folders(mut self, value: bool) -> Self {
+        self.include_mounted_folders = value;
+        self
+    }
+
+    pub fn with_limit(mut self, value: Option<u32>) -> Self {
+        self.limit = value;
+        self
+    }
+
 }
 
 const LIST_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
                                                           "recursive",
                                                           "include_media_info",
                                                           "include_deleted",
-                                                          "include_has_explicit_shared_members"];
+                                                          "include_has_explicit_shared_members",
+                                                          "include_mounted_folders",
+                                                          "limit"];
 impl ListFolderArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderArg, V::Error> {
         use serde::de;
@@ -4031,6 +4409,8 @@ impl ListFolderArg {
         let mut field_include_media_info = None;
         let mut field_include_deleted = None;
         let mut field_include_has_explicit_shared_members = None;
+        let mut field_include_mounted_folders = None;
+        let mut field_limit = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "path" => {
@@ -4063,6 +4443,18 @@ impl ListFolderArg {
                     }
                     field_include_has_explicit_shared_members = Some(map.next_value()?);
                 }
+                "include_mounted_folders" => {
+                    if field_include_mounted_folders.is_some() {
+                        return Err(de::Error::duplicate_field("include_mounted_folders"));
+                    }
+                    field_include_mounted_folders = Some(map.next_value()?);
+                }
+                "limit" => {
+                    if field_limit.is_some() {
+                        return Err(de::Error::duplicate_field("limit"));
+                    }
+                    field_limit = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_ARG_FIELDS))
             }
         }
@@ -4072,6 +4464,8 @@ impl ListFolderArg {
             include_media_info: field_include_media_info.unwrap_or(false),
             include_deleted: field_include_deleted.unwrap_or(false),
             include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
+            include_mounted_folders: field_include_mounted_folders.unwrap_or(true),
+            limit: field_limit,
         })
     }
 
@@ -4081,7 +4475,9 @@ impl ListFolderArg {
         s.serialize_field("recursive", &self.recursive)?;
         s.serialize_field("include_media_info", &self.include_media_info)?;
         s.serialize_field("include_deleted", &self.include_deleted)?;
-        s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)
+        s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
+        s.serialize_field("include_mounted_folders", &self.include_mounted_folders)?;
+        s.serialize_field("limit", &self.limit)
     }
 }
 
@@ -4107,7 +4503,7 @@ impl ::serde::ser::Serialize for ListFolderArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListFolderArg", 5)?;
+        let mut s = serializer.serialize_struct("ListFolderArg", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -5483,7 +5879,7 @@ impl ::serde::ser::Serialize for PhotoMetadata {
 pub struct PreviewArg {
     /// The path of the file to preview.
     pub path: ReadPath,
-    /// Deprecated. Please specify revision in :field:`path` instead.
+    /// Please specify revision in :field:`path` instead.
     pub rev: Option<Rev>,
 }
 

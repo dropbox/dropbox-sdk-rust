@@ -11,6 +11,7 @@
 pub type GroupsGetInfoResult = Vec<GroupsGetInfoItem>;
 pub type MembersGetInfoResult = Vec<MembersGetInfoItem>;
 pub type NumberPerDay = Vec<Option<u64>>;
+pub type UserQuota = u32;
 
 /// List all device sessions of a team's member.
 pub fn devices_list_member_devices(client: &::client_trait::HttpClient, arg: &ListMemberDevicesArg) -> ::Result<Result<ListMemberDevicesResult, ListMemberDevicesError>> {
@@ -27,12 +28,12 @@ pub fn devices_list_team_devices(client: &::client_trait::HttpClient, arg: &List
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/devices/list_team_devices", arg, None)
 }
 
-/// Revoke a device session of a team's member
+/// Revoke a device session of a team's member.
 pub fn devices_revoke_device_session(client: &::client_trait::HttpClient, arg: &RevokeDeviceSessionArg) -> ::Result<Result<(), RevokeDeviceSessionError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/devices/revoke_device_session", arg, None)
 }
 
-/// Revoke a list of device sessions of team members
+/// Revoke a list of device sessions of team members.
 pub fn devices_revoke_device_session_batch(client: &::client_trait::HttpClient, arg: &RevokeDeviceSessionBatchArg) -> ::Result<Result<RevokeDeviceSessionBatchResult, RevokeDeviceSessionBatchError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/devices/revoke_device_session_batch", arg, None)
 }
@@ -141,14 +142,31 @@ pub fn linked_apps_list_team_linked_apps(client: &::client_trait::HttpClient, ar
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/linked_apps/list_team_linked_apps", arg, None)
 }
 
-/// Revoke a linked application of the team member
+/// Revoke a linked application of the team member.
 pub fn linked_apps_revoke_linked_app(client: &::client_trait::HttpClient, arg: &RevokeLinkedApiAppArg) -> ::Result<Result<(), RevokeLinkedAppError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/linked_apps/revoke_linked_app", arg, None)
 }
 
-/// Revoke a list of linked applications of the team members
+/// Revoke a list of linked applications of the team members.
 pub fn linked_apps_revoke_linked_app_batch(client: &::client_trait::HttpClient, arg: &RevokeLinkedApiAppBatchArg) -> ::Result<Result<RevokeLinkedAppBatchResult, RevokeLinkedAppBatchError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/linked_apps/revoke_linked_app_batch", arg, None)
+}
+
+/// Get users custom quota. Returns none as the custom quota if none was set. A maximum of 1000
+/// members can be specified in a single call.
+pub fn member_space_limits_get_custom_quota(client: &::client_trait::HttpClient, arg: &CustomQuotaUsersArg) -> ::Result<Result<Vec<CustomQuotaResult>, CustomQuotaError>> {
+    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/member_space_limits/get_custom_quota", arg, None)
+}
+
+/// Remove users custom quota. A maximum of 1000 members can be specified in a single call.
+pub fn member_space_limits_remove_custom_quota(client: &::client_trait::HttpClient, arg: &CustomQuotaUsersArg) -> ::Result<Result<Vec<RemoveCustomQuotaResult>, CustomQuotaError>> {
+    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/member_space_limits/remove_custom_quota", arg, None)
+}
+
+/// Set users custom quota. Custom quota has to be at least 25GB. A maximum of 1000 members can be
+/// specified in a single call.
+pub fn member_space_limits_set_custom_quota(client: &::client_trait::HttpClient, arg: &SetCustomQuotaArg) -> ::Result<Result<Vec<CustomQuotaResult>, CustomQuotaError>> {
+    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/member_space_limits/set_custom_quota", arg, None)
 }
 
 /// Adds members to a team. Permission : Team member management A maximum of 20 members can be
@@ -165,7 +183,7 @@ pub fn members_add(client: &::client_trait::HttpClient, arg: &MembersAddArg) -> 
 }
 
 /// Once an async_job_id is returned from :route:`members/add` , use this to poll the status of the
-/// asynchronous request. Permission : Team member management
+/// asynchronous request. Permission : Team member management.
 pub fn members_add_job_status_get(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<MembersAddJobStatus, super::async::PollError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/add/job_status/get", arg, None)
 }
@@ -177,13 +195,13 @@ pub fn members_get_info(client: &::client_trait::HttpClient, arg: &MembersGetInf
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/get_info", arg, None)
 }
 
-/// Lists members of a team. Permission : Team information
+/// Lists members of a team. Permission : Team information.
 pub fn members_list(client: &::client_trait::HttpClient, arg: &MembersListArg) -> ::Result<Result<MembersListResult, MembersListError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/list", arg, None)
 }
 
 /// Once a cursor has been retrieved from :route:`members/list`, use this to paginate through all
-/// team members. Permission : Team information
+/// team members. Permission : Team information.
 pub fn members_list_continue(client: &::client_trait::HttpClient, arg: &MembersListContinueArg) -> ::Result<Result<MembersListResult, MembersListContinueError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/list/continue", arg, None)
 }
@@ -207,7 +225,7 @@ pub fn members_remove(client: &::client_trait::HttpClient, arg: &MembersRemoveAr
 }
 
 /// Once an async_job_id is returned from :route:`members/remove` , use this to poll the status of
-/// the asynchronous request. Permission : Team member management
+/// the asynchronous request. Permission : Team member management.
 pub fn members_remove_job_status_get(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<super::async::PollEmptyResult, super::async::PollError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/remove/job_status/get", arg, None)
 }
@@ -219,12 +237,12 @@ pub fn members_send_welcome_email(client: &::client_trait::HttpClient, arg: &Use
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/send_welcome_email", arg, None)
 }
 
-/// Updates a team member's permissions. Permission : Team member management
+/// Updates a team member's permissions. Permission : Team member management.
 pub fn members_set_admin_permissions(client: &::client_trait::HttpClient, arg: &MembersSetPermissionsArg) -> ::Result<Result<MembersSetPermissionsResult, MembersSetPermissionsError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/set_admin_permissions", arg, None)
 }
 
-/// Updates a team member's profile. Permission : Team member management
+/// Updates a team member's profile. Permission : Team member management.
 pub fn members_set_profile(client: &::client_trait::HttpClient, arg: &MembersSetProfileArg) -> ::Result<Result<TeamMemberInfo, MembersSetProfileError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/set_profile", arg, None)
 }
@@ -351,26 +369,26 @@ pub fn token_get_authenticated_admin(client: &::client_trait::HttpClient, arg: &
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/token/get_authenticated_admin", arg, None)
 }
 
-/// Information on active web sessions
+/// Information on active web sessions.
 #[derive(Debug)]
 pub struct ActiveWebSession {
-    /// The session id
+    /// The session id.
     pub session_id: String,
-    /// Information on the hosting device
+    /// Information on the hosting device.
     pub user_agent: String,
-    /// Information on the hosting operating system
+    /// Information on the hosting operating system.
     pub os: String,
-    /// Information on the browser used for this web session
+    /// Information on the browser used for this web session.
     pub browser: String,
-    /// The IP address of the last activity from this session
+    /// The IP address of the last activity from this session.
     pub ip_address: Option<String>,
-    /// The country from which the last activity from this session was made
+    /// The country from which the last activity from this session was made.
     pub country: Option<String>,
-    /// The time this session was created
+    /// The time this session was created.
     pub created: Option<super::common::DropboxTimestamp>,
-    /// The time of the last activity from this session
+    /// The time of the last activity from this session.
     pub updated: Option<super::common::DropboxTimestamp>,
-    /// The time this session expires
+    /// The time this session expires.
     pub expires: Option<super::common::DropboxTimestamp>,
 }
 
@@ -798,20 +816,20 @@ impl ::serde::ser::Serialize for AdminTier {
     }
 }
 
-/// Information on linked third party applications
+/// Information on linked third party applications.
 #[derive(Debug)]
 pub struct ApiApp {
-    /// The application unique id
+    /// The application unique id.
     pub app_id: String,
-    /// The application name
+    /// The application name.
     pub app_name: String,
-    /// Whether the linked application uses a dedicated folder
+    /// Whether the linked application uses a dedicated folder.
     pub is_app_folder: bool,
-    /// The application publisher name
+    /// The application publisher name.
     pub publisher: Option<String>,
-    /// The publisher's URL
+    /// The publisher's URL.
     pub publisher_url: Option<String>,
-    /// The time this application was linked
+    /// The time this application was linked.
     pub linked: Option<super::common::DropboxTimestamp>,
 }
 
@@ -1121,12 +1139,214 @@ impl ::std::fmt::Display for BaseTeamFolderError {
     }
 }
 
+/// Error returned by setting member custom quota.
+#[derive(Debug)]
+pub enum CustomQuotaError {
+    /// A maximum of 1000 users can be set for a single call.
+    TooManyUsers,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CustomQuotaError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = CustomQuotaError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CustomQuotaError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "too_many_users" => Ok(CustomQuotaError::TooManyUsers),
+                    _ => Ok(CustomQuotaError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["too_many_users",
+                                                    "other"];
+        deserializer.deserialize_struct("CustomQuotaError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CustomQuotaError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            CustomQuotaError::TooManyUsers => {
+                // unit
+                let mut s = serializer.serialize_struct("CustomQuotaError", 1)?;
+                s.serialize_field(".tag", "too_many_users")?;
+                s.end()
+            }
+            CustomQuotaError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for CustomQuotaError {
+    fn description(&self) -> &str {
+        "CustomQuotaError"
+    }
+}
+
+impl ::std::fmt::Display for CustomQuotaError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// User custom quota.
+#[derive(Debug)]
+pub enum CustomQuotaResult {
+    /// User's custom quota.
+    Success(UserCustomQuotaResult),
+    /// Invalid user (not in team).
+    InvalidUser(UserSelectorArg),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CustomQuotaResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = CustomQuotaResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CustomQuotaResult structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "success" => Ok(CustomQuotaResult::Success(UserCustomQuotaResult::internal_deserialize(map)?)),
+                    "invalid_user" => {
+                        match map.next_key()? {
+                            Some("invalid_user") => Ok(CustomQuotaResult::InvalidUser(map.next_value()?)),
+                            None => Err(de::Error::missing_field("invalid_user")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => Ok(CustomQuotaResult::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["success",
+                                                    "invalid_user",
+                                                    "other"];
+        deserializer.deserialize_struct("CustomQuotaResult", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CustomQuotaResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            CustomQuotaResult::Success(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("CustomQuotaResult", 3)?;
+                s.serialize_field(".tag", "success")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            CustomQuotaResult::InvalidUser(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "invalid_user")?;
+                s.serialize_field("invalid_user", x)?;
+                s.end()
+            }
+            CustomQuotaResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct CustomQuotaUsersArg {
+    /// List of users.
+    pub users: Vec<UserSelectorArg>,
+}
+
+impl CustomQuotaUsersArg {
+    pub fn new(users: Vec<UserSelectorArg>) -> Self {
+        CustomQuotaUsersArg {
+            users,
+        }
+    }
+
+}
+
+const CUSTOM_QUOTA_USERS_ARG_FIELDS: &'static [&'static str] = &["users"];
+impl CustomQuotaUsersArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CustomQuotaUsersArg, V::Error> {
+        use serde::de;
+        let mut field_users = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "users" => {
+                    if field_users.is_some() {
+                        return Err(de::Error::duplicate_field("users"));
+                    }
+                    field_users = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, CUSTOM_QUOTA_USERS_ARG_FIELDS))
+            }
+        }
+        Ok(CustomQuotaUsersArg {
+            users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("users", &self.users)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CustomQuotaUsersArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CustomQuotaUsersArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CustomQuotaUsersArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CustomQuotaUsersArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CustomQuotaUsersArg", CUSTOM_QUOTA_USERS_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CustomQuotaUsersArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CustomQuotaUsersArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Input arguments that can be provided for most reports.
 #[derive(Debug)]
 pub struct DateRange {
-    /// Optional starting date (inclusive)
+    /// Optional starting date (inclusive).
     pub start_date: Option<super::common::Date>,
-    /// Optional ending date (exclusive)
+    /// Optional ending date (exclusive).
     pub end_date: Option<super::common::Date>,
 }
 
@@ -1255,28 +1475,28 @@ impl ::std::fmt::Display for DateRangeError {
     }
 }
 
-/// Information about linked Dropbox desktop client sessions
+/// Information about linked Dropbox desktop client sessions.
 #[derive(Debug)]
 pub struct DesktopClientSession {
-    /// The session id
+    /// The session id.
     pub session_id: String,
-    /// Name of the hosting desktop
+    /// Name of the hosting desktop.
     pub host_name: String,
-    /// The Dropbox desktop client type
+    /// The Dropbox desktop client type.
     pub client_type: DesktopPlatform,
-    /// The Dropbox client version
+    /// The Dropbox client version.
     pub client_version: String,
-    /// Information on the hosting platform
+    /// Information on the hosting platform.
     pub platform: String,
-    /// Whether it's possible to delete all of the account files upon unlinking
+    /// Whether it's possible to delete all of the account files upon unlinking.
     pub is_delete_on_unlink_supported: bool,
-    /// The IP address of the last activity from this session
+    /// The IP address of the last activity from this session.
     pub ip_address: Option<String>,
-    /// The country from which the last activity from this session was made
+    /// The country from which the last activity from this session was made.
     pub country: Option<String>,
-    /// The time this session was created
+    /// The time this session was created.
     pub created: Option<super::common::DropboxTimestamp>,
-    /// The time of the last activity from this session
+    /// The time of the last activity from this session.
     pub updated: Option<super::common::DropboxTimestamp>,
 }
 
@@ -1465,11 +1685,11 @@ impl ::serde::ser::Serialize for DesktopClientSession {
 
 #[derive(Debug)]
 pub enum DesktopPlatform {
-    /// Official Windows Dropbox desktop client
+    /// Official Windows Dropbox desktop client.
     Windows,
-    /// Official Mac Dropbox desktop client
+    /// Official Mac Dropbox desktop client.
     Mac,
-    /// Official Linux Dropbox desktop client
+    /// Official Linux Dropbox desktop client.
     Linux,
     Other,
 }
@@ -1535,15 +1755,15 @@ impl ::serde::ser::Serialize for DesktopPlatform {
 
 #[derive(Debug)]
 pub struct DeviceSession {
-    /// The session id
+    /// The session id.
     pub session_id: String,
-    /// The IP address of the last activity from this session
+    /// The IP address of the last activity from this session.
     pub ip_address: Option<String>,
-    /// The country from which the last activity from this session was made
+    /// The country from which the last activity from this session was made.
     pub country: Option<String>,
-    /// The time this session was created
+    /// The time this session was created.
     pub created: Option<super::common::DropboxTimestamp>,
-    /// The time of the last activity from this session
+    /// The time of the last activity from this session.
     pub updated: Option<super::common::DropboxTimestamp>,
 }
 
@@ -1677,9 +1897,9 @@ impl ::serde::ser::Serialize for DeviceSession {
 
 #[derive(Debug)]
 pub struct DeviceSessionArg {
-    /// The session id
+    /// The session id.
     pub session_id: String,
-    /// The unique id of the member owning the device
+    /// The unique id of the member owning the device.
     pub team_member_id: String,
 }
 
@@ -6078,7 +6298,7 @@ impl ::serde::ser::Serialize for IncludeMembersArg {
 
 #[derive(Debug)]
 pub struct ListMemberAppsArg {
-    /// The team member id
+    /// The team member id.
     pub team_member_id: String,
 }
 
@@ -6211,7 +6431,7 @@ impl ::std::fmt::Display for ListMemberAppsError {
 
 #[derive(Debug)]
 pub struct ListMemberAppsResult {
-    /// List of third party applications linked by this team member
+    /// List of third party applications linked by this team member.
     pub linked_api_apps: Vec<ApiApp>,
 }
 
@@ -6281,13 +6501,13 @@ impl ::serde::ser::Serialize for ListMemberAppsResult {
 
 #[derive(Debug)]
 pub struct ListMemberDevicesArg {
-    /// The team's member id
+    /// The team's member id.
     pub team_member_id: String,
-    /// Whether to list web sessions of the team's member
+    /// Whether to list web sessions of the team's member.
     pub include_web_sessions: bool,
-    /// Whether to list linked desktop devices of the team's member
+    /// Whether to list linked desktop devices of the team's member.
     pub include_desktop_clients: bool,
-    /// Whether to list linked mobile devices of the team's member
+    /// Whether to list linked mobile devices of the team's member.
     pub include_mobile_clients: bool,
 }
 
@@ -6467,11 +6687,11 @@ impl ::std::fmt::Display for ListMemberDevicesError {
 
 #[derive(Debug)]
 pub struct ListMemberDevicesResult {
-    /// List of web sessions made by this team member
+    /// List of web sessions made by this team member.
     pub active_web_sessions: Option<Vec<ActiveWebSession>>,
-    /// List of desktop clients used by this team member
+    /// List of desktop clients used by this team member.
     pub desktop_client_sessions: Option<Vec<DesktopClientSession>>,
-    /// List of mobile client used by this team member
+    /// List of mobile client used by this team member.
     pub mobile_client_sessions: Option<Vec<MobileClientSession>>,
 }
 
@@ -6565,7 +6785,7 @@ impl ::serde::ser::Serialize for ListMemberDevicesResult {
 pub struct ListMembersAppsArg {
     /// At the first call to the :route:`linked_apps/list_members_linked_apps` the cursor shouldn't
     /// be passed. Then, if the result of the call includes a cursor, the following requests should
-    /// include the received cursors in order to receive the next sub list of the team applications
+    /// include the received cursors in order to receive the next sub list of the team applications.
     pub cursor: Option<String>,
 }
 
@@ -6632,7 +6852,7 @@ impl ::serde::ser::Serialize for ListMembersAppsArg {
     }
 }
 
-/// Error returned by :route:`linked_apps/list_members_linked_apps`
+/// Error returned by :route:`linked_apps/list_members_linked_apps`.
 #[derive(Debug)]
 pub enum ListMembersAppsError {
     /// Indicates that the cursor has been invalidated. Call
@@ -6700,7 +6920,7 @@ impl ::std::fmt::Display for ListMembersAppsError {
 /// Information returned by :route:`linked_apps/list_members_linked_apps`.
 #[derive(Debug)]
 pub struct ListMembersAppsResult {
-    /// The linked applications of each member of the team
+    /// The linked applications of each member of the team.
     pub apps: Vec<MemberLinkedApps>,
     /// If true, then there are more apps available. Pass the cursor to
     /// :route:`linked_apps/list_members_linked_apps` to retrieve the rest.
@@ -6805,13 +7025,13 @@ impl ::serde::ser::Serialize for ListMembersAppsResult {
 pub struct ListMembersDevicesArg {
     /// At the first call to the :route:`devices/list_members_devices` the cursor shouldn't be
     /// passed. Then, if the result of the call includes a cursor, the following requests should
-    /// include the received cursors in order to receive the next sub list of team devices
+    /// include the received cursors in order to receive the next sub list of team devices.
     pub cursor: Option<String>,
-    /// Whether to list web sessions of the team members
+    /// Whether to list web sessions of the team members.
     pub include_web_sessions: bool,
-    /// Whether to list desktop clients of the team members
+    /// Whether to list desktop clients of the team members.
     pub include_desktop_clients: bool,
-    /// Whether to list mobile clients of the team members
+    /// Whether to list mobile clients of the team members.
     pub include_mobile_clients: bool,
 }
 
@@ -6976,7 +7196,7 @@ impl ::std::fmt::Display for ListMembersDevicesError {
 
 #[derive(Debug)]
 pub struct ListMembersDevicesResult {
-    /// The devices of each member of the team
+    /// The devices of each member of the team.
     pub devices: Vec<MemberDevices>,
     /// If true, then there are more devices available. Pass the cursor to
     /// :route:`devices/list_members_devices` to retrieve the rest.
@@ -7082,7 +7302,7 @@ impl ::serde::ser::Serialize for ListMembersDevicesResult {
 pub struct ListTeamAppsArg {
     /// At the first call to the :route:`linked_apps/list_team_linked_apps` the cursor shouldn't be
     /// passed. Then, if the result of the call includes a cursor, the following requests should
-    /// include the received cursors in order to receive the next sub list of the team applications
+    /// include the received cursors in order to receive the next sub list of the team applications.
     pub cursor: Option<String>,
 }
 
@@ -7149,7 +7369,7 @@ impl ::serde::ser::Serialize for ListTeamAppsArg {
     }
 }
 
-/// Error returned by :route:`linked_apps/list_team_linked_apps`
+/// Error returned by :route:`linked_apps/list_team_linked_apps`.
 #[derive(Debug)]
 pub enum ListTeamAppsError {
     /// Indicates that the cursor has been invalidated. Call
@@ -7217,7 +7437,7 @@ impl ::std::fmt::Display for ListTeamAppsError {
 /// Information returned by :route:`linked_apps/list_team_linked_apps`.
 #[derive(Debug)]
 pub struct ListTeamAppsResult {
-    /// The linked applications of each member of the team
+    /// The linked applications of each member of the team.
     pub apps: Vec<MemberLinkedApps>,
     /// If true, then there are more apps available. Pass the cursor to
     /// :route:`linked_apps/list_team_linked_apps` to retrieve the rest.
@@ -7322,13 +7542,13 @@ impl ::serde::ser::Serialize for ListTeamAppsResult {
 pub struct ListTeamDevicesArg {
     /// At the first call to the :route:`devices/list_team_devices` the cursor shouldn't be passed.
     /// Then, if the result of the call includes a cursor, the following requests should include the
-    /// received cursors in order to receive the next sub list of team devices
+    /// received cursors in order to receive the next sub list of team devices.
     pub cursor: Option<String>,
-    /// Whether to list web sessions of the team members
+    /// Whether to list web sessions of the team members.
     pub include_web_sessions: bool,
-    /// Whether to list desktop clients of the team members
+    /// Whether to list desktop clients of the team members.
     pub include_desktop_clients: bool,
-    /// Whether to list mobile clients of the team members
+    /// Whether to list mobile clients of the team members.
     pub include_mobile_clients: bool,
 }
 
@@ -7493,7 +7713,7 @@ impl ::std::fmt::Display for ListTeamDevicesError {
 
 #[derive(Debug)]
 pub struct ListTeamDevicesResult {
-    /// The devices of each member of the team
+    /// The devices of each member of the team.
     pub devices: Vec<MemberDevices>,
     /// If true, then there are more devices available. Pass the cursor to
     /// :route:`devices/list_team_devices` to retrieve the rest.
@@ -8086,13 +8306,13 @@ impl ::serde::ser::Serialize for MemberAddResult {
 /// Information on devices of a team's member.
 #[derive(Debug)]
 pub struct MemberDevices {
-    /// The member unique Id
+    /// The member unique Id.
     pub team_member_id: String,
-    /// List of web sessions made by this team member
+    /// List of web sessions made by this team member.
     pub web_sessions: Option<Vec<ActiveWebSession>>,
-    /// List of desktop clients by this team member
+    /// List of desktop clients by this team member.
     pub desktop_clients: Option<Vec<DesktopClientSession>>,
-    /// List of mobile clients by this team member
+    /// List of mobile clients by this team member.
     pub mobile_clients: Option<Vec<MobileClientSession>>,
 }
 
@@ -8211,9 +8431,9 @@ impl ::serde::ser::Serialize for MemberDevices {
 /// Information on linked applications of a team member.
 #[derive(Debug)]
 pub struct MemberLinkedApps {
-    /// The member unique Id
+    /// The member unique Id.
     pub team_member_id: String,
-    /// List of third party applications linked by this team member
+    /// List of third party applications linked by this team member.
     pub linked_api_apps: Vec<ApiApp>,
 }
 
@@ -9850,7 +10070,7 @@ pub enum MembersRemoveError {
     Other,
     /// The user is the last admin of the team, so it cannot be removed from it.
     RemoveLastAdmin,
-    /// Expected removed user and transfer_dest user to be different
+    /// Expected removed user and transfer_dest user to be different.
     RemovedAndTransferDestShouldDiffer,
     /// Expected removed user and transfer_admin user to be different.
     RemovedAndTransferAdminShouldDiffer,
@@ -10391,9 +10611,9 @@ pub struct MembersSetProfileArg {
     /// New external ID for member.
     pub new_external_id: Option<super::team_common::MemberExternalId>,
     /// New given name for member.
-    pub new_given_name: Option<super::common::NamePart>,
+    pub new_given_name: Option<super::common::OptionalNamePart>,
     /// New surname for member.
-    pub new_surname: Option<super::common::NamePart>,
+    pub new_surname: Option<super::common::OptionalNamePart>,
     /// New persistent ID. This field only available to teams using persistent ID SAML
     /// configuration.
     pub new_persistent_id: Option<String>,
@@ -10421,12 +10641,12 @@ impl MembersSetProfileArg {
         self
     }
 
-    pub fn with_new_given_name(mut self, value: Option<super::common::NamePart>) -> Self {
+    pub fn with_new_given_name(mut self, value: Option<super::common::OptionalNamePart>) -> Self {
         self.new_given_name = value;
         self
     }
 
-    pub fn with_new_surname(mut self, value: Option<super::common::NamePart>) -> Self {
+    pub fn with_new_surname(mut self, value: Option<super::common::OptionalNamePart>) -> Self {
         self.new_surname = value;
         self
     }
@@ -10550,9 +10770,9 @@ pub enum MembersSetProfileError {
     UserNotFound,
     /// The user is not a member of the team.
     UserNotInTeam,
-    /// It is unsafe to use both external_id and new_external_id
+    /// It is unsafe to use both external_id and new_external_id.
     ExternalIdAndNewExternalIdUnsafe,
-    /// None of new_email, new_given_name, new_surname, or new_external_id are specified
+    /// None of new_email, new_given_name, new_surname, or new_external_id are specified.
     NoNewDataSpecified,
     /// Email is already reserved for another user.
     EmailReservedForOtherUser,
@@ -10967,15 +11187,15 @@ impl ::std::fmt::Display for MembersUnsuspendError {
 
 #[derive(Debug)]
 pub enum MobileClientPlatform {
-    /// Official Dropbox iPhone client
+    /// Official Dropbox iPhone client.
     Iphone,
-    /// Official Dropbox iPad client
+    /// Official Dropbox iPad client.
     Ipad,
-    /// Official Dropbox Android client
+    /// Official Dropbox Android client.
     Android,
-    /// Official Dropbox Windows phone client
+    /// Official Dropbox Windows phone client.
     WindowsPhone,
-    /// Official Dropbox Blackberry client
+    /// Official Dropbox Blackberry client.
     Blackberry,
     Other,
 }
@@ -11055,28 +11275,28 @@ impl ::serde::ser::Serialize for MobileClientPlatform {
     }
 }
 
-/// Information about linked Dropbox mobile client sessions
+/// Information about linked Dropbox mobile client sessions.
 #[derive(Debug)]
 pub struct MobileClientSession {
-    /// The session id
+    /// The session id.
     pub session_id: String,
-    /// The device name
+    /// The device name.
     pub device_name: String,
-    /// The mobile application type
+    /// The mobile application type.
     pub client_type: MobileClientPlatform,
-    /// The IP address of the last activity from this session
+    /// The IP address of the last activity from this session.
     pub ip_address: Option<String>,
-    /// The country from which the last activity from this session was made
+    /// The country from which the last activity from this session was made.
     pub country: Option<String>,
-    /// The time this session was created
+    /// The time this session was created.
     pub created: Option<super::common::DropboxTimestamp>,
-    /// The time of the last activity from this session
+    /// The time of the last activity from this session.
     pub updated: Option<super::common::DropboxTimestamp>,
-    /// The dropbox client version
+    /// The dropbox client version.
     pub client_version: Option<String>,
-    /// The hosting OS version
+    /// The hosting OS version.
     pub os_version: Option<String>,
-    /// last carrier used by the device
+    /// last carrier used by the device.
     pub last_carrier: Option<String>,
 }
 
@@ -11474,6 +11694,81 @@ impl ::serde::ser::Serialize for NamespaceType {
     }
 }
 
+/// User result for setting member custom quota.
+#[derive(Debug)]
+pub enum RemoveCustomQuotaResult {
+    /// Successfully removed user.
+    Success(UserSelectorArg),
+    /// Invalid user (not in team).
+    InvalidUser(UserSelectorArg),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RemoveCustomQuotaResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RemoveCustomQuotaResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RemoveCustomQuotaResult structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "success" => {
+                        match map.next_key()? {
+                            Some("success") => Ok(RemoveCustomQuotaResult::Success(map.next_value()?)),
+                            None => Err(de::Error::missing_field("success")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "invalid_user" => {
+                        match map.next_key()? {
+                            Some("invalid_user") => Ok(RemoveCustomQuotaResult::InvalidUser(map.next_value()?)),
+                            None => Err(de::Error::missing_field("invalid_user")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => Ok(RemoveCustomQuotaResult::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["success",
+                                                    "invalid_user",
+                                                    "other"];
+        deserializer.deserialize_struct("RemoveCustomQuotaResult", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RemoveCustomQuotaResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RemoveCustomQuotaResult::Success(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "success")?;
+                s.serialize_field("success", x)?;
+                s.end()
+            }
+            RemoveCustomQuotaResult::InvalidUser(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "invalid_user")?;
+                s.serialize_field("invalid_user", x)?;
+                s.end()
+            }
+            RemoveCustomQuotaResult::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct RemovedStatus {
     /// True if the removed team member is recoverable.
@@ -11546,12 +11841,12 @@ impl ::serde::ser::Serialize for RemovedStatus {
 
 #[derive(Debug)]
 pub struct RevokeDesktopClientArg {
-    /// The session id
+    /// The session id.
     pub session_id: String,
-    /// The unique id of the member owning the device
+    /// The unique id of the member owning the device.
     pub team_member_id: String,
     /// Whether to delete all files of the account (this is possible only if supported by the
-    /// desktop client and  will be made the next time the client access the account)
+    /// desktop client and  will be made the next time the client access the account).
     pub delete_on_unlink: bool,
 }
 
@@ -11648,11 +11943,11 @@ impl ::serde::ser::Serialize for RevokeDesktopClientArg {
 
 #[derive(Debug)]
 pub enum RevokeDeviceSessionArg {
-    /// End an active session
+    /// End an active session.
     WebSession(DeviceSessionArg),
-    /// Unlink a linked desktop device
+    /// Unlink a linked desktop device.
     DesktopClient(RevokeDesktopClientArg),
-    /// Unlink a linked mobile device
+    /// Unlink a linked mobile device.
     MobileClient(DeviceSessionArg),
 }
 
@@ -11979,9 +12274,9 @@ impl ::std::fmt::Display for RevokeDeviceSessionError {
 
 #[derive(Debug)]
 pub struct RevokeDeviceSessionStatus {
-    /// Result of the revoking request
+    /// Result of the revoking request.
     pub success: bool,
-    /// The error cause in case of a failure
+    /// The error cause in case of a failure.
     pub error_type: Option<RevokeDeviceSessionError>,
 }
 
@@ -12067,11 +12362,11 @@ impl ::serde::ser::Serialize for RevokeDeviceSessionStatus {
 
 #[derive(Debug)]
 pub struct RevokeLinkedApiAppArg {
-    /// The application's unique id
+    /// The application's unique id.
     pub app_id: String,
-    /// The unique id of the member owning the device
+    /// The unique id of the member owning the device.
     pub team_member_id: String,
-    /// Whether to keep the application dedicated folder (in case the application uses  one)
+    /// Whether to keep the application dedicated folder (in case the application uses  one).
     pub keep_app_folder: bool,
 }
 
@@ -12430,9 +12725,9 @@ impl ::std::fmt::Display for RevokeLinkedAppError {
 
 #[derive(Debug)]
 pub struct RevokeLinkedAppStatus {
-    /// Result of the revoking request
+    /// Result of the revoking request.
     pub success: bool,
-    /// The error cause in case of a failure
+    /// The error cause in case of a failure.
     pub error_type: Option<RevokeLinkedAppError>,
 }
 
@@ -12511,6 +12806,76 @@ impl ::serde::ser::Serialize for RevokeLinkedAppStatus {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("RevokeLinkedAppStatus", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct SetCustomQuotaArg {
+    /// List of users and their custom quotas.
+    pub users_and_quotas: Vec<UserCustomQuotaArg>,
+}
+
+impl SetCustomQuotaArg {
+    pub fn new(users_and_quotas: Vec<UserCustomQuotaArg>) -> Self {
+        SetCustomQuotaArg {
+            users_and_quotas,
+        }
+    }
+
+}
+
+const SET_CUSTOM_QUOTA_ARG_FIELDS: &'static [&'static str] = &["users_and_quotas"];
+impl SetCustomQuotaArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SetCustomQuotaArg, V::Error> {
+        use serde::de;
+        let mut field_users_and_quotas = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "users_and_quotas" => {
+                    if field_users_and_quotas.is_some() {
+                        return Err(de::Error::duplicate_field("users_and_quotas"));
+                    }
+                    field_users_and_quotas = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SET_CUSTOM_QUOTA_ARG_FIELDS))
+            }
+        }
+        Ok(SetCustomQuotaArg {
+            users_and_quotas: field_users_and_quotas.ok_or_else(|| de::Error::missing_field("users_and_quotas"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("users_and_quotas", &self.users_and_quotas)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SetCustomQuotaArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SetCustomQuotaArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SetCustomQuotaArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SetCustomQuotaArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SetCustomQuotaArg", SET_CUSTOM_QUOTA_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SetCustomQuotaArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SetCustomQuotaArg", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -15050,7 +15415,7 @@ impl ::serde::ser::Serialize for TeamMembershipType {
 
 #[derive(Debug)]
 pub struct TeamNamespacesListArg {
-    /// The approximate maximum number of results to return per request. This limit may be exceeded.
+    /// Specifying a value here has no effect.
     pub limit: u32,
 }
 
@@ -15756,6 +16121,176 @@ impl ::serde::ser::Serialize for UploadApiRateLimitValue {
             }
             UploadApiRateLimitValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
+    }
+}
+
+/// User and their required custom quota in GB (1 TB = 1024 GB).
+#[derive(Debug)]
+pub struct UserCustomQuotaArg {
+    pub user: UserSelectorArg,
+    pub quota_gb: UserQuota,
+}
+
+impl UserCustomQuotaArg {
+    pub fn new(user: UserSelectorArg, quota_gb: UserQuota) -> Self {
+        UserCustomQuotaArg {
+            user,
+            quota_gb,
+        }
+    }
+
+}
+
+const USER_CUSTOM_QUOTA_ARG_FIELDS: &'static [&'static str] = &["user",
+                                                                "quota_gb"];
+impl UserCustomQuotaArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserCustomQuotaArg, V::Error> {
+        use serde::de;
+        let mut field_user = None;
+        let mut field_quota_gb = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "user" => {
+                    if field_user.is_some() {
+                        return Err(de::Error::duplicate_field("user"));
+                    }
+                    field_user = Some(map.next_value()?);
+                }
+                "quota_gb" => {
+                    if field_quota_gb.is_some() {
+                        return Err(de::Error::duplicate_field("quota_gb"));
+                    }
+                    field_quota_gb = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, USER_CUSTOM_QUOTA_ARG_FIELDS))
+            }
+        }
+        Ok(UserCustomQuotaArg {
+            user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
+            quota_gb: field_quota_gb.ok_or_else(|| de::Error::missing_field("quota_gb"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("user", &self.user)?;
+        s.serialize_field("quota_gb", &self.quota_gb)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UserCustomQuotaArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UserCustomQuotaArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UserCustomQuotaArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UserCustomQuotaArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UserCustomQuotaArg", USER_CUSTOM_QUOTA_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UserCustomQuotaArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UserCustomQuotaArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// User and their custom quota in GB (1 TB = 1024 GB).  No quota returns if the user has no custom
+/// quota set.
+#[derive(Debug)]
+pub struct UserCustomQuotaResult {
+    pub user: UserSelectorArg,
+    pub quota_gb: Option<UserQuota>,
+}
+
+impl UserCustomQuotaResult {
+    pub fn new(user: UserSelectorArg) -> Self {
+        UserCustomQuotaResult {
+            user,
+            quota_gb: None,
+        }
+    }
+
+    pub fn with_quota_gb(mut self, value: Option<UserQuota>) -> Self {
+        self.quota_gb = value;
+        self
+    }
+
+}
+
+const USER_CUSTOM_QUOTA_RESULT_FIELDS: &'static [&'static str] = &["user",
+                                                                   "quota_gb"];
+impl UserCustomQuotaResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserCustomQuotaResult, V::Error> {
+        use serde::de;
+        let mut field_user = None;
+        let mut field_quota_gb = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "user" => {
+                    if field_user.is_some() {
+                        return Err(de::Error::duplicate_field("user"));
+                    }
+                    field_user = Some(map.next_value()?);
+                }
+                "quota_gb" => {
+                    if field_quota_gb.is_some() {
+                        return Err(de::Error::duplicate_field("quota_gb"));
+                    }
+                    field_quota_gb = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, USER_CUSTOM_QUOTA_RESULT_FIELDS))
+            }
+        }
+        Ok(UserCustomQuotaResult {
+            user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
+            quota_gb: field_quota_gb,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("user", &self.user)?;
+        s.serialize_field("quota_gb", &self.quota_gb)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UserCustomQuotaResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UserCustomQuotaResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UserCustomQuotaResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UserCustomQuotaResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UserCustomQuotaResult", USER_CUSTOM_QUOTA_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UserCustomQuotaResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UserCustomQuotaResult", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 

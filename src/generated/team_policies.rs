@@ -10,11 +10,11 @@
 
 #[derive(Debug)]
 pub enum EmmState {
-    /// Emm token is disabled
+    /// Emm token is disabled.
     Disabled,
-    /// Emm token is optional
+    /// Emm token is optional.
     Optional,
-    /// Emm token is required
+    /// Emm token is required.
     Required,
     Other,
 }
@@ -80,9 +80,9 @@ impl ::serde::ser::Serialize for EmmState {
 
 #[derive(Debug)]
 pub enum OfficeAddInPolicy {
-    /// Office Add-In is disabled
+    /// Office Add-In is disabled.
     Disabled,
-    /// Office Add-In is enabled
+    /// Office Add-In is enabled.
     Enabled,
     Other,
 }
