@@ -2,7 +2,7 @@ from contextlib import nested
 
 from stone import ir
 from stone.backend import CodeBackend
-from stone.target.helpers import (
+from stone.backends.helpers import (
     fmt_pascal,
     fmt_underscores,
     split_words
