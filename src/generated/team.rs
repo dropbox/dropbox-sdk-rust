@@ -217,9 +217,10 @@ pub fn members_recover(client: &::client_trait::HttpClient, arg: &MembersRecover
 /// via :route:`members/recover` for a 7 day period or until the account has been permanently
 /// deleted or transferred to another account (whichever comes first). Calling :route:`members/add`
 /// while a user is still recoverable on your team will return with
-/// :field:`MemberAddResult.user_already_on_team`. This endpoint may initiate an asynchronous job.
-/// To obtain the final result of the job, the client should periodically poll
-/// :route:`members/remove/job_status/get`.
+/// :field:`MemberAddResult.user_already_on_team`. Accounts can have their files transferred via the
+/// admin console for a limited time, based on the version history length associated with the team
+/// (120 days for most teams). This endpoint may initiate an asynchronous job. To obtain the final
+/// result of the job, the client should periodically poll :route:`members/remove/job_status/get`.
 pub fn members_remove(client: &::client_trait::HttpClient, arg: &MembersRemoveArg) -> ::Result<Result<super::async::LaunchEmptyResult, MembersRemoveError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/remove", arg, None)
 }
@@ -273,25 +274,19 @@ pub fn namespaces_list_continue(client: &::client_trait::HttpClient, arg: &TeamN
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/namespaces/list/continue", arg, None)
 }
 
-/// Add a property template. See route files/properties/add to add properties to a file.
-pub fn properties_template_add(client: &::client_trait::HttpClient, arg: &AddPropertyTemplateArg) -> ::Result<Result<AddPropertyTemplateResult, super::properties::ModifyPropertyTemplateError>> {
+pub fn properties_template_add(client: &::client_trait::HttpClient, arg: &super::file_properties::AddTemplateArg) -> ::Result<Result<super::file_properties::AddTemplateResult, super::file_properties::ModifyTemplateError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/properties/template/add", arg, None)
 }
 
-/// Get the schema for a specified template.
-pub fn properties_template_get(client: &::client_trait::HttpClient, arg: &super::properties::GetPropertyTemplateArg) -> ::Result<Result<super::properties::GetPropertyTemplateResult, super::properties::PropertyTemplateError>> {
+pub fn properties_template_get(client: &::client_trait::HttpClient, arg: &super::file_properties::GetTemplateArg) -> ::Result<Result<super::file_properties::GetTemplateResult, super::file_properties::TemplateError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/properties/template/get", arg, None)
 }
 
-/// Get the property template identifiers for a team. To get the schema of each template use
-/// :route:`properties/template/get`.
-pub fn properties_template_list(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<super::properties::ListPropertyTemplateIds, super::properties::PropertyTemplateError>> {
+pub fn properties_template_list(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/properties/template/list", arg, None)
 }
 
-/// Update a property template. This route can update the template name, the template description
-/// and add optional properties to templates.
-pub fn properties_template_update(client: &::client_trait::HttpClient, arg: &UpdatePropertyTemplateArg) -> ::Result<Result<UpdatePropertyTemplateResult, super::properties::ModifyPropertyTemplateError>> {
+pub fn properties_template_update(client: &::client_trait::HttpClient, arg: &super::file_properties::UpdateTemplateArg) -> ::Result<Result<super::file_properties::UpdateTemplateResult, super::file_properties::ModifyTemplateError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/properties/template/update", arg, None)
 }
 
@@ -564,175 +559,6 @@ impl ::serde::ser::Serialize for ActiveWebSession {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("ActiveWebSession", 9)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Arguments for adding property templates.
-#[derive(Debug)]
-pub struct AddPropertyTemplateArg {
-    /// A display name for the property template. Property template names can be up to 256 bytes.
-    pub name: String,
-    /// Description for new property template. Property template descriptions can be up to 1024
-    /// bytes.
-    pub description: String,
-    /// This is a list of custom properties associated with a property template. There can be up to
-    /// 64 properties in a single property template.
-    pub fields: Vec<super::properties::PropertyFieldTemplate>,
-}
-
-impl AddPropertyTemplateArg {
-    pub fn new(name: String, description: String, fields: Vec<super::properties::PropertyFieldTemplate>) -> Self {
-        AddPropertyTemplateArg {
-            name,
-            description,
-            fields,
-        }
-    }
-
-}
-
-const ADD_PROPERTY_TEMPLATE_ARG_FIELDS: &'static [&'static str] = &["name",
-                                                                    "description",
-                                                                    "fields"];
-impl AddPropertyTemplateArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddPropertyTemplateArg, V::Error> {
-        use serde::de;
-        let mut field_name = None;
-        let mut field_description = None;
-        let mut field_fields = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "name" => {
-                    if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
-                    }
-                    field_name = Some(map.next_value()?);
-                }
-                "description" => {
-                    if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
-                    }
-                    field_description = Some(map.next_value()?);
-                }
-                "fields" => {
-                    if field_fields.is_some() {
-                        return Err(de::Error::duplicate_field("fields"));
-                    }
-                    field_fields = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, ADD_PROPERTY_TEMPLATE_ARG_FIELDS))
-            }
-        }
-        Ok(AddPropertyTemplateArg {
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
-            fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("name", &self.name)?;
-        s.serialize_field("description", &self.description)?;
-        s.serialize_field("fields", &self.fields)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for AddPropertyTemplateArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = AddPropertyTemplateArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a AddPropertyTemplateArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                AddPropertyTemplateArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("AddPropertyTemplateArg", ADD_PROPERTY_TEMPLATE_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for AddPropertyTemplateArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("AddPropertyTemplateArg", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct AddPropertyTemplateResult {
-    /// An identifier for property template added by :route:`properties/template/add`.
-    pub template_id: super::properties::TemplateId,
-}
-
-impl AddPropertyTemplateResult {
-    pub fn new(template_id: super::properties::TemplateId) -> Self {
-        AddPropertyTemplateResult {
-            template_id,
-        }
-    }
-
-}
-
-const ADD_PROPERTY_TEMPLATE_RESULT_FIELDS: &'static [&'static str] = &["template_id"];
-impl AddPropertyTemplateResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddPropertyTemplateResult, V::Error> {
-        use serde::de;
-        let mut field_template_id = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "template_id" => {
-                    if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
-                    }
-                    field_template_id = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, ADD_PROPERTY_TEMPLATE_RESULT_FIELDS))
-            }
-        }
-        Ok(AddPropertyTemplateResult {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("template_id", &self.template_id)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for AddPropertyTemplateResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = AddPropertyTemplateResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a AddPropertyTemplateResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                AddPropertyTemplateResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("AddPropertyTemplateResult", ADD_PROPERTY_TEMPLATE_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for AddPropertyTemplateResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("AddPropertyTemplateResult", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -7902,9 +7728,9 @@ impl ::serde::ser::Serialize for MemberAccess {
 pub struct MemberAddArg {
     pub member_email: super::common::EmailAddress,
     /// Member's first name.
-    pub member_given_name: Option<super::common::NamePart>,
+    pub member_given_name: Option<super::common::OptionalNamePart>,
     /// Member's last name.
-    pub member_surname: Option<super::common::NamePart>,
+    pub member_surname: Option<super::common::OptionalNamePart>,
     /// External ID for member.
     pub member_external_id: Option<super::team_common::MemberExternalId>,
     /// Persistent ID for member. This field is only available to teams using persistent ID SAML
@@ -7930,12 +7756,12 @@ impl MemberAddArg {
         }
     }
 
-    pub fn with_member_given_name(mut self, value: Option<super::common::NamePart>) -> Self {
+    pub fn with_member_given_name(mut self, value: Option<super::common::OptionalNamePart>) -> Self {
         self.member_given_name = value;
         self
     }
 
-    pub fn with_member_surname(mut self, value: Option<super::common::NamePart>) -> Self {
+    pub fn with_member_surname(mut self, value: Option<super::common::OptionalNamePart>) -> Self {
         self.member_surname = value;
         self
     }
@@ -15854,202 +15680,6 @@ impl ::serde::ser::Serialize for TokenGetAuthenticatedAdminResult {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("TokenGetAuthenticatedAdminResult", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct UpdatePropertyTemplateArg {
-    /// An identifier for property template added by :route:`properties/template/add`.
-    pub template_id: super::properties::TemplateId,
-    /// A display name for the property template. Property template names can be up to 256 bytes.
-    pub name: Option<String>,
-    /// Description for new property template. Property template descriptions can be up to 1024
-    /// bytes.
-    pub description: Option<String>,
-    /// This is a list of custom properties to add to the property template. There can be up to 64
-    /// properties in a single property template.
-    pub add_fields: Option<Vec<super::properties::PropertyFieldTemplate>>,
-}
-
-impl UpdatePropertyTemplateArg {
-    pub fn new(template_id: super::properties::TemplateId) -> Self {
-        UpdatePropertyTemplateArg {
-            template_id,
-            name: None,
-            description: None,
-            add_fields: None,
-        }
-    }
-
-    pub fn with_name(mut self, value: Option<String>) -> Self {
-        self.name = value;
-        self
-    }
-
-    pub fn with_description(mut self, value: Option<String>) -> Self {
-        self.description = value;
-        self
-    }
-
-    pub fn with_add_fields(mut self, value: Option<Vec<super::properties::PropertyFieldTemplate>>) -> Self {
-        self.add_fields = value;
-        self
-    }
-
-}
-
-const UPDATE_PROPERTY_TEMPLATE_ARG_FIELDS: &'static [&'static str] = &["template_id",
-                                                                       "name",
-                                                                       "description",
-                                                                       "add_fields"];
-impl UpdatePropertyTemplateArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UpdatePropertyTemplateArg, V::Error> {
-        use serde::de;
-        let mut field_template_id = None;
-        let mut field_name = None;
-        let mut field_description = None;
-        let mut field_add_fields = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "template_id" => {
-                    if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
-                    }
-                    field_template_id = Some(map.next_value()?);
-                }
-                "name" => {
-                    if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
-                    }
-                    field_name = Some(map.next_value()?);
-                }
-                "description" => {
-                    if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
-                    }
-                    field_description = Some(map.next_value()?);
-                }
-                "add_fields" => {
-                    if field_add_fields.is_some() {
-                        return Err(de::Error::duplicate_field("add_fields"));
-                    }
-                    field_add_fields = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, UPDATE_PROPERTY_TEMPLATE_ARG_FIELDS))
-            }
-        }
-        Ok(UpdatePropertyTemplateArg {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
-            name: field_name,
-            description: field_description,
-            add_fields: field_add_fields,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("template_id", &self.template_id)?;
-        s.serialize_field("name", &self.name)?;
-        s.serialize_field("description", &self.description)?;
-        s.serialize_field("add_fields", &self.add_fields)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertyTemplateArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = UpdatePropertyTemplateArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UpdatePropertyTemplateArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UpdatePropertyTemplateArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("UpdatePropertyTemplateArg", UPDATE_PROPERTY_TEMPLATE_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UpdatePropertyTemplateArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UpdatePropertyTemplateArg", 4)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct UpdatePropertyTemplateResult {
-    /// An identifier for property template added by :route:`properties/template/add`.
-    pub template_id: super::properties::TemplateId,
-}
-
-impl UpdatePropertyTemplateResult {
-    pub fn new(template_id: super::properties::TemplateId) -> Self {
-        UpdatePropertyTemplateResult {
-            template_id,
-        }
-    }
-
-}
-
-const UPDATE_PROPERTY_TEMPLATE_RESULT_FIELDS: &'static [&'static str] = &["template_id"];
-impl UpdatePropertyTemplateResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UpdatePropertyTemplateResult, V::Error> {
-        use serde::de;
-        let mut field_template_id = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "template_id" => {
-                    if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
-                    }
-                    field_template_id = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, UPDATE_PROPERTY_TEMPLATE_RESULT_FIELDS))
-            }
-        }
-        Ok(UpdatePropertyTemplateResult {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("template_id", &self.template_id)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertyTemplateResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = UpdatePropertyTemplateResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UpdatePropertyTemplateResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UpdatePropertyTemplateResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("UpdatePropertyTemplateResult", UPDATE_PROPERTY_TEMPLATE_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UpdatePropertyTemplateResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UpdatePropertyTemplateResult", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

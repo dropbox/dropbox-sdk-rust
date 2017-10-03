@@ -138,6 +138,274 @@ impl ::serde::ser::Serialize for OfficeAddInPolicy {
     }
 }
 
+#[derive(Debug)]
+pub enum PaperDeploymentPolicy {
+    /// All team members have access to Paper.
+    Full,
+    /// Only whitelisted team members can access Paper. To see which user is whitelisted, check
+    /// 'is_paper_whitelisted' on 'account/info'.
+    Partial,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDeploymentPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PaperDeploymentPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperDeploymentPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "full" => Ok(PaperDeploymentPolicy::Full),
+                    "partial" => Ok(PaperDeploymentPolicy::Partial),
+                    _ => Ok(PaperDeploymentPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["full",
+                                                    "partial",
+                                                    "other"];
+        deserializer.deserialize_struct("PaperDeploymentPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDeploymentPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PaperDeploymentPolicy::Full => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDeploymentPolicy", 1)?;
+                s.serialize_field(".tag", "full")?;
+                s.end()
+            }
+            PaperDeploymentPolicy::Partial => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDeploymentPolicy", 1)?;
+                s.serialize_field(".tag", "partial")?;
+                s.end()
+            }
+            PaperDeploymentPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum PaperEnabledPolicy {
+    /// Paper is disabled.
+    Disabled,
+    /// Paper is enabled.
+    Enabled,
+    /// Unspecified policy.
+    Unspecified,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperEnabledPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PaperEnabledPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperEnabledPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => Ok(PaperEnabledPolicy::Disabled),
+                    "enabled" => Ok(PaperEnabledPolicy::Enabled),
+                    "unspecified" => Ok(PaperEnabledPolicy::Unspecified),
+                    _ => Ok(PaperEnabledPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["disabled",
+                                                    "enabled",
+                                                    "unspecified",
+                                                    "other"];
+        deserializer.deserialize_struct("PaperEnabledPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperEnabledPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PaperEnabledPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperEnabledPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            PaperEnabledPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperEnabledPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            PaperEnabledPolicy::Unspecified => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperEnabledPolicy", 1)?;
+                s.serialize_field(".tag", "unspecified")?;
+                s.end()
+            }
+            PaperEnabledPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum PasswordStrengthPolicy {
+    /// User passwords will adhere to the minimal password strength policy.
+    MinimalRequirements,
+    /// User passwords will adhere to the moderate password strength policy.
+    ModeratePassword,
+    /// User passwords will adhere to the very strong password strength policy.
+    StrongPassword,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PasswordStrengthPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PasswordStrengthPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PasswordStrengthPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "minimal_requirements" => Ok(PasswordStrengthPolicy::MinimalRequirements),
+                    "moderate_password" => Ok(PasswordStrengthPolicy::ModeratePassword),
+                    "strong_password" => Ok(PasswordStrengthPolicy::StrongPassword),
+                    _ => Ok(PasswordStrengthPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["minimal_requirements",
+                                                    "moderate_password",
+                                                    "strong_password",
+                                                    "other"];
+        deserializer.deserialize_struct("PasswordStrengthPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PasswordStrengthPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PasswordStrengthPolicy::MinimalRequirements => {
+                // unit
+                let mut s = serializer.serialize_struct("PasswordStrengthPolicy", 1)?;
+                s.serialize_field(".tag", "minimal_requirements")?;
+                s.end()
+            }
+            PasswordStrengthPolicy::ModeratePassword => {
+                // unit
+                let mut s = serializer.serialize_struct("PasswordStrengthPolicy", 1)?;
+                s.serialize_field(".tag", "moderate_password")?;
+                s.end()
+            }
+            PasswordStrengthPolicy::StrongPassword => {
+                // unit
+                let mut s = serializer.serialize_struct("PasswordStrengthPolicy", 1)?;
+                s.serialize_field(".tag", "strong_password")?;
+                s.end()
+            }
+            PasswordStrengthPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum RolloutMethod {
+    /// Unlink all.
+    UnlinkAll,
+    /// Unlink devices with the most inactivity.
+    UnlinkMostInactive,
+    /// Add member to Exceptions.
+    AddMemberToExceptions,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RolloutMethod {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RolloutMethod;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RolloutMethod structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "unlink_all" => Ok(RolloutMethod::UnlinkAll),
+                    "unlink_most_inactive" => Ok(RolloutMethod::UnlinkMostInactive),
+                    "add_member_to_exceptions" => Ok(RolloutMethod::AddMemberToExceptions),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["unlink_all",
+                                                    "unlink_most_inactive",
+                                                    "add_member_to_exceptions"];
+        deserializer.deserialize_struct("RolloutMethod", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RolloutMethod {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RolloutMethod::UnlinkAll => {
+                // unit
+                let mut s = serializer.serialize_struct("RolloutMethod", 1)?;
+                s.serialize_field(".tag", "unlink_all")?;
+                s.end()
+            }
+            RolloutMethod::UnlinkMostInactive => {
+                // unit
+                let mut s = serializer.serialize_struct("RolloutMethod", 1)?;
+                s.serialize_field(".tag", "unlink_most_inactive")?;
+                s.end()
+            }
+            RolloutMethod::AddMemberToExceptions => {
+                // unit
+                let mut s = serializer.serialize_struct("RolloutMethod", 1)?;
+                s.serialize_field(".tag", "add_member_to_exceptions")?;
+                s.end()
+            }
+        }
+    }
+}
+
 /// Policy governing which shared folders a team member can join.
 #[derive(Debug)]
 pub enum SharedFolderJoinPolicy {
@@ -331,6 +599,76 @@ impl ::serde::ser::Serialize for SharedLinkCreatePolicy {
                 s.end()
             }
             SharedLinkCreatePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum SsoPolicy {
+    /// Users will be able to sign in with their Dropbox credentials.
+    Disabled,
+    /// Users will be able to sign in with either their Dropbox or single sign-on credentials.
+    Optional,
+    /// Users will be required to sign in with their single sign-on credentials.
+    Required,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SsoPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SsoPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SsoPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => Ok(SsoPolicy::Disabled),
+                    "optional" => Ok(SsoPolicy::Optional),
+                    "required" => Ok(SsoPolicy::Required),
+                    _ => Ok(SsoPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["disabled",
+                                                    "optional",
+                                                    "required",
+                                                    "other"];
+        deserializer.deserialize_struct("SsoPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SsoPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SsoPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("SsoPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            SsoPolicy::Optional => {
+                // unit
+                let mut s = serializer.serialize_struct("SsoPolicy", 1)?;
+                s.serialize_field(".tag", "optional")?;
+                s.end()
+            }
+            SsoPolicy::Required => {
+                // unit
+                let mut s = serializer.serialize_struct("SsoPolicy", 1)?;
+                s.serialize_field(".tag", "required")?;
+                s.end()
+            }
+            SsoPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }

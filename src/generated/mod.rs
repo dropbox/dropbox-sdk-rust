@@ -11,9 +11,10 @@
 pub mod async;
 pub mod auth;
 pub mod common;
+pub mod file_properties;
+pub mod file_requests;
 pub mod files;
 pub mod paper;
-pub mod properties;
 pub mod sharing;
 pub mod team;
 pub mod team_common;

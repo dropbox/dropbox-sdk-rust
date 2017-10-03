@@ -1,7 +1,7 @@
 from contextlib import nested
 
-from stone import data_type
-from stone.generator import CodeGenerator
+from stone import ir
+from stone.backend import CodeBackend
 from stone.target.helpers import (
     fmt_pascal,
     fmt_underscores,
@@ -27,9 +27,9 @@ RUST_GLOBAL_NAMESPACE = [
     "Some", "None", "Result", "Ok", "Err", "SliceConcatExt", "String", "ToString", "Vec",
 ]
 
-class RustGenerator(CodeGenerator):
+class RustBackend(CodeBackend):
     def __init__(self, target_folder_path, args):
-        super(RustGenerator, self).__init__(target_folder_path, args)
+        super(RustBackend, self).__init__(target_folder_path, args)
         self._modules = []
         self.preserve_aliases = True
 
@@ -66,12 +66,12 @@ class RustGenerator(CodeGenerator):
                 self._emit_route(namespace.name, fn)
 
             for typ in namespace.data_types:
-                if isinstance(typ, data_type.Struct):
+                if isinstance(typ, ir.Struct):
                     if typ.has_enumerated_subtypes():
                         self._emit_polymorphic_struct(typ)
                     else:
                         self._emit_struct(typ)
-                elif isinstance(typ, data_type.Union):
+                elif isinstance(typ, ir.Union):
                     self._emit_union(typ)
                 else:
                     print('WARNING: unhandled type "{}" of field "{}"'.format(
@@ -140,7 +140,7 @@ class RustGenerator(CodeGenerator):
             for field in union.all_fields:
                 self._emit_doc(field.doc)
                 variant_name = self._enum_variant_name(field)
-                if isinstance(field.data_type, data_type.Void):
+                if isinstance(field.data_type, ir.Void):
                     self.emit(u'{},'.format(variant_name))
                 else:
                     self.emit(u'{}({}),'.format(variant_name, self._rust_type(field.data_type)))
@@ -237,15 +237,15 @@ class RustGenerator(CodeGenerator):
                 with self.block(u'Ok({}'.format(type_name), delim=(u'{',u'})')):
                     for field in struct.all_fields:
                         field_name = self._field_name(field)
-                        if isinstance(field.data_type, data_type.Nullable):
+                        if isinstance(field.data_type, ir.Nullable):
                             self.emit(u'{}: field_{},'.format(field_name, field_name))
                         elif field.has_default:
                             # TODO: check if the default is a copy type (i.e. primitive) and don't make a lambda
-                            if isinstance(field.data_type, data_type.String) \
+                            if isinstance(field.data_type, ir.String) \
                                     and not field.default:
                                 self.emit(u'{}: field_{}.unwrap_or_else(String::new),'.format(
                                     field_name, field_name))
-                            elif data_type.is_primitive_type(data_type.unwrap_aliases(field.data_type)[0]):
+                            elif ir.is_primitive_type(ir.unwrap_aliases(field.data_type)[0]):
                                 self.emit(u'{}: field_{}.unwrap_or({}),'.format(
                                     field_name, field_name, self._default_value(field)))
                             else:
@@ -308,9 +308,9 @@ class RustGenerator(CodeGenerator):
                     with self.block(u'match tag'):
                         for subtype in struct.get_enumerated_subtypes():
                             variant_name = self._enum_variant_name(subtype)
-                            if isinstance(subtype.data_type, data_type.Void):
+                            if isinstance(subtype.data_type, ir.Void):
                                 self.emit(u'"{}" => Ok({}::{}),'.format(subtype.name, type_name, variant_name))
-                            elif isinstance(data_type.unwrap_aliases(subtype.data_type)[0], data_type.Struct) \
+                            elif isinstance(ir.unwrap_aliases(subtype.data_type)[0], ir.Struct) \
                                     and not subtype.data_type.has_enumerated_subtypes():
                                 self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'.format(
                                     subtype.name,
@@ -374,9 +374,9 @@ class RustGenerator(CodeGenerator):
                             if field.catch_all:
                                 continue # Handle the 'Other' variant at the end.
                             variant_name = self._enum_variant_name(field)
-                            if isinstance(field.data_type, data_type.Void):
+                            if isinstance(field.data_type, ir.Void):
                                 self.emit(u'"{}" => Ok({}::{}),'.format(field.name, type_name, variant_name))
-                            elif isinstance(data_type.unwrap_aliases(field.data_type)[0], data_type.Struct) \
+                            elif isinstance(ir.unwrap_aliases(field.data_type)[0], ir.Struct) \
                                     and not field.data_type.has_enumerated_subtypes():
                                 self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'.format(
                                     field.name,
@@ -390,7 +390,7 @@ class RustGenerator(CodeGenerator):
                                             field.name,
                                             type_name,
                                             variant_name))
-                                        if isinstance(data_type.unwrap_aliases(field.data_type)[0], data_type.Nullable):
+                                        if isinstance(ir.unwrap_aliases(field.data_type)[0], ir.Nullable):
                                             # if it's null, the field can be omitted entirely
                                             self.emit(u'None => Ok({}::{}(None)),'.format(type_name, variant_name))
                                         else:
@@ -421,25 +421,25 @@ class RustGenerator(CodeGenerator):
                         if field.catch_all:
                             continue # Handle the 'Other' variant at the end.
                         variant_name = self._enum_variant_name(field)
-                        if isinstance(field.data_type, data_type.Void):
+                        if isinstance(field.data_type, ir.Void):
                             with self.block(u'{}::{} =>'.format(type_name, variant_name)):
                                 self.emit(u'// unit')
                                 self.emit(u'let mut s = serializer.serialize_struct("{}", 1)?;'.format(union.name))
                                 self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
                                 self.emit(u's.end()')
                         else:
-                            needs_x = not (isinstance(field.data_type, data_type.Struct) and not field.data_type.all_fields)
+                            needs_x = not (isinstance(field.data_type, ir.Struct) and not field.data_type.all_fields)
                             ref_x = 'ref x' if needs_x else '_'
                             with self.block(u'{}::{}({}) =>'.format(type_name, variant_name, ref_x)):
-                                if isinstance(field.data_type, data_type.Union) or \
-                                        (isinstance(field.data_type, data_type.Struct) and \
+                                if isinstance(field.data_type, ir.Union) or \
+                                        (isinstance(field.data_type, ir.Struct) and \
                                             field.data_type.has_enumerated_subtypes()):
                                     self.emit(u'// union or polymporphic struct')
                                     self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;')
                                     self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
                                     self.emit(u's.serialize_field("{}", x)?;'.format(field.name))
                                     self.emit(u's.end()')
-                                elif isinstance(field.data_type, data_type.Struct):
+                                elif isinstance(field.data_type, ir.Struct):
                                     self.emit(u'// struct')
                                     self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
                                         union.name,
@@ -509,11 +509,11 @@ class RustGenerator(CodeGenerator):
                 self.emit(u'self')
 
     def _default_value(self, field):
-        if isinstance(field.data_type, data_type.Nullable):
+        if isinstance(field.data_type, ir.Nullable):
             return u'None'
-        elif data_type.is_numeric_type(data_type.unwrap_aliases(field.data_type)[0]):
+        elif ir.is_numeric_type(ir.unwrap_aliases(field.data_type)[0]):
             return field.default
-        elif isinstance(field.default, data_type.TagRef):
+        elif isinstance(field.default, ir.TagRef):
             default_variant = None
             for variant in field.default.union_data_type.all_fields:
                 if variant.name == field.default.tag_name:
@@ -526,12 +526,12 @@ class RustGenerator(CodeGenerator):
             return u'{}::{}'.format(
                 self._rust_type(field.default.union_data_type),
                 self._enum_variant_name(default_variant))
-        elif isinstance(field.data_type, data_type.Boolean):
+        elif isinstance(field.data_type, ir.Boolean):
             if field.default:
                 return u'true'
             else:
                 return u'false'
-        elif isinstance(field.data_type, data_type.String):
+        elif isinstance(field.data_type, ir.String):
             if not field.default:
                 return u'String::new()'
             else:
@@ -539,14 +539,14 @@ class RustGenerator(CodeGenerator):
         else:
             print(u'WARNING: unhandled default value {}'.format(field.default))
             print(u'    in field: {}'.format(field))
-            if isinstance(field.data_type, data_type.Alias):
-                print(u'    unwrapped alias: {}'.format(data_type.unwrap_aliases(field.data_type)[0]))
+            if isinstance(field.data_type, ir.Alias):
+                print(u'    unwrapped alias: {}'.format(ir.unwrap_aliases(field.data_type)[0]))
             return field.default
 
     def _needs_explicit_default(self, field):
         return field.has_default \
-                and not (isinstance(field, data_type.Nullable) \
-                    or (isinstance(field.data_type, data_type.Boolean) and not field.default))
+                and not (isinstance(field, ir.Nullable) \
+                    or (isinstance(field.data_type, ir.Boolean) and not field.default))
 
     def _impl_error(self, type_name):
         with self.block(u'impl ::std::error::Error for {}'.format(type_name)):
@@ -561,36 +561,36 @@ class RustGenerator(CodeGenerator):
     # Naming Rules
 
     def _rust_type(self, typ):
-        if isinstance(typ, data_type.Nullable):
+        if isinstance(typ, ir.Nullable):
             return u'Option<{}>'.format(self._rust_type(typ.data_type))
-        elif isinstance(typ, data_type.Void):       return u'()'
-        elif isinstance(typ, data_type.Bytes):      return u'Vec<u8>'
-        elif isinstance(typ, data_type.Int32):      return u'i32'
-        elif isinstance(typ, data_type.UInt32):     return u'u32'
-        elif isinstance(typ, data_type.Int64):      return u'i64'
-        elif isinstance(typ, data_type.UInt64):     return u'u64'
-        elif isinstance(typ, data_type.Float32):    return u'f32'
-        elif isinstance(typ, data_type.Float64):    return u'f64'
-        elif isinstance(typ, data_type.Boolean):    return u'bool'
-        elif isinstance(typ, data_type.String):     return u'String'
-        elif isinstance(typ, data_type.Timestamp):  return u'String /*Timestamp*/' # TODO
-        elif isinstance(typ, data_type.List):
+        elif isinstance(typ, ir.Void):       return u'()'
+        elif isinstance(typ, ir.Bytes):      return u'Vec<u8>'
+        elif isinstance(typ, ir.Int32):      return u'i32'
+        elif isinstance(typ, ir.UInt32):     return u'u32'
+        elif isinstance(typ, ir.Int64):      return u'i64'
+        elif isinstance(typ, ir.UInt64):     return u'u64'
+        elif isinstance(typ, ir.Float32):    return u'f32'
+        elif isinstance(typ, ir.Float64):    return u'f64'
+        elif isinstance(typ, ir.Boolean):    return u'bool'
+        elif isinstance(typ, ir.String):     return u'String'
+        elif isinstance(typ, ir.Timestamp):  return u'String /*Timestamp*/' # TODO
+        elif isinstance(typ, ir.List):
             return u'Vec<{}>'.format(self._rust_type(typ.data_type))
-        elif isinstance(typ, data_type.Map):
+        elif isinstance(typ, ir.Map):
             return u'HashMap<{}, {}>'.format(
                 self._rust_type(typ.key_data_type),
                 self._rust_type(typ.value_data_type))
-        elif isinstance(typ, data_type.Alias):
+        elif isinstance(typ, ir.Alias):
             if typ.namespace.name == self._current_namespace:
                 return self._alias_name(typ)
             else:
                 return u'super::{}::{}'.format(
                     self._namespace_name(typ.namespace),
                     self._alias_name(typ))
-        elif isinstance(typ, data_type.UserDefined):
-            if isinstance(typ, data_type.Struct):
+        elif isinstance(typ, ir.UserDefined):
+            if isinstance(typ, ir.Struct):
                 name = self._struct_name(typ)
-            elif isinstance(typ, data_type.Union):
+            elif isinstance(typ, ir.Union):
                 name = self._enum_name(typ)
             else:
                 print(u'ERROR: user-defined type "{}" is neither Struct nor Union???'.format(typ))

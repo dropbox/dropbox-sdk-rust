@@ -238,38 +238,27 @@ pub fn permanently_delete(client: &::client_trait::HttpClient, arg: &DeleteArg) 
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/permanently_delete", arg, None)
 }
 
-/// Add custom properties to a file using a filled property template. See properties/template/add to
-/// create new property templates.
-pub fn properties_add(client: &::client_trait::HttpClient, arg: &PropertyGroupWithPath) -> ::Result<Result<(), AddPropertiesError>> {
+pub fn properties_add(client: &::client_trait::HttpClient, arg: &super::file_properties::AddPropertiesArg) -> ::Result<Result<(), super::file_properties::AddPropertiesError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/properties/add", arg, None)
 }
 
-/// Overwrite custom properties from a specified template associated with a file.
-pub fn properties_overwrite(client: &::client_trait::HttpClient, arg: &PropertyGroupWithPath) -> ::Result<Result<(), InvalidPropertyGroupError>> {
+pub fn properties_overwrite(client: &::client_trait::HttpClient, arg: &super::file_properties::OverwritePropertyGroupArg) -> ::Result<Result<(), super::file_properties::InvalidPropertyGroupError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/properties/overwrite", arg, None)
 }
 
-/// Remove all custom properties from a specified template associated with a file. To remove
-/// specific property key value pairs, see :route:`properties/update`. To update a property
-/// template, see properties/template/update. Property templates can't be removed once created.
-pub fn properties_remove(client: &::client_trait::HttpClient, arg: &RemovePropertiesArg) -> ::Result<Result<(), RemovePropertiesError>> {
+pub fn properties_remove(client: &::client_trait::HttpClient, arg: &super::file_properties::RemovePropertiesArg) -> ::Result<Result<(), super::file_properties::RemovePropertiesError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/properties/remove", arg, None)
 }
 
-/// Get the schema for a specified template.
-pub fn properties_template_get(client: &::client_trait::HttpClient, arg: &super::properties::GetPropertyTemplateArg) -> ::Result<Result<super::properties::GetPropertyTemplateResult, super::properties::PropertyTemplateError>> {
+pub fn properties_template_get(client: &::client_trait::HttpClient, arg: &super::file_properties::GetTemplateArg) -> ::Result<Result<super::file_properties::GetTemplateResult, super::file_properties::TemplateError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/properties/template/get", arg, None)
 }
 
-/// Get the property template identifiers for a user. To get the schema of each template use
-/// :route:`properties/template/get`.
-pub fn properties_template_list(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<super::properties::ListPropertyTemplateIds, super::properties::PropertyTemplateError>> {
+pub fn properties_template_list(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/properties/template/list", arg, None)
 }
 
-/// Add, update or remove custom properties from a specified template associated with a file. Fields
-/// that already exist and not described in the request will not be modified.
-pub fn properties_update(client: &::client_trait::HttpClient, arg: &UpdatePropertyGroupArg) -> ::Result<Result<(), UpdatePropertiesError>> {
+pub fn properties_update(client: &::client_trait::HttpClient, arg: &super::file_properties::UpdatePropertiesArg) -> ::Result<Result<(), super::file_properties::UpdatePropertiesError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/properties/update", arg, None)
 }
 
@@ -352,131 +341,6 @@ pub fn upload_session_start(client: &::client_trait::HttpClient, arg: &UploadSes
 }
 
 #[derive(Debug)]
-pub enum AddPropertiesError {
-    /// Property template does not exist for given identifier.
-    TemplateNotFound(super::properties::TemplateId),
-    /// You do not have the permissions to modify this property template.
-    RestrictedContent,
-    Other,
-    Path(LookupError),
-    /// A field value in this property group is too large.
-    PropertyFieldTooLarge,
-    /// The property group specified does not conform to the property template.
-    DoesNotFitTemplate,
-    /// This property group already exists for this file.
-    PropertyGroupAlreadyExists,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for AddPropertiesError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = AddPropertiesError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a AddPropertiesError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "template_not_found" => {
-                        match map.next_key()? {
-                            Some("template_not_found") => Ok(AddPropertiesError::TemplateNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    "restricted_content" => Ok(AddPropertiesError::RestrictedContent),
-                    "path" => {
-                        match map.next_key()? {
-                            Some("path") => Ok(AddPropertiesError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    "property_field_too_large" => Ok(AddPropertiesError::PropertyFieldTooLarge),
-                    "does_not_fit_template" => Ok(AddPropertiesError::DoesNotFitTemplate),
-                    "property_group_already_exists" => Ok(AddPropertiesError::PropertyGroupAlreadyExists),
-                    _ => Ok(AddPropertiesError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path",
-                                                    "property_field_too_large",
-                                                    "does_not_fit_template",
-                                                    "property_group_already_exists"];
-        deserializer.deserialize_struct("AddPropertiesError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for AddPropertiesError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            AddPropertiesError::TemplateNotFound(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "template_not_found")?;
-                s.serialize_field("template_not_found", x)?;
-                s.end()
-            }
-            AddPropertiesError::RestrictedContent => {
-                // unit
-                let mut s = serializer.serialize_struct("AddPropertiesError", 1)?;
-                s.serialize_field(".tag", "restricted_content")?;
-                s.end()
-            }
-            AddPropertiesError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            AddPropertiesError::PropertyFieldTooLarge => {
-                // unit
-                let mut s = serializer.serialize_struct("AddPropertiesError", 1)?;
-                s.serialize_field(".tag", "property_field_too_large")?;
-                s.end()
-            }
-            AddPropertiesError::DoesNotFitTemplate => {
-                // unit
-                let mut s = serializer.serialize_struct("AddPropertiesError", 1)?;
-                s.serialize_field(".tag", "does_not_fit_template")?;
-                s.end()
-            }
-            AddPropertiesError::PropertyGroupAlreadyExists => {
-                // unit
-                let mut s = serializer.serialize_struct("AddPropertiesError", 1)?;
-                s.serialize_field(".tag", "property_group_already_exists")?;
-                s.end()
-            }
-            AddPropertiesError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for AddPropertiesError {
-    fn description(&self) -> &str {
-        "AddPropertiesError"
-    }
-}
-
-impl ::std::fmt::Display for AddPropertiesError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
 pub struct AlphaGetMetadataArg {
     /// The path of a file or folder on Dropbox.
     pub path: ReadPath,
@@ -490,7 +354,7 @@ pub struct AlphaGetMetadataArg {
     pub include_has_explicit_shared_members: bool,
     /// If set to a valid list of template IDs, :field:`FileMetadata.property_groups` is set for
     /// files with custom properties.
-    pub include_property_templates: Option<Vec<super::properties::TemplateId>>,
+    pub include_property_templates: Option<Vec<super::file_properties::TemplateId>>,
 }
 
 impl AlphaGetMetadataArg {
@@ -519,7 +383,7 @@ impl AlphaGetMetadataArg {
         self
     }
 
-    pub fn with_include_property_templates(mut self, value: Option<Vec<super::properties::TemplateId>>) -> Self {
+    pub fn with_include_property_templates(mut self, value: Option<Vec<super::file_properties::TemplateId>>) -> Self {
         self.include_property_templates = value;
         self
     }
@@ -624,7 +488,7 @@ impl ::serde::ser::Serialize for AlphaGetMetadataArg {
 #[derive(Debug)]
 pub enum AlphaGetMetadataError {
     Path(LookupError),
-    PropertiesError(LookUpPropertiesError),
+    PropertiesError(super::file_properties::LookUpPropertiesError),
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AlphaGetMetadataError {
@@ -869,7 +733,7 @@ pub struct CommitInfoWithProperties {
     /// modification shouldn't result in a user notification.
     pub mute: bool,
     /// List of custom properties to add to file.
-    pub property_groups: Option<Vec<super::properties::PropertyGroup>>,
+    pub property_groups: Option<Vec<super::file_properties::PropertyGroup>>,
 }
 
 impl CommitInfoWithProperties {
@@ -904,7 +768,7 @@ impl CommitInfoWithProperties {
         self
     }
 
-    pub fn with_property_groups(mut self, value: Option<Vec<super::properties::PropertyGroup>>) -> Self {
+    pub fn with_property_groups(mut self, value: Option<Vec<super::file_properties::PropertyGroup>>) -> Self {
         self.property_groups = value;
         self
     }
@@ -2373,7 +2237,7 @@ pub struct FileMetadata {
     pub sharing_info: Option<FileSharingInfo>,
     /// Additional information if the file has custom properties with the property template
     /// specified.
-    pub property_groups: Option<Vec<super::properties::PropertyGroup>>,
+    pub property_groups: Option<Vec<super::file_properties::PropertyGroup>>,
     /// This flag will only be present if include_has_explicit_shared_members  is true in
     /// :route:`list_folder` or :route:`get_metadata`. If this  flag is present, it will be true if
     /// this file has any explicit shared  members. This is different from sharing_info in that this
@@ -2430,7 +2294,7 @@ impl FileMetadata {
         self
     }
 
-    pub fn with_property_groups(mut self, value: Option<Vec<super::properties::PropertyGroup>>) -> Self {
+    pub fn with_property_groups(mut self, value: Option<Vec<super::file_properties::PropertyGroup>>) -> Self {
         self.property_groups = value;
         self
     }
@@ -2808,7 +2672,7 @@ pub struct FolderMetadata {
     pub sharing_info: Option<FolderSharingInfo>,
     /// Additional information if the file has custom properties with the property template
     /// specified.
-    pub property_groups: Option<Vec<super::properties::PropertyGroup>>,
+    pub property_groups: Option<Vec<super::file_properties::PropertyGroup>>,
 }
 
 impl FolderMetadata {
@@ -2850,7 +2714,7 @@ impl FolderMetadata {
         self
     }
 
-    pub fn with_property_groups(mut self, value: Option<Vec<super::properties::PropertyGroup>>) -> Self {
+    pub fn with_property_groups(mut self, value: Option<Vec<super::file_properties::PropertyGroup>>) -> Self {
         self.property_groups = value;
         self
     }
@@ -4212,121 +4076,6 @@ impl ::serde::ser::Serialize for GpsCoordinates {
 }
 
 #[derive(Debug)]
-pub enum InvalidPropertyGroupError {
-    /// Property template does not exist for given identifier.
-    TemplateNotFound(super::properties::TemplateId),
-    /// You do not have the permissions to modify this property template.
-    RestrictedContent,
-    Other,
-    Path(LookupError),
-    /// A field value in this property group is too large.
-    PropertyFieldTooLarge,
-    /// The property group specified does not conform to the property template.
-    DoesNotFitTemplate,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = InvalidPropertyGroupError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a InvalidPropertyGroupError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "template_not_found" => {
-                        match map.next_key()? {
-                            Some("template_not_found") => Ok(InvalidPropertyGroupError::TemplateNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    "restricted_content" => Ok(InvalidPropertyGroupError::RestrictedContent),
-                    "path" => {
-                        match map.next_key()? {
-                            Some("path") => Ok(InvalidPropertyGroupError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    "property_field_too_large" => Ok(InvalidPropertyGroupError::PropertyFieldTooLarge),
-                    "does_not_fit_template" => Ok(InvalidPropertyGroupError::DoesNotFitTemplate),
-                    _ => Ok(InvalidPropertyGroupError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path",
-                                                    "property_field_too_large",
-                                                    "does_not_fit_template"];
-        deserializer.deserialize_struct("InvalidPropertyGroupError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for InvalidPropertyGroupError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            InvalidPropertyGroupError::TemplateNotFound(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "template_not_found")?;
-                s.serialize_field("template_not_found", x)?;
-                s.end()
-            }
-            InvalidPropertyGroupError::RestrictedContent => {
-                // unit
-                let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 1)?;
-                s.serialize_field(".tag", "restricted_content")?;
-                s.end()
-            }
-            InvalidPropertyGroupError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            InvalidPropertyGroupError::PropertyFieldTooLarge => {
-                // unit
-                let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 1)?;
-                s.serialize_field(".tag", "property_field_too_large")?;
-                s.end()
-            }
-            InvalidPropertyGroupError::DoesNotFitTemplate => {
-                // unit
-                let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 1)?;
-                s.serialize_field(".tag", "does_not_fit_template")?;
-                s.end()
-            }
-            InvalidPropertyGroupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for InvalidPropertyGroupError {
-    fn description(&self) -> &str {
-        "InvalidPropertyGroupError"
-    }
-}
-
-impl ::std::fmt::Display for InvalidPropertyGroupError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
 pub struct ListFolderArg {
     /// A unique identifier for the file.
     pub path: PathROrId,
@@ -5399,65 +5148,6 @@ impl ::serde::ser::Serialize for ListRevisionsResult {
 }
 
 #[derive(Debug)]
-pub enum LookUpPropertiesError {
-    /// This property group does not exist for this file.
-    PropertyGroupNotFound,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for LookUpPropertiesError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = LookUpPropertiesError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a LookUpPropertiesError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "property_group_not_found" => Ok(LookUpPropertiesError::PropertyGroupNotFound),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["property_group_not_found"];
-        deserializer.deserialize_struct("LookUpPropertiesError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for LookUpPropertiesError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            LookUpPropertiesError::PropertyGroupNotFound => {
-                // unit
-                let mut s = serializer.serialize_struct("LookUpPropertiesError", 1)?;
-                s.serialize_field(".tag", "property_group_not_found")?;
-                s.end()
-            }
-        }
-    }
-}
-
-impl ::std::error::Error for LookUpPropertiesError {
-    fn description(&self) -> &str {
-        "LookUpPropertiesError"
-    }
-}
-
-impl ::std::fmt::Display for LookUpPropertiesError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
 pub enum LookupError {
     MalformedPath(MalformedPathError),
     /// There is nothing at the given path.
@@ -6056,291 +5746,6 @@ impl ::std::error::Error for PreviewError {
 impl ::std::fmt::Display for PreviewError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub enum PropertiesError {
-    /// Property template does not exist for given identifier.
-    TemplateNotFound(super::properties::TemplateId),
-    /// You do not have the permissions to modify this property template.
-    RestrictedContent,
-    Other,
-    Path(LookupError),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PropertiesError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = PropertiesError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PropertiesError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "template_not_found" => {
-                        match map.next_key()? {
-                            Some("template_not_found") => Ok(PropertiesError::TemplateNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    "restricted_content" => Ok(PropertiesError::RestrictedContent),
-                    "path" => {
-                        match map.next_key()? {
-                            Some("path") => Ok(PropertiesError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    _ => Ok(PropertiesError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path"];
-        deserializer.deserialize_struct("PropertiesError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PropertiesError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            PropertiesError::TemplateNotFound(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "template_not_found")?;
-                s.serialize_field("template_not_found", x)?;
-                s.end()
-            }
-            PropertiesError::RestrictedContent => {
-                // unit
-                let mut s = serializer.serialize_struct("PropertiesError", 1)?;
-                s.serialize_field(".tag", "restricted_content")?;
-                s.end()
-            }
-            PropertiesError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            PropertiesError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for PropertiesError {
-    fn description(&self) -> &str {
-        "PropertiesError"
-    }
-}
-
-impl ::std::fmt::Display for PropertiesError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct PropertyGroupUpdate {
-    /// A unique identifier for a property template.
-    pub template_id: super::properties::TemplateId,
-    /// List of property fields to update if the field already exists. If the field doesn't exist,
-    /// add the field to the property group.
-    pub add_or_update_fields: Option<Vec<super::properties::PropertyField>>,
-    /// List of property field names to remove from property group if the field exists.
-    pub remove_fields: Option<Vec<String>>,
-}
-
-impl PropertyGroupUpdate {
-    pub fn new(template_id: super::properties::TemplateId) -> Self {
-        PropertyGroupUpdate {
-            template_id,
-            add_or_update_fields: None,
-            remove_fields: None,
-        }
-    }
-
-    pub fn with_add_or_update_fields(mut self, value: Option<Vec<super::properties::PropertyField>>) -> Self {
-        self.add_or_update_fields = value;
-        self
-    }
-
-    pub fn with_remove_fields(mut self, value: Option<Vec<String>>) -> Self {
-        self.remove_fields = value;
-        self
-    }
-
-}
-
-const PROPERTY_GROUP_UPDATE_FIELDS: &'static [&'static str] = &["template_id",
-                                                                "add_or_update_fields",
-                                                                "remove_fields"];
-impl PropertyGroupUpdate {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroupUpdate, V::Error> {
-        use serde::de;
-        let mut field_template_id = None;
-        let mut field_add_or_update_fields = None;
-        let mut field_remove_fields = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "template_id" => {
-                    if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
-                    }
-                    field_template_id = Some(map.next_value()?);
-                }
-                "add_or_update_fields" => {
-                    if field_add_or_update_fields.is_some() {
-                        return Err(de::Error::duplicate_field("add_or_update_fields"));
-                    }
-                    field_add_or_update_fields = Some(map.next_value()?);
-                }
-                "remove_fields" => {
-                    if field_remove_fields.is_some() {
-                        return Err(de::Error::duplicate_field("remove_fields"));
-                    }
-                    field_remove_fields = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_UPDATE_FIELDS))
-            }
-        }
-        Ok(PropertyGroupUpdate {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
-            add_or_update_fields: field_add_or_update_fields,
-            remove_fields: field_remove_fields,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("template_id", &self.template_id)?;
-        s.serialize_field("add_or_update_fields", &self.add_or_update_fields)?;
-        s.serialize_field("remove_fields", &self.remove_fields)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PropertyGroupUpdate {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = PropertyGroupUpdate;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PropertyGroupUpdate struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                PropertyGroupUpdate::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("PropertyGroupUpdate", PROPERTY_GROUP_UPDATE_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PropertyGroupUpdate {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PropertyGroupUpdate", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct PropertyGroupWithPath {
-    /// A unique identifier for the file.
-    pub path: PathOrId,
-    /// Filled custom property templates associated with a file.
-    pub property_groups: Vec<super::properties::PropertyGroup>,
-}
-
-impl PropertyGroupWithPath {
-    pub fn new(path: PathOrId, property_groups: Vec<super::properties::PropertyGroup>) -> Self {
-        PropertyGroupWithPath {
-            path,
-            property_groups,
-        }
-    }
-
-}
-
-const PROPERTY_GROUP_WITH_PATH_FIELDS: &'static [&'static str] = &["path",
-                                                                   "property_groups"];
-impl PropertyGroupWithPath {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroupWithPath, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_property_groups = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "property_groups" => {
-                    if field_property_groups.is_some() {
-                        return Err(de::Error::duplicate_field("property_groups"));
-                    }
-                    field_property_groups = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_WITH_PATH_FIELDS))
-            }
-        }
-        Ok(PropertyGroupWithPath {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            property_groups: field_property_groups.ok_or_else(|| de::Error::missing_field("property_groups"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("property_groups", &self.property_groups)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PropertyGroupWithPath {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = PropertyGroupWithPath;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PropertyGroupWithPath struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                PropertyGroupWithPath::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("PropertyGroupWithPath", PROPERTY_GROUP_WITH_PATH_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PropertyGroupWithPath {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PropertyGroupWithPath", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
     }
 }
 
@@ -7382,200 +6787,6 @@ impl ::serde::ser::Serialize for RelocationResult {
         let mut s = serializer.serialize_struct("RelocationResult", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct RemovePropertiesArg {
-    /// A unique identifier for the file.
-    pub path: PathOrId,
-    /// A list of identifiers for a property template created by route properties/template/add.
-    pub property_template_ids: Vec<super::properties::TemplateId>,
-}
-
-impl RemovePropertiesArg {
-    pub fn new(path: PathOrId, property_template_ids: Vec<super::properties::TemplateId>) -> Self {
-        RemovePropertiesArg {
-            path,
-            property_template_ids,
-        }
-    }
-
-}
-
-const REMOVE_PROPERTIES_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                                "property_template_ids"];
-impl RemovePropertiesArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RemovePropertiesArg, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_property_template_ids = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "property_template_ids" => {
-                    if field_property_template_ids.is_some() {
-                        return Err(de::Error::duplicate_field("property_template_ids"));
-                    }
-                    field_property_template_ids = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, REMOVE_PROPERTIES_ARG_FIELDS))
-            }
-        }
-        Ok(RemovePropertiesArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            property_template_ids: field_property_template_ids.ok_or_else(|| de::Error::missing_field("property_template_ids"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("property_template_ids", &self.property_template_ids)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = RemovePropertiesArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RemovePropertiesArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                RemovePropertiesArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("RemovePropertiesArg", REMOVE_PROPERTIES_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for RemovePropertiesArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("RemovePropertiesArg", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum RemovePropertiesError {
-    /// Property template does not exist for given identifier.
-    TemplateNotFound(super::properties::TemplateId),
-    /// You do not have the permissions to modify this property template.
-    RestrictedContent,
-    Other,
-    Path(LookupError),
-    PropertyGroupLookup(LookUpPropertiesError),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = RemovePropertiesError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a RemovePropertiesError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "template_not_found" => {
-                        match map.next_key()? {
-                            Some("template_not_found") => Ok(RemovePropertiesError::TemplateNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    "restricted_content" => Ok(RemovePropertiesError::RestrictedContent),
-                    "path" => {
-                        match map.next_key()? {
-                            Some("path") => Ok(RemovePropertiesError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    "property_group_lookup" => {
-                        match map.next_key()? {
-                            Some("property_group_lookup") => Ok(RemovePropertiesError::PropertyGroupLookup(map.next_value()?)),
-                            None => Err(de::Error::missing_field("property_group_lookup")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    _ => Ok(RemovePropertiesError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path",
-                                                    "property_group_lookup"];
-        deserializer.deserialize_struct("RemovePropertiesError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for RemovePropertiesError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            RemovePropertiesError::TemplateNotFound(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "template_not_found")?;
-                s.serialize_field("template_not_found", x)?;
-                s.end()
-            }
-            RemovePropertiesError::RestrictedContent => {
-                // unit
-                let mut s = serializer.serialize_struct("RemovePropertiesError", 1)?;
-                s.serialize_field(".tag", "restricted_content")?;
-                s.end()
-            }
-            RemovePropertiesError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            RemovePropertiesError::PropertyGroupLookup(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "property_group_lookup")?;
-                s.serialize_field("property_group_lookup", x)?;
-                s.end()
-            }
-            RemovePropertiesError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for RemovePropertiesError {
-    fn description(&self) -> &str {
-        "RemovePropertiesError"
-    }
-}
-
-impl ::std::fmt::Display for RemovePropertiesError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
     }
 }
 
@@ -9282,220 +8493,6 @@ impl ::serde::ser::Serialize for ThumbnailSize {
 }
 
 #[derive(Debug)]
-pub enum UpdatePropertiesError {
-    /// Property template does not exist for given identifier.
-    TemplateNotFound(super::properties::TemplateId),
-    /// You do not have the permissions to modify this property template.
-    RestrictedContent,
-    Other,
-    Path(LookupError),
-    /// A field value in this property group is too large.
-    PropertyFieldTooLarge,
-    /// The property group specified does not conform to the property template.
-    DoesNotFitTemplate,
-    PropertyGroupLookup(LookUpPropertiesError),
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = UpdatePropertiesError;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UpdatePropertiesError structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "template_not_found" => {
-                        match map.next_key()? {
-                            Some("template_not_found") => Ok(UpdatePropertiesError::TemplateNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    "restricted_content" => Ok(UpdatePropertiesError::RestrictedContent),
-                    "path" => {
-                        match map.next_key()? {
-                            Some("path") => Ok(UpdatePropertiesError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    "property_field_too_large" => Ok(UpdatePropertiesError::PropertyFieldTooLarge),
-                    "does_not_fit_template" => Ok(UpdatePropertiesError::DoesNotFitTemplate),
-                    "property_group_lookup" => {
-                        match map.next_key()? {
-                            Some("property_group_lookup") => Ok(UpdatePropertiesError::PropertyGroupLookup(map.next_value()?)),
-                            None => Err(de::Error::missing_field("property_group_lookup")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
-                        }
-                    }
-                    _ => Ok(UpdatePropertiesError::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path",
-                                                    "property_field_too_large",
-                                                    "does_not_fit_template",
-                                                    "property_group_lookup"];
-        deserializer.deserialize_struct("UpdatePropertiesError", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UpdatePropertiesError {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            UpdatePropertiesError::TemplateNotFound(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "template_not_found")?;
-                s.serialize_field("template_not_found", x)?;
-                s.end()
-            }
-            UpdatePropertiesError::RestrictedContent => {
-                // unit
-                let mut s = serializer.serialize_struct("UpdatePropertiesError", 1)?;
-                s.serialize_field(".tag", "restricted_content")?;
-                s.end()
-            }
-            UpdatePropertiesError::Path(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "path")?;
-                s.serialize_field("path", x)?;
-                s.end()
-            }
-            UpdatePropertiesError::PropertyFieldTooLarge => {
-                // unit
-                let mut s = serializer.serialize_struct("UpdatePropertiesError", 1)?;
-                s.serialize_field(".tag", "property_field_too_large")?;
-                s.end()
-            }
-            UpdatePropertiesError::DoesNotFitTemplate => {
-                // unit
-                let mut s = serializer.serialize_struct("UpdatePropertiesError", 1)?;
-                s.serialize_field(".tag", "does_not_fit_template")?;
-                s.end()
-            }
-            UpdatePropertiesError::PropertyGroupLookup(ref x) => {
-                // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
-                s.serialize_field(".tag", "property_group_lookup")?;
-                s.serialize_field("property_group_lookup", x)?;
-                s.end()
-            }
-            UpdatePropertiesError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-impl ::std::error::Error for UpdatePropertiesError {
-    fn description(&self) -> &str {
-        "UpdatePropertiesError"
-    }
-}
-
-impl ::std::fmt::Display for UpdatePropertiesError {
-    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct UpdatePropertyGroupArg {
-    /// A unique identifier for the file.
-    pub path: PathOrId,
-    /// Filled custom property templates associated with a file.
-    pub update_property_groups: Vec<PropertyGroupUpdate>,
-}
-
-impl UpdatePropertyGroupArg {
-    pub fn new(path: PathOrId, update_property_groups: Vec<PropertyGroupUpdate>) -> Self {
-        UpdatePropertyGroupArg {
-            path,
-            update_property_groups,
-        }
-    }
-
-}
-
-const UPDATE_PROPERTY_GROUP_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                                    "update_property_groups"];
-impl UpdatePropertyGroupArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UpdatePropertyGroupArg, V::Error> {
-        use serde::de;
-        let mut field_path = None;
-        let mut field_update_property_groups = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                "update_property_groups" => {
-                    if field_update_property_groups.is_some() {
-                        return Err(de::Error::duplicate_field("update_property_groups"));
-                    }
-                    field_update_property_groups = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, UPDATE_PROPERTY_GROUP_ARG_FIELDS))
-            }
-        }
-        Ok(UpdatePropertyGroupArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            update_property_groups: field_update_property_groups.ok_or_else(|| de::Error::missing_field("update_property_groups"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)?;
-        s.serialize_field("update_property_groups", &self.update_property_groups)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertyGroupArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = UpdatePropertyGroupArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a UpdatePropertyGroupArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                UpdatePropertyGroupArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("UpdatePropertyGroupArg", UPDATE_PROPERTY_GROUP_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for UpdatePropertyGroupArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UpdatePropertyGroupArg", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
 pub enum UploadError {
     /// Unable to save the uploaded contents to a file.
     Path(UploadWriteFailed),
@@ -9563,7 +8560,7 @@ pub enum UploadErrorWithProperties {
     /// Unable to save the uploaded contents to a file.
     Path(UploadWriteFailed),
     Other,
-    PropertiesError(InvalidPropertyGroupError),
+    PropertiesError(super::file_properties::InvalidPropertyGroupError),
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for UploadErrorWithProperties {

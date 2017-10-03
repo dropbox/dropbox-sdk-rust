@@ -2234,13 +2234,13 @@ impl ::serde::ser::Serialize for DeviceApprovalsChangeMobilePolicyDetails {
 }
 
 /// Changed the action taken when a team member is already over the limits (e.g when they join the
-/// team, an admin lowers limits, etc).
+/// team, an admin lowers limits, etc.).
 #[derive(Debug)]
 pub struct DeviceApprovalsChangeOverageActionDetails {
     /// New over the limits policy. Might be missing due to historical data gap.
-    pub new_value: Option<DeviceApprovalsRolloutPolicy>,
+    pub new_value: Option<super::team_policies::RolloutMethod>,
     /// Previous over the limit policy. Might be missing due to historical data gap.
-    pub previous_value: Option<DeviceApprovalsRolloutPolicy>,
+    pub previous_value: Option<super::team_policies::RolloutMethod>,
 }
 
 impl Default for DeviceApprovalsChangeOverageActionDetails {
@@ -2455,73 +2455,6 @@ impl ::serde::ser::Serialize for DeviceApprovalsPolicy {
                 s.end()
             }
             DeviceApprovalsPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum DeviceApprovalsRolloutPolicy {
-    RemoveOldest,
-    RemoveAll,
-    AddException,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsRolloutPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = DeviceApprovalsRolloutPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DeviceApprovalsRolloutPolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "remove_oldest" => Ok(DeviceApprovalsRolloutPolicy::RemoveOldest),
-                    "remove_all" => Ok(DeviceApprovalsRolloutPolicy::RemoveAll),
-                    "add_exception" => Ok(DeviceApprovalsRolloutPolicy::AddException),
-                    _ => Ok(DeviceApprovalsRolloutPolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["remove_oldest",
-                                                    "remove_all",
-                                                    "add_exception",
-                                                    "other"];
-        deserializer.deserialize_struct("DeviceApprovalsRolloutPolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for DeviceApprovalsRolloutPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            DeviceApprovalsRolloutPolicy::RemoveOldest => {
-                // unit
-                let mut s = serializer.serialize_struct("DeviceApprovalsRolloutPolicy", 1)?;
-                s.serialize_field(".tag", "remove_oldest")?;
-                s.end()
-            }
-            DeviceApprovalsRolloutPolicy::RemoveAll => {
-                // unit
-                let mut s = serializer.serialize_struct("DeviceApprovalsRolloutPolicy", 1)?;
-                s.serialize_field(".tag", "remove_all")?;
-                s.end()
-            }
-            DeviceApprovalsRolloutPolicy::AddException => {
-                // unit
-                let mut s = serializer.serialize_struct("DeviceApprovalsRolloutPolicy", 1)?;
-                s.serialize_field(".tag", "add_exception")?;
-                s.end()
-            }
-            DeviceApprovalsRolloutPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -4350,20 +4283,20 @@ impl ::serde::ser::Serialize for EmmAddExceptionDetails {
 #[derive(Debug)]
 pub struct EmmChangePolicyDetails {
     /// New enterprise mobility management policy.
-    pub new_value: EmmPolicy,
+    pub new_value: super::team_policies::EmmState,
     /// Previous enterprise mobility management policy. Might be missing due to historical data gap.
-    pub previous_value: Option<EmmPolicy>,
+    pub previous_value: Option<super::team_policies::EmmState>,
 }
 
 impl EmmChangePolicyDetails {
-    pub fn new(new_value: EmmPolicy) -> Self {
+    pub fn new(new_value: super::team_policies::EmmState) -> Self {
         EmmChangePolicyDetails {
             new_value,
             previous_value: None,
         }
     }
 
-    pub fn with_previous_value(mut self, value: Option<EmmPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<super::team_policies::EmmState>) -> Self {
         self.previous_value = value;
         self
     }
@@ -4582,74 +4515,6 @@ impl ::serde::ser::Serialize for EmmLoginSuccessDetails {
         // struct serializer
         use serde::ser::SerializeStruct;
         serializer.serialize_struct("EmmLoginSuccessDetails", 0)?.end()
-    }
-}
-
-/// Enterprise mobility management policy
-#[derive(Debug)]
-pub enum EmmPolicy {
-    Disabled,
-    Optional,
-    Required,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for EmmPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = EmmPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a EmmPolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "disabled" => Ok(EmmPolicy::Disabled),
-                    "optional" => Ok(EmmPolicy::Optional),
-                    "required" => Ok(EmmPolicy::Required),
-                    _ => Ok(EmmPolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "optional",
-                                                    "required",
-                                                    "other"];
-        deserializer.deserialize_struct("EmmPolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for EmmPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            EmmPolicy::Disabled => {
-                // unit
-                let mut s = serializer.serialize_struct("EmmPolicy", 1)?;
-                s.serialize_field(".tag", "disabled")?;
-                s.end()
-            }
-            EmmPolicy::Optional => {
-                // unit
-                let mut s = serializer.serialize_struct("EmmPolicy", 1)?;
-                s.serialize_field(".tag", "optional")?;
-                s.end()
-            }
-            EmmPolicy::Required => {
-                // unit
-                let mut s = serializer.serialize_struct("EmmPolicy", 1)?;
-                s.serialize_field(".tag", "required")?;
-                s.end()
-            }
-            EmmPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
     }
 }
 
@@ -5328,10 +5193,6 @@ pub enum EventDetails {
     GroupCreateDetails(GroupCreateDetails),
     /// Deleted a group.
     GroupDeleteDetails(GroupDeleteDetails),
-    /// Updated a group.
-    GroupDescriptionUpdatedDetails(GroupDescriptionUpdatedDetails),
-    /// Updated a group join policy.
-    GroupJoinPolicyUpdatedDetails(GroupJoinPolicyUpdatedDetails),
     /// Moved a group.
     GroupMovedDetails(GroupMovedDetails),
     /// Removed the external ID for group.
@@ -5376,8 +5237,6 @@ pub enum EventDetails {
     PaperContentAddToFolderDetails(PaperContentAddToFolderDetails),
     /// Archived Paper doc or folder.
     PaperContentArchiveDetails(PaperContentArchiveDetails),
-    /// Followed or unfollowed a Paper doc or folder.
-    PaperContentChangeSubscriptionDetails(PaperContentChangeSubscriptionDetails),
     /// Created a Paper doc or folder.
     PaperContentCreateDetails(PaperContentCreateDetails),
     /// Permanently deleted a Paper doc or folder.
@@ -5396,6 +5255,8 @@ pub enum EventDetails {
     PaperDocChangeMemberRoleDetails(PaperDocChangeMemberRoleDetails),
     /// Changed the sharing policy for Paper doc.
     PaperDocChangeSharingPolicyDetails(PaperDocChangeSharingPolicyDetails),
+    /// Followed or unfollowed a Paper doc.
+    PaperDocChangeSubscriptionDetails(PaperDocChangeSubscriptionDetails),
     /// Paper doc archived.
     PaperDocDeletedDetails(PaperDocDeletedDetails),
     /// Deleted a Paper doc comment.
@@ -5420,10 +5281,16 @@ pub enum EventDetails {
     PaperDocSlackShareDetails(PaperDocSlackShareDetails),
     /// Paper doc shared with team member.
     PaperDocTeamInviteDetails(PaperDocTeamInviteDetails),
+    /// Paper doc trashed.
+    PaperDocTrashedDetails(PaperDocTrashedDetails),
     /// Unresolved a Paper doc comment.
     PaperDocUnresolveCommentDetails(PaperDocUnresolveCommentDetails),
+    /// Paper doc untrashed.
+    PaperDocUntrashedDetails(PaperDocUntrashedDetails),
     /// Viewed Paper doc.
     PaperDocViewDetails(PaperDocViewDetails),
+    /// Followed or unfollowed a Paper folder.
+    PaperFolderChangeSubscriptionDetails(PaperFolderChangeSubscriptionDetails),
     /// Paper folder archived.
     PaperFolderDeletedDetails(PaperFolderDeletedDetails),
     /// Followed a Paper folder.
@@ -5615,7 +5482,7 @@ pub enum EventDetails {
     /// work Dropbox account.
     DeviceApprovalsChangeMobilePolicyDetails(DeviceApprovalsChangeMobilePolicyDetails),
     /// Changed the action taken when a team member is already over the limits (e.g when they join
-    /// the team, an admin lowers limits, etc).
+    /// the team, an admin lowers limits, etc.).
     DeviceApprovalsChangeOverageActionDetails(DeviceApprovalsChangeOverageActionDetails),
     /// Changed the action taken with respect to approval limits when a team member unlinks an
     /// approved device.
@@ -5814,8 +5681,6 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "group_change_member_role_details" => Ok(EventDetails::GroupChangeMemberRoleDetails(GroupChangeMemberRoleDetails::internal_deserialize(map)?)),
                     "group_create_details" => Ok(EventDetails::GroupCreateDetails(GroupCreateDetails::internal_deserialize(map)?)),
                     "group_delete_details" => Ok(EventDetails::GroupDeleteDetails(GroupDeleteDetails::internal_deserialize(map)?)),
-                    "group_description_updated_details" => Ok(EventDetails::GroupDescriptionUpdatedDetails(GroupDescriptionUpdatedDetails::internal_deserialize(map)?)),
-                    "group_join_policy_updated_details" => Ok(EventDetails::GroupJoinPolicyUpdatedDetails(GroupJoinPolicyUpdatedDetails::internal_deserialize(map)?)),
                     "group_moved_details" => Ok(EventDetails::GroupMovedDetails(GroupMovedDetails::internal_deserialize(map)?)),
                     "group_remove_external_id_details" => Ok(EventDetails::GroupRemoveExternalIdDetails(GroupRemoveExternalIdDetails::internal_deserialize(map)?)),
                     "group_remove_member_details" => Ok(EventDetails::GroupRemoveMemberDetails(GroupRemoveMemberDetails::internal_deserialize(map)?)),
@@ -5838,7 +5703,6 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "paper_content_add_member_details" => Ok(EventDetails::PaperContentAddMemberDetails(PaperContentAddMemberDetails::internal_deserialize(map)?)),
                     "paper_content_add_to_folder_details" => Ok(EventDetails::PaperContentAddToFolderDetails(PaperContentAddToFolderDetails::internal_deserialize(map)?)),
                     "paper_content_archive_details" => Ok(EventDetails::PaperContentArchiveDetails(PaperContentArchiveDetails::internal_deserialize(map)?)),
-                    "paper_content_change_subscription_details" => Ok(EventDetails::PaperContentChangeSubscriptionDetails(PaperContentChangeSubscriptionDetails::internal_deserialize(map)?)),
                     "paper_content_create_details" => Ok(EventDetails::PaperContentCreateDetails(PaperContentCreateDetails::internal_deserialize(map)?)),
                     "paper_content_permanently_delete_details" => Ok(EventDetails::PaperContentPermanentlyDeleteDetails(PaperContentPermanentlyDeleteDetails::internal_deserialize(map)?)),
                     "paper_content_remove_from_folder_details" => Ok(EventDetails::PaperContentRemoveFromFolderDetails(PaperContentRemoveFromFolderDetails::internal_deserialize(map)?)),
@@ -5848,6 +5712,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "paper_doc_add_comment_details" => Ok(EventDetails::PaperDocAddCommentDetails(PaperDocAddCommentDetails::internal_deserialize(map)?)),
                     "paper_doc_change_member_role_details" => Ok(EventDetails::PaperDocChangeMemberRoleDetails(PaperDocChangeMemberRoleDetails::internal_deserialize(map)?)),
                     "paper_doc_change_sharing_policy_details" => Ok(EventDetails::PaperDocChangeSharingPolicyDetails(PaperDocChangeSharingPolicyDetails::internal_deserialize(map)?)),
+                    "paper_doc_change_subscription_details" => Ok(EventDetails::PaperDocChangeSubscriptionDetails(PaperDocChangeSubscriptionDetails::internal_deserialize(map)?)),
                     "paper_doc_deleted_details" => Ok(EventDetails::PaperDocDeletedDetails(PaperDocDeletedDetails::internal_deserialize(map)?)),
                     "paper_doc_delete_comment_details" => Ok(EventDetails::PaperDocDeleteCommentDetails(PaperDocDeleteCommentDetails::internal_deserialize(map)?)),
                     "paper_doc_download_details" => Ok(EventDetails::PaperDocDownloadDetails(PaperDocDownloadDetails::internal_deserialize(map)?)),
@@ -5860,8 +5725,11 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "paper_doc_revert_details" => Ok(EventDetails::PaperDocRevertDetails(PaperDocRevertDetails::internal_deserialize(map)?)),
                     "paper_doc_slack_share_details" => Ok(EventDetails::PaperDocSlackShareDetails(PaperDocSlackShareDetails::internal_deserialize(map)?)),
                     "paper_doc_team_invite_details" => Ok(EventDetails::PaperDocTeamInviteDetails(PaperDocTeamInviteDetails::internal_deserialize(map)?)),
+                    "paper_doc_trashed_details" => Ok(EventDetails::PaperDocTrashedDetails(PaperDocTrashedDetails::internal_deserialize(map)?)),
                     "paper_doc_unresolve_comment_details" => Ok(EventDetails::PaperDocUnresolveCommentDetails(PaperDocUnresolveCommentDetails::internal_deserialize(map)?)),
+                    "paper_doc_untrashed_details" => Ok(EventDetails::PaperDocUntrashedDetails(PaperDocUntrashedDetails::internal_deserialize(map)?)),
                     "paper_doc_view_details" => Ok(EventDetails::PaperDocViewDetails(PaperDocViewDetails::internal_deserialize(map)?)),
+                    "paper_folder_change_subscription_details" => Ok(EventDetails::PaperFolderChangeSubscriptionDetails(PaperFolderChangeSubscriptionDetails::internal_deserialize(map)?)),
                     "paper_folder_deleted_details" => Ok(EventDetails::PaperFolderDeletedDetails(PaperFolderDeletedDetails::internal_deserialize(map)?)),
                     "paper_folder_followed_details" => Ok(EventDetails::PaperFolderFollowedDetails(PaperFolderFollowedDetails::internal_deserialize(map)?)),
                     "paper_folder_team_invite_details" => Ok(EventDetails::PaperFolderTeamInviteDetails(PaperFolderTeamInviteDetails::internal_deserialize(map)?)),
@@ -6084,8 +5952,6 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "group_change_member_role_details",
                                                     "group_create_details",
                                                     "group_delete_details",
-                                                    "group_description_updated_details",
-                                                    "group_join_policy_updated_details",
                                                     "group_moved_details",
                                                     "group_remove_external_id_details",
                                                     "group_remove_member_details",
@@ -6108,7 +5974,6 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "paper_content_add_member_details",
                                                     "paper_content_add_to_folder_details",
                                                     "paper_content_archive_details",
-                                                    "paper_content_change_subscription_details",
                                                     "paper_content_create_details",
                                                     "paper_content_permanently_delete_details",
                                                     "paper_content_remove_from_folder_details",
@@ -6118,6 +5983,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "paper_doc_add_comment_details",
                                                     "paper_doc_change_member_role_details",
                                                     "paper_doc_change_sharing_policy_details",
+                                                    "paper_doc_change_subscription_details",
                                                     "paper_doc_deleted_details",
                                                     "paper_doc_delete_comment_details",
                                                     "paper_doc_download_details",
@@ -6130,8 +5996,11 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "paper_doc_revert_details",
                                                     "paper_doc_slack_share_details",
                                                     "paper_doc_team_invite_details",
+                                                    "paper_doc_trashed_details",
                                                     "paper_doc_unresolve_comment_details",
+                                                    "paper_doc_untrashed_details",
                                                     "paper_doc_view_details",
+                                                    "paper_folder_change_subscription_details",
                                                     "paper_folder_deleted_details",
                                                     "paper_folder_followed_details",
                                                     "paper_folder_team_invite_details",
@@ -6805,19 +6674,6 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::GroupDescriptionUpdatedDetails(_) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventDetails", 1)?;
-                s.serialize_field(".tag", "group_description_updated_details")?;
-                s.end()
-            }
-            EventDetails::GroupJoinPolicyUpdatedDetails(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
-                s.serialize_field(".tag", "group_join_policy_updated_details")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
             EventDetails::GroupMovedDetails(_) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 1)?;
@@ -6839,7 +6695,7 @@ impl ::serde::ser::Serialize for EventDetails {
             }
             EventDetails::GroupRenameDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "group_rename_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -6962,13 +6818,6 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::PaperContentChangeSubscriptionDetails(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventDetails", 4)?;
-                s.serialize_field(".tag", "paper_content_change_subscription_details")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
             EventDetails::PaperContentCreateDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 2)?;
@@ -7029,6 +6878,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 4)?;
                 s.serialize_field(".tag", "paper_doc_change_sharing_policy_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::PaperDocChangeSubscriptionDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                s.serialize_field(".tag", "paper_doc_change_subscription_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -7116,6 +6972,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventDetails::PaperDocTrashedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "paper_doc_trashed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::PaperDocUnresolveCommentDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
@@ -7123,10 +6986,24 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventDetails::PaperDocUntrashedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "paper_doc_untrashed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::PaperDocViewDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "paper_doc_view_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::PaperFolderChangeSubscriptionDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                s.serialize_field(".tag", "paper_folder_change_subscription_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -8243,10 +8120,6 @@ pub enum EventType {
     GroupCreate,
     /// Deleted a group.
     GroupDelete,
-    /// Updated a group.
-    GroupDescriptionUpdated,
-    /// Updated a group join policy.
-    GroupJoinPolicyUpdated,
     /// Moved a group. This event is deprecated and will not be logged going forward as the
     /// associated product functionality no longer exists.
     GroupMoved,
@@ -8292,8 +8165,6 @@ pub enum EventType {
     PaperContentAddToFolder,
     /// Archived Paper doc or folder.
     PaperContentArchive,
-    /// Followed or unfollowed a Paper doc or folder.
-    PaperContentChangeSubscription,
     /// Created a Paper doc or folder.
     PaperContentCreate,
     /// Permanently deleted a Paper doc or folder.
@@ -8312,6 +8183,8 @@ pub enum EventType {
     PaperDocChangeMemberRole,
     /// Changed the sharing policy for Paper doc.
     PaperDocChangeSharingPolicy,
+    /// Followed or unfollowed a Paper doc.
+    PaperDocChangeSubscription,
     /// Paper doc archived. This event is deprecated and will not be logged going forward as the
     /// associated product functionality no longer exists.
     PaperDocDeleted,
@@ -8323,8 +8196,8 @@ pub enum EventType {
     PaperDocEdit,
     /// Edited a Paper doc comment.
     PaperDocEditComment,
-    /// Followed a Paper doc. This event is replaced by paper_content_change_subscription and will
-    /// not be logged going forward.
+    /// Followed a Paper doc. This event is replaced by paper_doc_change_subscription and will not
+    /// be logged going forward.
     PaperDocFollowed,
     /// Mentioned a member in a Paper doc.
     PaperDocMention,
@@ -8339,15 +8212,21 @@ pub enum EventType {
     /// Paper doc shared with team member. This event is deprecated and will not be logged going
     /// forward as the associated product functionality no longer exists.
     PaperDocTeamInvite,
+    /// Paper doc trashed.
+    PaperDocTrashed,
     /// Unresolved a Paper doc comment.
     PaperDocUnresolveComment,
+    /// Paper doc untrashed.
+    PaperDocUntrashed,
     /// Viewed Paper doc.
     PaperDocView,
+    /// Followed or unfollowed a Paper folder.
+    PaperFolderChangeSubscription,
     /// Paper folder archived. This event is deprecated and will not be logged going forward as the
     /// associated product functionality no longer exists.
     PaperFolderDeleted,
-    /// Followed a Paper folder. This event is replaced by paper_content_change_subscription and
-    /// will not be logged going forward.
+    /// Followed a Paper folder. This event is replaced by paper_folder_change_subscription and will
+    /// not be logged going forward.
     PaperFolderFollowed,
     /// Paper folder shared with team member. This event is deprecated and will not be logged going
     /// forward as the associated product functionality no longer exists.
@@ -8556,7 +8435,7 @@ pub enum EventType {
     /// work Dropbox account.
     DeviceApprovalsChangeMobilePolicy,
     /// Changed the action taken when a team member is already over the limits (e.g when they join
-    /// the team, an admin lowers limits, etc).
+    /// the team, an admin lowers limits, etc.).
     DeviceApprovalsChangeOverageAction,
     /// Changed the action taken with respect to approval limits when a team member unlinks an
     /// approved device.
@@ -8755,8 +8634,6 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "group_change_member_role" => Ok(EventType::GroupChangeMemberRole),
                     "group_create" => Ok(EventType::GroupCreate),
                     "group_delete" => Ok(EventType::GroupDelete),
-                    "group_description_updated" => Ok(EventType::GroupDescriptionUpdated),
-                    "group_join_policy_updated" => Ok(EventType::GroupJoinPolicyUpdated),
                     "group_moved" => Ok(EventType::GroupMoved),
                     "group_remove_external_id" => Ok(EventType::GroupRemoveExternalId),
                     "group_remove_member" => Ok(EventType::GroupRemoveMember),
@@ -8779,7 +8656,6 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "paper_content_add_member" => Ok(EventType::PaperContentAddMember),
                     "paper_content_add_to_folder" => Ok(EventType::PaperContentAddToFolder),
                     "paper_content_archive" => Ok(EventType::PaperContentArchive),
-                    "paper_content_change_subscription" => Ok(EventType::PaperContentChangeSubscription),
                     "paper_content_create" => Ok(EventType::PaperContentCreate),
                     "paper_content_permanently_delete" => Ok(EventType::PaperContentPermanentlyDelete),
                     "paper_content_remove_from_folder" => Ok(EventType::PaperContentRemoveFromFolder),
@@ -8789,6 +8665,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "paper_doc_add_comment" => Ok(EventType::PaperDocAddComment),
                     "paper_doc_change_member_role" => Ok(EventType::PaperDocChangeMemberRole),
                     "paper_doc_change_sharing_policy" => Ok(EventType::PaperDocChangeSharingPolicy),
+                    "paper_doc_change_subscription" => Ok(EventType::PaperDocChangeSubscription),
                     "paper_doc_deleted" => Ok(EventType::PaperDocDeleted),
                     "paper_doc_delete_comment" => Ok(EventType::PaperDocDeleteComment),
                     "paper_doc_download" => Ok(EventType::PaperDocDownload),
@@ -8801,8 +8678,11 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "paper_doc_revert" => Ok(EventType::PaperDocRevert),
                     "paper_doc_slack_share" => Ok(EventType::PaperDocSlackShare),
                     "paper_doc_team_invite" => Ok(EventType::PaperDocTeamInvite),
+                    "paper_doc_trashed" => Ok(EventType::PaperDocTrashed),
                     "paper_doc_unresolve_comment" => Ok(EventType::PaperDocUnresolveComment),
+                    "paper_doc_untrashed" => Ok(EventType::PaperDocUntrashed),
                     "paper_doc_view" => Ok(EventType::PaperDocView),
+                    "paper_folder_change_subscription" => Ok(EventType::PaperFolderChangeSubscription),
                     "paper_folder_deleted" => Ok(EventType::PaperFolderDeleted),
                     "paper_folder_followed" => Ok(EventType::PaperFolderFollowed),
                     "paper_folder_team_invite" => Ok(EventType::PaperFolderTeamInvite),
@@ -9024,8 +8904,6 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "group_change_member_role",
                                                     "group_create",
                                                     "group_delete",
-                                                    "group_description_updated",
-                                                    "group_join_policy_updated",
                                                     "group_moved",
                                                     "group_remove_external_id",
                                                     "group_remove_member",
@@ -9048,7 +8926,6 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "paper_content_add_member",
                                                     "paper_content_add_to_folder",
                                                     "paper_content_archive",
-                                                    "paper_content_change_subscription",
                                                     "paper_content_create",
                                                     "paper_content_permanently_delete",
                                                     "paper_content_remove_from_folder",
@@ -9058,6 +8935,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "paper_doc_add_comment",
                                                     "paper_doc_change_member_role",
                                                     "paper_doc_change_sharing_policy",
+                                                    "paper_doc_change_subscription",
                                                     "paper_doc_deleted",
                                                     "paper_doc_delete_comment",
                                                     "paper_doc_download",
@@ -9070,8 +8948,11 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "paper_doc_revert",
                                                     "paper_doc_slack_share",
                                                     "paper_doc_team_invite",
+                                                    "paper_doc_trashed",
                                                     "paper_doc_unresolve_comment",
+                                                    "paper_doc_untrashed",
                                                     "paper_doc_view",
+                                                    "paper_folder_change_subscription",
                                                     "paper_folder_deleted",
                                                     "paper_folder_followed",
                                                     "paper_folder_team_invite",
@@ -9694,18 +9575,6 @@ impl ::serde::ser::Serialize for EventType {
                 s.serialize_field(".tag", "group_delete")?;
                 s.end()
             }
-            EventType::GroupDescriptionUpdated => {
-                // unit
-                let mut s = serializer.serialize_struct("EventType", 1)?;
-                s.serialize_field(".tag", "group_description_updated")?;
-                s.end()
-            }
-            EventType::GroupJoinPolicyUpdated => {
-                // unit
-                let mut s = serializer.serialize_struct("EventType", 1)?;
-                s.serialize_field(".tag", "group_join_policy_updated")?;
-                s.end()
-            }
             EventType::GroupMoved => {
                 // unit
                 let mut s = serializer.serialize_struct("EventType", 1)?;
@@ -9838,12 +9707,6 @@ impl ::serde::ser::Serialize for EventType {
                 s.serialize_field(".tag", "paper_content_archive")?;
                 s.end()
             }
-            EventType::PaperContentChangeSubscription => {
-                // unit
-                let mut s = serializer.serialize_struct("EventType", 1)?;
-                s.serialize_field(".tag", "paper_content_change_subscription")?;
-                s.end()
-            }
             EventType::PaperContentCreate => {
                 // unit
                 let mut s = serializer.serialize_struct("EventType", 1)?;
@@ -9896,6 +9759,12 @@ impl ::serde::ser::Serialize for EventType {
                 // unit
                 let mut s = serializer.serialize_struct("EventType", 1)?;
                 s.serialize_field(".tag", "paper_doc_change_sharing_policy")?;
+                s.end()
+            }
+            EventType::PaperDocChangeSubscription => {
+                // unit
+                let mut s = serializer.serialize_struct("EventType", 1)?;
+                s.serialize_field(".tag", "paper_doc_change_subscription")?;
                 s.end()
             }
             EventType::PaperDocDeleted => {
@@ -9970,16 +9839,34 @@ impl ::serde::ser::Serialize for EventType {
                 s.serialize_field(".tag", "paper_doc_team_invite")?;
                 s.end()
             }
+            EventType::PaperDocTrashed => {
+                // unit
+                let mut s = serializer.serialize_struct("EventType", 1)?;
+                s.serialize_field(".tag", "paper_doc_trashed")?;
+                s.end()
+            }
             EventType::PaperDocUnresolveComment => {
                 // unit
                 let mut s = serializer.serialize_struct("EventType", 1)?;
                 s.serialize_field(".tag", "paper_doc_unresolve_comment")?;
                 s.end()
             }
+            EventType::PaperDocUntrashed => {
+                // unit
+                let mut s = serializer.serialize_struct("EventType", 1)?;
+                s.serialize_field(".tag", "paper_doc_untrashed")?;
+                s.end()
+            }
             EventType::PaperDocView => {
                 // unit
                 let mut s = serializer.serialize_struct("EventType", 1)?;
                 s.serialize_field(".tag", "paper_doc_view")?;
+                s.end()
+            }
+            EventType::PaperFolderChangeSubscription => {
+                // unit
+                let mut s = serializer.serialize_struct("EventType", 1)?;
+                s.serialize_field(".tag", "paper_folder_change_subscription")?;
                 s.end()
             }
             EventType::PaperFolderDeleted => {
@@ -14744,20 +14631,20 @@ impl ::serde::ser::Serialize for GroupChangeExternalIdDetails {
 #[derive(Debug)]
 pub struct GroupChangeManagementTypeDetails {
     /// New group management type.
-    pub new_value: GroupManagementType,
+    pub new_value: super::team_common::GroupManagementType,
     /// Previous group management type. Might be missing due to historical data gap.
-    pub previous_value: Option<GroupManagementType>,
+    pub previous_value: Option<super::team_common::GroupManagementType>,
 }
 
 impl GroupChangeManagementTypeDetails {
-    pub fn new(new_value: GroupManagementType) -> Self {
+    pub fn new(new_value: super::team_common::GroupManagementType) -> Self {
         GroupChangeManagementTypeDetails {
             new_value,
             previous_value: None,
         }
     }
 
-    pub fn with_previous_value(mut self, value: Option<GroupManagementType>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<super::team_common::GroupManagementType>) -> Self {
         self.previous_value = value;
         self
     }
@@ -15059,56 +14946,6 @@ impl ::serde::ser::Serialize for GroupDeleteDetails {
     }
 }
 
-/// Updated a group.
-#[derive(Debug)]
-pub struct GroupDescriptionUpdatedDetails {
-}
-
-impl Default for GroupDescriptionUpdatedDetails {
-    fn default() -> Self {
-        GroupDescriptionUpdatedDetails {
-        }
-    }
-}
-
-const GROUP_DESCRIPTION_UPDATED_DETAILS_FIELDS: &'static [&'static str] = &[];
-impl GroupDescriptionUpdatedDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupDescriptionUpdatedDetails, V::Error> {
-        use serde::de;
-        if let Some(key) = map.next_key()? {
-            return Err(de::Error::unknown_field(key, GROUP_DESCRIPTION_UPDATED_DETAILS_FIELDS));
-        }
-        Ok(GroupDescriptionUpdatedDetails {
-        })
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GroupDescriptionUpdatedDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GroupDescriptionUpdatedDetails;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GroupDescriptionUpdatedDetails struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GroupDescriptionUpdatedDetails::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("GroupDescriptionUpdatedDetails", GROUP_DESCRIPTION_UPDATED_DETAILS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GroupDescriptionUpdatedDetails {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        serializer.serialize_struct("GroupDescriptionUpdatedDetails", 0)?.end()
-    }
-}
-
 #[derive(Debug)]
 pub enum GroupJoinPolicy {
     Open,
@@ -15164,95 +15001,6 @@ impl ::serde::ser::Serialize for GroupJoinPolicy {
             }
             GroupJoinPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
-    }
-}
-
-/// Updated a group join policy.
-#[derive(Debug)]
-pub struct GroupJoinPolicyUpdatedDetails {
-    /// Group join policy.
-    pub join_policy: GroupJoinPolicy,
-    /// Is admin managed group. Might be missing due to historical data gap.
-    pub is_admin_managed: Option<bool>,
-}
-
-impl GroupJoinPolicyUpdatedDetails {
-    pub fn new(join_policy: GroupJoinPolicy) -> Self {
-        GroupJoinPolicyUpdatedDetails {
-            join_policy,
-            is_admin_managed: None,
-        }
-    }
-
-    pub fn with_is_admin_managed(mut self, value: Option<bool>) -> Self {
-        self.is_admin_managed = value;
-        self
-    }
-
-}
-
-const GROUP_JOIN_POLICY_UPDATED_DETAILS_FIELDS: &'static [&'static str] = &["join_policy",
-                                                                            "is_admin_managed"];
-impl GroupJoinPolicyUpdatedDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupJoinPolicyUpdatedDetails, V::Error> {
-        use serde::de;
-        let mut field_join_policy = None;
-        let mut field_is_admin_managed = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "join_policy" => {
-                    if field_join_policy.is_some() {
-                        return Err(de::Error::duplicate_field("join_policy"));
-                    }
-                    field_join_policy = Some(map.next_value()?);
-                }
-                "is_admin_managed" => {
-                    if field_is_admin_managed.is_some() {
-                        return Err(de::Error::duplicate_field("is_admin_managed"));
-                    }
-                    field_is_admin_managed = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, GROUP_JOIN_POLICY_UPDATED_DETAILS_FIELDS))
-            }
-        }
-        Ok(GroupJoinPolicyUpdatedDetails {
-            join_policy: field_join_policy.ok_or_else(|| de::Error::missing_field("join_policy"))?,
-            is_admin_managed: field_is_admin_managed,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("join_policy", &self.join_policy)?;
-        s.serialize_field("is_admin_managed", &self.is_admin_managed)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GroupJoinPolicyUpdatedDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = GroupJoinPolicyUpdatedDetails;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GroupJoinPolicyUpdatedDetails struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                GroupJoinPolicyUpdatedDetails::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("GroupJoinPolicyUpdatedDetails", GROUP_JOIN_POLICY_UPDATED_DETAILS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GroupJoinPolicyUpdatedDetails {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GroupJoinPolicyUpdatedDetails", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
     }
 }
 
@@ -15360,64 +15108,6 @@ impl ::serde::ser::Serialize for GroupLogInfo {
         let mut s = serializer.serialize_struct("GroupLogInfo", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
-    }
-}
-
-#[derive(Debug)]
-pub enum GroupManagementType {
-    AdminManagementGroup,
-    MemberManagementGroup,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for GroupManagementType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = GroupManagementType;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a GroupManagementType structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "admin_management_group" => Ok(GroupManagementType::AdminManagementGroup),
-                    "member_management_group" => Ok(GroupManagementType::MemberManagementGroup),
-                    _ => Ok(GroupManagementType::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["admin_management_group",
-                                                    "member_management_group",
-                                                    "other"];
-        deserializer.deserialize_struct("GroupManagementType", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for GroupManagementType {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            GroupManagementType::AdminManagementGroup => {
-                // unit
-                let mut s = serializer.serialize_struct("GroupManagementType", 1)?;
-                s.serialize_field(".tag", "admin_management_group")?;
-                s.end()
-            }
-            GroupManagementType::MemberManagementGroup => {
-                // unit
-                let mut s = serializer.serialize_struct("GroupManagementType", 1)?;
-                s.serialize_field(".tag", "member_management_group")?;
-                s.end()
-            }
-            GroupManagementType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
     }
 }
 
@@ -15597,22 +15287,27 @@ impl ::serde::ser::Serialize for GroupRemoveMemberDetails {
 pub struct GroupRenameDetails {
     /// Previous display name.
     pub previous_value: String,
+    /// New display name.
+    pub new_value: String,
 }
 
 impl GroupRenameDetails {
-    pub fn new(previous_value: String) -> Self {
+    pub fn new(previous_value: String, new_value: String) -> Self {
         GroupRenameDetails {
             previous_value,
+            new_value,
         }
     }
 
 }
 
-const GROUP_RENAME_DETAILS_FIELDS: &'static [&'static str] = &["previous_value"];
+const GROUP_RENAME_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
+                                                               "new_value"];
 impl GroupRenameDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupRenameDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
+        let mut field_new_value = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "previous_value" => {
@@ -15621,17 +15316,25 @@ impl GroupRenameDetails {
                     }
                     field_previous_value = Some(map.next_value()?);
                 }
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, GROUP_RENAME_DETAILS_FIELDS))
             }
         }
         Ok(GroupRenameDetails {
             previous_value: field_previous_value.ok_or_else(|| de::Error::missing_field("previous_value"))?,
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("previous_value", &self.previous_value)
+        s.serialize_field("previous_value", &self.previous_value)?;
+        s.serialize_field("new_value", &self.new_value)
     }
 }
 
@@ -15657,7 +15360,7 @@ impl ::serde::ser::Serialize for GroupRenameDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GroupRenameDetails", 1)?;
+        let mut s = serializer.serialize_struct("GroupRenameDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -18599,20 +18302,20 @@ impl ::serde::ser::Serialize for PaperAdminExportStartDetails {
 #[derive(Debug)]
 pub struct PaperChangeDeploymentPolicyDetails {
     /// New Dropbox Paper deployment policy.
-    pub new_value: PaperDeploymentPolicy,
+    pub new_value: super::team_policies::PaperDeploymentPolicy,
     /// Previous Dropbox Paper deployment policy. Might be missing due to historical data gap.
-    pub previous_value: Option<PaperDeploymentPolicy>,
+    pub previous_value: Option<super::team_policies::PaperDeploymentPolicy>,
 }
 
 impl PaperChangeDeploymentPolicyDetails {
-    pub fn new(new_value: PaperDeploymentPolicy) -> Self {
+    pub fn new(new_value: super::team_policies::PaperDeploymentPolicy) -> Self {
         PaperChangeDeploymentPolicyDetails {
             new_value,
             previous_value: None,
         }
     }
 
-    pub fn with_previous_value(mut self, value: Option<PaperDeploymentPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<super::team_policies::PaperDeploymentPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -18778,20 +18481,20 @@ impl ::serde::ser::Serialize for PaperChangeMemberPolicyDetails {
 #[derive(Debug)]
 pub struct PaperChangePolicyDetails {
     /// New Dropbox Paper policy.
-    pub new_value: PaperPolicy,
+    pub new_value: super::team_policies::PaperEnabledPolicy,
     /// Previous Dropbox Paper policy. Might be missing due to historical data gap.
-    pub previous_value: Option<PaperPolicy>,
+    pub previous_value: Option<super::team_policies::PaperEnabledPolicy>,
 }
 
 impl PaperChangePolicyDetails {
-    pub fn new(new_value: PaperPolicy) -> Self {
+    pub fn new(new_value: super::team_policies::PaperEnabledPolicy) -> Self {
         PaperChangePolicyDetails {
             new_value,
             previous_value: None,
         }
     }
 
-    pub fn with_previous_value(mut self, value: Option<PaperPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<super::team_policies::PaperEnabledPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -19097,108 +18800,6 @@ impl ::serde::ser::Serialize for PaperContentArchiveDetails {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("PaperContentArchiveDetails", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Followed or unfollowed a Paper doc or folder.
-#[derive(Debug)]
-pub struct PaperContentChangeSubscriptionDetails {
-    /// Event unique identifier.
-    pub event_uuid: String,
-    /// New subscription level.
-    pub new_subscription_level: PaperTaggedValue,
-    /// Previous subscription level. Might be missing due to historical data gap.
-    pub previous_subscription_level: Option<PaperTaggedValue>,
-}
-
-impl PaperContentChangeSubscriptionDetails {
-    pub fn new(event_uuid: String, new_subscription_level: PaperTaggedValue) -> Self {
-        PaperContentChangeSubscriptionDetails {
-            event_uuid,
-            new_subscription_level,
-            previous_subscription_level: None,
-        }
-    }
-
-    pub fn with_previous_subscription_level(mut self, value: Option<PaperTaggedValue>) -> Self {
-        self.previous_subscription_level = value;
-        self
-    }
-
-}
-
-const PAPER_CONTENT_CHANGE_SUBSCRIPTION_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
-                                                                                    "new_subscription_level",
-                                                                                    "previous_subscription_level"];
-impl PaperContentChangeSubscriptionDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperContentChangeSubscriptionDetails, V::Error> {
-        use serde::de;
-        let mut field_event_uuid = None;
-        let mut field_new_subscription_level = None;
-        let mut field_previous_subscription_level = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "event_uuid" => {
-                    if field_event_uuid.is_some() {
-                        return Err(de::Error::duplicate_field("event_uuid"));
-                    }
-                    field_event_uuid = Some(map.next_value()?);
-                }
-                "new_subscription_level" => {
-                    if field_new_subscription_level.is_some() {
-                        return Err(de::Error::duplicate_field("new_subscription_level"));
-                    }
-                    field_new_subscription_level = Some(map.next_value()?);
-                }
-                "previous_subscription_level" => {
-                    if field_previous_subscription_level.is_some() {
-                        return Err(de::Error::duplicate_field("previous_subscription_level"));
-                    }
-                    field_previous_subscription_level = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, PAPER_CONTENT_CHANGE_SUBSCRIPTION_DETAILS_FIELDS))
-            }
-        }
-        Ok(PaperContentChangeSubscriptionDetails {
-            event_uuid: field_event_uuid.ok_or_else(|| de::Error::missing_field("event_uuid"))?,
-            new_subscription_level: field_new_subscription_level.ok_or_else(|| de::Error::missing_field("new_subscription_level"))?,
-            previous_subscription_level: field_previous_subscription_level,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("event_uuid", &self.event_uuid)?;
-        s.serialize_field("new_subscription_level", &self.new_subscription_level)?;
-        s.serialize_field("previous_subscription_level", &self.previous_subscription_level)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PaperContentChangeSubscriptionDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = PaperContentChangeSubscriptionDetails;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PaperContentChangeSubscriptionDetails struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                PaperContentChangeSubscriptionDetails::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("PaperContentChangeSubscriptionDetails", PAPER_CONTENT_CHANGE_SUBSCRIPTION_DETAILS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PaperContentChangeSubscriptionDetails {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PaperContentChangeSubscriptionDetails", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -19630,64 +19231,6 @@ impl ::serde::ser::Serialize for PaperContentRestoreDetails {
     }
 }
 
-#[derive(Debug)]
-pub enum PaperDeploymentPolicy {
-    Full,
-    Partial,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PaperDeploymentPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = PaperDeploymentPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PaperDeploymentPolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "full" => Ok(PaperDeploymentPolicy::Full),
-                    "partial" => Ok(PaperDeploymentPolicy::Partial),
-                    _ => Ok(PaperDeploymentPolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["full",
-                                                    "partial",
-                                                    "other"];
-        deserializer.deserialize_struct("PaperDeploymentPolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PaperDeploymentPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            PaperDeploymentPolicy::Full => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperDeploymentPolicy", 1)?;
-                s.serialize_field(".tag", "full")?;
-                s.end()
-            }
-            PaperDeploymentPolicy::Partial => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperDeploymentPolicy", 1)?;
-                s.serialize_field(".tag", "partial")?;
-                s.end()
-            }
-            PaperDeploymentPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
 /// Added a Paper doc comment.
 #[derive(Debug)]
 pub struct PaperDocAddCommentDetails {
@@ -19963,6 +19506,108 @@ impl ::serde::ser::Serialize for PaperDocChangeSharingPolicyDetails {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("PaperDocChangeSharingPolicyDetails", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Followed or unfollowed a Paper doc.
+#[derive(Debug)]
+pub struct PaperDocChangeSubscriptionDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+    /// New doc subscription level.
+    pub new_subscription_level: String,
+    /// Previous doc subscription level. Might be missing due to historical data gap.
+    pub previous_subscription_level: Option<String>,
+}
+
+impl PaperDocChangeSubscriptionDetails {
+    pub fn new(event_uuid: String, new_subscription_level: String) -> Self {
+        PaperDocChangeSubscriptionDetails {
+            event_uuid,
+            new_subscription_level,
+            previous_subscription_level: None,
+        }
+    }
+
+    pub fn with_previous_subscription_level(mut self, value: Option<String>) -> Self {
+        self.previous_subscription_level = value;
+        self
+    }
+
+}
+
+const PAPER_DOC_CHANGE_SUBSCRIPTION_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
+                                                                                "new_subscription_level",
+                                                                                "previous_subscription_level"];
+impl PaperDocChangeSubscriptionDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocChangeSubscriptionDetails, V::Error> {
+        use serde::de;
+        let mut field_event_uuid = None;
+        let mut field_new_subscription_level = None;
+        let mut field_previous_subscription_level = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                "new_subscription_level" => {
+                    if field_new_subscription_level.is_some() {
+                        return Err(de::Error::duplicate_field("new_subscription_level"));
+                    }
+                    field_new_subscription_level = Some(map.next_value()?);
+                }
+                "previous_subscription_level" => {
+                    if field_previous_subscription_level.is_some() {
+                        return Err(de::Error::duplicate_field("previous_subscription_level"));
+                    }
+                    field_previous_subscription_level = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_CHANGE_SUBSCRIPTION_DETAILS_FIELDS))
+            }
+        }
+        Ok(PaperDocChangeSubscriptionDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| de::Error::missing_field("event_uuid"))?,
+            new_subscription_level: field_new_subscription_level.ok_or_else(|| de::Error::missing_field("new_subscription_level"))?,
+            previous_subscription_level: field_previous_subscription_level,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)?;
+        s.serialize_field("new_subscription_level", &self.new_subscription_level)?;
+        s.serialize_field("previous_subscription_level", &self.previous_subscription_level)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocChangeSubscriptionDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperDocChangeSubscriptionDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperDocChangeSubscriptionDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperDocChangeSubscriptionDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperDocChangeSubscriptionDetails", PAPER_DOC_CHANGE_SUBSCRIPTION_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDocChangeSubscriptionDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperDocChangeSubscriptionDetails", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -20887,6 +20532,77 @@ impl ::serde::ser::Serialize for PaperDocTeamInviteDetails {
     }
 }
 
+/// Paper doc trashed.
+#[derive(Debug)]
+pub struct PaperDocTrashedDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+}
+
+impl PaperDocTrashedDetails {
+    pub fn new(event_uuid: String) -> Self {
+        PaperDocTrashedDetails {
+            event_uuid,
+        }
+    }
+
+}
+
+const PAPER_DOC_TRASHED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+impl PaperDocTrashedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocTrashedDetails, V::Error> {
+        use serde::de;
+        let mut field_event_uuid = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_TRASHED_DETAILS_FIELDS))
+            }
+        }
+        Ok(PaperDocTrashedDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| de::Error::missing_field("event_uuid"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocTrashedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperDocTrashedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperDocTrashedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperDocTrashedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperDocTrashedDetails", PAPER_DOC_TRASHED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDocTrashedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperDocTrashedDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Unresolved a Paper doc comment.
 #[derive(Debug)]
 pub struct PaperDocUnresolveCommentDetails {
@@ -20971,6 +20687,77 @@ impl ::serde::ser::Serialize for PaperDocUnresolveCommentDetails {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("PaperDocUnresolveCommentDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Paper doc untrashed.
+#[derive(Debug)]
+pub struct PaperDocUntrashedDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+}
+
+impl PaperDocUntrashedDetails {
+    pub fn new(event_uuid: String) -> Self {
+        PaperDocUntrashedDetails {
+            event_uuid,
+        }
+    }
+
+}
+
+const PAPER_DOC_UNTRASHED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+impl PaperDocUntrashedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocUntrashedDetails, V::Error> {
+        use serde::de;
+        let mut field_event_uuid = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_UNTRASHED_DETAILS_FIELDS))
+            }
+        }
+        Ok(PaperDocUntrashedDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| de::Error::missing_field("event_uuid"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDocUntrashedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperDocUntrashedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperDocUntrashedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperDocUntrashedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperDocUntrashedDetails", PAPER_DOC_UNTRASHED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDocUntrashedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperDocUntrashedDetails", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -21448,6 +21235,108 @@ impl ::serde::ser::Serialize for PaperExternalViewForbidDetails {
     }
 }
 
+/// Followed or unfollowed a Paper folder.
+#[derive(Debug)]
+pub struct PaperFolderChangeSubscriptionDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+    /// New folder subscription level.
+    pub new_subscription_level: String,
+    /// Previous folder subscription level. Might be missing due to historical data gap.
+    pub previous_subscription_level: Option<String>,
+}
+
+impl PaperFolderChangeSubscriptionDetails {
+    pub fn new(event_uuid: String, new_subscription_level: String) -> Self {
+        PaperFolderChangeSubscriptionDetails {
+            event_uuid,
+            new_subscription_level,
+            previous_subscription_level: None,
+        }
+    }
+
+    pub fn with_previous_subscription_level(mut self, value: Option<String>) -> Self {
+        self.previous_subscription_level = value;
+        self
+    }
+
+}
+
+const PAPER_FOLDER_CHANGE_SUBSCRIPTION_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
+                                                                                   "new_subscription_level",
+                                                                                   "previous_subscription_level"];
+impl PaperFolderChangeSubscriptionDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperFolderChangeSubscriptionDetails, V::Error> {
+        use serde::de;
+        let mut field_event_uuid = None;
+        let mut field_new_subscription_level = None;
+        let mut field_previous_subscription_level = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                "new_subscription_level" => {
+                    if field_new_subscription_level.is_some() {
+                        return Err(de::Error::duplicate_field("new_subscription_level"));
+                    }
+                    field_new_subscription_level = Some(map.next_value()?);
+                }
+                "previous_subscription_level" => {
+                    if field_previous_subscription_level.is_some() {
+                        return Err(de::Error::duplicate_field("previous_subscription_level"));
+                    }
+                    field_previous_subscription_level = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PAPER_FOLDER_CHANGE_SUBSCRIPTION_DETAILS_FIELDS))
+            }
+        }
+        Ok(PaperFolderChangeSubscriptionDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| de::Error::missing_field("event_uuid"))?,
+            new_subscription_level: field_new_subscription_level.ok_or_else(|| de::Error::missing_field("new_subscription_level"))?,
+            previous_subscription_level: field_previous_subscription_level,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)?;
+        s.serialize_field("new_subscription_level", &self.new_subscription_level)?;
+        s.serialize_field("previous_subscription_level", &self.previous_subscription_level)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperFolderChangeSubscriptionDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperFolderChangeSubscriptionDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperFolderChangeSubscriptionDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperFolderChangeSubscriptionDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperFolderChangeSubscriptionDetails", PAPER_FOLDER_CHANGE_SUBSCRIPTION_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperFolderChangeSubscriptionDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperFolderChangeSubscriptionDetails", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Paper folder archived.
 #[derive(Debug)]
 pub struct PaperFolderDeletedDetails {
@@ -21810,145 +21699,6 @@ impl ::serde::ser::Serialize for PaperMemberPolicy {
             }
             PaperMemberPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
-    }
-}
-
-/// Policy for enabling or disabling Dropbox Paper for the team.
-#[derive(Debug)]
-pub enum PaperPolicy {
-    Disabled,
-    Enabled,
-    Unspecified,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PaperPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = PaperPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PaperPolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "disabled" => Ok(PaperPolicy::Disabled),
-                    "enabled" => Ok(PaperPolicy::Enabled),
-                    "unspecified" => Ok(PaperPolicy::Unspecified),
-                    _ => Ok(PaperPolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "unspecified",
-                                                    "other"];
-        deserializer.deserialize_struct("PaperPolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PaperPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            PaperPolicy::Disabled => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperPolicy", 1)?;
-                s.serialize_field(".tag", "disabled")?;
-                s.end()
-            }
-            PaperPolicy::Enabled => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperPolicy", 1)?;
-                s.serialize_field(".tag", "enabled")?;
-                s.end()
-            }
-            PaperPolicy::Unspecified => {
-                // unit
-                let mut s = serializer.serialize_struct("PaperPolicy", 1)?;
-                s.serialize_field(".tag", "unspecified")?;
-                s.end()
-            }
-            PaperPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-/// Paper tagged value.
-#[derive(Debug)]
-pub struct PaperTaggedValue {
-    /// Tag.
-    pub ptag: String,
-}
-
-impl PaperTaggedValue {
-    pub fn new(ptag: String) -> Self {
-        PaperTaggedValue {
-            ptag,
-        }
-    }
-
-}
-
-const PAPER_TAGGED_VALUE_FIELDS: &'static [&'static str] = &["ptag"];
-impl PaperTaggedValue {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperTaggedValue, V::Error> {
-        use serde::de;
-        let mut field_ptag = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "ptag" => {
-                    if field_ptag.is_some() {
-                        return Err(de::Error::duplicate_field("ptag"));
-                    }
-                    field_ptag = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, PAPER_TAGGED_VALUE_FIELDS))
-            }
-        }
-        Ok(PaperTaggedValue {
-            ptag: field_ptag.ok_or_else(|| de::Error::missing_field("ptag"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("ptag", &self.ptag)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for PaperTaggedValue {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = PaperTaggedValue;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a PaperTaggedValue struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                PaperTaggedValue::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("PaperTaggedValue", PAPER_TAGGED_VALUE_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for PaperTaggedValue {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PaperTaggedValue", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
     }
 }
 
@@ -30084,20 +29834,20 @@ impl ::serde::ser::Serialize for SsoChangeLogoutUrlDetails {
 #[derive(Debug)]
 pub struct SsoChangePolicyDetails {
     /// New single sign-on policy.
-    pub new_value: SsoPolicy,
+    pub new_value: super::team_policies::SsoPolicy,
     /// Previous single sign-on policy. Might be missing due to historical data gap.
-    pub previous_value: Option<SsoPolicy>,
+    pub previous_value: Option<super::team_policies::SsoPolicy>,
 }
 
 impl SsoChangePolicyDetails {
-    pub fn new(new_value: SsoPolicy) -> Self {
+    pub fn new(new_value: super::team_policies::SsoPolicy) -> Self {
         SsoChangePolicyDetails {
             new_value,
             previous_value: None,
         }
     }
 
-    pub fn with_previous_value(mut self, value: Option<SsoPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<super::team_policies::SsoPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -30324,74 +30074,6 @@ impl ::serde::ser::Serialize for SsoLoginFailDetails {
     }
 }
 
-/// SSO policy
-#[derive(Debug)]
-pub enum SsoPolicy {
-    Disabled,
-    Optional,
-    Required,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SsoPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SsoPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SsoPolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "disabled" => Ok(SsoPolicy::Disabled),
-                    "optional" => Ok(SsoPolicy::Optional),
-                    "required" => Ok(SsoPolicy::Required),
-                    _ => Ok(SsoPolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "optional",
-                                                    "required",
-                                                    "other"];
-        deserializer.deserialize_struct("SsoPolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SsoPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SsoPolicy::Disabled => {
-                // unit
-                let mut s = serializer.serialize_struct("SsoPolicy", 1)?;
-                s.serialize_field(".tag", "disabled")?;
-                s.end()
-            }
-            SsoPolicy::Optional => {
-                // unit
-                let mut s = serializer.serialize_struct("SsoPolicy", 1)?;
-                s.serialize_field(".tag", "optional")?;
-                s.end()
-            }
-            SsoPolicy::Required => {
-                // unit
-                let mut s = serializer.serialize_struct("SsoPolicy", 1)?;
-                s.serialize_field(".tag", "required")?;
-                s.end()
-            }
-            SsoPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
 /// Removed the sign-in URL for SSO.
 #[derive(Debug)]
 pub struct SsoRemoveLoginUrlDetails {
@@ -30538,13 +30220,13 @@ impl ::serde::ser::Serialize for SsoRemoveLogoutUrlDetails {
 #[derive(Debug)]
 pub struct TeamActivityCreateReportDetails {
     /// Report start date.
-    pub start_date: super::common::Date,
+    pub start_date: super::common::DropboxTimestamp,
     /// Report end date.
-    pub end_date: super::common::Date,
+    pub end_date: super::common::DropboxTimestamp,
 }
 
 impl TeamActivityCreateReportDetails {
-    pub fn new(start_date: super::common::Date, end_date: super::common::Date) -> Self {
+    pub fn new(start_date: super::common::DropboxTimestamp, end_date: super::common::DropboxTimestamp) -> Self {
         TeamActivityCreateReportDetails {
             start_date,
             end_date,

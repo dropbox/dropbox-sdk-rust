@@ -1,6 +1,6 @@
-from stone import data_type
-from stone.generator import CodeGenerator
-import stone.data_type
+from stone import ir
+from stone.backend import CodeBackend
+import stone.ir
 
 import datetime
 import imp
@@ -9,19 +9,19 @@ import re
 import string
 import sys
 
-class TestGenerator(CodeGenerator):
+class TestBackend(CodeBackend):
     def __init__(self, target_folder_path, args):
-        super(TestGenerator, self).__init__(target_folder_path, args)
+        super(TestBackend, self).__init__(target_folder_path, args)
 
         # Don't import other generators until here, otherwise stone.cli will call them with its own
-        # arguments, in addition to the TestGenerator.
-        from stone.target.python_types import PythonTypesGenerator
+        # arguments, in addition to the TestBackend.
+        from stone.backends.python_types import PythonTypesBackend
         self.ref_path = os.path.join(target_folder_path, 'reference')
-        self.reference = PythonTypesGenerator(self.ref_path, args)
+        self.reference = PythonTypesBackend(self.ref_path, args)
         self.reference_impls = {}
 
         rust_gen = imp.load_source('rust_gen', 'generator/rust.stoneg.py')
-        self.rust = rust_gen.RustGenerator(self.ref_path, args)
+        self.rust = rust_gen.RustBackend(self.ref_path, args)
 
     def generate(self, api):
         print(u'Generating Python reference code')
@@ -52,7 +52,7 @@ class TestGenerator(CodeGenerator):
 
                     is_serializable = True
                     test_value = None
-                    if data_type.is_struct_type(typ):
+                    if ir.is_struct_type(typ):
                         if typ.has_enumerated_subtypes():
                             # TODO: generate tests for all variants
                             # for now, just pick the first variant
@@ -60,7 +60,7 @@ class TestGenerator(CodeGenerator):
                             test_value = TestPolymorphicStruct(self.rust, typ, self.reference_impls, variant)
                         else:
                             test_value = TestStruct(self.rust, typ, self.reference_impls)
-                    elif data_type.is_union_type(typ):
+                    elif ir.is_union_type(typ):
                         # TODO: generate tests for all variants
                         # for now, just pick the first variant
 
@@ -161,16 +161,16 @@ class TestField(object):
 
         if isinstance(self.test_value, TestValue):
             self.test_value.emit_asserts(codegen, expression)
-        elif data_type.is_string_type(self.typ):
+        elif ir.is_string_type(self.typ):
             codegen.emit(u'assert_eq!({}.as_str(), r#"{}"#);'.format(
                 expression, self.value))
-        elif data_type.is_numeric_type(self.typ):
+        elif ir.is_numeric_type(self.typ):
             codegen.emit(u'assert_eq!({}, {});'.format(
                 expression, self.value))
-        elif data_type.is_boolean_type(self.typ):
+        elif ir.is_boolean_type(self.typ):
             codegen.emit(u'assert_eq!({}, {});'.format(
                 expression, 'true' if self.value else 'false'))
-        elif data_type.is_timestamp_type(self.typ):
+        elif ir.is_timestamp_type(self.typ):
             codegen.emit(u'assert_eq!({}.as_str(), "{}");'.format(
                 expression, self.value.strftime(self.typ.format)))
         else:
@@ -256,7 +256,7 @@ class TestUnion(TestValue):
                 expression_path = expression_path[1:-1] # strip off superfluous parens
 
         with codegen.block(u'match {}'.format(expression_path)):
-            if data_type.is_void_type(self._variant_type):
+            if ir.is_void_type(self._variant_type):
                 codegen.emit(u'::dropbox_sdk::{}::{}::{} => (),'.format(
                     self._stone_type.namespace.name,
                     self._rust_name,
@@ -305,18 +305,18 @@ class TestList(TestValue):
 
 def make_test_field(field_name, stone_type, rust_generator, reference_impls):
     rust_name = rust_generator._field_name_raw(field_name) if field_name is not None else None
-    typ, option = data_type.unwrap_nullable(stone_type)
+    typ, option = ir.unwrap_nullable(stone_type)
 
     inner = None
     value = None
-    if data_type.is_struct_type(typ):
+    if ir.is_struct_type(typ):
         if typ.has_enumerated_subtypes():
             variant = typ.get_enumerated_subtypes()[0]
             inner = TestPolymorphicStruct(rust_generator, typ, reference_impls, variant)
         else:
             inner = TestStruct(rust_generator, typ, reference_impls)
         value = inner.value
-    elif data_type.is_union_type(typ):
+    elif ir.is_union_type(typ):
         # pick the first tag
         if len(typ.fields) == 0:
             # there must be a parent type; go for it
@@ -325,23 +325,23 @@ def make_test_field(field_name, stone_type, rust_generator, reference_impls):
             variant = typ.fields[0]
         inner = TestUnion(rust_generator, typ, reference_impls, variant)
         value = inner.value
-    elif data_type.is_list_type(typ):
+    elif ir.is_list_type(typ):
         inner = TestList(rust_generator, typ.data_type, reference_impls)
         value = [inner.value]
-    elif data_type.is_string_type(typ):
+    elif ir.is_string_type(typ):
         if typ.pattern:
             value = Unregex(typ.pattern, typ.min_length).generate()
         elif typ.min_length:
             value = 'a' * typ.min_length
         else:
             value = 'something'
-    elif data_type.is_numeric_type(typ):
+    elif ir.is_numeric_type(typ):
         value = typ.max_value or typ.maximum or 1e307
-    elif data_type.is_boolean_type(typ):
+    elif ir.is_boolean_type(typ):
         value = True
-    elif data_type.is_timestamp_type(typ):
+    elif ir.is_timestamp_type(typ):
         value = datetime.datetime.utcfromtimestamp(2**33 - 1)
-    elif not data_type.is_void_type(typ):
+    elif not ir.is_void_type(typ):
         print(u'Error: unhandled field type of {}: {}'.format(
             field_name, typ))
         return None

@@ -95,17 +95,17 @@ pub enum PathRoot {
     /// belongs to a team.
     Home,
     /// Paths are relative to the authenticating team member's home directory. (This results in
-    /// :field:`PathRootError.invalid' if the user does not belong to a team.)
+    /// :field:`PathRootError.invalid` if the user does not belong to a team.).
     MemberHome,
     /// Paths are relative to the given team directory. (This results in
     /// :field:`PathRootError.invalid` if the user is not a member of the team associated with that
-    /// path root id.)
+    /// path root id.).
     Team(PathRootId),
     /// Paths are relative to the user's home directory. (This results in
-    /// :field:`PathRootError.invalid` if the belongs to a team.)
+    /// :field:`PathRootError.invalid` if the belongs to a team.).
     UserHome,
     /// Paths are relative to given namespace id (This results in
-    /// :field:`PathRootError.no_permission` if you don't have access to this namespace.)
+    /// :field:`PathRootError.no_permission` if you don't have access to this namespace.).
     NamespaceId(PathRootId),
     Other,
 }

@@ -13676,7 +13676,7 @@ pub enum SharedLinkSettingsError {
     /// The given settings are invalid (for example, all attributes of the
     /// :type:`SharedLinkSettings` are empty, the requested visibility is
     /// :field:`RequestedVisibility.password` but the :field:`SharedLinkSettings.link_password` is
-    /// missing, :field:`SharedLinkSettings.expires` is set to the past, etc.)
+    /// missing, :field:`SharedLinkSettings.expires` is set to the past, etc.).
     InvalidSettings,
     /// User is not allowed to modify the settings of this link. Note that basic users can only set
     /// :field:`RequestedVisibility.public` as the :field:`SharedLinkSettings.requested_visibility`
