@@ -8,8 +8,7 @@
     doc_markdown,
 )]
 
-//! This namespace contains endpoints and data types for file request operations. Warning: This
-//! namespace is in beta and is subject to backwards-incompatible changes.
+//! This namespace contains endpoints and data types for file request operations.
 
 pub type FileRequestId = String;
 pub type FileRequestValidationError = Option<String>;

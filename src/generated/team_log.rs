@@ -11,6 +11,7 @@
 pub type AppId = String;
 pub type IpAddress = String;
 pub type RequestId = String;
+pub type TeamEventList = Vec<TeamEvent>;
 
 /// Retrieves team events. Permission : Team Auditing.
 pub fn get_events(client: &::client_trait::HttpClient, arg: &GetTeamEventsArg) -> ::Result<Result<GetTeamEventsResult, GetTeamEventsError>> {
@@ -4060,32 +4061,22 @@ impl ::serde::ser::Serialize for DomainVerificationAddDomainSuccessDetails {
 pub struct DomainVerificationRemoveDomainDetails {
     /// Domain names.
     pub domain_names: Vec<String>,
-    /// Domain name verification method. Might be missing due to historical data gap.
-    pub verification_method: Option<String>,
 }
 
 impl DomainVerificationRemoveDomainDetails {
     pub fn new(domain_names: Vec<String>) -> Self {
         DomainVerificationRemoveDomainDetails {
             domain_names,
-            verification_method: None,
         }
-    }
-
-    pub fn with_verification_method(mut self, value: Option<String>) -> Self {
-        self.verification_method = value;
-        self
     }
 
 }
 
-const DOMAIN_VERIFICATION_REMOVE_DOMAIN_DETAILS_FIELDS: &'static [&'static str] = &["domain_names",
-                                                                                    "verification_method"];
+const DOMAIN_VERIFICATION_REMOVE_DOMAIN_DETAILS_FIELDS: &'static [&'static str] = &["domain_names"];
 impl DomainVerificationRemoveDomainDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainVerificationRemoveDomainDetails, V::Error> {
         use serde::de;
         let mut field_domain_names = None;
-        let mut field_verification_method = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "domain_names" => {
@@ -4094,25 +4085,17 @@ impl DomainVerificationRemoveDomainDetails {
                     }
                     field_domain_names = Some(map.next_value()?);
                 }
-                "verification_method" => {
-                    if field_verification_method.is_some() {
-                        return Err(de::Error::duplicate_field("verification_method"));
-                    }
-                    field_verification_method = Some(map.next_value()?);
-                }
                 _ => return Err(de::Error::unknown_field(key, DOMAIN_VERIFICATION_REMOVE_DOMAIN_DETAILS_FIELDS))
             }
         }
         Ok(DomainVerificationRemoveDomainDetails {
             domain_names: field_domain_names.ok_or_else(|| de::Error::missing_field("domain_names"))?,
-            verification_method: field_verification_method,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("domain_names", &self.domain_names)?;
-        s.serialize_field("verification_method", &self.verification_method)
+        s.serialize_field("domain_names", &self.domain_names)
     }
 }
 
@@ -4138,7 +4121,7 @@ impl ::serde::ser::Serialize for DomainVerificationRemoveDomainDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DomainVerificationRemoveDomainDetails", 2)?;
+        let mut s = serializer.serialize_struct("DomainVerificationRemoveDomainDetails", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -5438,6 +5421,8 @@ pub enum EventDetails {
     ShmodelVisibilityPublicDetails(ShmodelVisibilityPublicDetails),
     /// Made a file/folder visible only to team members with the link.
     ShmodelVisibilityTeamOnlyDetails(ShmodelVisibilityTeamOnlyDetails),
+    /// Added the X.509 certificate for SSO.
+    SsoAddCertDetails(SsoAddCertDetails),
     /// Added sign-in URL for SSO.
     SsoAddLoginUrlDetails(SsoAddLoginUrlDetails),
     /// Added sign-out URL for SSO.
@@ -5450,6 +5435,8 @@ pub enum EventDetails {
     SsoChangeLogoutUrlDetails(SsoChangeLogoutUrlDetails),
     /// Changed the SAML identity mode for SSO.
     SsoChangeSamlIdentityModeDetails(SsoChangeSamlIdentityModeDetails),
+    /// Removed the X.509 certificate for SSO.
+    SsoRemoveCertDetails(SsoRemoveCertDetails),
     /// Removed the sign-in URL for SSO.
     SsoRemoveLoginUrlDetails(SsoRemoveLoginUrlDetails),
     /// Removed single sign-on logout URL.
@@ -5527,6 +5514,8 @@ pub enum EventDetails {
     /// Changed whether Dropbox Paper, when enabled, is deployed to all teams or to specific members
     /// of the team.
     PaperChangeDeploymentPolicyDetails(PaperChangeDeploymentPolicyDetails),
+    /// Changed whether non team members can view Paper documents using a link.
+    PaperChangeMemberLinkPolicyDetails(PaperChangeMemberLinkPolicyDetails),
     /// Changed whether team members can share Paper documents externally (i.e. outside the team),
     /// and if so, whether they should be accessible only by team members or anyone by default.
     PaperChangeMemberPolicyDetails(PaperChangeMemberPolicyDetails),
@@ -5561,6 +5550,8 @@ pub enum EventDetails {
     WebSessionsChangeIdleLengthPolicyDetails(WebSessionsChangeIdleLengthPolicyDetails),
     /// Added a team logo to be displayed on shared link headers.
     TeamProfileAddLogoDetails(TeamProfileAddLogoDetails),
+    /// Changed the default language for the team.
+    TeamProfileChangeDefaultLanguageDetails(TeamProfileChangeDefaultLanguageDetails),
     /// Changed the team logo to be displayed on shared link headers.
     TeamProfileChangeLogoDetails(TeamProfileChangeLogoDetails),
     /// Changed the team name.
@@ -5803,12 +5794,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "shmodel_visibility_password_details" => Ok(EventDetails::ShmodelVisibilityPasswordDetails(ShmodelVisibilityPasswordDetails::internal_deserialize(map)?)),
                     "shmodel_visibility_public_details" => Ok(EventDetails::ShmodelVisibilityPublicDetails(ShmodelVisibilityPublicDetails::internal_deserialize(map)?)),
                     "shmodel_visibility_team_only_details" => Ok(EventDetails::ShmodelVisibilityTeamOnlyDetails(ShmodelVisibilityTeamOnlyDetails::internal_deserialize(map)?)),
+                    "sso_add_cert_details" => Ok(EventDetails::SsoAddCertDetails(SsoAddCertDetails::internal_deserialize(map)?)),
                     "sso_add_login_url_details" => Ok(EventDetails::SsoAddLoginUrlDetails(SsoAddLoginUrlDetails::internal_deserialize(map)?)),
                     "sso_add_logout_url_details" => Ok(EventDetails::SsoAddLogoutUrlDetails(SsoAddLogoutUrlDetails::internal_deserialize(map)?)),
                     "sso_change_cert_details" => Ok(EventDetails::SsoChangeCertDetails(SsoChangeCertDetails::internal_deserialize(map)?)),
                     "sso_change_login_url_details" => Ok(EventDetails::SsoChangeLoginUrlDetails(SsoChangeLoginUrlDetails::internal_deserialize(map)?)),
                     "sso_change_logout_url_details" => Ok(EventDetails::SsoChangeLogoutUrlDetails(SsoChangeLogoutUrlDetails::internal_deserialize(map)?)),
                     "sso_change_saml_identity_mode_details" => Ok(EventDetails::SsoChangeSamlIdentityModeDetails(SsoChangeSamlIdentityModeDetails::internal_deserialize(map)?)),
+                    "sso_remove_cert_details" => Ok(EventDetails::SsoRemoveCertDetails(SsoRemoveCertDetails::internal_deserialize(map)?)),
                     "sso_remove_login_url_details" => Ok(EventDetails::SsoRemoveLoginUrlDetails(SsoRemoveLoginUrlDetails::internal_deserialize(map)?)),
                     "sso_remove_logout_url_details" => Ok(EventDetails::SsoRemoveLogoutUrlDetails(SsoRemoveLogoutUrlDetails::internal_deserialize(map)?)),
                     "team_folder_change_status_details" => Ok(EventDetails::TeamFolderChangeStatusDetails(TeamFolderChangeStatusDetails::internal_deserialize(map)?)),
@@ -5843,6 +5836,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "microsoft_office_addin_change_policy_details" => Ok(EventDetails::MicrosoftOfficeAddinChangePolicyDetails(MicrosoftOfficeAddinChangePolicyDetails::internal_deserialize(map)?)),
                     "network_control_change_policy_details" => Ok(EventDetails::NetworkControlChangePolicyDetails(NetworkControlChangePolicyDetails::internal_deserialize(map)?)),
                     "paper_change_deployment_policy_details" => Ok(EventDetails::PaperChangeDeploymentPolicyDetails(PaperChangeDeploymentPolicyDetails::internal_deserialize(map)?)),
+                    "paper_change_member_link_policy_details" => Ok(EventDetails::PaperChangeMemberLinkPolicyDetails(PaperChangeMemberLinkPolicyDetails::internal_deserialize(map)?)),
                     "paper_change_member_policy_details" => Ok(EventDetails::PaperChangeMemberPolicyDetails(PaperChangeMemberPolicyDetails::internal_deserialize(map)?)),
                     "paper_change_policy_details" => Ok(EventDetails::PaperChangePolicyDetails(PaperChangePolicyDetails::internal_deserialize(map)?)),
                     "permanent_delete_change_policy_details" => Ok(EventDetails::PermanentDeleteChangePolicyDetails(PermanentDeleteChangePolicyDetails::internal_deserialize(map)?)),
@@ -5858,6 +5852,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "web_sessions_change_fixed_length_policy_details" => Ok(EventDetails::WebSessionsChangeFixedLengthPolicyDetails(WebSessionsChangeFixedLengthPolicyDetails::internal_deserialize(map)?)),
                     "web_sessions_change_idle_length_policy_details" => Ok(EventDetails::WebSessionsChangeIdleLengthPolicyDetails(WebSessionsChangeIdleLengthPolicyDetails::internal_deserialize(map)?)),
                     "team_profile_add_logo_details" => Ok(EventDetails::TeamProfileAddLogoDetails(TeamProfileAddLogoDetails::internal_deserialize(map)?)),
+                    "team_profile_change_default_language_details" => Ok(EventDetails::TeamProfileChangeDefaultLanguageDetails(TeamProfileChangeDefaultLanguageDetails::internal_deserialize(map)?)),
                     "team_profile_change_logo_details" => Ok(EventDetails::TeamProfileChangeLogoDetails(TeamProfileChangeLogoDetails::internal_deserialize(map)?)),
                     "team_profile_change_name_details" => Ok(EventDetails::TeamProfileChangeNameDetails(TeamProfileChangeNameDetails::internal_deserialize(map)?)),
                     "team_profile_remove_logo_details" => Ok(EventDetails::TeamProfileRemoveLogoDetails(TeamProfileRemoveLogoDetails::internal_deserialize(map)?)),
@@ -6074,12 +6069,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "shmodel_visibility_password_details",
                                                     "shmodel_visibility_public_details",
                                                     "shmodel_visibility_team_only_details",
+                                                    "sso_add_cert_details",
                                                     "sso_add_login_url_details",
                                                     "sso_add_logout_url_details",
                                                     "sso_change_cert_details",
                                                     "sso_change_login_url_details",
                                                     "sso_change_logout_url_details",
                                                     "sso_change_saml_identity_mode_details",
+                                                    "sso_remove_cert_details",
                                                     "sso_remove_login_url_details",
                                                     "sso_remove_logout_url_details",
                                                     "team_folder_change_status_details",
@@ -6114,6 +6111,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "microsoft_office_addin_change_policy_details",
                                                     "network_control_change_policy_details",
                                                     "paper_change_deployment_policy_details",
+                                                    "paper_change_member_link_policy_details",
                                                     "paper_change_member_policy_details",
                                                     "paper_change_policy_details",
                                                     "permanent_delete_change_policy_details",
@@ -6129,6 +6127,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "web_sessions_change_fixed_length_policy_details",
                                                     "web_sessions_change_idle_length_policy_details",
                                                     "team_profile_add_logo_details",
+                                                    "team_profile_change_default_language_details",
                                                     "team_profile_change_logo_details",
                                                     "team_profile_change_name_details",
                                                     "team_profile_remove_logo_details",
@@ -6464,7 +6463,7 @@ impl ::serde::ser::Serialize for EventDetails {
             }
             EventDetails::DomainVerificationRemoveDomainDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "domain_verification_remove_domain_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -7496,6 +7495,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 s.serialize_field(".tag", "shmodel_visibility_team_only_details")?;
                 s.end()
             }
+            EventDetails::SsoAddCertDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "sso_add_cert_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::SsoAddLoginUrlDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 2)?;
@@ -7512,7 +7518,7 @@ impl ::serde::ser::Serialize for EventDetails {
             }
             EventDetails::SsoChangeCertDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "sso_change_cert_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -7536,6 +7542,12 @@ impl ::serde::ser::Serialize for EventDetails {
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "sso_change_saml_identity_mode_details")?;
                 x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::SsoRemoveCertDetails(_) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
+                s.serialize_field(".tag", "sso_remove_cert_details")?;
                 s.end()
             }
             EventDetails::SsoRemoveLoginUrlDetails(ref x) => {
@@ -7766,6 +7778,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventDetails::PaperChangeMemberLinkPolicyDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "paper_change_member_link_policy_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::PaperChangeMemberPolicyDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
@@ -7868,6 +7887,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 1)?;
                 s.serialize_field(".tag", "team_profile_add_logo_details")?;
+                s.end()
+            }
+            EventDetails::TeamProfileChangeDefaultLanguageDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "team_profile_change_default_language_details")?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::TeamProfileChangeLogoDetails(_) => {
@@ -8389,6 +8415,8 @@ pub enum EventType {
     ShmodelVisibilityPublic,
     /// Made a file/folder visible only to team members with the link.
     ShmodelVisibilityTeamOnly,
+    /// Added the X.509 certificate for SSO.
+    SsoAddCert,
     /// Added sign-in URL for SSO.
     SsoAddLoginUrl,
     /// Added sign-out URL for SSO.
@@ -8401,6 +8429,8 @@ pub enum EventType {
     SsoChangeLogoutUrl,
     /// Changed the SAML identity mode for SSO.
     SsoChangeSamlIdentityMode,
+    /// Removed the X.509 certificate for SSO.
+    SsoRemoveCert,
     /// Removed the sign-in URL for SSO.
     SsoRemoveLoginUrl,
     /// Removed single sign-on logout URL.
@@ -8482,6 +8512,10 @@ pub enum EventType {
     /// Changed whether Dropbox Paper, when enabled, is deployed to all teams or to specific members
     /// of the team.
     PaperChangeDeploymentPolicy,
+    /// Changed whether non team members can view Paper documents using a link. This event is
+    /// deprecated and will not be logged going forward as the associated product functionality no
+    /// longer exists.
+    PaperChangeMemberLinkPolicy,
     /// Changed whether team members can share Paper documents externally (i.e. outside the team),
     /// and if so, whether they should be accessible only by team members or anyone by default.
     PaperChangeMemberPolicy,
@@ -8516,6 +8550,8 @@ pub enum EventType {
     WebSessionsChangeIdleLengthPolicy,
     /// Added a team logo to be displayed on shared link headers.
     TeamProfileAddLogo,
+    /// Changed the default language for the team.
+    TeamProfileChangeDefaultLanguage,
     /// Changed the team logo to be displayed on shared link headers.
     TeamProfileChangeLogo,
     /// Changed the team name.
@@ -8756,12 +8792,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "shmodel_visibility_password" => Ok(EventType::ShmodelVisibilityPassword),
                     "shmodel_visibility_public" => Ok(EventType::ShmodelVisibilityPublic),
                     "shmodel_visibility_team_only" => Ok(EventType::ShmodelVisibilityTeamOnly),
+                    "sso_add_cert" => Ok(EventType::SsoAddCert),
                     "sso_add_login_url" => Ok(EventType::SsoAddLoginUrl),
                     "sso_add_logout_url" => Ok(EventType::SsoAddLogoutUrl),
                     "sso_change_cert" => Ok(EventType::SsoChangeCert),
                     "sso_change_login_url" => Ok(EventType::SsoChangeLoginUrl),
                     "sso_change_logout_url" => Ok(EventType::SsoChangeLogoutUrl),
                     "sso_change_saml_identity_mode" => Ok(EventType::SsoChangeSamlIdentityMode),
+                    "sso_remove_cert" => Ok(EventType::SsoRemoveCert),
                     "sso_remove_login_url" => Ok(EventType::SsoRemoveLoginUrl),
                     "sso_remove_logout_url" => Ok(EventType::SsoRemoveLogoutUrl),
                     "team_folder_change_status" => Ok(EventType::TeamFolderChangeStatus),
@@ -8796,6 +8834,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "microsoft_office_addin_change_policy" => Ok(EventType::MicrosoftOfficeAddinChangePolicy),
                     "network_control_change_policy" => Ok(EventType::NetworkControlChangePolicy),
                     "paper_change_deployment_policy" => Ok(EventType::PaperChangeDeploymentPolicy),
+                    "paper_change_member_link_policy" => Ok(EventType::PaperChangeMemberLinkPolicy),
                     "paper_change_member_policy" => Ok(EventType::PaperChangeMemberPolicy),
                     "paper_change_policy" => Ok(EventType::PaperChangePolicy),
                     "permanent_delete_change_policy" => Ok(EventType::PermanentDeleteChangePolicy),
@@ -8811,6 +8850,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "web_sessions_change_fixed_length_policy" => Ok(EventType::WebSessionsChangeFixedLengthPolicy),
                     "web_sessions_change_idle_length_policy" => Ok(EventType::WebSessionsChangeIdleLengthPolicy),
                     "team_profile_add_logo" => Ok(EventType::TeamProfileAddLogo),
+                    "team_profile_change_default_language" => Ok(EventType::TeamProfileChangeDefaultLanguage),
                     "team_profile_change_logo" => Ok(EventType::TeamProfileChangeLogo),
                     "team_profile_change_name" => Ok(EventType::TeamProfileChangeName),
                     "team_profile_remove_logo" => Ok(EventType::TeamProfileRemoveLogo),
@@ -9026,12 +9066,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "shmodel_visibility_password",
                                                     "shmodel_visibility_public",
                                                     "shmodel_visibility_team_only",
+                                                    "sso_add_cert",
                                                     "sso_add_login_url",
                                                     "sso_add_logout_url",
                                                     "sso_change_cert",
                                                     "sso_change_login_url",
                                                     "sso_change_logout_url",
                                                     "sso_change_saml_identity_mode",
+                                                    "sso_remove_cert",
                                                     "sso_remove_login_url",
                                                     "sso_remove_logout_url",
                                                     "team_folder_change_status",
@@ -9066,6 +9108,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "microsoft_office_addin_change_policy",
                                                     "network_control_change_policy",
                                                     "paper_change_deployment_policy",
+                                                    "paper_change_member_link_policy",
                                                     "paper_change_member_policy",
                                                     "paper_change_policy",
                                                     "permanent_delete_change_policy",
@@ -9081,6 +9124,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "web_sessions_change_fixed_length_policy",
                                                     "web_sessions_change_idle_length_policy",
                                                     "team_profile_add_logo",
+                                                    "team_profile_change_default_language",
                                                     "team_profile_change_logo",
                                                     "team_profile_change_name",
                                                     "team_profile_remove_logo",
@@ -10307,6 +10351,12 @@ impl ::serde::ser::Serialize for EventType {
                 s.serialize_field(".tag", "shmodel_visibility_team_only")?;
                 s.end()
             }
+            EventType::SsoAddCert => {
+                // unit
+                let mut s = serializer.serialize_struct("EventType", 1)?;
+                s.serialize_field(".tag", "sso_add_cert")?;
+                s.end()
+            }
             EventType::SsoAddLoginUrl => {
                 // unit
                 let mut s = serializer.serialize_struct("EventType", 1)?;
@@ -10341,6 +10391,12 @@ impl ::serde::ser::Serialize for EventType {
                 // unit
                 let mut s = serializer.serialize_struct("EventType", 1)?;
                 s.serialize_field(".tag", "sso_change_saml_identity_mode")?;
+                s.end()
+            }
+            EventType::SsoRemoveCert => {
+                // unit
+                let mut s = serializer.serialize_struct("EventType", 1)?;
+                s.serialize_field(".tag", "sso_remove_cert")?;
                 s.end()
             }
             EventType::SsoRemoveLoginUrl => {
@@ -10547,6 +10603,12 @@ impl ::serde::ser::Serialize for EventType {
                 s.serialize_field(".tag", "paper_change_deployment_policy")?;
                 s.end()
             }
+            EventType::PaperChangeMemberLinkPolicy => {
+                // unit
+                let mut s = serializer.serialize_struct("EventType", 1)?;
+                s.serialize_field(".tag", "paper_change_member_link_policy")?;
+                s.end()
+            }
             EventType::PaperChangeMemberPolicy => {
                 // unit
                 let mut s = serializer.serialize_struct("EventType", 1)?;
@@ -10635,6 +10697,12 @@ impl ::serde::ser::Serialize for EventType {
                 // unit
                 let mut s = serializer.serialize_struct("EventType", 1)?;
                 s.serialize_field(".tag", "team_profile_add_logo")?;
+                s.end()
+            }
+            EventType::TeamProfileChangeDefaultLanguage => {
+                // unit
+                let mut s = serializer.serialize_struct("EventType", 1)?;
+                s.serialize_field(".tag", "team_profile_change_default_language")?;
                 s.end()
             }
             EventType::TeamProfileChangeLogo => {
@@ -14792,32 +14860,32 @@ impl ::serde::ser::Serialize for GroupChangeMemberRoleDetails {
 pub struct GroupCreateDetails {
     /// Group join policy.
     pub join_policy: GroupJoinPolicy,
-    /// Is admin managed group. Might be missing due to historical data gap.
-    pub is_admin_managed: Option<bool>,
+    /// Is company managed group. Might be missing due to historical data gap.
+    pub is_company_managed: Option<bool>,
 }
 
 impl GroupCreateDetails {
     pub fn new(join_policy: GroupJoinPolicy) -> Self {
         GroupCreateDetails {
             join_policy,
-            is_admin_managed: None,
+            is_company_managed: None,
         }
     }
 
-    pub fn with_is_admin_managed(mut self, value: Option<bool>) -> Self {
-        self.is_admin_managed = value;
+    pub fn with_is_company_managed(mut self, value: Option<bool>) -> Self {
+        self.is_company_managed = value;
         self
     }
 
 }
 
 const GROUP_CREATE_DETAILS_FIELDS: &'static [&'static str] = &["join_policy",
-                                                               "is_admin_managed"];
+                                                               "is_company_managed"];
 impl GroupCreateDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupCreateDetails, V::Error> {
         use serde::de;
         let mut field_join_policy = None;
-        let mut field_is_admin_managed = None;
+        let mut field_is_company_managed = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "join_policy" => {
@@ -14826,25 +14894,25 @@ impl GroupCreateDetails {
                     }
                     field_join_policy = Some(map.next_value()?);
                 }
-                "is_admin_managed" => {
-                    if field_is_admin_managed.is_some() {
-                        return Err(de::Error::duplicate_field("is_admin_managed"));
+                "is_company_managed" => {
+                    if field_is_company_managed.is_some() {
+                        return Err(de::Error::duplicate_field("is_company_managed"));
                     }
-                    field_is_admin_managed = Some(map.next_value()?);
+                    field_is_company_managed = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, GROUP_CREATE_DETAILS_FIELDS))
             }
         }
         Ok(GroupCreateDetails {
             join_policy: field_join_policy.ok_or_else(|| de::Error::missing_field("join_policy"))?,
-            is_admin_managed: field_is_admin_managed,
+            is_company_managed: field_is_company_managed,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("join_policy", &self.join_policy)?;
-        s.serialize_field("is_admin_managed", &self.is_admin_managed)
+        s.serialize_field("is_company_managed", &self.is_company_managed)
     }
 }
 
@@ -14879,42 +14947,42 @@ impl ::serde::ser::Serialize for GroupCreateDetails {
 /// Deleted a group.
 #[derive(Debug)]
 pub struct GroupDeleteDetails {
-    /// Is admin managed group. Might be missing due to historical data gap.
-    pub is_admin_managed: Option<bool>,
+    /// Is company managed group. Might be missing due to historical data gap.
+    pub is_company_managed: Option<bool>,
 }
 
 impl Default for GroupDeleteDetails {
     fn default() -> Self {
         GroupDeleteDetails {
-            is_admin_managed: None,
+            is_company_managed: None,
         }
     }
 }
 
-const GROUP_DELETE_DETAILS_FIELDS: &'static [&'static str] = &["is_admin_managed"];
+const GROUP_DELETE_DETAILS_FIELDS: &'static [&'static str] = &["is_company_managed"];
 impl GroupDeleteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupDeleteDetails, V::Error> {
         use serde::de;
-        let mut field_is_admin_managed = None;
+        let mut field_is_company_managed = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "is_admin_managed" => {
-                    if field_is_admin_managed.is_some() {
-                        return Err(de::Error::duplicate_field("is_admin_managed"));
+                "is_company_managed" => {
+                    if field_is_company_managed.is_some() {
+                        return Err(de::Error::duplicate_field("is_company_managed"));
                     }
-                    field_is_admin_managed = Some(map.next_value()?);
+                    field_is_company_managed = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, GROUP_DELETE_DETAILS_FIELDS))
             }
         }
         Ok(GroupDeleteDetails {
-            is_admin_managed: field_is_admin_managed,
+            is_company_managed: field_is_company_managed,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("is_admin_managed", &self.is_admin_managed)
+        s.serialize_field("is_company_managed", &self.is_company_managed)
     }
 }
 
@@ -18382,6 +18450,77 @@ impl ::serde::ser::Serialize for PaperChangeDeploymentPolicyDetails {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("PaperChangeDeploymentPolicyDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Changed whether non team members can view Paper documents using a link.
+#[derive(Debug)]
+pub struct PaperChangeMemberLinkPolicyDetails {
+    /// New paper external link accessibility policy.
+    pub new_value: PaperMemberPolicy,
+}
+
+impl PaperChangeMemberLinkPolicyDetails {
+    pub fn new(new_value: PaperMemberPolicy) -> Self {
+        PaperChangeMemberLinkPolicyDetails {
+            new_value,
+        }
+    }
+
+}
+
+const PAPER_CHANGE_MEMBER_LINK_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
+impl PaperChangeMemberLinkPolicyDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperChangeMemberLinkPolicyDetails, V::Error> {
+        use serde::de;
+        let mut field_new_value = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PAPER_CHANGE_MEMBER_LINK_POLICY_DETAILS_FIELDS))
+            }
+        }
+        Ok(PaperChangeMemberLinkPolicyDetails {
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_value", &self.new_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperChangeMemberLinkPolicyDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperChangeMemberLinkPolicyDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PaperChangeMemberLinkPolicyDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperChangeMemberLinkPolicyDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperChangeMemberLinkPolicyDetails", PAPER_CHANGE_MEMBER_LINK_POLICY_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperChangeMemberLinkPolicyDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperChangeMemberLinkPolicyDetails", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -29451,6 +29590,77 @@ impl ::serde::ser::Serialize for SpaceLimitsStatus {
     }
 }
 
+/// Added the X.509 certificate for SSO.
+#[derive(Debug)]
+pub struct SsoAddCertDetails {
+    /// SSO certificate details.
+    pub certificate_details: Certificate,
+}
+
+impl SsoAddCertDetails {
+    pub fn new(certificate_details: Certificate) -> Self {
+        SsoAddCertDetails {
+            certificate_details,
+        }
+    }
+
+}
+
+const SSO_ADD_CERT_DETAILS_FIELDS: &'static [&'static str] = &["certificate_details"];
+impl SsoAddCertDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoAddCertDetails, V::Error> {
+        use serde::de;
+        let mut field_certificate_details = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "certificate_details" => {
+                    if field_certificate_details.is_some() {
+                        return Err(de::Error::duplicate_field("certificate_details"));
+                    }
+                    field_certificate_details = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SSO_ADD_CERT_DETAILS_FIELDS))
+            }
+        }
+        Ok(SsoAddCertDetails {
+            certificate_details: field_certificate_details.ok_or_else(|| de::Error::missing_field("certificate_details"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("certificate_details", &self.certificate_details)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SsoAddCertDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SsoAddCertDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SsoAddCertDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SsoAddCertDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SsoAddCertDetails", SSO_ADD_CERT_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SsoAddCertDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SsoAddCertDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Added sign-in URL for SSO.
 #[derive(Debug)]
 pub struct SsoAddLoginUrlDetails {
@@ -29595,43 +29805,61 @@ impl ::serde::ser::Serialize for SsoAddLogoutUrlDetails {
 /// Changed the X.509 certificate for SSO.
 #[derive(Debug)]
 pub struct SsoChangeCertDetails {
-    /// SSO certificate details.
-    pub certificate_details: Certificate,
+    /// New SSO certificate details.
+    pub new_certificate_details: Certificate,
+    /// Previous SSO certificate details.
+    pub previous_certificate_details: Option<Certificate>,
 }
 
 impl SsoChangeCertDetails {
-    pub fn new(certificate_details: Certificate) -> Self {
+    pub fn new(new_certificate_details: Certificate) -> Self {
         SsoChangeCertDetails {
-            certificate_details,
+            new_certificate_details,
+            previous_certificate_details: None,
         }
+    }
+
+    pub fn with_previous_certificate_details(mut self, value: Option<Certificate>) -> Self {
+        self.previous_certificate_details = value;
+        self
     }
 
 }
 
-const SSO_CHANGE_CERT_DETAILS_FIELDS: &'static [&'static str] = &["certificate_details"];
+const SSO_CHANGE_CERT_DETAILS_FIELDS: &'static [&'static str] = &["new_certificate_details",
+                                                                  "previous_certificate_details"];
 impl SsoChangeCertDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoChangeCertDetails, V::Error> {
         use serde::de;
-        let mut field_certificate_details = None;
+        let mut field_new_certificate_details = None;
+        let mut field_previous_certificate_details = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "certificate_details" => {
-                    if field_certificate_details.is_some() {
-                        return Err(de::Error::duplicate_field("certificate_details"));
+                "new_certificate_details" => {
+                    if field_new_certificate_details.is_some() {
+                        return Err(de::Error::duplicate_field("new_certificate_details"));
                     }
-                    field_certificate_details = Some(map.next_value()?);
+                    field_new_certificate_details = Some(map.next_value()?);
+                }
+                "previous_certificate_details" => {
+                    if field_previous_certificate_details.is_some() {
+                        return Err(de::Error::duplicate_field("previous_certificate_details"));
+                    }
+                    field_previous_certificate_details = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, SSO_CHANGE_CERT_DETAILS_FIELDS))
             }
         }
         Ok(SsoChangeCertDetails {
-            certificate_details: field_certificate_details.ok_or_else(|| de::Error::missing_field("certificate_details"))?,
+            new_certificate_details: field_new_certificate_details.ok_or_else(|| de::Error::missing_field("new_certificate_details"))?,
+            previous_certificate_details: field_previous_certificate_details,
         })
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("certificate_details", &self.certificate_details)
+        s.serialize_field("new_certificate_details", &self.new_certificate_details)?;
+        s.serialize_field("previous_certificate_details", &self.previous_certificate_details)
     }
 }
 
@@ -29657,7 +29885,7 @@ impl ::serde::ser::Serialize for SsoChangeCertDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SsoChangeCertDetails", 1)?;
+        let mut s = serializer.serialize_struct("SsoChangeCertDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -30071,6 +30299,56 @@ impl ::serde::ser::Serialize for SsoLoginFailDetails {
         let mut s = serializer.serialize_struct("SsoLoginFailDetails", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+/// Removed the X.509 certificate for SSO.
+#[derive(Debug)]
+pub struct SsoRemoveCertDetails {
+}
+
+impl Default for SsoRemoveCertDetails {
+    fn default() -> Self {
+        SsoRemoveCertDetails {
+        }
+    }
+}
+
+const SSO_REMOVE_CERT_DETAILS_FIELDS: &'static [&'static str] = &[];
+impl SsoRemoveCertDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoRemoveCertDetails, V::Error> {
+        use serde::de;
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SSO_REMOVE_CERT_DETAILS_FIELDS));
+        }
+        Ok(SsoRemoveCertDetails {
+        })
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SsoRemoveCertDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SsoRemoveCertDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SsoRemoveCertDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SsoRemoveCertDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SsoRemoveCertDetails", SSO_REMOVE_CERT_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SsoRemoveCertDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("SsoRemoveCertDetails", 0)?.end()
     }
 }
 
@@ -31438,6 +31716,90 @@ impl ::serde::ser::Serialize for TeamProfileAddLogoDetails {
     }
 }
 
+/// Changed the default language for the team.
+#[derive(Debug)]
+pub struct TeamProfileChangeDefaultLanguageDetails {
+    /// New team's default language.
+    pub new_value: super::common::LanguageCode,
+    /// Previous team's default language.
+    pub previous_value: super::common::LanguageCode,
+}
+
+impl TeamProfileChangeDefaultLanguageDetails {
+    pub fn new(new_value: super::common::LanguageCode, previous_value: super::common::LanguageCode) -> Self {
+        TeamProfileChangeDefaultLanguageDetails {
+            new_value,
+            previous_value,
+        }
+    }
+
+}
+
+const TEAM_PROFILE_CHANGE_DEFAULT_LANGUAGE_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
+                                                                                       "previous_value"];
+impl TeamProfileChangeDefaultLanguageDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamProfileChangeDefaultLanguageDetails, V::Error> {
+        use serde::de;
+        let mut field_new_value = None;
+        let mut field_previous_value = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, TEAM_PROFILE_CHANGE_DEFAULT_LANGUAGE_DETAILS_FIELDS))
+            }
+        }
+        Ok(TeamProfileChangeDefaultLanguageDetails {
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
+            previous_value: field_previous_value.ok_or_else(|| de::Error::missing_field("previous_value"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_value", &self.new_value)?;
+        s.serialize_field("previous_value", &self.previous_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamProfileChangeDefaultLanguageDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TeamProfileChangeDefaultLanguageDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a TeamProfileChangeDefaultLanguageDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TeamProfileChangeDefaultLanguageDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TeamProfileChangeDefaultLanguageDetails", TEAM_PROFILE_CHANGE_DEFAULT_LANGUAGE_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamProfileChangeDefaultLanguageDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TeamProfileChangeDefaultLanguageDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Changed the team logo to be displayed on shared link headers.
 #[derive(Debug)]
 pub struct TeamProfileChangeLogoDetails {
@@ -31781,20 +32143,20 @@ impl ::serde::ser::Serialize for TfaChangeBackupPhoneDetails {
 #[derive(Debug)]
 pub struct TfaChangePolicyDetails {
     /// New change policy.
-    pub new_value: TfaPolicy,
+    pub new_value: super::team_policies::TwoStepVerificationPolicy,
     /// Previous change policy. Might be missing due to historical data gap.
-    pub previous_value: Option<TfaPolicy>,
+    pub previous_value: Option<super::team_policies::TwoStepVerificationPolicy>,
 }
 
 impl TfaChangePolicyDetails {
-    pub fn new(new_value: TfaPolicy) -> Self {
+    pub fn new(new_value: super::team_policies::TwoStepVerificationPolicy) -> Self {
         TfaChangePolicyDetails {
             new_value,
             previous_value: None,
         }
     }
 
-    pub fn with_previous_value(mut self, value: Option<TfaPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<super::team_policies::TwoStepVerificationPolicy>) -> Self {
         self.previous_value = value;
         self
     }
@@ -32048,65 +32410,6 @@ impl ::serde::ser::Serialize for TfaConfiguration {
                 s.end()
             }
             TfaConfiguration::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-/// Two factor authentication policy
-#[derive(Debug)]
-pub enum TfaPolicy {
-    AllowDisable,
-    StickyEnable,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for TfaPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = TfaPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a TfaPolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "allow_disable" => Ok(TfaPolicy::AllowDisable),
-                    "sticky_enable" => Ok(TfaPolicy::StickyEnable),
-                    _ => Ok(TfaPolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["allow_disable",
-                                                    "sticky_enable",
-                                                    "other"];
-        deserializer.deserialize_struct("TfaPolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for TfaPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            TfaPolicy::AllowDisable => {
-                // unit
-                let mut s = serializer.serialize_struct("TfaPolicy", 1)?;
-                s.serialize_field(".tag", "allow_disable")?;
-                s.end()
-            }
-            TfaPolicy::StickyEnable => {
-                // unit
-                let mut s = serializer.serialize_struct("TfaPolicy", 1)?;
-                s.serialize_field(".tag", "sticky_enable")?;
-                s.end()
-            }
-            TfaPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }

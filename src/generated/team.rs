@@ -327,7 +327,7 @@ pub fn team_folder_archive_check(client: &::client_trait::HttpClient, arg: &supe
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/team_folder/archive/check", arg, None)
 }
 
-/// Creates a new, active, team folder. Permission : Team member file access.
+/// Creates a new, active, team folder with no members. Permission : Team member file access.
 pub fn team_folder_create(client: &::client_trait::HttpClient, arg: &TeamFolderCreateArg) -> ::Result<Result<TeamFolderMetadata, TeamFolderCreateError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/team_folder/create", arg, None)
 }

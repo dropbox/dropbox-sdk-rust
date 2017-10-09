@@ -40,7 +40,7 @@ pub fn properties_overwrite(client: &::client_trait::HttpClient, arg: &Overwrite
 }
 
 /// Remove the specified property group from the file. To remove specific property field key value
-/// pairs, see route :route:`properties/update`. To update a template, see
+/// pairs, see :route:`properties/update`. To update a template, see
 /// :route:`templates/update_for_user` or :route:`templates/update_for_team`. Templates can't be
 /// removed once created.
 pub fn properties_remove(client: &::client_trait::HttpClient, arg: &RemovePropertiesArg) -> ::Result<Result<(), RemovePropertiesError>> {
@@ -61,14 +61,14 @@ pub fn properties_update(client: &::client_trait::HttpClient, arg: &UpdateProper
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/properties/update", arg, None)
 }
 
-/// Add a template associated with a team. See route :route:`properties/add` to add properties to a
-/// file or folder.
+/// Add a template associated with a team. See :route:`properties/add` to add properties to a file
+/// or folder.
 pub fn templates_add_for_team(client: &::client_trait::HttpClient, arg: &AddTemplateArg) -> ::Result<Result<AddTemplateResult, ModifyTemplateError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/add_for_team", arg, None)
 }
 
-/// Add a template associated with a user. See route :route:`properties/add` to add properties to a
-/// file.
+/// Add a template associated with a user. See :route:`properties/add` to add properties to a file.
+/// This endpoint can't be called on a team member or admin's behalf.
 pub fn templates_add_for_user(client: &::client_trait::HttpClient, arg: &AddTemplateArg) -> ::Result<Result<AddTemplateResult, ModifyTemplateError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/add_for_user", arg, None)
 }
@@ -78,7 +78,8 @@ pub fn templates_get_for_team(client: &::client_trait::HttpClient, arg: &GetTemp
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/get_for_team", arg, None)
 }
 
-/// Get the schema for a specified template.
+/// Get the schema for a specified template. This endpoint can't be called on a team member or
+/// admin's behalf.
 pub fn templates_get_for_user(client: &::client_trait::HttpClient, arg: &GetTemplateArg) -> ::Result<Result<GetTemplateResult, TemplateError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/get_for_user", arg, None)
 }
@@ -90,7 +91,8 @@ pub fn templates_list_for_team(client: &::client_trait::HttpClient, arg: &()) ->
 }
 
 /// Get the template identifiers for a team. To get the schema of each template use
-/// :route:`templates/get_for_user`.
+/// :route:`templates/get_for_user`. This endpoint can't be called on a team member or admin's
+/// behalf.
 pub fn templates_list_for_user(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<ListTemplateResult, TemplateError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/list_for_user", arg, None)
 }
@@ -102,7 +104,8 @@ pub fn templates_update_for_team(client: &::client_trait::HttpClient, arg: &Upda
 }
 
 /// Update a template associated with a user. This route can update the template name, the template
-/// description and add optional properties to templates.
+/// description and add optional properties to templates. This endpoint can't be called on a team
+/// member or admin's behalf.
 pub fn templates_update_for_user(client: &::client_trait::HttpClient, arg: &UpdateTemplateArg) -> ::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/update_for_user", arg, None)
 }
@@ -198,8 +201,7 @@ pub enum AddPropertiesError {
     RestrictedContent,
     Other,
     Path(LookupError),
-    /// This folder cannot be tagged. Shared folders and team folders are not supported for
-    /// team-owned tags.
+    /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
     UnsupportedFolder,
     /// One or more of the supplied property field values is too large.
     PropertyFieldTooLarge,
@@ -670,8 +672,7 @@ pub enum InvalidPropertyGroupError {
     RestrictedContent,
     Other,
     Path(LookupError),
-    /// This folder cannot be tagged. Shared folders and team folders are not supported for
-    /// team-owned tags.
+    /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
     UnsupportedFolder,
     /// One or more of the supplied property field values is too large.
     PropertyFieldTooLarge,
@@ -1292,8 +1293,7 @@ pub enum PropertiesError {
     RestrictedContent,
     Other,
     Path(LookupError),
-    /// This folder cannot be tagged. Shared folders and team folders are not supported for
-    /// team-owned tags.
+    /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
     UnsupportedFolder,
 }
 
@@ -2490,8 +2490,7 @@ pub enum RemovePropertiesError {
     RestrictedContent,
     Other,
     Path(LookupError),
-    /// This folder cannot be tagged. Shared folders and team folders are not supported for
-    /// team-owned tags.
+    /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
     UnsupportedFolder,
     PropertyGroupLookup(LookUpPropertiesError),
 }
@@ -2902,8 +2901,7 @@ pub enum UpdatePropertiesError {
     RestrictedContent,
     Other,
     Path(LookupError),
-    /// This folder cannot be tagged. Shared folders and team folders are not supported for
-    /// team-owned tags.
+    /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
     UnsupportedFolder,
     /// One or more of the supplied property field values is too large.
     PropertyFieldTooLarge,

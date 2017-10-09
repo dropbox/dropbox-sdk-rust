@@ -13,6 +13,7 @@ pub type DisplayName = String;
 pub type DisplayNameLegacy = String;
 pub type DropboxTimestamp = String /*Timestamp*/;
 pub type EmailAddress = String;
+pub type LanguageCode = String;
 pub type NamePart = String;
 pub type NamespaceId = String;
 pub type OptionalNamePart = String;

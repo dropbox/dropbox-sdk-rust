@@ -12102,7 +12102,7 @@ impl ::serde::ser::Serialize for SharedContentLinkMetadataBase {
 #[derive(Debug)]
 pub struct SharedFileMembers {
     /// The list of user members of the shared file.
-    pub users: Vec<UserMembershipInfo>,
+    pub users: Vec<UserFileMembershipInfo>,
     /// The list of group members of the shared file.
     pub groups: Vec<GroupMembershipInfo>,
     /// The list of invited members of a file, but have not logged in and claimed this.
@@ -12113,7 +12113,7 @@ pub struct SharedFileMembers {
 }
 
 impl SharedFileMembers {
-    pub fn new(users: Vec<UserMembershipInfo>, groups: Vec<GroupMembershipInfo>, invitees: Vec<InviteeMembershipInfo>) -> Self {
+    pub fn new(users: Vec<UserFileMembershipInfo>, groups: Vec<GroupMembershipInfo>, invitees: Vec<InviteeMembershipInfo>) -> Self {
         SharedFileMembers {
             users,
             groups,
@@ -15344,6 +15344,163 @@ impl ::std::error::Error for UpdateFolderPolicyError {
 impl ::std::fmt::Display for UpdateFolderPolicyError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
+    }
+}
+
+/// The information about a user member of the shared content with an appended last seen timestamp.
+#[derive(Debug)]
+pub struct UserFileMembershipInfo {
+    /// The access type for this member.
+    pub access_type: AccessLevel,
+    /// The account information for the membership user.
+    pub user: UserInfo,
+    /// The permissions that requesting user has on this member. The set of permissions corresponds
+    /// to the MemberActions in the request.
+    pub permissions: Option<Vec<MemberPermission>>,
+    /// Suggested name initials for a member.
+    pub initials: Option<String>,
+    /// True if the member has access from a parent folder.
+    pub is_inherited: bool,
+    /// The UTC timestamp of when the user has last seen the content, if they have.
+    pub time_last_seen: Option<super::common::DropboxTimestamp>,
+}
+
+impl UserFileMembershipInfo {
+    pub fn new(access_type: AccessLevel, user: UserInfo) -> Self {
+        UserFileMembershipInfo {
+            access_type,
+            user,
+            permissions: None,
+            initials: None,
+            is_inherited: false,
+            time_last_seen: None,
+        }
+    }
+
+    pub fn with_permissions(mut self, value: Option<Vec<MemberPermission>>) -> Self {
+        self.permissions = value;
+        self
+    }
+
+    pub fn with_initials(mut self, value: Option<String>) -> Self {
+        self.initials = value;
+        self
+    }
+
+    pub fn with_is_inherited(mut self, value: bool) -> Self {
+        self.is_inherited = value;
+        self
+    }
+
+    pub fn with_time_last_seen(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.time_last_seen = value;
+        self
+    }
+
+}
+
+const USER_FILE_MEMBERSHIP_INFO_FIELDS: &'static [&'static str] = &["access_type",
+                                                                    "user",
+                                                                    "permissions",
+                                                                    "initials",
+                                                                    "is_inherited",
+                                                                    "time_last_seen"];
+impl UserFileMembershipInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserFileMembershipInfo, V::Error> {
+        use serde::de;
+        let mut field_access_type = None;
+        let mut field_user = None;
+        let mut field_permissions = None;
+        let mut field_initials = None;
+        let mut field_is_inherited = None;
+        let mut field_time_last_seen = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "access_type" => {
+                    if field_access_type.is_some() {
+                        return Err(de::Error::duplicate_field("access_type"));
+                    }
+                    field_access_type = Some(map.next_value()?);
+                }
+                "user" => {
+                    if field_user.is_some() {
+                        return Err(de::Error::duplicate_field("user"));
+                    }
+                    field_user = Some(map.next_value()?);
+                }
+                "permissions" => {
+                    if field_permissions.is_some() {
+                        return Err(de::Error::duplicate_field("permissions"));
+                    }
+                    field_permissions = Some(map.next_value()?);
+                }
+                "initials" => {
+                    if field_initials.is_some() {
+                        return Err(de::Error::duplicate_field("initials"));
+                    }
+                    field_initials = Some(map.next_value()?);
+                }
+                "is_inherited" => {
+                    if field_is_inherited.is_some() {
+                        return Err(de::Error::duplicate_field("is_inherited"));
+                    }
+                    field_is_inherited = Some(map.next_value()?);
+                }
+                "time_last_seen" => {
+                    if field_time_last_seen.is_some() {
+                        return Err(de::Error::duplicate_field("time_last_seen"));
+                    }
+                    field_time_last_seen = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, USER_FILE_MEMBERSHIP_INFO_FIELDS))
+            }
+        }
+        Ok(UserFileMembershipInfo {
+            access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
+            user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
+            permissions: field_permissions,
+            initials: field_initials,
+            is_inherited: field_is_inherited.unwrap_or(false),
+            time_last_seen: field_time_last_seen,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("access_type", &self.access_type)?;
+        s.serialize_field("user", &self.user)?;
+        s.serialize_field("permissions", &self.permissions)?;
+        s.serialize_field("initials", &self.initials)?;
+        s.serialize_field("is_inherited", &self.is_inherited)?;
+        s.serialize_field("time_last_seen", &self.time_last_seen)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UserFileMembershipInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UserFileMembershipInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a UserFileMembershipInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UserFileMembershipInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UserFileMembershipInfo", USER_FILE_MEMBERSHIP_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UserFileMembershipInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UserFileMembershipInfo", 6)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 

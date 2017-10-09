@@ -110,7 +110,7 @@ fn main() {
 fn list_directory<'a>(client: &'a HttpClient, path: &str, recursive: bool)
     -> dropbox_sdk::Result<Result<DirectoryIterator<'a>, files::ListFolderError>>
 {
-    assert!(path.chars().next() == Some('/'), "path needs to be absolute (start with a '/')");
+    assert!(path.starts_with('/'), "path needs to be absolute (start with a '/')");
     match files::list_folder(
         client,
         &files::ListFolderArg::new((&path[1..]).to_owned())

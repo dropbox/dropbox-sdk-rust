@@ -871,3 +871,63 @@ impl ::serde::ser::Serialize for TeamSharingPolicies {
     }
 }
 
+#[derive(Debug)]
+pub enum TwoStepVerificationPolicy {
+    /// Enabled require two factor authorization.
+    RequireTfaEnable,
+    /// Disabled require two factor authorization.
+    RequireTfaDisable,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TwoStepVerificationPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TwoStepVerificationPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a TwoStepVerificationPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "require_tfa_enable" => Ok(TwoStepVerificationPolicy::RequireTfaEnable),
+                    "require_tfa_disable" => Ok(TwoStepVerificationPolicy::RequireTfaDisable),
+                    _ => Ok(TwoStepVerificationPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["require_tfa_enable",
+                                                    "require_tfa_disable",
+                                                    "other"];
+        deserializer.deserialize_struct("TwoStepVerificationPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TwoStepVerificationPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            TwoStepVerificationPolicy::RequireTfaEnable => {
+                // unit
+                let mut s = serializer.serialize_struct("TwoStepVerificationPolicy", 1)?;
+                s.serialize_field(".tag", "require_tfa_enable")?;
+                s.end()
+            }
+            TwoStepVerificationPolicy::RequireTfaDisable => {
+                // unit
+                let mut s = serializer.serialize_struct("TwoStepVerificationPolicy", 1)?;
+                s.serialize_field(".tag", "require_tfa_disable")?;
+                s.end()
+            }
+            TwoStepVerificationPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+

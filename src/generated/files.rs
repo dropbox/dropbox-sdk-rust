@@ -20,6 +20,7 @@ pub type PathROrId = String;
 pub type ReadPath = String;
 pub type Rev = String;
 pub type Sha256HexHash = String;
+pub type SharedLinkUrl = String;
 pub type WritePath = String;
 pub type WritePathOrId = String;
 
@@ -201,7 +202,13 @@ pub fn list_folder_longpoll(client: &::client_trait::HttpClient, arg: &ListFolde
     ::client_helpers::request(client, ::client_trait::Endpoint::Notify, "files/list_folder/longpoll", arg, None)
 }
 
-/// Return revisions of a file.
+/// Returns revisions for files based on a file path or a file id. The file path or file id is
+/// identified from the latest file entry at the given file path or id. This end point allows your
+/// app to query either by file path or file id by setting the mode parameter appropriately. In the
+/// :field:`ListRevisionsMode.path` (default) mode, all revisions at the same file path as the
+/// latest file entry are returned. If revisions with the same file id are desired, then mode must
+/// be set to :field:`ListRevisionsMode.id`. The :field:`ListRevisionsMode.id` mode is useful to
+/// retrieve revisions for a given file across moves or renames.
 pub fn list_revisions(client: &::client_trait::HttpClient, arg: &ListRevisionsArg) -> ::Result<Result<ListRevisionsResult, ListRevisionsError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/list_revisions", arg, None)
 }
@@ -4096,6 +4103,10 @@ pub struct ListFolderArg {
     /// The maximum number of results to return per request. Note: This is an approximate number and
     /// there can be slightly more entries returned in some cases.
     pub limit: Option<u32>,
+    /// A shared link to list the contents of. If the link is password-protected, the password must
+    /// be provided. If this field is present, :field:`ListFolderArg.path` will be relative to root
+    /// of the shared link. Only non-recursive mode is supported for shared link.
+    pub shared_link: Option<SharedLink>,
 }
 
 impl ListFolderArg {
@@ -4108,6 +4119,7 @@ impl ListFolderArg {
             include_has_explicit_shared_members: false,
             include_mounted_folders: true,
             limit: None,
+            shared_link: None,
         }
     }
 
@@ -4141,6 +4153,11 @@ impl ListFolderArg {
         self
     }
 
+    pub fn with_shared_link(mut self, value: Option<SharedLink>) -> Self {
+        self.shared_link = value;
+        self
+    }
+
 }
 
 const LIST_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
@@ -4149,7 +4166,8 @@ const LIST_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
                                                           "include_deleted",
                                                           "include_has_explicit_shared_members",
                                                           "include_mounted_folders",
-                                                          "limit"];
+                                                          "limit",
+                                                          "shared_link"];
 impl ListFolderArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderArg, V::Error> {
         use serde::de;
@@ -4160,6 +4178,7 @@ impl ListFolderArg {
         let mut field_include_has_explicit_shared_members = None;
         let mut field_include_mounted_folders = None;
         let mut field_limit = None;
+        let mut field_shared_link = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "path" => {
@@ -4204,6 +4223,12 @@ impl ListFolderArg {
                     }
                     field_limit = Some(map.next_value()?);
                 }
+                "shared_link" => {
+                    if field_shared_link.is_some() {
+                        return Err(de::Error::duplicate_field("shared_link"));
+                    }
+                    field_shared_link = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_ARG_FIELDS))
             }
         }
@@ -4215,6 +4240,7 @@ impl ListFolderArg {
             include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
             include_mounted_folders: field_include_mounted_folders.unwrap_or(true),
             limit: field_limit,
+            shared_link: field_shared_link,
         })
     }
 
@@ -4226,7 +4252,8 @@ impl ListFolderArg {
         s.serialize_field("include_deleted", &self.include_deleted)?;
         s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
         s.serialize_field("include_mounted_folders", &self.include_mounted_folders)?;
-        s.serialize_field("limit", &self.limit)
+        s.serialize_field("limit", &self.limit)?;
+        s.serialize_field("shared_link", &self.shared_link)
     }
 }
 
@@ -4252,7 +4279,7 @@ impl ::serde::ser::Serialize for ListFolderArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListFolderArg", 7)?;
+        let mut s = serializer.serialize_struct("ListFolderArg", 8)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -4894,6 +4921,8 @@ impl ::serde::ser::Serialize for ListFolderResult {
 pub struct ListRevisionsArg {
     /// The path to the file you want to see the revisions of.
     pub path: PathOrId,
+    /// Determines the behavior of the API in listing the revisions for a given file path or id.
+    pub mode: ListRevisionsMode,
     /// The maximum number of revision entries returned.
     pub limit: u64,
 }
@@ -4902,8 +4931,14 @@ impl ListRevisionsArg {
     pub fn new(path: PathOrId) -> Self {
         ListRevisionsArg {
             path,
+            mode: ListRevisionsMode::Path,
             limit: 10,
         }
+    }
+
+    pub fn with_mode(mut self, value: ListRevisionsMode) -> Self {
+        self.mode = value;
+        self
     }
 
     pub fn with_limit(mut self, value: u64) -> Self {
@@ -4914,11 +4949,13 @@ impl ListRevisionsArg {
 }
 
 const LIST_REVISIONS_ARG_FIELDS: &'static [&'static str] = &["path",
+                                                             "mode",
                                                              "limit"];
 impl ListRevisionsArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListRevisionsArg, V::Error> {
         use serde::de;
         let mut field_path = None;
+        let mut field_mode = None;
         let mut field_limit = None;
         while let Some(key) = map.next_key()? {
             match key {
@@ -4927,6 +4964,12 @@ impl ListRevisionsArg {
                         return Err(de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
+                }
+                "mode" => {
+                    if field_mode.is_some() {
+                        return Err(de::Error::duplicate_field("mode"));
+                    }
+                    field_mode = Some(map.next_value()?);
                 }
                 "limit" => {
                     if field_limit.is_some() {
@@ -4939,6 +4982,7 @@ impl ListRevisionsArg {
         }
         Ok(ListRevisionsArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            mode: field_mode.unwrap_or_else(|| ListRevisionsMode::Path),
             limit: field_limit.unwrap_or(10),
         })
     }
@@ -4946,6 +4990,7 @@ impl ListRevisionsArg {
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
+        s.serialize_field("mode", &self.mode)?;
         s.serialize_field("limit", &self.limit)
     }
 }
@@ -4972,7 +5017,7 @@ impl ::serde::ser::Serialize for ListRevisionsArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListRevisionsArg", 2)?;
+        let mut s = serializer.serialize_struct("ListRevisionsArg", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -5047,8 +5092,70 @@ impl ::std::fmt::Display for ListRevisionsError {
 }
 
 #[derive(Debug)]
+pub enum ListRevisionsMode {
+    /// Returns revisions with the same file path as identified by the latest file entry at the
+    /// given file path or id.
+    Path,
+    /// Returns revisions with the same file id as identified by the latest file entry at the given
+    /// file path or id.
+    Id,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsMode {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ListRevisionsMode;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ListRevisionsMode structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => Ok(ListRevisionsMode::Path),
+                    "id" => Ok(ListRevisionsMode::Id),
+                    _ => Ok(ListRevisionsMode::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path",
+                                                    "id",
+                                                    "other"];
+        deserializer.deserialize_struct("ListRevisionsMode", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListRevisionsMode {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ListRevisionsMode::Path => {
+                // unit
+                let mut s = serializer.serialize_struct("ListRevisionsMode", 1)?;
+                s.serialize_field(".tag", "path")?;
+                s.end()
+            }
+            ListRevisionsMode::Id => {
+                // unit
+                let mut s = serializer.serialize_struct("ListRevisionsMode", 1)?;
+                s.serialize_field(".tag", "id")?;
+                s.end()
+            }
+            ListRevisionsMode::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
 pub struct ListRevisionsResult {
-    /// If the file is deleted.
+    /// If the file identified by the latest revision in the response is either deleted or moved.
     pub is_deleted: bool,
     /// The revisions for the file. Only revisions that are not deleted will show up here.
     pub entries: Vec<FileMetadata>,
@@ -8076,6 +8183,94 @@ impl ::serde::ser::Serialize for SearchResult {
     }
 }
 
+#[derive(Debug)]
+pub struct SharedLink {
+    /// Shared link url.
+    pub url: SharedLinkUrl,
+    /// Password for the shared link.
+    pub password: Option<String>,
+}
+
+impl SharedLink {
+    pub fn new(url: SharedLinkUrl) -> Self {
+        SharedLink {
+            url,
+            password: None,
+        }
+    }
+
+    pub fn with_password(mut self, value: Option<String>) -> Self {
+        self.password = value;
+        self
+    }
+
+}
+
+const SHARED_LINK_FIELDS: &'static [&'static str] = &["url",
+                                                      "password"];
+impl SharedLink {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedLink, V::Error> {
+        use serde::de;
+        let mut field_url = None;
+        let mut field_password = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "url" => {
+                    if field_url.is_some() {
+                        return Err(de::Error::duplicate_field("url"));
+                    }
+                    field_url = Some(map.next_value()?);
+                }
+                "password" => {
+                    if field_password.is_some() {
+                        return Err(de::Error::duplicate_field("password"));
+                    }
+                    field_password = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHARED_LINK_FIELDS))
+            }
+        }
+        Ok(SharedLink {
+            url: field_url.ok_or_else(|| de::Error::missing_field("url"))?,
+            password: field_password,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("url", &self.url)?;
+        s.serialize_field("password", &self.password)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharedLink {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharedLink;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SharedLink struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharedLink::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharedLink", SHARED_LINK_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharedLink {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SharedLink", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Sharing info for a file or folder.
 #[derive(Debug)]
 pub struct SharingInfo {
@@ -9909,7 +10104,7 @@ pub enum WriteError {
     InsufficientSpace,
     /// Dropbox will not save the file or folder because of its name.
     DisallowedName,
-    /// This endpoint cannot modify or delete team folders.
+    /// This endpoint cannot move or delete team folders.
     TeamFolder,
     Other,
 }
