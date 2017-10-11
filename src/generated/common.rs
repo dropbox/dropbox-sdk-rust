@@ -37,7 +37,9 @@ impl Default for InvalidPathRootError {
 
 const INVALID_PATH_ROOT_ERROR_FIELDS: &'static [&'static str] = &["path_root"];
 impl InvalidPathRootError {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<InvalidPathRootError, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<InvalidPathRootError, V::Error> {
         use serde::de;
         let mut field_path_root = None;
         while let Some(key) = map.next_key()? {
@@ -56,7 +58,10 @@ impl InvalidPathRootError {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path_root", &self.path_root)
     }

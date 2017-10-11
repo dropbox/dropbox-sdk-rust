@@ -689,7 +689,11 @@ pub struct TeamMemberPolicies {
 }
 
 impl TeamMemberPolicies {
-    pub fn new(sharing: TeamSharingPolicies, emm_state: EmmState, office_addin: OfficeAddInPolicy) -> Self {
+    pub fn new(
+        sharing: TeamSharingPolicies,
+        emm_state: EmmState,
+        office_addin: OfficeAddInPolicy,
+    ) -> Self {
         TeamMemberPolicies {
             sharing,
             emm_state,
@@ -703,7 +707,9 @@ const TEAM_MEMBER_POLICIES_FIELDS: &'static [&'static str] = &["sharing",
                                                                "emm_state",
                                                                "office_addin"];
 impl TeamMemberPolicies {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamMemberPolicies, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamMemberPolicies, V::Error> {
         use serde::de;
         let mut field_sharing = None;
         let mut field_emm_state = None;
@@ -738,7 +744,10 @@ impl TeamMemberPolicies {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("sharing", &self.sharing)?;
         s.serialize_field("emm_state", &self.emm_state)?;
@@ -786,7 +795,11 @@ pub struct TeamSharingPolicies {
 }
 
 impl TeamSharingPolicies {
-    pub fn new(shared_folder_member_policy: SharedFolderMemberPolicy, shared_folder_join_policy: SharedFolderJoinPolicy, shared_link_create_policy: SharedLinkCreatePolicy) -> Self {
+    pub fn new(
+        shared_folder_member_policy: SharedFolderMemberPolicy,
+        shared_folder_join_policy: SharedFolderJoinPolicy,
+        shared_link_create_policy: SharedLinkCreatePolicy,
+    ) -> Self {
         TeamSharingPolicies {
             shared_folder_member_policy,
             shared_folder_join_policy,
@@ -800,7 +813,9 @@ const TEAM_SHARING_POLICIES_FIELDS: &'static [&'static str] = &["shared_folder_m
                                                                 "shared_folder_join_policy",
                                                                 "shared_link_create_policy"];
 impl TeamSharingPolicies {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamSharingPolicies, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamSharingPolicies, V::Error> {
         use serde::de;
         let mut field_shared_folder_member_policy = None;
         let mut field_shared_folder_join_policy = None;
@@ -835,7 +850,10 @@ impl TeamSharingPolicies {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_member_policy", &self.shared_folder_member_policy)?;
         s.serialize_field("shared_folder_join_policy", &self.shared_folder_join_policy)?;

@@ -14,95 +14,213 @@ pub type NumberPerDay = Vec<Option<u64>>;
 pub type UserQuota = u32;
 
 /// List all device sessions of a team's member.
-pub fn devices_list_member_devices(client: &::client_trait::HttpClient, arg: &ListMemberDevicesArg) -> ::Result<Result<ListMemberDevicesResult, ListMemberDevicesError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/devices/list_member_devices", arg, None)
+pub fn devices_list_member_devices(
+    client: &::client_trait::HttpClient,
+    arg: &ListMemberDevicesArg,
+) -> ::Result<Result<ListMemberDevicesResult, ListMemberDevicesError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/devices/list_member_devices",
+        arg,
+        None)
 }
 
 /// List all device sessions of a team.
-pub fn devices_list_members_devices(client: &::client_trait::HttpClient, arg: &ListMembersDevicesArg) -> ::Result<Result<ListMembersDevicesResult, ListMembersDevicesError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/devices/list_members_devices", arg, None)
+pub fn devices_list_members_devices(
+    client: &::client_trait::HttpClient,
+    arg: &ListMembersDevicesArg,
+) -> ::Result<Result<ListMembersDevicesResult, ListMembersDevicesError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/devices/list_members_devices",
+        arg,
+        None)
 }
 
 /// List all device sessions of a team.
-pub fn devices_list_team_devices(client: &::client_trait::HttpClient, arg: &ListTeamDevicesArg) -> ::Result<Result<ListTeamDevicesResult, ListTeamDevicesError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/devices/list_team_devices", arg, None)
+pub fn devices_list_team_devices(
+    client: &::client_trait::HttpClient,
+    arg: &ListTeamDevicesArg,
+) -> ::Result<Result<ListTeamDevicesResult, ListTeamDevicesError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/devices/list_team_devices",
+        arg,
+        None)
 }
 
 /// Revoke a device session of a team's member.
-pub fn devices_revoke_device_session(client: &::client_trait::HttpClient, arg: &RevokeDeviceSessionArg) -> ::Result<Result<(), RevokeDeviceSessionError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/devices/revoke_device_session", arg, None)
+pub fn devices_revoke_device_session(
+    client: &::client_trait::HttpClient,
+    arg: &RevokeDeviceSessionArg,
+) -> ::Result<Result<(), RevokeDeviceSessionError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/devices/revoke_device_session",
+        arg,
+        None)
 }
 
 /// Revoke a list of device sessions of team members.
-pub fn devices_revoke_device_session_batch(client: &::client_trait::HttpClient, arg: &RevokeDeviceSessionBatchArg) -> ::Result<Result<RevokeDeviceSessionBatchResult, RevokeDeviceSessionBatchError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/devices/revoke_device_session_batch", arg, None)
+pub fn devices_revoke_device_session_batch(
+    client: &::client_trait::HttpClient,
+    arg: &RevokeDeviceSessionBatchArg,
+) -> ::Result<Result<RevokeDeviceSessionBatchResult, RevokeDeviceSessionBatchError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/devices/revoke_device_session_batch",
+        arg,
+        None)
 }
 
 /// Get the values for one or more featues. This route allows you to check your account's capability
 /// for what feature you can access or what value you have for certain features. Permission : Team
 /// information.
-pub fn features_get_values(client: &::client_trait::HttpClient, arg: &FeaturesGetValuesBatchArg) -> ::Result<Result<FeaturesGetValuesBatchResult, FeaturesGetValuesBatchError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/features/get_values", arg, None)
+pub fn features_get_values(
+    client: &::client_trait::HttpClient,
+    arg: &FeaturesGetValuesBatchArg,
+) -> ::Result<Result<FeaturesGetValuesBatchResult, FeaturesGetValuesBatchError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/features/get_values",
+        arg,
+        None)
 }
 
 /// Retrieves information about a team.
-pub fn get_info(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<TeamGetInfoResult, ()>> {
+pub fn get_info(
+    client: &::client_trait::HttpClient,
+    arg: &(),
+) -> ::Result<Result<TeamGetInfoResult, ()>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/get_info", arg, None)
 }
 
 /// Creates a new, empty group, with a requested name. Permission : Team member management.
-pub fn groups_create(client: &::client_trait::HttpClient, arg: &GroupCreateArg) -> ::Result<Result<GroupFullInfo, GroupCreateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/create", arg, None)
+pub fn groups_create(
+    client: &::client_trait::HttpClient,
+    arg: &GroupCreateArg,
+) -> ::Result<Result<GroupFullInfo, GroupCreateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/groups/create",
+        arg,
+        None)
 }
 
 /// Deletes a group. The group is deleted immediately. However the revoking of group-owned resources
 /// may take additional time. Use the :route:`groups/job_status/get` to determine whether this
 /// process has completed. Permission : Team member management.
-pub fn groups_delete(client: &::client_trait::HttpClient, arg: &GroupSelector) -> ::Result<Result<super::async::LaunchEmptyResult, GroupDeleteError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/delete", arg, None)
+pub fn groups_delete(
+    client: &::client_trait::HttpClient,
+    arg: &GroupSelector,
+) -> ::Result<Result<super::async::LaunchEmptyResult, GroupDeleteError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/groups/delete",
+        arg,
+        None)
 }
 
 /// Retrieves information about one or more groups. Note that the optional field
 /// :field:`GroupFullInfo.members` is not returned for system-managed groups. Permission : Team
 /// Information.
-pub fn groups_get_info(client: &::client_trait::HttpClient, arg: &GroupsSelector) -> ::Result<Result<GroupsGetInfoResult, GroupsGetInfoError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/get_info", arg, None)
+pub fn groups_get_info(
+    client: &::client_trait::HttpClient,
+    arg: &GroupsSelector,
+) -> ::Result<Result<GroupsGetInfoResult, GroupsGetInfoError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/groups/get_info",
+        arg,
+        None)
 }
 
 /// Once an async_job_id is returned from :route:`groups/delete`, :route:`groups/members/add` , or
 /// :route:`groups/members/remove` use this method to poll the status of granting/revoking group
 /// members' access to group-owned resources. Permission : Team member management.
-pub fn groups_job_status_get(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<super::async::PollEmptyResult, GroupsPollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/job_status/get", arg, None)
+pub fn groups_job_status_get(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<super::async::PollEmptyResult, GroupsPollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/groups/job_status/get",
+        arg,
+        None)
 }
 
 /// Lists groups on a team. Permission : Team Information.
-pub fn groups_list(client: &::client_trait::HttpClient, arg: &GroupsListArg) -> ::Result<Result<GroupsListResult, ()>> {
+pub fn groups_list(
+    client: &::client_trait::HttpClient,
+    arg: &GroupsListArg,
+) -> ::Result<Result<GroupsListResult, ()>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/list", arg, None)
 }
 
 /// Once a cursor has been retrieved from :route:`groups/list`, use this to paginate through all
 /// groups. Permission : Team Information.
-pub fn groups_list_continue(client: &::client_trait::HttpClient, arg: &GroupsListContinueArg) -> ::Result<Result<GroupsListResult, GroupsListContinueError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/list/continue", arg, None)
+pub fn groups_list_continue(
+    client: &::client_trait::HttpClient,
+    arg: &GroupsListContinueArg,
+) -> ::Result<Result<GroupsListResult, GroupsListContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/groups/list/continue",
+        arg,
+        None)
 }
 
 /// Adds members to a group. The members are added immediately. However the granting of group-owned
 /// resources may take additional time. Use the :route:`groups/job_status/get` to determine whether
 /// this process has completed. Permission : Team member management.
-pub fn groups_members_add(client: &::client_trait::HttpClient, arg: &GroupMembersAddArg) -> ::Result<Result<GroupMembersChangeResult, GroupMembersAddError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/members/add", arg, None)
+pub fn groups_members_add(
+    client: &::client_trait::HttpClient,
+    arg: &GroupMembersAddArg,
+) -> ::Result<Result<GroupMembersChangeResult, GroupMembersAddError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/groups/members/add",
+        arg,
+        None)
 }
 
 /// Lists members of a group. Permission : Team Information.
-pub fn groups_members_list(client: &::client_trait::HttpClient, arg: &GroupsMembersListArg) -> ::Result<Result<GroupsMembersListResult, GroupSelectorError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/members/list", arg, None)
+pub fn groups_members_list(
+    client: &::client_trait::HttpClient,
+    arg: &GroupsMembersListArg,
+) -> ::Result<Result<GroupsMembersListResult, GroupSelectorError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/groups/members/list",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from :route:`groups/members/list`, use this to paginate through
 /// all members of the group. Permission : Team information.
-pub fn groups_members_list_continue(client: &::client_trait::HttpClient, arg: &GroupsMembersListContinueArg) -> ::Result<Result<GroupsMembersListResult, GroupsMembersListContinueError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/members/list/continue", arg, None)
+pub fn groups_members_list_continue(
+    client: &::client_trait::HttpClient,
+    arg: &GroupsMembersListContinueArg,
+) -> ::Result<Result<GroupsMembersListResult, GroupsMembersListContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/groups/members/list/continue",
+        arg,
+        None)
 }
 
 /// Removes members from a group. The members are removed immediately. However the revoking of
@@ -110,63 +228,151 @@ pub fn groups_members_list_continue(client: &::client_trait::HttpClient, arg: &G
 /// determine whether this process has completed. This method permits removing the only owner of a
 /// group, even in cases where this is not possible via the web client. Permission : Team member
 /// management.
-pub fn groups_members_remove(client: &::client_trait::HttpClient, arg: &GroupMembersRemoveArg) -> ::Result<Result<GroupMembersChangeResult, GroupMembersRemoveError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/members/remove", arg, None)
+pub fn groups_members_remove(
+    client: &::client_trait::HttpClient,
+    arg: &GroupMembersRemoveArg,
+) -> ::Result<Result<GroupMembersChangeResult, GroupMembersRemoveError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/groups/members/remove",
+        arg,
+        None)
 }
 
 /// Sets a member's access type in a group. Permission : Team member management.
-pub fn groups_members_set_access_type(client: &::client_trait::HttpClient, arg: &GroupMembersSetAccessTypeArg) -> ::Result<Result<GroupsGetInfoResult, GroupMemberSetAccessTypeError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/members/set_access_type", arg, None)
+pub fn groups_members_set_access_type(
+    client: &::client_trait::HttpClient,
+    arg: &GroupMembersSetAccessTypeArg,
+) -> ::Result<Result<GroupsGetInfoResult, GroupMemberSetAccessTypeError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/groups/members/set_access_type",
+        arg,
+        None)
 }
 
 /// Updates a group's name and/or external ID. Permission : Team member management.
-pub fn groups_update(client: &::client_trait::HttpClient, arg: &GroupUpdateArgs) -> ::Result<Result<GroupFullInfo, GroupUpdateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/update", arg, None)
+pub fn groups_update(
+    client: &::client_trait::HttpClient,
+    arg: &GroupUpdateArgs,
+) -> ::Result<Result<GroupFullInfo, GroupUpdateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/groups/update",
+        arg,
+        None)
 }
 
 /// List all linked applications of the team member. Note, this endpoint does not list any
 /// team-linked applications.
-pub fn linked_apps_list_member_linked_apps(client: &::client_trait::HttpClient, arg: &ListMemberAppsArg) -> ::Result<Result<ListMemberAppsResult, ListMemberAppsError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/linked_apps/list_member_linked_apps", arg, None)
+pub fn linked_apps_list_member_linked_apps(
+    client: &::client_trait::HttpClient,
+    arg: &ListMemberAppsArg,
+) -> ::Result<Result<ListMemberAppsResult, ListMemberAppsError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/linked_apps/list_member_linked_apps",
+        arg,
+        None)
 }
 
 /// List all applications linked to the team members' accounts. Note, this endpoint does not list
 /// any team-linked applications.
-pub fn linked_apps_list_members_linked_apps(client: &::client_trait::HttpClient, arg: &ListMembersAppsArg) -> ::Result<Result<ListMembersAppsResult, ListMembersAppsError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/linked_apps/list_members_linked_apps", arg, None)
+pub fn linked_apps_list_members_linked_apps(
+    client: &::client_trait::HttpClient,
+    arg: &ListMembersAppsArg,
+) -> ::Result<Result<ListMembersAppsResult, ListMembersAppsError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/linked_apps/list_members_linked_apps",
+        arg,
+        None)
 }
 
 /// List all applications linked to the team members' accounts. Note, this endpoint doesn't list any
 /// team-linked applications.
-pub fn linked_apps_list_team_linked_apps(client: &::client_trait::HttpClient, arg: &ListTeamAppsArg) -> ::Result<Result<ListTeamAppsResult, ListTeamAppsError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/linked_apps/list_team_linked_apps", arg, None)
+pub fn linked_apps_list_team_linked_apps(
+    client: &::client_trait::HttpClient,
+    arg: &ListTeamAppsArg,
+) -> ::Result<Result<ListTeamAppsResult, ListTeamAppsError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/linked_apps/list_team_linked_apps",
+        arg,
+        None)
 }
 
 /// Revoke a linked application of the team member.
-pub fn linked_apps_revoke_linked_app(client: &::client_trait::HttpClient, arg: &RevokeLinkedApiAppArg) -> ::Result<Result<(), RevokeLinkedAppError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/linked_apps/revoke_linked_app", arg, None)
+pub fn linked_apps_revoke_linked_app(
+    client: &::client_trait::HttpClient,
+    arg: &RevokeLinkedApiAppArg,
+) -> ::Result<Result<(), RevokeLinkedAppError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/linked_apps/revoke_linked_app",
+        arg,
+        None)
 }
 
 /// Revoke a list of linked applications of the team members.
-pub fn linked_apps_revoke_linked_app_batch(client: &::client_trait::HttpClient, arg: &RevokeLinkedApiAppBatchArg) -> ::Result<Result<RevokeLinkedAppBatchResult, RevokeLinkedAppBatchError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/linked_apps/revoke_linked_app_batch", arg, None)
+pub fn linked_apps_revoke_linked_app_batch(
+    client: &::client_trait::HttpClient,
+    arg: &RevokeLinkedApiAppBatchArg,
+) -> ::Result<Result<RevokeLinkedAppBatchResult, RevokeLinkedAppBatchError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/linked_apps/revoke_linked_app_batch",
+        arg,
+        None)
 }
 
 /// Get users custom quota. Returns none as the custom quota if none was set. A maximum of 1000
 /// members can be specified in a single call.
-pub fn member_space_limits_get_custom_quota(client: &::client_trait::HttpClient, arg: &CustomQuotaUsersArg) -> ::Result<Result<Vec<CustomQuotaResult>, CustomQuotaError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/member_space_limits/get_custom_quota", arg, None)
+pub fn member_space_limits_get_custom_quota(
+    client: &::client_trait::HttpClient,
+    arg: &CustomQuotaUsersArg,
+) -> ::Result<Result<Vec<CustomQuotaResult>, CustomQuotaError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/member_space_limits/get_custom_quota",
+        arg,
+        None)
 }
 
 /// Remove users custom quota. A maximum of 1000 members can be specified in a single call.
-pub fn member_space_limits_remove_custom_quota(client: &::client_trait::HttpClient, arg: &CustomQuotaUsersArg) -> ::Result<Result<Vec<RemoveCustomQuotaResult>, CustomQuotaError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/member_space_limits/remove_custom_quota", arg, None)
+pub fn member_space_limits_remove_custom_quota(
+    client: &::client_trait::HttpClient,
+    arg: &CustomQuotaUsersArg,
+) -> ::Result<Result<Vec<RemoveCustomQuotaResult>, CustomQuotaError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/member_space_limits/remove_custom_quota",
+        arg,
+        None)
 }
 
 /// Set users custom quota. Custom quota has to be at least 25GB. A maximum of 1000 members can be
 /// specified in a single call.
-pub fn member_space_limits_set_custom_quota(client: &::client_trait::HttpClient, arg: &SetCustomQuotaArg) -> ::Result<Result<Vec<CustomQuotaResult>, CustomQuotaError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/member_space_limits/set_custom_quota", arg, None)
+pub fn member_space_limits_set_custom_quota(
+    client: &::client_trait::HttpClient,
+    arg: &SetCustomQuotaArg,
+) -> ::Result<Result<Vec<CustomQuotaResult>, CustomQuotaError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/member_space_limits/set_custom_quota",
+        arg,
+        None)
 }
 
 /// Adds members to a team. Permission : Team member management A maximum of 20 members can be
@@ -178,38 +384,81 @@ pub fn member_space_limits_set_custom_quota(client: &::client_trait::HttpClient,
 /// management apps are required to set an initial given_name and surname for a user to use in the
 /// team invitation and for 'Perform as team member' actions taken on the user before they become
 /// 'active'.
-pub fn members_add(client: &::client_trait::HttpClient, arg: &MembersAddArg) -> ::Result<Result<MembersAddLaunch, ()>> {
+pub fn members_add(
+    client: &::client_trait::HttpClient,
+    arg: &MembersAddArg,
+) -> ::Result<Result<MembersAddLaunch, ()>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/add", arg, None)
 }
 
 /// Once an async_job_id is returned from :route:`members/add` , use this to poll the status of the
 /// asynchronous request. Permission : Team member management.
-pub fn members_add_job_status_get(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<MembersAddJobStatus, super::async::PollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/add/job_status/get", arg, None)
+pub fn members_add_job_status_get(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<MembersAddJobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/add/job_status/get",
+        arg,
+        None)
 }
 
 /// Returns information about multiple team members. Permission : Team information This endpoint
 /// will return :field:`MembersGetInfoItem.id_not_found`, for IDs (or emails) that cannot be matched
 /// to a valid team member.
-pub fn members_get_info(client: &::client_trait::HttpClient, arg: &MembersGetInfoArgs) -> ::Result<Result<MembersGetInfoResult, MembersGetInfoError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/get_info", arg, None)
+pub fn members_get_info(
+    client: &::client_trait::HttpClient,
+    arg: &MembersGetInfoArgs,
+) -> ::Result<Result<MembersGetInfoResult, MembersGetInfoError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/get_info",
+        arg,
+        None)
 }
 
 /// Lists members of a team. Permission : Team information.
-pub fn members_list(client: &::client_trait::HttpClient, arg: &MembersListArg) -> ::Result<Result<MembersListResult, MembersListError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/list", arg, None)
+pub fn members_list(
+    client: &::client_trait::HttpClient,
+    arg: &MembersListArg,
+) -> ::Result<Result<MembersListResult, MembersListError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/list",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from :route:`members/list`, use this to paginate through all
 /// team members. Permission : Team information.
-pub fn members_list_continue(client: &::client_trait::HttpClient, arg: &MembersListContinueArg) -> ::Result<Result<MembersListResult, MembersListContinueError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/list/continue", arg, None)
+pub fn members_list_continue(
+    client: &::client_trait::HttpClient,
+    arg: &MembersListContinueArg,
+) -> ::Result<Result<MembersListResult, MembersListContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/list/continue",
+        arg,
+        None)
 }
 
 /// Recover a deleted member. Permission : Team member management Exactly one of team_member_id,
 /// email, or external_id must be provided to identify the user account.
-pub fn members_recover(client: &::client_trait::HttpClient, arg: &MembersRecoverArg) -> ::Result<Result<(), MembersRecoverError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/recover", arg, None)
+pub fn members_recover(
+    client: &::client_trait::HttpClient,
+    arg: &MembersRecoverArg,
+) -> ::Result<Result<(), MembersRecoverError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/recover",
+        arg,
+        None)
 }
 
 /// Removes a member from a team. Permission : Team member management Exactly one of team_member_id,
@@ -221,147 +470,363 @@ pub fn members_recover(client: &::client_trait::HttpClient, arg: &MembersRecover
 /// admin console for a limited time, based on the version history length associated with the team
 /// (120 days for most teams). This endpoint may initiate an asynchronous job. To obtain the final
 /// result of the job, the client should periodically poll :route:`members/remove/job_status/get`.
-pub fn members_remove(client: &::client_trait::HttpClient, arg: &MembersRemoveArg) -> ::Result<Result<super::async::LaunchEmptyResult, MembersRemoveError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/remove", arg, None)
+pub fn members_remove(
+    client: &::client_trait::HttpClient,
+    arg: &MembersRemoveArg,
+) -> ::Result<Result<super::async::LaunchEmptyResult, MembersRemoveError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/remove",
+        arg,
+        None)
 }
 
 /// Once an async_job_id is returned from :route:`members/remove` , use this to poll the status of
 /// the asynchronous request. Permission : Team member management.
-pub fn members_remove_job_status_get(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<super::async::PollEmptyResult, super::async::PollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/remove/job_status/get", arg, None)
+pub fn members_remove_job_status_get(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<super::async::PollEmptyResult, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/remove/job_status/get",
+        arg,
+        None)
 }
 
 /// Sends welcome email to pending team member. Permission : Team member management Exactly one of
 /// team_member_id, email, or external_id must be provided to identify the user account. No-op if
 /// team member is not pending.
-pub fn members_send_welcome_email(client: &::client_trait::HttpClient, arg: &UserSelectorArg) -> ::Result<Result<(), MembersSendWelcomeError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/send_welcome_email", arg, None)
+pub fn members_send_welcome_email(
+    client: &::client_trait::HttpClient,
+    arg: &UserSelectorArg,
+) -> ::Result<Result<(), MembersSendWelcomeError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/send_welcome_email",
+        arg,
+        None)
 }
 
 /// Updates a team member's permissions. Permission : Team member management.
-pub fn members_set_admin_permissions(client: &::client_trait::HttpClient, arg: &MembersSetPermissionsArg) -> ::Result<Result<MembersSetPermissionsResult, MembersSetPermissionsError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/set_admin_permissions", arg, None)
+pub fn members_set_admin_permissions(
+    client: &::client_trait::HttpClient,
+    arg: &MembersSetPermissionsArg,
+) -> ::Result<Result<MembersSetPermissionsResult, MembersSetPermissionsError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/set_admin_permissions",
+        arg,
+        None)
 }
 
 /// Updates a team member's profile. Permission : Team member management.
-pub fn members_set_profile(client: &::client_trait::HttpClient, arg: &MembersSetProfileArg) -> ::Result<Result<TeamMemberInfo, MembersSetProfileError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/set_profile", arg, None)
+pub fn members_set_profile(
+    client: &::client_trait::HttpClient,
+    arg: &MembersSetProfileArg,
+) -> ::Result<Result<TeamMemberInfo, MembersSetProfileError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/set_profile",
+        arg,
+        None)
 }
 
 /// Suspend a member from a team. Permission : Team member management Exactly one of team_member_id,
 /// email, or external_id must be provided to identify the user account.
-pub fn members_suspend(client: &::client_trait::HttpClient, arg: &MembersDeactivateArg) -> ::Result<Result<(), MembersSuspendError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/suspend", arg, None)
+pub fn members_suspend(
+    client: &::client_trait::HttpClient,
+    arg: &MembersDeactivateArg,
+) -> ::Result<Result<(), MembersSuspendError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/suspend",
+        arg,
+        None)
 }
 
 /// Unsuspend a member from a team. Permission : Team member management Exactly one of
 /// team_member_id, email, or external_id must be provided to identify the user account.
-pub fn members_unsuspend(client: &::client_trait::HttpClient, arg: &MembersUnsuspendArg) -> ::Result<Result<(), MembersUnsuspendError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/unsuspend", arg, None)
+pub fn members_unsuspend(
+    client: &::client_trait::HttpClient,
+    arg: &MembersUnsuspendArg,
+) -> ::Result<Result<(), MembersUnsuspendError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/unsuspend",
+        arg,
+        None)
 }
 
 /// Returns a list of all team-accessible namespaces. This list includes team folders, shared
 /// folders containing team members, team members' home namespaces, and team members' app folders.
 /// Home namespaces and app folders are always owned by this team or members of the team, but shared
 /// folders may be owned by other users or other teams. Duplicates may occur in the list.
-pub fn namespaces_list(client: &::client_trait::HttpClient, arg: &TeamNamespacesListArg) -> ::Result<Result<TeamNamespacesListResult, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/namespaces/list", arg, None)
+pub fn namespaces_list(
+    client: &::client_trait::HttpClient,
+    arg: &TeamNamespacesListArg,
+) -> ::Result<Result<TeamNamespacesListResult, ()>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/namespaces/list",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from :route:`namespaces/list`, use this to paginate through all
 /// team-accessible namespaces. Duplicates may occur in the list.
-pub fn namespaces_list_continue(client: &::client_trait::HttpClient, arg: &TeamNamespacesListContinueArg) -> ::Result<Result<TeamNamespacesListResult, TeamNamespacesListContinueError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/namespaces/list/continue", arg, None)
+pub fn namespaces_list_continue(
+    client: &::client_trait::HttpClient,
+    arg: &TeamNamespacesListContinueArg,
+) -> ::Result<Result<TeamNamespacesListResult, TeamNamespacesListContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/namespaces/list/continue",
+        arg,
+        None)
 }
 
-pub fn properties_template_add(client: &::client_trait::HttpClient, arg: &super::file_properties::AddTemplateArg) -> ::Result<Result<super::file_properties::AddTemplateResult, super::file_properties::ModifyTemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/properties/template/add", arg, None)
+pub fn properties_template_add(
+    client: &::client_trait::HttpClient,
+    arg: &super::file_properties::AddTemplateArg,
+) -> ::Result<Result<super::file_properties::AddTemplateResult, super::file_properties::ModifyTemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/properties/template/add",
+        arg,
+        None)
 }
 
-pub fn properties_template_get(client: &::client_trait::HttpClient, arg: &super::file_properties::GetTemplateArg) -> ::Result<Result<super::file_properties::GetTemplateResult, super::file_properties::TemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/properties/template/get", arg, None)
+pub fn properties_template_get(
+    client: &::client_trait::HttpClient,
+    arg: &super::file_properties::GetTemplateArg,
+) -> ::Result<Result<super::file_properties::GetTemplateResult, super::file_properties::TemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/properties/template/get",
+        arg,
+        None)
 }
 
-pub fn properties_template_list(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/properties/template/list", arg, None)
+pub fn properties_template_list(
+    client: &::client_trait::HttpClient,
+    arg: &(),
+) -> ::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/properties/template/list",
+        arg,
+        None)
 }
 
-pub fn properties_template_update(client: &::client_trait::HttpClient, arg: &super::file_properties::UpdateTemplateArg) -> ::Result<Result<super::file_properties::UpdateTemplateResult, super::file_properties::ModifyTemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/properties/template/update", arg, None)
+pub fn properties_template_update(
+    client: &::client_trait::HttpClient,
+    arg: &super::file_properties::UpdateTemplateArg,
+) -> ::Result<Result<super::file_properties::UpdateTemplateResult, super::file_properties::ModifyTemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/properties/template/update",
+        arg,
+        None)
 }
 
 /// Retrieves reporting data about a team's user activity.
-pub fn reports_get_activity(client: &::client_trait::HttpClient, arg: &DateRange) -> ::Result<Result<GetActivityReport, DateRangeError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/reports/get_activity", arg, None)
+pub fn reports_get_activity(
+    client: &::client_trait::HttpClient,
+    arg: &DateRange,
+) -> ::Result<Result<GetActivityReport, DateRangeError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/reports/get_activity",
+        arg,
+        None)
 }
 
 /// Retrieves reporting data about a team's linked devices.
-pub fn reports_get_devices(client: &::client_trait::HttpClient, arg: &DateRange) -> ::Result<Result<GetDevicesReport, DateRangeError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/reports/get_devices", arg, None)
+pub fn reports_get_devices(
+    client: &::client_trait::HttpClient,
+    arg: &DateRange,
+) -> ::Result<Result<GetDevicesReport, DateRangeError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/reports/get_devices",
+        arg,
+        None)
 }
 
 /// Retrieves reporting data about a team's membership.
-pub fn reports_get_membership(client: &::client_trait::HttpClient, arg: &DateRange) -> ::Result<Result<GetMembershipReport, DateRangeError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/reports/get_membership", arg, None)
+pub fn reports_get_membership(
+    client: &::client_trait::HttpClient,
+    arg: &DateRange,
+) -> ::Result<Result<GetMembershipReport, DateRangeError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/reports/get_membership",
+        arg,
+        None)
 }
 
 /// Retrieves reporting data about a team's storage usage.
-pub fn reports_get_storage(client: &::client_trait::HttpClient, arg: &DateRange) -> ::Result<Result<GetStorageReport, DateRangeError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/reports/get_storage", arg, None)
+pub fn reports_get_storage(
+    client: &::client_trait::HttpClient,
+    arg: &DateRange,
+) -> ::Result<Result<GetStorageReport, DateRangeError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/reports/get_storage",
+        arg,
+        None)
 }
 
 /// Sets an archived team folder's status to active. Permission : Team member file access.
-pub fn team_folder_activate(client: &::client_trait::HttpClient, arg: &TeamFolderIdArg) -> ::Result<Result<TeamFolderMetadata, TeamFolderActivateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/team_folder/activate", arg, None)
+pub fn team_folder_activate(
+    client: &::client_trait::HttpClient,
+    arg: &TeamFolderIdArg,
+) -> ::Result<Result<TeamFolderMetadata, TeamFolderActivateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/team_folder/activate",
+        arg,
+        None)
 }
 
 /// Sets an active team folder's status to archived and removes all folder and file members.
 /// Permission : Team member file access.
-pub fn team_folder_archive(client: &::client_trait::HttpClient, arg: &TeamFolderArchiveArg) -> ::Result<Result<TeamFolderArchiveLaunch, TeamFolderArchiveError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/team_folder/archive", arg, None)
+pub fn team_folder_archive(
+    client: &::client_trait::HttpClient,
+    arg: &TeamFolderArchiveArg,
+) -> ::Result<Result<TeamFolderArchiveLaunch, TeamFolderArchiveError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/team_folder/archive",
+        arg,
+        None)
 }
 
 /// Returns the status of an asynchronous job for archiving a team folder. Permission : Team member
 /// file access.
-pub fn team_folder_archive_check(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<TeamFolderArchiveJobStatus, super::async::PollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/team_folder/archive/check", arg, None)
+pub fn team_folder_archive_check(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<TeamFolderArchiveJobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/team_folder/archive/check",
+        arg,
+        None)
 }
 
 /// Creates a new, active, team folder with no members. Permission : Team member file access.
-pub fn team_folder_create(client: &::client_trait::HttpClient, arg: &TeamFolderCreateArg) -> ::Result<Result<TeamFolderMetadata, TeamFolderCreateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/team_folder/create", arg, None)
+pub fn team_folder_create(
+    client: &::client_trait::HttpClient,
+    arg: &TeamFolderCreateArg,
+) -> ::Result<Result<TeamFolderMetadata, TeamFolderCreateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/team_folder/create",
+        arg,
+        None)
 }
 
 /// Retrieves metadata for team folders. Permission : Team member file access.
-pub fn team_folder_get_info(client: &::client_trait::HttpClient, arg: &TeamFolderIdListArg) -> ::Result<Result<Vec<TeamFolderGetInfoItem>, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/team_folder/get_info", arg, None)
+pub fn team_folder_get_info(
+    client: &::client_trait::HttpClient,
+    arg: &TeamFolderIdListArg,
+) -> ::Result<Result<Vec<TeamFolderGetInfoItem>, ()>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/team_folder/get_info",
+        arg,
+        None)
 }
 
 /// Lists all team folders. Permission : Team member file access.
-pub fn team_folder_list(client: &::client_trait::HttpClient, arg: &TeamFolderListArg) -> ::Result<Result<TeamFolderListResult, TeamFolderListError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/team_folder/list", arg, None)
+pub fn team_folder_list(
+    client: &::client_trait::HttpClient,
+    arg: &TeamFolderListArg,
+) -> ::Result<Result<TeamFolderListResult, TeamFolderListError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/team_folder/list",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from :route:`team_folder/list`, use this to paginate through
 /// all team folders. Permission : Team member file access.
-pub fn team_folder_list_continue(client: &::client_trait::HttpClient, arg: &TeamFolderListContinueArg) -> ::Result<Result<TeamFolderListResult, TeamFolderListContinueError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/team_folder/list/continue", arg, None)
+pub fn team_folder_list_continue(
+    client: &::client_trait::HttpClient,
+    arg: &TeamFolderListContinueArg,
+) -> ::Result<Result<TeamFolderListResult, TeamFolderListContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/team_folder/list/continue",
+        arg,
+        None)
 }
 
 /// Permanently deletes an archived team folder. Permission : Team member file access.
-pub fn team_folder_permanently_delete(client: &::client_trait::HttpClient, arg: &TeamFolderIdArg) -> ::Result<Result<(), TeamFolderPermanentlyDeleteError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/team_folder/permanently_delete", arg, None)
+pub fn team_folder_permanently_delete(
+    client: &::client_trait::HttpClient,
+    arg: &TeamFolderIdArg,
+) -> ::Result<Result<(), TeamFolderPermanentlyDeleteError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/team_folder/permanently_delete",
+        arg,
+        None)
 }
 
 /// Changes an active team folder's name. Permission : Team member file access.
-pub fn team_folder_rename(client: &::client_trait::HttpClient, arg: &TeamFolderRenameArg) -> ::Result<Result<TeamFolderMetadata, TeamFolderRenameError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/team_folder/rename", arg, None)
+pub fn team_folder_rename(
+    client: &::client_trait::HttpClient,
+    arg: &TeamFolderRenameArg,
+) -> ::Result<Result<TeamFolderMetadata, TeamFolderRenameError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/team_folder/rename",
+        arg,
+        None)
 }
 
 /// Returns the member profile of the admin who generated the team access token used to make the
 /// call.
-pub fn token_get_authenticated_admin(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<TokenGetAuthenticatedAdminResult, TokenGetAuthenticatedAdminError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/token/get_authenticated_admin", arg, None)
+pub fn token_get_authenticated_admin(
+    client: &::client_trait::HttpClient,
+    arg: &(),
+) -> ::Result<Result<TokenGetAuthenticatedAdminResult, TokenGetAuthenticatedAdminError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/token/get_authenticated_admin",
+        arg,
+        None)
 }
 
 /// Information on active web sessions.
@@ -439,7 +904,9 @@ const ACTIVE_WEB_SESSION_FIELDS: &'static [&'static str] = &["session_id",
                                                              "updated",
                                                              "expires"];
 impl ActiveWebSession {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ActiveWebSession, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ActiveWebSession, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_user_agent = None;
@@ -522,7 +989,10 @@ impl ActiveWebSession {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)?;
         s.serialize_field("user_agent", &self.user_agent)?;
@@ -695,7 +1165,9 @@ const API_APP_FIELDS: &'static [&'static str] = &["app_id",
                                                   "publisher_url",
                                                   "linked"];
 impl ApiApp {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ApiApp, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ApiApp, V::Error> {
         use serde::de;
         let mut field_app_id = None;
         let mut field_app_name = None;
@@ -754,7 +1226,10 @@ impl ApiApp {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("app_id", &self.app_id)?;
         s.serialize_field("app_name", &self.app_name)?;
@@ -811,7 +1286,9 @@ impl BaseDfbReport {
 
 const BASE_DFB_REPORT_FIELDS: &'static [&'static str] = &["start_date"];
 impl BaseDfbReport {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<BaseDfbReport, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<BaseDfbReport, V::Error> {
         use serde::de;
         let mut field_start_date = None;
         while let Some(key) = map.next_key()? {
@@ -830,7 +1307,10 @@ impl BaseDfbReport {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("start_date", &self.start_date)
     }
@@ -1114,7 +1594,9 @@ impl CustomQuotaUsersArg {
 
 const CUSTOM_QUOTA_USERS_ARG_FIELDS: &'static [&'static str] = &["users"];
 impl CustomQuotaUsersArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CustomQuotaUsersArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<CustomQuotaUsersArg, V::Error> {
         use serde::de;
         let mut field_users = None;
         while let Some(key) = map.next_key()? {
@@ -1133,7 +1615,10 @@ impl CustomQuotaUsersArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("users", &self.users)
     }
@@ -1188,7 +1673,9 @@ impl Default for DateRange {
 const DATE_RANGE_FIELDS: &'static [&'static str] = &["start_date",
                                                      "end_date"];
 impl DateRange {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DateRange, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DateRange, V::Error> {
         use serde::de;
         let mut field_start_date = None;
         let mut field_end_date = None;
@@ -1215,7 +1702,10 @@ impl DateRange {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("start_date", &self.start_date)?;
         s.serialize_field("end_date", &self.end_date)
@@ -1327,7 +1817,14 @@ pub struct DesktopClientSession {
 }
 
 impl DesktopClientSession {
-    pub fn new(session_id: String, host_name: String, client_type: DesktopPlatform, client_version: String, platform: String, is_delete_on_unlink_supported: bool) -> Self {
+    pub fn new(
+        session_id: String,
+        host_name: String,
+        client_type: DesktopPlatform,
+        client_version: String,
+        platform: String,
+        is_delete_on_unlink_supported: bool,
+    ) -> Self {
         DesktopClientSession {
             session_id,
             host_name,
@@ -1375,7 +1872,9 @@ const DESKTOP_CLIENT_SESSION_FIELDS: &'static [&'static str] = &["session_id",
                                                                  "created",
                                                                  "updated"];
 impl DesktopClientSession {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DesktopClientSession, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DesktopClientSession, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_host_name = None;
@@ -1466,7 +1965,10 @@ impl DesktopClientSession {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)?;
         s.serialize_field("host_name", &self.host_name)?;
@@ -1632,7 +2134,9 @@ const DEVICE_SESSION_FIELDS: &'static [&'static str] = &["session_id",
                                                          "created",
                                                          "updated"];
 impl DeviceSession {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceSession, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceSession, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_ip_address = None;
@@ -1683,7 +2187,10 @@ impl DeviceSession {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)?;
         s.serialize_field("ip_address", &self.ip_address)?;
@@ -1742,7 +2249,9 @@ impl DeviceSessionArg {
 const DEVICE_SESSION_ARG_FIELDS: &'static [&'static str] = &["session_id",
                                                              "team_member_id"];
 impl DeviceSessionArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceSessionArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceSessionArg, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_team_member_id = None;
@@ -1769,7 +2278,10 @@ impl DeviceSessionArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)?;
         s.serialize_field("team_member_id", &self.team_member_id)
@@ -1826,7 +2338,15 @@ pub struct DevicesActive {
 }
 
 impl DevicesActive {
-    pub fn new(windows: NumberPerDay, macos: NumberPerDay, linux: NumberPerDay, ios: NumberPerDay, android: NumberPerDay, other: NumberPerDay, total: NumberPerDay) -> Self {
+    pub fn new(
+        windows: NumberPerDay,
+        macos: NumberPerDay,
+        linux: NumberPerDay,
+        ios: NumberPerDay,
+        android: NumberPerDay,
+        other: NumberPerDay,
+        total: NumberPerDay,
+    ) -> Self {
         DevicesActive {
             windows,
             macos,
@@ -1848,7 +2368,9 @@ const DEVICES_ACTIVE_FIELDS: &'static [&'static str] = &["windows",
                                                          "other",
                                                          "total"];
 impl DevicesActive {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DevicesActive, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DevicesActive, V::Error> {
         use serde::de;
         let mut field_windows = None;
         let mut field_macos = None;
@@ -1915,7 +2437,10 @@ impl DevicesActive {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("windows", &self.windows)?;
         s.serialize_field("macos", &self.macos)?;
@@ -2108,7 +2633,9 @@ impl FeaturesGetValuesBatchArg {
 
 const FEATURES_GET_VALUES_BATCH_ARG_FIELDS: &'static [&'static str] = &["features"];
 impl FeaturesGetValuesBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FeaturesGetValuesBatchArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FeaturesGetValuesBatchArg, V::Error> {
         use serde::de;
         let mut field_features = None;
         while let Some(key) = map.next_key()? {
@@ -2127,7 +2654,10 @@ impl FeaturesGetValuesBatchArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("features", &self.features)
     }
@@ -2240,7 +2770,9 @@ impl FeaturesGetValuesBatchResult {
 
 const FEATURES_GET_VALUES_BATCH_RESULT_FIELDS: &'static [&'static str] = &["values"];
 impl FeaturesGetValuesBatchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FeaturesGetValuesBatchResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FeaturesGetValuesBatchResult, V::Error> {
         use serde::de;
         let mut field_values = None;
         while let Some(key) = map.next_key()? {
@@ -2259,7 +2791,10 @@ impl FeaturesGetValuesBatchResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("values", &self.values)
     }
@@ -2332,7 +2867,23 @@ pub struct GetActivityReport {
 }
 
 impl GetActivityReport {
-    pub fn new(start_date: String, adds: NumberPerDay, edits: NumberPerDay, deletes: NumberPerDay, active_users_28_day: NumberPerDay, active_users_7_day: NumberPerDay, active_users_1_day: NumberPerDay, active_shared_folders_28_day: NumberPerDay, active_shared_folders_7_day: NumberPerDay, active_shared_folders_1_day: NumberPerDay, shared_links_created: NumberPerDay, shared_links_viewed_by_team: NumberPerDay, shared_links_viewed_by_outside_user: NumberPerDay, shared_links_viewed_by_not_logged_in: NumberPerDay, shared_links_viewed_total: NumberPerDay) -> Self {
+    pub fn new(
+        start_date: String,
+        adds: NumberPerDay,
+        edits: NumberPerDay,
+        deletes: NumberPerDay,
+        active_users_28_day: NumberPerDay,
+        active_users_7_day: NumberPerDay,
+        active_users_1_day: NumberPerDay,
+        active_shared_folders_28_day: NumberPerDay,
+        active_shared_folders_7_day: NumberPerDay,
+        active_shared_folders_1_day: NumberPerDay,
+        shared_links_created: NumberPerDay,
+        shared_links_viewed_by_team: NumberPerDay,
+        shared_links_viewed_by_outside_user: NumberPerDay,
+        shared_links_viewed_by_not_logged_in: NumberPerDay,
+        shared_links_viewed_total: NumberPerDay,
+    ) -> Self {
         GetActivityReport {
             start_date,
             adds,
@@ -2370,7 +2921,9 @@ const GET_ACTIVITY_REPORT_FIELDS: &'static [&'static str] = &["start_date",
                                                               "shared_links_viewed_by_not_logged_in",
                                                               "shared_links_viewed_total"];
 impl GetActivityReport {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetActivityReport, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetActivityReport, V::Error> {
         use serde::de;
         let mut field_start_date = None;
         let mut field_adds = None;
@@ -2501,7 +3054,10 @@ impl GetActivityReport {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("start_date", &self.start_date)?;
         s.serialize_field("adds", &self.adds)?;
@@ -2565,7 +3121,12 @@ pub struct GetDevicesReport {
 }
 
 impl GetDevicesReport {
-    pub fn new(start_date: String, active_1_day: DevicesActive, active_7_day: DevicesActive, active_28_day: DevicesActive) -> Self {
+    pub fn new(
+        start_date: String,
+        active_1_day: DevicesActive,
+        active_7_day: DevicesActive,
+        active_28_day: DevicesActive,
+    ) -> Self {
         GetDevicesReport {
             start_date,
             active_1_day,
@@ -2581,7 +3142,9 @@ const GET_DEVICES_REPORT_FIELDS: &'static [&'static str] = &["start_date",
                                                              "active_7_day",
                                                              "active_28_day"];
 impl GetDevicesReport {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetDevicesReport, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetDevicesReport, V::Error> {
         use serde::de;
         let mut field_start_date = None;
         let mut field_active_1_day = None;
@@ -2624,7 +3187,10 @@ impl GetDevicesReport {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("start_date", &self.start_date)?;
         s.serialize_field("active_1_day", &self.active_1_day)?;
@@ -2680,7 +3246,14 @@ pub struct GetMembershipReport {
 }
 
 impl GetMembershipReport {
-    pub fn new(start_date: String, team_size: NumberPerDay, pending_invites: NumberPerDay, members_joined: NumberPerDay, suspended_members: NumberPerDay, licenses: NumberPerDay) -> Self {
+    pub fn new(
+        start_date: String,
+        team_size: NumberPerDay,
+        pending_invites: NumberPerDay,
+        members_joined: NumberPerDay,
+        suspended_members: NumberPerDay,
+        licenses: NumberPerDay,
+    ) -> Self {
         GetMembershipReport {
             start_date,
             team_size,
@@ -2700,7 +3273,9 @@ const GET_MEMBERSHIP_REPORT_FIELDS: &'static [&'static str] = &["start_date",
                                                                 "suspended_members",
                                                                 "licenses"];
 impl GetMembershipReport {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetMembershipReport, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetMembershipReport, V::Error> {
         use serde::de;
         let mut field_start_date = None;
         let mut field_team_size = None;
@@ -2759,7 +3334,10 @@ impl GetMembershipReport {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("start_date", &self.start_date)?;
         s.serialize_field("team_size", &self.team_size)?;
@@ -2820,7 +3398,14 @@ pub struct GetStorageReport {
 }
 
 impl GetStorageReport {
-    pub fn new(start_date: String, total_usage: NumberPerDay, shared_usage: NumberPerDay, unshared_usage: NumberPerDay, shared_folders: NumberPerDay, member_storage_map: Vec<Vec<StorageBucket>>) -> Self {
+    pub fn new(
+        start_date: String,
+        total_usage: NumberPerDay,
+        shared_usage: NumberPerDay,
+        unshared_usage: NumberPerDay,
+        shared_folders: NumberPerDay,
+        member_storage_map: Vec<Vec<StorageBucket>>,
+    ) -> Self {
         GetStorageReport {
             start_date,
             total_usage,
@@ -2840,7 +3425,9 @@ const GET_STORAGE_REPORT_FIELDS: &'static [&'static str] = &["start_date",
                                                              "shared_folders",
                                                              "member_storage_map"];
 impl GetStorageReport {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetStorageReport, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetStorageReport, V::Error> {
         use serde::de;
         let mut field_start_date = None;
         let mut field_total_usage = None;
@@ -2899,7 +3486,10 @@ impl GetStorageReport {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("start_date", &self.start_date)?;
         s.serialize_field("total_usage", &self.total_usage)?;
@@ -3015,12 +3605,18 @@ impl GroupCreateArg {
         }
     }
 
-    pub fn with_group_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
+    pub fn with_group_external_id(
+        mut self,
+        value: Option<super::team_common::GroupExternalId>,
+    ) -> Self {
         self.group_external_id = value;
         self
     }
 
-    pub fn with_group_management_type(mut self, value: Option<super::team_common::GroupManagementType>) -> Self {
+    pub fn with_group_management_type(
+        mut self,
+        value: Option<super::team_common::GroupManagementType>,
+    ) -> Self {
         self.group_management_type = value;
         self
     }
@@ -3031,7 +3627,9 @@ const GROUP_CREATE_ARG_FIELDS: &'static [&'static str] = &["group_name",
                                                            "group_external_id",
                                                            "group_management_type"];
 impl GroupCreateArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupCreateArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupCreateArg, V::Error> {
         use serde::de;
         let mut field_group_name = None;
         let mut field_group_external_id = None;
@@ -3066,7 +3664,10 @@ impl GroupCreateArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group_name", &self.group_name)?;
         s.serialize_field("group_external_id", &self.group_external_id)?;
@@ -3294,7 +3895,12 @@ pub struct GroupFullInfo {
 }
 
 impl GroupFullInfo {
-    pub fn new(group_name: String, group_id: super::team_common::GroupId, group_management_type: super::team_common::GroupManagementType, created: u64) -> Self {
+    pub fn new(
+        group_name: String,
+        group_id: super::team_common::GroupId,
+        group_management_type: super::team_common::GroupManagementType,
+        created: u64,
+    ) -> Self {
         GroupFullInfo {
             group_name,
             group_id,
@@ -3306,7 +3912,10 @@ impl GroupFullInfo {
         }
     }
 
-    pub fn with_group_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
+    pub fn with_group_external_id(
+        mut self,
+        value: Option<super::team_common::GroupExternalId>,
+    ) -> Self {
         self.group_external_id = value;
         self
     }
@@ -3331,7 +3940,9 @@ const GROUP_FULL_INFO_FIELDS: &'static [&'static str] = &["group_name",
                                                           "member_count",
                                                           "members"];
 impl GroupFullInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupFullInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupFullInfo, V::Error> {
         use serde::de;
         let mut field_group_name = None;
         let mut field_group_id = None;
@@ -3398,7 +4009,10 @@ impl GroupFullInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group_name", &self.group_name)?;
         s.serialize_field("group_id", &self.group_id)?;
@@ -3460,7 +4074,9 @@ impl GroupMemberInfo {
 const GROUP_MEMBER_INFO_FIELDS: &'static [&'static str] = &["profile",
                                                             "access_type"];
 impl GroupMemberInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupMemberInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupMemberInfo, V::Error> {
         use serde::de;
         let mut field_profile = None;
         let mut field_access_type = None;
@@ -3487,7 +4103,10 @@ impl GroupMemberInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("profile", &self.profile)?;
         s.serialize_field("access_type", &self.access_type)
@@ -3544,7 +4163,9 @@ impl GroupMemberSelector {
 const GROUP_MEMBER_SELECTOR_FIELDS: &'static [&'static str] = &["group",
                                                                 "user"];
 impl GroupMemberSelector {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupMemberSelector, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupMemberSelector, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_user = None;
@@ -3571,7 +4192,10 @@ impl GroupMemberSelector {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group", &self.group)?;
         s.serialize_field("user", &self.user)
@@ -3814,7 +4438,9 @@ const GROUP_MEMBERS_ADD_ARG_FIELDS: &'static [&'static str] = &["group",
                                                                 "members",
                                                                 "return_members"];
 impl GroupMembersAddArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupMembersAddArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupMembersAddArg, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_members = None;
@@ -3849,7 +4475,10 @@ impl GroupMembersAddArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group", &self.group)?;
         s.serialize_field("members", &self.members)?;
@@ -4063,7 +4692,9 @@ impl GroupMembersChangeResult {
 const GROUP_MEMBERS_CHANGE_RESULT_FIELDS: &'static [&'static str] = &["group_info",
                                                                       "async_job_id"];
 impl GroupMembersChangeResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupMembersChangeResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupMembersChangeResult, V::Error> {
         use serde::de;
         let mut field_group_info = None;
         let mut field_async_job_id = None;
@@ -4090,7 +4721,10 @@ impl GroupMembersChangeResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group_info", &self.group_info)?;
         s.serialize_field("async_job_id", &self.async_job_id)
@@ -4157,7 +4791,9 @@ const GROUP_MEMBERS_REMOVE_ARG_FIELDS: &'static [&'static str] = &["group",
                                                                    "users",
                                                                    "return_members"];
 impl GroupMembersRemoveArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupMembersRemoveArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupMembersRemoveArg, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_users = None;
@@ -4192,7 +4828,10 @@ impl GroupMembersRemoveArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group", &self.group)?;
         s.serialize_field("users", &self.users)?;
@@ -4377,7 +5016,9 @@ impl GroupMembersSelector {
 const GROUP_MEMBERS_SELECTOR_FIELDS: &'static [&'static str] = &["group",
                                                                  "users"];
 impl GroupMembersSelector {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupMembersSelector, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupMembersSelector, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_users = None;
@@ -4404,7 +5045,10 @@ impl GroupMembersSelector {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group", &self.group)?;
         s.serialize_field("users", &self.users)
@@ -4559,7 +5203,9 @@ const GROUP_MEMBERS_SET_ACCESS_TYPE_ARG_FIELDS: &'static [&'static str] = &["gro
                                                                             "access_type",
                                                                             "return_members"];
 impl GroupMembersSetAccessTypeArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupMembersSetAccessTypeArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupMembersSetAccessTypeArg, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_user = None;
@@ -4602,7 +5248,10 @@ impl GroupMembersSetAccessTypeArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group", &self.group)?;
         s.serialize_field("user", &self.user)?;
@@ -4886,12 +5535,18 @@ impl GroupUpdateArgs {
         self
     }
 
-    pub fn with_new_group_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
+    pub fn with_new_group_external_id(
+        mut self,
+        value: Option<super::team_common::GroupExternalId>,
+    ) -> Self {
         self.new_group_external_id = value;
         self
     }
 
-    pub fn with_new_group_management_type(mut self, value: Option<super::team_common::GroupManagementType>) -> Self {
+    pub fn with_new_group_management_type(
+        mut self,
+        value: Option<super::team_common::GroupManagementType>,
+    ) -> Self {
         self.new_group_management_type = value;
         self
     }
@@ -4904,7 +5559,9 @@ const GROUP_UPDATE_ARGS_FIELDS: &'static [&'static str] = &["group",
                                                             "new_group_external_id",
                                                             "new_group_management_type"];
 impl GroupUpdateArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupUpdateArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupUpdateArgs, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_return_members = None;
@@ -4955,7 +5612,10 @@ impl GroupUpdateArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group", &self.group)?;
         s.serialize_field("return_members", &self.return_members)?;
@@ -5240,7 +5900,9 @@ impl Default for GroupsListArg {
 
 const GROUPS_LIST_ARG_FIELDS: &'static [&'static str] = &["limit"];
 impl GroupsListArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupsListArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupsListArg, V::Error> {
         use serde::de;
         let mut field_limit = None;
         while let Some(key) = map.next_key()? {
@@ -5259,7 +5921,10 @@ impl GroupsListArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("limit", &self.limit)
     }
@@ -5310,7 +5975,9 @@ impl GroupsListContinueArg {
 
 const GROUPS_LIST_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl GroupsListContinueArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupsListContinueArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupsListContinueArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -5329,7 +5996,10 @@ impl GroupsListContinueArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -5436,7 +6106,11 @@ pub struct GroupsListResult {
 }
 
 impl GroupsListResult {
-    pub fn new(groups: Vec<super::team_common::GroupSummary>, cursor: String, has_more: bool) -> Self {
+    pub fn new(
+        groups: Vec<super::team_common::GroupSummary>,
+        cursor: String,
+        has_more: bool,
+    ) -> Self {
         GroupsListResult {
             groups,
             cursor,
@@ -5450,7 +6124,9 @@ const GROUPS_LIST_RESULT_FIELDS: &'static [&'static str] = &["groups",
                                                              "cursor",
                                                              "has_more"];
 impl GroupsListResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupsListResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupsListResult, V::Error> {
         use serde::de;
         let mut field_groups = None;
         let mut field_cursor = None;
@@ -5485,7 +6161,10 @@ impl GroupsListResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("groups", &self.groups)?;
         s.serialize_field("cursor", &self.cursor)?;
@@ -5547,7 +6226,9 @@ impl GroupsMembersListArg {
 const GROUPS_MEMBERS_LIST_ARG_FIELDS: &'static [&'static str] = &["group",
                                                                   "limit"];
 impl GroupsMembersListArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupsMembersListArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupsMembersListArg, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_limit = None;
@@ -5574,7 +6255,10 @@ impl GroupsMembersListArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group", &self.group)?;
         s.serialize_field("limit", &self.limit)
@@ -5626,7 +6310,9 @@ impl GroupsMembersListContinueArg {
 
 const GROUPS_MEMBERS_LIST_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl GroupsMembersListContinueArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupsMembersListContinueArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupsMembersListContinueArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -5645,7 +6331,10 @@ impl GroupsMembersListContinueArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -5767,7 +6456,9 @@ const GROUPS_MEMBERS_LIST_RESULT_FIELDS: &'static [&'static str] = &["members",
                                                                      "cursor",
                                                                      "has_more"];
 impl GroupsMembersListResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupsMembersListResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupsMembersListResult, V::Error> {
         use serde::de;
         let mut field_members = None;
         let mut field_cursor = None;
@@ -5802,7 +6493,10 @@ impl GroupsMembersListResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("members", &self.members)?;
         s.serialize_field("cursor", &self.cursor)?;
@@ -6069,7 +6763,9 @@ impl Default for IncludeMembersArg {
 
 const INCLUDE_MEMBERS_ARG_FIELDS: &'static [&'static str] = &["return_members"];
 impl IncludeMembersArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<IncludeMembersArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<IncludeMembersArg, V::Error> {
         use serde::de;
         let mut field_return_members = None;
         while let Some(key) = map.next_key()? {
@@ -6088,7 +6784,10 @@ impl IncludeMembersArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("return_members", &self.return_members)
     }
@@ -6139,7 +6838,9 @@ impl ListMemberAppsArg {
 
 const LIST_MEMBER_APPS_ARG_FIELDS: &'static [&'static str] = &["team_member_id"];
 impl ListMemberAppsArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListMemberAppsArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListMemberAppsArg, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         while let Some(key) = map.next_key()? {
@@ -6158,7 +6859,10 @@ impl ListMemberAppsArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_member_id", &self.team_member_id)
     }
@@ -6272,7 +6976,9 @@ impl ListMemberAppsResult {
 
 const LIST_MEMBER_APPS_RESULT_FIELDS: &'static [&'static str] = &["linked_api_apps"];
 impl ListMemberAppsResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListMemberAppsResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListMemberAppsResult, V::Error> {
         use serde::de;
         let mut field_linked_api_apps = None;
         while let Some(key) = map.next_key()? {
@@ -6291,7 +6997,10 @@ impl ListMemberAppsResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("linked_api_apps", &self.linked_api_apps)
     }
@@ -6369,7 +7078,9 @@ const LIST_MEMBER_DEVICES_ARG_FIELDS: &'static [&'static str] = &["team_member_i
                                                                   "include_desktop_clients",
                                                                   "include_mobile_clients"];
 impl ListMemberDevicesArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListMemberDevicesArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListMemberDevicesArg, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         let mut field_include_web_sessions = None;
@@ -6412,7 +7123,10 @@ impl ListMemberDevicesArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_member_id", &self.team_member_id)?;
         s.serialize_field("include_web_sessions", &self.include_web_sessions)?;
@@ -6535,7 +7249,9 @@ const LIST_MEMBER_DEVICES_RESULT_FIELDS: &'static [&'static str] = &["active_web
                                                                      "desktop_client_sessions",
                                                                      "mobile_client_sessions"];
 impl ListMemberDevicesResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListMemberDevicesResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListMemberDevicesResult, V::Error> {
         use serde::de;
         let mut field_active_web_sessions = None;
         let mut field_desktop_client_sessions = None;
@@ -6570,7 +7286,10 @@ impl ListMemberDevicesResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("active_web_sessions", &self.active_web_sessions)?;
         s.serialize_field("desktop_client_sessions", &self.desktop_client_sessions)?;
@@ -6625,7 +7344,9 @@ impl Default for ListMembersAppsArg {
 
 const LIST_MEMBERS_APPS_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl ListMembersAppsArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListMembersAppsArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListMembersAppsArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -6644,7 +7365,10 @@ impl ListMembersAppsArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -6776,7 +7500,9 @@ const LIST_MEMBERS_APPS_RESULT_FIELDS: &'static [&'static str] = &["apps",
                                                                    "has_more",
                                                                    "cursor"];
 impl ListMembersAppsResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListMembersAppsResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListMembersAppsResult, V::Error> {
         use serde::de;
         let mut field_apps = None;
         let mut field_has_more = None;
@@ -6811,7 +7537,10 @@ impl ListMembersAppsResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("apps", &self.apps)?;
         s.serialize_field("has_more", &self.has_more)?;
@@ -6877,7 +7606,9 @@ const LIST_MEMBERS_DEVICES_ARG_FIELDS: &'static [&'static str] = &["cursor",
                                                                    "include_desktop_clients",
                                                                    "include_mobile_clients"];
 impl ListMembersDevicesArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListMembersDevicesArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListMembersDevicesArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         let mut field_include_web_sessions = None;
@@ -6920,7 +7651,10 @@ impl ListMembersDevicesArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)?;
         s.serialize_field("include_web_sessions", &self.include_web_sessions)?;
@@ -7052,7 +7786,9 @@ const LIST_MEMBERS_DEVICES_RESULT_FIELDS: &'static [&'static str] = &["devices",
                                                                       "has_more",
                                                                       "cursor"];
 impl ListMembersDevicesResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListMembersDevicesResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListMembersDevicesResult, V::Error> {
         use serde::de;
         let mut field_devices = None;
         let mut field_has_more = None;
@@ -7087,7 +7823,10 @@ impl ListMembersDevicesResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("devices", &self.devices)?;
         s.serialize_field("has_more", &self.has_more)?;
@@ -7142,7 +7881,9 @@ impl Default for ListTeamAppsArg {
 
 const LIST_TEAM_APPS_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl ListTeamAppsArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListTeamAppsArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListTeamAppsArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -7161,7 +7902,10 @@ impl ListTeamAppsArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -7293,7 +8037,9 @@ const LIST_TEAM_APPS_RESULT_FIELDS: &'static [&'static str] = &["apps",
                                                                 "has_more",
                                                                 "cursor"];
 impl ListTeamAppsResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListTeamAppsResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListTeamAppsResult, V::Error> {
         use serde::de;
         let mut field_apps = None;
         let mut field_has_more = None;
@@ -7328,7 +8074,10 @@ impl ListTeamAppsResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("apps", &self.apps)?;
         s.serialize_field("has_more", &self.has_more)?;
@@ -7394,7 +8143,9 @@ const LIST_TEAM_DEVICES_ARG_FIELDS: &'static [&'static str] = &["cursor",
                                                                 "include_desktop_clients",
                                                                 "include_mobile_clients"];
 impl ListTeamDevicesArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListTeamDevicesArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListTeamDevicesArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         let mut field_include_web_sessions = None;
@@ -7437,7 +8188,10 @@ impl ListTeamDevicesArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)?;
         s.serialize_field("include_web_sessions", &self.include_web_sessions)?;
@@ -7569,7 +8323,9 @@ const LIST_TEAM_DEVICES_RESULT_FIELDS: &'static [&'static str] = &["devices",
                                                                    "has_more",
                                                                    "cursor"];
 impl ListTeamDevicesResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListTeamDevicesResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListTeamDevicesResult, V::Error> {
         use serde::de;
         let mut field_devices = None;
         let mut field_has_more = None;
@@ -7604,7 +8360,10 @@ impl ListTeamDevicesResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("devices", &self.devices)?;
         s.serialize_field("has_more", &self.has_more)?;
@@ -7662,7 +8421,9 @@ impl MemberAccess {
 const MEMBER_ACCESS_FIELDS: &'static [&'static str] = &["user",
                                                         "access_type"];
 impl MemberAccess {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberAccess, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberAccess, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_access_type = None;
@@ -7689,7 +8450,10 @@ impl MemberAccess {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)?;
         s.serialize_field("access_type", &self.access_type)
@@ -7756,7 +8520,10 @@ impl MemberAddArg {
         }
     }
 
-    pub fn with_member_given_name(mut self, value: Option<super::common::OptionalNamePart>) -> Self {
+    pub fn with_member_given_name(
+        mut self,
+        value: Option<super::common::OptionalNamePart>,
+    ) -> Self {
         self.member_given_name = value;
         self
     }
@@ -7766,7 +8533,10 @@ impl MemberAddArg {
         self
     }
 
-    pub fn with_member_external_id(mut self, value: Option<super::team_common::MemberExternalId>) -> Self {
+    pub fn with_member_external_id(
+        mut self,
+        value: Option<super::team_common::MemberExternalId>,
+    ) -> Self {
         self.member_external_id = value;
         self
     }
@@ -7796,7 +8566,9 @@ const MEMBER_ADD_ARG_FIELDS: &'static [&'static str] = &["member_email",
                                                          "send_welcome_email",
                                                          "role"];
 impl MemberAddArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberAddArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberAddArg, V::Error> {
         use serde::de;
         let mut field_member_email = None;
         let mut field_member_given_name = None;
@@ -7863,7 +8635,10 @@ impl MemberAddArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("member_email", &self.member_email)?;
         s.serialize_field("member_given_name", &self.member_given_name)?;
@@ -8174,7 +8949,9 @@ const MEMBER_DEVICES_FIELDS: &'static [&'static str] = &["team_member_id",
                                                          "desktop_clients",
                                                          "mobile_clients"];
 impl MemberDevices {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberDevices, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberDevices, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         let mut field_web_sessions = None;
@@ -8217,7 +8994,10 @@ impl MemberDevices {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_member_id", &self.team_member_id)?;
         s.serialize_field("web_sessions", &self.web_sessions)?;
@@ -8276,7 +9056,9 @@ impl MemberLinkedApps {
 const MEMBER_LINKED_APPS_FIELDS: &'static [&'static str] = &["team_member_id",
                                                              "linked_api_apps"];
 impl MemberLinkedApps {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberLinkedApps, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberLinkedApps, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         let mut field_linked_api_apps = None;
@@ -8303,7 +9085,10 @@ impl MemberLinkedApps {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_member_id", &self.team_member_id)?;
         s.serialize_field("linked_api_apps", &self.linked_api_apps)
@@ -8367,7 +9152,14 @@ pub struct MemberProfile {
 }
 
 impl MemberProfile {
-    pub fn new(team_member_id: super::team_common::TeamMemberId, email: String, email_verified: bool, status: TeamMemberStatus, name: super::users::Name, membership_type: TeamMembershipType) -> Self {
+    pub fn new(
+        team_member_id: super::team_common::TeamMemberId,
+        email: String,
+        email_verified: bool,
+        status: TeamMemberStatus,
+        name: super::users::Name,
+        membership_type: TeamMembershipType,
+    ) -> Self {
         MemberProfile {
             team_member_id,
             email,
@@ -8415,7 +9207,9 @@ const MEMBER_PROFILE_FIELDS: &'static [&'static str] = &["team_member_id",
                                                          "joined_on",
                                                          "persistent_id"];
 impl MemberProfile {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberProfile, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberProfile, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         let mut field_email = None;
@@ -8506,7 +9300,10 @@ impl MemberProfile {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_member_id", &self.team_member_id)?;
         s.serialize_field("email", &self.email)?;
@@ -8645,7 +9442,9 @@ impl MembersAddArg {
 const MEMBERS_ADD_ARG_FIELDS: &'static [&'static str] = &["new_members",
                                                           "force_async"];
 impl MembersAddArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembersAddArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersAddArg, V::Error> {
         use serde::de;
         let mut field_new_members = None;
         let mut field_force_async = None;
@@ -8672,7 +9471,10 @@ impl MembersAddArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_members", &self.new_members)?;
         s.serialize_field("force_async", &self.force_async)
@@ -8889,7 +9691,9 @@ impl MembersDeactivateArg {
 const MEMBERS_DEACTIVATE_ARG_FIELDS: &'static [&'static str] = &["user",
                                                                  "wipe_data"];
 impl MembersDeactivateArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembersDeactivateArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersDeactivateArg, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_wipe_data = None;
@@ -8916,7 +9720,10 @@ impl MembersDeactivateArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)?;
         s.serialize_field("wipe_data", &self.wipe_data)
@@ -9041,7 +9848,9 @@ impl MembersGetInfoArgs {
 
 const MEMBERS_GET_INFO_ARGS_FIELDS: &'static [&'static str] = &["members"];
 impl MembersGetInfoArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembersGetInfoArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersGetInfoArgs, V::Error> {
         use serde::de;
         let mut field_members = None;
         while let Some(key) = map.next_key()? {
@@ -9060,7 +9869,10 @@ impl MembersGetInfoArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("members", &self.members)
     }
@@ -9234,7 +10046,9 @@ impl Default for MembersListArg {
 const MEMBERS_LIST_ARG_FIELDS: &'static [&'static str] = &["limit",
                                                            "include_removed"];
 impl MembersListArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembersListArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersListArg, V::Error> {
         use serde::de;
         let mut field_limit = None;
         let mut field_include_removed = None;
@@ -9261,7 +10075,10 @@ impl MembersListArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("limit", &self.limit)?;
         s.serialize_field("include_removed", &self.include_removed)
@@ -9313,7 +10130,9 @@ impl MembersListContinueArg {
 
 const MEMBERS_LIST_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl MembersListContinueArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembersListContinueArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersListContinueArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -9332,7 +10151,10 @@ impl MembersListContinueArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -9505,7 +10327,9 @@ const MEMBERS_LIST_RESULT_FIELDS: &'static [&'static str] = &["members",
                                                               "cursor",
                                                               "has_more"];
 impl MembersListResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembersListResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersListResult, V::Error> {
         use serde::de;
         let mut field_members = None;
         let mut field_cursor = None;
@@ -9540,7 +10364,10 @@ impl MembersListResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("members", &self.members)?;
         s.serialize_field("cursor", &self.cursor)?;
@@ -9595,7 +10422,9 @@ impl MembersRecoverArg {
 
 const MEMBERS_RECOVER_ARG_FIELDS: &'static [&'static str] = &["user"];
 impl MembersRecoverArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembersRecoverArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersRecoverArg, V::Error> {
         use serde::de;
         let mut field_user = None;
         while let Some(key) = map.next_key()? {
@@ -9614,7 +10443,10 @@ impl MembersRecoverArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)
     }
@@ -9797,7 +10629,9 @@ const MEMBERS_REMOVE_ARG_FIELDS: &'static [&'static str] = &["user",
                                                              "transfer_admin_id",
                                                              "keep_account"];
 impl MembersRemoveArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembersRemoveArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersRemoveArg, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_wipe_data = None;
@@ -9848,7 +10682,10 @@ impl MembersRemoveArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)?;
         s.serialize_field("wipe_data", &self.wipe_data)?;
@@ -10177,7 +11014,9 @@ impl MembersSetPermissionsArg {
 const MEMBERS_SET_PERMISSIONS_ARG_FIELDS: &'static [&'static str] = &["user",
                                                                       "new_role"];
 impl MembersSetPermissionsArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembersSetPermissionsArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersSetPermissionsArg, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_new_role = None;
@@ -10204,7 +11043,10 @@ impl MembersSetPermissionsArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)?;
         s.serialize_field("new_role", &self.new_role)
@@ -10363,7 +11205,9 @@ impl MembersSetPermissionsResult {
 const MEMBERS_SET_PERMISSIONS_RESULT_FIELDS: &'static [&'static str] = &["team_member_id",
                                                                          "role"];
 impl MembersSetPermissionsResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembersSetPermissionsResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersSetPermissionsResult, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         let mut field_role = None;
@@ -10390,7 +11234,10 @@ impl MembersSetPermissionsResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_member_id", &self.team_member_id)?;
         s.serialize_field("role", &self.role)
@@ -10462,7 +11309,10 @@ impl MembersSetProfileArg {
         self
     }
 
-    pub fn with_new_external_id(mut self, value: Option<super::team_common::MemberExternalId>) -> Self {
+    pub fn with_new_external_id(
+        mut self,
+        value: Option<super::team_common::MemberExternalId>,
+    ) -> Self {
         self.new_external_id = value;
         self
     }
@@ -10491,7 +11341,9 @@ const MEMBERS_SET_PROFILE_ARG_FIELDS: &'static [&'static str] = &["user",
                                                                   "new_surname",
                                                                   "new_persistent_id"];
 impl MembersSetProfileArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembersSetProfileArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersSetProfileArg, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_new_email = None;
@@ -10550,7 +11402,10 @@ impl MembersSetProfileArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)?;
         s.serialize_field("new_email", &self.new_email)?;
@@ -10865,7 +11720,9 @@ impl MembersUnsuspendArg {
 
 const MEMBERS_UNSUSPEND_ARG_FIELDS: &'static [&'static str] = &["user"];
 impl MembersUnsuspendArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembersUnsuspendArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersUnsuspendArg, V::Error> {
         use serde::de;
         let mut field_user = None;
         while let Some(key) = map.next_key()? {
@@ -10884,7 +11741,10 @@ impl MembersUnsuspendArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)
     }
@@ -11127,7 +11987,11 @@ pub struct MobileClientSession {
 }
 
 impl MobileClientSession {
-    pub fn new(session_id: String, device_name: String, client_type: MobileClientPlatform) -> Self {
+    pub fn new(
+        session_id: String,
+        device_name: String,
+        client_type: MobileClientPlatform,
+    ) -> Self {
         MobileClientSession {
             session_id,
             device_name,
@@ -11190,7 +12054,9 @@ const MOBILE_CLIENT_SESSION_FIELDS: &'static [&'static str] = &["session_id",
                                                                 "os_version",
                                                                 "last_carrier"];
 impl MobileClientSession {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MobileClientSession, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MobileClientSession, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_device_name = None;
@@ -11281,7 +12147,10 @@ impl MobileClientSession {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)?;
         s.serialize_field("device_name", &self.device_name)?;
@@ -11339,7 +12208,11 @@ pub struct NamespaceMetadata {
 }
 
 impl NamespaceMetadata {
-    pub fn new(name: String, namespace_id: super::common::SharedFolderId, namespace_type: NamespaceType) -> Self {
+    pub fn new(
+        name: String,
+        namespace_id: super::common::SharedFolderId,
+        namespace_type: NamespaceType,
+    ) -> Self {
         NamespaceMetadata {
             name,
             namespace_id,
@@ -11360,7 +12233,9 @@ const NAMESPACE_METADATA_FIELDS: &'static [&'static str] = &["name",
                                                              "namespace_type",
                                                              "team_member_id"];
 impl NamespaceMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NamespaceMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<NamespaceMetadata, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_namespace_id = None;
@@ -11403,7 +12278,10 @@ impl NamespaceMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("namespace_id", &self.namespace_id)?;
@@ -11612,7 +12490,9 @@ impl RemovedStatus {
 
 const REMOVED_STATUS_FIELDS: &'static [&'static str] = &["is_recoverable"];
 impl RemovedStatus {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RemovedStatus, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RemovedStatus, V::Error> {
         use serde::de;
         let mut field_is_recoverable = None;
         while let Some(key) = map.next_key()? {
@@ -11631,7 +12511,10 @@ impl RemovedStatus {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("is_recoverable", &self.is_recoverable)
     }
@@ -11696,7 +12579,9 @@ const REVOKE_DESKTOP_CLIENT_ARG_FIELDS: &'static [&'static str] = &["session_id"
                                                                     "team_member_id",
                                                                     "delete_on_unlink"];
 impl RevokeDesktopClientArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RevokeDesktopClientArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RevokeDesktopClientArg, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_team_member_id = None;
@@ -11731,7 +12616,10 @@ impl RevokeDesktopClientArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)?;
         s.serialize_field("team_member_id", &self.team_member_id)?;
@@ -11853,7 +12741,9 @@ impl RevokeDeviceSessionBatchArg {
 
 const REVOKE_DEVICE_SESSION_BATCH_ARG_FIELDS: &'static [&'static str] = &["revoke_devices"];
 impl RevokeDeviceSessionBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RevokeDeviceSessionBatchArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RevokeDeviceSessionBatchArg, V::Error> {
         use serde::de;
         let mut field_revoke_devices = None;
         while let Some(key) = map.next_key()? {
@@ -11872,7 +12762,10 @@ impl RevokeDeviceSessionBatchArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("revoke_devices", &self.revoke_devices)
     }
@@ -11973,7 +12866,9 @@ impl RevokeDeviceSessionBatchResult {
 
 const REVOKE_DEVICE_SESSION_BATCH_RESULT_FIELDS: &'static [&'static str] = &["revoke_devices_status"];
 impl RevokeDeviceSessionBatchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RevokeDeviceSessionBatchResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RevokeDeviceSessionBatchResult, V::Error> {
         use serde::de;
         let mut field_revoke_devices_status = None;
         while let Some(key) = map.next_key()? {
@@ -11992,7 +12887,10 @@ impl RevokeDeviceSessionBatchResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("revoke_devices_status", &self.revoke_devices_status)
     }
@@ -12124,7 +13022,9 @@ impl RevokeDeviceSessionStatus {
 const REVOKE_DEVICE_SESSION_STATUS_FIELDS: &'static [&'static str] = &["success",
                                                                        "error_type"];
 impl RevokeDeviceSessionStatus {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RevokeDeviceSessionStatus, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RevokeDeviceSessionStatus, V::Error> {
         use serde::de;
         let mut field_success = None;
         let mut field_error_type = None;
@@ -12151,7 +13051,10 @@ impl RevokeDeviceSessionStatus {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("success", &self.success)?;
         s.serialize_field("error_type", &self.error_type)
@@ -12216,7 +13119,9 @@ const REVOKE_LINKED_API_APP_ARG_FIELDS: &'static [&'static str] = &["app_id",
                                                                     "team_member_id",
                                                                     "keep_app_folder"];
 impl RevokeLinkedApiAppArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RevokeLinkedApiAppArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RevokeLinkedApiAppArg, V::Error> {
         use serde::de;
         let mut field_app_id = None;
         let mut field_team_member_id = None;
@@ -12251,7 +13156,10 @@ impl RevokeLinkedApiAppArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("app_id", &self.app_id)?;
         s.serialize_field("team_member_id", &self.team_member_id)?;
@@ -12303,7 +13211,9 @@ impl RevokeLinkedApiAppBatchArg {
 
 const REVOKE_LINKED_API_APP_BATCH_ARG_FIELDS: &'static [&'static str] = &["revoke_linked_app"];
 impl RevokeLinkedApiAppBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RevokeLinkedApiAppBatchArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RevokeLinkedApiAppBatchArg, V::Error> {
         use serde::de;
         let mut field_revoke_linked_app = None;
         while let Some(key) = map.next_key()? {
@@ -12322,7 +13232,10 @@ impl RevokeLinkedApiAppBatchArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("revoke_linked_app", &self.revoke_linked_app)
     }
@@ -12423,7 +13336,9 @@ impl RevokeLinkedAppBatchResult {
 
 const REVOKE_LINKED_APP_BATCH_RESULT_FIELDS: &'static [&'static str] = &["revoke_linked_app_status"];
 impl RevokeLinkedAppBatchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RevokeLinkedAppBatchResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RevokeLinkedAppBatchResult, V::Error> {
         use serde::de;
         let mut field_revoke_linked_app_status = None;
         while let Some(key) = map.next_key()? {
@@ -12442,7 +13357,10 @@ impl RevokeLinkedAppBatchResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("revoke_linked_app_status", &self.revoke_linked_app_status)
     }
@@ -12575,7 +13493,9 @@ impl RevokeLinkedAppStatus {
 const REVOKE_LINKED_APP_STATUS_FIELDS: &'static [&'static str] = &["success",
                                                                    "error_type"];
 impl RevokeLinkedAppStatus {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RevokeLinkedAppStatus, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RevokeLinkedAppStatus, V::Error> {
         use serde::de;
         let mut field_success = None;
         let mut field_error_type = None;
@@ -12602,7 +13522,10 @@ impl RevokeLinkedAppStatus {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("success", &self.success)?;
         s.serialize_field("error_type", &self.error_type)
@@ -12654,7 +13577,9 @@ impl SetCustomQuotaArg {
 
 const SET_CUSTOM_QUOTA_ARG_FIELDS: &'static [&'static str] = &["users_and_quotas"];
 impl SetCustomQuotaArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SetCustomQuotaArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SetCustomQuotaArg, V::Error> {
         use serde::de;
         let mut field_users_and_quotas = None;
         while let Some(key) = map.next_key()? {
@@ -12673,7 +13598,10 @@ impl SetCustomQuotaArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("users_and_quotas", &self.users_and_quotas)
     }
@@ -12730,7 +13658,9 @@ impl StorageBucket {
 const STORAGE_BUCKET_FIELDS: &'static [&'static str] = &["bucket",
                                                          "users"];
 impl StorageBucket {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<StorageBucket, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<StorageBucket, V::Error> {
         use serde::de;
         let mut field_bucket = None;
         let mut field_users = None;
@@ -12757,7 +13687,10 @@ impl StorageBucket {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("bucket", &self.bucket)?;
         s.serialize_field("users", &self.users)
@@ -12991,7 +13924,9 @@ impl TeamFolderArchiveArg {
 const TEAM_FOLDER_ARCHIVE_ARG_FIELDS: &'static [&'static str] = &["team_folder_id",
                                                                   "force_async_off"];
 impl TeamFolderArchiveArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderArchiveArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderArchiveArg, V::Error> {
         use serde::de;
         let mut field_team_folder_id = None;
         let mut field_force_async_off = None;
@@ -13018,7 +13953,10 @@ impl TeamFolderArchiveArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_folder_id", &self.team_folder_id)?;
         s.serialize_field("force_async_off", &self.force_async_off)
@@ -13311,7 +14249,9 @@ impl TeamFolderCreateArg {
 
 const TEAM_FOLDER_CREATE_ARG_FIELDS: &'static [&'static str] = &["name"];
 impl TeamFolderCreateArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderCreateArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderCreateArg, V::Error> {
         use serde::de;
         let mut field_name = None;
         while let Some(key) = map.next_key()? {
@@ -13330,7 +14270,10 @@ impl TeamFolderCreateArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)
     }
@@ -13529,7 +14472,9 @@ impl TeamFolderIdArg {
 
 const TEAM_FOLDER_ID_ARG_FIELDS: &'static [&'static str] = &["team_folder_id"];
 impl TeamFolderIdArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderIdArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderIdArg, V::Error> {
         use serde::de;
         let mut field_team_folder_id = None;
         while let Some(key) = map.next_key()? {
@@ -13548,7 +14493,10 @@ impl TeamFolderIdArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_folder_id", &self.team_folder_id)
     }
@@ -13599,7 +14547,9 @@ impl TeamFolderIdListArg {
 
 const TEAM_FOLDER_ID_LIST_ARG_FIELDS: &'static [&'static str] = &["team_folder_ids"];
 impl TeamFolderIdListArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderIdListArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderIdListArg, V::Error> {
         use serde::de;
         let mut field_team_folder_ids = None;
         while let Some(key) = map.next_key()? {
@@ -13618,7 +14568,10 @@ impl TeamFolderIdListArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_folder_ids", &self.team_folder_ids)
     }
@@ -13750,7 +14703,9 @@ impl Default for TeamFolderListArg {
 
 const TEAM_FOLDER_LIST_ARG_FIELDS: &'static [&'static str] = &["limit"];
 impl TeamFolderListArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderListArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderListArg, V::Error> {
         use serde::de;
         let mut field_limit = None;
         while let Some(key) = map.next_key()? {
@@ -13769,7 +14724,10 @@ impl TeamFolderListArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("limit", &self.limit)
     }
@@ -13820,7 +14778,9 @@ impl TeamFolderListContinueArg {
 
 const TEAM_FOLDER_LIST_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl TeamFolderListContinueArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderListContinueArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderListContinueArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -13839,7 +14799,10 @@ impl TeamFolderListContinueArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -13951,7 +14914,9 @@ impl TeamFolderListError {
 
 const TEAM_FOLDER_LIST_ERROR_FIELDS: &'static [&'static str] = &["access_error"];
 impl TeamFolderListError {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderListError, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderListError, V::Error> {
         use serde::de;
         let mut field_access_error = None;
         while let Some(key) = map.next_key()? {
@@ -13970,7 +14935,10 @@ impl TeamFolderListError {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_error", &self.access_error)
     }
@@ -14031,7 +14999,9 @@ const TEAM_FOLDER_LIST_RESULT_FIELDS: &'static [&'static str] = &["team_folders"
                                                                   "cursor",
                                                                   "has_more"];
 impl TeamFolderListResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderListResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderListResult, V::Error> {
         use serde::de;
         let mut field_team_folders = None;
         let mut field_cursor = None;
@@ -14066,7 +15036,10 @@ impl TeamFolderListResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_folders", &self.team_folders)?;
         s.serialize_field("cursor", &self.cursor)?;
@@ -14116,7 +15089,12 @@ pub struct TeamFolderMetadata {
 }
 
 impl TeamFolderMetadata {
-    pub fn new(team_folder_id: super::common::SharedFolderId, name: String, status: TeamFolderStatus, is_team_shared_dropbox: bool) -> Self {
+    pub fn new(
+        team_folder_id: super::common::SharedFolderId,
+        name: String,
+        status: TeamFolderStatus,
+        is_team_shared_dropbox: bool,
+    ) -> Self {
         TeamFolderMetadata {
             team_folder_id,
             name,
@@ -14132,7 +15110,9 @@ const TEAM_FOLDER_METADATA_FIELDS: &'static [&'static str] = &["team_folder_id",
                                                                "status",
                                                                "is_team_shared_dropbox"];
 impl TeamFolderMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderMetadata, V::Error> {
         use serde::de;
         let mut field_team_folder_id = None;
         let mut field_name = None;
@@ -14175,7 +15155,10 @@ impl TeamFolderMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_folder_id", &self.team_folder_id)?;
         s.serialize_field("name", &self.name)?;
@@ -14334,7 +15317,9 @@ impl TeamFolderRenameArg {
 const TEAM_FOLDER_RENAME_ARG_FIELDS: &'static [&'static str] = &["team_folder_id",
                                                                  "name"];
 impl TeamFolderRenameArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderRenameArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderRenameArg, V::Error> {
         use serde::de;
         let mut field_team_folder_id = None;
         let mut field_name = None;
@@ -14361,7 +15346,10 @@ impl TeamFolderRenameArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_folder_id", &self.team_folder_id)?;
         s.serialize_field("name", &self.name)
@@ -14672,7 +15660,13 @@ pub struct TeamGetInfoResult {
 }
 
 impl TeamGetInfoResult {
-    pub fn new(name: String, team_id: String, num_licensed_users: u32, num_provisioned_users: u32, policies: super::team_policies::TeamMemberPolicies) -> Self {
+    pub fn new(
+        name: String,
+        team_id: String,
+        num_licensed_users: u32,
+        num_provisioned_users: u32,
+        policies: super::team_policies::TeamMemberPolicies,
+    ) -> Self {
         TeamGetInfoResult {
             name,
             team_id,
@@ -14690,7 +15684,9 @@ const TEAM_GET_INFO_RESULT_FIELDS: &'static [&'static str] = &["name",
                                                                "num_provisioned_users",
                                                                "policies"];
 impl TeamGetInfoResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamGetInfoResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamGetInfoResult, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_team_id = None;
@@ -14741,7 +15737,10 @@ impl TeamGetInfoResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("team_id", &self.team_id)?;
@@ -14801,7 +15800,9 @@ impl TeamMemberInfo {
 const TEAM_MEMBER_INFO_FIELDS: &'static [&'static str] = &["profile",
                                                            "role"];
 impl TeamMemberInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamMemberInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamMemberInfo, V::Error> {
         use serde::de;
         let mut field_profile = None;
         let mut field_role = None;
@@ -14828,7 +15829,10 @@ impl TeamMemberInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("profile", &self.profile)?;
         s.serialize_field("role", &self.role)
@@ -14896,7 +15900,16 @@ pub struct TeamMemberProfile {
 }
 
 impl TeamMemberProfile {
-    pub fn new(team_member_id: super::team_common::TeamMemberId, email: String, email_verified: bool, status: TeamMemberStatus, name: super::users::Name, membership_type: TeamMembershipType, groups: Vec<super::team_common::GroupId>, member_folder_id: super::common::NamespaceId) -> Self {
+    pub fn new(
+        team_member_id: super::team_common::TeamMemberId,
+        email: String,
+        email_verified: bool,
+        status: TeamMemberStatus,
+        name: super::users::Name,
+        membership_type: TeamMembershipType,
+        groups: Vec<super::team_common::GroupId>,
+        member_folder_id: super::common::NamespaceId,
+    ) -> Self {
         TeamMemberProfile {
             team_member_id,
             email,
@@ -14948,7 +15961,9 @@ const TEAM_MEMBER_PROFILE_FIELDS: &'static [&'static str] = &["team_member_id",
                                                               "joined_on",
                                                               "persistent_id"];
 impl TeamMemberProfile {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamMemberProfile, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamMemberProfile, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         let mut field_email = None;
@@ -15055,7 +16070,10 @@ impl TeamMemberProfile {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_member_id", &self.team_member_id)?;
         s.serialize_field("email", &self.email)?;
@@ -15255,7 +16273,9 @@ impl Default for TeamNamespacesListArg {
 
 const TEAM_NAMESPACES_LIST_ARG_FIELDS: &'static [&'static str] = &["limit"];
 impl TeamNamespacesListArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamNamespacesListArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamNamespacesListArg, V::Error> {
         use serde::de;
         let mut field_limit = None;
         while let Some(key) = map.next_key()? {
@@ -15274,7 +16294,10 @@ impl TeamNamespacesListArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("limit", &self.limit)
     }
@@ -15325,7 +16348,9 @@ impl TeamNamespacesListContinueArg {
 
 const TEAM_NAMESPACES_LIST_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl TeamNamespacesListContinueArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamNamespacesListContinueArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamNamespacesListContinueArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -15344,7 +16369,10 @@ impl TeamNamespacesListContinueArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -15467,7 +16495,9 @@ const TEAM_NAMESPACES_LIST_RESULT_FIELDS: &'static [&'static str] = &["namespace
                                                                       "cursor",
                                                                       "has_more"];
 impl TeamNamespacesListResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamNamespacesListResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamNamespacesListResult, V::Error> {
         use serde::de;
         let mut field_namespaces = None;
         let mut field_cursor = None;
@@ -15502,7 +16532,10 @@ impl TeamNamespacesListResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("namespaces", &self.namespaces)?;
         s.serialize_field("cursor", &self.cursor)?;
@@ -15632,7 +16665,9 @@ impl TokenGetAuthenticatedAdminResult {
 
 const TOKEN_GET_AUTHENTICATED_ADMIN_RESULT_FIELDS: &'static [&'static str] = &["admin_profile"];
 impl TokenGetAuthenticatedAdminResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TokenGetAuthenticatedAdminResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TokenGetAuthenticatedAdminResult, V::Error> {
         use serde::de;
         let mut field_admin_profile = None;
         while let Some(key) = map.next_key()? {
@@ -15651,7 +16686,10 @@ impl TokenGetAuthenticatedAdminResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("admin_profile", &self.admin_profile)
     }
@@ -15774,7 +16812,9 @@ impl UserCustomQuotaArg {
 const USER_CUSTOM_QUOTA_ARG_FIELDS: &'static [&'static str] = &["user",
                                                                 "quota_gb"];
 impl UserCustomQuotaArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserCustomQuotaArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UserCustomQuotaArg, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_quota_gb = None;
@@ -15801,7 +16841,10 @@ impl UserCustomQuotaArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)?;
         s.serialize_field("quota_gb", &self.quota_gb)
@@ -15862,7 +16905,9 @@ impl UserCustomQuotaResult {
 const USER_CUSTOM_QUOTA_RESULT_FIELDS: &'static [&'static str] = &["user",
                                                                    "quota_gb"];
 impl UserCustomQuotaResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserCustomQuotaResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UserCustomQuotaResult, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_quota_gb = None;
@@ -15889,7 +16934,10 @@ impl UserCustomQuotaResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)?;
         s.serialize_field("quota_gb", &self.quota_gb)

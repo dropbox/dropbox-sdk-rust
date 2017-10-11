@@ -26,8 +26,16 @@ pub type TemplateId = String;
 
 /// Add property groups to a Dropbox file. See :route:`templates/add_for_user` or
 /// :route:`templates/add_for_team` to create new templates.
-pub fn properties_add(client: &::client_trait::HttpClient, arg: &AddPropertiesArg) -> ::Result<Result<(), AddPropertiesError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/properties/add", arg, None)
+pub fn properties_add(
+    client: &::client_trait::HttpClient,
+    arg: &AddPropertiesArg,
+) -> ::Result<Result<(), AddPropertiesError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/properties/add",
+        arg,
+        None)
 }
 
 /// Overwrite property groups associated with a file. This endpoint should be used instead of
@@ -35,21 +43,45 @@ pub fn properties_add(client: &::client_trait::HttpClient, arg: &AddPropertiesAr
 /// via a "delta". In other words, this endpoint will delete all omitted fields from a property
 /// group, whereas :route:`properties/update` will only delete fields that are explicitly marked for
 /// deletion.
-pub fn properties_overwrite(client: &::client_trait::HttpClient, arg: &OverwritePropertyGroupArg) -> ::Result<Result<(), InvalidPropertyGroupError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/properties/overwrite", arg, None)
+pub fn properties_overwrite(
+    client: &::client_trait::HttpClient,
+    arg: &OverwritePropertyGroupArg,
+) -> ::Result<Result<(), InvalidPropertyGroupError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/properties/overwrite",
+        arg,
+        None)
 }
 
 /// Remove the specified property group from the file. To remove specific property field key value
 /// pairs, see :route:`properties/update`. To update a template, see
 /// :route:`templates/update_for_user` or :route:`templates/update_for_team`. Templates can't be
 /// removed once created.
-pub fn properties_remove(client: &::client_trait::HttpClient, arg: &RemovePropertiesArg) -> ::Result<Result<(), RemovePropertiesError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/properties/remove", arg, None)
+pub fn properties_remove(
+    client: &::client_trait::HttpClient,
+    arg: &RemovePropertiesArg,
+) -> ::Result<Result<(), RemovePropertiesError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/properties/remove",
+        arg,
+        None)
 }
 
 /// Search across property templates for particular property field values.
-pub fn properties_search(client: &::client_trait::HttpClient, arg: &PropertiesSearchArg) -> ::Result<Result<PropertiesSearchResult, PropertiesSearchError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/properties/search", arg, None)
+pub fn properties_search(
+    client: &::client_trait::HttpClient,
+    arg: &PropertiesSearchArg,
+) -> ::Result<Result<PropertiesSearchResult, PropertiesSearchError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/properties/search",
+        arg,
+        None)
 }
 
 /// Add, update or remove properties associated with the supplied file and templates. This endpoint
@@ -57,57 +89,129 @@ pub fn properties_search(client: &::client_trait::HttpClient, arg: &PropertiesSe
 /// via a "delta" instead of via a "snapshot" . In other words, this endpoint will not delete any
 /// omitted fields from a property group, whereas :route:`properties/overwrite` will delete any
 /// fields that are omitted from a property group.
-pub fn properties_update(client: &::client_trait::HttpClient, arg: &UpdatePropertiesArg) -> ::Result<Result<(), UpdatePropertiesError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/properties/update", arg, None)
+pub fn properties_update(
+    client: &::client_trait::HttpClient,
+    arg: &UpdatePropertiesArg,
+) -> ::Result<Result<(), UpdatePropertiesError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/properties/update",
+        arg,
+        None)
 }
 
 /// Add a template associated with a team. See :route:`properties/add` to add properties to a file
 /// or folder.
-pub fn templates_add_for_team(client: &::client_trait::HttpClient, arg: &AddTemplateArg) -> ::Result<Result<AddTemplateResult, ModifyTemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/add_for_team", arg, None)
+pub fn templates_add_for_team(
+    client: &::client_trait::HttpClient,
+    arg: &AddTemplateArg,
+) -> ::Result<Result<AddTemplateResult, ModifyTemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/templates/add_for_team",
+        arg,
+        None)
 }
 
 /// Add a template associated with a user. See :route:`properties/add` to add properties to a file.
 /// This endpoint can't be called on a team member or admin's behalf.
-pub fn templates_add_for_user(client: &::client_trait::HttpClient, arg: &AddTemplateArg) -> ::Result<Result<AddTemplateResult, ModifyTemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/add_for_user", arg, None)
+pub fn templates_add_for_user(
+    client: &::client_trait::HttpClient,
+    arg: &AddTemplateArg,
+) -> ::Result<Result<AddTemplateResult, ModifyTemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/templates/add_for_user",
+        arg,
+        None)
 }
 
 /// Get the schema for a specified template.
-pub fn templates_get_for_team(client: &::client_trait::HttpClient, arg: &GetTemplateArg) -> ::Result<Result<GetTemplateResult, TemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/get_for_team", arg, None)
+pub fn templates_get_for_team(
+    client: &::client_trait::HttpClient,
+    arg: &GetTemplateArg,
+) -> ::Result<Result<GetTemplateResult, TemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/templates/get_for_team",
+        arg,
+        None)
 }
 
 /// Get the schema for a specified template. This endpoint can't be called on a team member or
 /// admin's behalf.
-pub fn templates_get_for_user(client: &::client_trait::HttpClient, arg: &GetTemplateArg) -> ::Result<Result<GetTemplateResult, TemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/get_for_user", arg, None)
+pub fn templates_get_for_user(
+    client: &::client_trait::HttpClient,
+    arg: &GetTemplateArg,
+) -> ::Result<Result<GetTemplateResult, TemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/templates/get_for_user",
+        arg,
+        None)
 }
 
 /// Get the template identifiers for a team. To get the schema of each template use
 /// :route:`templates/get_for_team`.
-pub fn templates_list_for_team(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<ListTemplateResult, TemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/list_for_team", arg, None)
+pub fn templates_list_for_team(
+    client: &::client_trait::HttpClient,
+    arg: &(),
+) -> ::Result<Result<ListTemplateResult, TemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/templates/list_for_team",
+        arg,
+        None)
 }
 
 /// Get the template identifiers for a team. To get the schema of each template use
 /// :route:`templates/get_for_user`. This endpoint can't be called on a team member or admin's
 /// behalf.
-pub fn templates_list_for_user(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<ListTemplateResult, TemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/list_for_user", arg, None)
+pub fn templates_list_for_user(
+    client: &::client_trait::HttpClient,
+    arg: &(),
+) -> ::Result<Result<ListTemplateResult, TemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/templates/list_for_user",
+        arg,
+        None)
 }
 
 /// Update a template associated with a team. This route can update the template name, the template
 /// description and add optional properties to templates.
-pub fn templates_update_for_team(client: &::client_trait::HttpClient, arg: &UpdateTemplateArg) -> ::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/update_for_team", arg, None)
+pub fn templates_update_for_team(
+    client: &::client_trait::HttpClient,
+    arg: &UpdateTemplateArg,
+) -> ::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/templates/update_for_team",
+        arg,
+        None)
 }
 
 /// Update a template associated with a user. This route can update the template name, the template
 /// description and add optional properties to templates. This endpoint can't be called on a team
 /// member or admin's behalf.
-pub fn templates_update_for_user(client: &::client_trait::HttpClient, arg: &UpdateTemplateArg) -> ::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_properties/templates/update_for_user", arg, None)
+pub fn templates_update_for_user(
+    client: &::client_trait::HttpClient,
+    arg: &UpdateTemplateArg,
+) -> ::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/templates/update_for_user",
+        arg,
+        None)
 }
 
 #[derive(Debug)]
@@ -131,7 +235,9 @@ impl AddPropertiesArg {
 const ADD_PROPERTIES_ARG_FIELDS: &'static [&'static str] = &["path",
                                                              "property_groups"];
 impl AddPropertiesArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddPropertiesArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AddPropertiesArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_property_groups = None;
@@ -158,7 +264,10 @@ impl AddPropertiesArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("property_groups", &self.property_groups)
@@ -354,7 +463,9 @@ const ADD_TEMPLATE_ARG_FIELDS: &'static [&'static str] = &["name",
                                                            "description",
                                                            "fields"];
 impl AddTemplateArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddTemplateArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AddTemplateArg, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_description = None;
@@ -389,7 +500,10 @@ impl AddTemplateArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("description", &self.description)?;
@@ -443,7 +557,9 @@ impl AddTemplateResult {
 
 const ADD_TEMPLATE_RESULT_FIELDS: &'static [&'static str] = &["template_id"];
 impl AddTemplateResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddTemplateResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AddTemplateResult, V::Error> {
         use serde::de;
         let mut field_template_id = None;
         while let Some(key) = map.next_key()? {
@@ -462,7 +578,10 @@ impl AddTemplateResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("template_id", &self.template_id)
     }
@@ -514,7 +633,9 @@ impl GetTemplateArg {
 
 const GET_TEMPLATE_ARG_FIELDS: &'static [&'static str] = &["template_id"];
 impl GetTemplateArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetTemplateArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetTemplateArg, V::Error> {
         use serde::de;
         let mut field_template_id = None;
         while let Some(key) = map.next_key()? {
@@ -533,7 +654,10 @@ impl GetTemplateArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("template_id", &self.template_id)
     }
@@ -593,7 +717,9 @@ const GET_TEMPLATE_RESULT_FIELDS: &'static [&'static str] = &["name",
                                                               "description",
                                                               "fields"];
 impl GetTemplateResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetTemplateResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetTemplateResult, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_description = None;
@@ -628,7 +754,10 @@ impl GetTemplateResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("description", &self.description)?;
@@ -807,7 +936,9 @@ impl ListTemplateResult {
 
 const LIST_TEMPLATE_RESULT_FIELDS: &'static [&'static str] = &["template_ids"];
 impl ListTemplateResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListTemplateResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListTemplateResult, V::Error> {
         use serde::de;
         let mut field_template_ids = None;
         while let Some(key) = map.next_key()? {
@@ -826,7 +957,10 @@ impl ListTemplateResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("template_ids", &self.template_ids)
     }
@@ -1223,7 +1357,9 @@ impl OverwritePropertyGroupArg {
 const OVERWRITE_PROPERTY_GROUP_ARG_FIELDS: &'static [&'static str] = &["path",
                                                                        "property_groups"];
 impl OverwritePropertyGroupArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<OverwritePropertyGroupArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<OverwritePropertyGroupArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_property_groups = None;
@@ -1250,7 +1386,10 @@ impl OverwritePropertyGroupArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("property_groups", &self.property_groups)
@@ -1416,7 +1555,9 @@ impl PropertiesSearchArg {
 const PROPERTIES_SEARCH_ARG_FIELDS: &'static [&'static str] = &["queries",
                                                                 "template_filter"];
 impl PropertiesSearchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertiesSearchArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PropertiesSearchArg, V::Error> {
         use serde::de;
         let mut field_queries = None;
         let mut field_template_filter = None;
@@ -1443,7 +1584,10 @@ impl PropertiesSearchArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("queries", &self.queries)?;
         s.serialize_field("template_filter", &self.template_filter)
@@ -1571,7 +1715,9 @@ const PROPERTIES_SEARCH_MATCH_FIELDS: &'static [&'static str] = &["id",
                                                                   "path",
                                                                   "property_groups"];
 impl PropertiesSearchMatch {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertiesSearchMatch, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PropertiesSearchMatch, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_path = None;
@@ -1606,7 +1752,10 @@ impl PropertiesSearchMatch {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
         s.serialize_field("path", &self.path)?;
@@ -1729,7 +1878,9 @@ const PROPERTIES_SEARCH_QUERY_FIELDS: &'static [&'static str] = &["query",
                                                                   "mode",
                                                                   "logical_operator"];
 impl PropertiesSearchQuery {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertiesSearchQuery, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PropertiesSearchQuery, V::Error> {
         use serde::de;
         let mut field_query = None;
         let mut field_mode = None;
@@ -1764,7 +1915,10 @@ impl PropertiesSearchQuery {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("query", &self.query)?;
         s.serialize_field("mode", &self.mode)?;
@@ -1817,7 +1971,9 @@ impl PropertiesSearchResult {
 
 const PROPERTIES_SEARCH_RESULT_FIELDS: &'static [&'static str] = &["matches"];
 impl PropertiesSearchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertiesSearchResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PropertiesSearchResult, V::Error> {
         use serde::de;
         let mut field_matches = None;
         while let Some(key) = map.next_key()? {
@@ -1836,7 +1992,10 @@ impl PropertiesSearchResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("matches", &self.matches)
     }
@@ -1894,7 +2053,9 @@ impl PropertyField {
 const PROPERTY_FIELD_FIELDS: &'static [&'static str] = &["name",
                                                          "value"];
 impl PropertyField {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyField, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PropertyField, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_value = None;
@@ -1921,7 +2082,10 @@ impl PropertyField {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("value", &self.value)
@@ -1984,7 +2148,9 @@ const PROPERTY_FIELD_TEMPLATE_FIELDS: &'static [&'static str] = &["name",
                                                                   "description",
                                                                   "type"];
 impl PropertyFieldTemplate {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyFieldTemplate, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PropertyFieldTemplate, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_description = None;
@@ -2019,7 +2185,10 @@ impl PropertyFieldTemplate {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("description", &self.description)?;
@@ -2080,7 +2249,9 @@ impl PropertyGroup {
 const PROPERTY_GROUP_FIELDS: &'static [&'static str] = &["template_id",
                                                          "fields"];
 impl PropertyGroup {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroup, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PropertyGroup, V::Error> {
         use serde::de;
         let mut field_template_id = None;
         let mut field_fields = None;
@@ -2107,7 +2278,10 @@ impl PropertyGroup {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("template_id", &self.template_id)?;
         s.serialize_field("fields", &self.fields)
@@ -2169,7 +2343,9 @@ const PROPERTY_GROUP_TEMPLATE_FIELDS: &'static [&'static str] = &["name",
                                                                   "description",
                                                                   "fields"];
 impl PropertyGroupTemplate {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroupTemplate, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PropertyGroupTemplate, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_description = None;
@@ -2204,7 +2380,10 @@ impl PropertyGroupTemplate {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("description", &self.description)?;
@@ -2276,7 +2455,9 @@ const PROPERTY_GROUP_UPDATE_FIELDS: &'static [&'static str] = &["template_id",
                                                                 "add_or_update_fields",
                                                                 "remove_fields"];
 impl PropertyGroupUpdate {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PropertyGroupUpdate, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PropertyGroupUpdate, V::Error> {
         use serde::de;
         let mut field_template_id = None;
         let mut field_add_or_update_fields = None;
@@ -2311,7 +2492,10 @@ impl PropertyGroupUpdate {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("template_id", &self.template_id)?;
         s.serialize_field("add_or_update_fields", &self.add_or_update_fields)?;
@@ -2420,7 +2604,9 @@ impl RemovePropertiesArg {
 const REMOVE_PROPERTIES_ARG_FIELDS: &'static [&'static str] = &["path",
                                                                 "property_template_ids"];
 impl RemovePropertiesArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RemovePropertiesArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RemovePropertiesArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_property_template_ids = None;
@@ -2447,7 +2633,10 @@ impl RemovePropertiesArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("property_template_ids", &self.property_template_ids)
@@ -2831,7 +3020,9 @@ impl UpdatePropertiesArg {
 const UPDATE_PROPERTIES_ARG_FIELDS: &'static [&'static str] = &["path",
                                                                 "update_property_groups"];
 impl UpdatePropertiesArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UpdatePropertiesArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UpdatePropertiesArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_update_property_groups = None;
@@ -2858,7 +3049,10 @@ impl UpdatePropertiesArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("update_property_groups", &self.update_property_groups)
@@ -3080,7 +3274,9 @@ const UPDATE_TEMPLATE_ARG_FIELDS: &'static [&'static str] = &["template_id",
                                                               "description",
                                                               "add_fields"];
 impl UpdateTemplateArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UpdateTemplateArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UpdateTemplateArg, V::Error> {
         use serde::de;
         let mut field_template_id = None;
         let mut field_name = None;
@@ -3123,7 +3319,10 @@ impl UpdateTemplateArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("template_id", &self.template_id)?;
         s.serialize_field("name", &self.name)?;
@@ -3178,7 +3377,9 @@ impl UpdateTemplateResult {
 
 const UPDATE_TEMPLATE_RESULT_FIELDS: &'static [&'static str] = &["template_id"];
 impl UpdateTemplateResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UpdateTemplateResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UpdateTemplateResult, V::Error> {
         use serde::de;
         let mut field_template_id = None;
         while let Some(key) = map.next_key()? {
@@ -3197,7 +3398,10 @@ impl UpdateTemplateResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("template_id", &self.template_id)
     }

@@ -1,27 +1,23 @@
-from stone import ir
-from stone.backend import CodeBackend
-import stone.ir
-
 import datetime
-import imp
 import os.path
 import re
 import string
 import sys
 
-class TestBackend(CodeBackend):
+from rust import RustHelperBackend
+from stone import ir
+
+
+class TestBackend(RustHelperBackend):
     def __init__(self, target_folder_path, args):
         super(TestBackend, self).__init__(target_folder_path, args)
 
-        # Don't import other generators until here, otherwise stone.cli will call them with its own
-        # arguments, in addition to the TestBackend.
+        # Don't import other generators until here, otherwise stone.cli will
+        # call them with its own arguments, in addition to the TestBackend.
         from stone.backends.python_types import PythonTypesBackend
         self.ref_path = os.path.join(target_folder_path, 'reference')
         self.reference = PythonTypesBackend(self.ref_path, args)
         self.reference_impls = {}
-
-        rust_gen = imp.load_source('rust_gen', 'generator/rust.stoneg.py')
-        self.rust = rust_gen.RustBackend(self.ref_path, args)
 
     def generate(self, api):
         print(u'Generating Python reference code')
@@ -29,11 +25,11 @@ class TestBackend(CodeBackend):
         with self.output_to_relative_path('reference/__init__.py'):
             self.emit(u'# this is the Stone-generated reference Python SDK')
 
-        print(u'Loading reference code')
+        print(u'Loading reference code:')
         sys.path.append(self.ref_path)
-        from stone_serializers import (json_encode, json_decode)
+        from stone_serializers import json_encode
         for ns in api.namespaces:
-            print(ns)
+            print('\t' + ns)
             self.reference_impls[ns] = __import__(ns)
 
         print(u'Generating test code')
@@ -41,14 +37,16 @@ class TestBackend(CodeBackend):
             with self.output_to_relative_path(ns.name + '.rs'):
                 self._emit_header()
                 for typ in ns.data_types:
-                    type_name = self.rust._struct_name(typ)
+                    type_name = self.struct_name(typ)
 
-                    # the general idea here is to instantiate each type using the reference Python
-                    # code, put some random data in the fields, serialize it to JSON, emit the
-                    # JSON into the Rust test, have Rust deserialize it, and emit assertions that
-                    # the fields match.
-                    # Then have Rust re-serialize to JSON and desereialize it again, then check the
-                    # fields of the newly-deserialized struct. This verifies Rust's serializer.
+                    # the general idea here is to instantiate each type using
+                    # the reference Python code, put some random data in the
+                    # fields, serialize it to JSON, emit the JSON into the Rust
+                    # test, have Rust deserialize it, and emit assertions that
+                    # the fields match. Then have Rust re-serialize to JSON and
+                    # desereialize it again, then check the fields of the
+                    # newly-deserialized struct. This verifies Rust's
+                    # serializer.
 
                     is_serializable = True
                     test_value = None
@@ -57,9 +55,10 @@ class TestBackend(CodeBackend):
                             # TODO: generate tests for all variants
                             # for now, just pick the first variant
                             variant = typ.get_enumerated_subtypes()[0]
-                            test_value = TestPolymorphicStruct(self.rust, typ, self.reference_impls, variant)
+                            test_value = TestPolymorphicStruct(
+                                self, typ, self.reference_impls, variant)
                         else:
-                            test_value = TestStruct(self.rust, typ, self.reference_impls)
+                            test_value = TestStruct(self, typ, self.reference_impls)
                     elif ir.is_union_type(typ):
                         # TODO: generate tests for all variants
                         # for now, just pick the first variant
@@ -74,55 +73,43 @@ class TestBackend(CodeBackend):
                             # Rust code will refuse to serialize a type with no variants (or only
                             # the catch-all variant), so don't bother testing that
                             is_serializable = False
-                            variant = typ.all_fields[0] # this assumes there's at least one
+                            variant = typ.all_fields[0]  # this assumes there's at least one
                         else:
                             variant = variants[0]
 
-                        test_value = TestUnion(self.rust, typ, self.reference_impls, variant)
+                        test_value = TestUnion(self, typ, self.reference_impls, variant)
                     else:
-                        print(u'ERROR: type {} is neither struct nor union'.format(typ))
+                        raise RuntimeError(u'ERROR: type {} is neither struct nor union'
+                                           .format(typ))
 
-                    if test_value is None or test_value.value is None:
-                        self.emit(u'#[ignore]')
-                        with self._test_fn(type_name):
-                            self.emit(u'// test not implemented')
+                    json = json_encode(
+                        self.reference_impls[ns.name].__dict__[typ.name + '_validator'],
+                        test_value.value)
+                    with self._test_fn(type_name):
+                        self.emit(u'let json = r#"{}"#;'.format(json))
+                        self.emit(u'let x = ::serde_json::from_str::<::dropbox_sdk::{}::{}>(json).unwrap();'
+                                  .format(ns.name,
+                                          self.struct_name(typ)))
+                        test_value.emit_asserts(self, 'x')
+
+                        if is_serializable:
+                            # now serialize it back to JSON, deserialize it again, and test
+                            # it again.
+                            self.emit()
+                            self.emit(u'let json2 = ::serde_json::to_string(&x).unwrap();')
+                            de = u'::serde_json::from_str::<::dropbox_sdk::{}::{}>(&json2).unwrap()' \
+                                 .format(ns.name,
+                                         self.struct_name(typ))
+
+                            if typ.all_fields:
+                                self.emit(u'let x2 = {};'.format(de))
+                                test_value.emit_asserts(self, 'x2')
+                            else:
+                                self.emit(u'{};'.format(de))
+                        else:
+                            # assert that serializing it returns an error
+                            self.emit(u'assert!(::serde_json::to_string(&x).is_err());')
                         self.emit()
-                    else:
-                        try:
-                            json = json_encode(
-                                self.reference_impls[ns.name].__dict__[typ.name + '_validator'],
-                                test_value.value)
-                            with self._test_fn(type_name):
-                                self.emit(u'let json = r#"{}"#;'.format(json))
-                                self.emit(u'let x = ::serde_json::from_str::<::dropbox_sdk::{}::{}>(json).unwrap();'.format(
-                                    ns.name,
-                                    self.rust._struct_name(typ)))
-                                test_value.emit_asserts(self, 'x')
-
-                                if is_serializable:
-                                    # now serialize it back to JSON, deserialize it again, and test it again.
-                                    self.emit()
-                                    self.emit(u'let json2 = ::serde_json::to_string(&x).unwrap();')
-                                    de = u'::serde_json::from_str::<::dropbox_sdk::{}::{}>(&json2).unwrap()'.format(
-                                        ns.name,
-                                        self.rust._struct_name(typ))
-
-                                    if typ.all_fields:
-                                        self.emit(u'let x2 = {};'.format(de))
-                                        test_value.emit_asserts(self, 'x2')
-                                    else:
-                                        self.emit(u'{};'.format(de))
-                                else:
-                                    # assert that serializing it returns an error
-                                    self.emit(u'assert!(::serde_json::to_string(&x).is_err());')
-                            self.emit()
-                        except Exception as e:
-                            print(u'Error serializing {}.{}: {}'.format(
-                                ns.name, typ.name, e))
-                            self.emit(u'#[ignore]')
-                            with self._test_fn(type_name):
-                                self.emit(u'// error generating test: {}'.format(e))
-                            self.emit()
 
                 # for typ
             # .rs test file
@@ -142,7 +129,8 @@ class TestBackend(CodeBackend):
 
     def _test_fn(self, name):
         self.emit(u'#[test]')
-        return self.block(u'fn test_{}()'.format(name))
+        return self.emit_rust_function_def(u'test_' + name)
+
 
 class TestField(object):
     def __init__(self, name, python_value, test_value, stone_type, option):
@@ -174,7 +162,9 @@ class TestField(object):
             codegen.emit(u'assert_eq!({}.as_str(), "{}");'.format(
                 expression, self.value.strftime(self.typ.format)))
         else:
-            print(u'Error: assetion unhandled for type {} of field {}'.format(self.typ, self.name))
+            raise RuntimeError(u'Error: assetion unhandled for type {} of field {}'
+                               .format(self.typ, self.name))
+
 
 class TestValue(object):
     def __init__(self, rust_generator):
@@ -184,6 +174,7 @@ class TestValue(object):
 
     def emit_asserts(self, codegen, expression_path):
         raise NotImplementedError('you\'re supposed to implement TestValue.emit_asserts')
+
 
 class TestStruct(TestValue):
     def __init__(self, rust_generator, stone_type, reference_impls):
@@ -198,62 +189,57 @@ class TestStruct(TestValue):
         try:
             self.value = reference_impls[stone_type.namespace.name].__dict__[stone_type.name]()
         except Exception as e:
-            print(u'Error instantiating value for {}: {}'.format(stone_type.name, e))
-            self.value = None
-            return
+            raise RuntimeError(u'Error instantiating value for {}: {}'.format(stone_type.name, e))
 
         for field in stone_type.all_fields:
-            field_value = make_test_field(field.name, field.data_type, rust_generator, reference_impls)
+            field_value = make_test_field(
+                    field.name, field.data_type, rust_generator, reference_impls)
             if field_value is None:
-                print(u'Error: incomplete type generated: {}'.format(stone_type.name))
-                self.value = None
-                return
+                raise RuntimeError(u'Error: incomplete type generated: {}'.format(stone_type.name))
             self.fields.append(field_value)
             try:
                 setattr(self.value, field.name, field_value.value)
             except Exception as e:
-                print(u'Error generating value for {}.{}: {}'.format(
-                    stone_type.name, field.name, e))
-                self.value = None
-                return
+                raise RuntimeError(u'Error generating value for {}.{}: {}'
+                                   .format(stone_type.name, field.name, e))
 
     def emit_asserts(self, codegen, expression_path):
         for field in self.fields:
             field.emit_assert(codegen, expression_path)
+
 
 class TestUnion(TestValue):
     def __init__(self, rust_generator, stone_type, reference_impls, variant):
         super(TestUnion, self).__init__(rust_generator)
         self._stone_type = stone_type
         self._reference_impls = reference_impls
-        self._rust_name = rust_generator._enum_name(stone_type)
-        self._rust_variant_name = rust_generator._enum_variant_name_raw(variant.name)
+        self._rust_name = rust_generator.enum_name(stone_type)
+        self._rust_variant_name = rust_generator.enum_variant_name_raw(variant.name)
         self._variant_type = variant.data_type
 
-        self._inner_value = make_test_field(None, self._variant_type, rust_generator, reference_impls)
+        self._inner_value = make_test_field(
+            None, self._variant_type, rust_generator, reference_impls)
 
         if self._inner_value is None:
-            print(u'Error generating union variant value for {}.{}'.format(
-                stone_type.name, variant.name))
-            self.value = None
-            return
+            raise RuntimeError(u'Error generating union variant value for {}.{}'
+                               .format(stone_type.name, variant.name))
 
         self.value = self.get_from_inner_value(variant.name, self._inner_value)
 
     def get_from_inner_value(self, variant_name, generated_field):
         try:
-            return self._reference_impls[self._stone_type.namespace.name].__dict__[self._stone_type.name](variant_name, generated_field.value)
+            return self._reference_impls[self._stone_type.namespace.name] \
+                    .__dict__[self._stone_type.name](variant_name, generated_field.value)
         except Exception as e:
-            print(u'Error generating value for {}.{}: {}'.format(
-                self._stone_type.name, variant_name, e))
-            return None
+            raise RuntimeError(u'Error generating value for {}.{}: {}'
+                               .format(self._stone_type.name, variant_name, e))
 
     def is_open(self):
         return len(self._stone_type.all_fields) > 1
 
     def emit_asserts(self, codegen, expression_path):
         if expression_path[0] == '(' and expression_path[-1] == ')':
-                expression_path = expression_path[1:-1] # strip off superfluous parens
+                expression_path = expression_path[1:-1]  # strip off superfluous parens
 
         with codegen.block(u'match {}'.format(expression_path)):
             if ir.is_void_type(self._variant_type):
@@ -271,19 +257,14 @@ class TestUnion(TestValue):
             if self.is_open():
                 codegen.emit(u'_ => panic!("wrong variant")')
 
-class TestPolymorphicStruct(TestUnion):
-    def __init__(self, rust_generator, stone_type, reference_impls, variant):
-        super(TestPolymorphicStruct, self).__init__(
-            rust_generator,
-            stone_type,
-            reference_impls,
-            variant)
 
+class TestPolymorphicStruct(TestUnion):
     def get_from_inner_value(self, variant_name, generated_field):
         return generated_field.value
 
     def is_open(self):
         return len(self._stone_type.get_enumerated_subtypes()) > 1
+
 
 class TestList(TestValue):
     def __init__(self, rust_generator, stone_type, reference_impls):
@@ -293,18 +274,16 @@ class TestList(TestValue):
 
         self._inner_value = make_test_field(None, stone_type, rust_generator, reference_impls)
         if self._inner_value is None:
-            print(u'Error generating value for list of {}'.format(
-                stone_type.name))
-            self.value = None
-            return
+            raise RuntimeError(u'Error generating value for list of {}'.format(stone_type.name))
 
         self.value = self._inner_value.value
 
     def emit_asserts(self, codegen, expression_path):
         self._inner_value.emit_assert(codegen, expression_path + '[0]')
 
+
 def make_test_field(field_name, stone_type, rust_generator, reference_impls):
-    rust_name = rust_generator._field_name_raw(field_name) if field_name is not None else None
+    rust_name = rust_generator.field_name_raw(field_name) if field_name is not None else None
     typ, option = ir.unwrap_nullable(stone_type)
 
     inner = None
@@ -342,14 +321,16 @@ def make_test_field(field_name, stone_type, rust_generator, reference_impls):
     elif ir.is_timestamp_type(typ):
         value = datetime.datetime.utcfromtimestamp(2**33 - 1)
     elif not ir.is_void_type(typ):
-        print(u'Error: unhandled field type of {}: {}'.format(
-            field_name, typ))
-        return None
+        raise RuntimeError(u'Error: unhandled field type of {}: {}'.format(field_name, typ))
     return TestField(rust_name, value, inner, typ, option)
 
-# Generate a minimal string that passes a regex and optionally is of a given minimum length.
+
 class Unregex(object):
-    def __init__(self, regex_string, min_len = None):
+    """
+    Generate a minimal string that passes a regex and optionally is of a given
+    minimum length.
+    """
+    def __init__(self, regex_string, min_len=None):
         self._min_len = min_len
         self._group_refs = {}
         self._tokens = re.sre_parse.parse(regex_string)
@@ -363,7 +344,7 @@ class Unregex(object):
             if opcode == 'literal':
                 result += chr(argument)
             elif opcode == 'at':
-                pass # start or end anchor; nothing to add
+                pass  # start or end anchor; nothing to add
             elif opcode == 'in':
                 if argument[0][0] == 'negate':
                     rejects = []
@@ -373,7 +354,9 @@ class Unregex(object):
                         elif opcode == 'range':
                             for i in range(reject[0], reject[1]):
                                 rejects.append(chr(i))
-                    choices = list(set(string.printable).difference(string.whitespace).difference(rejects))
+                    choices = list(set(string.printable)
+                                   .difference(string.whitespace)
+                                   .difference(rejects))
                     result += choices[0]
                 else:
                     result += self._generate([argument[0]])
@@ -404,7 +387,7 @@ class Unregex(object):
                 else:
                     raise NotImplementedError('category {}'.format(argument))
             elif opcode == 'assert' or opcode == 'assert_not' \
-                    or opcode == 'negate': # note: 'negate' is handled in the 'in' opcode
+                    or opcode == 'negate':  # note: 'negate' is handled in the 'in' opcode
                 raise NotImplementedError('regex opcode {} not implemented'.format(opcode))
             else:
                 raise NotImplementedError('unknown regex opcode: {}'.format(opcode))

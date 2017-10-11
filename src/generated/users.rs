@@ -13,23 +13,55 @@
 pub type GetAccountBatchResult = Vec<BasicAccount>;
 
 /// Get information about a user's account.
-pub fn get_account(client: &::client_trait::HttpClient, arg: &GetAccountArg) -> ::Result<Result<BasicAccount, GetAccountError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "users/get_account", arg, None)
+pub fn get_account(
+    client: &::client_trait::HttpClient,
+    arg: &GetAccountArg,
+) -> ::Result<Result<BasicAccount, GetAccountError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "users/get_account",
+        arg,
+        None)
 }
 
 /// Get information about multiple user accounts.  At most 300 accounts may be queried per request.
-pub fn get_account_batch(client: &::client_trait::HttpClient, arg: &GetAccountBatchArg) -> ::Result<Result<GetAccountBatchResult, GetAccountBatchError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "users/get_account_batch", arg, None)
+pub fn get_account_batch(
+    client: &::client_trait::HttpClient,
+    arg: &GetAccountBatchArg,
+) -> ::Result<Result<GetAccountBatchResult, GetAccountBatchError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "users/get_account_batch",
+        arg,
+        None)
 }
 
 /// Get information about the current user's account.
-pub fn get_current_account(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<FullAccount, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "users/get_current_account", arg, None)
+pub fn get_current_account(
+    client: &::client_trait::HttpClient,
+    arg: &(),
+) -> ::Result<Result<FullAccount, ()>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "users/get_current_account",
+        arg,
+        None)
 }
 
 /// Get the space usage information for the current user's account.
-pub fn get_space_usage(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<SpaceUsage, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "users/get_space_usage", arg, None)
+pub fn get_space_usage(
+    client: &::client_trait::HttpClient,
+    arg: &(),
+) -> ::Result<Result<SpaceUsage, ()>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "users/get_space_usage",
+        arg,
+        None)
 }
 
 /// The amount of detail revealed about an account depends on the user being queried and the user
@@ -52,7 +84,13 @@ pub struct Account {
 }
 
 impl Account {
-    pub fn new(account_id: super::users_common::AccountId, name: Name, email: String, email_verified: bool, disabled: bool) -> Self {
+    pub fn new(
+        account_id: super::users_common::AccountId,
+        name: Name,
+        email: String,
+        email_verified: bool,
+        disabled: bool,
+    ) -> Self {
         Account {
             account_id,
             name,
@@ -77,7 +115,9 @@ const ACCOUNT_FIELDS: &'static [&'static str] = &["account_id",
                                                   "disabled",
                                                   "profile_photo_url"];
 impl Account {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Account, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<Account, V::Error> {
         use serde::de;
         let mut field_account_id = None;
         let mut field_name = None;
@@ -136,7 +176,10 @@ impl Account {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("account_id", &self.account_id)?;
         s.serialize_field("name", &self.name)?;
@@ -200,7 +243,14 @@ pub struct BasicAccount {
 }
 
 impl BasicAccount {
-    pub fn new(account_id: super::users_common::AccountId, name: Name, email: String, email_verified: bool, disabled: bool, is_teammate: bool) -> Self {
+    pub fn new(
+        account_id: super::users_common::AccountId,
+        name: Name,
+        email: String,
+        email_verified: bool,
+        disabled: bool,
+        is_teammate: bool,
+    ) -> Self {
         BasicAccount {
             account_id,
             name,
@@ -234,7 +284,9 @@ const BASIC_ACCOUNT_FIELDS: &'static [&'static str] = &["account_id",
                                                         "profile_photo_url",
                                                         "team_member_id"];
 impl BasicAccount {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<BasicAccount, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<BasicAccount, V::Error> {
         use serde::de;
         let mut field_account_id = None;
         let mut field_name = None;
@@ -309,7 +361,10 @@ impl BasicAccount {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("account_id", &self.account_id)?;
         s.serialize_field("name", &self.name)?;
@@ -388,7 +443,17 @@ pub struct FullAccount {
 }
 
 impl FullAccount {
-    pub fn new(account_id: super::users_common::AccountId, name: Name, email: String, email_verified: bool, disabled: bool, locale: String, referral_link: String, is_paired: bool, account_type: super::users_common::AccountType) -> Self {
+    pub fn new(
+        account_id: super::users_common::AccountId,
+        name: Name,
+        email: String,
+        email_verified: bool,
+        disabled: bool,
+        locale: String,
+        referral_link: String,
+        is_paired: bool,
+        account_type: super::users_common::AccountType,
+    ) -> Self {
         FullAccount {
             account_id,
             name,
@@ -442,7 +507,9 @@ const FULL_ACCOUNT_FIELDS: &'static [&'static str] = &["account_id",
                                                        "team",
                                                        "team_member_id"];
 impl FullAccount {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FullAccount, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FullAccount, V::Error> {
         use serde::de;
         let mut field_account_id = None;
         let mut field_name = None;
@@ -557,7 +624,10 @@ impl FullAccount {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("account_id", &self.account_id)?;
         s.serialize_field("name", &self.name)?;
@@ -617,7 +687,12 @@ pub struct FullTeam {
 }
 
 impl FullTeam {
-    pub fn new(id: String, name: String, sharing_policies: super::team_policies::TeamSharingPolicies, office_addin_policy: super::team_policies::OfficeAddInPolicy) -> Self {
+    pub fn new(
+        id: String,
+        name: String,
+        sharing_policies: super::team_policies::TeamSharingPolicies,
+        office_addin_policy: super::team_policies::OfficeAddInPolicy,
+    ) -> Self {
         FullTeam {
             id,
             name,
@@ -633,7 +708,9 @@ const FULL_TEAM_FIELDS: &'static [&'static str] = &["id",
                                                     "sharing_policies",
                                                     "office_addin_policy"];
 impl FullTeam {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FullTeam, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FullTeam, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_name = None;
@@ -676,7 +753,10 @@ impl FullTeam {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
         s.serialize_field("name", &self.name)?;
@@ -730,7 +810,9 @@ impl GetAccountArg {
 
 const GET_ACCOUNT_ARG_FIELDS: &'static [&'static str] = &["account_id"];
 impl GetAccountArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetAccountArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetAccountArg, V::Error> {
         use serde::de;
         let mut field_account_id = None;
         while let Some(key) = map.next_key()? {
@@ -749,7 +831,10 @@ impl GetAccountArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("account_id", &self.account_id)
     }
@@ -800,7 +885,9 @@ impl GetAccountBatchArg {
 
 const GET_ACCOUNT_BATCH_ARG_FIELDS: &'static [&'static str] = &["account_ids"];
 impl GetAccountBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetAccountBatchArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetAccountBatchArg, V::Error> {
         use serde::de;
         let mut field_account_ids = None;
         while let Some(key) = map.next_key()? {
@@ -819,7 +906,10 @@ impl GetAccountBatchArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("account_ids", &self.account_ids)
     }
@@ -1002,7 +1092,9 @@ impl IndividualSpaceAllocation {
 
 const INDIVIDUAL_SPACE_ALLOCATION_FIELDS: &'static [&'static str] = &["allocated"];
 impl IndividualSpaceAllocation {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<IndividualSpaceAllocation, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<IndividualSpaceAllocation, V::Error> {
         use serde::de;
         let mut field_allocated = None;
         while let Some(key) = map.next_key()? {
@@ -1021,7 +1113,10 @@ impl IndividualSpaceAllocation {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("allocated", &self.allocated)
     }
@@ -1073,7 +1168,13 @@ pub struct Name {
 }
 
 impl Name {
-    pub fn new(given_name: String, surname: String, familiar_name: String, display_name: String, abbreviated_name: String) -> Self {
+    pub fn new(
+        given_name: String,
+        surname: String,
+        familiar_name: String,
+        display_name: String,
+        abbreviated_name: String,
+    ) -> Self {
         Name {
             given_name,
             surname,
@@ -1091,7 +1192,9 @@ const NAME_FIELDS: &'static [&'static str] = &["given_name",
                                                "display_name",
                                                "abbreviated_name"];
 impl Name {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Name, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<Name, V::Error> {
         use serde::de;
         let mut field_given_name = None;
         let mut field_surname = None;
@@ -1142,7 +1245,10 @@ impl Name {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("given_name", &self.given_name)?;
         s.serialize_field("surname", &self.surname)?;
@@ -1265,7 +1371,9 @@ impl SpaceUsage {
 const SPACE_USAGE_FIELDS: &'static [&'static str] = &["used",
                                                       "allocation"];
 impl SpaceUsage {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SpaceUsage, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SpaceUsage, V::Error> {
         use serde::de;
         let mut field_used = None;
         let mut field_allocation = None;
@@ -1292,7 +1400,10 @@ impl SpaceUsage {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("used", &self.used)?;
         s.serialize_field("allocation", &self.allocation)
@@ -1349,7 +1460,9 @@ impl Team {
 const TEAM_FIELDS: &'static [&'static str] = &["id",
                                                "name"];
 impl Team {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Team, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<Team, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_name = None;
@@ -1376,7 +1489,10 @@ impl Team {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
         s.serialize_field("name", &self.name)
@@ -1432,7 +1548,9 @@ impl TeamSpaceAllocation {
 const TEAM_SPACE_ALLOCATION_FIELDS: &'static [&'static str] = &["used",
                                                                 "allocated"];
 impl TeamSpaceAllocation {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamSpaceAllocation, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamSpaceAllocation, V::Error> {
         use serde::de;
         let mut field_used = None;
         let mut field_allocated = None;
@@ -1459,7 +1577,10 @@ impl TeamSpaceAllocation {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("used", &self.used)?;
         s.serialize_field("allocated", &self.allocated)

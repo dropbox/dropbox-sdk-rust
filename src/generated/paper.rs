@@ -14,31 +14,78 @@ pub type PaperDocId = String;
 
 /// Marks the given Paper doc as archived. Note: This action can be performed or undone by anyone
 /// with edit permissions to the doc.
-pub fn docs_archive(client: &::client_trait::HttpClient, arg: &RefPaperDoc) -> ::Result<Result<(), DocLookupError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/archive", arg, None)
+pub fn docs_archive(
+    client: &::client_trait::HttpClient,
+    arg: &RefPaperDoc,
+) -> ::Result<Result<(), DocLookupError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/archive",
+        arg,
+        None)
 }
 
 /// Creates a new Paper doc with the provided content.
-pub fn docs_create(client: &::client_trait::HttpClient, arg: &PaperDocCreateArgs, body: Vec<u8>) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocCreateUpdateResult>, PaperDocCreateError>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Api, "paper/docs/create", arg, Some(body), None, None)
+pub fn docs_create(
+    client: &::client_trait::HttpClient,
+    arg: &PaperDocCreateArgs,
+    body: Vec<u8>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocCreateUpdateResult>, PaperDocCreateError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/create",
+        arg,
+        Some(body),
+        None,
+        None)
 }
 
 /// Exports and downloads Paper doc either as HTML or markdown.
-pub fn docs_download(client: &::client_trait::HttpClient, arg: &PaperDocExport, range_start: Option<u64>, range_end: Option<u64>) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocExportResult>, DocLookupError>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Api, "paper/docs/download", arg, None, range_start, range_end)
+pub fn docs_download(
+    client: &::client_trait::HttpClient,
+    arg: &PaperDocExport,
+    range_start: Option<u64>,
+    range_end: Option<u64>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocExportResult>, DocLookupError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/download",
+        arg,
+        None,
+        range_start,
+        range_end)
 }
 
 /// Lists the users who are explicitly invited to the Paper folder in which the Paper doc is
 /// contained. For private folders all users (including owner) shared on the folder are listed and
 /// for team folders all non-team users shared on the folder are returned.
-pub fn docs_folder_users_list(client: &::client_trait::HttpClient, arg: &ListUsersOnFolderArgs) -> ::Result<Result<ListUsersOnFolderResponse, DocLookupError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/folder_users/list", arg, None)
+pub fn docs_folder_users_list(
+    client: &::client_trait::HttpClient,
+    arg: &ListUsersOnFolderArgs,
+) -> ::Result<Result<ListUsersOnFolderResponse, DocLookupError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/folder_users/list",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from :route:`docs/folder_users/list`, use this to paginate
 /// through all users on the Paper folder.
-pub fn docs_folder_users_list_continue(client: &::client_trait::HttpClient, arg: &ListUsersOnFolderContinueArgs) -> ::Result<Result<ListUsersOnFolderResponse, ListUsersCursorError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/folder_users/list/continue", arg, None)
+pub fn docs_folder_users_list_continue(
+    client: &::client_trait::HttpClient,
+    arg: &ListUsersOnFolderContinueArgs,
+) -> ::Result<Result<ListUsersOnFolderResponse, ListUsersCursorError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/folder_users/list/continue",
+        arg,
+        None)
 }
 
 /// Retrieves folder information for the given Paper doc. This includes:   - folder sharing policy;
@@ -46,70 +93,156 @@ pub fn docs_folder_users_list_continue(client: &::client_trait::HttpClient, arg:
 /// of folders (both folderId and folderName) from the root folder to the folder directly containing
 /// the Paper doc.  Note: If the Paper doc is not in any folder (aka unfiled) the response will be
 /// empty.
-pub fn docs_get_folder_info(client: &::client_trait::HttpClient, arg: &RefPaperDoc) -> ::Result<Result<FoldersContainingPaperDoc, DocLookupError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/get_folder_info", arg, None)
+pub fn docs_get_folder_info(
+    client: &::client_trait::HttpClient,
+    arg: &RefPaperDoc,
+) -> ::Result<Result<FoldersContainingPaperDoc, DocLookupError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/get_folder_info",
+        arg,
+        None)
 }
 
 /// Return the list of all Paper docs according to the argument specifications. To iterate over
 /// through the full pagination, pass the cursor to :route:`docs/list/continue`.
-pub fn docs_list(client: &::client_trait::HttpClient, arg: &ListPaperDocsArgs) -> ::Result<Result<ListPaperDocsResponse, ()>> {
+pub fn docs_list(
+    client: &::client_trait::HttpClient,
+    arg: &ListPaperDocsArgs,
+) -> ::Result<Result<ListPaperDocsResponse, ()>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/list", arg, None)
 }
 
 /// Once a cursor has been retrieved from :route:`docs/list`, use this to paginate through all Paper
 /// doc.
-pub fn docs_list_continue(client: &::client_trait::HttpClient, arg: &ListPaperDocsContinueArgs) -> ::Result<Result<ListPaperDocsResponse, ListDocsCursorError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/list/continue", arg, None)
+pub fn docs_list_continue(
+    client: &::client_trait::HttpClient,
+    arg: &ListPaperDocsContinueArgs,
+) -> ::Result<Result<ListPaperDocsResponse, ListDocsCursorError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/list/continue",
+        arg,
+        None)
 }
 
 /// Permanently deletes the given Paper doc. This operation is final as the doc cannot be recovered.
 /// Note: This action can be performed only by the doc owner.
-pub fn docs_permanently_delete(client: &::client_trait::HttpClient, arg: &RefPaperDoc) -> ::Result<Result<(), DocLookupError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/permanently_delete", arg, None)
+pub fn docs_permanently_delete(
+    client: &::client_trait::HttpClient,
+    arg: &RefPaperDoc,
+) -> ::Result<Result<(), DocLookupError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/permanently_delete",
+        arg,
+        None)
 }
 
 /// Gets the default sharing policy for the given Paper doc.
-pub fn docs_sharing_policy_get(client: &::client_trait::HttpClient, arg: &RefPaperDoc) -> ::Result<Result<SharingPolicy, DocLookupError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/sharing_policy/get", arg, None)
+pub fn docs_sharing_policy_get(
+    client: &::client_trait::HttpClient,
+    arg: &RefPaperDoc,
+) -> ::Result<Result<SharingPolicy, DocLookupError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/sharing_policy/get",
+        arg,
+        None)
 }
 
 /// Sets the default sharing policy for the given Paper doc. The default 'team_sharing_policy' can
 /// be changed only by teams, omit this field for personal accounts.  Note: 'public_sharing_policy'
 /// cannot be set to the value 'disabled' because this setting can be changed only via the team
 /// admin console.
-pub fn docs_sharing_policy_set(client: &::client_trait::HttpClient, arg: &PaperDocSharingPolicy) -> ::Result<Result<(), DocLookupError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/sharing_policy/set", arg, None)
+pub fn docs_sharing_policy_set(
+    client: &::client_trait::HttpClient,
+    arg: &PaperDocSharingPolicy,
+) -> ::Result<Result<(), DocLookupError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/sharing_policy/set",
+        arg,
+        None)
 }
 
 /// Updates an existing Paper doc with the provided content.
-pub fn docs_update(client: &::client_trait::HttpClient, arg: &PaperDocUpdateArgs, body: Vec<u8>) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocCreateUpdateResult>, PaperDocUpdateError>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Api, "paper/docs/update", arg, Some(body), None, None)
+pub fn docs_update(
+    client: &::client_trait::HttpClient,
+    arg: &PaperDocUpdateArgs,
+    body: Vec<u8>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocCreateUpdateResult>, PaperDocUpdateError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/update",
+        arg,
+        Some(body),
+        None,
+        None)
 }
 
 /// Allows an owner or editor to add users to a Paper doc or change their permissions using their
 /// email address or Dropbox account ID.  Note: The Doc owner's permissions cannot be changed.
-pub fn docs_users_add(client: &::client_trait::HttpClient, arg: &AddPaperDocUser) -> ::Result<Result<Vec<AddPaperDocUserMemberResult>, DocLookupError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/users/add", arg, None)
+pub fn docs_users_add(
+    client: &::client_trait::HttpClient,
+    arg: &AddPaperDocUser,
+) -> ::Result<Result<Vec<AddPaperDocUserMemberResult>, DocLookupError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/users/add",
+        arg,
+        None)
 }
 
 /// Lists all users who visited the Paper doc or users with explicit access. This call excludes
 /// users who have been removed. The list is sorted by the date of the visit or the share date. The
 /// list will include both users, the explicitly shared ones as well as those who came in using the
 /// Paper url link.
-pub fn docs_users_list(client: &::client_trait::HttpClient, arg: &ListUsersOnPaperDocArgs) -> ::Result<Result<ListUsersOnPaperDocResponse, DocLookupError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/users/list", arg, None)
+pub fn docs_users_list(
+    client: &::client_trait::HttpClient,
+    arg: &ListUsersOnPaperDocArgs,
+) -> ::Result<Result<ListUsersOnPaperDocResponse, DocLookupError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/users/list",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from :route:`docs/users/list`, use this to paginate through all
 /// users on the Paper doc.
-pub fn docs_users_list_continue(client: &::client_trait::HttpClient, arg: &ListUsersOnPaperDocContinueArgs) -> ::Result<Result<ListUsersOnPaperDocResponse, ListUsersCursorError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/users/list/continue", arg, None)
+pub fn docs_users_list_continue(
+    client: &::client_trait::HttpClient,
+    arg: &ListUsersOnPaperDocContinueArgs,
+) -> ::Result<Result<ListUsersOnPaperDocResponse, ListUsersCursorError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/users/list/continue",
+        arg,
+        None)
 }
 
 /// Allows an owner or editor to remove users from a Paper doc using their email address or Dropbox
 /// account ID.  Note: Doc owner cannot be removed.
-pub fn docs_users_remove(client: &::client_trait::HttpClient, arg: &RemovePaperDocUser) -> ::Result<Result<(), DocLookupError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/users/remove", arg, None)
+pub fn docs_users_remove(
+    client: &::client_trait::HttpClient,
+    arg: &RemovePaperDocUser,
+) -> ::Result<Result<(), DocLookupError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "paper/docs/users/remove",
+        arg,
+        None)
 }
 
 #[derive(Debug)]
@@ -139,7 +272,9 @@ impl AddMember {
 const ADD_MEMBER_FIELDS: &'static [&'static str] = &["member",
                                                      "permission_level"];
 impl AddMember {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddMember, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AddMember, V::Error> {
         use serde::de;
         let mut field_member = None;
         let mut field_permission_level = None;
@@ -166,7 +301,10 @@ impl AddMember {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("member", &self.member)?;
         s.serialize_field("permission_level", &self.permission_level)
@@ -241,7 +379,9 @@ const ADD_PAPER_DOC_USER_FIELDS: &'static [&'static str] = &["doc_id",
                                                              "custom_message",
                                                              "quiet"];
 impl AddPaperDocUser {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddPaperDocUser, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AddPaperDocUser, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_members = None;
@@ -284,7 +424,10 @@ impl AddPaperDocUser {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("members", &self.members)?;
@@ -343,7 +486,9 @@ impl AddPaperDocUserMemberResult {
 const ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS: &'static [&'static str] = &["member",
                                                                            "result"];
 impl AddPaperDocUserMemberResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddPaperDocUserMemberResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AddPaperDocUserMemberResult, V::Error> {
         use serde::de;
         let mut field_member = None;
         let mut field_result = None;
@@ -370,7 +515,10 @@ impl AddPaperDocUserMemberResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("member", &self.member)?;
         s.serialize_field("result", &self.result)
@@ -550,7 +698,9 @@ impl Cursor {
 const CURSOR_FIELDS: &'static [&'static str] = &["value",
                                                  "expiration"];
 impl Cursor {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Cursor, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<Cursor, V::Error> {
         use serde::de;
         let mut field_value = None;
         let mut field_expiration = None;
@@ -577,7 +727,10 @@ impl Cursor {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("value", &self.value)?;
         s.serialize_field("expiration", &self.expiration)
@@ -845,7 +998,9 @@ impl Folder {
 const FOLDER_FIELDS: &'static [&'static str] = &["id",
                                                  "name"];
 impl Folder {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Folder, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<Folder, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_name = None;
@@ -872,7 +1027,10 @@ impl Folder {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
         s.serialize_field("name", &self.name)
@@ -1065,7 +1223,9 @@ impl Default for FoldersContainingPaperDoc {
 const FOLDERS_CONTAINING_PAPER_DOC_FIELDS: &'static [&'static str] = &["folder_sharing_policy_type",
                                                                        "folders"];
 impl FoldersContainingPaperDoc {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FoldersContainingPaperDoc, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FoldersContainingPaperDoc, V::Error> {
         use serde::de;
         let mut field_folder_sharing_policy_type = None;
         let mut field_folders = None;
@@ -1092,7 +1252,10 @@ impl FoldersContainingPaperDoc {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("folder_sharing_policy_type", &self.folder_sharing_policy_type)?;
         s.serialize_field("folders", &self.folders)
@@ -1209,7 +1372,10 @@ pub struct InviteeInfoWithPermissionLevel {
 }
 
 impl InviteeInfoWithPermissionLevel {
-    pub fn new(invitee: super::sharing::InviteeInfo, permission_level: PaperDocPermissionLevel) -> Self {
+    pub fn new(
+        invitee: super::sharing::InviteeInfo,
+        permission_level: PaperDocPermissionLevel,
+    ) -> Self {
         InviteeInfoWithPermissionLevel {
             invitee,
             permission_level,
@@ -1221,7 +1387,9 @@ impl InviteeInfoWithPermissionLevel {
 const INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS: &'static [&'static str] = &["invitee",
                                                                              "permission_level"];
 impl InviteeInfoWithPermissionLevel {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<InviteeInfoWithPermissionLevel, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<InviteeInfoWithPermissionLevel, V::Error> {
         use serde::de;
         let mut field_invitee = None;
         let mut field_permission_level = None;
@@ -1248,7 +1416,10 @@ impl InviteeInfoWithPermissionLevel {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("invitee", &self.invitee)?;
         s.serialize_field("permission_level", &self.permission_level)
@@ -1380,7 +1551,9 @@ const LIST_PAPER_DOCS_ARGS_FIELDS: &'static [&'static str] = &["filter_by",
                                                                "sort_order",
                                                                "limit"];
 impl ListPaperDocsArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListPaperDocsArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListPaperDocsArgs, V::Error> {
         use serde::de;
         let mut field_filter_by = None;
         let mut field_sort_by = None;
@@ -1423,7 +1596,10 @@ impl ListPaperDocsArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("filter_by", &self.filter_by)?;
         s.serialize_field("sort_by", &self.sort_by)?;
@@ -1478,7 +1654,9 @@ impl ListPaperDocsContinueArgs {
 
 const LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS: &'static [&'static str] = &["cursor"];
 impl ListPaperDocsContinueArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListPaperDocsContinueArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListPaperDocsContinueArgs, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -1497,7 +1675,10 @@ impl ListPaperDocsContinueArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -1621,7 +1802,9 @@ const LIST_PAPER_DOCS_RESPONSE_FIELDS: &'static [&'static str] = &["doc_ids",
                                                                    "cursor",
                                                                    "has_more"];
 impl ListPaperDocsResponse {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListPaperDocsResponse, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListPaperDocsResponse, V::Error> {
         use serde::de;
         let mut field_doc_ids = None;
         let mut field_cursor = None;
@@ -1656,7 +1839,10 @@ impl ListPaperDocsResponse {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_ids", &self.doc_ids)?;
         s.serialize_field("cursor", &self.cursor)?;
@@ -1937,7 +2123,9 @@ impl ListUsersOnFolderArgs {
 const LIST_USERS_ON_FOLDER_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
                                                                     "limit"];
 impl ListUsersOnFolderArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnFolderArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListUsersOnFolderArgs, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_limit = None;
@@ -1964,7 +2152,10 @@ impl ListUsersOnFolderArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("limit", &self.limit)
@@ -2021,7 +2212,9 @@ impl ListUsersOnFolderContinueArgs {
 const LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
                                                                              "cursor"];
 impl ListUsersOnFolderContinueArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnFolderContinueArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListUsersOnFolderContinueArgs, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_cursor = None;
@@ -2048,7 +2241,10 @@ impl ListUsersOnFolderContinueArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("cursor", &self.cursor)
@@ -2101,7 +2297,12 @@ pub struct ListUsersOnFolderResponse {
 }
 
 impl ListUsersOnFolderResponse {
-    pub fn new(invitees: Vec<super::sharing::InviteeInfo>, users: Vec<super::sharing::UserInfo>, cursor: Cursor, has_more: bool) -> Self {
+    pub fn new(
+        invitees: Vec<super::sharing::InviteeInfo>,
+        users: Vec<super::sharing::UserInfo>,
+        cursor: Cursor,
+        has_more: bool,
+    ) -> Self {
         ListUsersOnFolderResponse {
             invitees,
             users,
@@ -2117,7 +2318,9 @@ const LIST_USERS_ON_FOLDER_RESPONSE_FIELDS: &'static [&'static str] = &["invitee
                                                                         "cursor",
                                                                         "has_more"];
 impl ListUsersOnFolderResponse {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnFolderResponse, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListUsersOnFolderResponse, V::Error> {
         use serde::de;
         let mut field_invitees = None;
         let mut field_users = None;
@@ -2160,7 +2363,10 @@ impl ListUsersOnFolderResponse {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("invitees", &self.invitees)?;
         s.serialize_field("users", &self.users)?;
@@ -2233,7 +2439,9 @@ const LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
                                                                        "limit",
                                                                        "filter_by"];
 impl ListUsersOnPaperDocArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnPaperDocArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListUsersOnPaperDocArgs, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_limit = None;
@@ -2268,7 +2476,10 @@ impl ListUsersOnPaperDocArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("limit", &self.limit)?;
@@ -2326,7 +2537,9 @@ impl ListUsersOnPaperDocContinueArgs {
 const LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
                                                                                 "cursor"];
 impl ListUsersOnPaperDocContinueArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnPaperDocContinueArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListUsersOnPaperDocContinueArgs, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_cursor = None;
@@ -2353,7 +2566,10 @@ impl ListUsersOnPaperDocContinueArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("cursor", &self.cursor)
@@ -2408,7 +2624,13 @@ pub struct ListUsersOnPaperDocResponse {
 }
 
 impl ListUsersOnPaperDocResponse {
-    pub fn new(invitees: Vec<InviteeInfoWithPermissionLevel>, users: Vec<UserInfoWithPermissionLevel>, doc_owner: super::sharing::UserInfo, cursor: Cursor, has_more: bool) -> Self {
+    pub fn new(
+        invitees: Vec<InviteeInfoWithPermissionLevel>,
+        users: Vec<UserInfoWithPermissionLevel>,
+        doc_owner: super::sharing::UserInfo,
+        cursor: Cursor,
+        has_more: bool,
+    ) -> Self {
         ListUsersOnPaperDocResponse {
             invitees,
             users,
@@ -2426,7 +2648,9 @@ const LIST_USERS_ON_PAPER_DOC_RESPONSE_FIELDS: &'static [&'static str] = &["invi
                                                                            "cursor",
                                                                            "has_more"];
 impl ListUsersOnPaperDocResponse {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListUsersOnPaperDocResponse, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListUsersOnPaperDocResponse, V::Error> {
         use serde::de;
         let mut field_invitees = None;
         let mut field_users = None;
@@ -2477,7 +2701,10 @@ impl ListUsersOnPaperDocResponse {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("invitees", &self.invitees)?;
         s.serialize_field("users", &self.users)?;
@@ -2697,7 +2924,9 @@ impl PaperDocCreateArgs {
 const PAPER_DOC_CREATE_ARGS_FIELDS: &'static [&'static str] = &["import_format",
                                                                 "parent_folder_id"];
 impl PaperDocCreateArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocCreateArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocCreateArgs, V::Error> {
         use serde::de;
         let mut field_import_format = None;
         let mut field_parent_folder_id = None;
@@ -2724,7 +2953,10 @@ impl PaperDocCreateArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("import_format", &self.import_format)?;
         s.serialize_field("parent_folder_id", &self.parent_folder_id)
@@ -2887,7 +3119,9 @@ const PAPER_DOC_CREATE_UPDATE_RESULT_FIELDS: &'static [&'static str] = &["doc_id
                                                                          "revision",
                                                                          "title"];
 impl PaperDocCreateUpdateResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocCreateUpdateResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocCreateUpdateResult, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_revision = None;
@@ -2922,7 +3156,10 @@ impl PaperDocCreateUpdateResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("revision", &self.revision)?;
@@ -2978,7 +3215,9 @@ impl PaperDocExport {
 const PAPER_DOC_EXPORT_FIELDS: &'static [&'static str] = &["doc_id",
                                                            "export_format"];
 impl PaperDocExport {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocExport, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocExport, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_export_format = None;
@@ -3005,7 +3244,10 @@ impl PaperDocExport {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("export_format", &self.export_format)
@@ -3069,7 +3311,9 @@ const PAPER_DOC_EXPORT_RESULT_FIELDS: &'static [&'static str] = &["owner",
                                                                   "revision",
                                                                   "mime_type"];
 impl PaperDocExportResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocExportResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocExportResult, V::Error> {
         use serde::de;
         let mut field_owner = None;
         let mut field_title = None;
@@ -3112,7 +3356,10 @@ impl PaperDocExportResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("owner", &self.owner)?;
         s.serialize_field("title", &self.title)?;
@@ -3230,7 +3477,9 @@ impl PaperDocSharingPolicy {
 const PAPER_DOC_SHARING_POLICY_FIELDS: &'static [&'static str] = &["doc_id",
                                                                    "sharing_policy"];
 impl PaperDocSharingPolicy {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocSharingPolicy, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocSharingPolicy, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_sharing_policy = None;
@@ -3257,7 +3506,10 @@ impl PaperDocSharingPolicy {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("sharing_policy", &self.sharing_policy)
@@ -3306,7 +3558,12 @@ pub struct PaperDocUpdateArgs {
 }
 
 impl PaperDocUpdateArgs {
-    pub fn new(doc_id: PaperDocId, doc_update_policy: PaperDocUpdatePolicy, revision: i64, import_format: ImportFormat) -> Self {
+    pub fn new(
+        doc_id: PaperDocId,
+        doc_update_policy: PaperDocUpdatePolicy,
+        revision: i64,
+        import_format: ImportFormat,
+    ) -> Self {
         PaperDocUpdateArgs {
             doc_id,
             doc_update_policy,
@@ -3322,7 +3579,9 @@ const PAPER_DOC_UPDATE_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
                                                                 "revision",
                                                                 "import_format"];
 impl PaperDocUpdateArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocUpdateArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocUpdateArgs, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_doc_update_policy = None;
@@ -3365,7 +3624,10 @@ impl PaperDocUpdateArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("doc_update_policy", &self.doc_update_policy)?;
@@ -3622,7 +3884,9 @@ impl RefPaperDoc {
 
 const REF_PAPER_DOC_FIELDS: &'static [&'static str] = &["doc_id"];
 impl RefPaperDoc {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RefPaperDoc, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RefPaperDoc, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         while let Some(key) = map.next_key()? {
@@ -3641,7 +3905,10 @@ impl RefPaperDoc {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)
     }
@@ -3697,7 +3964,9 @@ impl RemovePaperDocUser {
 const REMOVE_PAPER_DOC_USER_FIELDS: &'static [&'static str] = &["doc_id",
                                                                 "member"];
 impl RemovePaperDocUser {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RemovePaperDocUser, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RemovePaperDocUser, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_member = None;
@@ -3724,7 +3993,10 @@ impl RemovePaperDocUser {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("member", &self.member)
@@ -3780,7 +4052,9 @@ impl Default for SharingPolicy {
 const SHARING_POLICY_FIELDS: &'static [&'static str] = &["public_sharing_policy",
                                                          "team_sharing_policy"];
 impl SharingPolicy {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharingPolicy, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharingPolicy, V::Error> {
         use serde::de;
         let mut field_public_sharing_policy = None;
         let mut field_team_sharing_policy = None;
@@ -3807,7 +4081,10 @@ impl SharingPolicy {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("public_sharing_policy", &self.public_sharing_policy)?;
         s.serialize_field("team_sharing_policy", &self.team_sharing_policy)
@@ -4008,7 +4285,9 @@ impl UserInfoWithPermissionLevel {
 const USER_INFO_WITH_PERMISSION_LEVEL_FIELDS: &'static [&'static str] = &["user",
                                                                           "permission_level"];
 impl UserInfoWithPermissionLevel {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserInfoWithPermissionLevel, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UserInfoWithPermissionLevel, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_permission_level = None;
@@ -4035,7 +4314,10 @@ impl UserInfoWithPermissionLevel {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user", &self.user)?;
         s.serialize_field("permission_level", &self.permission_level)

@@ -22,39 +22,87 @@ pub type Rev = super::files::Rev;
 pub type TeamInfo = super::users::Team;
 
 /// Adds specified members to a file.
-pub fn add_file_member(client: &::client_trait::HttpClient, arg: &AddFileMemberArgs) -> ::Result<Result<Vec<FileMemberActionResult>, AddFileMemberError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/add_file_member", arg, None)
+pub fn add_file_member(
+    client: &::client_trait::HttpClient,
+    arg: &AddFileMemberArgs,
+) -> ::Result<Result<Vec<FileMemberActionResult>, AddFileMemberError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/add_file_member",
+        arg,
+        None)
 }
 
 /// Allows an owner or editor (if the ACL update policy allows) of a shared folder to add another
 /// member. For the new member to get access to all the functionality for this folder, you will need
 /// to call :route:`mount_folder` on their behalf. Apps must have full Dropbox access to use this
 /// endpoint.
-pub fn add_folder_member(client: &::client_trait::HttpClient, arg: &AddFolderMemberArg) -> ::Result<Result<(), AddFolderMemberError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/add_folder_member", arg, None)
+pub fn add_folder_member(
+    client: &::client_trait::HttpClient,
+    arg: &AddFolderMemberArg,
+) -> ::Result<Result<(), AddFolderMemberError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/add_folder_member",
+        arg,
+        None)
 }
 
 /// Identical to update_file_member but with less information returned.
-pub fn change_file_member_access(client: &::client_trait::HttpClient, arg: &ChangeFileMemberAccessArgs) -> ::Result<Result<FileMemberActionResult, FileMemberActionError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/change_file_member_access", arg, None)
+pub fn change_file_member_access(
+    client: &::client_trait::HttpClient,
+    arg: &ChangeFileMemberAccessArgs,
+) -> ::Result<Result<FileMemberActionResult, FileMemberActionError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/change_file_member_access",
+        arg,
+        None)
 }
 
 /// Returns the status of an asynchronous job. Apps must have full Dropbox access to use this
 /// endpoint.
-pub fn check_job_status(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<JobStatus, super::async::PollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/check_job_status", arg, None)
+pub fn check_job_status(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<JobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/check_job_status",
+        arg,
+        None)
 }
 
 /// Returns the status of an asynchronous job for sharing a folder. Apps must have full Dropbox
 /// access to use this endpoint.
-pub fn check_remove_member_job_status(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<RemoveMemberJobStatus, super::async::PollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/check_remove_member_job_status", arg, None)
+pub fn check_remove_member_job_status(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<RemoveMemberJobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/check_remove_member_job_status",
+        arg,
+        None)
 }
 
 /// Returns the status of an asynchronous job for sharing a folder. Apps must have full Dropbox
 /// access to use this endpoint.
-pub fn check_share_job_status(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<ShareFolderJobStatus, super::async::PollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/check_share_job_status", arg, None)
+pub fn check_share_job_status(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<ShareFolderJobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/check_share_job_status",
+        arg,
+        None)
 }
 
 /// Create a shared link. If a shared link already exists for the given path, that link is returned.
@@ -64,41 +112,101 @@ pub fn check_share_job_status(client: &::client_trait::HttpClient, arg: &super::
 /// corresponding file or folder. In the future, this will no longer be the case, so your app
 /// shouldn't rely on this behavior. Instead, if your app needs to revoke a shared link, use
 /// :route:`revoke_shared_link`.
-pub fn create_shared_link(client: &::client_trait::HttpClient, arg: &CreateSharedLinkArg) -> ::Result<Result<PathLinkMetadata, CreateSharedLinkError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/create_shared_link", arg, None)
+pub fn create_shared_link(
+    client: &::client_trait::HttpClient,
+    arg: &CreateSharedLinkArg,
+) -> ::Result<Result<PathLinkMetadata, CreateSharedLinkError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/create_shared_link",
+        arg,
+        None)
 }
 
 /// Create a shared link with custom settings. If no settings are given then the default visibility
 /// is :field:`RequestedVisibility.public` (The resolved visibility, though, may depend on other
 /// aspects such as team and shared folder settings).
-pub fn create_shared_link_with_settings(client: &::client_trait::HttpClient, arg: &CreateSharedLinkWithSettingsArg) -> ::Result<Result<SharedLinkMetadata, CreateSharedLinkWithSettingsError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/create_shared_link_with_settings", arg, None)
+pub fn create_shared_link_with_settings(
+    client: &::client_trait::HttpClient,
+    arg: &CreateSharedLinkWithSettingsArg,
+) -> ::Result<Result<SharedLinkMetadata, CreateSharedLinkWithSettingsError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/create_shared_link_with_settings",
+        arg,
+        None)
 }
 
 /// Returns shared file metadata.
-pub fn get_file_metadata(client: &::client_trait::HttpClient, arg: &GetFileMetadataArg) -> ::Result<Result<SharedFileMetadata, GetFileMetadataError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/get_file_metadata", arg, None)
+pub fn get_file_metadata(
+    client: &::client_trait::HttpClient,
+    arg: &GetFileMetadataArg,
+) -> ::Result<Result<SharedFileMetadata, GetFileMetadataError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/get_file_metadata",
+        arg,
+        None)
 }
 
 /// Returns shared file metadata.
-pub fn get_file_metadata_batch(client: &::client_trait::HttpClient, arg: &GetFileMetadataBatchArg) -> ::Result<Result<Vec<GetFileMetadataBatchResult>, SharingUserError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/get_file_metadata/batch", arg, None)
+pub fn get_file_metadata_batch(
+    client: &::client_trait::HttpClient,
+    arg: &GetFileMetadataBatchArg,
+) -> ::Result<Result<Vec<GetFileMetadataBatchResult>, SharingUserError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/get_file_metadata/batch",
+        arg,
+        None)
 }
 
 /// Returns shared folder metadata by its folder ID. Apps must have full Dropbox access to use this
 /// endpoint.
-pub fn get_folder_metadata(client: &::client_trait::HttpClient, arg: &GetMetadataArgs) -> ::Result<Result<SharedFolderMetadata, SharedFolderAccessError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/get_folder_metadata", arg, None)
+pub fn get_folder_metadata(
+    client: &::client_trait::HttpClient,
+    arg: &GetMetadataArgs,
+) -> ::Result<Result<SharedFolderMetadata, SharedFolderAccessError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/get_folder_metadata",
+        arg,
+        None)
 }
 
 /// Download the shared link's file from a user's Dropbox.
-pub fn get_shared_link_file(client: &::client_trait::HttpClient, arg: &GetSharedLinkFileArg, range_start: Option<u64>, range_end: Option<u64>) -> ::Result<Result<::client_trait::HttpRequestResult<SharedLinkMetadata>, GetSharedLinkFileError>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Content, "sharing/get_shared_link_file", arg, None, range_start, range_end)
+pub fn get_shared_link_file(
+    client: &::client_trait::HttpClient,
+    arg: &GetSharedLinkFileArg,
+    range_start: Option<u64>,
+    range_end: Option<u64>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<SharedLinkMetadata>, GetSharedLinkFileError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Content,
+        "sharing/get_shared_link_file",
+        arg,
+        None,
+        range_start,
+        range_end)
 }
 
 /// Get the shared link's metadata.
-pub fn get_shared_link_metadata(client: &::client_trait::HttpClient, arg: &GetSharedLinkMetadataArg) -> ::Result<Result<SharedLinkMetadata, SharedLinkError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/get_shared_link_metadata", arg, None)
+pub fn get_shared_link_metadata(
+    client: &::client_trait::HttpClient,
+    arg: &GetSharedLinkMetadataArg,
+) -> ::Result<Result<SharedLinkMetadata, SharedLinkError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/get_shared_link_metadata",
+        arg,
+        None)
 }
 
 /// Returns a list of :type:`LinkMetadata` objects for this user, including collection links. If no
@@ -106,86 +214,190 @@ pub fn get_shared_link_metadata(client: &::client_trait::HttpClient, arg: &GetSh
 /// links, up to a maximum of 1000 links. If a non-empty path is given, returns a list of all shared
 /// links that allow access to the given path.  Collection links are never returned in this case.
 /// Note that the url field in the response is never the shortened URL.
-pub fn get_shared_links(client: &::client_trait::HttpClient, arg: &GetSharedLinksArg) -> ::Result<Result<GetSharedLinksResult, GetSharedLinksError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/get_shared_links", arg, None)
+pub fn get_shared_links(
+    client: &::client_trait::HttpClient,
+    arg: &GetSharedLinksArg,
+) -> ::Result<Result<GetSharedLinksResult, GetSharedLinksError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/get_shared_links",
+        arg,
+        None)
 }
 
 /// Use to obtain the members who have been invited to a file, both inherited and uninherited
 /// members.
-pub fn list_file_members(client: &::client_trait::HttpClient, arg: &ListFileMembersArg) -> ::Result<Result<SharedFileMembers, ListFileMembersError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/list_file_members", arg, None)
+pub fn list_file_members(
+    client: &::client_trait::HttpClient,
+    arg: &ListFileMembersArg,
+) -> ::Result<Result<SharedFileMembers, ListFileMembersError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/list_file_members",
+        arg,
+        None)
 }
 
 /// Get members of multiple files at once. The arguments to this route are more limited, and the
 /// limit on query result size per file is more strict. To customize the results more, use the
 /// individual file endpoint. Inherited users and groups are not included in the result, and
 /// permissions are not returned for this endpoint.
-pub fn list_file_members_batch(client: &::client_trait::HttpClient, arg: &ListFileMembersBatchArg) -> ::Result<Result<Vec<ListFileMembersBatchResult>, SharingUserError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/list_file_members/batch", arg, None)
+pub fn list_file_members_batch(
+    client: &::client_trait::HttpClient,
+    arg: &ListFileMembersBatchArg,
+) -> ::Result<Result<Vec<ListFileMembersBatchResult>, SharingUserError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/list_file_members/batch",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from :route:`list_file_members` or
 /// :route:`list_file_members/batch`, use this to paginate through all shared file members.
-pub fn list_file_members_continue(client: &::client_trait::HttpClient, arg: &ListFileMembersContinueArg) -> ::Result<Result<SharedFileMembers, ListFileMembersContinueError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/list_file_members/continue", arg, None)
+pub fn list_file_members_continue(
+    client: &::client_trait::HttpClient,
+    arg: &ListFileMembersContinueArg,
+) -> ::Result<Result<SharedFileMembers, ListFileMembersContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/list_file_members/continue",
+        arg,
+        None)
 }
 
 /// Returns shared folder membership by its folder ID. Apps must have full Dropbox access to use
 /// this endpoint.
-pub fn list_folder_members(client: &::client_trait::HttpClient, arg: &ListFolderMembersArgs) -> ::Result<Result<SharedFolderMembers, SharedFolderAccessError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/list_folder_members", arg, None)
+pub fn list_folder_members(
+    client: &::client_trait::HttpClient,
+    arg: &ListFolderMembersArgs,
+) -> ::Result<Result<SharedFolderMembers, SharedFolderAccessError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/list_folder_members",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from :route:`list_folder_members`, use this to paginate through
 /// all shared folder members. Apps must have full Dropbox access to use this endpoint.
-pub fn list_folder_members_continue(client: &::client_trait::HttpClient, arg: &ListFolderMembersContinueArg) -> ::Result<Result<SharedFolderMembers, ListFolderMembersContinueError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/list_folder_members/continue", arg, None)
+pub fn list_folder_members_continue(
+    client: &::client_trait::HttpClient,
+    arg: &ListFolderMembersContinueArg,
+) -> ::Result<Result<SharedFolderMembers, ListFolderMembersContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/list_folder_members/continue",
+        arg,
+        None)
 }
 
 /// Return the list of all shared folders the current user has access to. Apps must have full
 /// Dropbox access to use this endpoint.
-pub fn list_folders(client: &::client_trait::HttpClient, arg: &ListFoldersArgs) -> ::Result<Result<ListFoldersResult, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/list_folders", arg, None)
+pub fn list_folders(
+    client: &::client_trait::HttpClient,
+    arg: &ListFoldersArgs,
+) -> ::Result<Result<ListFoldersResult, ()>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/list_folders",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from :route:`list_folders`, use this to paginate through all
 /// shared folders. The cursor must come from a previous call to :route:`list_folders` or
 /// :route:`list_folders/continue`. Apps must have full Dropbox access to use this endpoint.
-pub fn list_folders_continue(client: &::client_trait::HttpClient, arg: &ListFoldersContinueArg) -> ::Result<Result<ListFoldersResult, ListFoldersContinueError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/list_folders/continue", arg, None)
+pub fn list_folders_continue(
+    client: &::client_trait::HttpClient,
+    arg: &ListFoldersContinueArg,
+) -> ::Result<Result<ListFoldersResult, ListFoldersContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/list_folders/continue",
+        arg,
+        None)
 }
 
 /// Return the list of all shared folders the current user can mount or unmount. Apps must have full
 /// Dropbox access to use this endpoint.
-pub fn list_mountable_folders(client: &::client_trait::HttpClient, arg: &ListFoldersArgs) -> ::Result<Result<ListFoldersResult, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/list_mountable_folders", arg, None)
+pub fn list_mountable_folders(
+    client: &::client_trait::HttpClient,
+    arg: &ListFoldersArgs,
+) -> ::Result<Result<ListFoldersResult, ()>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/list_mountable_folders",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from :route:`list_mountable_folders`, use this to paginate
 /// through all mountable shared folders. The cursor must come from a previous call to
 /// :route:`list_mountable_folders` or :route:`list_mountable_folders/continue`. Apps must have full
 /// Dropbox access to use this endpoint.
-pub fn list_mountable_folders_continue(client: &::client_trait::HttpClient, arg: &ListFoldersContinueArg) -> ::Result<Result<ListFoldersResult, ListFoldersContinueError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/list_mountable_folders/continue", arg, None)
+pub fn list_mountable_folders_continue(
+    client: &::client_trait::HttpClient,
+    arg: &ListFoldersContinueArg,
+) -> ::Result<Result<ListFoldersResult, ListFoldersContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/list_mountable_folders/continue",
+        arg,
+        None)
 }
 
 /// Returns a list of all files shared with current user.  Does not include files the user has
 /// received via shared folders, and does  not include unclaimed invitations.
-pub fn list_received_files(client: &::client_trait::HttpClient, arg: &ListFilesArg) -> ::Result<Result<ListFilesResult, SharingUserError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/list_received_files", arg, None)
+pub fn list_received_files(
+    client: &::client_trait::HttpClient,
+    arg: &ListFilesArg,
+) -> ::Result<Result<ListFilesResult, SharingUserError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/list_received_files",
+        arg,
+        None)
 }
 
 /// Get more results with a cursor from :route:`list_received_files`.
-pub fn list_received_files_continue(client: &::client_trait::HttpClient, arg: &ListFilesContinueArg) -> ::Result<Result<ListFilesResult, ListFilesContinueError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/list_received_files/continue", arg, None)
+pub fn list_received_files_continue(
+    client: &::client_trait::HttpClient,
+    arg: &ListFilesContinueArg,
+) -> ::Result<Result<ListFilesResult, ListFilesContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/list_received_files/continue",
+        arg,
+        None)
 }
 
 /// List shared links of this user. If no path is given, returns a list of all shared links for the
 /// current user. If a non-empty path is given, returns a list of all shared links that allow access
 /// to the given path - direct links to the given path and links to parent folders of the given
 /// path. Links to parent folders can be suppressed by setting direct_only to true.
-pub fn list_shared_links(client: &::client_trait::HttpClient, arg: &ListSharedLinksArg) -> ::Result<Result<ListSharedLinksResult, ListSharedLinksError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/list_shared_links", arg, None)
+pub fn list_shared_links(
+    client: &::client_trait::HttpClient,
+    arg: &ListSharedLinksArg,
+) -> ::Result<Result<ListSharedLinksResult, ListSharedLinksError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/list_shared_links",
+        arg,
+        None)
 }
 
 /// Modify the shared link's settings. If the requested visibility conflict with the shared links
@@ -193,54 +405,118 @@ pub fn list_shared_links(client: &::client_trait::HttpClient, arg: &ListSharedLi
 /// then the :field:`LinkPermissions.resolved_visibility` of the returned :type:`SharedLinkMetadata`
 /// will reflect the actual visibility of the shared link and the
 /// :field:`LinkPermissions.requested_visibility` will reflect the requested visibility.
-pub fn modify_shared_link_settings(client: &::client_trait::HttpClient, arg: &ModifySharedLinkSettingsArgs) -> ::Result<Result<SharedLinkMetadata, ModifySharedLinkSettingsError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/modify_shared_link_settings", arg, None)
+pub fn modify_shared_link_settings(
+    client: &::client_trait::HttpClient,
+    arg: &ModifySharedLinkSettingsArgs,
+) -> ::Result<Result<SharedLinkMetadata, ModifySharedLinkSettingsError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/modify_shared_link_settings",
+        arg,
+        None)
 }
 
 /// The current user mounts the designated folder. Mount a shared folder for a user after they have
 /// been added as a member. Once mounted, the shared folder will appear in their Dropbox. Apps must
 /// have full Dropbox access to use this endpoint.
-pub fn mount_folder(client: &::client_trait::HttpClient, arg: &MountFolderArg) -> ::Result<Result<SharedFolderMetadata, MountFolderError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/mount_folder", arg, None)
+pub fn mount_folder(
+    client: &::client_trait::HttpClient,
+    arg: &MountFolderArg,
+) -> ::Result<Result<SharedFolderMetadata, MountFolderError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/mount_folder",
+        arg,
+        None)
 }
 
 /// The current user relinquishes their membership in the designated file. Note that the current
 /// user may still have inherited access to this file through the parent folder. Apps must have full
 /// Dropbox access to use this endpoint.
-pub fn relinquish_file_membership(client: &::client_trait::HttpClient, arg: &RelinquishFileMembershipArg) -> ::Result<Result<(), RelinquishFileMembershipError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/relinquish_file_membership", arg, None)
+pub fn relinquish_file_membership(
+    client: &::client_trait::HttpClient,
+    arg: &RelinquishFileMembershipArg,
+) -> ::Result<Result<(), RelinquishFileMembershipError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/relinquish_file_membership",
+        arg,
+        None)
 }
 
 /// The current user relinquishes their membership in the designated shared folder and will no
 /// longer have access to the folder.  A folder owner cannot relinquish membership in their own
 /// folder. This will run synchronously if leave_a_copy is false, and asynchronously if leave_a_copy
 /// is true. Apps must have full Dropbox access to use this endpoint.
-pub fn relinquish_folder_membership(client: &::client_trait::HttpClient, arg: &RelinquishFolderMembershipArg) -> ::Result<Result<super::async::LaunchEmptyResult, RelinquishFolderMembershipError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/relinquish_folder_membership", arg, None)
+pub fn relinquish_folder_membership(
+    client: &::client_trait::HttpClient,
+    arg: &RelinquishFolderMembershipArg,
+) -> ::Result<Result<super::async::LaunchEmptyResult, RelinquishFolderMembershipError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/relinquish_folder_membership",
+        arg,
+        None)
 }
 
 /// Identical to remove_file_member_2 but with less information returned.
-pub fn remove_file_member(client: &::client_trait::HttpClient, arg: &RemoveFileMemberArg) -> ::Result<Result<FileMemberActionIndividualResult, RemoveFileMemberError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/remove_file_member", arg, None)
+pub fn remove_file_member(
+    client: &::client_trait::HttpClient,
+    arg: &RemoveFileMemberArg,
+) -> ::Result<Result<FileMemberActionIndividualResult, RemoveFileMemberError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/remove_file_member",
+        arg,
+        None)
 }
 
 /// Removes a specified member from the file.
-pub fn remove_file_member_2(client: &::client_trait::HttpClient, arg: &RemoveFileMemberArg) -> ::Result<Result<FileMemberRemoveActionResult, RemoveFileMemberError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/remove_file_member_2", arg, None)
+pub fn remove_file_member_2(
+    client: &::client_trait::HttpClient,
+    arg: &RemoveFileMemberArg,
+) -> ::Result<Result<FileMemberRemoveActionResult, RemoveFileMemberError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/remove_file_member_2",
+        arg,
+        None)
 }
 
 /// Allows an owner or editor (if the ACL update policy allows) of a shared folder to remove another
 /// member. Apps must have full Dropbox access to use this endpoint.
-pub fn remove_folder_member(client: &::client_trait::HttpClient, arg: &RemoveFolderMemberArg) -> ::Result<Result<super::async::LaunchResultBase, RemoveFolderMemberError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/remove_folder_member", arg, None)
+pub fn remove_folder_member(
+    client: &::client_trait::HttpClient,
+    arg: &RemoveFolderMemberArg,
+) -> ::Result<Result<super::async::LaunchResultBase, RemoveFolderMemberError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/remove_folder_member",
+        arg,
+        None)
 }
 
 /// Revoke a shared link. Note that even after revoking a shared link to a file, the file may be
 /// accessible if there are shared links leading to any of the file parent folders. To list all
 /// shared links that enable access to a specific file, you can use the :route:`list_shared_links`
 /// with the file as the :field:`ListSharedLinksArg.path` argument.
-pub fn revoke_shared_link(client: &::client_trait::HttpClient, arg: &RevokeSharedLinkArg) -> ::Result<Result<(), RevokeSharedLinkError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/revoke_shared_link", arg, None)
+pub fn revoke_shared_link(
+    client: &::client_trait::HttpClient,
+    arg: &RevokeSharedLinkArg,
+) -> ::Result<Result<(), RevokeSharedLinkError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/revoke_shared_link",
+        arg,
+        None)
 }
 
 /// Share a folder with collaborators. Most sharing will be completed synchronously. Large folders
@@ -248,51 +524,115 @@ pub fn revoke_shared_link(client: &::client_trait::HttpClient, arg: &RevokeShare
 /// `ShareFolderArg.force_async`. If a :field:`ShareFolderLaunch.async_job_id` is returned, you'll
 /// need to call :route:`check_share_job_status` until the action completes to get the metadata for
 /// the folder. Apps must have full Dropbox access to use this endpoint.
-pub fn share_folder(client: &::client_trait::HttpClient, arg: &ShareFolderArg) -> ::Result<Result<ShareFolderLaunch, ShareFolderError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/share_folder", arg, None)
+pub fn share_folder(
+    client: &::client_trait::HttpClient,
+    arg: &ShareFolderArg,
+) -> ::Result<Result<ShareFolderLaunch, ShareFolderError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/share_folder",
+        arg,
+        None)
 }
 
 /// Transfer ownership of a shared folder to a member of the shared folder. User must have
 /// :field:`AccessLevel.owner` access to the shared folder to perform a transfer. Apps must have
 /// full Dropbox access to use this endpoint.
-pub fn transfer_folder(client: &::client_trait::HttpClient, arg: &TransferFolderArg) -> ::Result<Result<(), TransferFolderError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/transfer_folder", arg, None)
+pub fn transfer_folder(
+    client: &::client_trait::HttpClient,
+    arg: &TransferFolderArg,
+) -> ::Result<Result<(), TransferFolderError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/transfer_folder",
+        arg,
+        None)
 }
 
 /// The current user unmounts the designated folder. They can re-mount the folder at a later time
 /// using :route:`mount_folder`. Apps must have full Dropbox access to use this endpoint.
-pub fn unmount_folder(client: &::client_trait::HttpClient, arg: &UnmountFolderArg) -> ::Result<Result<(), UnmountFolderError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/unmount_folder", arg, None)
+pub fn unmount_folder(
+    client: &::client_trait::HttpClient,
+    arg: &UnmountFolderArg,
+) -> ::Result<Result<(), UnmountFolderError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/unmount_folder",
+        arg,
+        None)
 }
 
 /// Remove all members from this file. Does not remove inherited members.
-pub fn unshare_file(client: &::client_trait::HttpClient, arg: &UnshareFileArg) -> ::Result<Result<(), UnshareFileError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/unshare_file", arg, None)
+pub fn unshare_file(
+    client: &::client_trait::HttpClient,
+    arg: &UnshareFileArg,
+) -> ::Result<Result<(), UnshareFileError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/unshare_file",
+        arg,
+        None)
 }
 
 /// Allows a shared folder owner to unshare the folder. You'll need to call
 /// :route:`check_job_status` to determine if the action has completed successfully. Apps must have
 /// full Dropbox access to use this endpoint.
-pub fn unshare_folder(client: &::client_trait::HttpClient, arg: &UnshareFolderArg) -> ::Result<Result<super::async::LaunchEmptyResult, UnshareFolderError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/unshare_folder", arg, None)
+pub fn unshare_folder(
+    client: &::client_trait::HttpClient,
+    arg: &UnshareFolderArg,
+) -> ::Result<Result<super::async::LaunchEmptyResult, UnshareFolderError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/unshare_folder",
+        arg,
+        None)
 }
 
 /// Changes a member's access on a shared file.
-pub fn update_file_member(client: &::client_trait::HttpClient, arg: &UpdateFileMemberArgs) -> ::Result<Result<MemberAccessLevelResult, FileMemberActionError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/update_file_member", arg, None)
+pub fn update_file_member(
+    client: &::client_trait::HttpClient,
+    arg: &UpdateFileMemberArgs,
+) -> ::Result<Result<MemberAccessLevelResult, FileMemberActionError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/update_file_member",
+        arg,
+        None)
 }
 
 /// Allows an owner or editor of a shared folder to update another member's permissions. Apps must
 /// have full Dropbox access to use this endpoint.
-pub fn update_folder_member(client: &::client_trait::HttpClient, arg: &UpdateFolderMemberArg) -> ::Result<Result<MemberAccessLevelResult, UpdateFolderMemberError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/update_folder_member", arg, None)
+pub fn update_folder_member(
+    client: &::client_trait::HttpClient,
+    arg: &UpdateFolderMemberArg,
+) -> ::Result<Result<MemberAccessLevelResult, UpdateFolderMemberError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/update_folder_member",
+        arg,
+        None)
 }
 
 /// Update the sharing policies for a shared folder. User must have :field:`AccessLevel.owner`
 /// access to the shared folder to update its policies. Apps must have full Dropbox access to use
 /// this endpoint.
-pub fn update_folder_policy(client: &::client_trait::HttpClient, arg: &UpdateFolderPolicyArg) -> ::Result<Result<SharedFolderMetadata, UpdateFolderPolicyError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "sharing/update_folder_policy", arg, None)
+pub fn update_folder_policy(
+    client: &::client_trait::HttpClient,
+    arg: &UpdateFolderPolicyArg,
+) -> ::Result<Result<SharedFolderMetadata, UpdateFolderPolicyError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/update_folder_policy",
+        arg,
+        None)
 }
 
 /// Defines the access levels for collaborators.
@@ -498,7 +838,9 @@ const ADD_FILE_MEMBER_ARGS_FIELDS: &'static [&'static str] = &["file",
                                                                "access_level",
                                                                "add_message_as_comment"];
 impl AddFileMemberArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddFileMemberArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AddFileMemberArgs, V::Error> {
         use serde::de;
         let mut field_file = None;
         let mut field_members = None;
@@ -557,7 +899,10 @@ impl AddFileMemberArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
         s.serialize_field("members", &self.members)?;
@@ -741,7 +1086,9 @@ const ADD_FOLDER_MEMBER_ARG_FIELDS: &'static [&'static str] = &["shared_folder_i
                                                                 "quiet",
                                                                 "custom_message"];
 impl AddFolderMemberArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddFolderMemberArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AddFolderMemberArg, V::Error> {
         use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_members = None;
@@ -784,7 +1131,10 @@ impl AddFolderMemberArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("members", &self.members)?;
@@ -1041,7 +1391,9 @@ impl AddMember {
 const ADD_MEMBER_FIELDS: &'static [&'static str] = &["member",
                                                      "access_level"];
 impl AddMember {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AddMember, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AddMember, V::Error> {
         use serde::de;
         let mut field_member = None;
         let mut field_access_level = None;
@@ -1068,7 +1420,10 @@ impl AddMember {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("member", &self.member)?;
         s.serialize_field("access_level", &self.access_level)
@@ -1255,7 +1610,9 @@ impl AudienceExceptionContentInfo {
 
 const AUDIENCE_EXCEPTION_CONTENT_INFO_FIELDS: &'static [&'static str] = &["name"];
 impl AudienceExceptionContentInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AudienceExceptionContentInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AudienceExceptionContentInfo, V::Error> {
         use serde::de;
         let mut field_name = None;
         while let Some(key) = map.next_key()? {
@@ -1274,7 +1631,10 @@ impl AudienceExceptionContentInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)
     }
@@ -1332,7 +1692,9 @@ impl AudienceExceptions {
 const AUDIENCE_EXCEPTIONS_FIELDS: &'static [&'static str] = &["count",
                                                               "exceptions"];
 impl AudienceExceptions {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AudienceExceptions, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AudienceExceptions, V::Error> {
         use serde::de;
         let mut field_count = None;
         let mut field_exceptions = None;
@@ -1359,7 +1721,10 @@ impl AudienceExceptions {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("count", &self.count)?;
         s.serialize_field("exceptions", &self.exceptions)
@@ -1407,7 +1772,11 @@ pub struct AudienceRestrictingSharedFolder {
 }
 
 impl AudienceRestrictingSharedFolder {
-    pub fn new(shared_folder_id: super::common::SharedFolderId, name: String, audience: LinkAudience) -> Self {
+    pub fn new(
+        shared_folder_id: super::common::SharedFolderId,
+        name: String,
+        audience: LinkAudience,
+    ) -> Self {
         AudienceRestrictingSharedFolder {
             shared_folder_id,
             name,
@@ -1421,7 +1790,9 @@ const AUDIENCE_RESTRICTING_SHARED_FOLDER_FIELDS: &'static [&'static str] = &["sh
                                                                              "name",
                                                                              "audience"];
 impl AudienceRestrictingSharedFolder {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AudienceRestrictingSharedFolder, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AudienceRestrictingSharedFolder, V::Error> {
         use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_name = None;
@@ -1456,7 +1827,10 @@ impl AudienceRestrictingSharedFolder {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("name", &self.name)?;
@@ -1518,7 +1892,9 @@ const CHANGE_FILE_MEMBER_ACCESS_ARGS_FIELDS: &'static [&'static str] = &["file",
                                                                          "member",
                                                                          "access_level"];
 impl ChangeFileMemberAccessArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ChangeFileMemberAccessArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ChangeFileMemberAccessArgs, V::Error> {
         use serde::de;
         let mut field_file = None;
         let mut field_member = None;
@@ -1553,7 +1929,10 @@ impl ChangeFileMemberAccessArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
         s.serialize_field("member", &self.member)?;
@@ -1620,7 +1999,9 @@ const COLLECTION_LINK_METADATA_FIELDS: &'static [&'static str] = &["url",
                                                                    "visibility",
                                                                    "expires"];
 impl CollectionLinkMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CollectionLinkMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<CollectionLinkMetadata, V::Error> {
         use serde::de;
         let mut field_url = None;
         let mut field_visibility = None;
@@ -1655,7 +2036,10 @@ impl CollectionLinkMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
         s.serialize_field("visibility", &self.visibility)?;
@@ -1728,7 +2112,9 @@ const CREATE_SHARED_LINK_ARG_FIELDS: &'static [&'static str] = &["path",
                                                                  "short_url",
                                                                  "pending_upload"];
 impl CreateSharedLinkArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CreateSharedLinkArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<CreateSharedLinkArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_short_url = None;
@@ -1763,7 +2149,10 @@ impl CreateSharedLinkArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("short_url", &self.short_url)?;
@@ -1893,7 +2282,9 @@ impl CreateSharedLinkWithSettingsArg {
 const CREATE_SHARED_LINK_WITH_SETTINGS_ARG_FIELDS: &'static [&'static str] = &["path",
                                                                                "settings"];
 impl CreateSharedLinkWithSettingsArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CreateSharedLinkWithSettingsArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<CreateSharedLinkWithSettingsArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_settings = None;
@@ -1920,7 +2311,10 @@ impl CreateSharedLinkWithSettingsArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("settings", &self.settings)
@@ -2093,7 +2487,12 @@ pub struct ExpectedSharedContentLinkMetadata {
 }
 
 impl ExpectedSharedContentLinkMetadata {
-    pub fn new(audience_options: Vec<LinkAudience>, current_audience: LinkAudience, link_permissions: Vec<LinkPermission>, password_protected: bool) -> Self {
+    pub fn new(
+        audience_options: Vec<LinkAudience>,
+        current_audience: LinkAudience,
+        link_permissions: Vec<LinkPermission>,
+        password_protected: bool,
+    ) -> Self {
         ExpectedSharedContentLinkMetadata {
             audience_options,
             current_audience,
@@ -2110,7 +2509,10 @@ impl ExpectedSharedContentLinkMetadata {
         self
     }
 
-    pub fn with_audience_restricting_shared_folder(mut self, value: Option<AudienceRestrictingSharedFolder>) -> Self {
+    pub fn with_audience_restricting_shared_folder(
+        mut self,
+        value: Option<AudienceRestrictingSharedFolder>,
+    ) -> Self {
         self.audience_restricting_shared_folder = value;
         self
     }
@@ -2130,7 +2532,9 @@ const EXPECTED_SHARED_CONTENT_LINK_METADATA_FIELDS: &'static [&'static str] = &[
                                                                                 "audience_restricting_shared_folder",
                                                                                 "expiry"];
 impl ExpectedSharedContentLinkMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ExpectedSharedContentLinkMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ExpectedSharedContentLinkMetadata, V::Error> {
         use serde::de;
         let mut field_audience_options = None;
         let mut field_current_audience = None;
@@ -2197,7 +2601,10 @@ impl ExpectedSharedContentLinkMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("audience_options", &self.audience_options)?;
         s.serialize_field("current_audience", &self.current_audience)?;
@@ -2497,7 +2904,15 @@ pub struct FileLinkMetadata {
 }
 
 impl FileLinkMetadata {
-    pub fn new(url: String, name: String, link_permissions: LinkPermissions, client_modified: super::common::DropboxTimestamp, server_modified: super::common::DropboxTimestamp, rev: Rev, size: u64) -> Self {
+    pub fn new(
+        url: String,
+        name: String,
+        link_permissions: LinkPermissions,
+        client_modified: super::common::DropboxTimestamp,
+        server_modified: super::common::DropboxTimestamp,
+        rev: Rev,
+        size: u64,
+    ) -> Self {
         FileLinkMetadata {
             url,
             name,
@@ -2554,7 +2969,9 @@ const FILE_LINK_METADATA_FIELDS: &'static [&'static str] = &["url",
                                                              "team_member_info",
                                                              "content_owner_team_info"];
 impl FileLinkMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileLinkMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileLinkMetadata, V::Error> {
         use serde::de;
         let mut field_url = None;
         let mut field_name = None;
@@ -2661,7 +3078,10 @@ impl FileLinkMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
         s.serialize_field("name", &self.name)?;
@@ -2902,7 +3322,9 @@ impl FileMemberActionResult {
 const FILE_MEMBER_ACTION_RESULT_FIELDS: &'static [&'static str] = &["member",
                                                                     "result"];
 impl FileMemberActionResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileMemberActionResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileMemberActionResult, V::Error> {
         use serde::de;
         let mut field_member = None;
         let mut field_result = None;
@@ -2929,7 +3351,10 @@ impl FileMemberActionResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("member", &self.member)?;
         s.serialize_field("result", &self.result)
@@ -3063,7 +3488,9 @@ const FILE_PERMISSION_FIELDS: &'static [&'static str] = &["action",
                                                           "allow",
                                                           "reason"];
 impl FilePermission {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FilePermission, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FilePermission, V::Error> {
         use serde::de;
         let mut field_action = None;
         let mut field_allow = None;
@@ -3098,7 +3525,10 @@ impl FilePermission {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("action", &self.action)?;
         s.serialize_field("allow", &self.allow)?;
@@ -3380,7 +3810,9 @@ const FOLDER_LINK_METADATA_FIELDS: &'static [&'static str] = &["url",
                                                                "team_member_info",
                                                                "content_owner_team_info"];
 impl FolderLinkMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FolderLinkMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FolderLinkMetadata, V::Error> {
         use serde::de;
         let mut field_url = None;
         let mut field_name = None;
@@ -3455,7 +3887,10 @@ impl FolderLinkMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
         s.serialize_field("name", &self.name)?;
@@ -3528,7 +3963,9 @@ const FOLDER_PERMISSION_FIELDS: &'static [&'static str] = &["action",
                                                             "allow",
                                                             "reason"];
 impl FolderPermission {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FolderPermission, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FolderPermission, V::Error> {
         use serde::de;
         let mut field_action = None;
         let mut field_allow = None;
@@ -3563,7 +4000,10 @@ impl FolderPermission {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("action", &self.action)?;
         s.serialize_field("allow", &self.allow)?;
@@ -3652,7 +4092,9 @@ const FOLDER_POLICY_FIELDS: &'static [&'static str] = &["acl_update_policy",
                                                         "resolved_member_policy",
                                                         "viewer_info_policy"];
 impl FolderPolicy {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FolderPolicy, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FolderPolicy, V::Error> {
         use serde::de;
         let mut field_acl_update_policy = None;
         let mut field_shared_link_policy = None;
@@ -3703,7 +4145,10 @@ impl FolderPolicy {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("acl_update_policy", &self.acl_update_policy)?;
         s.serialize_field("shared_link_policy", &self.shared_link_policy)?;
@@ -3770,7 +4215,9 @@ impl GetFileMetadataArg {
 const GET_FILE_METADATA_ARG_FIELDS: &'static [&'static str] = &["file",
                                                                 "actions"];
 impl GetFileMetadataArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetFileMetadataArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetFileMetadataArg, V::Error> {
         use serde::de;
         let mut field_file = None;
         let mut field_actions = None;
@@ -3797,7 +4244,10 @@ impl GetFileMetadataArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
         s.serialize_field("actions", &self.actions)
@@ -3861,7 +4311,9 @@ impl GetFileMetadataBatchArg {
 const GET_FILE_METADATA_BATCH_ARG_FIELDS: &'static [&'static str] = &["files",
                                                                       "actions"];
 impl GetFileMetadataBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetFileMetadataBatchArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetFileMetadataBatchArg, V::Error> {
         use serde::de;
         let mut field_files = None;
         let mut field_actions = None;
@@ -3888,7 +4340,10 @@ impl GetFileMetadataBatchArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("files", &self.files)?;
         s.serialize_field("actions", &self.actions)
@@ -3946,7 +4401,9 @@ impl GetFileMetadataBatchResult {
 const GET_FILE_METADATA_BATCH_RESULT_FIELDS: &'static [&'static str] = &["file",
                                                                          "result"];
 impl GetFileMetadataBatchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetFileMetadataBatchResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetFileMetadataBatchResult, V::Error> {
         use serde::de;
         let mut field_file = None;
         let mut field_result = None;
@@ -3973,7 +4430,10 @@ impl GetFileMetadataBatchResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
         s.serialize_field("result", &self.result)
@@ -4189,7 +4649,9 @@ impl GetMetadataArgs {
 const GET_METADATA_ARGS_FIELDS: &'static [&'static str] = &["shared_folder_id",
                                                             "actions"];
 impl GetMetadataArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetMetadataArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetMetadataArgs, V::Error> {
         use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_actions = None;
@@ -4216,7 +4678,10 @@ impl GetMetadataArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("actions", &self.actions)
@@ -4379,7 +4844,9 @@ const GET_SHARED_LINK_METADATA_ARG_FIELDS: &'static [&'static str] = &["url",
                                                                        "path",
                                                                        "link_password"];
 impl GetSharedLinkMetadataArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetSharedLinkMetadataArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetSharedLinkMetadataArg, V::Error> {
         use serde::de;
         let mut field_url = None;
         let mut field_path = None;
@@ -4414,7 +4881,10 @@ impl GetSharedLinkMetadataArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
         s.serialize_field("path", &self.path)?;
@@ -4466,7 +4936,9 @@ impl Default for GetSharedLinksArg {
 
 const GET_SHARED_LINKS_ARG_FIELDS: &'static [&'static str] = &["path"];
 impl GetSharedLinksArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetSharedLinksArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetSharedLinksArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         while let Some(key) = map.next_key()? {
@@ -4485,7 +4957,10 @@ impl GetSharedLinksArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)
     }
@@ -4604,7 +5079,9 @@ impl GetSharedLinksResult {
 
 const GET_SHARED_LINKS_RESULT_FIELDS: &'static [&'static str] = &["links"];
 impl GetSharedLinksResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetSharedLinksResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetSharedLinksResult, V::Error> {
         use serde::de;
         let mut field_links = None;
         while let Some(key) = map.next_key()? {
@@ -4623,7 +5100,10 @@ impl GetSharedLinksResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("links", &self.links)
     }
@@ -4680,7 +5160,15 @@ pub struct GroupInfo {
 }
 
 impl GroupInfo {
-    pub fn new(group_name: String, group_id: super::team_common::GroupId, group_management_type: super::team_common::GroupManagementType, group_type: super::team_common::GroupType, is_member: bool, is_owner: bool, same_team: bool) -> Self {
+    pub fn new(
+        group_name: String,
+        group_id: super::team_common::GroupId,
+        group_management_type: super::team_common::GroupManagementType,
+        group_type: super::team_common::GroupType,
+        is_member: bool,
+        is_owner: bool,
+        same_team: bool,
+    ) -> Self {
         GroupInfo {
             group_name,
             group_id,
@@ -4694,7 +5182,10 @@ impl GroupInfo {
         }
     }
 
-    pub fn with_group_external_id(mut self, value: Option<super::team_common::GroupExternalId>) -> Self {
+    pub fn with_group_external_id(
+        mut self,
+        value: Option<super::team_common::GroupExternalId>,
+    ) -> Self {
         self.group_external_id = value;
         self
     }
@@ -4716,7 +5207,9 @@ const GROUP_INFO_FIELDS: &'static [&'static str] = &["group_name",
                                                      "group_external_id",
                                                      "member_count"];
 impl GroupInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupInfo, V::Error> {
         use serde::de;
         let mut field_group_name = None;
         let mut field_group_id = None;
@@ -4799,7 +5292,10 @@ impl GroupInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group_name", &self.group_name)?;
         s.serialize_field("group_id", &self.group_id)?;
@@ -4891,7 +5387,9 @@ const GROUP_MEMBERSHIP_INFO_FIELDS: &'static [&'static str] = &["access_type",
                                                                 "initials",
                                                                 "is_inherited"];
 impl GroupMembershipInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupMembershipInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupMembershipInfo, V::Error> {
         use serde::de;
         let mut field_access_type = None;
         let mut field_group = None;
@@ -4942,7 +5440,10 @@ impl GroupMembershipInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_type", &self.access_type)?;
         s.serialize_field("group", &self.group)?;
@@ -5007,7 +5508,9 @@ impl InsufficientPlan {
 const INSUFFICIENT_PLAN_FIELDS: &'static [&'static str] = &["message",
                                                             "upsell_url"];
 impl InsufficientPlan {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<InsufficientPlan, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<InsufficientPlan, V::Error> {
         use serde::de;
         let mut field_message = None;
         let mut field_upsell_url = None;
@@ -5034,7 +5537,10 @@ impl InsufficientPlan {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("message", &self.message)?;
         s.serialize_field("upsell_url", &self.upsell_url)
@@ -5094,7 +5600,9 @@ const INSUFFICIENT_QUOTA_AMOUNTS_FIELDS: &'static [&'static str] = &["space_need
                                                                      "space_shortage",
                                                                      "space_left"];
 impl InsufficientQuotaAmounts {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<InsufficientQuotaAmounts, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<InsufficientQuotaAmounts, V::Error> {
         use serde::de;
         let mut field_space_needed = None;
         let mut field_space_shortage = None;
@@ -5129,7 +5637,10 @@ impl InsufficientQuotaAmounts {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("space_needed", &self.space_needed)?;
         s.serialize_field("space_shortage", &self.space_shortage)?;
@@ -5282,7 +5793,9 @@ const INVITEE_MEMBERSHIP_INFO_FIELDS: &'static [&'static str] = &["access_type",
                                                                   "is_inherited",
                                                                   "user"];
 impl InviteeMembershipInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<InviteeMembershipInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<InviteeMembershipInfo, V::Error> {
         use serde::de;
         let mut field_access_type = None;
         let mut field_invitee = None;
@@ -5341,7 +5854,10 @@ impl InviteeMembershipInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_type", &self.access_type)?;
         s.serialize_field("invitee", &self.invitee)?;
@@ -5956,7 +6472,9 @@ const LINK_PERMISSION_FIELDS: &'static [&'static str] = &["action",
                                                           "allow",
                                                           "reason"];
 impl LinkPermission {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<LinkPermission, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<LinkPermission, V::Error> {
         use serde::de;
         let mut field_action = None;
         let mut field_allow = None;
@@ -5991,7 +6509,10 @@ impl LinkPermission {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("action", &self.action)?;
         s.serialize_field("allow", &self.allow)?;
@@ -6065,7 +6586,10 @@ impl LinkPermissions {
         self
     }
 
-    pub fn with_revoke_failure_reason(mut self, value: Option<SharedLinkAccessFailureReason>) -> Self {
+    pub fn with_revoke_failure_reason(
+        mut self,
+        value: Option<SharedLinkAccessFailureReason>,
+    ) -> Self {
         self.revoke_failure_reason = value;
         self
     }
@@ -6077,7 +6601,9 @@ const LINK_PERMISSIONS_FIELDS: &'static [&'static str] = &["can_revoke",
                                                            "requested_visibility",
                                                            "revoke_failure_reason"];
 impl LinkPermissions {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<LinkPermissions, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<LinkPermissions, V::Error> {
         use serde::de;
         let mut field_can_revoke = None;
         let mut field_resolved_visibility = None;
@@ -6120,7 +6646,10 @@ impl LinkPermissions {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("can_revoke", &self.can_revoke)?;
         s.serialize_field("resolved_visibility", &self.resolved_visibility)?;
@@ -6187,7 +6716,9 @@ const LINK_SETTINGS_FIELDS: &'static [&'static str] = &["access_level",
                                                         "expiry",
                                                         "password"];
 impl LinkSettings {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<LinkSettings, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<LinkSettings, V::Error> {
         use serde::de;
         let mut field_access_level = None;
         let mut field_audience = None;
@@ -6230,7 +6761,10 @@ impl LinkSettings {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_level", &self.access_level)?;
         s.serialize_field("audience", &self.audience)?;
@@ -6312,7 +6846,9 @@ const LIST_FILE_MEMBERS_ARG_FIELDS: &'static [&'static str] = &["file",
                                                                 "include_inherited",
                                                                 "limit"];
 impl ListFileMembersArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFileMembersArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFileMembersArg, V::Error> {
         use serde::de;
         let mut field_file = None;
         let mut field_actions = None;
@@ -6355,7 +6891,10 @@ impl ListFileMembersArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
         s.serialize_field("actions", &self.actions)?;
@@ -6419,7 +6958,9 @@ impl ListFileMembersBatchArg {
 const LIST_FILE_MEMBERS_BATCH_ARG_FIELDS: &'static [&'static str] = &["files",
                                                                       "limit"];
 impl ListFileMembersBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFileMembersBatchArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFileMembersBatchArg, V::Error> {
         use serde::de;
         let mut field_files = None;
         let mut field_limit = None;
@@ -6446,7 +6987,10 @@ impl ListFileMembersBatchArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("files", &self.files)?;
         s.serialize_field("limit", &self.limit)
@@ -6503,7 +7047,9 @@ impl ListFileMembersBatchResult {
 const LIST_FILE_MEMBERS_BATCH_RESULT_FIELDS: &'static [&'static str] = &["file",
                                                                          "result"];
 impl ListFileMembersBatchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFileMembersBatchResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFileMembersBatchResult, V::Error> {
         use serde::de;
         let mut field_file = None;
         let mut field_result = None;
@@ -6530,7 +7076,10 @@ impl ListFileMembersBatchResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
         s.serialize_field("result", &self.result)
@@ -6584,7 +7133,9 @@ impl ListFileMembersContinueArg {
 
 const LIST_FILE_MEMBERS_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl ListFileMembersContinueArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFileMembersContinueArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFileMembersContinueArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -6603,7 +7154,10 @@ impl ListFileMembersContinueArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -6753,7 +7307,9 @@ impl ListFileMembersCountResult {
 const LIST_FILE_MEMBERS_COUNT_RESULT_FIELDS: &'static [&'static str] = &["members",
                                                                          "member_count"];
 impl ListFileMembersCountResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFileMembersCountResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFileMembersCountResult, V::Error> {
         use serde::de;
         let mut field_members = None;
         let mut field_member_count = None;
@@ -6780,7 +7336,10 @@ impl ListFileMembersCountResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("members", &self.members)?;
         s.serialize_field("member_count", &self.member_count)
@@ -6991,7 +7550,9 @@ impl Default for ListFilesArg {
 const LIST_FILES_ARG_FIELDS: &'static [&'static str] = &["limit",
                                                          "actions"];
 impl ListFilesArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFilesArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFilesArg, V::Error> {
         use serde::de;
         let mut field_limit = None;
         let mut field_actions = None;
@@ -7018,7 +7579,10 @@ impl ListFilesArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("limit", &self.limit)?;
         s.serialize_field("actions", &self.actions)
@@ -7071,7 +7635,9 @@ impl ListFilesContinueArg {
 
 const LIST_FILES_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl ListFilesContinueArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFilesContinueArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFilesContinueArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -7090,7 +7656,10 @@ impl ListFilesContinueArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -7231,7 +7800,9 @@ impl ListFilesResult {
 const LIST_FILES_RESULT_FIELDS: &'static [&'static str] = &["entries",
                                                             "cursor"];
 impl ListFilesResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFilesResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFilesResult, V::Error> {
         use serde::de;
         let mut field_entries = None;
         let mut field_cursor = None;
@@ -7258,7 +7829,10 @@ impl ListFilesResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
         s.serialize_field("cursor", &self.cursor)
@@ -7331,7 +7905,9 @@ const LIST_FOLDER_MEMBERS_ARGS_FIELDS: &'static [&'static str] = &["shared_folde
                                                                    "actions",
                                                                    "limit"];
 impl ListFolderMembersArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderMembersArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFolderMembersArgs, V::Error> {
         use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_actions = None;
@@ -7366,7 +7942,10 @@ impl ListFolderMembersArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("actions", &self.actions)?;
@@ -7420,7 +7999,9 @@ impl ListFolderMembersContinueArg {
 
 const LIST_FOLDER_MEMBERS_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl ListFolderMembersContinueArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderMembersContinueArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFolderMembersContinueArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -7439,7 +8020,10 @@ impl ListFolderMembersContinueArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -7574,7 +8158,9 @@ impl Default for ListFolderMembersCursorArg {
 const LIST_FOLDER_MEMBERS_CURSOR_ARG_FIELDS: &'static [&'static str] = &["actions",
                                                                          "limit"];
 impl ListFolderMembersCursorArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderMembersCursorArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFolderMembersCursorArg, V::Error> {
         use serde::de;
         let mut field_actions = None;
         let mut field_limit = None;
@@ -7601,7 +8187,10 @@ impl ListFolderMembersCursorArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("actions", &self.actions)?;
         s.serialize_field("limit", &self.limit)
@@ -7658,7 +8247,9 @@ impl Default for ListFoldersArgs {
 const LIST_FOLDERS_ARGS_FIELDS: &'static [&'static str] = &["limit",
                                                             "actions"];
 impl ListFoldersArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFoldersArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFoldersArgs, V::Error> {
         use serde::de;
         let mut field_limit = None;
         let mut field_actions = None;
@@ -7685,7 +8276,10 @@ impl ListFoldersArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("limit", &self.limit)?;
         s.serialize_field("actions", &self.actions)
@@ -7737,7 +8331,9 @@ impl ListFoldersContinueArg {
 
 const LIST_FOLDERS_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl ListFoldersContinueArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFoldersContinueArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFoldersContinueArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -7756,7 +8352,10 @@ impl ListFoldersContinueArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -7883,7 +8482,9 @@ impl ListFoldersResult {
 const LIST_FOLDERS_RESULT_FIELDS: &'static [&'static str] = &["entries",
                                                               "cursor"];
 impl ListFoldersResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFoldersResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFoldersResult, V::Error> {
         use serde::de;
         let mut field_entries = None;
         let mut field_cursor = None;
@@ -7910,7 +8511,10 @@ impl ListFoldersResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
         s.serialize_field("cursor", &self.cursor)
@@ -7969,7 +8573,9 @@ const LIST_SHARED_LINKS_ARG_FIELDS: &'static [&'static str] = &["path",
                                                                 "cursor",
                                                                 "direct_only"];
 impl ListSharedLinksArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListSharedLinksArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListSharedLinksArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_cursor = None;
@@ -8004,7 +8610,10 @@ impl ListSharedLinksArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("cursor", &self.cursor)?;
@@ -8151,7 +8760,9 @@ const LIST_SHARED_LINKS_RESULT_FIELDS: &'static [&'static str] = &["links",
                                                                    "has_more",
                                                                    "cursor"];
 impl ListSharedLinksResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListSharedLinksResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListSharedLinksResult, V::Error> {
         use serde::de;
         let mut field_links = None;
         let mut field_has_more = None;
@@ -8186,7 +8797,10 @@ impl ListSharedLinksResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("links", &self.links)?;
         s.serialize_field("has_more", &self.has_more)?;
@@ -8249,7 +8863,9 @@ const MEMBER_ACCESS_LEVEL_RESULT_FIELDS: &'static [&'static str] = &["access_lev
                                                                      "warning",
                                                                      "access_details"];
 impl MemberAccessLevelResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberAccessLevelResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberAccessLevelResult, V::Error> {
         use serde::de;
         let mut field_access_level = None;
         let mut field_warning = None;
@@ -8284,7 +8900,10 @@ impl MemberAccessLevelResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_level", &self.access_level)?;
         s.serialize_field("warning", &self.warning)?;
@@ -8452,7 +9071,9 @@ const MEMBER_PERMISSION_FIELDS: &'static [&'static str] = &["action",
                                                             "allow",
                                                             "reason"];
 impl MemberPermission {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberPermission, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberPermission, V::Error> {
         use serde::de;
         let mut field_action = None;
         let mut field_allow = None;
@@ -8487,7 +9108,10 @@ impl MemberPermission {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("action", &self.action)?;
         s.serialize_field("allow", &self.allow)?;
@@ -8706,7 +9330,9 @@ const MEMBERSHIP_INFO_FIELDS: &'static [&'static str] = &["access_type",
                                                           "initials",
                                                           "is_inherited"];
 impl MembershipInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MembershipInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembershipInfo, V::Error> {
         use serde::de;
         let mut field_access_type = None;
         let mut field_permissions = None;
@@ -8749,7 +9375,10 @@ impl MembershipInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_type", &self.access_type)?;
         s.serialize_field("permissions", &self.permissions)?;
@@ -8816,7 +9445,9 @@ const MODIFY_SHARED_LINK_SETTINGS_ARGS_FIELDS: &'static [&'static str] = &["url"
                                                                            "settings",
                                                                            "remove_expiration"];
 impl ModifySharedLinkSettingsArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ModifySharedLinkSettingsArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ModifySharedLinkSettingsArgs, V::Error> {
         use serde::de;
         let mut field_url = None;
         let mut field_settings = None;
@@ -8851,7 +9482,10 @@ impl ModifySharedLinkSettingsArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
         s.serialize_field("settings", &self.settings)?;
@@ -9013,7 +9647,9 @@ impl MountFolderArg {
 
 const MOUNT_FOLDER_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id"];
 impl MountFolderArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MountFolderArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MountFolderArg, V::Error> {
         use serde::de;
         let mut field_shared_folder_id = None;
         while let Some(key) = map.next_key()? {
@@ -9032,7 +9668,10 @@ impl MountFolderArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)
     }
@@ -9200,7 +9839,12 @@ pub struct ParentFolderAccessInfo {
 }
 
 impl ParentFolderAccessInfo {
-    pub fn new(folder_name: String, shared_folder_id: super::common::SharedFolderId, permissions: Vec<MemberPermission>, path: String) -> Self {
+    pub fn new(
+        folder_name: String,
+        shared_folder_id: super::common::SharedFolderId,
+        permissions: Vec<MemberPermission>,
+        path: String,
+    ) -> Self {
         ParentFolderAccessInfo {
             folder_name,
             shared_folder_id,
@@ -9216,7 +9860,9 @@ const PARENT_FOLDER_ACCESS_INFO_FIELDS: &'static [&'static str] = &["folder_name
                                                                     "permissions",
                                                                     "path"];
 impl ParentFolderAccessInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ParentFolderAccessInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ParentFolderAccessInfo, V::Error> {
         use serde::de;
         let mut field_folder_name = None;
         let mut field_shared_folder_id = None;
@@ -9259,7 +9905,10 @@ impl ParentFolderAccessInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("folder_name", &self.folder_name)?;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
@@ -9331,7 +9980,9 @@ const PATH_LINK_METADATA_FIELDS: &'static [&'static str] = &["url",
                                                              "path",
                                                              "expires"];
 impl PathLinkMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PathLinkMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PathLinkMetadata, V::Error> {
         use serde::de;
         let mut field_url = None;
         let mut field_visibility = None;
@@ -9374,7 +10025,10 @@ impl PathLinkMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
         s.serialize_field("visibility", &self.visibility)?;
@@ -9677,7 +10331,9 @@ impl RelinquishFileMembershipArg {
 
 const RELINQUISH_FILE_MEMBERSHIP_ARG_FIELDS: &'static [&'static str] = &["file"];
 impl RelinquishFileMembershipArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelinquishFileMembershipArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RelinquishFileMembershipArg, V::Error> {
         use serde::de;
         let mut field_file = None;
         while let Some(key) = map.next_key()? {
@@ -9696,7 +10352,10 @@ impl RelinquishFileMembershipArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)
     }
@@ -9845,7 +10504,9 @@ impl RelinquishFolderMembershipArg {
 const RELINQUISH_FOLDER_MEMBERSHIP_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id",
                                                                            "leave_a_copy"];
 impl RelinquishFolderMembershipArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelinquishFolderMembershipArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RelinquishFolderMembershipArg, V::Error> {
         use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_leave_a_copy = None;
@@ -9872,7 +10533,10 @@ impl RelinquishFolderMembershipArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("leave_a_copy", &self.leave_a_copy)
@@ -10063,7 +10727,9 @@ impl RemoveFileMemberArg {
 const REMOVE_FILE_MEMBER_ARG_FIELDS: &'static [&'static str] = &["file",
                                                                  "member"];
 impl RemoveFileMemberArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RemoveFileMemberArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RemoveFileMemberArg, V::Error> {
         use serde::de;
         let mut field_file = None;
         let mut field_member = None;
@@ -10090,7 +10756,10 @@ impl RemoveFileMemberArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
         s.serialize_field("member", &self.member)
@@ -10235,7 +10904,11 @@ pub struct RemoveFolderMemberArg {
 }
 
 impl RemoveFolderMemberArg {
-    pub fn new(shared_folder_id: super::common::SharedFolderId, member: MemberSelector, leave_a_copy: bool) -> Self {
+    pub fn new(
+        shared_folder_id: super::common::SharedFolderId,
+        member: MemberSelector,
+        leave_a_copy: bool,
+    ) -> Self {
         RemoveFolderMemberArg {
             shared_folder_id,
             member,
@@ -10249,7 +10922,9 @@ const REMOVE_FOLDER_MEMBER_ARG_FIELDS: &'static [&'static str] = &["shared_folde
                                                                    "member",
                                                                    "leave_a_copy"];
 impl RemoveFolderMemberArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RemoveFolderMemberArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RemoveFolderMemberArg, V::Error> {
         use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_member = None;
@@ -10284,7 +10959,10 @@ impl RemoveFolderMemberArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("member", &self.member)?;
@@ -10703,7 +11381,9 @@ impl RevokeSharedLinkArg {
 
 const REVOKE_SHARED_LINK_ARG_FIELDS: &'static [&'static str] = &["url"];
 impl RevokeSharedLinkArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RevokeSharedLinkArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RevokeSharedLinkArg, V::Error> {
         use serde::de;
         let mut field_url = None;
         while let Some(key) = map.next_key()? {
@@ -10722,7 +11402,10 @@ impl RevokeSharedLinkArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)
     }
@@ -10931,7 +11614,9 @@ const SHARE_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
                                                            "actions",
                                                            "link_settings"];
 impl ShareFolderArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShareFolderArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShareFolderArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_acl_update_policy = None;
@@ -11006,7 +11691,10 @@ impl ShareFolderArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("acl_update_policy", &self.acl_update_policy)?;
@@ -11110,7 +11798,9 @@ const SHARE_FOLDER_ARG_BASE_FIELDS: &'static [&'static str] = &["path",
                                                                 "shared_link_policy",
                                                                 "viewer_info_policy"];
 impl ShareFolderArgBase {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShareFolderArgBase, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShareFolderArgBase, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_acl_update_policy = None;
@@ -11169,7 +11859,10 @@ impl ShareFolderArgBase {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("acl_update_policy", &self.acl_update_policy)?;
@@ -11758,7 +12451,13 @@ pub struct SharedContentLinkMetadata {
 }
 
 impl SharedContentLinkMetadata {
-    pub fn new(audience_options: Vec<LinkAudience>, current_audience: LinkAudience, link_permissions: Vec<LinkPermission>, password_protected: bool, url: String) -> Self {
+    pub fn new(
+        audience_options: Vec<LinkAudience>,
+        current_audience: LinkAudience,
+        link_permissions: Vec<LinkPermission>,
+        password_protected: bool,
+        url: String,
+    ) -> Self {
         SharedContentLinkMetadata {
             audience_options,
             current_audience,
@@ -11777,7 +12476,10 @@ impl SharedContentLinkMetadata {
         self
     }
 
-    pub fn with_audience_restricting_shared_folder(mut self, value: Option<AudienceRestrictingSharedFolder>) -> Self {
+    pub fn with_audience_restricting_shared_folder(
+        mut self,
+        value: Option<AudienceRestrictingSharedFolder>,
+    ) -> Self {
         self.audience_restricting_shared_folder = value;
         self
     }
@@ -11804,7 +12506,9 @@ const SHARED_CONTENT_LINK_METADATA_FIELDS: &'static [&'static str] = &["audience
                                                                        "expiry",
                                                                        "audience_exceptions"];
 impl SharedContentLinkMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentLinkMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentLinkMetadata, V::Error> {
         use serde::de;
         let mut field_audience_options = None;
         let mut field_current_audience = None;
@@ -11887,7 +12591,10 @@ impl SharedContentLinkMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("audience_options", &self.audience_options)?;
         s.serialize_field("current_audience", &self.current_audience)?;
@@ -11952,7 +12659,12 @@ pub struct SharedContentLinkMetadataBase {
 }
 
 impl SharedContentLinkMetadataBase {
-    pub fn new(audience_options: Vec<LinkAudience>, current_audience: LinkAudience, link_permissions: Vec<LinkPermission>, password_protected: bool) -> Self {
+    pub fn new(
+        audience_options: Vec<LinkAudience>,
+        current_audience: LinkAudience,
+        link_permissions: Vec<LinkPermission>,
+        password_protected: bool,
+    ) -> Self {
         SharedContentLinkMetadataBase {
             audience_options,
             current_audience,
@@ -11969,7 +12681,10 @@ impl SharedContentLinkMetadataBase {
         self
     }
 
-    pub fn with_audience_restricting_shared_folder(mut self, value: Option<AudienceRestrictingSharedFolder>) -> Self {
+    pub fn with_audience_restricting_shared_folder(
+        mut self,
+        value: Option<AudienceRestrictingSharedFolder>,
+    ) -> Self {
         self.audience_restricting_shared_folder = value;
         self
     }
@@ -11989,7 +12704,9 @@ const SHARED_CONTENT_LINK_METADATA_BASE_FIELDS: &'static [&'static str] = &["aud
                                                                             "audience_restricting_shared_folder",
                                                                             "expiry"];
 impl SharedContentLinkMetadataBase {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentLinkMetadataBase, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentLinkMetadataBase, V::Error> {
         use serde::de;
         let mut field_audience_options = None;
         let mut field_current_audience = None;
@@ -12056,7 +12773,10 @@ impl SharedContentLinkMetadataBase {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("audience_options", &self.audience_options)?;
         s.serialize_field("current_audience", &self.current_audience)?;
@@ -12113,7 +12833,11 @@ pub struct SharedFileMembers {
 }
 
 impl SharedFileMembers {
-    pub fn new(users: Vec<UserFileMembershipInfo>, groups: Vec<GroupMembershipInfo>, invitees: Vec<InviteeMembershipInfo>) -> Self {
+    pub fn new(
+        users: Vec<UserFileMembershipInfo>,
+        groups: Vec<GroupMembershipInfo>,
+        invitees: Vec<InviteeMembershipInfo>,
+    ) -> Self {
         SharedFileMembers {
             users,
             groups,
@@ -12134,7 +12858,9 @@ const SHARED_FILE_MEMBERS_FIELDS: &'static [&'static str] = &["users",
                                                               "invitees",
                                                               "cursor"];
 impl SharedFileMembers {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFileMembers, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFileMembers, V::Error> {
         use serde::de;
         let mut field_users = None;
         let mut field_groups = None;
@@ -12177,7 +12903,10 @@ impl SharedFileMembers {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("users", &self.users)?;
         s.serialize_field("groups", &self.groups)?;
@@ -12283,7 +13012,10 @@ impl SharedFileMetadata {
         self
     }
 
-    pub fn with_expected_link_metadata(mut self, value: Option<ExpectedSharedContentLinkMetadata>) -> Self {
+    pub fn with_expected_link_metadata(
+        mut self,
+        value: Option<ExpectedSharedContentLinkMetadata>,
+    ) -> Self {
         self.expected_link_metadata = value;
         self
     }
@@ -12303,7 +13035,10 @@ impl SharedFileMetadata {
         self
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: Option<super::common::SharedFolderId>,
+    ) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
@@ -12345,7 +13080,9 @@ const SHARED_FILE_METADATA_FIELDS: &'static [&'static str] = &["id",
                                                                "permissions",
                                                                "time_invited"];
 impl SharedFileMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFileMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFileMetadata, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_name = None;
@@ -12468,7 +13205,10 @@ impl SharedFileMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
         s.serialize_field("name", &self.name)?;
@@ -12706,7 +13446,11 @@ pub struct SharedFolderMembers {
 }
 
 impl SharedFolderMembers {
-    pub fn new(users: Vec<UserMembershipInfo>, groups: Vec<GroupMembershipInfo>, invitees: Vec<InviteeMembershipInfo>) -> Self {
+    pub fn new(
+        users: Vec<UserMembershipInfo>,
+        groups: Vec<GroupMembershipInfo>,
+        invitees: Vec<InviteeMembershipInfo>,
+    ) -> Self {
         SharedFolderMembers {
             users,
             groups,
@@ -12727,7 +13471,9 @@ const SHARED_FOLDER_MEMBERS_FIELDS: &'static [&'static str] = &["users",
                                                                 "invitees",
                                                                 "cursor"];
 impl SharedFolderMembers {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFolderMembers, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderMembers, V::Error> {
         use serde::de;
         let mut field_users = None;
         let mut field_groups = None;
@@ -12770,7 +13516,10 @@ impl SharedFolderMembers {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("users", &self.users)?;
         s.serialize_field("groups", &self.groups)?;
@@ -12847,7 +13596,16 @@ pub struct SharedFolderMetadata {
 }
 
 impl SharedFolderMetadata {
-    pub fn new(access_type: AccessLevel, is_inside_team_folder: bool, is_team_folder: bool, name: String, policy: FolderPolicy, preview_url: String, shared_folder_id: super::common::SharedFolderId, time_invited: super::common::DropboxTimestamp) -> Self {
+    pub fn new(
+        access_type: AccessLevel,
+        is_inside_team_folder: bool,
+        is_team_folder: bool,
+        name: String,
+        policy: FolderPolicy,
+        preview_url: String,
+        shared_folder_id: super::common::SharedFolderId,
+        time_invited: super::common::DropboxTimestamp,
+    ) -> Self {
         SharedFolderMetadata {
             access_type,
             is_inside_team_folder,
@@ -12876,7 +13634,10 @@ impl SharedFolderMetadata {
         self
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: Option<super::common::SharedFolderId>,
+    ) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
@@ -12913,7 +13674,9 @@ const SHARED_FOLDER_METADATA_FIELDS: &'static [&'static str] = &["access_type",
                                                                  "link_metadata",
                                                                  "permissions"];
 impl SharedFolderMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFolderMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderMetadata, V::Error> {
         use serde::de;
         let mut field_access_type = None;
         let mut field_is_inside_team_folder = None;
@@ -13036,7 +13799,10 @@ impl SharedFolderMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_type", &self.access_type)?;
         s.serialize_field("is_inside_team_folder", &self.is_inside_team_folder)?;
@@ -13107,7 +13873,11 @@ pub struct SharedFolderMetadataBase {
 }
 
 impl SharedFolderMetadataBase {
-    pub fn new(access_type: AccessLevel, is_inside_team_folder: bool, is_team_folder: bool) -> Self {
+    pub fn new(
+        access_type: AccessLevel,
+        is_inside_team_folder: bool,
+        is_team_folder: bool,
+    ) -> Self {
         SharedFolderMetadataBase {
             access_type,
             is_inside_team_folder,
@@ -13129,7 +13899,10 @@ impl SharedFolderMetadataBase {
         self
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: Option<super::common::SharedFolderId>,
+    ) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
@@ -13149,7 +13922,9 @@ const SHARED_FOLDER_METADATA_BASE_FIELDS: &'static [&'static str] = &["access_ty
                                                                       "parent_shared_folder_id",
                                                                       "path_lower"];
 impl SharedFolderMetadataBase {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFolderMetadataBase, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderMetadataBase, V::Error> {
         use serde::de;
         let mut field_access_type = None;
         let mut field_is_inside_team_folder = None;
@@ -13216,7 +13991,10 @@ impl SharedFolderMetadataBase {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_type", &self.access_type)?;
         s.serialize_field("is_inside_team_folder", &self.is_inside_team_folder)?;
@@ -13600,7 +14378,9 @@ const SHARED_LINK_SETTINGS_FIELDS: &'static [&'static str] = &["requested_visibi
                                                                "link_password",
                                                                "expires"];
 impl SharedLinkSettings {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedLinkSettings, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedLinkSettings, V::Error> {
         use serde::de;
         let mut field_requested_visibility = None;
         let mut field_link_password = None;
@@ -13635,7 +14415,10 @@ impl SharedLinkSettings {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("requested_visibility", &self.requested_visibility)?;
         s.serialize_field("link_password", &self.link_password)?;
@@ -13943,7 +14726,9 @@ const TEAM_MEMBER_INFO_FIELDS: &'static [&'static str] = &["team_info",
                                                            "display_name",
                                                            "member_id"];
 impl TeamMemberInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamMemberInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamMemberInfo, V::Error> {
         use serde::de;
         let mut field_team_info = None;
         let mut field_display_name = None;
@@ -13978,7 +14763,10 @@ impl TeamMemberInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_info", &self.team_info)?;
         s.serialize_field("display_name", &self.display_name)?;
@@ -14035,7 +14823,9 @@ impl TransferFolderArg {
 const TRANSFER_FOLDER_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id",
                                                               "to_dropbox_id"];
 impl TransferFolderArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TransferFolderArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TransferFolderArg, V::Error> {
         use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_to_dropbox_id = None;
@@ -14062,7 +14852,10 @@ impl TransferFolderArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("to_dropbox_id", &self.to_dropbox_id)
@@ -14242,7 +15035,9 @@ impl UnmountFolderArg {
 
 const UNMOUNT_FOLDER_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id"];
 impl UnmountFolderArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UnmountFolderArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UnmountFolderArg, V::Error> {
         use serde::de;
         let mut field_shared_folder_id = None;
         while let Some(key) = map.next_key()? {
@@ -14261,7 +15056,10 @@ impl UnmountFolderArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)
     }
@@ -14402,7 +15200,9 @@ impl UnshareFileArg {
 
 const UNSHARE_FILE_ARG_FIELDS: &'static [&'static str] = &["file"];
 impl UnshareFileArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UnshareFileArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UnshareFileArg, V::Error> {
         use serde::de;
         let mut field_file = None;
         while let Some(key) = map.next_key()? {
@@ -14421,7 +15221,10 @@ impl UnshareFileArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)
     }
@@ -14568,7 +15371,9 @@ impl UnshareFolderArg {
 const UNSHARE_FOLDER_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id",
                                                              "leave_a_copy"];
 impl UnshareFolderArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UnshareFolderArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UnshareFolderArg, V::Error> {
         use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_leave_a_copy = None;
@@ -14595,7 +15400,10 @@ impl UnshareFolderArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("leave_a_copy", &self.leave_a_copy)
@@ -14754,7 +15562,9 @@ const UPDATE_FILE_MEMBER_ARGS_FIELDS: &'static [&'static str] = &["file",
                                                                   "member",
                                                                   "access_level"];
 impl UpdateFileMemberArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UpdateFileMemberArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UpdateFileMemberArgs, V::Error> {
         use serde::de;
         let mut field_file = None;
         let mut field_member = None;
@@ -14789,7 +15599,10 @@ impl UpdateFileMemberArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file", &self.file)?;
         s.serialize_field("member", &self.member)?;
@@ -14837,7 +15650,11 @@ pub struct UpdateFolderMemberArg {
 }
 
 impl UpdateFolderMemberArg {
-    pub fn new(shared_folder_id: super::common::SharedFolderId, member: MemberSelector, access_level: AccessLevel) -> Self {
+    pub fn new(
+        shared_folder_id: super::common::SharedFolderId,
+        member: MemberSelector,
+        access_level: AccessLevel,
+    ) -> Self {
         UpdateFolderMemberArg {
             shared_folder_id,
             member,
@@ -14851,7 +15668,9 @@ const UPDATE_FOLDER_MEMBER_ARG_FIELDS: &'static [&'static str] = &["shared_folde
                                                                    "member",
                                                                    "access_level"];
 impl UpdateFolderMemberArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UpdateFolderMemberArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UpdateFolderMemberArg, V::Error> {
         use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_member = None;
@@ -14886,7 +15705,10 @@ impl UpdateFolderMemberArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("member", &self.member)?;
@@ -15121,7 +15943,9 @@ const UPDATE_FOLDER_POLICY_ARG_FIELDS: &'static [&'static str] = &["shared_folde
                                                                    "link_settings",
                                                                    "actions"];
 impl UpdateFolderPolicyArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UpdateFolderPolicyArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UpdateFolderPolicyArg, V::Error> {
         use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_member_policy = None;
@@ -15188,7 +16012,10 @@ impl UpdateFolderPolicyArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
         s.serialize_field("member_policy", &self.member_policy)?;
@@ -15406,7 +16233,9 @@ const USER_FILE_MEMBERSHIP_INFO_FIELDS: &'static [&'static str] = &["access_type
                                                                     "is_inherited",
                                                                     "time_last_seen"];
 impl UserFileMembershipInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserFileMembershipInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UserFileMembershipInfo, V::Error> {
         use serde::de;
         let mut field_access_type = None;
         let mut field_user = None;
@@ -15465,7 +16294,10 @@ impl UserFileMembershipInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_type", &self.access_type)?;
         s.serialize_field("user", &self.user)?;
@@ -15536,7 +16368,9 @@ const USER_INFO_FIELDS: &'static [&'static str] = &["account_id",
                                                     "same_team",
                                                     "team_member_id"];
 impl UserInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UserInfo, V::Error> {
         use serde::de;
         let mut field_account_id = None;
         let mut field_same_team = None;
@@ -15571,7 +16405,10 @@ impl UserInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("account_id", &self.account_id)?;
         s.serialize_field("same_team", &self.same_team)?;
@@ -15657,7 +16494,9 @@ const USER_MEMBERSHIP_INFO_FIELDS: &'static [&'static str] = &["access_type",
                                                                "initials",
                                                                "is_inherited"];
 impl UserMembershipInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserMembershipInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UserMembershipInfo, V::Error> {
         use serde::de;
         let mut field_access_type = None;
         let mut field_user = None;
@@ -15708,7 +16547,10 @@ impl UserMembershipInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_type", &self.access_type)?;
         s.serialize_field("user", &self.user)?;

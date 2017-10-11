@@ -99,7 +99,11 @@ pub struct GroupSummary {
 }
 
 impl GroupSummary {
-    pub fn new(group_name: String, group_id: GroupId, group_management_type: GroupManagementType) -> Self {
+    pub fn new(
+        group_name: String,
+        group_id: GroupId,
+        group_management_type: GroupManagementType,
+    ) -> Self {
         GroupSummary {
             group_name,
             group_id,
@@ -127,7 +131,9 @@ const GROUP_SUMMARY_FIELDS: &'static [&'static str] = &["group_name",
                                                         "group_external_id",
                                                         "member_count"];
 impl GroupSummary {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupSummary, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupSummary, V::Error> {
         use serde::de;
         let mut field_group_name = None;
         let mut field_group_id = None;
@@ -178,7 +184,10 @@ impl GroupSummary {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group_name", &self.group_name)?;
         s.serialize_field("group_id", &self.group_id)?;
@@ -299,7 +308,9 @@ impl Default for TimeRange {
 const TIME_RANGE_FIELDS: &'static [&'static str] = &["start_time",
                                                      "end_time"];
 impl TimeRange {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TimeRange, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TimeRange, V::Error> {
         use serde::de;
         let mut field_start_time = None;
         let mut field_end_time = None;
@@ -326,7 +337,10 @@ impl TimeRange {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("start_time", &self.start_time)?;
         s.serialize_field("end_time", &self.end_time)

@@ -155,7 +155,9 @@ impl PollArg {
 
 const POLL_ARG_FIELDS: &'static [&'static str] = &["async_job_id"];
 impl PollArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PollArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PollArg, V::Error> {
         use serde::de;
         let mut field_async_job_id = None;
         while let Some(key) = map.next_key()? {
@@ -174,7 +176,10 @@ impl PollArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("async_job_id", &self.async_job_id)
     }

@@ -14,14 +14,30 @@ pub type RequestId = String;
 pub type TeamEventList = Vec<TeamEvent>;
 
 /// Retrieves team events. Permission : Team Auditing.
-pub fn get_events(client: &::client_trait::HttpClient, arg: &GetTeamEventsArg) -> ::Result<Result<GetTeamEventsResult, GetTeamEventsError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team_log/get_events", arg, None)
+pub fn get_events(
+    client: &::client_trait::HttpClient,
+    arg: &GetTeamEventsArg,
+) -> ::Result<Result<GetTeamEventsResult, GetTeamEventsError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team_log/get_events",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from :route:`get_events`, use this to paginate through all
 /// events. Permission : Team Auditing.
-pub fn get_events_continue(client: &::client_trait::HttpClient, arg: &GetTeamEventsContinueArg) -> ::Result<Result<GetTeamEventsResult, GetTeamEventsContinueError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team_log/get_events/continue", arg, None)
+pub fn get_events_continue(
+    client: &::client_trait::HttpClient,
+    arg: &GetTeamEventsContinueArg,
+) -> ::Result<Result<GetTeamEventsResult, GetTeamEventsContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team_log/get_events/continue",
+        arg,
+        None)
 }
 
 /// Indicates the method in which the action was performed.
@@ -211,7 +227,9 @@ impl AccountCaptureChangeAvailabilityDetails {
 const ACCOUNT_CAPTURE_CHANGE_AVAILABILITY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                       "previous_value"];
 impl AccountCaptureChangeAvailabilityDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AccountCaptureChangeAvailabilityDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AccountCaptureChangeAvailabilityDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -238,7 +256,10 @@ impl AccountCaptureChangeAvailabilityDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -300,7 +321,9 @@ impl AccountCaptureChangePolicyDetails {
 const ACCOUNT_CAPTURE_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                 "previous_value"];
 impl AccountCaptureChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AccountCaptureChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AccountCaptureChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -327,7 +350,10 @@ impl AccountCaptureChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -380,7 +406,9 @@ impl AccountCaptureMigrateAccountDetails {
 
 const ACCOUNT_CAPTURE_MIGRATE_ACCOUNT_DETAILS_FIELDS: &'static [&'static str] = &["domain_name"];
 impl AccountCaptureMigrateAccountDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AccountCaptureMigrateAccountDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AccountCaptureMigrateAccountDetails, V::Error> {
         use serde::de;
         let mut field_domain_name = None;
         while let Some(key) = map.next_key()? {
@@ -399,7 +427,10 @@ impl AccountCaptureMigrateAccountDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("domain_name", &self.domain_name)
     }
@@ -519,7 +550,9 @@ impl AccountCaptureRelinquishAccountDetails {
 
 const ACCOUNT_CAPTURE_RELINQUISH_ACCOUNT_DETAILS_FIELDS: &'static [&'static str] = &["domain_name"];
 impl AccountCaptureRelinquishAccountDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AccountCaptureRelinquishAccountDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AccountCaptureRelinquishAccountDetails, V::Error> {
         use serde::de;
         let mut field_domain_name = None;
         while let Some(key) = map.next_key()? {
@@ -538,7 +571,10 @@ impl AccountCaptureRelinquishAccountDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("domain_name", &self.domain_name)
     }
@@ -784,7 +820,9 @@ impl Default for AllowDownloadDisabledDetails {
 
 const ALLOW_DOWNLOAD_DISABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl AllowDownloadDisabledDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AllowDownloadDisabledDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AllowDownloadDisabledDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, ALLOW_DOWNLOAD_DISABLED_DETAILS_FIELDS));
@@ -834,7 +872,9 @@ impl Default for AllowDownloadEnabledDetails {
 
 const ALLOW_DOWNLOAD_ENABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl AllowDownloadEnabledDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AllowDownloadEnabledDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AllowDownloadEnabledDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, ALLOW_DOWNLOAD_ENABLED_DETAILS_FIELDS));
@@ -888,7 +928,9 @@ impl ApiSessionLogInfo {
 
 const API_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["request_id"];
 impl ApiSessionLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ApiSessionLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ApiSessionLogInfo, V::Error> {
         use serde::de;
         let mut field_request_id = None;
         while let Some(key) = map.next_key()? {
@@ -907,7 +949,10 @@ impl ApiSessionLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("request_id", &self.request_id)
     }
@@ -959,7 +1004,9 @@ impl AppLinkTeamDetails {
 
 const APP_LINK_TEAM_DETAILS_FIELDS: &'static [&'static str] = &["app_info"];
 impl AppLinkTeamDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AppLinkTeamDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AppLinkTeamDetails, V::Error> {
         use serde::de;
         let mut field_app_info = None;
         while let Some(key) = map.next_key()? {
@@ -978,7 +1025,10 @@ impl AppLinkTeamDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("app_info", &self.app_info)
     }
@@ -1030,7 +1080,9 @@ impl AppLinkUserDetails {
 
 const APP_LINK_USER_DETAILS_FIELDS: &'static [&'static str] = &["app_info"];
 impl AppLinkUserDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AppLinkUserDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AppLinkUserDetails, V::Error> {
         use serde::de;
         let mut field_app_info = None;
         while let Some(key) = map.next_key()? {
@@ -1049,7 +1101,10 @@ impl AppLinkUserDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("app_info", &self.app_info)
     }
@@ -1171,7 +1226,9 @@ impl AppUnlinkTeamDetails {
 
 const APP_UNLINK_TEAM_DETAILS_FIELDS: &'static [&'static str] = &["app_info"];
 impl AppUnlinkTeamDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AppUnlinkTeamDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AppUnlinkTeamDetails, V::Error> {
         use serde::de;
         let mut field_app_info = None;
         while let Some(key) = map.next_key()? {
@@ -1190,7 +1247,10 @@ impl AppUnlinkTeamDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("app_info", &self.app_info)
     }
@@ -1242,7 +1302,9 @@ impl AppUnlinkUserDetails {
 
 const APP_UNLINK_USER_DETAILS_FIELDS: &'static [&'static str] = &["app_info"];
 impl AppUnlinkUserDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AppUnlinkUserDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AppUnlinkUserDetails, V::Error> {
         use serde::de;
         let mut field_app_info = None;
         while let Some(key) = map.next_key()? {
@@ -1261,7 +1323,10 @@ impl AppUnlinkUserDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("app_info", &self.app_info)
     }
@@ -1400,7 +1465,15 @@ pub struct Certificate {
 }
 
 impl Certificate {
-    pub fn new(subject: String, issuer: String, issue_date: String, expiration_date: String, serial_number: String, sha1_fingerprint: String, common_name: String) -> Self {
+    pub fn new(
+        subject: String,
+        issuer: String,
+        issue_date: String,
+        expiration_date: String,
+        serial_number: String,
+        sha1_fingerprint: String,
+        common_name: String,
+    ) -> Self {
         Certificate {
             subject,
             issuer,
@@ -1422,7 +1495,9 @@ const CERTIFICATE_FIELDS: &'static [&'static str] = &["subject",
                                                       "sha1_fingerprint",
                                                       "common_name"];
 impl Certificate {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Certificate, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<Certificate, V::Error> {
         use serde::de;
         let mut field_subject = None;
         let mut field_issuer = None;
@@ -1489,7 +1564,10 @@ impl Certificate {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("subject", &self.subject)?;
         s.serialize_field("issuer", &self.issuer)?;
@@ -1547,7 +1625,9 @@ impl CollectionShareDetails {
 
 const COLLECTION_SHARE_DETAILS_FIELDS: &'static [&'static str] = &["album_name"];
 impl CollectionShareDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CollectionShareDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<CollectionShareDetails, V::Error> {
         use serde::de;
         let mut field_album_name = None;
         while let Some(key) = map.next_key()? {
@@ -1566,7 +1646,10 @@ impl CollectionShareDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("album_name", &self.album_name)
     }
@@ -1804,7 +1887,9 @@ impl Default for CreateFolderDetails {
 
 const CREATE_FOLDER_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl CreateFolderDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CreateFolderDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<CreateFolderDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, CREATE_FOLDER_DETAILS_FIELDS));
@@ -1862,7 +1947,9 @@ impl DataPlacementRestrictionChangePolicyDetails {
 const DATA_PLACEMENT_RESTRICTION_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
                                                                                            "new_value"];
 impl DataPlacementRestrictionChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DataPlacementRestrictionChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DataPlacementRestrictionChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
         let mut field_new_value = None;
@@ -1889,7 +1976,10 @@ impl DataPlacementRestrictionChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("previous_value", &self.previous_value)?;
         s.serialize_field("new_value", &self.new_value)
@@ -1943,7 +2033,9 @@ impl DataPlacementRestrictionSatisfyPolicyDetails {
 
 const DATA_PLACEMENT_RESTRICTION_SATISFY_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["placement_restriction"];
 impl DataPlacementRestrictionSatisfyPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DataPlacementRestrictionSatisfyPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DataPlacementRestrictionSatisfyPolicyDetails, V::Error> {
         use serde::de;
         let mut field_placement_restriction = None;
         while let Some(key) = map.next_key()? {
@@ -1962,7 +2054,10 @@ impl DataPlacementRestrictionSatisfyPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("placement_restriction", &self.placement_restriction)
     }
@@ -2013,7 +2108,9 @@ impl Default for DesktopSessionLogInfo {
 
 const DESKTOP_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["session_id"];
 impl DesktopSessionLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DesktopSessionLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DesktopSessionLogInfo, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         while let Some(key) = map.next_key()? {
@@ -2032,7 +2129,10 @@ impl DesktopSessionLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)
     }
@@ -2088,7 +2188,9 @@ impl Default for DeviceApprovalsChangeDesktopPolicyDetails {
 const DEVICE_APPROVALS_CHANGE_DESKTOP_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                          "previous_value"];
 impl DeviceApprovalsChangeDesktopPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceApprovalsChangeDesktopPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceApprovalsChangeDesktopPolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -2115,7 +2217,10 @@ impl DeviceApprovalsChangeDesktopPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -2172,7 +2277,9 @@ impl Default for DeviceApprovalsChangeMobilePolicyDetails {
 const DEVICE_APPROVALS_CHANGE_MOBILE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                         "previous_value"];
 impl DeviceApprovalsChangeMobilePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceApprovalsChangeMobilePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceApprovalsChangeMobilePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -2199,7 +2306,10 @@ impl DeviceApprovalsChangeMobilePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -2256,7 +2366,9 @@ impl Default for DeviceApprovalsChangeOverageActionDetails {
 const DEVICE_APPROVALS_CHANGE_OVERAGE_ACTION_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                          "previous_value"];
 impl DeviceApprovalsChangeOverageActionDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceApprovalsChangeOverageActionDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceApprovalsChangeOverageActionDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -2283,7 +2395,10 @@ impl DeviceApprovalsChangeOverageActionDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -2340,7 +2455,9 @@ impl Default for DeviceApprovalsChangeUnlinkActionDetails {
 const DEVICE_APPROVALS_CHANGE_UNLINK_ACTION_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                         "previous_value"];
 impl DeviceApprovalsChangeUnlinkActionDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceApprovalsChangeUnlinkActionDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceApprovalsChangeUnlinkActionDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -2367,7 +2484,10 @@ impl DeviceApprovalsChangeUnlinkActionDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -2478,7 +2598,9 @@ impl DeviceChangeIpDesktopDetails {
 
 const DEVICE_CHANGE_IP_DESKTOP_DETAILS_FIELDS: &'static [&'static str] = &["device_info"];
 impl DeviceChangeIpDesktopDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceChangeIpDesktopDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceChangeIpDesktopDetails, V::Error> {
         use serde::de;
         let mut field_device_info = None;
         while let Some(key) = map.next_key()? {
@@ -2497,7 +2619,10 @@ impl DeviceChangeIpDesktopDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("device_info", &self.device_info)
     }
@@ -2549,7 +2674,9 @@ impl DeviceChangeIpMobileDetails {
 
 const DEVICE_CHANGE_IP_MOBILE_DETAILS_FIELDS: &'static [&'static str] = &["device_info"];
 impl DeviceChangeIpMobileDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceChangeIpMobileDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceChangeIpMobileDetails, V::Error> {
         use serde::de;
         let mut field_device_info = None;
         while let Some(key) = map.next_key()? {
@@ -2568,7 +2695,10 @@ impl DeviceChangeIpMobileDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("device_info", &self.device_info)
     }
@@ -2629,7 +2759,9 @@ impl DeviceChangeIpWebDetails {
 const DEVICE_CHANGE_IP_WEB_DETAILS_FIELDS: &'static [&'static str] = &["user_agent",
                                                                        "device_info"];
 impl DeviceChangeIpWebDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceChangeIpWebDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceChangeIpWebDetails, V::Error> {
         use serde::de;
         let mut field_user_agent = None;
         let mut field_device_info = None;
@@ -2656,7 +2788,10 @@ impl DeviceChangeIpWebDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user_agent", &self.user_agent)?;
         s.serialize_field("device_info", &self.device_info)
@@ -2713,7 +2848,9 @@ impl DeviceDeleteOnUnlinkFailDetails {
 const DEVICE_DELETE_ON_UNLINK_FAIL_DETAILS_FIELDS: &'static [&'static str] = &["device_info",
                                                                                "num_failures"];
 impl DeviceDeleteOnUnlinkFailDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceDeleteOnUnlinkFailDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceDeleteOnUnlinkFailDetails, V::Error> {
         use serde::de;
         let mut field_device_info = None;
         let mut field_num_failures = None;
@@ -2740,7 +2877,10 @@ impl DeviceDeleteOnUnlinkFailDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("device_info", &self.device_info)?;
         s.serialize_field("num_failures", &self.num_failures)
@@ -2793,7 +2933,9 @@ impl DeviceDeleteOnUnlinkSuccessDetails {
 
 const DEVICE_DELETE_ON_UNLINK_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &["device_info"];
 impl DeviceDeleteOnUnlinkSuccessDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceDeleteOnUnlinkSuccessDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceDeleteOnUnlinkSuccessDetails, V::Error> {
         use serde::de;
         let mut field_device_info = None;
         while let Some(key) = map.next_key()? {
@@ -2812,7 +2954,10 @@ impl DeviceDeleteOnUnlinkSuccessDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("device_info", &self.device_info)
     }
@@ -2873,7 +3018,9 @@ impl DeviceLinkFailDetails {
 const DEVICE_LINK_FAIL_DETAILS_FIELDS: &'static [&'static str] = &["device_type",
                                                                    "device_info"];
 impl DeviceLinkFailDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceLinkFailDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceLinkFailDetails, V::Error> {
         use serde::de;
         let mut field_device_type = None;
         let mut field_device_info = None;
@@ -2900,7 +3047,10 @@ impl DeviceLinkFailDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("device_type", &self.device_type)?;
         s.serialize_field("device_info", &self.device_info)
@@ -2953,7 +3103,9 @@ impl DeviceLinkSuccessDetails {
 
 const DEVICE_LINK_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &["device_info"];
 impl DeviceLinkSuccessDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceLinkSuccessDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceLinkSuccessDetails, V::Error> {
         use serde::de;
         let mut field_device_info = None;
         while let Some(key) = map.next_key()? {
@@ -2972,7 +3124,10 @@ impl DeviceLinkSuccessDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("device_info", &self.device_info)
     }
@@ -3060,7 +3215,9 @@ const DEVICE_LOG_INFO_FIELDS: &'static [&'static str] = &["device_id",
                                                           "last_activity",
                                                           "app_version"];
 impl DeviceLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceLogInfo, V::Error> {
         use serde::de;
         let mut field_device_id = None;
         let mut field_display_name = None;
@@ -3151,7 +3308,10 @@ impl DeviceLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("device_id", &self.device_id)?;
         s.serialize_field("display_name", &self.display_name)?;
@@ -3208,7 +3368,9 @@ impl Default for DeviceManagementDisabledDetails {
 
 const DEVICE_MANAGEMENT_DISABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl DeviceManagementDisabledDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceManagementDisabledDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceManagementDisabledDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, DEVICE_MANAGEMENT_DISABLED_DETAILS_FIELDS));
@@ -3258,7 +3420,9 @@ impl Default for DeviceManagementEnabledDetails {
 
 const DEVICE_MANAGEMENT_ENABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl DeviceManagementEnabledDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceManagementEnabledDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceManagementEnabledDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, DEVICE_MANAGEMENT_ENABLED_DETAILS_FIELDS));
@@ -3374,7 +3538,9 @@ impl DeviceUnlinkDetails {
 const DEVICE_UNLINK_DETAILS_FIELDS: &'static [&'static str] = &["device_info",
                                                                 "delete_data"];
 impl DeviceUnlinkDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeviceUnlinkDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeviceUnlinkDetails, V::Error> {
         use serde::de;
         let mut field_device_info = None;
         let mut field_delete_data = None;
@@ -3401,7 +3567,10 @@ impl DeviceUnlinkDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("device_info", &self.device_info)?;
         s.serialize_field("delete_data", &self.delete_data)
@@ -3508,7 +3677,9 @@ impl Default for DisabledDomainInvitesDetails {
 
 const DISABLED_DOMAIN_INVITES_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl DisabledDomainInvitesDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DisabledDomainInvitesDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DisabledDomainInvitesDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, DISABLED_DOMAIN_INVITES_DETAILS_FIELDS));
@@ -3558,7 +3729,9 @@ impl Default for DomainInvitesApproveRequestToJoinTeamDetails {
 
 const DOMAIN_INVITES_APPROVE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl DomainInvitesApproveRequestToJoinTeamDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainInvitesApproveRequestToJoinTeamDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DomainInvitesApproveRequestToJoinTeamDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, DOMAIN_INVITES_APPROVE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS));
@@ -3608,7 +3781,9 @@ impl Default for DomainInvitesDeclineRequestToJoinTeamDetails {
 
 const DOMAIN_INVITES_DECLINE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl DomainInvitesDeclineRequestToJoinTeamDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainInvitesDeclineRequestToJoinTeamDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DomainInvitesDeclineRequestToJoinTeamDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, DOMAIN_INVITES_DECLINE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS));
@@ -3666,7 +3841,9 @@ impl DomainInvitesEmailExistingUsersDetails {
 const DOMAIN_INVITES_EMAIL_EXISTING_USERS_DETAILS_FIELDS: &'static [&'static str] = &["domain_name",
                                                                                       "num_recipients"];
 impl DomainInvitesEmailExistingUsersDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainInvitesEmailExistingUsersDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DomainInvitesEmailExistingUsersDetails, V::Error> {
         use serde::de;
         let mut field_domain_name = None;
         let mut field_num_recipients = None;
@@ -3693,7 +3870,10 @@ impl DomainInvitesEmailExistingUsersDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("domain_name", &self.domain_name)?;
         s.serialize_field("num_recipients", &self.num_recipients)
@@ -3742,7 +3922,9 @@ impl Default for DomainInvitesRequestToJoinTeamDetails {
 
 const DOMAIN_INVITES_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl DomainInvitesRequestToJoinTeamDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainInvitesRequestToJoinTeamDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DomainInvitesRequestToJoinTeamDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, DOMAIN_INVITES_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS));
@@ -3792,7 +3974,9 @@ impl Default for DomainInvitesSetInviteNewUserPrefToNoDetails {
 
 const DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_NO_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl DomainInvitesSetInviteNewUserPrefToNoDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainInvitesSetInviteNewUserPrefToNoDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DomainInvitesSetInviteNewUserPrefToNoDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_NO_DETAILS_FIELDS));
@@ -3842,7 +4026,9 @@ impl Default for DomainInvitesSetInviteNewUserPrefToYesDetails {
 
 const DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_YES_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl DomainInvitesSetInviteNewUserPrefToYesDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainInvitesSetInviteNewUserPrefToYesDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DomainInvitesSetInviteNewUserPrefToYesDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_YES_DETAILS_FIELDS));
@@ -3905,7 +4091,9 @@ impl DomainVerificationAddDomainFailDetails {
 const DOMAIN_VERIFICATION_ADD_DOMAIN_FAIL_DETAILS_FIELDS: &'static [&'static str] = &["domain_name",
                                                                                       "verification_method"];
 impl DomainVerificationAddDomainFailDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainVerificationAddDomainFailDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DomainVerificationAddDomainFailDetails, V::Error> {
         use serde::de;
         let mut field_domain_name = None;
         let mut field_verification_method = None;
@@ -3932,7 +4120,10 @@ impl DomainVerificationAddDomainFailDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("domain_name", &self.domain_name)?;
         s.serialize_field("verification_method", &self.verification_method)
@@ -3994,7 +4185,9 @@ impl DomainVerificationAddDomainSuccessDetails {
 const DOMAIN_VERIFICATION_ADD_DOMAIN_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &["domain_names",
                                                                                          "verification_method"];
 impl DomainVerificationAddDomainSuccessDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainVerificationAddDomainSuccessDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DomainVerificationAddDomainSuccessDetails, V::Error> {
         use serde::de;
         let mut field_domain_names = None;
         let mut field_verification_method = None;
@@ -4021,7 +4214,10 @@ impl DomainVerificationAddDomainSuccessDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("domain_names", &self.domain_names)?;
         s.serialize_field("verification_method", &self.verification_method)
@@ -4074,7 +4270,9 @@ impl DomainVerificationRemoveDomainDetails {
 
 const DOMAIN_VERIFICATION_REMOVE_DOMAIN_DETAILS_FIELDS: &'static [&'static str] = &["domain_names"];
 impl DomainVerificationRemoveDomainDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DomainVerificationRemoveDomainDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DomainVerificationRemoveDomainDetails, V::Error> {
         use serde::de;
         let mut field_domain_names = None;
         while let Some(key) = map.next_key()? {
@@ -4093,7 +4291,10 @@ impl DomainVerificationRemoveDomainDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("domain_names", &self.domain_names)
     }
@@ -4149,7 +4350,9 @@ impl DurationLogInfo {
 const DURATION_LOG_INFO_FIELDS: &'static [&'static str] = &["unit",
                                                             "amount"];
 impl DurationLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DurationLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DurationLogInfo, V::Error> {
         use serde::de;
         let mut field_unit = None;
         let mut field_amount = None;
@@ -4176,7 +4379,10 @@ impl DurationLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("unit", &self.unit)?;
         s.serialize_field("amount", &self.amount)
@@ -4226,7 +4432,9 @@ impl Default for EmmAddExceptionDetails {
 
 const EMM_ADD_EXCEPTION_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EmmAddExceptionDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmAddExceptionDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<EmmAddExceptionDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, EMM_ADD_EXCEPTION_DETAILS_FIELDS));
@@ -4289,7 +4497,9 @@ impl EmmChangePolicyDetails {
 const EMM_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                     "previous_value"];
 impl EmmChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<EmmChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -4316,7 +4526,10 @@ impl EmmChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -4365,7 +4578,9 @@ impl Default for EmmCreateExceptionsReportDetails {
 
 const EMM_CREATE_EXCEPTIONS_REPORT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EmmCreateExceptionsReportDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmCreateExceptionsReportDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<EmmCreateExceptionsReportDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, EMM_CREATE_EXCEPTIONS_REPORT_DETAILS_FIELDS));
@@ -4415,7 +4630,9 @@ impl Default for EmmCreateUsageReportDetails {
 
 const EMM_CREATE_USAGE_REPORT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EmmCreateUsageReportDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmCreateUsageReportDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<EmmCreateUsageReportDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, EMM_CREATE_USAGE_REPORT_DETAILS_FIELDS));
@@ -4465,7 +4682,9 @@ impl Default for EmmLoginSuccessDetails {
 
 const EMM_LOGIN_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EmmLoginSuccessDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmLoginSuccessDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<EmmLoginSuccessDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, EMM_LOGIN_SUCCESS_DETAILS_FIELDS));
@@ -4515,7 +4734,9 @@ impl Default for EmmRefreshAuthTokenDetails {
 
 const EMM_REFRESH_AUTH_TOKEN_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EmmRefreshAuthTokenDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmRefreshAuthTokenDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<EmmRefreshAuthTokenDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, EMM_REFRESH_AUTH_TOKEN_DETAILS_FIELDS));
@@ -4566,7 +4787,9 @@ impl Default for EmmRemoveExceptionDetails {
 
 const EMM_REMOVE_EXCEPTION_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EmmRemoveExceptionDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EmmRemoveExceptionDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<EmmRemoveExceptionDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, EMM_REMOVE_EXCEPTION_DETAILS_FIELDS));
@@ -4616,7 +4839,9 @@ impl Default for EnabledDomainInvitesDetails {
 
 const ENABLED_DOMAIN_INVITES_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl EnabledDomainInvitesDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<EnabledDomainInvitesDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<EnabledDomainInvitesDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, ENABLED_DOMAIN_INVITES_DETAILS_FIELDS));
@@ -10797,7 +11022,9 @@ impl ExtendedVersionHistoryChangePolicyDetails {
 const EXTENDED_VERSION_HISTORY_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                          "previous_value"];
 impl ExtendedVersionHistoryChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ExtendedVersionHistoryChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ExtendedVersionHistoryChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -10824,7 +11051,10 @@ impl ExtendedVersionHistoryChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -10947,7 +11177,9 @@ impl Default for FailureDetailsLogInfo {
 const FAILURE_DETAILS_LOG_INFO_FIELDS: &'static [&'static str] = &["user_friendly_message",
                                                                    "technical_error_message"];
 impl FailureDetailsLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FailureDetailsLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FailureDetailsLogInfo, V::Error> {
         use serde::de;
         let mut field_user_friendly_message = None;
         let mut field_technical_error_message = None;
@@ -10974,7 +11206,10 @@ impl FailureDetailsLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user_friendly_message", &self.user_friendly_message)?;
         s.serialize_field("technical_error_message", &self.technical_error_message)
@@ -11036,7 +11271,9 @@ impl FileAddCommentDetails {
 const FILE_ADD_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                    "comment_text"];
 impl FileAddCommentDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileAddCommentDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileAddCommentDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_comment_text = None;
@@ -11063,7 +11300,10 @@ impl FileAddCommentDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("comment_text", &self.comment_text)
@@ -11112,7 +11352,9 @@ impl Default for FileAddDetails {
 
 const FILE_ADD_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileAddDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileAddDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileAddDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_ADD_DETAILS_FIELDS));
@@ -11179,7 +11421,9 @@ const FILE_CHANGE_COMMENT_SUBSCRIPTION_DETAILS_FIELDS: &'static [&'static str] =
                                                                                    "new_value",
                                                                                    "previous_value"];
 impl FileChangeCommentSubscriptionDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileChangeCommentSubscriptionDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileChangeCommentSubscriptionDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_new_value = None;
@@ -11214,7 +11458,10 @@ impl FileChangeCommentSubscriptionDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("new_value", &self.new_value)?;
@@ -11336,7 +11583,9 @@ impl FileCommentsChangePolicyDetails {
 const FILE_COMMENTS_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                               "previous_value"];
 impl FileCommentsChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileCommentsChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileCommentsChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -11363,7 +11612,10 @@ impl FileCommentsChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -11475,7 +11727,9 @@ impl FileCopyDetails {
 
 const FILE_COPY_DETAILS_FIELDS: &'static [&'static str] = &["relocate_action_details"];
 impl FileCopyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileCopyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileCopyDetails, V::Error> {
         use serde::de;
         let mut field_relocate_action_details = None;
         while let Some(key) = map.next_key()? {
@@ -11494,7 +11748,10 @@ impl FileCopyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("relocate_action_details", &self.relocate_action_details)
     }
@@ -11555,7 +11812,9 @@ impl FileDeleteCommentDetails {
 const FILE_DELETE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                       "comment_text"];
 impl FileDeleteCommentDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileDeleteCommentDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileDeleteCommentDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_comment_text = None;
@@ -11582,7 +11841,10 @@ impl FileDeleteCommentDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("comment_text", &self.comment_text)
@@ -11631,7 +11893,9 @@ impl Default for FileDeleteDetails {
 
 const FILE_DELETE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileDeleteDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileDeleteDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileDeleteDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_DELETE_DETAILS_FIELDS));
@@ -11681,7 +11945,9 @@ impl Default for FileDownloadDetails {
 
 const FILE_DOWNLOAD_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileDownloadDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileDownloadDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileDownloadDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_DOWNLOAD_DETAILS_FIELDS));
@@ -11731,7 +11997,9 @@ impl Default for FileEditDetails {
 
 const FILE_EDIT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileEditDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileEditDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileEditDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_EDIT_DETAILS_FIELDS));
@@ -11781,7 +12049,9 @@ impl Default for FileGetCopyReferenceDetails {
 
 const FILE_GET_COPY_REFERENCE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileGetCopyReferenceDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileGetCopyReferenceDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileGetCopyReferenceDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_GET_COPY_REFERENCE_DETAILS_FIELDS));
@@ -11844,7 +12114,9 @@ impl FileLikeCommentDetails {
 const FILE_LIKE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                     "comment_text"];
 impl FileLikeCommentDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileLikeCommentDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileLikeCommentDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_comment_text = None;
@@ -11871,7 +12143,10 @@ impl FileLikeCommentDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("comment_text", &self.comment_text)
@@ -11942,7 +12217,9 @@ const FILE_LOG_INFO_FIELDS: &'static [&'static str] = &["path",
                                                         "display_name",
                                                         "file_id"];
 impl FileLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileLogInfo, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_display_name = None;
@@ -11977,7 +12254,10 @@ impl FileLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("display_name", &self.display_name)?;
@@ -12031,7 +12311,9 @@ impl FileMoveDetails {
 
 const FILE_MOVE_DETAILS_FIELDS: &'static [&'static str] = &["relocate_action_details"];
 impl FileMoveDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileMoveDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileMoveDetails, V::Error> {
         use serde::de;
         let mut field_relocate_action_details = None;
         while let Some(key) = map.next_key()? {
@@ -12050,7 +12332,10 @@ impl FileMoveDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("relocate_action_details", &self.relocate_action_details)
     }
@@ -12120,7 +12405,9 @@ const FILE_OR_FOLDER_LOG_INFO_FIELDS: &'static [&'static str] = &["path",
                                                                   "display_name",
                                                                   "file_id"];
 impl FileOrFolderLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileOrFolderLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileOrFolderLogInfo, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_display_name = None;
@@ -12155,7 +12442,10 @@ impl FileOrFolderLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("display_name", &self.display_name)?;
@@ -12205,7 +12495,9 @@ impl Default for FilePermanentlyDeleteDetails {
 
 const FILE_PERMANENTLY_DELETE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FilePermanentlyDeleteDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FilePermanentlyDeleteDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FilePermanentlyDeleteDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_PERMANENTLY_DELETE_DETAILS_FIELDS));
@@ -12255,7 +12547,9 @@ impl Default for FilePreviewDetails {
 
 const FILE_PREVIEW_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FilePreviewDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FilePreviewDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FilePreviewDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_PREVIEW_DETAILS_FIELDS));
@@ -12309,7 +12603,9 @@ impl FileRenameDetails {
 
 const FILE_RENAME_DETAILS_FIELDS: &'static [&'static str] = &["relocate_action_details"];
 impl FileRenameDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRenameDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRenameDetails, V::Error> {
         use serde::de;
         let mut field_relocate_action_details = None;
         while let Some(key) = map.next_key()? {
@@ -12328,7 +12624,10 @@ impl FileRenameDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("relocate_action_details", &self.relocate_action_details)
     }
@@ -12379,7 +12678,9 @@ impl Default for FileRequestAddDeadlineDetails {
 
 const FILE_REQUEST_ADD_DEADLINE_DETAILS_FIELDS: &'static [&'static str] = &["request_title"];
 impl FileRequestAddDeadlineDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestAddDeadlineDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequestAddDeadlineDetails, V::Error> {
         use serde::de;
         let mut field_request_title = None;
         while let Some(key) = map.next_key()? {
@@ -12398,7 +12699,10 @@ impl FileRequestAddDeadlineDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("request_title", &self.request_title)
     }
@@ -12449,7 +12753,9 @@ impl Default for FileRequestChangeFolderDetails {
 
 const FILE_REQUEST_CHANGE_FOLDER_DETAILS_FIELDS: &'static [&'static str] = &["request_title"];
 impl FileRequestChangeFolderDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestChangeFolderDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequestChangeFolderDetails, V::Error> {
         use serde::de;
         let mut field_request_title = None;
         while let Some(key) = map.next_key()? {
@@ -12468,7 +12774,10 @@ impl FileRequestChangeFolderDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("request_title", &self.request_title)
     }
@@ -12519,7 +12828,9 @@ impl Default for FileRequestChangeTitleDetails {
 
 const FILE_REQUEST_CHANGE_TITLE_DETAILS_FIELDS: &'static [&'static str] = &["request_title"];
 impl FileRequestChangeTitleDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestChangeTitleDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequestChangeTitleDetails, V::Error> {
         use serde::de;
         let mut field_request_title = None;
         while let Some(key) = map.next_key()? {
@@ -12538,7 +12849,10 @@ impl FileRequestChangeTitleDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("request_title", &self.request_title)
     }
@@ -12589,7 +12903,9 @@ impl Default for FileRequestCloseDetails {
 
 const FILE_REQUEST_CLOSE_DETAILS_FIELDS: &'static [&'static str] = &["request_title"];
 impl FileRequestCloseDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestCloseDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequestCloseDetails, V::Error> {
         use serde::de;
         let mut field_request_title = None;
         while let Some(key) = map.next_key()? {
@@ -12608,7 +12924,10 @@ impl FileRequestCloseDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("request_title", &self.request_title)
     }
@@ -12659,7 +12978,9 @@ impl Default for FileRequestCreateDetails {
 
 const FILE_REQUEST_CREATE_DETAILS_FIELDS: &'static [&'static str] = &["request_title"];
 impl FileRequestCreateDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestCreateDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequestCreateDetails, V::Error> {
         use serde::de;
         let mut field_request_title = None;
         while let Some(key) = map.next_key()? {
@@ -12678,7 +12999,10 @@ impl FileRequestCreateDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("request_title", &self.request_title)
     }
@@ -12739,7 +13063,9 @@ impl FileRequestReceiveFileDetails {
 const FILE_REQUEST_RECEIVE_FILE_DETAILS_FIELDS: &'static [&'static str] = &["submitted_file_names",
                                                                             "request_title"];
 impl FileRequestReceiveFileDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestReceiveFileDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequestReceiveFileDetails, V::Error> {
         use serde::de;
         let mut field_submitted_file_names = None;
         let mut field_request_title = None;
@@ -12766,7 +13092,10 @@ impl FileRequestReceiveFileDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("submitted_file_names", &self.submitted_file_names)?;
         s.serialize_field("request_title", &self.request_title)
@@ -12818,7 +13147,9 @@ impl Default for FileRequestRemoveDeadlineDetails {
 
 const FILE_REQUEST_REMOVE_DEADLINE_DETAILS_FIELDS: &'static [&'static str] = &["request_title"];
 impl FileRequestRemoveDeadlineDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestRemoveDeadlineDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequestRemoveDeadlineDetails, V::Error> {
         use serde::de;
         let mut field_request_title = None;
         while let Some(key) = map.next_key()? {
@@ -12837,7 +13168,10 @@ impl FileRequestRemoveDeadlineDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("request_title", &self.request_title)
     }
@@ -12888,7 +13222,9 @@ impl Default for FileRequestSendDetails {
 
 const FILE_REQUEST_SEND_DETAILS_FIELDS: &'static [&'static str] = &["request_title"];
 impl FileRequestSendDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestSendDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequestSendDetails, V::Error> {
         use serde::de;
         let mut field_request_title = None;
         while let Some(key) = map.next_key()? {
@@ -12907,7 +13243,10 @@ impl FileRequestSendDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("request_title", &self.request_title)
     }
@@ -12968,7 +13307,9 @@ impl FileRequestsChangePolicyDetails {
 const FILE_REQUESTS_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                               "previous_value"];
 impl FileRequestsChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestsChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequestsChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -12995,7 +13336,10 @@ impl FileRequestsChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -13044,7 +13388,9 @@ impl Default for FileRequestsEmailsEnabledDetails {
 
 const FILE_REQUESTS_EMAILS_ENABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileRequestsEmailsEnabledDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestsEmailsEnabledDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequestsEmailsEnabledDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_REQUESTS_EMAILS_ENABLED_DETAILS_FIELDS));
@@ -13094,7 +13440,9 @@ impl Default for FileRequestsEmailsRestrictedToTeamOnlyDetails {
 
 const FILE_REQUESTS_EMAILS_RESTRICTED_TO_TEAM_ONLY_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileRequestsEmailsRestrictedToTeamOnlyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestsEmailsRestrictedToTeamOnlyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequestsEmailsRestrictedToTeamOnlyDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_REQUESTS_EMAILS_RESTRICTED_TO_TEAM_ONLY_DETAILS_FIELDS));
@@ -13216,7 +13564,9 @@ impl FileResolveCommentDetails {
 const FILE_RESOLVE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                        "comment_text"];
 impl FileResolveCommentDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileResolveCommentDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileResolveCommentDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_comment_text = None;
@@ -13243,7 +13593,10 @@ impl FileResolveCommentDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("comment_text", &self.comment_text)
@@ -13292,7 +13645,9 @@ impl Default for FileRestoreDetails {
 
 const FILE_RESTORE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileRestoreDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRestoreDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRestoreDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_RESTORE_DETAILS_FIELDS));
@@ -13342,7 +13697,9 @@ impl Default for FileRevertDetails {
 
 const FILE_REVERT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileRevertDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRevertDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRevertDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_REVERT_DETAILS_FIELDS));
@@ -13392,7 +13749,9 @@ impl Default for FileRollbackChangesDetails {
 
 const FILE_ROLLBACK_CHANGES_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl FileRollbackChangesDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRollbackChangesDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRollbackChangesDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_ROLLBACK_CHANGES_DETAILS_FIELDS));
@@ -13446,7 +13805,9 @@ impl FileSaveCopyReferenceDetails {
 
 const FILE_SAVE_COPY_REFERENCE_DETAILS_FIELDS: &'static [&'static str] = &["relocate_action_details"];
 impl FileSaveCopyReferenceDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileSaveCopyReferenceDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileSaveCopyReferenceDetails, V::Error> {
         use serde::de;
         let mut field_relocate_action_details = None;
         while let Some(key) = map.next_key()? {
@@ -13465,7 +13826,10 @@ impl FileSaveCopyReferenceDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("relocate_action_details", &self.relocate_action_details)
     }
@@ -13526,7 +13890,9 @@ impl FileUnlikeCommentDetails {
 const FILE_UNLIKE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                       "comment_text"];
 impl FileUnlikeCommentDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileUnlikeCommentDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileUnlikeCommentDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_comment_text = None;
@@ -13553,7 +13919,10 @@ impl FileUnlikeCommentDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("comment_text", &self.comment_text)
@@ -13615,7 +13984,9 @@ impl FileUnresolveCommentDetails {
 const FILE_UNRESOLVE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                          "comment_text"];
 impl FileUnresolveCommentDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileUnresolveCommentDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileUnresolveCommentDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_comment_text = None;
@@ -13642,7 +14013,10 @@ impl FileUnresolveCommentDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("comment_text", &self.comment_text)
@@ -13713,7 +14087,9 @@ const FOLDER_LOG_INFO_FIELDS: &'static [&'static str] = &["path",
                                                           "display_name",
                                                           "file_id"];
 impl FolderLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FolderLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FolderLogInfo, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_display_name = None;
@@ -13748,7 +14124,10 @@ impl FolderLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("display_name", &self.display_name)?;
@@ -13829,7 +14208,9 @@ const GEO_LOCATION_LOG_INFO_FIELDS: &'static [&'static str] = &["ip_address",
                                                                 "region",
                                                                 "country"];
 impl GeoLocationLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GeoLocationLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GeoLocationLogInfo, V::Error> {
         use serde::de;
         let mut field_ip_address = None;
         let mut field_city = None;
@@ -13872,7 +14253,10 @@ impl GeoLocationLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("ip_address", &self.ip_address)?;
         s.serialize_field("city", &self.city)?;
@@ -13938,7 +14322,9 @@ const GET_TEAM_EVENTS_ARG_FIELDS: &'static [&'static str] = &["limit",
                                                               "time",
                                                               "category"];
 impl GetTeamEventsArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetTeamEventsArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetTeamEventsArg, V::Error> {
         use serde::de;
         let mut field_limit = None;
         let mut field_account_id = None;
@@ -13981,7 +14367,10 @@ impl GetTeamEventsArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("limit", &self.limit)?;
         s.serialize_field("account_id", &self.account_id)?;
@@ -14035,7 +14424,9 @@ impl GetTeamEventsContinueArg {
 
 const GET_TEAM_EVENTS_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl GetTeamEventsContinueArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetTeamEventsContinueArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetTeamEventsContinueArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -14054,7 +14445,10 @@ impl GetTeamEventsContinueArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -14250,7 +14644,9 @@ const GET_TEAM_EVENTS_RESULT_FIELDS: &'static [&'static str] = &["events",
                                                                  "cursor",
                                                                  "has_more"];
 impl GetTeamEventsResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetTeamEventsResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetTeamEventsResult, V::Error> {
         use serde::de;
         let mut field_events = None;
         let mut field_cursor = None;
@@ -14285,7 +14681,10 @@ impl GetTeamEventsResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("events", &self.events)?;
         s.serialize_field("cursor", &self.cursor)?;
@@ -14348,7 +14747,9 @@ impl GoogleSsoChangePolicyDetails {
 const GOOGLE_SSO_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                            "previous_value"];
 impl GoogleSsoChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GoogleSsoChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GoogleSsoChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -14375,7 +14776,10 @@ impl GoogleSsoChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -14487,7 +14891,9 @@ impl GroupAddExternalIdDetails {
 
 const GROUP_ADD_EXTERNAL_ID_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
 impl GroupAddExternalIdDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupAddExternalIdDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupAddExternalIdDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         while let Some(key) = map.next_key()? {
@@ -14506,7 +14912,10 @@ impl GroupAddExternalIdDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)
     }
@@ -14558,7 +14967,9 @@ impl GroupAddMemberDetails {
 
 const GROUP_ADD_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["is_group_owner"];
 impl GroupAddMemberDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupAddMemberDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupAddMemberDetails, V::Error> {
         use serde::de;
         let mut field_is_group_owner = None;
         while let Some(key) = map.next_key()? {
@@ -14577,7 +14988,10 @@ impl GroupAddMemberDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("is_group_owner", &self.is_group_owner)
     }
@@ -14621,7 +15035,10 @@ pub struct GroupChangeExternalIdDetails {
 }
 
 impl GroupChangeExternalIdDetails {
-    pub fn new(new_value: super::team_common::GroupExternalId, previous_value: super::team_common::GroupExternalId) -> Self {
+    pub fn new(
+        new_value: super::team_common::GroupExternalId,
+        previous_value: super::team_common::GroupExternalId,
+    ) -> Self {
         GroupChangeExternalIdDetails {
             new_value,
             previous_value,
@@ -14633,7 +15050,9 @@ impl GroupChangeExternalIdDetails {
 const GROUP_CHANGE_EXTERNAL_ID_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                            "previous_value"];
 impl GroupChangeExternalIdDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupChangeExternalIdDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupChangeExternalIdDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -14660,7 +15079,10 @@ impl GroupChangeExternalIdDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -14712,7 +15134,10 @@ impl GroupChangeManagementTypeDetails {
         }
     }
 
-    pub fn with_previous_value(mut self, value: Option<super::team_common::GroupManagementType>) -> Self {
+    pub fn with_previous_value(
+        mut self,
+        value: Option<super::team_common::GroupManagementType>,
+    ) -> Self {
         self.previous_value = value;
         self
     }
@@ -14722,7 +15147,9 @@ impl GroupChangeManagementTypeDetails {
 const GROUP_CHANGE_MANAGEMENT_TYPE_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                "previous_value"];
 impl GroupChangeManagementTypeDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupChangeManagementTypeDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupChangeManagementTypeDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -14749,7 +15176,10 @@ impl GroupChangeManagementTypeDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -14802,7 +15232,9 @@ impl GroupChangeMemberRoleDetails {
 
 const GROUP_CHANGE_MEMBER_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["is_group_owner"];
 impl GroupChangeMemberRoleDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupChangeMemberRoleDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupChangeMemberRoleDetails, V::Error> {
         use serde::de;
         let mut field_is_group_owner = None;
         while let Some(key) = map.next_key()? {
@@ -14821,7 +15253,10 @@ impl GroupChangeMemberRoleDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("is_group_owner", &self.is_group_owner)
     }
@@ -14882,7 +15317,9 @@ impl GroupCreateDetails {
 const GROUP_CREATE_DETAILS_FIELDS: &'static [&'static str] = &["join_policy",
                                                                "is_company_managed"];
 impl GroupCreateDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupCreateDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupCreateDetails, V::Error> {
         use serde::de;
         let mut field_join_policy = None;
         let mut field_is_company_managed = None;
@@ -14909,7 +15346,10 @@ impl GroupCreateDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("join_policy", &self.join_policy)?;
         s.serialize_field("is_company_managed", &self.is_company_managed)
@@ -14961,7 +15401,9 @@ impl Default for GroupDeleteDetails {
 
 const GROUP_DELETE_DETAILS_FIELDS: &'static [&'static str] = &["is_company_managed"];
 impl GroupDeleteDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupDeleteDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupDeleteDetails, V::Error> {
         use serde::de;
         let mut field_is_company_managed = None;
         while let Some(key) = map.next_key()? {
@@ -14980,7 +15422,10 @@ impl GroupDeleteDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("is_company_managed", &self.is_company_managed)
     }
@@ -15108,7 +15553,9 @@ const GROUP_LOG_INFO_FIELDS: &'static [&'static str] = &["display_name",
                                                          "group_id",
                                                          "external_id"];
 impl GroupLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupLogInfo, V::Error> {
         use serde::de;
         let mut field_display_name = None;
         let mut field_group_id = None;
@@ -15143,7 +15590,10 @@ impl GroupLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("display_name", &self.display_name)?;
         s.serialize_field("group_id", &self.group_id)?;
@@ -15193,7 +15643,9 @@ impl Default for GroupMovedDetails {
 
 const GROUP_MOVED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl GroupMovedDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupMovedDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupMovedDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, GROUP_MOVED_DETAILS_FIELDS));
@@ -15247,7 +15699,9 @@ impl GroupRemoveExternalIdDetails {
 
 const GROUP_REMOVE_EXTERNAL_ID_DETAILS_FIELDS: &'static [&'static str] = &["previous_value"];
 impl GroupRemoveExternalIdDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupRemoveExternalIdDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupRemoveExternalIdDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
         while let Some(key) = map.next_key()? {
@@ -15266,7 +15720,10 @@ impl GroupRemoveExternalIdDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("previous_value", &self.previous_value)
     }
@@ -15314,7 +15771,9 @@ impl Default for GroupRemoveMemberDetails {
 
 const GROUP_REMOVE_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl GroupRemoveMemberDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupRemoveMemberDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupRemoveMemberDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, GROUP_REMOVE_MEMBER_DETAILS_FIELDS));
@@ -15372,7 +15831,9 @@ impl GroupRenameDetails {
 const GROUP_RENAME_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
                                                                "new_value"];
 impl GroupRenameDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupRenameDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupRenameDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
         let mut field_new_value = None;
@@ -15399,7 +15860,10 @@ impl GroupRenameDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("previous_value", &self.previous_value)?;
         s.serialize_field("new_value", &self.new_value)
@@ -15461,7 +15925,9 @@ impl GroupUserManagementChangePolicyDetails {
 const GROUP_USER_MANAGEMENT_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                       "previous_value"];
 impl GroupUserManagementChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GroupUserManagementChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GroupUserManagementChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -15488,7 +15954,10 @@ impl GroupUserManagementChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -15602,7 +16071,9 @@ impl Default for HostLogInfo {
 const HOST_LOG_INFO_FIELDS: &'static [&'static str] = &["host_id",
                                                         "host_name"];
 impl HostLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<HostLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<HostLogInfo, V::Error> {
         use serde::de;
         let mut field_host_id = None;
         let mut field_host_name = None;
@@ -15629,7 +16100,10 @@ impl HostLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("host_id", &self.host_id)?;
         s.serialize_field("host_name", &self.host_name)
@@ -15676,7 +16150,11 @@ pub struct JoinTeamDetails {
 }
 
 impl JoinTeamDetails {
-    pub fn new(linked_apps: Vec<AppLogInfo>, linked_devices: Vec<DeviceLogInfo>, linked_shared_folders: Vec<FolderLogInfo>) -> Self {
+    pub fn new(
+        linked_apps: Vec<AppLogInfo>,
+        linked_devices: Vec<DeviceLogInfo>,
+        linked_shared_folders: Vec<FolderLogInfo>,
+    ) -> Self {
         JoinTeamDetails {
             linked_apps,
             linked_devices,
@@ -15690,7 +16168,9 @@ const JOIN_TEAM_DETAILS_FIELDS: &'static [&'static str] = &["linked_apps",
                                                             "linked_devices",
                                                             "linked_shared_folders"];
 impl JoinTeamDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<JoinTeamDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<JoinTeamDetails, V::Error> {
         use serde::de;
         let mut field_linked_apps = None;
         let mut field_linked_devices = None;
@@ -15725,7 +16205,10 @@ impl JoinTeamDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("linked_apps", &self.linked_apps)?;
         s.serialize_field("linked_devices", &self.linked_devices)?;
@@ -15842,7 +16325,9 @@ impl Default for LogoutDetails {
 
 const LOGOUT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl LogoutDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<LogoutDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<LogoutDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, LOGOUT_DETAILS_FIELDS));
@@ -15896,7 +16381,9 @@ impl MemberAddNameDetails {
 
 const MEMBER_ADD_NAME_DETAILS_FIELDS: &'static [&'static str] = &["value"];
 impl MemberAddNameDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberAddNameDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberAddNameDetails, V::Error> {
         use serde::de;
         let mut field_value = None;
         while let Some(key) = map.next_key()? {
@@ -15915,7 +16402,10 @@ impl MemberAddNameDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("value", &self.value)
     }
@@ -15972,7 +16462,9 @@ impl Default for MemberChangeAdminRoleDetails {
 const MEMBER_CHANGE_ADMIN_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                            "previous_value"];
 impl MemberChangeAdminRoleDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberChangeAdminRoleDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberChangeAdminRoleDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -15999,7 +16491,10 @@ impl MemberChangeAdminRoleDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -16061,7 +16556,9 @@ impl MemberChangeEmailDetails {
 const MEMBER_CHANGE_EMAIL_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                       "previous_value"];
 impl MemberChangeEmailDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberChangeEmailDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberChangeEmailDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -16088,7 +16585,10 @@ impl MemberChangeEmailDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -16145,7 +16645,9 @@ impl MemberChangeMembershipTypeDetails {
 const MEMBER_CHANGE_MEMBERSHIP_TYPE_DETAILS_FIELDS: &'static [&'static str] = &["prev_value",
                                                                                 "new_value"];
 impl MemberChangeMembershipTypeDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberChangeMembershipTypeDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberChangeMembershipTypeDetails, V::Error> {
         use serde::de;
         let mut field_prev_value = None;
         let mut field_new_value = None;
@@ -16172,7 +16674,10 @@ impl MemberChangeMembershipTypeDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("prev_value", &self.prev_value)?;
         s.serialize_field("new_value", &self.new_value)
@@ -16234,7 +16739,9 @@ impl MemberChangeNameDetails {
 const MEMBER_CHANGE_NAME_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                      "previous_value"];
 impl MemberChangeNameDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberChangeNameDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberChangeNameDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -16261,7 +16768,10 @@ impl MemberChangeNameDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -16332,7 +16842,9 @@ const MEMBER_CHANGE_STATUS_DETAILS_FIELDS: &'static [&'static str] = &["new_valu
                                                                        "previous_value",
                                                                        "team_join_details"];
 impl MemberChangeStatusDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberChangeStatusDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberChangeStatusDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -16367,7 +16879,10 @@ impl MemberChangeStatusDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)?;
@@ -16417,7 +16932,9 @@ impl Default for MemberPermanentlyDeleteAccountContentsDetails {
 
 const MEMBER_PERMANENTLY_DELETE_ACCOUNT_CONTENTS_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl MemberPermanentlyDeleteAccountContentsDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberPermanentlyDeleteAccountContentsDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberPermanentlyDeleteAccountContentsDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, MEMBER_PERMANENTLY_DELETE_ACCOUNT_CONTENTS_DETAILS_FIELDS));
@@ -16480,7 +16997,9 @@ impl MemberRequestsChangePolicyDetails {
 const MEMBER_REQUESTS_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                 "previous_value"];
 impl MemberRequestsChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberRequestsChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberRequestsChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -16507,7 +17026,10 @@ impl MemberRequestsChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -16623,7 +17145,9 @@ impl Default for MemberSpaceLimitsAddExceptionDetails {
 
 const MEMBER_SPACE_LIMITS_ADD_EXCEPTION_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl MemberSpaceLimitsAddExceptionDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberSpaceLimitsAddExceptionDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSpaceLimitsAddExceptionDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_ADD_EXCEPTION_DETAILS_FIELDS));
@@ -16681,7 +17205,9 @@ impl MemberSpaceLimitsChangePolicyDetails {
 const MEMBER_SPACE_LIMITS_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
                                                                                     "new_value"];
 impl MemberSpaceLimitsChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberSpaceLimitsChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSpaceLimitsChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
         let mut field_new_value = None;
@@ -16708,7 +17234,10 @@ impl MemberSpaceLimitsChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("previous_value", &self.previous_value)?;
         s.serialize_field("new_value", &self.new_value)
@@ -16766,7 +17295,9 @@ impl MemberSpaceLimitsChangeStatusDetails {
 const MEMBER_SPACE_LIMITS_CHANGE_STATUS_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
                                                                                     "new_value"];
 impl MemberSpaceLimitsChangeStatusDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberSpaceLimitsChangeStatusDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSpaceLimitsChangeStatusDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
         let mut field_new_value = None;
@@ -16793,7 +17324,10 @@ impl MemberSpaceLimitsChangeStatusDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("previous_value", &self.previous_value)?;
         s.serialize_field("new_value", &self.new_value)
@@ -16842,7 +17376,9 @@ impl Default for MemberSpaceLimitsRemoveExceptionDetails {
 
 const MEMBER_SPACE_LIMITS_REMOVE_EXCEPTION_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl MemberSpaceLimitsRemoveExceptionDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberSpaceLimitsRemoveExceptionDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSpaceLimitsRemoveExceptionDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_REMOVE_EXCEPTION_DETAILS_FIELDS));
@@ -16977,7 +17513,9 @@ impl Default for MemberSuggestDetails {
 
 const MEMBER_SUGGEST_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl MemberSuggestDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberSuggestDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSuggestDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, MEMBER_SUGGEST_DETAILS_FIELDS));
@@ -17040,7 +17578,9 @@ impl MemberSuggestionsChangePolicyDetails {
 const MEMBER_SUGGESTIONS_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                    "previous_value"];
 impl MemberSuggestionsChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberSuggestionsChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSuggestionsChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -17067,7 +17607,10 @@ impl MemberSuggestionsChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -17183,7 +17726,9 @@ impl MemberTransferAccountContentsDetails {
 const MEMBER_TRANSFER_ACCOUNT_CONTENTS_DETAILS_FIELDS: &'static [&'static str] = &["src_participant_index",
                                                                                    "dest_participant_index"];
 impl MemberTransferAccountContentsDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MemberTransferAccountContentsDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberTransferAccountContentsDetails, V::Error> {
         use serde::de;
         let mut field_src_participant_index = None;
         let mut field_dest_participant_index = None;
@@ -17210,7 +17755,10 @@ impl MemberTransferAccountContentsDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("src_participant_index", &self.src_participant_index)?;
         s.serialize_field("dest_participant_index", &self.dest_participant_index)
@@ -17273,7 +17821,9 @@ impl MicrosoftOfficeAddinChangePolicyDetails {
 const MICROSOFT_OFFICE_ADDIN_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                        "previous_value"];
 impl MicrosoftOfficeAddinChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MicrosoftOfficeAddinChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MicrosoftOfficeAddinChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -17300,7 +17850,10 @@ impl MicrosoftOfficeAddinChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -17408,7 +17961,9 @@ impl Default for MissingDetails {
 
 const MISSING_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl MissingDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MissingDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MissingDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, MISSING_DETAILS_FIELDS));
@@ -17461,7 +18016,9 @@ impl Default for MobileSessionLogInfo {
 
 const MOBILE_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["session_id"];
 impl MobileSessionLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<MobileSessionLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MobileSessionLogInfo, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         while let Some(key) = map.next_key()? {
@@ -17480,7 +18037,10 @@ impl MobileSessionLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)
     }
@@ -17535,7 +18095,9 @@ impl Default for NamespaceRelativePathLogInfo {
 const NAMESPACE_RELATIVE_PATH_LOG_INFO_FIELDS: &'static [&'static str] = &["ns_id",
                                                                            "relative_path"];
 impl NamespaceRelativePathLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NamespaceRelativePathLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<NamespaceRelativePathLogInfo, V::Error> {
         use serde::de;
         let mut field_ns_id = None;
         let mut field_relative_path = None;
@@ -17562,7 +18124,10 @@ impl NamespaceRelativePathLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("ns_id", &self.ns_id)?;
         s.serialize_field("relative_path", &self.relative_path)
@@ -17624,7 +18189,9 @@ impl NetworkControlChangePolicyDetails {
 const NETWORK_CONTROL_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                 "previous_value"];
 impl NetworkControlChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NetworkControlChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<NetworkControlChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -17651,7 +18218,10 @@ impl NetworkControlChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -17770,7 +18340,9 @@ const NON_TEAM_MEMBER_LOG_INFO_FIELDS: &'static [&'static str] = &["account_id",
                                                                    "display_name",
                                                                    "email"];
 impl NonTeamMemberLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NonTeamMemberLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<NonTeamMemberLogInfo, V::Error> {
         use serde::de;
         let mut field_account_id = None;
         let mut field_display_name = None;
@@ -17805,7 +18377,10 @@ impl NonTeamMemberLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("account_id", &self.account_id)?;
         s.serialize_field("display_name", &self.display_name)?;
@@ -17855,7 +18430,9 @@ impl Default for NoteAclInviteOnlyDetails {
 
 const NOTE_ACL_INVITE_ONLY_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl NoteAclInviteOnlyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NoteAclInviteOnlyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<NoteAclInviteOnlyDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, NOTE_ACL_INVITE_ONLY_DETAILS_FIELDS));
@@ -17905,7 +18482,9 @@ impl Default for NoteAclLinkDetails {
 
 const NOTE_ACL_LINK_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl NoteAclLinkDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NoteAclLinkDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<NoteAclLinkDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, NOTE_ACL_LINK_DETAILS_FIELDS));
@@ -17955,7 +18534,9 @@ impl Default for NoteAclTeamLinkDetails {
 
 const NOTE_ACL_TEAM_LINK_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl NoteAclTeamLinkDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NoteAclTeamLinkDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<NoteAclTeamLinkDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, NOTE_ACL_TEAM_LINK_DETAILS_FIELDS));
@@ -18005,7 +18586,9 @@ impl Default for NoteShareReceiveDetails {
 
 const NOTE_SHARE_RECEIVE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl NoteShareReceiveDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NoteShareReceiveDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<NoteShareReceiveDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, NOTE_SHARE_RECEIVE_DETAILS_FIELDS));
@@ -18055,7 +18638,9 @@ impl Default for NoteSharedDetails {
 
 const NOTE_SHARED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl NoteSharedDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<NoteSharedDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<NoteSharedDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, NOTE_SHARED_DETAILS_FIELDS));
@@ -18105,7 +18690,9 @@ impl Default for OpenNoteSharedDetails {
 
 const OPEN_NOTE_SHARED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl OpenNoteSharedDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<OpenNoteSharedDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<OpenNoteSharedDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, OPEN_NOTE_SHARED_DETAILS_FIELDS));
@@ -18177,7 +18764,9 @@ const ORIGIN_LOG_INFO_FIELDS: &'static [&'static str] = &["access_method",
                                                           "geo_location",
                                                           "host"];
 impl OriginLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<OriginLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<OriginLogInfo, V::Error> {
         use serde::de;
         let mut field_access_method = None;
         let mut field_geo_location = None;
@@ -18212,7 +18801,10 @@ impl OriginLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("access_method", &self.access_method)?;
         s.serialize_field("geo_location", &self.geo_location)?;
@@ -18329,7 +18921,9 @@ impl Default for PaperAdminExportStartDetails {
 
 const PAPER_ADMIN_EXPORT_START_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PaperAdminExportStartDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperAdminExportStartDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperAdminExportStartDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, PAPER_ADMIN_EXPORT_START_DETAILS_FIELDS));
@@ -18383,7 +18977,10 @@ impl PaperChangeDeploymentPolicyDetails {
         }
     }
 
-    pub fn with_previous_value(mut self, value: Option<super::team_policies::PaperDeploymentPolicy>) -> Self {
+    pub fn with_previous_value(
+        mut self,
+        value: Option<super::team_policies::PaperDeploymentPolicy>,
+    ) -> Self {
         self.previous_value = value;
         self
     }
@@ -18393,7 +18990,9 @@ impl PaperChangeDeploymentPolicyDetails {
 const PAPER_CHANGE_DEPLOYMENT_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                  "previous_value"];
 impl PaperChangeDeploymentPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperChangeDeploymentPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperChangeDeploymentPolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -18420,7 +19019,10 @@ impl PaperChangeDeploymentPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -18473,7 +19075,9 @@ impl PaperChangeMemberLinkPolicyDetails {
 
 const PAPER_CHANGE_MEMBER_LINK_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
 impl PaperChangeMemberLinkPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperChangeMemberLinkPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperChangeMemberLinkPolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         while let Some(key) = map.next_key()? {
@@ -18492,7 +19096,10 @@ impl PaperChangeMemberLinkPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)
     }
@@ -18554,7 +19161,9 @@ impl PaperChangeMemberPolicyDetails {
 const PAPER_CHANGE_MEMBER_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                              "previous_value"];
 impl PaperChangeMemberPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperChangeMemberPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperChangeMemberPolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -18581,7 +19190,10 @@ impl PaperChangeMemberPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -18633,7 +19245,10 @@ impl PaperChangePolicyDetails {
         }
     }
 
-    pub fn with_previous_value(mut self, value: Option<super::team_policies::PaperEnabledPolicy>) -> Self {
+    pub fn with_previous_value(
+        mut self,
+        value: Option<super::team_policies::PaperEnabledPolicy>,
+    ) -> Self {
         self.previous_value = value;
         self
     }
@@ -18643,7 +19258,9 @@ impl PaperChangePolicyDetails {
 const PAPER_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                       "previous_value"];
 impl PaperChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -18670,7 +19287,10 @@ impl PaperChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -18723,7 +19343,9 @@ impl PaperContentAddMemberDetails {
 
 const PAPER_CONTENT_ADD_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperContentAddMemberDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperContentAddMemberDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperContentAddMemberDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -18742,7 +19364,10 @@ impl PaperContentAddMemberDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -18802,7 +19427,9 @@ const PAPER_CONTENT_ADD_TO_FOLDER_DETAILS_FIELDS: &'static [&'static str] = &["e
                                                                               "target_asset_index",
                                                                               "parent_asset_index"];
 impl PaperContentAddToFolderDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperContentAddToFolderDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperContentAddToFolderDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         let mut field_target_asset_index = None;
@@ -18837,7 +19464,10 @@ impl PaperContentAddToFolderDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)?;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
@@ -18891,7 +19521,9 @@ impl PaperContentArchiveDetails {
 
 const PAPER_CONTENT_ARCHIVE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperContentArchiveDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperContentArchiveDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperContentArchiveDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -18910,7 +19542,10 @@ impl PaperContentArchiveDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -18962,7 +19597,9 @@ impl PaperContentCreateDetails {
 
 const PAPER_CONTENT_CREATE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperContentCreateDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperContentCreateDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperContentCreateDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -18981,7 +19618,10 @@ impl PaperContentCreateDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -19033,7 +19673,9 @@ impl PaperContentPermanentlyDeleteDetails {
 
 const PAPER_CONTENT_PERMANENTLY_DELETE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperContentPermanentlyDeleteDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperContentPermanentlyDeleteDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperContentPermanentlyDeleteDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -19052,7 +19694,10 @@ impl PaperContentPermanentlyDeleteDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -19104,7 +19749,9 @@ impl PaperContentRemoveFromFolderDetails {
 
 const PAPER_CONTENT_REMOVE_FROM_FOLDER_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperContentRemoveFromFolderDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperContentRemoveFromFolderDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperContentRemoveFromFolderDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -19123,7 +19770,10 @@ impl PaperContentRemoveFromFolderDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -19175,7 +19825,9 @@ impl PaperContentRemoveMemberDetails {
 
 const PAPER_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperContentRemoveMemberDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperContentRemoveMemberDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperContentRemoveMemberDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -19194,7 +19846,10 @@ impl PaperContentRemoveMemberDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -19246,7 +19901,9 @@ impl PaperContentRenameDetails {
 
 const PAPER_CONTENT_RENAME_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperContentRenameDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperContentRenameDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperContentRenameDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -19265,7 +19922,10 @@ impl PaperContentRenameDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -19317,7 +19977,9 @@ impl PaperContentRestoreDetails {
 
 const PAPER_CONTENT_RESTORE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperContentRestoreDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperContentRestoreDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperContentRestoreDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -19336,7 +19998,10 @@ impl PaperContentRestoreDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -19397,7 +20062,9 @@ impl PaperDocAddCommentDetails {
 const PAPER_DOC_ADD_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
                                                                         "comment_text"];
 impl PaperDocAddCommentDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocAddCommentDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocAddCommentDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         let mut field_comment_text = None;
@@ -19424,7 +20091,10 @@ impl PaperDocAddCommentDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)?;
         s.serialize_field("comment_text", &self.comment_text)
@@ -19481,7 +20151,9 @@ impl PaperDocChangeMemberRoleDetails {
 const PAPER_DOC_CHANGE_MEMBER_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
                                                                                "access_type"];
 impl PaperDocChangeMemberRoleDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocChangeMemberRoleDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocChangeMemberRoleDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         let mut field_access_type = None;
@@ -19508,7 +20180,10 @@ impl PaperDocChangeMemberRoleDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)?;
         s.serialize_field("access_type", &self.access_type)
@@ -19579,7 +20254,9 @@ const PAPER_DOC_CHANGE_SHARING_POLICY_DETAILS_FIELDS: &'static [&'static str] = 
                                                                                   "public_sharing_policy",
                                                                                   "team_sharing_policy"];
 impl PaperDocChangeSharingPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocChangeSharingPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocChangeSharingPolicyDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         let mut field_public_sharing_policy = None;
@@ -19614,7 +20291,10 @@ impl PaperDocChangeSharingPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)?;
         s.serialize_field("public_sharing_policy", &self.public_sharing_policy)?;
@@ -19681,7 +20361,9 @@ const PAPER_DOC_CHANGE_SUBSCRIPTION_DETAILS_FIELDS: &'static [&'static str] = &[
                                                                                 "new_subscription_level",
                                                                                 "previous_subscription_level"];
 impl PaperDocChangeSubscriptionDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocChangeSubscriptionDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocChangeSubscriptionDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         let mut field_new_subscription_level = None;
@@ -19716,7 +20398,10 @@ impl PaperDocChangeSubscriptionDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)?;
         s.serialize_field("new_subscription_level", &self.new_subscription_level)?;
@@ -19779,7 +20464,9 @@ impl PaperDocDeleteCommentDetails {
 const PAPER_DOC_DELETE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
                                                                            "comment_text"];
 impl PaperDocDeleteCommentDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocDeleteCommentDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocDeleteCommentDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         let mut field_comment_text = None;
@@ -19806,7 +20493,10 @@ impl PaperDocDeleteCommentDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)?;
         s.serialize_field("comment_text", &self.comment_text)
@@ -19859,7 +20549,9 @@ impl PaperDocDeletedDetails {
 
 const PAPER_DOC_DELETED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperDocDeletedDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocDeletedDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocDeletedDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -19878,7 +20570,10 @@ impl PaperDocDeletedDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -19934,7 +20629,9 @@ impl PaperDocDownloadDetails {
 const PAPER_DOC_DOWNLOAD_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
                                                                      "export_file_format"];
 impl PaperDocDownloadDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocDownloadDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocDownloadDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         let mut field_export_file_format = None;
@@ -19961,7 +20658,10 @@ impl PaperDocDownloadDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)?;
         s.serialize_field("export_file_format", &self.export_file_format)
@@ -20023,7 +20723,9 @@ impl PaperDocEditCommentDetails {
 const PAPER_DOC_EDIT_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
                                                                          "comment_text"];
 impl PaperDocEditCommentDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocEditCommentDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocEditCommentDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         let mut field_comment_text = None;
@@ -20050,7 +20752,10 @@ impl PaperDocEditCommentDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)?;
         s.serialize_field("comment_text", &self.comment_text)
@@ -20103,7 +20808,9 @@ impl PaperDocEditDetails {
 
 const PAPER_DOC_EDIT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperDocEditDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocEditDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocEditDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -20122,7 +20829,10 @@ impl PaperDocEditDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -20174,7 +20884,9 @@ impl PaperDocFollowedDetails {
 
 const PAPER_DOC_FOLLOWED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperDocFollowedDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocFollowedDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocFollowedDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -20193,7 +20905,10 @@ impl PaperDocFollowedDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -20245,7 +20960,9 @@ impl PaperDocMentionDetails {
 
 const PAPER_DOC_MENTION_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperDocMentionDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocMentionDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocMentionDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -20264,7 +20981,10 @@ impl PaperDocMentionDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -20316,7 +21036,9 @@ impl PaperDocRequestAccessDetails {
 
 const PAPER_DOC_REQUEST_ACCESS_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperDocRequestAccessDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocRequestAccessDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocRequestAccessDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -20335,7 +21057,10 @@ impl PaperDocRequestAccessDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -20396,7 +21121,9 @@ impl PaperDocResolveCommentDetails {
 const PAPER_DOC_RESOLVE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
                                                                             "comment_text"];
 impl PaperDocResolveCommentDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocResolveCommentDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocResolveCommentDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         let mut field_comment_text = None;
@@ -20423,7 +21150,10 @@ impl PaperDocResolveCommentDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)?;
         s.serialize_field("comment_text", &self.comment_text)
@@ -20476,7 +21206,9 @@ impl PaperDocRevertDetails {
 
 const PAPER_DOC_REVERT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperDocRevertDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocRevertDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocRevertDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -20495,7 +21227,10 @@ impl PaperDocRevertDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -20547,7 +21282,9 @@ impl PaperDocSlackShareDetails {
 
 const PAPER_DOC_SLACK_SHARE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperDocSlackShareDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocSlackShareDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocSlackShareDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -20566,7 +21303,10 @@ impl PaperDocSlackShareDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -20618,7 +21358,9 @@ impl PaperDocTeamInviteDetails {
 
 const PAPER_DOC_TEAM_INVITE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperDocTeamInviteDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocTeamInviteDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocTeamInviteDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -20637,7 +21379,10 @@ impl PaperDocTeamInviteDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -20689,7 +21434,9 @@ impl PaperDocTrashedDetails {
 
 const PAPER_DOC_TRASHED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperDocTrashedDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocTrashedDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocTrashedDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -20708,7 +21455,10 @@ impl PaperDocTrashedDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -20769,7 +21519,9 @@ impl PaperDocUnresolveCommentDetails {
 const PAPER_DOC_UNRESOLVE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
                                                                               "comment_text"];
 impl PaperDocUnresolveCommentDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocUnresolveCommentDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocUnresolveCommentDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         let mut field_comment_text = None;
@@ -20796,7 +21548,10 @@ impl PaperDocUnresolveCommentDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)?;
         s.serialize_field("comment_text", &self.comment_text)
@@ -20849,7 +21604,9 @@ impl PaperDocUntrashedDetails {
 
 const PAPER_DOC_UNTRASHED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperDocUntrashedDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocUntrashedDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocUntrashedDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -20868,7 +21625,10 @@ impl PaperDocUntrashedDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -20920,7 +21680,9 @@ impl PaperDocViewDetails {
 
 const PAPER_DOC_VIEW_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperDocViewDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocViewDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocViewDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -20939,7 +21701,10 @@ impl PaperDocViewDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -20995,7 +21760,9 @@ impl PaperDocumentLogInfo {
 const PAPER_DOCUMENT_LOG_INFO_FIELDS: &'static [&'static str] = &["doc_id",
                                                                   "doc_title"];
 impl PaperDocumentLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperDocumentLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperDocumentLogInfo, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_doc_title = None;
@@ -21022,7 +21789,10 @@ impl PaperDocumentLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("doc_id", &self.doc_id)?;
         s.serialize_field("doc_title", &self.doc_title)
@@ -21138,7 +21908,9 @@ impl Default for PaperEnabledUsersGroupAdditionDetails {
 
 const PAPER_ENABLED_USERS_GROUP_ADDITION_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PaperEnabledUsersGroupAdditionDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperEnabledUsersGroupAdditionDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperEnabledUsersGroupAdditionDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, PAPER_ENABLED_USERS_GROUP_ADDITION_DETAILS_FIELDS));
@@ -21188,7 +21960,9 @@ impl Default for PaperEnabledUsersGroupRemovalDetails {
 
 const PAPER_ENABLED_USERS_GROUP_REMOVAL_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PaperEnabledUsersGroupRemovalDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperEnabledUsersGroupRemovalDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperEnabledUsersGroupRemovalDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, PAPER_ENABLED_USERS_GROUP_REMOVAL_DETAILS_FIELDS));
@@ -21238,7 +22012,9 @@ impl Default for PaperExternalViewAllowDetails {
 
 const PAPER_EXTERNAL_VIEW_ALLOW_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PaperExternalViewAllowDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperExternalViewAllowDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperExternalViewAllowDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, PAPER_EXTERNAL_VIEW_ALLOW_DETAILS_FIELDS));
@@ -21288,7 +22064,9 @@ impl Default for PaperExternalViewDefaultTeamDetails {
 
 const PAPER_EXTERNAL_VIEW_DEFAULT_TEAM_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PaperExternalViewDefaultTeamDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperExternalViewDefaultTeamDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperExternalViewDefaultTeamDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, PAPER_EXTERNAL_VIEW_DEFAULT_TEAM_DETAILS_FIELDS));
@@ -21338,7 +22116,9 @@ impl Default for PaperExternalViewForbidDetails {
 
 const PAPER_EXTERNAL_VIEW_FORBID_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PaperExternalViewForbidDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperExternalViewForbidDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperExternalViewForbidDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, PAPER_EXTERNAL_VIEW_FORBID_DETAILS_FIELDS));
@@ -21405,7 +22185,9 @@ const PAPER_FOLDER_CHANGE_SUBSCRIPTION_DETAILS_FIELDS: &'static [&'static str] =
                                                                                    "new_subscription_level",
                                                                                    "previous_subscription_level"];
 impl PaperFolderChangeSubscriptionDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperFolderChangeSubscriptionDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperFolderChangeSubscriptionDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         let mut field_new_subscription_level = None;
@@ -21440,7 +22222,10 @@ impl PaperFolderChangeSubscriptionDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)?;
         s.serialize_field("new_subscription_level", &self.new_subscription_level)?;
@@ -21494,7 +22279,9 @@ impl PaperFolderDeletedDetails {
 
 const PAPER_FOLDER_DELETED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperFolderDeletedDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperFolderDeletedDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperFolderDeletedDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -21513,7 +22300,10 @@ impl PaperFolderDeletedDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -21565,7 +22355,9 @@ impl PaperFolderFollowedDetails {
 
 const PAPER_FOLDER_FOLLOWED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperFolderFollowedDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperFolderFollowedDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperFolderFollowedDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -21584,7 +22376,10 @@ impl PaperFolderFollowedDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -21640,7 +22435,9 @@ impl PaperFolderLogInfo {
 const PAPER_FOLDER_LOG_INFO_FIELDS: &'static [&'static str] = &["folder_id",
                                                                 "folder_name"];
 impl PaperFolderLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperFolderLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperFolderLogInfo, V::Error> {
         use serde::de;
         let mut field_folder_id = None;
         let mut field_folder_name = None;
@@ -21667,7 +22464,10 @@ impl PaperFolderLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("folder_id", &self.folder_id)?;
         s.serialize_field("folder_name", &self.folder_name)
@@ -21720,7 +22520,9 @@ impl PaperFolderTeamInviteDetails {
 
 const PAPER_FOLDER_TEAM_INVITE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
 impl PaperFolderTeamInviteDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PaperFolderTeamInviteDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PaperFolderTeamInviteDetails, V::Error> {
         use serde::de;
         let mut field_event_uuid = None;
         while let Some(key) = map.next_key()? {
@@ -21739,7 +22541,10 @@ impl PaperFolderTeamInviteDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("event_uuid", &self.event_uuid)
     }
@@ -21924,7 +22729,9 @@ impl Default for PasswordChangeDetails {
 
 const PASSWORD_CHANGE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PasswordChangeDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PasswordChangeDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PasswordChangeDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, PASSWORD_CHANGE_DETAILS_FIELDS));
@@ -21978,7 +22785,9 @@ impl PasswordLoginFailDetails {
 
 const PASSWORD_LOGIN_FAIL_DETAILS_FIELDS: &'static [&'static str] = &["error_details"];
 impl PasswordLoginFailDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PasswordLoginFailDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PasswordLoginFailDetails, V::Error> {
         use serde::de;
         let mut field_error_details = None;
         while let Some(key) = map.next_key()? {
@@ -21997,7 +22806,10 @@ impl PasswordLoginFailDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("error_details", &self.error_details)
     }
@@ -22045,7 +22857,9 @@ impl Default for PasswordLoginSuccessDetails {
 
 const PASSWORD_LOGIN_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PasswordLoginSuccessDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PasswordLoginSuccessDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PasswordLoginSuccessDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, PASSWORD_LOGIN_SUCCESS_DETAILS_FIELDS));
@@ -22095,7 +22909,9 @@ impl Default for PasswordResetAllDetails {
 
 const PASSWORD_RESET_ALL_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PasswordResetAllDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PasswordResetAllDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PasswordResetAllDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, PASSWORD_RESET_ALL_DETAILS_FIELDS));
@@ -22145,7 +22961,9 @@ impl Default for PasswordResetDetails {
 
 const PASSWORD_RESET_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl PasswordResetDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PasswordResetDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PasswordResetDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, PASSWORD_RESET_DETAILS_FIELDS));
@@ -22209,7 +23027,9 @@ impl PathLogInfo {
 const PATH_LOG_INFO_FIELDS: &'static [&'static str] = &["namespace_relative",
                                                         "contextual"];
 impl PathLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PathLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PathLogInfo, V::Error> {
         use serde::de;
         let mut field_namespace_relative = None;
         let mut field_contextual = None;
@@ -22236,7 +23056,10 @@ impl PathLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("namespace_relative", &self.namespace_relative)?;
         s.serialize_field("contextual", &self.contextual)
@@ -22298,7 +23121,9 @@ impl PermanentDeleteChangePolicyDetails {
 const PERMANENT_DELETE_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                  "previous_value"];
 impl PermanentDeleteChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PermanentDeleteChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PermanentDeleteChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -22325,7 +23150,10 @@ impl PermanentDeleteChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -22440,7 +23268,9 @@ impl RelocateAssetReferencesLogInfo {
 const RELOCATE_ASSET_REFERENCES_LOG_INFO_FIELDS: &'static [&'static str] = &["src_asset_index",
                                                                              "dest_asset_index"];
 impl RelocateAssetReferencesLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocateAssetReferencesLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RelocateAssetReferencesLogInfo, V::Error> {
         use serde::de;
         let mut field_src_asset_index = None;
         let mut field_dest_asset_index = None;
@@ -22467,7 +23297,10 @@ impl RelocateAssetReferencesLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("src_asset_index", &self.src_asset_index)?;
         s.serialize_field("dest_asset_index", &self.dest_asset_index)
@@ -22524,7 +23357,9 @@ impl ResellerLogInfo {
 const RESELLER_LOG_INFO_FIELDS: &'static [&'static str] = &["reseller_name",
                                                             "reseller_id"];
 impl ResellerLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ResellerLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ResellerLogInfo, V::Error> {
         use serde::de;
         let mut field_reseller_name = None;
         let mut field_reseller_id = None;
@@ -22551,7 +23386,10 @@ impl ResellerLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("reseller_name", &self.reseller_name)?;
         s.serialize_field("reseller_id", &self.reseller_id)
@@ -22600,7 +23438,9 @@ impl Default for ResellerSupportSessionEndDetails {
 
 const RESELLER_SUPPORT_SESSION_END_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ResellerSupportSessionEndDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ResellerSupportSessionEndDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ResellerSupportSessionEndDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, RESELLER_SUPPORT_SESSION_END_DETAILS_FIELDS));
@@ -22650,7 +23490,9 @@ impl Default for ResellerSupportSessionStartDetails {
 
 const RESELLER_SUPPORT_SESSION_START_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ResellerSupportSessionStartDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ResellerSupportSessionStartDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ResellerSupportSessionStartDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, RESELLER_SUPPORT_SESSION_START_DETAILS_FIELDS));
@@ -22788,7 +23630,9 @@ const SF_ADD_GROUP_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_ind
                                                                "team_name",
                                                                "sharing_permission"];
 impl SfAddGroupDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfAddGroupDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfAddGroupDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -22831,7 +23675,10 @@ impl SfAddGroupDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -22899,7 +23746,9 @@ const SF_ALLOW_NON_MEMBERS_TO_VIEW_SHARED_LINKS_DETAILS_FIELDS: &'static [&'stat
                                                                                             "original_folder_name",
                                                                                             "shared_folder_type"];
 impl SfAllowNonMembersToViewSharedLinksDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfAllowNonMembersToViewSharedLinksDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfAllowNonMembersToViewSharedLinksDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -22934,7 +23783,10 @@ impl SfAllowNonMembersToViewSharedLinksDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -22985,7 +23837,9 @@ impl Default for SfExternalInviteWarnDetails {
 
 const SF_EXTERNAL_INVITE_WARN_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SfExternalInviteWarnDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfExternalInviteWarnDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfExternalInviteWarnDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SF_EXTERNAL_INVITE_WARN_DETAILS_FIELDS));
@@ -23039,7 +23893,9 @@ impl SfInviteGroupDetails {
 
 const SF_INVITE_GROUP_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index"];
 impl SfInviteGroupDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfInviteGroupDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfInviteGroupDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         while let Some(key) = map.next_key()? {
@@ -23058,7 +23914,10 @@ impl SfInviteGroupDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)
     }
@@ -23132,7 +23991,9 @@ const SF_NEST_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                           "prev_parent_ns_id",
                                                           "new_parent_ns_id"];
 impl SfNestDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfNestDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfNestDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -23175,7 +24036,10 @@ impl SfNestDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -23234,7 +24098,9 @@ impl SfTeamDeclineDetails {
 const SF_TEAM_DECLINE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                   "original_folder_name"];
 impl SfTeamDeclineDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfTeamDeclineDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfTeamDeclineDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -23261,7 +24127,10 @@ impl SfTeamDeclineDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)
@@ -23318,7 +24187,9 @@ impl SfTeamGrantAccessDetails {
 const SF_TEAM_GRANT_ACCESS_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                        "original_folder_name"];
 impl SfTeamGrantAccessDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfTeamGrantAccessDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfTeamGrantAccessDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -23345,7 +24216,10 @@ impl SfTeamGrantAccessDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)
@@ -23420,7 +24294,9 @@ const SF_TEAM_INVITE_CHANGE_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["ta
                                                                              "new_sharing_permission",
                                                                              "previous_sharing_permission"];
 impl SfTeamInviteChangeRoleDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfTeamInviteChangeRoleDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfTeamInviteChangeRoleDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -23463,7 +24339,10 @@ impl SfTeamInviteChangeRoleDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -23531,7 +24410,9 @@ const SF_TEAM_INVITE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_i
                                                                  "original_folder_name",
                                                                  "sharing_permission"];
 impl SfTeamInviteDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfTeamInviteDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfTeamInviteDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -23566,7 +24447,10 @@ impl SfTeamInviteDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -23624,7 +24508,9 @@ impl SfTeamJoinDetails {
 const SF_TEAM_JOIN_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                "original_folder_name"];
 impl SfTeamJoinDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfTeamJoinDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfTeamJoinDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -23651,7 +24537,10 @@ impl SfTeamJoinDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)
@@ -23726,7 +24615,9 @@ const SF_TEAM_JOIN_FROM_OOB_LINK_DETAILS_FIELDS: &'static [&'static str] = &["ta
                                                                              "token_key",
                                                                              "sharing_permission"];
 impl SfTeamJoinFromOobLinkDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfTeamJoinFromOobLinkDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfTeamJoinFromOobLinkDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -23769,7 +24660,10 @@ impl SfTeamJoinFromOobLinkDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -23828,7 +24722,9 @@ impl SfTeamUninviteDetails {
 const SF_TEAM_UNINVITE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                    "original_folder_name"];
 impl SfTeamUninviteDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SfTeamUninviteDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfTeamUninviteDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -23855,7 +24751,10 @@ impl SfTeamUninviteDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)
@@ -23926,7 +24825,9 @@ const SHARED_CONTENT_ADD_INVITEES_DETAILS_FIELDS: &'static [&'static str] = &["t
                                                                               "original_folder_name",
                                                                               "sharing_permission"];
 impl SharedContentAddInviteesDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentAddInviteesDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentAddInviteesDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -23961,7 +24862,10 @@ impl SharedContentAddInviteesDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -24013,7 +24917,11 @@ pub struct SharedContentAddLinkExpiryDetails {
 }
 
 impl SharedContentAddLinkExpiryDetails {
-    pub fn new(target_asset_index: u64, expiration_start_date: String, expiration_days: i64) -> Self {
+    pub fn new(
+        target_asset_index: u64,
+        expiration_start_date: String,
+        expiration_days: i64,
+    ) -> Self {
         SharedContentAddLinkExpiryDetails {
             target_asset_index,
             expiration_start_date,
@@ -24041,7 +24949,9 @@ const SHARED_CONTENT_ADD_LINK_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &
                                                                                  "original_folder_name",
                                                                                  "shared_folder_type"];
 impl SharedContentAddLinkExpiryDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentAddLinkExpiryDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentAddLinkExpiryDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_expiration_start_date = None;
@@ -24092,7 +25002,10 @@ impl SharedContentAddLinkExpiryDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("expiration_start_date", &self.expiration_start_date)?;
@@ -24166,7 +25079,9 @@ const SHARED_CONTENT_ADD_LINK_PASSWORD_DETAILS_FIELDS: &'static [&'static str] =
                                                                                    "original_folder_name",
                                                                                    "shared_folder_type"];
 impl SharedContentAddLinkPasswordDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentAddLinkPasswordDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentAddLinkPasswordDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -24201,7 +25116,10 @@ impl SharedContentAddLinkPasswordDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -24282,7 +25200,9 @@ const SHARED_CONTENT_ADD_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["tar
                                                                             "sharing_permission",
                                                                             "shared_folder_type"];
 impl SharedContentAddMemberDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentAddMemberDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentAddMemberDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -24325,7 +25245,10 @@ impl SharedContentAddMemberDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -24411,7 +25334,9 @@ const SHARED_CONTENT_CHANGE_DOWNLOADS_POLICY_DETAILS_FIELDS: &'static [&'static 
                                                                                          "shared_folder_type",
                                                                                          "previous_value"];
 impl SharedContentChangeDownloadsPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentChangeDownloadsPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentChangeDownloadsPolicyDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_new_value = None;
@@ -24462,7 +25387,10 @@ impl SharedContentChangeDownloadsPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("new_value", &self.new_value)?;
@@ -24541,7 +25469,9 @@ const SHARED_CONTENT_CHANGE_INVITEE_ROLE_DETAILS_FIELDS: &'static [&'static str]
                                                                                      "new_sharing_permission",
                                                                                      "previous_sharing_permission"];
 impl SharedContentChangeInviteeRoleDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentChangeInviteeRoleDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentChangeInviteeRoleDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -24584,7 +25514,10 @@ impl SharedContentChangeInviteeRoleDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -24670,7 +25603,9 @@ const SHARED_CONTENT_CHANGE_LINK_AUDIENCE_DETAILS_FIELDS: &'static [&'static str
                                                                                       "shared_folder_type",
                                                                                       "previous_value"];
 impl SharedContentChangeLinkAudienceDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentChangeLinkAudienceDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentChangeLinkAudienceDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_new_value = None;
@@ -24721,7 +25656,10 @@ impl SharedContentChangeLinkAudienceDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("new_value", &self.new_value)?;
@@ -24775,7 +25713,11 @@ pub struct SharedContentChangeLinkExpiryDetails {
 }
 
 impl SharedContentChangeLinkExpiryDetails {
-    pub fn new(target_asset_index: u64, expiration_start_date: String, expiration_days: i64) -> Self {
+    pub fn new(
+        target_asset_index: u64,
+        expiration_start_date: String,
+        expiration_days: i64,
+    ) -> Self {
         SharedContentChangeLinkExpiryDetails {
             target_asset_index,
             expiration_start_date,
@@ -24803,7 +25745,9 @@ const SHARED_CONTENT_CHANGE_LINK_EXPIRY_DETAILS_FIELDS: &'static [&'static str] 
                                                                                     "original_folder_name",
                                                                                     "shared_folder_type"];
 impl SharedContentChangeLinkExpiryDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentChangeLinkExpiryDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentChangeLinkExpiryDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_expiration_start_date = None;
@@ -24854,7 +25798,10 @@ impl SharedContentChangeLinkExpiryDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("expiration_start_date", &self.expiration_start_date)?;
@@ -24928,7 +25875,9 @@ const SHARED_CONTENT_CHANGE_LINK_PASSWORD_DETAILS_FIELDS: &'static [&'static str
                                                                                       "original_folder_name",
                                                                                       "shared_folder_type"];
 impl SharedContentChangeLinkPasswordDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentChangeLinkPasswordDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentChangeLinkPasswordDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -24963,7 +25912,10 @@ impl SharedContentChangeLinkPasswordDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -25053,7 +26005,9 @@ const SHARED_CONTENT_CHANGE_MEMBER_ROLE_DETAILS_FIELDS: &'static [&'static str] 
                                                                                     "previous_sharing_permission",
                                                                                     "shared_folder_type"];
 impl SharedContentChangeMemberRoleDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentChangeMemberRoleDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentChangeMemberRoleDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -25104,7 +26058,10 @@ impl SharedContentChangeMemberRoleDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -25191,7 +26148,9 @@ const SHARED_CONTENT_CHANGE_VIEWER_INFO_POLICY_DETAILS_FIELDS: &'static [&'stati
                                                                                            "shared_folder_type",
                                                                                            "previous_value"];
 impl SharedContentChangeViewerInfoPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentChangeViewerInfoPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentChangeViewerInfoPolicyDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_new_value = None;
@@ -25242,7 +26201,10 @@ impl SharedContentChangeViewerInfoPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("new_value", &self.new_value)?;
@@ -25316,7 +26278,9 @@ const SHARED_CONTENT_CLAIM_INVITATION_DETAILS_FIELDS: &'static [&'static str] = 
                                                                                   "original_folder_name",
                                                                                   "shared_content_link"];
 impl SharedContentClaimInvitationDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentClaimInvitationDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentClaimInvitationDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -25351,7 +26315,10 @@ impl SharedContentClaimInvitationDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -25401,7 +26368,11 @@ pub struct SharedContentCopyDetails {
 }
 
 impl SharedContentCopyDetails {
-    pub fn new(shared_content_link: String, target_asset_index: u64, relocate_action_details: RelocateAssetReferencesLogInfo) -> Self {
+    pub fn new(
+        shared_content_link: String,
+        target_asset_index: u64,
+        relocate_action_details: RelocateAssetReferencesLogInfo,
+    ) -> Self {
         SharedContentCopyDetails {
             shared_content_link,
             target_asset_index,
@@ -25422,7 +26393,9 @@ const SHARED_CONTENT_COPY_DETAILS_FIELDS: &'static [&'static str] = &["shared_co
                                                                       "relocate_action_details",
                                                                       "sharing_permission"];
 impl SharedContentCopyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentCopyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentCopyDetails, V::Error> {
         use serde::de;
         let mut field_shared_content_link = None;
         let mut field_target_asset_index = None;
@@ -25465,7 +26438,10 @@ impl SharedContentCopyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_content_link", &self.shared_content_link)?;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
@@ -25533,7 +26509,9 @@ const SHARED_CONTENT_DOWNLOAD_DETAILS_FIELDS: &'static [&'static str] = &["share
                                                                           "target_asset_index",
                                                                           "sharing_permission"];
 impl SharedContentDownloadDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentDownloadDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentDownloadDetails, V::Error> {
         use serde::de;
         let mut field_shared_content_link = None;
         let mut field_target_asset_index = None;
@@ -25568,7 +26546,10 @@ impl SharedContentDownloadDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_content_link", &self.shared_content_link)?;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
@@ -25685,7 +26666,9 @@ impl SharedContentRelinquishMembershipDetails {
 const SHARED_CONTENT_RELINQUISH_MEMBERSHIP_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                                        "original_folder_name"];
 impl SharedContentRelinquishMembershipDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentRelinquishMembershipDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentRelinquishMembershipDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -25712,7 +26695,10 @@ impl SharedContentRelinquishMembershipDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)
@@ -25769,7 +26755,9 @@ impl SharedContentRemoveInviteeDetails {
 const SHARED_CONTENT_REMOVE_INVITEE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                                 "original_folder_name"];
 impl SharedContentRemoveInviteeDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentRemoveInviteeDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentRemoveInviteeDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -25796,7 +26784,10 @@ impl SharedContentRemoveInviteeDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)
@@ -25867,7 +26858,9 @@ const SHARED_CONTENT_REMOVE_LINK_EXPIRY_DETAILS_FIELDS: &'static [&'static str] 
                                                                                     "original_folder_name",
                                                                                     "shared_folder_type"];
 impl SharedContentRemoveLinkExpiryDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentRemoveLinkExpiryDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentRemoveLinkExpiryDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -25902,7 +26895,10 @@ impl SharedContentRemoveLinkExpiryDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -25974,7 +26970,9 @@ const SHARED_CONTENT_REMOVE_LINK_PASSWORD_DETAILS_FIELDS: &'static [&'static str
                                                                                       "original_folder_name",
                                                                                       "shared_folder_type"];
 impl SharedContentRemoveLinkPasswordDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentRemoveLinkPasswordDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentRemoveLinkPasswordDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -26009,7 +27007,10 @@ impl SharedContentRemoveLinkPasswordDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -26090,7 +27091,9 @@ const SHARED_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["
                                                                                "sharing_permission",
                                                                                "shared_folder_type"];
 impl SharedContentRemoveMemberDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentRemoveMemberDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentRemoveMemberDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -26133,7 +27136,10 @@ impl SharedContentRemoveMemberDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -26206,7 +27212,9 @@ const SHARED_CONTENT_REQUEST_ACCESS_DETAILS_FIELDS: &'static [&'static str] = &[
                                                                                 "original_folder_name",
                                                                                 "shared_content_link"];
 impl SharedContentRequestAccessDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentRequestAccessDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentRequestAccessDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -26241,7 +27249,10 @@ impl SharedContentRequestAccessDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -26304,7 +27315,9 @@ impl SharedContentUnshareDetails {
 const SHARED_CONTENT_UNSHARE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                          "original_folder_name"];
 impl SharedContentUnshareDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentUnshareDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentUnshareDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -26331,7 +27344,10 @@ impl SharedContentUnshareDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)
@@ -26397,7 +27413,9 @@ const SHARED_CONTENT_VIEW_DETAILS_FIELDS: &'static [&'static str] = &["shared_co
                                                                       "target_asset_index",
                                                                       "sharing_permission"];
 impl SharedContentViewDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedContentViewDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedContentViewDetails, V::Error> {
         use serde::de;
         let mut field_shared_content_link = None;
         let mut field_target_asset_index = None;
@@ -26432,7 +27450,10 @@ impl SharedContentViewDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_content_link", &self.shared_content_link)?;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
@@ -26541,7 +27562,11 @@ pub struct SharedFolderChangeConfidentialityDetails {
 }
 
 impl SharedFolderChangeConfidentialityDetails {
-    pub fn new(target_asset_index: u64, original_folder_name: String, new_value: Confidentiality) -> Self {
+    pub fn new(
+        target_asset_index: u64,
+        original_folder_name: String,
+        new_value: Confidentiality,
+    ) -> Self {
         SharedFolderChangeConfidentialityDetails {
             target_asset_index,
             original_folder_name,
@@ -26562,7 +27587,9 @@ const SHARED_FOLDER_CHANGE_CONFIDENTIALITY_DETAILS_FIELDS: &'static [&'static st
                                                                                        "new_value",
                                                                                        "previous_value"];
 impl SharedFolderChangeConfidentialityDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFolderChangeConfidentialityDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderChangeConfidentialityDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -26605,7 +27632,10 @@ impl SharedFolderChangeConfidentialityDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -26658,7 +27688,11 @@ pub struct SharedFolderChangeLinkPolicyDetails {
 }
 
 impl SharedFolderChangeLinkPolicyDetails {
-    pub fn new(target_asset_index: u64, original_folder_name: String, new_value: SharedFolderLinkPolicy) -> Self {
+    pub fn new(
+        target_asset_index: u64,
+        original_folder_name: String,
+        new_value: SharedFolderLinkPolicy,
+    ) -> Self {
         SharedFolderChangeLinkPolicyDetails {
             target_asset_index,
             original_folder_name,
@@ -26686,7 +27720,9 @@ const SHARED_FOLDER_CHANGE_LINK_POLICY_DETAILS_FIELDS: &'static [&'static str] =
                                                                                    "shared_folder_type",
                                                                                    "previous_value"];
 impl SharedFolderChangeLinkPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFolderChangeLinkPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderChangeLinkPolicyDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -26737,7 +27773,10 @@ impl SharedFolderChangeLinkPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -26791,7 +27830,11 @@ pub struct SharedFolderChangeMemberManagementPolicyDetails {
 }
 
 impl SharedFolderChangeMemberManagementPolicyDetails {
-    pub fn new(target_asset_index: u64, original_folder_name: String, new_value: SharedFolderMembershipManagementPolicy) -> Self {
+    pub fn new(
+        target_asset_index: u64,
+        original_folder_name: String,
+        new_value: SharedFolderMembershipManagementPolicy,
+    ) -> Self {
         SharedFolderChangeMemberManagementPolicyDetails {
             target_asset_index,
             original_folder_name,
@@ -26806,7 +27849,10 @@ impl SharedFolderChangeMemberManagementPolicyDetails {
         self
     }
 
-    pub fn with_previous_value(mut self, value: Option<SharedFolderMembershipManagementPolicy>) -> Self {
+    pub fn with_previous_value(
+        mut self,
+        value: Option<SharedFolderMembershipManagementPolicy>,
+    ) -> Self {
         self.previous_value = value;
         self
     }
@@ -26819,7 +27865,9 @@ const SHARED_FOLDER_CHANGE_MEMBER_MANAGEMENT_POLICY_DETAILS_FIELDS: &'static [&'
                                                                                                 "shared_folder_type",
                                                                                                 "previous_value"];
 impl SharedFolderChangeMemberManagementPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFolderChangeMemberManagementPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderChangeMemberManagementPolicyDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -26870,7 +27918,10 @@ impl SharedFolderChangeMemberManagementPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -26924,7 +27975,11 @@ pub struct SharedFolderChangeMemberPolicyDetails {
 }
 
 impl SharedFolderChangeMemberPolicyDetails {
-    pub fn new(target_asset_index: u64, original_folder_name: String, new_value: SharedFolderMemberPolicy) -> Self {
+    pub fn new(
+        target_asset_index: u64,
+        original_folder_name: String,
+        new_value: SharedFolderMemberPolicy,
+    ) -> Self {
         SharedFolderChangeMemberPolicyDetails {
             target_asset_index,
             original_folder_name,
@@ -26952,7 +28007,9 @@ const SHARED_FOLDER_CHANGE_MEMBER_POLICY_DETAILS_FIELDS: &'static [&'static str]
                                                                                      "shared_folder_type",
                                                                                      "previous_value"];
 impl SharedFolderChangeMemberPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFolderChangeMemberPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderChangeMemberPolicyDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -27003,7 +28060,10 @@ impl SharedFolderChangeMemberPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)?;
@@ -27068,7 +28128,9 @@ impl SharedFolderCreateDetails {
 const SHARED_FOLDER_CREATE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                        "parent_ns_id"];
 impl SharedFolderCreateDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFolderCreateDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderCreateDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_parent_ns_id = None;
@@ -27095,7 +28157,10 @@ impl SharedFolderCreateDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("parent_ns_id", &self.parent_ns_id)
@@ -27336,7 +28401,9 @@ impl SharedFolderMountDetails {
 const SHARED_FOLDER_MOUNT_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                       "original_folder_name"];
 impl SharedFolderMountDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFolderMountDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderMountDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -27363,7 +28430,10 @@ impl SharedFolderMountDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)
@@ -27420,7 +28490,9 @@ impl SharedFolderTransferOwnershipDetails {
 const SHARED_FOLDER_TRANSFER_OWNERSHIP_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                                    "original_folder_name"];
 impl SharedFolderTransferOwnershipDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFolderTransferOwnershipDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderTransferOwnershipDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -27447,7 +28519,10 @@ impl SharedFolderTransferOwnershipDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)
@@ -27504,7 +28579,9 @@ impl SharedFolderUnmountDetails {
 const SHARED_FOLDER_UNMOUNT_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
                                                                         "original_folder_name"];
 impl SharedFolderUnmountDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedFolderUnmountDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderUnmountDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         let mut field_original_folder_name = None;
@@ -27531,7 +28608,10 @@ impl SharedFolderUnmountDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("original_folder_name", &self.original_folder_name)
@@ -27580,7 +28660,9 @@ impl Default for SharedNoteOpenedDetails {
 
 const SHARED_NOTE_OPENED_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SharedNoteOpenedDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedNoteOpenedDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedNoteOpenedDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SHARED_NOTE_OPENED_DETAILS_FIELDS));
@@ -27643,7 +28725,9 @@ impl SharingChangeFolderJoinPolicyDetails {
 const SHARING_CHANGE_FOLDER_JOIN_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                     "previous_value"];
 impl SharingChangeFolderJoinPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharingChangeFolderJoinPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharingChangeFolderJoinPolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -27670,7 +28754,10 @@ impl SharingChangeFolderJoinPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -27733,7 +28820,9 @@ impl SharingChangeLinkPolicyDetails {
 const SHARING_CHANGE_LINK_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                              "previous_value"];
 impl SharingChangeLinkPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharingChangeLinkPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharingChangeLinkPolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -27760,7 +28849,10 @@ impl SharingChangeLinkPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -27822,7 +28914,9 @@ impl SharingChangeMemberPolicyDetails {
 const SHARING_CHANGE_MEMBER_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                "previous_value"];
 impl SharingChangeMemberPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharingChangeMemberPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharingChangeMemberPolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -27849,7 +28943,10 @@ impl SharingChangeMemberPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -28091,7 +29188,9 @@ impl Default for ShmodelAppCreateDetails {
 const SHMODEL_APP_CREATE_DETAILS_FIELDS: &'static [&'static str] = &["sharing_permission",
                                                                      "token_key"];
 impl ShmodelAppCreateDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelAppCreateDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelAppCreateDetails, V::Error> {
         use serde::de;
         let mut field_sharing_permission = None;
         let mut field_token_key = None;
@@ -28118,7 +29217,10 @@ impl ShmodelAppCreateDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("sharing_permission", &self.sharing_permission)?;
         s.serialize_field("token_key", &self.token_key)
@@ -28174,7 +29276,9 @@ impl Default for ShmodelCreateDetails {
 const SHMODEL_CREATE_DETAILS_FIELDS: &'static [&'static str] = &["sharing_permission",
                                                                  "token_key"];
 impl ShmodelCreateDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelCreateDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelCreateDetails, V::Error> {
         use serde::de;
         let mut field_sharing_permission = None;
         let mut field_token_key = None;
@@ -28201,7 +29305,10 @@ impl ShmodelCreateDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("sharing_permission", &self.sharing_permission)?;
         s.serialize_field("token_key", &self.token_key)
@@ -28257,7 +29364,9 @@ impl Default for ShmodelDisableDetails {
 const SHMODEL_DISABLE_DETAILS_FIELDS: &'static [&'static str] = &["sharing_permission",
                                                                   "token_key"];
 impl ShmodelDisableDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelDisableDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelDisableDetails, V::Error> {
         use serde::de;
         let mut field_sharing_permission = None;
         let mut field_token_key = None;
@@ -28284,7 +29393,10 @@ impl ShmodelDisableDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("sharing_permission", &self.sharing_permission)?;
         s.serialize_field("token_key", &self.token_key)
@@ -28337,7 +29449,9 @@ impl ShmodelFbShareDetails {
 
 const SHMODEL_FB_SHARE_DETAILS_FIELDS: &'static [&'static str] = &["sharing_non_member_recipients"];
 impl ShmodelFbShareDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelFbShareDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelFbShareDetails, V::Error> {
         use serde::de;
         let mut field_sharing_non_member_recipients = None;
         while let Some(key) = map.next_key()? {
@@ -28356,7 +29470,10 @@ impl ShmodelFbShareDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("sharing_non_member_recipients", &self.sharing_non_member_recipients)
     }
@@ -28404,7 +29521,9 @@ impl Default for ShmodelGroupShareDetails {
 
 const SHMODEL_GROUP_SHARE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelGroupShareDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelGroupShareDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelGroupShareDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SHMODEL_GROUP_SHARE_DETAILS_FIELDS));
@@ -28454,7 +29573,9 @@ impl Default for ShmodelRemoveExpirationDetails {
 
 const SHMODEL_REMOVE_EXPIRATION_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelRemoveExpirationDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelRemoveExpirationDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelRemoveExpirationDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SHMODEL_REMOVE_EXPIRATION_DETAILS_FIELDS));
@@ -28512,7 +29633,9 @@ impl ShmodelSetExpirationDetails {
 const SHMODEL_SET_EXPIRATION_DETAILS_FIELDS: &'static [&'static str] = &["expiration_start_date",
                                                                          "expiration_days"];
 impl ShmodelSetExpirationDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelSetExpirationDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelSetExpirationDetails, V::Error> {
         use serde::de;
         let mut field_expiration_start_date = None;
         let mut field_expiration_days = None;
@@ -28539,7 +29662,10 @@ impl ShmodelSetExpirationDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("expiration_start_date", &self.expiration_start_date)?;
         s.serialize_field("expiration_days", &self.expiration_days)
@@ -28588,7 +29714,9 @@ impl Default for ShmodelTeamCopyDetails {
 
 const SHMODEL_TEAM_COPY_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelTeamCopyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelTeamCopyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelTeamCopyDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SHMODEL_TEAM_COPY_DETAILS_FIELDS));
@@ -28638,7 +29766,9 @@ impl Default for ShmodelTeamDownloadDetails {
 
 const SHMODEL_TEAM_DOWNLOAD_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelTeamDownloadDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelTeamDownloadDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelTeamDownloadDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SHMODEL_TEAM_DOWNLOAD_DETAILS_FIELDS));
@@ -28688,7 +29818,9 @@ impl Default for ShmodelTeamShareDetails {
 
 const SHMODEL_TEAM_SHARE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelTeamShareDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelTeamShareDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelTeamShareDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SHMODEL_TEAM_SHARE_DETAILS_FIELDS));
@@ -28738,7 +29870,9 @@ impl Default for ShmodelTeamViewDetails {
 
 const SHMODEL_TEAM_VIEW_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelTeamViewDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelTeamViewDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelTeamViewDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SHMODEL_TEAM_VIEW_DETAILS_FIELDS));
@@ -28788,7 +29922,9 @@ impl Default for ShmodelVisibilityPasswordDetails {
 
 const SHMODEL_VISIBILITY_PASSWORD_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelVisibilityPasswordDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelVisibilityPasswordDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelVisibilityPasswordDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SHMODEL_VISIBILITY_PASSWORD_DETAILS_FIELDS));
@@ -28838,7 +29974,9 @@ impl Default for ShmodelVisibilityPublicDetails {
 
 const SHMODEL_VISIBILITY_PUBLIC_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelVisibilityPublicDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelVisibilityPublicDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelVisibilityPublicDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SHMODEL_VISIBILITY_PUBLIC_DETAILS_FIELDS));
@@ -28888,7 +30026,9 @@ impl Default for ShmodelVisibilityTeamOnlyDetails {
 
 const SHMODEL_VISIBILITY_TEAM_ONLY_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl ShmodelVisibilityTeamOnlyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ShmodelVisibilityTeamOnlyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ShmodelVisibilityTeamOnlyDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SHMODEL_VISIBILITY_TEAM_ONLY_DETAILS_FIELDS));
@@ -28938,7 +30078,9 @@ impl Default for SignInAsSessionEndDetails {
 
 const SIGN_IN_AS_SESSION_END_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SignInAsSessionEndDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SignInAsSessionEndDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SignInAsSessionEndDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SIGN_IN_AS_SESSION_END_DETAILS_FIELDS));
@@ -28988,7 +30130,9 @@ impl Default for SignInAsSessionStartDetails {
 
 const SIGN_IN_AS_SESSION_START_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SignInAsSessionStartDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SignInAsSessionStartDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SignInAsSessionStartDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SIGN_IN_AS_SESSION_START_DETAILS_FIELDS));
@@ -29051,7 +30195,9 @@ impl SmartSyncChangePolicyDetails {
 const SMART_SYNC_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                            "previous_value"];
 impl SmartSyncChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SmartSyncChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SmartSyncChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -29078,7 +30224,10 @@ impl SmartSyncChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -29127,7 +30276,9 @@ impl Default for SmartSyncCreateAdminPrivilegeReportDetails {
 
 const SMART_SYNC_CREATE_ADMIN_PRIVILEGE_REPORT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SmartSyncCreateAdminPrivilegeReportDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SmartSyncCreateAdminPrivilegeReportDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SmartSyncCreateAdminPrivilegeReportDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SMART_SYNC_CREATE_ADMIN_PRIVILEGE_REPORT_DETAILS_FIELDS));
@@ -29185,7 +30336,9 @@ impl SmartSyncNotOptOutDetails {
 const SMART_SYNC_NOT_OPT_OUT_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
                                                                          "new_value"];
 impl SmartSyncNotOptOutDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SmartSyncNotOptOutDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SmartSyncNotOptOutDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
         let mut field_new_value = None;
@@ -29212,7 +30365,10 @@ impl SmartSyncNotOptOutDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("previous_value", &self.previous_value)?;
         s.serialize_field("new_value", &self.new_value)
@@ -29269,7 +30425,9 @@ impl SmartSyncOptOutDetails {
 const SMART_SYNC_OPT_OUT_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
                                                                      "new_value"];
 impl SmartSyncOptOutDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SmartSyncOptOutDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SmartSyncOptOutDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
         let mut field_new_value = None;
@@ -29296,7 +30454,10 @@ impl SmartSyncOptOutDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("previous_value", &self.previous_value)?;
         s.serialize_field("new_value", &self.new_value)
@@ -29608,7 +30769,9 @@ impl SsoAddCertDetails {
 
 const SSO_ADD_CERT_DETAILS_FIELDS: &'static [&'static str] = &["certificate_details"];
 impl SsoAddCertDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoAddCertDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SsoAddCertDetails, V::Error> {
         use serde::de;
         let mut field_certificate_details = None;
         while let Some(key) = map.next_key()? {
@@ -29627,7 +30790,10 @@ impl SsoAddCertDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("certificate_details", &self.certificate_details)
     }
@@ -29679,7 +30845,9 @@ impl SsoAddLoginUrlDetails {
 
 const SSO_ADD_LOGIN_URL_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
 impl SsoAddLoginUrlDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoAddLoginUrlDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SsoAddLoginUrlDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         while let Some(key) = map.next_key()? {
@@ -29698,7 +30866,10 @@ impl SsoAddLoginUrlDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)
     }
@@ -29749,7 +30920,9 @@ impl Default for SsoAddLogoutUrlDetails {
 
 const SSO_ADD_LOGOUT_URL_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
 impl SsoAddLogoutUrlDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoAddLogoutUrlDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SsoAddLogoutUrlDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         while let Some(key) = map.next_key()? {
@@ -29768,7 +30941,10 @@ impl SsoAddLogoutUrlDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)
     }
@@ -29829,7 +31005,9 @@ impl SsoChangeCertDetails {
 const SSO_CHANGE_CERT_DETAILS_FIELDS: &'static [&'static str] = &["new_certificate_details",
                                                                   "previous_certificate_details"];
 impl SsoChangeCertDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoChangeCertDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SsoChangeCertDetails, V::Error> {
         use serde::de;
         let mut field_new_certificate_details = None;
         let mut field_previous_certificate_details = None;
@@ -29856,7 +31034,10 @@ impl SsoChangeCertDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_certificate_details", &self.new_certificate_details)?;
         s.serialize_field("previous_certificate_details", &self.previous_certificate_details)
@@ -29913,7 +31094,9 @@ impl SsoChangeLoginUrlDetails {
 const SSO_CHANGE_LOGIN_URL_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
                                                                        "new_value"];
 impl SsoChangeLoginUrlDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoChangeLoginUrlDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SsoChangeLoginUrlDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
         let mut field_new_value = None;
@@ -29940,7 +31123,10 @@ impl SsoChangeLoginUrlDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("previous_value", &self.previous_value)?;
         s.serialize_field("new_value", &self.new_value)
@@ -29996,7 +31182,9 @@ impl Default for SsoChangeLogoutUrlDetails {
 const SSO_CHANGE_LOGOUT_URL_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
                                                                         "new_value"];
 impl SsoChangeLogoutUrlDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoChangeLogoutUrlDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SsoChangeLogoutUrlDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
         let mut field_new_value = None;
@@ -30023,7 +31211,10 @@ impl SsoChangeLogoutUrlDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("previous_value", &self.previous_value)?;
         s.serialize_field("new_value", &self.new_value)
@@ -30085,7 +31276,9 @@ impl SsoChangePolicyDetails {
 const SSO_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                     "previous_value"];
 impl SsoChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SsoChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -30112,7 +31305,10 @@ impl SsoChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -30169,7 +31365,9 @@ impl SsoChangeSamlIdentityModeDetails {
 const SSO_CHANGE_SAML_IDENTITY_MODE_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
                                                                                 "new_value"];
 impl SsoChangeSamlIdentityModeDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoChangeSamlIdentityModeDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SsoChangeSamlIdentityModeDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
         let mut field_new_value = None;
@@ -30196,7 +31394,10 @@ impl SsoChangeSamlIdentityModeDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("previous_value", &self.previous_value)?;
         s.serialize_field("new_value", &self.new_value)
@@ -30249,7 +31450,9 @@ impl SsoLoginFailDetails {
 
 const SSO_LOGIN_FAIL_DETAILS_FIELDS: &'static [&'static str] = &["error_details"];
 impl SsoLoginFailDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoLoginFailDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SsoLoginFailDetails, V::Error> {
         use serde::de;
         let mut field_error_details = None;
         while let Some(key) = map.next_key()? {
@@ -30268,7 +31471,10 @@ impl SsoLoginFailDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("error_details", &self.error_details)
     }
@@ -30316,7 +31522,9 @@ impl Default for SsoRemoveCertDetails {
 
 const SSO_REMOVE_CERT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SsoRemoveCertDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoRemoveCertDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SsoRemoveCertDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, SSO_REMOVE_CERT_DETAILS_FIELDS));
@@ -30370,7 +31578,9 @@ impl SsoRemoveLoginUrlDetails {
 
 const SSO_REMOVE_LOGIN_URL_DETAILS_FIELDS: &'static [&'static str] = &["previous_value"];
 impl SsoRemoveLoginUrlDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoRemoveLoginUrlDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SsoRemoveLoginUrlDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
         while let Some(key) = map.next_key()? {
@@ -30389,7 +31599,10 @@ impl SsoRemoveLoginUrlDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("previous_value", &self.previous_value)
     }
@@ -30441,7 +31654,9 @@ impl SsoRemoveLogoutUrlDetails {
 
 const SSO_REMOVE_LOGOUT_URL_DETAILS_FIELDS: &'static [&'static str] = &["previous_value"];
 impl SsoRemoveLogoutUrlDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SsoRemoveLogoutUrlDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SsoRemoveLogoutUrlDetails, V::Error> {
         use serde::de;
         let mut field_previous_value = None;
         while let Some(key) = map.next_key()? {
@@ -30460,7 +31675,10 @@ impl SsoRemoveLogoutUrlDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("previous_value", &self.previous_value)
     }
@@ -30504,7 +31722,10 @@ pub struct TeamActivityCreateReportDetails {
 }
 
 impl TeamActivityCreateReportDetails {
-    pub fn new(start_date: super::common::DropboxTimestamp, end_date: super::common::DropboxTimestamp) -> Self {
+    pub fn new(
+        start_date: super::common::DropboxTimestamp,
+        end_date: super::common::DropboxTimestamp,
+    ) -> Self {
         TeamActivityCreateReportDetails {
             start_date,
             end_date,
@@ -30516,7 +31737,9 @@ impl TeamActivityCreateReportDetails {
 const TEAM_ACTIVITY_CREATE_REPORT_DETAILS_FIELDS: &'static [&'static str] = &["start_date",
                                                                               "end_date"];
 impl TeamActivityCreateReportDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamActivityCreateReportDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamActivityCreateReportDetails, V::Error> {
         use serde::de;
         let mut field_start_date = None;
         let mut field_end_date = None;
@@ -30543,7 +31766,10 @@ impl TeamActivityCreateReportDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("start_date", &self.start_date)?;
         s.serialize_field("end_date", &self.end_date)
@@ -30611,7 +31837,15 @@ pub struct TeamEvent {
 }
 
 impl TeamEvent {
-    pub fn new(timestamp: super::common::DropboxTimestamp, event_category: EventCategory, actor: ActorLogInfo, involve_non_team_member: bool, context: ContextLogInfo, event_type: EventType, details: EventDetails) -> Self {
+    pub fn new(
+        timestamp: super::common::DropboxTimestamp,
+        event_category: EventCategory,
+        actor: ActorLogInfo,
+        involve_non_team_member: bool,
+        context: ContextLogInfo,
+        event_type: EventType,
+        details: EventDetails,
+    ) -> Self {
         TeamEvent {
             timestamp,
             event_category,
@@ -30654,7 +31888,9 @@ const TEAM_EVENT_FIELDS: &'static [&'static str] = &["timestamp",
                                                      "participants",
                                                      "assets"];
 impl TeamEvent {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamEvent, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamEvent, V::Error> {
         use serde::de;
         let mut field_timestamp = None;
         let mut field_event_category = None;
@@ -30745,7 +31981,10 @@ impl TeamEvent {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("timestamp", &self.timestamp)?;
         s.serialize_field("event_category", &self.event_category)?;
@@ -30815,7 +32054,9 @@ impl TeamFolderChangeStatusDetails {
 const TEAM_FOLDER_CHANGE_STATUS_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                             "previous_value"];
 impl TeamFolderChangeStatusDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderChangeStatusDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderChangeStatusDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -30842,7 +32083,10 @@ impl TeamFolderChangeStatusDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -30891,7 +32135,9 @@ impl Default for TeamFolderCreateDetails {
 
 const TEAM_FOLDER_CREATE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TeamFolderCreateDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderCreateDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderCreateDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, TEAM_FOLDER_CREATE_DETAILS_FIELDS));
@@ -30945,7 +32191,9 @@ impl TeamFolderDowngradeDetails {
 
 const TEAM_FOLDER_DOWNGRADE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index"];
 impl TeamFolderDowngradeDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderDowngradeDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderDowngradeDetails, V::Error> {
         use serde::de;
         let mut field_target_asset_index = None;
         while let Some(key) = map.next_key()? {
@@ -30964,7 +32212,10 @@ impl TeamFolderDowngradeDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("target_asset_index", &self.target_asset_index)
     }
@@ -31012,7 +32263,9 @@ impl Default for TeamFolderPermanentlyDeleteDetails {
 
 const TEAM_FOLDER_PERMANENTLY_DELETE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TeamFolderPermanentlyDeleteDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderPermanentlyDeleteDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderPermanentlyDeleteDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, TEAM_FOLDER_PERMANENTLY_DELETE_DETAILS_FIELDS));
@@ -31066,7 +32319,9 @@ impl TeamFolderRenameDetails {
 
 const TEAM_FOLDER_RENAME_DETAILS_FIELDS: &'static [&'static str] = &["relocate_action_details"];
 impl TeamFolderRenameDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamFolderRenameDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamFolderRenameDetails, V::Error> {
         use serde::de;
         let mut field_relocate_action_details = None;
         while let Some(key) = map.next_key()? {
@@ -31085,7 +32340,10 @@ impl TeamFolderRenameDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("relocate_action_details", &self.relocate_action_details)
     }
@@ -31198,7 +32456,9 @@ impl Default for TeamLinkedAppLogInfo {
 const TEAM_LINKED_APP_LOG_INFO_FIELDS: &'static [&'static str] = &["app_id",
                                                                    "display_name"];
 impl TeamLinkedAppLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamLinkedAppLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamLinkedAppLogInfo, V::Error> {
         use serde::de;
         let mut field_app_id = None;
         let mut field_display_name = None;
@@ -31225,7 +32485,10 @@ impl TeamLinkedAppLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("app_id", &self.app_id)?;
         s.serialize_field("display_name", &self.display_name)
@@ -31293,7 +32556,9 @@ const TEAM_MEMBER_LOG_INFO_FIELDS: &'static [&'static str] = &["account_id",
                                                                "team_member_id",
                                                                "member_external_id"];
 impl TeamMemberLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamMemberLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamMemberLogInfo, V::Error> {
         use serde::de;
         let mut field_account_id = None;
         let mut field_display_name = None;
@@ -31344,7 +32609,10 @@ impl TeamMemberLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("account_id", &self.account_id)?;
         s.serialize_field("display_name", &self.display_name)?;
@@ -31458,7 +32726,9 @@ impl TeamMergeFromDetails {
 
 const TEAM_MERGE_FROM_DETAILS_FIELDS: &'static [&'static str] = &["team_name"];
 impl TeamMergeFromDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamMergeFromDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamMergeFromDetails, V::Error> {
         use serde::de;
         let mut field_team_name = None;
         while let Some(key) = map.next_key()? {
@@ -31477,7 +32747,10 @@ impl TeamMergeFromDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_name", &self.team_name)
     }
@@ -31529,7 +32802,9 @@ impl TeamMergeToDetails {
 
 const TEAM_MERGE_TO_DETAILS_FIELDS: &'static [&'static str] = &["team_name"];
 impl TeamMergeToDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamMergeToDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamMergeToDetails, V::Error> {
         use serde::de;
         let mut field_team_name = None;
         while let Some(key) = map.next_key()? {
@@ -31548,7 +32823,10 @@ impl TeamMergeToDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_name", &self.team_name)
     }
@@ -31604,7 +32882,9 @@ impl TeamName {
 const TEAM_NAME_FIELDS: &'static [&'static str] = &["team_display_name",
                                                     "team_legal_name"];
 impl TeamName {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamName, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamName, V::Error> {
         use serde::de;
         let mut field_team_display_name = None;
         let mut field_team_legal_name = None;
@@ -31631,7 +32911,10 @@ impl TeamName {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("team_display_name", &self.team_display_name)?;
         s.serialize_field("team_legal_name", &self.team_legal_name)
@@ -31680,7 +32963,9 @@ impl Default for TeamProfileAddLogoDetails {
 
 const TEAM_PROFILE_ADD_LOGO_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TeamProfileAddLogoDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamProfileAddLogoDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamProfileAddLogoDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, TEAM_PROFILE_ADD_LOGO_DETAILS_FIELDS));
@@ -31726,7 +33011,10 @@ pub struct TeamProfileChangeDefaultLanguageDetails {
 }
 
 impl TeamProfileChangeDefaultLanguageDetails {
-    pub fn new(new_value: super::common::LanguageCode, previous_value: super::common::LanguageCode) -> Self {
+    pub fn new(
+        new_value: super::common::LanguageCode,
+        previous_value: super::common::LanguageCode,
+    ) -> Self {
         TeamProfileChangeDefaultLanguageDetails {
             new_value,
             previous_value,
@@ -31738,7 +33026,9 @@ impl TeamProfileChangeDefaultLanguageDetails {
 const TEAM_PROFILE_CHANGE_DEFAULT_LANGUAGE_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                        "previous_value"];
 impl TeamProfileChangeDefaultLanguageDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamProfileChangeDefaultLanguageDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamProfileChangeDefaultLanguageDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -31765,7 +33055,10 @@ impl TeamProfileChangeDefaultLanguageDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -31814,7 +33107,9 @@ impl Default for TeamProfileChangeLogoDetails {
 
 const TEAM_PROFILE_CHANGE_LOGO_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TeamProfileChangeLogoDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamProfileChangeLogoDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamProfileChangeLogoDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, TEAM_PROFILE_CHANGE_LOGO_DETAILS_FIELDS));
@@ -31877,7 +33172,9 @@ impl TeamProfileChangeNameDetails {
 const TEAM_PROFILE_CHANGE_NAME_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                            "previous_value"];
 impl TeamProfileChangeNameDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamProfileChangeNameDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamProfileChangeNameDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -31904,7 +33201,10 @@ impl TeamProfileChangeNameDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -31953,7 +33253,9 @@ impl Default for TeamProfileRemoveLogoDetails {
 
 const TEAM_PROFILE_REMOVE_LOGO_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TeamProfileRemoveLogoDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TeamProfileRemoveLogoDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TeamProfileRemoveLogoDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, TEAM_PROFILE_REMOVE_LOGO_DETAILS_FIELDS));
@@ -32003,7 +33305,9 @@ impl Default for TfaAddBackupPhoneDetails {
 
 const TFA_ADD_BACKUP_PHONE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TfaAddBackupPhoneDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaAddBackupPhoneDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TfaAddBackupPhoneDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, TFA_ADD_BACKUP_PHONE_DETAILS_FIELDS));
@@ -32053,7 +33357,9 @@ impl Default for TfaAddSecurityKeyDetails {
 
 const TFA_ADD_SECURITY_KEY_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TfaAddSecurityKeyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaAddSecurityKeyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TfaAddSecurityKeyDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, TFA_ADD_SECURITY_KEY_DETAILS_FIELDS));
@@ -32103,7 +33409,9 @@ impl Default for TfaChangeBackupPhoneDetails {
 
 const TFA_CHANGE_BACKUP_PHONE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TfaChangeBackupPhoneDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaChangeBackupPhoneDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TfaChangeBackupPhoneDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, TFA_CHANGE_BACKUP_PHONE_DETAILS_FIELDS));
@@ -32156,7 +33464,10 @@ impl TfaChangePolicyDetails {
         }
     }
 
-    pub fn with_previous_value(mut self, value: Option<super::team_policies::TwoStepVerificationPolicy>) -> Self {
+    pub fn with_previous_value(
+        mut self,
+        value: Option<super::team_policies::TwoStepVerificationPolicy>,
+    ) -> Self {
         self.previous_value = value;
         self
     }
@@ -32166,7 +33477,9 @@ impl TfaChangePolicyDetails {
 const TFA_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                     "previous_value"];
 impl TfaChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TfaChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -32193,7 +33506,10 @@ impl TfaChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -32266,7 +33582,9 @@ const TFA_CHANGE_STATUS_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                     "previous_value",
                                                                     "used_rescue_code"];
 impl TfaChangeStatusDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaChangeStatusDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TfaChangeStatusDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -32301,7 +33619,10 @@ impl TfaChangeStatusDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)?;
@@ -32428,7 +33749,9 @@ impl Default for TfaRemoveBackupPhoneDetails {
 
 const TFA_REMOVE_BACKUP_PHONE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TfaRemoveBackupPhoneDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaRemoveBackupPhoneDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TfaRemoveBackupPhoneDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, TFA_REMOVE_BACKUP_PHONE_DETAILS_FIELDS));
@@ -32478,7 +33801,9 @@ impl Default for TfaRemoveSecurityKeyDetails {
 
 const TFA_REMOVE_SECURITY_KEY_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TfaRemoveSecurityKeyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaRemoveSecurityKeyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TfaRemoveSecurityKeyDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, TFA_REMOVE_SECURITY_KEY_DETAILS_FIELDS));
@@ -32528,7 +33853,9 @@ impl Default for TfaResetDetails {
 
 const TFA_RESET_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl TfaResetDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TfaResetDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TfaResetDetails, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, TFA_RESET_DETAILS_FIELDS));
@@ -32704,7 +34031,9 @@ impl TwoAccountChangePolicyDetails {
 const TWO_ACCOUNT_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                             "previous_value"];
 impl TwoAccountChangePolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TwoAccountChangePolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TwoAccountChangePolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -32731,7 +34060,10 @@ impl TwoAccountChangePolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -32846,7 +34178,9 @@ impl Default for UserLinkedAppLogInfo {
 const USER_LINKED_APP_LOG_INFO_FIELDS: &'static [&'static str] = &["app_id",
                                                                    "display_name"];
 impl UserLinkedAppLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserLinkedAppLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UserLinkedAppLogInfo, V::Error> {
         use serde::de;
         let mut field_app_id = None;
         let mut field_display_name = None;
@@ -32873,7 +34207,10 @@ impl UserLinkedAppLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("app_id", &self.app_id)?;
         s.serialize_field("display_name", &self.display_name)
@@ -33003,7 +34340,9 @@ const USER_NAME_LOG_INFO_FIELDS: &'static [&'static str] = &["given_name",
                                                              "surname",
                                                              "locale"];
 impl UserNameLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserNameLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UserNameLogInfo, V::Error> {
         use serde::de;
         let mut field_given_name = None;
         let mut field_surname = None;
@@ -33038,7 +34377,10 @@ impl UserNameLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("given_name", &self.given_name)?;
         s.serialize_field("surname", &self.surname)?;
@@ -33095,7 +34437,9 @@ impl Default for UserOrTeamLinkedAppLogInfo {
 const USER_OR_TEAM_LINKED_APP_LOG_INFO_FIELDS: &'static [&'static str] = &["app_id",
                                                                            "display_name"];
 impl UserOrTeamLinkedAppLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UserOrTeamLinkedAppLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UserOrTeamLinkedAppLogInfo, V::Error> {
         use serde::de;
         let mut field_app_id = None;
         let mut field_display_name = None;
@@ -33122,7 +34466,10 @@ impl UserOrTeamLinkedAppLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("app_id", &self.app_id)?;
         s.serialize_field("display_name", &self.display_name)
@@ -33174,7 +34521,9 @@ impl Default for WebSessionLogInfo {
 
 const WEB_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["session_id"];
 impl WebSessionLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<WebSessionLogInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<WebSessionLogInfo, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         while let Some(key) = map.next_key()? {
@@ -33193,7 +34542,10 @@ impl WebSessionLogInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)
     }
@@ -33248,7 +34600,9 @@ impl Default for WebSessionsChangeFixedLengthPolicyDetails {
 const WEB_SESSIONS_CHANGE_FIXED_LENGTH_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                           "previous_value"];
 impl WebSessionsChangeFixedLengthPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<WebSessionsChangeFixedLengthPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<WebSessionsChangeFixedLengthPolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -33275,7 +34629,10 @@ impl WebSessionsChangeFixedLengthPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
@@ -33331,7 +34688,9 @@ impl Default for WebSessionsChangeIdleLengthPolicyDetails {
 const WEB_SESSIONS_CHANGE_IDLE_LENGTH_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                          "previous_value"];
 impl WebSessionsChangeIdleLengthPolicyDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<WebSessionsChangeIdleLengthPolicyDetails, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<WebSessionsChangeIdleLengthPolicyDetails, V::Error> {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
@@ -33358,7 +34717,10 @@ impl WebSessionsChangeIdleLengthPolicyDetails {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)

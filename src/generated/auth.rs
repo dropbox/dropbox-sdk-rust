@@ -9,13 +9,26 @@
 )]
 
 /// Creates an OAuth 2.0 access token from the supplied OAuth 1.0 access token.
-pub fn token_from_oauth1(client: &::client_trait::HttpClient, arg: &TokenFromOAuth1Arg) -> ::Result<Result<TokenFromOAuth1Result, TokenFromOAuth1Error>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "auth/token/from_oauth1", arg, None)
+pub fn token_from_oauth1(
+    client: &::client_trait::HttpClient,
+    arg: &TokenFromOAuth1Arg,
+) -> ::Result<Result<TokenFromOAuth1Result, TokenFromOAuth1Error>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "auth/token/from_oauth1",
+        arg,
+        None)
 }
 
 /// Disables the access token used to authenticate the call.
 pub fn token_revoke(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<(), ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "auth/token/revoke", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "auth/token/revoke",
+        arg,
+        None)
 }
 
 /// Error occurred because the account doesn't have permission to access the resource.
@@ -369,7 +382,9 @@ impl RateLimitError {
 const RATE_LIMIT_ERROR_FIELDS: &'static [&'static str] = &["reason",
                                                            "retry_after"];
 impl RateLimitError {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RateLimitError, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RateLimitError, V::Error> {
         use serde::de;
         let mut field_reason = None;
         let mut field_retry_after = None;
@@ -396,7 +411,10 @@ impl RateLimitError {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("reason", &self.reason)?;
         s.serialize_field("retry_after", &self.retry_after)
@@ -512,7 +530,9 @@ impl TokenFromOAuth1Arg {
 const TOKEN_FROM_O_AUTH1_ARG_FIELDS: &'static [&'static str] = &["oauth1_token",
                                                                  "oauth1_token_secret"];
 impl TokenFromOAuth1Arg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TokenFromOAuth1Arg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TokenFromOAuth1Arg, V::Error> {
         use serde::de;
         let mut field_oauth1_token = None;
         let mut field_oauth1_token_secret = None;
@@ -539,7 +559,10 @@ impl TokenFromOAuth1Arg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("oauth1_token", &self.oauth1_token)?;
         s.serialize_field("oauth1_token_secret", &self.oauth1_token_secret)
@@ -663,7 +686,9 @@ impl TokenFromOAuth1Result {
 
 const TOKEN_FROM_O_AUTH1_RESULT_FIELDS: &'static [&'static str] = &["oauth2_token"];
 impl TokenFromOAuth1Result {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<TokenFromOAuth1Result, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<TokenFromOAuth1Result, V::Error> {
         use serde::de;
         let mut field_oauth2_token = None;
         while let Some(key) = map.next_key()? {
@@ -682,7 +707,10 @@ impl TokenFromOAuth1Result {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("oauth2_token", &self.oauth2_token)
     }

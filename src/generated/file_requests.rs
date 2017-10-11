@@ -14,24 +14,56 @@ pub type FileRequestId = String;
 pub type FileRequestValidationError = Option<String>;
 
 /// Creates a file request for this user.
-pub fn create(client: &::client_trait::HttpClient, arg: &CreateFileRequestArgs) -> ::Result<Result<FileRequest, CreateFileRequestError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_requests/create", arg, None)
+pub fn create(
+    client: &::client_trait::HttpClient,
+    arg: &CreateFileRequestArgs,
+) -> ::Result<Result<FileRequest, CreateFileRequestError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_requests/create",
+        arg,
+        None)
 }
 
 /// Returns the specified file request.
-pub fn get(client: &::client_trait::HttpClient, arg: &GetFileRequestArgs) -> ::Result<Result<FileRequest, GetFileRequestError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_requests/get", arg, None)
+pub fn get(
+    client: &::client_trait::HttpClient,
+    arg: &GetFileRequestArgs,
+) -> ::Result<Result<FileRequest, GetFileRequestError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_requests/get",
+        arg,
+        None)
 }
 
 /// Returns a list of file requests owned by this user. For apps with the app folder permission,
 /// this will only return file requests with destinations in the app folder.
-pub fn list(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<ListFileRequestsResult, ListFileRequestsError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_requests/list", arg, None)
+pub fn list(
+    client: &::client_trait::HttpClient,
+    arg: &(),
+) -> ::Result<Result<ListFileRequestsResult, ListFileRequestsError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_requests/list",
+        arg,
+        None)
 }
 
 /// Update a file request.
-pub fn update(client: &::client_trait::HttpClient, arg: &UpdateFileRequestArgs) -> ::Result<Result<FileRequest, UpdateFileRequestError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "file_requests/update", arg, None)
+pub fn update(
+    client: &::client_trait::HttpClient,
+    arg: &UpdateFileRequestArgs,
+) -> ::Result<Result<FileRequest, UpdateFileRequestError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_requests/update",
+        arg,
+        None)
 }
 
 /// Arguments for :route:`create`.
@@ -76,7 +108,9 @@ const CREATE_FILE_REQUEST_ARGS_FIELDS: &'static [&'static str] = &["title",
                                                                    "deadline",
                                                                    "open"];
 impl CreateFileRequestArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CreateFileRequestArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<CreateFileRequestArgs, V::Error> {
         use serde::de;
         let mut field_title = None;
         let mut field_destination = None;
@@ -119,7 +153,10 @@ impl CreateFileRequestArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("title", &self.title)?;
         s.serialize_field("destination", &self.destination)?;
@@ -330,7 +367,14 @@ pub struct FileRequest {
 }
 
 impl FileRequest {
-    pub fn new(id: FileRequestId, url: String, title: String, created: super::common::DropboxTimestamp, is_open: bool, file_count: i64) -> Self {
+    pub fn new(
+        id: FileRequestId,
+        url: String,
+        title: String,
+        created: super::common::DropboxTimestamp,
+        is_open: bool,
+        file_count: i64,
+    ) -> Self {
         FileRequest {
             id,
             url,
@@ -364,7 +408,9 @@ const FILE_REQUEST_FIELDS: &'static [&'static str] = &["id",
                                                        "destination",
                                                        "deadline"];
 impl FileRequest {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequest, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequest, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_url = None;
@@ -439,7 +485,10 @@ impl FileRequest {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
         s.serialize_field("url", &self.url)?;
@@ -506,7 +555,9 @@ impl FileRequestDeadline {
 const FILE_REQUEST_DEADLINE_FIELDS: &'static [&'static str] = &["deadline",
                                                                 "allow_late_uploads"];
 impl FileRequestDeadline {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileRequestDeadline, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileRequestDeadline, V::Error> {
         use serde::de;
         let mut field_deadline = None;
         let mut field_allow_late_uploads = None;
@@ -533,7 +584,10 @@ impl FileRequestDeadline {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("deadline", &self.deadline)?;
         s.serialize_field("allow_late_uploads", &self.allow_late_uploads)
@@ -776,7 +830,9 @@ impl GetFileRequestArgs {
 
 const GET_FILE_REQUEST_ARGS_FIELDS: &'static [&'static str] = &["id"];
 impl GetFileRequestArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetFileRequestArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetFileRequestArgs, V::Error> {
         use serde::de;
         let mut field_id = None;
         while let Some(key) = map.next_key()? {
@@ -795,7 +851,10 @@ impl GetFileRequestArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)
     }
@@ -1123,7 +1182,9 @@ impl ListFileRequestsResult {
 
 const LIST_FILE_REQUESTS_RESULT_FIELDS: &'static [&'static str] = &["file_requests"];
 impl ListFileRequestsResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFileRequestsResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFileRequestsResult, V::Error> {
         use serde::de;
         let mut field_file_requests = None;
         while let Some(key) = map.next_key()? {
@@ -1142,7 +1203,10 @@ impl ListFileRequestsResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("file_requests", &self.file_requests)
     }
@@ -1231,7 +1295,9 @@ const UPDATE_FILE_REQUEST_ARGS_FIELDS: &'static [&'static str] = &["id",
                                                                    "deadline",
                                                                    "open"];
 impl UpdateFileRequestArgs {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UpdateFileRequestArgs, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UpdateFileRequestArgs, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_title = None;
@@ -1282,7 +1348,10 @@ impl UpdateFileRequestArgs {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
         s.serialize_field("title", &self.title)?;

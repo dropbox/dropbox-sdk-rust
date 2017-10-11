@@ -1,33 +1,15 @@
 from contextlib import nested
 
+from rust import RustHelperBackend
 from stone import ir
-from stone.backend import CodeBackend
-from stone.backends.helpers import (
-    fmt_pascal,
-    fmt_underscores,
-    split_words
-)
+from stone.backends.helpers import split_words
+
 
 def fmt_shouting_snake(name):
     return '_'.join([word.upper() for word in split_words(name)])
 
-RUST_RESERVED_WORDS = [
-    "abstract", "alignof", "as", "become", "box", "break", "const", "continue", "crate", "do",
-    "else", "enum", "extern", "false", "final", "fn", "for", "if", "impl", "in", "let", "loop",
-    "macro", "match", "mod", "move", "mut", "offsetof", "override", "priv", "proc", "pub", "pure",
-    "ref", "return", "Self", "self", "sizeof", "static", "struct", "super", "trait", "true", "type",
-    "typeof", "unsafe", "unsized", "use", "virtual", "where", "while", "yield",
-]
 
-# Also avoid using names of types that are in the prelude for the names of our types.
-RUST_GLOBAL_NAMESPACE = [
-    "Copy", "Send", "Sized", "Sync", "Drop", "Fn", "FnMut", "FnOnce", "drop", "Box", "ToOwned",
-    "Clone", "PartialEq", "PartialOrd", "Eq", "Ord", "AsRef", "AsMut", "Into", "From", "Default",
-    "Iterator", "Extend", "IntoIterator", "DoubleEndedIterator", "ExactSizeIterator", "Option",
-    "Some", "None", "Result", "Ok", "Err", "SliceConcatExt", "String", "ToString", "Vec",
-]
-
-class RustBackend(CodeBackend):
+class RustBackend(RustHelperBackend):
     def __init__(self, target_folder_path, args):
         super(RustBackend, self).__init__(target_folder_path, args)
         self._modules = []
@@ -74,9 +56,8 @@ class RustBackend(CodeBackend):
                 elif isinstance(typ, ir.Union):
                     self._emit_union(typ)
                 else:
-                    print('WARNING: unhandled type "{}" of field "{}"'.format(
-                        type(typ).__name__,
-                        typ.name))
+                    raise RuntimeError('WARNING: unhandled type "{}" of field "{}"'
+                                       .format(type(typ).__name__, typ.name))
 
         self._modules.append(namespace.name)
 
@@ -93,14 +74,14 @@ class RustBackend(CodeBackend):
         self.emit()
 
     def _emit_struct(self, struct):
-        struct_name = self._struct_name(struct)
+        struct_name = self.struct_name(struct)
         self._emit_doc(struct.doc)
         self.emit(u'#[derive(Debug)]')
         with self.block(u'pub struct {}'.format(struct_name)):
             for field in struct.all_fields:
                 self._emit_doc(field.doc)
                 self.emit(u'pub {}: {},'.format(
-                    self._field_name(field),
+                    self.field_name(field),
                     self._rust_type(field.data_type)))
         self.emit()
 
@@ -118,13 +99,13 @@ class RustBackend(CodeBackend):
         self._impl_serde_for_struct(struct)
 
     def _emit_polymorphic_struct(self, struct):
-        enum_name = self._enum_name(struct)
+        enum_name = self.enum_name(struct)
         self._emit_doc(struct.doc)
         self.emit(u'#[derive(Debug)]')
         with self.block(u'pub enum {}'.format(enum_name)):
             for subtype in struct.get_enumerated_subtypes():
                 self.emit(u'{}({}),'.format(
-                    self._enum_variant_name(subtype),
+                    self.enum_variant_name(subtype),
                     self._rust_type(subtype.data_type)))
             if struct.is_catch_all():
                 self.emit(u'_Unknown')
@@ -133,13 +114,13 @@ class RustBackend(CodeBackend):
         self._impl_serde_for_polymorphic_struct(struct)
 
     def _emit_union(self, union):
-        enum_name = self._enum_name(union)
+        enum_name = self.enum_name(union)
         self._emit_doc(union.doc)
         self.emit(u'#[derive(Debug)]')
         with self.block(u'pub enum {}'.format(enum_name)):
             for field in union.all_fields:
                 self._emit_doc(field.doc)
-                variant_name = self._enum_variant_name(field)
+                variant_name = self.enum_variant_name(field)
                 if isinstance(field.data_type, ir.Void):
                     self.emit(u'{},'.format(variant_name))
                 else:
@@ -152,7 +133,7 @@ class RustBackend(CodeBackend):
             self._impl_error(enum_name)
 
     def _emit_route(self, ns, fn):
-        route_name = self._route_name(fn)
+        route_name = self.route_name(fn)
         self._emit_doc(fn.doc)
         host = fn.attrs.get('host', 'api')
         if host == 'api':
@@ -162,121 +143,165 @@ class RustBackend(CodeBackend):
         elif host == 'notify':
             endpoint = u'::client_trait::Endpoint::Notify'
         else:
-            print(u'ERROR: unsupported endpoint: {}'.format(host))
-            return
-
-        # TODO: do something about these extremely long lines
+            raise RuntimeError(u'ERROR: unsupported endpoint: {}'.format(host))
 
         style = fn.attrs.get('style', 'rpc')
         if style == 'rpc':
-            with self.block(u'pub fn {}(client: &::client_trait::HttpClient, arg: &{}) -> ::Result<Result<{}, {}>>'.format(
+            with self.emit_rust_function_def(
                     route_name,
-                    self._rust_type(fn.arg_data_type),
-                    self._rust_type(fn.result_data_type),
-                    self._rust_type(fn.error_data_type))):
-                self.emit(u'::client_helpers::request(client, {}, "{}/{}", arg, None)'.format(
-                    endpoint,
-                    ns,
-                    fn.name))
+                    [u'client: &::client_trait::HttpClient',
+                        u'arg: &{}'.format(self._rust_type(fn.arg_data_type))],
+                    u'::Result<Result<{}, {}>>'.format(
+                        self._rust_type(fn.result_data_type),
+                        self._rust_type(fn.error_data_type)),
+                    access=u'pub'):
+                self.emit_rust_fn_call(
+                    u'::client_helpers::request',
+                    [u'client',
+                        endpoint,
+                        u'"{}/{}"'.format(ns, fn.name),
+                        u'arg',
+                        u'None'])
         elif style == 'download':
-            with self.block(u'pub fn {}(client: &::client_trait::HttpClient, arg: &{}, range_start: Option<u64>, range_end: Option<u64>) -> ::Result<Result<::client_trait::HttpRequestResult<{}>, {}>>'.format(
+            with self.emit_rust_function_def(
                     route_name,
-                    self._rust_type(fn.arg_data_type),
-                    self._rust_type(fn.result_data_type),
-                    self._rust_type(fn.error_data_type))):
-                self.emit(u'::client_helpers::request_with_body(client, {}, "{}/{}", arg, None, range_start, range_end)'.format(
-                    endpoint,
-                    ns,
-                    fn.name))
+                    [u'client: &::client_trait::HttpClient',
+                        u'arg: &{}'.format(self._rust_type(fn.arg_data_type)),
+                        u'range_start: Option<u64>',
+                        u'range_end: Option<u64>'],
+                    u'::Result<Result<::client_trait::HttpRequestResult<{}>, {}>>'.format(
+                        self._rust_type(fn.result_data_type),
+                        self._rust_type(fn.error_data_type)),
+                    access=u'pub'):
+                self.emit_rust_fn_call(
+                    u'::client_helpers::request_with_body',
+                    [u'client',
+                        endpoint,
+                        u'"{}/{}"'.format(ns, fn.name),
+                        u'arg',
+                        u'None',
+                        u'range_start',
+                        u'range_end'])
         elif style == 'upload':
-            with self.block(u'pub fn {}(client: &::client_trait::HttpClient, arg: &{}, body: Vec<u8>) -> ::Result<Result<::client_trait::HttpRequestResult<{}>, {}>>'.format(
+            with self.emit_rust_function_def(
                     route_name,
-                    self._rust_type(fn.arg_data_type),
-                    self._rust_type(fn.result_data_type),
-                    self._rust_type(fn.error_data_type))):
-                self.emit(u'::client_helpers::request_with_body(client, {}, "{}/{}", arg, Some(body), None, None)'.format(
-                    endpoint,
-                    ns,
-                    fn.name))
+                    [u'client: &::client_trait::HttpClient',
+                        u'arg: &{}'.format(self._rust_type(fn.arg_data_type)),
+                        u'body: Vec<u8>'],
+                    u'::Result<Result<::client_trait::HttpRequestResult<{}>, {}>>'.format(
+                        self._rust_type(fn.result_data_type),
+                        self._rust_type(fn.error_data_type)),
+                    access=u'pub'):
+                self.emit_rust_fn_call(
+                    u'::client_helpers::request_with_body',
+                    [u'client',
+                        endpoint,
+                        u'"{}/{}"'.format(ns, fn.name),
+                        u'arg',
+                        u'Some(body)',
+                        u'None',
+                        u'None'])
         else:
-            print(u'ERROR: unknown route style: {}'.format(style))
-            return
+            raise RuntimeError(u'ERROR: unknown route style: {}'.format(style))
         self.emit()
 
     def _emit_alias(self, alias):
-        alias_name = self._alias_name(alias)
+        alias_name = self.alias_name(alias)
         self.emit(u'pub type {} = {};'.format(alias_name, self._rust_type(alias.data_type)))
 
     # Serialization
 
     def _impl_serde_for_struct(self, struct):
-        type_name = self._struct_name(struct)
+        type_name = self.struct_name(struct)
         field_list_name = u'{}_FIELDS'.format(fmt_shouting_snake(struct.name))
         self.generate_multiline_list(
             list(u'"{}"'.format(field.name) for field in struct.all_fields),
             before='const {}: &\'static [&\'static str] = &'.format(field_list_name),
             after=';',
-            delim=(u'[',u']'))
+            delim=(u'[', u']'))
         with self._impl_struct(struct):
-            with self.block(u'pub(crate) fn internal_deserialize<\'de, V: ::serde::de::MapAccess<\'de>>(mut map: V) -> Result<{}, V::Error>'.format(type_name)):
+            with self.emit_rust_function_def(
+                    u'internal_deserialize<\'de, V: ::serde::de::MapAccess<\'de>>',
+                    [u'mut map: V'],
+                    u'Result<{}, V::Error>'.format(type_name),
+                    access=u'pub(crate)'):
                 self.emit(u'use serde::de;')
                 if not struct.all_fields:
                     with self.block(u'if let Some(key) = map.next_key()?'):
-                        self.emit(u'return Err(de::Error::unknown_field(key, {}));'.format(field_list_name))
+                        self.emit(u'return Err(de::Error::unknown_field(key, {}));'
+                                  .format(field_list_name))
                 else:
                     for field in struct.all_fields:
-                        self.emit(u'let mut field_{} = None;'.format(self._field_name(field)))
-                    with nested(self.block(u'while let Some(key) = map.next_key()?'), self.block(u'match key')):
+                        self.emit(u'let mut field_{} = None;'.format(self.field_name(field)))
+                    with nested(self.block(u'while let Some(key) = map.next_key()?'),
+                                self.block(u'match key')):
                         for field in struct.all_fields:
-                            field_name = self._field_name(field)
+                            field_name = self.field_name(field)
                             with self.block(u'"{}" =>'.format(field.name)):
                                 with self.block(u'if field_{}.is_some()'.format(field_name)):
-                                    self.emit(u'return Err(de::Error::duplicate_field("{}"));'.format(field.name))
+                                    self.emit(u'return Err(de::Error::duplicate_field("{}"));'
+                                              .format(field.name))
                                 self.emit(u'field_{} = Some(map.next_value()?);'.format(field_name))
-                        self.emit(u'_ => return Err(de::Error::unknown_field(key, {}))'.format(field_list_name))
-                with self.block(u'Ok({}'.format(type_name), delim=(u'{',u'})')):
+                        self.emit(u'_ => return Err(de::Error::unknown_field(key, {}))'
+                                  .format(field_list_name))
+                with self.block(u'Ok({}'.format(type_name), delim=(u'{', u'})')):
                     for field in struct.all_fields:
-                        field_name = self._field_name(field)
+                        field_name = self.field_name(field)
                         if isinstance(field.data_type, ir.Nullable):
                             self.emit(u'{}: field_{},'.format(field_name, field_name))
                         elif field.has_default:
-                            # TODO: check if the default is a copy type (i.e. primitive) and don't make a lambda
                             if isinstance(field.data_type, ir.String) \
                                     and not field.default:
-                                self.emit(u'{}: field_{}.unwrap_or_else(String::new),'.format(
-                                    field_name, field_name))
+                                self.emit(u'{}: field_{}.unwrap_or_else(String::new),'
+                                          .format(field_name, field_name))
                             elif ir.is_primitive_type(ir.unwrap_aliases(field.data_type)[0]):
-                                self.emit(u'{}: field_{}.unwrap_or({}),'.format(
-                                    field_name, field_name, self._default_value(field)))
+                                self.emit(u'{}: field_{}.unwrap_or({}),'
+                                          .format(field_name,
+                                                  field_name,
+                                                  self._default_value(field)))
                             else:
-                                self.emit(u'{}: field_{}.unwrap_or_else(|| {}),'.format(
-                                    field_name, field_name, self._default_value(field)))
+                                self.emit(u'{}: field_{}.unwrap_or_else(|| {}),'
+                                          .format(field_name,
+                                                  field_name,
+                                                  self._default_value(field)))
                         else:
-                            self.emit(u'{}: field_{}.ok_or_else(|| de::Error::missing_field("{}"))?,'.format(
-                                field_name, field_name, field.name))
+                            self.emit(u'{}: field_{}.ok_or_else(|| de::Error::missing_field("{}"))?,'
+                                      .format(field_name, field_name, field.name))
             if struct.all_fields:
                 self.emit()
-                with self.block(u'pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error>'):
+                with self.emit_rust_function_def(
+                        u'internal_serialize<S: ::serde::ser::Serializer>',
+                        [u'&self', u's: &mut S::SerializeStruct'],
+                        u'Result<(), S::Error>',
+                        access=u'pub(crate)'):
                     self.emit(u'use serde::ser::SerializeStruct;')
                     self.generate_multiline_list(
-                        list(u's.serialize_field("{}", &self.{})'.format(field.name, self._field_name(field)) for field in struct.all_fields),
-                        delim=(u'',u''),
+                        list(u's.serialize_field("{}", &self.{})'
+                             .format(field.name, self.field_name(field))
+                             for field in struct.all_fields),
+                        delim=(u'', u''),
                         sep='?;',
                         skip_last_sep=True)
         self.emit()
-        with self._impl_deserialize(self._struct_name(struct)):
+        with self._impl_deserialize(self.struct_name(struct)):
             self.emit(u'// struct deserializer')
             self.emit(u'use serde::de::{MapAccess, Visitor};')
             self.emit(u'struct StructVisitor;')
             with self.block(u'impl<\'de> Visitor<\'de> for StructVisitor'):
                 self.emit(u'type Value = {};'.format(type_name))
-                with self.block(u'fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result'):
+                with self.emit_rust_function_def(
+                        u'expecting',
+                        [u'&self', u'f: &mut ::std::fmt::Formatter'],
+                        u'::std::fmt::Result'):
                     self.emit(u'f.write_str("a {} struct")'.format(struct.name))
-                with self.block(u'fn visit_map<V: MapAccess<\'de>>(self, map: V) -> Result<Self::Value, V::Error>'):
+                with self.emit_rust_function_def(
+                        u'visit_map<V: MapAccess<\'de>>',
+                        [u'self', u'map: V'],
+                        u'Result<Self::Value, V::Error>'):
                     self.emit(u'{}::internal_deserialize(map)'.format(type_name))
-            self.emit(u'deserializer.deserialize_struct("{}", {}, StructVisitor)'.format(
-                struct.name,
-                field_list_name))
+            self.emit(u'deserializer.deserialize_struct("{}", {}, StructVisitor)'
+                      .format(struct.name,
+                              field_list_name))
         self.emit()
         with self._impl_serialize(type_name):
             self.emit(u'// struct serializer')
@@ -284,53 +309,64 @@ class RustBackend(CodeBackend):
             if not struct.all_fields:
                 self.emit(u'serializer.serialize_struct("{}", 0)?.end()'.format(struct.name))
             else:
-                self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
-                    struct.name,
-                    len(struct.all_fields)))
+                self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'
+                          .format(struct.name,
+                                  len(struct.all_fields)))
                 self.emit(u'self.internal_serialize::<S>(&mut s)?;')
                 self.emit(u's.end()')
         self.emit()
 
     def _impl_serde_for_polymorphic_struct(self, struct):
-        type_name = self._enum_name(struct)
+        type_name = self.enum_name(struct)
         with self._impl_deserialize(type_name):
             self.emit(u'// polymorphic struct deserializer')
             self.emit(u'use serde::de::{self, MapAccess, Visitor};')
             self.emit(u'struct EnumVisitor;')
             with self.block(u'impl<\'de> Visitor<\'de> for EnumVisitor'):
                 self.emit(u'type Value = {};'.format(type_name))
-                with self.block(u'fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result'):
+                with self.emit_rust_function_def(
+                        u'expecting',
+                        [u'&self', u'f: &mut ::std::fmt::Formatter'],
+                        u'::std::fmt::Result'):
                     self.emit(u'f.write_str("a {} structure")'.format(struct.name))
-                with self.block(u'fn visit_map<V: MapAccess<\'de>>(self, mut map: V) -> Result<Self::Value, V::Error>'):
+                with self.emit_rust_function_def(
+                        u'visit_map<V: MapAccess<\'de>>',
+                        [u'self', u'mut map: V'],
+                        u'Result<Self::Value, V::Error>'):
                     with self.block(u'let tag = match map.next_key()?', after=';'):
                         self.emit(u'Some(".tag") => map.next_value()?,')
                         self.emit(u'_ => return Err(de::Error::missing_field(".tag"))')
                     with self.block(u'match tag'):
                         for subtype in struct.get_enumerated_subtypes():
-                            variant_name = self._enum_variant_name(subtype)
+                            variant_name = self.enum_variant_name(subtype)
                             if isinstance(subtype.data_type, ir.Void):
-                                self.emit(u'"{}" => Ok({}::{}),'.format(subtype.name, type_name, variant_name))
+                                self.emit(u'"{}" => Ok({}::{}),'
+                                          .format(subtype.name, type_name, variant_name))
                             elif isinstance(ir.unwrap_aliases(subtype.data_type)[0], ir.Struct) \
                                     and not subtype.data_type.has_enumerated_subtypes():
-                                self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'.format(
-                                    subtype.name,
-                                    type_name,
-                                    variant_name,
-                                    self._rust_type(subtype.data_type)))
+                                self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'
+                                          .format(subtype.name,
+                                                  type_name,
+                                                  variant_name,
+                                                  self._rust_type(subtype.data_type)))
                             else:
                                 with self.block(u'"{}" =>'.format(subtype.name)):
-                                    with self.block(u'if map.next_key()? != Some("{}")'.format(subtype.name)):
-                                        self.emit(u'Err(de::Error::missing_field("{}"));'.format(subtype.name))
-                                    self.emit(u'Ok({}::{}(map.next_value()?))'.format(type_name, variant_name))
+                                    with self.block(u'if map.next_key()? != Some("{}")'
+                                                    .format(subtype.name)):
+                                        self.emit(u'Err(de::Error::missing_field("{}"));'
+                                                  .format(subtype.name))
+                                    self.emit(u'Ok({}::{}(map.next_value()?))'
+                                              .format(type_name, variant_name))
                         if struct.is_catch_all():
                             self.emit(u'_ => Ok({}::_Unknown)'.format(type_name))
                         else:
                             self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(
-                    list(u'"{}"'.format(subtype.name) for field in struct.get_enumerated_subtypes()),
-                    before='const VARIANTS: &\'static [&\'static str] = &',
-                    after=';',
-                    delim=(u'[',u']'),)
+                list(u'"{}"'.format(subtype.name)
+                     for field in struct.get_enumerated_subtypes()),
+                before='const VARIANTS: &\'static [&\'static str] = &',
+                after=';',
+                delim=(u'[', u']'))
             self.emit(u'deserializer.deserialize_struct("{}", VARIANTS, EnumVisitor)'.format(
                 struct.name))
         self.emit()
@@ -338,17 +374,16 @@ class RustBackend(CodeBackend):
             self.emit(u'// polymorphic struct serializer')
             self.emit(u'use serde::ser::SerializeStruct;')
             with self.block(u'match *self'):
-                i = 0
                 for subtype in struct.get_enumerated_subtypes():
-                    variant_name = self._enum_variant_name(subtype)
+                    variant_name = self.enum_variant_name(subtype)
                     with self.block(u'{}::{}(ref x) =>'.format(type_name, variant_name)):
-                        self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
-                            type_name, len(subtype.data_type.all_fields) + 1))
+                        self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'
+                                  .format(type_name, len(subtype.data_type.all_fields) + 1))
                         self.emit(u's.serialize_field(".tag", "{}")?;'.format(subtype.name))
                         for field in subtype.data_type.all_fields:
-                            self.emit(u's.serialize_field("{}", &x.{})?;'.format(
-                                field.name,
-                                self._field_name(field)))
+                            self.emit(u's.serialize_field("{}", &x.{})?;'
+                                      .format(field.name,
+                                              self.field_name(field)))
                         self.emit(u's.end()')
                 if struct.is_catch_all():
                     self.emit(u'{}::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))'.format(
@@ -356,45 +391,56 @@ class RustBackend(CodeBackend):
         self.emit()
 
     def _impl_serde_for_union(self, union):
-        type_name = self._enum_name(union)
+        type_name = self.enum_name(union)
         with self._impl_deserialize(type_name):
             self.emit(u'// union deserializer')
             self.emit(u'use serde::de::{self, MapAccess, Visitor};')
             self.emit(u'struct EnumVisitor;')
             with self.block(u'impl<\'de> Visitor<\'de> for EnumVisitor'):
                 self.emit(u'type Value = {};'.format(type_name))
-                with self.block(u'fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result'):
+                with self.emit_rust_function_def(
+                        u'expecting',
+                        [u'&self', u'f: &mut ::std::fmt::Formatter'],
+                        u'::std::fmt::Result'):
                     self.emit(u'f.write_str("a {} structure")'.format(union.name))
-                with self.block(u'fn visit_map<V: MapAccess<\'de>>(self, mut map: V) -> Result<Self::Value, V::Error>'):
+                with self.emit_rust_function_def(
+                        u'visit_map<V: MapAccess<\'de>>',
+                        [u'self', u'mut map: V'],
+                        u'Result<Self::Value, V::Error>'):
                     with self.block(u'let tag: &str = match map.next_key()?', after=';'):
                         self.emit(u'Some(".tag") => map.next_value()?,')
                         self.emit(u'_ => return Err(de::Error::missing_field(".tag"))')
                     with self.block(u'match tag'):
                         for field in union.all_fields:
                             if field.catch_all:
-                                continue # Handle the 'Other' variant at the end.
-                            variant_name = self._enum_variant_name(field)
+                                # Handle the 'Other' variant at the end.
+                                continue
+                            variant_name = self.enum_variant_name(field)
                             if isinstance(field.data_type, ir.Void):
-                                self.emit(u'"{}" => Ok({}::{}),'.format(field.name, type_name, variant_name))
+                                self.emit(u'"{}" => Ok({}::{}),'
+                                          .format(field.name, type_name, variant_name))
                             elif isinstance(ir.unwrap_aliases(field.data_type)[0], ir.Struct) \
                                     and not field.data_type.has_enumerated_subtypes():
-                                self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'.format(
-                                    field.name,
-                                    type_name,
-                                    variant_name,
-                                    self._rust_type(field.data_type)))
+                                self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'
+                                          .format(field.name,
+                                                  type_name,
+                                                  variant_name,
+                                                  self._rust_type(field.data_type)))
                             else:
                                 with self.block(u'"{}" =>'.format(field.name)):
                                     with self.block(u'match map.next_key()?'):
-                                        self.emit(u'Some("{}") => Ok({}::{}(map.next_value()?)),'.format(
-                                            field.name,
-                                            type_name,
-                                            variant_name))
-                                        if isinstance(ir.unwrap_aliases(field.data_type)[0], ir.Nullable):
+                                        self.emit(u'Some("{}") => Ok({}::{}(map.next_value()?)),'
+                                                  .format(field.name,
+                                                          type_name,
+                                                          variant_name))
+                                        if isinstance(ir.unwrap_aliases(field.data_type)[0],
+                                                      ir.Nullable):
                                             # if it's null, the field can be omitted entirely
-                                            self.emit(u'None => Ok({}::{}(None)),'.format(type_name, variant_name))
+                                            self.emit(u'None => Ok({}::{}(None)),'
+                                                      .format(type_name, variant_name))
                                         else:
-                                            self.emit(u'None => Err(de::Error::missing_field("{}")),'.format(field.name))
+                                            self.emit(u'None => Err(de::Error::missing_field("{}")),'
+                                                      .format(field.name))
                                         self.emit(u'_ => Err(de::Error::unknown_field(tag, VARIANTS))')
                         if not union.closed:
                             self.emit(u'_ => Ok({}::Other)'.format(type_name))
@@ -404,7 +450,7 @@ class RustBackend(CodeBackend):
                     list(u'"{}"'.format(field.name) for field in union.all_fields),
                     before='const VARIANTS: &\'static [&\'static str] = &',
                     after=';',
-                    delim=(u'[',u']'),)
+                    delim=(u'[', u']'),)
             self.emit(u'deserializer.deserialize_struct("{}", VARIANTS, EnumVisitor)'.format(
                 union.name))
         self.emit()
@@ -419,44 +465,52 @@ class RustBackend(CodeBackend):
                 with self.block(u'match *self'):
                     for field in union.all_fields:
                         if field.catch_all:
-                            continue # Handle the 'Other' variant at the end.
-                        variant_name = self._enum_variant_name(field)
+                            # Handle the 'Other' variant at the end.
+                            continue
+                        variant_name = self.enum_variant_name(field)
                         if isinstance(field.data_type, ir.Void):
                             with self.block(u'{}::{} =>'.format(type_name, variant_name)):
                                 self.emit(u'// unit')
-                                self.emit(u'let mut s = serializer.serialize_struct("{}", 1)?;'.format(union.name))
+                                self.emit(u'let mut s = serializer.serialize_struct("{}", 1)?;'
+                                          .format(union.name))
                                 self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
                                 self.emit(u's.end()')
                         else:
-                            needs_x = not (isinstance(field.data_type, ir.Struct) and not field.data_type.all_fields)
+                            needs_x = not (isinstance(field.data_type, ir.Struct)
+                                           and not field.data_type.all_fields)
                             ref_x = 'ref x' if needs_x else '_'
-                            with self.block(u'{}::{}({}) =>'.format(type_name, variant_name, ref_x)):
+                            with self.block(u'{}::{}({}) =>'.format(
+                                    type_name, variant_name, ref_x)):
                                 if isinstance(field.data_type, ir.Union) or \
-                                        (isinstance(field.data_type, ir.Struct) and \
-                                            field.data_type.has_enumerated_subtypes()):
+                                        (isinstance(field.data_type, ir.Struct)
+                                         and field.data_type.has_enumerated_subtypes()):
                                     self.emit(u'// union or polymporphic struct')
                                     self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;')
-                                    self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
+                                    self.emit(u's.serialize_field(".tag", "{}")?;'
+                                              .format(field.name))
                                     self.emit(u's.serialize_field("{}", x)?;'.format(field.name))
                                     self.emit(u's.end()')
                                 elif isinstance(field.data_type, ir.Struct):
                                     self.emit(u'// struct')
-                                    self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'.format(
-                                        union.name,
-                                        len(field.data_type.all_fields) + 1))
-                                    self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
+                                    self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'
+                                              .format(union.name,
+                                                      len(field.data_type.all_fields) + 1))
+                                    self.emit(u's.serialize_field(".tag", "{}")?;'.format(
+                                        field.name))
                                     if field.data_type.all_fields:
                                         self.emit(u'x.internal_serialize::<S>(&mut s)?;')
                                     self.emit(u's.end()')
                                 else:
                                     self.emit(u'// primitive')
                                     self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;')
-                                    self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
+                                    self.emit(u's.serialize_field(".tag", "{}")?;'
+                                              .format(field.name))
                                     self.emit(u's.serialize_field("{}", x)?;'.format(field.name))
                                     self.emit(u's.end()')
                     if not union.closed:
-                        self.emit(u'{}::Other => Err(::serde::ser::Error::custom("cannot serialize \'Other\' variant"))'.format(
-                            type_name))
+                        self.emit(u'{}::Other => Err(::serde::ser::Error::custom('
+                                  u'"cannot serialize \'Other\' variant"))'
+                                  .format(type_name))
         self.emit()
 
     # Helpers
@@ -466,45 +520,58 @@ class RustBackend(CodeBackend):
             self.emit_wrapped_text(doc_string, prefix=u'/// ', width=100)
 
     def _impl_deserialize(self, type_name):
-        return nested(self.block(u'impl<\'de> ::serde::de::Deserialize<\'de> for {}'.format(type_name)),
-            self.block(u'fn deserialize<D: ::serde::de::Deserializer<\'de>>(deserializer: D) -> Result<Self, D::Error>'))
+        return nested(self.block(u'impl<\'de> ::serde::de::Deserialize<\'de> for {}'.format(
+                type_name)),
+            self.emit_rust_function_def(
+                u'deserialize<D: ::serde::de::Deserializer<\'de>>',
+                [u'deserializer: D'],
+                u'Result<Self, D::Error>'))
 
     def _impl_serialize(self, type_name):
-        return nested(self.block(u'impl ::serde::ser::Serialize for {}'.format(type_name)),
-            self.block(u'fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error>'))
+        return nested(
+            self.block(u'impl ::serde::ser::Serialize for {}'.format(type_name)),
+            self.emit_rust_function_def(
+                u'serialize<S: ::serde::ser::Serializer>',
+                [u'&self', u'serializer: S'],
+                u'Result<S::Ok, S::Error>'))
 
     def _impl_default_for_struct(self, struct):
-        struct_name = self._struct_name(struct)
+        struct_name = self.struct_name(struct)
         with self.block(u'impl Default for {}'.format(struct_name)):
-            with self.block(u'fn default() -> Self'):
+            with self.emit_rust_function_def(u'default', [], u'Self'):
                 with self.block(struct_name):
                     for field in struct.all_fields:
                         self.emit(u'{}: {},'.format(
-                            self._field_name(field), self._default_value(field)))
+                            self.field_name(field), self._default_value(field)))
 
     def _impl_struct(self, struct):
-        return self.block(u'impl {}'.format(self._struct_name(struct)))
+        return self.block(u'impl {}'.format(self.struct_name(struct)))
 
     def _emit_new_for_struct(self, struct):
-        struct_name = self._struct_name(struct)
-        args = u''
-        for field in struct.all_required_fields:
-            args += u'{}: {}, '.format(self._field_name(field), self._rust_type(field.data_type))
-        args = args[:-2]
-
-        with self.block(u'pub fn new({}) -> Self'.format(args)):
+        struct_name = self.struct_name(struct)
+        with self.emit_rust_function_def(
+                u'new',
+                [u'{}: {}'.format(self.field_name(field), self._rust_type(field.data_type))
+                    for field in struct.all_required_fields],
+                u'Self',
+                access=u'pub'):
             with self.block(struct_name):
                 for field in struct.all_required_fields:
-                    self.emit(u'{},'.format(self._field_name(field))) # shorthand assignment
+                    # shorthand assignment
+                    self.emit(u'{},'.format(self.field_name(field)))
                 for field in struct.all_optional_fields:
-                    self.emit(u'{}: {},'.format(self._field_name(field), self._default_value(field)))
+                    self.emit(u'{}: {},'.format(
+                        self.field_name(field),
+                        self._default_value(field)))
 
         for field in struct.all_optional_fields:
             self.emit()
-            field_name = self._field_name(field)
-            with self.block(u'pub fn with_{}(mut self, value: {}) -> Self'.format(
-                    field_name,
-                    self._rust_type(field.data_type))):
+            field_name = self.field_name(field)
+            with self.emit_rust_function_def(
+                    u'with_{}'.format(field_name),
+                    [u'mut self', u'value: {}'.format(self._rust_type(field.data_type))],
+                    u'Self',
+                    access=u'pub'):
                 self.emit(u'self.{} = value;'.format(field_name))
                 self.emit(u'self')
 
@@ -519,13 +586,11 @@ class RustBackend(CodeBackend):
                 if variant.name == field.default.tag_name:
                     default_variant = variant
             if default_variant is None:
-                print('ERROR: didn\'t find matching variant: {}'.format(field.default.tag_name))
-                for variant in field.default.union_data_type.fields:
-                    print(u'\tvariant.name = {}'.format(variant.name))
-                default_variant = variant
+                raise RuntimeError('ERROR: didn\'t find matching variant of {}: {}'
+                                   .format(field.data_type.name, field.default.tag_name))
             return u'{}::{}'.format(
                 self._rust_type(field.default.union_data_type),
-                self._enum_variant_name(default_variant))
+                self.enum_variant_name(default_variant))
         elif isinstance(field.data_type, ir.Boolean):
             if field.default:
                 return u'true'
@@ -545,16 +610,19 @@ class RustBackend(CodeBackend):
 
     def _needs_explicit_default(self, field):
         return field.has_default \
-                and not (isinstance(field, ir.Nullable) \
-                    or (isinstance(field.data_type, ir.Boolean) and not field.default))
+                and not (isinstance(field, ir.Nullable)
+                         or (isinstance(field.data_type, ir.Boolean) and not field.default))
 
     def _impl_error(self, type_name):
         with self.block(u'impl ::std::error::Error for {}'.format(type_name)):
-            with self.block(u'fn description(&self) -> &str'):
+            with self.emit_rust_function_def(u'description', [u'&self'], u'&str'):
                 self.emit(u'"{}"'.format(type_name))
         self.emit()
         with self.block(u'impl ::std::fmt::Display for {}'.format(type_name)):
-            with self.block(u'fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result'):
+            with self.emit_rust_function_def(
+                    u'fmt',
+                    [u'&self', u'f: &mut ::std::fmt::Formatter'],
+                    u'::std::fmt::Result'):
                 self.emit(u'write!(f, "{:?}", *self)')
         self.emit()
 
@@ -563,17 +631,28 @@ class RustBackend(CodeBackend):
     def _rust_type(self, typ):
         if isinstance(typ, ir.Nullable):
             return u'Option<{}>'.format(self._rust_type(typ.data_type))
-        elif isinstance(typ, ir.Void):       return u'()'
-        elif isinstance(typ, ir.Bytes):      return u'Vec<u8>'
-        elif isinstance(typ, ir.Int32):      return u'i32'
-        elif isinstance(typ, ir.UInt32):     return u'u32'
-        elif isinstance(typ, ir.Int64):      return u'i64'
-        elif isinstance(typ, ir.UInt64):     return u'u64'
-        elif isinstance(typ, ir.Float32):    return u'f32'
-        elif isinstance(typ, ir.Float64):    return u'f64'
-        elif isinstance(typ, ir.Boolean):    return u'bool'
-        elif isinstance(typ, ir.String):     return u'String'
-        elif isinstance(typ, ir.Timestamp):  return u'String /*Timestamp*/' # TODO
+        elif isinstance(typ, ir.Void):
+            return u'()'
+        elif isinstance(typ, ir.Bytes):
+            return u'Vec<u8>'
+        elif isinstance(typ, ir.Int32):
+            return u'i32'
+        elif isinstance(typ, ir.UInt32):
+            return u'u32'
+        elif isinstance(typ, ir.Int64):
+            return u'i64'
+        elif isinstance(typ, ir.UInt64):
+            return u'u64'
+        elif isinstance(typ, ir.Float32):
+            return u'f32'
+        elif isinstance(typ, ir.Float64):
+            return u'f64'
+        elif isinstance(typ, ir.Boolean):
+            return u'bool'
+        elif isinstance(typ, ir.String):
+            return u'String'
+        elif isinstance(typ, ir.Timestamp):
+            return u'String /*Timestamp*/'  # TODO
         elif isinstance(typ, ir.List):
             return u'Vec<{}>'.format(self._rust_type(typ.data_type))
         elif isinstance(typ, ir.Map):
@@ -582,73 +661,24 @@ class RustBackend(CodeBackend):
                 self._rust_type(typ.value_data_type))
         elif isinstance(typ, ir.Alias):
             if typ.namespace.name == self._current_namespace:
-                return self._alias_name(typ)
+                return self.alias_name(typ)
             else:
                 return u'super::{}::{}'.format(
-                    self._namespace_name(typ.namespace),
-                    self._alias_name(typ))
+                    self.namespace_name(typ.namespace),
+                    self.alias_name(typ))
         elif isinstance(typ, ir.UserDefined):
             if isinstance(typ, ir.Struct):
-                name = self._struct_name(typ)
+                name = self.struct_name(typ)
             elif isinstance(typ, ir.Union):
-                name = self._enum_name(typ)
+                name = self.enum_name(typ)
             else:
-                print(u'ERROR: user-defined type "{}" is neither Struct nor Union???'.format(typ))
-                return u'()'
+                raise RuntimeError(u'ERROR: user-defined type "{}" is neither Struct nor Union???'
+                                   .format(typ))
             if typ.namespace.name == self._current_namespace:
                 return name
             else:
                 return u'super::{}::{}'.format(
-                    self._namespace_name(typ.namespace),
+                    self.namespace_name(typ.namespace),
                     name)
         else:
-            print(u'ERROR: unhandled type "{}"'.format(typ))
-            return u'()'
-
-    def _namespace_name(self, ns):
-        name = fmt_underscores(ns.name)
-        if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
-            name += '_namespace'
-        return name
-
-    def _struct_name(self, struct):
-        name = fmt_pascal(struct.name)
-        if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
-            name += 'Struct'
-        return name
-
-    def _enum_name(self, union):
-        name = fmt_pascal(union.name)
-        if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
-            name += 'Union'
-        return name
-
-    def _field_name(self, field):
-        return self._field_name_raw(field.name)
-
-    def _field_name_raw(self, name):
-        name = fmt_underscores(name)
-        if name in RUST_RESERVED_WORDS:
-            name += '_field'
-        return name
-
-    def _enum_variant_name(self, field):
-        return self._enum_variant_name_raw(field.name)
-
-    def _enum_variant_name_raw(self, name):
-        name = fmt_pascal(name)
-        if name in RUST_RESERVED_WORDS:
-            name += 'Variant'
-        return name
-
-    def _route_name(self, route):
-        name = fmt_underscores(route.name)
-        if name in RUST_RESERVED_WORDS:
-            name = 'do_' + name
-        return name
-
-    def _alias_name(self, alias):
-        name = fmt_pascal(alias.name)
-        if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
-            name += 'Alias'
-        return name
+            raise RuntimeError(u'ERROR: unhandled type "{}"'.format(typ))

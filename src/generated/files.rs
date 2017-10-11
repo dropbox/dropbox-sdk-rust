@@ -26,21 +26,43 @@ pub type WritePathOrId = String;
 
 /// Returns the metadata for a file or folder. This is an alpha endpoint compatible with the
 /// properties API. Note: Metadata for the root folder is unsupported.
-pub fn alpha_get_metadata(client: &::client_trait::HttpClient, arg: &AlphaGetMetadataArg) -> ::Result<Result<Metadata, AlphaGetMetadataError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/alpha/get_metadata", arg, None)
+pub fn alpha_get_metadata(
+    client: &::client_trait::HttpClient,
+    arg: &AlphaGetMetadataArg,
+) -> ::Result<Result<Metadata, AlphaGetMetadataError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/alpha/get_metadata",
+        arg,
+        None)
 }
 
 /// Create a new file with the contents provided in the request. Note that this endpoint is part of
 /// the properties API alpha and is slightly different from :route:`upload`. Do not use this to
 /// upload a file larger than 150 MB. Instead, create an upload session with
 /// :route:`upload_session/start`.
-pub fn alpha_upload(client: &::client_trait::HttpClient, arg: &CommitInfoWithProperties, body: Vec<u8>) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, UploadErrorWithProperties>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Content, "files/alpha/upload", arg, Some(body), None, None)
+pub fn alpha_upload(
+    client: &::client_trait::HttpClient,
+    arg: &CommitInfoWithProperties,
+    body: Vec<u8>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, UploadErrorWithProperties>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Content,
+        "files/alpha/upload",
+        arg,
+        Some(body),
+        None,
+        None)
 }
 
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be copied.
-pub fn copy(client: &::client_trait::HttpClient, arg: &RelocationArg) -> ::Result<Result<Metadata, RelocationError>> {
+pub fn copy(
+    client: &::client_trait::HttpClient,
+    arg: &RelocationArg,
+) -> ::Result<Result<Metadata, RelocationError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/copy", arg, None)
 }
 
@@ -50,109 +72,237 @@ pub fn copy(client: &::client_trait::HttpClient, arg: &RelocationArg) -> ::Resul
 /// true, not atomicity is guaranteed, but you will be able to copy the contents of shared folders
 /// to new locations. This route will return job ID immediately and do the async copy job in
 /// background. Please use :route:`copy_batch/check` to check the job status.
-pub fn copy_batch(client: &::client_trait::HttpClient, arg: &RelocationBatchArg) -> ::Result<Result<RelocationBatchLaunch, ()>> {
+pub fn copy_batch(
+    client: &::client_trait::HttpClient,
+    arg: &RelocationBatchArg,
+) -> ::Result<Result<RelocationBatchLaunch, ()>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/copy_batch", arg, None)
 }
 
 /// Returns the status of an asynchronous job for :route:`copy_batch`. If success, it returns list
 /// of results for each entry.
-pub fn copy_batch_check(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<RelocationBatchJobStatus, super::async::PollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/copy_batch/check", arg, None)
+pub fn copy_batch_check(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<RelocationBatchJobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/copy_batch/check",
+        arg,
+        None)
 }
 
 /// Get a copy reference to a file or folder. This reference string can be used to save that file or
 /// folder to another user's Dropbox by passing it to :route:`copy_reference/save`.
-pub fn copy_reference_get(client: &::client_trait::HttpClient, arg: &GetCopyReferenceArg) -> ::Result<Result<GetCopyReferenceResult, GetCopyReferenceError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/copy_reference/get", arg, None)
+pub fn copy_reference_get(
+    client: &::client_trait::HttpClient,
+    arg: &GetCopyReferenceArg,
+) -> ::Result<Result<GetCopyReferenceResult, GetCopyReferenceError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/copy_reference/get",
+        arg,
+        None)
 }
 
 /// Save a copy reference returned by :route:`copy_reference/get` to the user's Dropbox.
-pub fn copy_reference_save(client: &::client_trait::HttpClient, arg: &SaveCopyReferenceArg) -> ::Result<Result<SaveCopyReferenceResult, SaveCopyReferenceError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/copy_reference/save", arg, None)
+pub fn copy_reference_save(
+    client: &::client_trait::HttpClient,
+    arg: &SaveCopyReferenceArg,
+) -> ::Result<Result<SaveCopyReferenceResult, SaveCopyReferenceError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/copy_reference/save",
+        arg,
+        None)
 }
 
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be copied.
-pub fn copy_v2(client: &::client_trait::HttpClient, arg: &RelocationArg) -> ::Result<Result<RelocationResult, RelocationError>> {
+pub fn copy_v2(
+    client: &::client_trait::HttpClient,
+    arg: &RelocationArg,
+) -> ::Result<Result<RelocationResult, RelocationError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/copy_v2", arg, None)
 }
 
 /// Create a folder at a given path.
-pub fn create_folder(client: &::client_trait::HttpClient, arg: &CreateFolderArg) -> ::Result<Result<FolderMetadata, CreateFolderError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/create_folder", arg, None)
+pub fn create_folder(
+    client: &::client_trait::HttpClient,
+    arg: &CreateFolderArg,
+) -> ::Result<Result<FolderMetadata, CreateFolderError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/create_folder",
+        arg,
+        None)
 }
 
 /// Create a folder at a given path.
-pub fn create_folder_v2(client: &::client_trait::HttpClient, arg: &CreateFolderArg) -> ::Result<Result<CreateFolderResult, CreateFolderError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/create_folder_v2", arg, None)
+pub fn create_folder_v2(
+    client: &::client_trait::HttpClient,
+    arg: &CreateFolderArg,
+) -> ::Result<Result<CreateFolderResult, CreateFolderError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/create_folder_v2",
+        arg,
+        None)
 }
 
 /// Delete the file or folder at a given path. If the path is a folder, all its contents will be
 /// deleted too. A successful response indicates that the file or folder was deleted. The returned
 /// metadata will be the corresponding :type:`FileMetadata` or :type:`FolderMetadata` for the item
 /// at time of deletion, and not a :type:`DeletedMetadata` object.
-pub fn delete(client: &::client_trait::HttpClient, arg: &DeleteArg) -> ::Result<Result<Metadata, DeleteError>> {
+pub fn delete(
+    client: &::client_trait::HttpClient,
+    arg: &DeleteArg,
+) -> ::Result<Result<Metadata, DeleteError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/delete", arg, None)
 }
 
 /// Delete multiple files/folders at once. This route is asynchronous, which returns a job ID
 /// immediately and runs the delete batch asynchronously. Use :route:`delete_batch/check` to check
 /// the job status.
-pub fn delete_batch(client: &::client_trait::HttpClient, arg: &DeleteBatchArg) -> ::Result<Result<DeleteBatchLaunch, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/delete_batch", arg, None)
+pub fn delete_batch(
+    client: &::client_trait::HttpClient,
+    arg: &DeleteBatchArg,
+) -> ::Result<Result<DeleteBatchLaunch, ()>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/delete_batch",
+        arg,
+        None)
 }
 
 /// Returns the status of an asynchronous job for :route:`delete_batch`. If success, it returns list
 /// of result for each entry.
-pub fn delete_batch_check(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<DeleteBatchJobStatus, super::async::PollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/delete_batch/check", arg, None)
+pub fn delete_batch_check(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<DeleteBatchJobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/delete_batch/check",
+        arg,
+        None)
 }
 
 /// Delete the file or folder at a given path. If the path is a folder, all its contents will be
 /// deleted too. A successful response indicates that the file or folder was deleted. The returned
 /// metadata will be the corresponding :type:`FileMetadata` or :type:`FolderMetadata` for the item
 /// at time of deletion, and not a :type:`DeletedMetadata` object.
-pub fn delete_v2(client: &::client_trait::HttpClient, arg: &DeleteArg) -> ::Result<Result<DeleteResult, DeleteError>> {
+pub fn delete_v2(
+    client: &::client_trait::HttpClient,
+    arg: &DeleteArg,
+) -> ::Result<Result<DeleteResult, DeleteError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/delete_v2", arg, None)
 }
 
 /// Download a file from a user's Dropbox.
-pub fn download(client: &::client_trait::HttpClient, arg: &DownloadArg, range_start: Option<u64>, range_end: Option<u64>) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, DownloadError>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Content, "files/download", arg, None, range_start, range_end)
+pub fn download(
+    client: &::client_trait::HttpClient,
+    arg: &DownloadArg,
+    range_start: Option<u64>,
+    range_end: Option<u64>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, DownloadError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Content,
+        "files/download",
+        arg,
+        None,
+        range_start,
+        range_end)
 }
 
 /// Returns the metadata for a file or folder. Note: Metadata for the root folder is unsupported.
-pub fn get_metadata(client: &::client_trait::HttpClient, arg: &GetMetadataArg) -> ::Result<Result<Metadata, GetMetadataError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/get_metadata", arg, None)
+pub fn get_metadata(
+    client: &::client_trait::HttpClient,
+    arg: &GetMetadataArg,
+) -> ::Result<Result<Metadata, GetMetadataError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/get_metadata",
+        arg,
+        None)
 }
 
 /// Get a preview for a file. Currently, PDF previews are generated for files with the following
 /// extensions: .ai, .doc, .docm, .docx, .eps, .odp, .odt, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx,
 /// .rtf. HTML previews are generated for files with the following extensions: .csv, .ods, .xls,
 /// .xlsm, .xlsx. Other formats will return an unsupported extension error.
-pub fn get_preview(client: &::client_trait::HttpClient, arg: &PreviewArg, range_start: Option<u64>, range_end: Option<u64>) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, PreviewError>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Content, "files/get_preview", arg, None, range_start, range_end)
+pub fn get_preview(
+    client: &::client_trait::HttpClient,
+    arg: &PreviewArg,
+    range_start: Option<u64>,
+    range_end: Option<u64>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, PreviewError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Content,
+        "files/get_preview",
+        arg,
+        None,
+        range_start,
+        range_end)
 }
 
 /// Get a temporary link to stream content of a file. This link will expire in four hours and
 /// afterwards you will get 410 Gone. Content-Type of the link is determined automatically by the
 /// file's mime type.
-pub fn get_temporary_link(client: &::client_trait::HttpClient, arg: &GetTemporaryLinkArg) -> ::Result<Result<GetTemporaryLinkResult, GetTemporaryLinkError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/get_temporary_link", arg, None)
+pub fn get_temporary_link(
+    client: &::client_trait::HttpClient,
+    arg: &GetTemporaryLinkArg,
+) -> ::Result<Result<GetTemporaryLinkResult, GetTemporaryLinkError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/get_temporary_link",
+        arg,
+        None)
 }
 
 /// Get a thumbnail for an image. This method currently supports files with the following file
 /// extensions: jpg, jpeg, png, tiff, tif, gif and bmp. Photos that are larger than 20MB in size
 /// won't be converted to a thumbnail.
-pub fn get_thumbnail(client: &::client_trait::HttpClient, arg: &ThumbnailArg, range_start: Option<u64>, range_end: Option<u64>) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, ThumbnailError>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Content, "files/get_thumbnail", arg, None, range_start, range_end)
+pub fn get_thumbnail(
+    client: &::client_trait::HttpClient,
+    arg: &ThumbnailArg,
+    range_start: Option<u64>,
+    range_end: Option<u64>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, ThumbnailError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Content,
+        "files/get_thumbnail",
+        arg,
+        None,
+        range_start,
+        range_end)
 }
 
 /// Get thumbnails for a list of images. We allow up to 25 thumbnails in a single batch. This method
 /// currently supports files with the following file extensions: jpg, jpeg, png, tiff, tif, gif and
 /// bmp. Photos that are larger than 20MB in size won't be converted to a thumbnail.
-pub fn get_thumbnail_batch(client: &::client_trait::HttpClient, arg: &GetThumbnailBatchArg) -> ::Result<Result<GetThumbnailBatchResult, GetThumbnailBatchError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Content, "files/get_thumbnail_batch", arg, None)
+pub fn get_thumbnail_batch(
+    client: &::client_trait::HttpClient,
+    arg: &GetThumbnailBatchArg,
+) -> ::Result<Result<GetThumbnailBatchResult, GetThumbnailBatchError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Content,
+        "files/get_thumbnail_batch",
+        arg,
+        None)
 }
 
 /// Starts returning the contents of a folder. If the result's :field:`ListFolderResult.has_more`
@@ -173,23 +323,47 @@ pub fn get_thumbnail_batch(client: &::client_trait::HttpClient, arg: &GetThumbna
 /// :route:`list_folder/continue` calls with same parameters are made simultaneously by same API app
 /// for same user. If your app implements retry logic, please hold off the retry until the previous
 /// request finishes.
-pub fn list_folder(client: &::client_trait::HttpClient, arg: &ListFolderArg) -> ::Result<Result<ListFolderResult, ListFolderError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/list_folder", arg, None)
+pub fn list_folder(
+    client: &::client_trait::HttpClient,
+    arg: &ListFolderArg,
+) -> ::Result<Result<ListFolderResult, ListFolderError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/list_folder",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from :route:`list_folder`, use this to paginate through all
 /// files and retrieve updates to the folder, following the same rules as documented for
 /// :route:`list_folder`.
-pub fn list_folder_continue(client: &::client_trait::HttpClient, arg: &ListFolderContinueArg) -> ::Result<Result<ListFolderResult, ListFolderContinueError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/list_folder/continue", arg, None)
+pub fn list_folder_continue(
+    client: &::client_trait::HttpClient,
+    arg: &ListFolderContinueArg,
+) -> ::Result<Result<ListFolderResult, ListFolderContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/list_folder/continue",
+        arg,
+        None)
 }
 
 /// A way to quickly get a cursor for the folder's state. Unlike :route:`list_folder`,
 /// :route:`list_folder/get_latest_cursor` doesn't return any entries. This endpoint is for app
 /// which only needs to know about new files and modifications and doesn't need to know about files
 /// that already exist in Dropbox.
-pub fn list_folder_get_latest_cursor(client: &::client_trait::HttpClient, arg: &ListFolderArg) -> ::Result<Result<ListFolderGetLatestCursorResult, ListFolderError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/list_folder/get_latest_cursor", arg, None)
+pub fn list_folder_get_latest_cursor(
+    client: &::client_trait::HttpClient,
+    arg: &ListFolderArg,
+) -> ::Result<Result<ListFolderGetLatestCursorResult, ListFolderError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/list_folder/get_latest_cursor",
+        arg,
+        None)
 }
 
 /// A longpoll endpoint to wait for changes on an account. In conjunction with
@@ -198,8 +372,16 @@ pub fn list_folder_get_latest_cursor(client: &::client_trait::HttpClient, arg: &
 /// This endpoint is useful mostly for client-side apps. If you're looking for server-side
 /// notifications, check out our :link:`webhooks documentation
 /// https://www.dropbox.com/developers/reference/webhooks`.
-pub fn list_folder_longpoll(client: &::client_trait::HttpClient, arg: &ListFolderLongpollArg) -> ::Result<Result<ListFolderLongpollResult, ListFolderLongpollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Notify, "files/list_folder/longpoll", arg, None)
+pub fn list_folder_longpoll(
+    client: &::client_trait::HttpClient,
+    arg: &ListFolderLongpollArg,
+) -> ::Result<Result<ListFolderLongpollResult, ListFolderLongpollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Notify,
+        "files/list_folder/longpoll",
+        arg,
+        None)
 }
 
 /// Returns revisions for files based on a file path or a file id. The file path or file id is
@@ -209,13 +391,24 @@ pub fn list_folder_longpoll(client: &::client_trait::HttpClient, arg: &ListFolde
 /// latest file entry are returned. If revisions with the same file id are desired, then mode must
 /// be set to :field:`ListRevisionsMode.id`. The :field:`ListRevisionsMode.id` mode is useful to
 /// retrieve revisions for a given file across moves or renames.
-pub fn list_revisions(client: &::client_trait::HttpClient, arg: &ListRevisionsArg) -> ::Result<Result<ListRevisionsResult, ListRevisionsError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/list_revisions", arg, None)
+pub fn list_revisions(
+    client: &::client_trait::HttpClient,
+    arg: &ListRevisionsArg,
+) -> ::Result<Result<ListRevisionsResult, ListRevisionsError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/list_revisions",
+        arg,
+        None)
 }
 
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be moved.
-pub fn do_move(client: &::client_trait::HttpClient, arg: &RelocationArg) -> ::Result<Result<Metadata, RelocationError>> {
+pub fn do_move(
+    client: &::client_trait::HttpClient,
+    arg: &RelocationArg,
+) -> ::Result<Result<Metadata, RelocationError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/move", arg, None)
 }
 
@@ -223,95 +416,226 @@ pub fn do_move(client: &::client_trait::HttpClient, arg: &RelocationArg) -> ::Re
 /// is 'all or nothing', which means if one entry fails, the whole transaction will abort. This
 /// route will return job ID immediately and do the async moving job in background. Please use
 /// :route:`move_batch/check` to check the job status.
-pub fn move_batch(client: &::client_trait::HttpClient, arg: &RelocationBatchArg) -> ::Result<Result<RelocationBatchLaunch, ()>> {
+pub fn move_batch(
+    client: &::client_trait::HttpClient,
+    arg: &RelocationBatchArg,
+) -> ::Result<Result<RelocationBatchLaunch, ()>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/move_batch", arg, None)
 }
 
 /// Returns the status of an asynchronous job for :route:`move_batch`. If success, it returns list
 /// of results for each entry.
-pub fn move_batch_check(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<RelocationBatchJobStatus, super::async::PollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/move_batch/check", arg, None)
+pub fn move_batch_check(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<RelocationBatchJobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/move_batch/check",
+        arg,
+        None)
 }
 
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be moved.
-pub fn move_v2(client: &::client_trait::HttpClient, arg: &RelocationArg) -> ::Result<Result<RelocationResult, RelocationError>> {
+pub fn move_v2(
+    client: &::client_trait::HttpClient,
+    arg: &RelocationArg,
+) -> ::Result<Result<RelocationResult, RelocationError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/move_v2", arg, None)
 }
 
 /// Permanently delete the file or folder at a given path (see https://www.dropbox.com/en/help/40).
 /// Note: This endpoint is only available for Dropbox Business apps.
-pub fn permanently_delete(client: &::client_trait::HttpClient, arg: &DeleteArg) -> ::Result<Result<(), DeleteError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/permanently_delete", arg, None)
+pub fn permanently_delete(
+    client: &::client_trait::HttpClient,
+    arg: &DeleteArg,
+) -> ::Result<Result<(), DeleteError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/permanently_delete",
+        arg,
+        None)
 }
 
-pub fn properties_add(client: &::client_trait::HttpClient, arg: &super::file_properties::AddPropertiesArg) -> ::Result<Result<(), super::file_properties::AddPropertiesError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/properties/add", arg, None)
+pub fn properties_add(
+    client: &::client_trait::HttpClient,
+    arg: &super::file_properties::AddPropertiesArg,
+) -> ::Result<Result<(), super::file_properties::AddPropertiesError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/properties/add",
+        arg,
+        None)
 }
 
-pub fn properties_overwrite(client: &::client_trait::HttpClient, arg: &super::file_properties::OverwritePropertyGroupArg) -> ::Result<Result<(), super::file_properties::InvalidPropertyGroupError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/properties/overwrite", arg, None)
+pub fn properties_overwrite(
+    client: &::client_trait::HttpClient,
+    arg: &super::file_properties::OverwritePropertyGroupArg,
+) -> ::Result<Result<(), super::file_properties::InvalidPropertyGroupError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/properties/overwrite",
+        arg,
+        None)
 }
 
-pub fn properties_remove(client: &::client_trait::HttpClient, arg: &super::file_properties::RemovePropertiesArg) -> ::Result<Result<(), super::file_properties::RemovePropertiesError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/properties/remove", arg, None)
+pub fn properties_remove(
+    client: &::client_trait::HttpClient,
+    arg: &super::file_properties::RemovePropertiesArg,
+) -> ::Result<Result<(), super::file_properties::RemovePropertiesError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/properties/remove",
+        arg,
+        None)
 }
 
-pub fn properties_template_get(client: &::client_trait::HttpClient, arg: &super::file_properties::GetTemplateArg) -> ::Result<Result<super::file_properties::GetTemplateResult, super::file_properties::TemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/properties/template/get", arg, None)
+pub fn properties_template_get(
+    client: &::client_trait::HttpClient,
+    arg: &super::file_properties::GetTemplateArg,
+) -> ::Result<Result<super::file_properties::GetTemplateResult, super::file_properties::TemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/properties/template/get",
+        arg,
+        None)
 }
 
-pub fn properties_template_list(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/properties/template/list", arg, None)
+pub fn properties_template_list(
+    client: &::client_trait::HttpClient,
+    arg: &(),
+) -> ::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/properties/template/list",
+        arg,
+        None)
 }
 
-pub fn properties_update(client: &::client_trait::HttpClient, arg: &super::file_properties::UpdatePropertiesArg) -> ::Result<Result<(), super::file_properties::UpdatePropertiesError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/properties/update", arg, None)
+pub fn properties_update(
+    client: &::client_trait::HttpClient,
+    arg: &super::file_properties::UpdatePropertiesArg,
+) -> ::Result<Result<(), super::file_properties::UpdatePropertiesError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/properties/update",
+        arg,
+        None)
 }
 
 /// Restore a file to a specific revision.
-pub fn restore(client: &::client_trait::HttpClient, arg: &RestoreArg) -> ::Result<Result<FileMetadata, RestoreError>> {
+pub fn restore(
+    client: &::client_trait::HttpClient,
+    arg: &RestoreArg,
+) -> ::Result<Result<FileMetadata, RestoreError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/restore", arg, None)
 }
 
 /// Save a specified URL into a file in user's Dropbox. If the given path already exists, the file
 /// will be renamed to avoid the conflict (e.g. myfile (1).txt).
-pub fn save_url(client: &::client_trait::HttpClient, arg: &SaveUrlArg) -> ::Result<Result<SaveUrlResult, SaveUrlError>> {
+pub fn save_url(
+    client: &::client_trait::HttpClient,
+    arg: &SaveUrlArg,
+) -> ::Result<Result<SaveUrlResult, SaveUrlError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/save_url", arg, None)
 }
 
 /// Check the status of a :route:`save_url` job.
-pub fn save_url_check_job_status(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<SaveUrlJobStatus, super::async::PollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/save_url/check_job_status", arg, None)
+pub fn save_url_check_job_status(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<SaveUrlJobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/save_url/check_job_status",
+        arg,
+        None)
 }
 
 /// Searches for files and folders. Note: Recent changes may not immediately be reflected in search
 /// results due to a short delay in indexing.
-pub fn search(client: &::client_trait::HttpClient, arg: &SearchArg) -> ::Result<Result<SearchResult, SearchError>> {
+pub fn search(
+    client: &::client_trait::HttpClient,
+    arg: &SearchArg,
+) -> ::Result<Result<SearchResult, SearchError>> {
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/search", arg, None)
 }
 
 /// Create a new file with the contents provided in the request. Do not use this to upload a file
 /// larger than 150 MB. Instead, create an upload session with :route:`upload_session/start`.
-pub fn upload(client: &::client_trait::HttpClient, arg: &CommitInfo, body: Vec<u8>) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, UploadError>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Content, "files/upload", arg, Some(body), None, None)
+pub fn upload(
+    client: &::client_trait::HttpClient,
+    arg: &CommitInfo,
+    body: Vec<u8>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, UploadError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Content,
+        "files/upload",
+        arg,
+        Some(body),
+        None,
+        None)
 }
 
 /// Append more data to an upload session. A single request should not upload more than 150 MB.
-pub fn upload_session_append(client: &::client_trait::HttpClient, arg: &UploadSessionCursor, body: Vec<u8>) -> ::Result<Result<::client_trait::HttpRequestResult<()>, UploadSessionLookupError>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Content, "files/upload_session/append", arg, Some(body), None, None)
+pub fn upload_session_append(
+    client: &::client_trait::HttpClient,
+    arg: &UploadSessionCursor,
+    body: Vec<u8>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<()>, UploadSessionLookupError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Content,
+        "files/upload_session/append",
+        arg,
+        Some(body),
+        None,
+        None)
 }
 
 /// Append more data to an upload session. When the parameter close is set, this call will close the
 /// session. A single request should not upload more than 150 MB.
-pub fn upload_session_append_v2(client: &::client_trait::HttpClient, arg: &UploadSessionAppendArg, body: Vec<u8>) -> ::Result<Result<::client_trait::HttpRequestResult<()>, UploadSessionLookupError>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Content, "files/upload_session/append_v2", arg, Some(body), None, None)
+pub fn upload_session_append_v2(
+    client: &::client_trait::HttpClient,
+    arg: &UploadSessionAppendArg,
+    body: Vec<u8>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<()>, UploadSessionLookupError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Content,
+        "files/upload_session/append_v2",
+        arg,
+        Some(body),
+        None,
+        None)
 }
 
 /// Finish an upload session and save the uploaded data to the given file path. A single request
 /// should not upload more than 150 MB.
-pub fn upload_session_finish(client: &::client_trait::HttpClient, arg: &UploadSessionFinishArg, body: Vec<u8>) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, UploadSessionFinishError>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Content, "files/upload_session/finish", arg, Some(body), None, None)
+pub fn upload_session_finish(
+    client: &::client_trait::HttpClient,
+    arg: &UploadSessionFinishArg,
+    body: Vec<u8>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, UploadSessionFinishError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Content,
+        "files/upload_session/finish",
+        arg,
+        Some(body),
+        None,
+        None)
 }
 
 /// This route helps you commit many files at once into a user's Dropbox. Use
@@ -325,14 +649,30 @@ pub fn upload_session_finish(client: &::client_trait::HttpClient, arg: &UploadSe
 /// :route:`upload_session/finish_batch/check` to check the job status. For the same account, this
 /// route should be executed serially. That means you should not start the next job before current
 /// job finishes. We allow up to 1000 entries in a single request.
-pub fn upload_session_finish_batch(client: &::client_trait::HttpClient, arg: &UploadSessionFinishBatchArg) -> ::Result<Result<UploadSessionFinishBatchLaunch, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/upload_session/finish_batch", arg, None)
+pub fn upload_session_finish_batch(
+    client: &::client_trait::HttpClient,
+    arg: &UploadSessionFinishBatchArg,
+) -> ::Result<Result<UploadSessionFinishBatchLaunch, ()>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/upload_session/finish_batch",
+        arg,
+        None)
 }
 
 /// Returns the status of an asynchronous job for :route:`upload_session/finish_batch`. If success,
 /// it returns list of result for each entry.
-pub fn upload_session_finish_batch_check(client: &::client_trait::HttpClient, arg: &super::async::PollArg) -> ::Result<Result<UploadSessionFinishBatchJobStatus, super::async::PollError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/upload_session/finish_batch/check", arg, None)
+pub fn upload_session_finish_batch_check(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<UploadSessionFinishBatchJobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/upload_session/finish_batch/check",
+        arg,
+        None)
 }
 
 /// Upload sessions allow you to upload a single file in one or more requests, for example where the
@@ -343,8 +683,19 @@ pub fn upload_session_finish_batch_check(client: &::client_trait::HttpClient, ar
 /// Attempting to use an :field:`UploadSessionStartResult.session_id` with
 /// :route:`upload_session/append_v2` or :route:`upload_session/finish` more than 48 hours after its
 /// creation will return a :field:`UploadSessionLookupError.not_found`.
-pub fn upload_session_start(client: &::client_trait::HttpClient, arg: &UploadSessionStartArg, body: Vec<u8>) -> ::Result<Result<::client_trait::HttpRequestResult<UploadSessionStartResult>, ()>> {
-    ::client_helpers::request_with_body(client, ::client_trait::Endpoint::Content, "files/upload_session/start", arg, Some(body), None, None)
+pub fn upload_session_start(
+    client: &::client_trait::HttpClient,
+    arg: &UploadSessionStartArg,
+    body: Vec<u8>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<UploadSessionStartResult>, ()>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Content,
+        "files/upload_session/start",
+        arg,
+        Some(body),
+        None,
+        None)
 }
 
 #[derive(Debug)]
@@ -390,7 +741,10 @@ impl AlphaGetMetadataArg {
         self
     }
 
-    pub fn with_include_property_templates(mut self, value: Option<Vec<super::file_properties::TemplateId>>) -> Self {
+    pub fn with_include_property_templates(
+        mut self,
+        value: Option<Vec<super::file_properties::TemplateId>>,
+    ) -> Self {
         self.include_property_templates = value;
         self
     }
@@ -403,7 +757,9 @@ const ALPHA_GET_METADATA_ARG_FIELDS: &'static [&'static str] = &["path",
                                                                  "include_has_explicit_shared_members",
                                                                  "include_property_templates"];
 impl AlphaGetMetadataArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<AlphaGetMetadataArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AlphaGetMetadataArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_include_media_info = None;
@@ -454,7 +810,10 @@ impl AlphaGetMetadataArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("include_media_info", &self.include_media_info)?;
@@ -632,7 +991,9 @@ const COMMIT_INFO_FIELDS: &'static [&'static str] = &["path",
                                                       "client_modified",
                                                       "mute"];
 impl CommitInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CommitInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<CommitInfo, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_mode = None;
@@ -683,7 +1044,10 @@ impl CommitInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("mode", &self.mode)?;
@@ -775,7 +1139,10 @@ impl CommitInfoWithProperties {
         self
     }
 
-    pub fn with_property_groups(mut self, value: Option<Vec<super::file_properties::PropertyGroup>>) -> Self {
+    pub fn with_property_groups(
+        mut self,
+        value: Option<Vec<super::file_properties::PropertyGroup>>,
+    ) -> Self {
         self.property_groups = value;
         self
     }
@@ -789,7 +1156,9 @@ const COMMIT_INFO_WITH_PROPERTIES_FIELDS: &'static [&'static str] = &["path",
                                                                       "mute",
                                                                       "property_groups"];
 impl CommitInfoWithProperties {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CommitInfoWithProperties, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<CommitInfoWithProperties, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_mode = None;
@@ -848,7 +1217,10 @@ impl CommitInfoWithProperties {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("mode", &self.mode)?;
@@ -914,7 +1286,9 @@ impl CreateFolderArg {
 const CREATE_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
                                                             "autorename"];
 impl CreateFolderArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CreateFolderArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<CreateFolderArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_autorename = None;
@@ -941,7 +1315,10 @@ impl CreateFolderArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("autorename", &self.autorename)
@@ -1058,7 +1435,9 @@ impl CreateFolderResult {
 
 const CREATE_FOLDER_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
 impl CreateFolderResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<CreateFolderResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<CreateFolderResult, V::Error> {
         use serde::de;
         let mut field_metadata = None;
         while let Some(key) = map.next_key()? {
@@ -1077,7 +1456,10 @@ impl CreateFolderResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)
     }
@@ -1128,7 +1510,9 @@ impl DeleteArg {
 
 const DELETE_ARG_FIELDS: &'static [&'static str] = &["path"];
 impl DeleteArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeleteArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeleteArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         while let Some(key) = map.next_key()? {
@@ -1147,7 +1531,10 @@ impl DeleteArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)
     }
@@ -1197,7 +1584,9 @@ impl DeleteBatchArg {
 
 const DELETE_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries"];
 impl DeleteBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeleteBatchArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeleteBatchArg, V::Error> {
         use serde::de;
         let mut field_entries = None;
         while let Some(key) = map.next_key()? {
@@ -1216,7 +1605,10 @@ impl DeleteBatchArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)
     }
@@ -1477,7 +1869,9 @@ impl DeleteBatchResult {
 
 const DELETE_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
 impl DeleteBatchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeleteBatchResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeleteBatchResult, V::Error> {
         use serde::de;
         let mut field_entries = None;
         while let Some(key) = map.next_key()? {
@@ -1496,7 +1890,10 @@ impl DeleteBatchResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)
     }
@@ -1547,7 +1944,9 @@ impl DeleteBatchResultData {
 
 const DELETE_BATCH_RESULT_DATA_FIELDS: &'static [&'static str] = &["metadata"];
 impl DeleteBatchResultData {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeleteBatchResultData, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeleteBatchResultData, V::Error> {
         use serde::de;
         let mut field_metadata = None;
         while let Some(key) = map.next_key()? {
@@ -1566,7 +1965,10 @@ impl DeleteBatchResultData {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)
     }
@@ -1784,7 +2186,9 @@ impl DeleteResult {
 
 const DELETE_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
 impl DeleteResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeleteResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeleteResult, V::Error> {
         use serde::de;
         let mut field_metadata = None;
         while let Some(key) = map.next_key()? {
@@ -1803,7 +2207,10 @@ impl DeleteResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)
     }
@@ -1876,7 +2283,10 @@ impl DeletedMetadata {
         self
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: Option<super::common::SharedFolderId>,
+    ) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
@@ -1888,7 +2298,9 @@ const DELETED_METADATA_FIELDS: &'static [&'static str] = &["name",
                                                            "path_display",
                                                            "parent_shared_folder_id"];
 impl DeletedMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DeletedMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DeletedMetadata, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_path_lower = None;
@@ -1931,7 +2343,10 @@ impl DeletedMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("path_lower", &self.path_lower)?;
@@ -1990,7 +2405,9 @@ impl Dimensions {
 const DIMENSIONS_FIELDS: &'static [&'static str] = &["height",
                                                      "width"];
 impl Dimensions {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<Dimensions, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<Dimensions, V::Error> {
         use serde::de;
         let mut field_height = None;
         let mut field_width = None;
@@ -2017,7 +2434,10 @@ impl Dimensions {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("height", &self.height)?;
         s.serialize_field("width", &self.width)
@@ -2078,7 +2498,9 @@ impl DownloadArg {
 const DOWNLOAD_ARG_FIELDS: &'static [&'static str] = &["path",
                                                        "rev"];
 impl DownloadArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<DownloadArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DownloadArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_rev = None;
@@ -2105,7 +2527,10 @@ impl DownloadArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("rev", &self.rev)
@@ -2257,7 +2682,14 @@ pub struct FileMetadata {
 }
 
 impl FileMetadata {
-    pub fn new(name: String, id: Id, client_modified: super::common::DropboxTimestamp, server_modified: super::common::DropboxTimestamp, rev: Rev, size: u64) -> Self {
+    pub fn new(
+        name: String,
+        id: Id,
+        client_modified: super::common::DropboxTimestamp,
+        server_modified: super::common::DropboxTimestamp,
+        rev: Rev,
+        size: u64,
+    ) -> Self {
         FileMetadata {
             name,
             id,
@@ -2286,7 +2718,10 @@ impl FileMetadata {
         self
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: Option<super::common::SharedFolderId>,
+    ) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
@@ -2301,7 +2736,10 @@ impl FileMetadata {
         self
     }
 
-    pub fn with_property_groups(mut self, value: Option<Vec<super::file_properties::PropertyGroup>>) -> Self {
+    pub fn with_property_groups(
+        mut self,
+        value: Option<Vec<super::file_properties::PropertyGroup>>,
+    ) -> Self {
         self.property_groups = value;
         self
     }
@@ -2333,7 +2771,9 @@ const FILE_METADATA_FIELDS: &'static [&'static str] = &["name",
                                                         "has_explicit_shared_members",
                                                         "content_hash"];
 impl FileMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileMetadata, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_id = None;
@@ -2456,7 +2896,10 @@ impl FileMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("id", &self.id)?;
@@ -2516,7 +2959,9 @@ impl Default for FileOpsResult {
 
 const FILE_OPS_RESULT_FIELDS: &'static [&'static str] = &[];
 impl FileOpsResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileOpsResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileOpsResult, V::Error> {
         use serde::de;
         if let Some(key) = map.next_key()? {
             return Err(de::Error::unknown_field(key, FILE_OPS_RESULT_FIELDS));
@@ -2584,7 +3029,9 @@ const FILE_SHARING_INFO_FIELDS: &'static [&'static str] = &["read_only",
                                                             "parent_shared_folder_id",
                                                             "modified_by"];
 impl FileSharingInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FileSharingInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileSharingInfo, V::Error> {
         use serde::de;
         let mut field_read_only = None;
         let mut field_parent_shared_folder_id = None;
@@ -2619,7 +3066,10 @@ impl FileSharingInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("read_only", &self.read_only)?;
         s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
@@ -2706,7 +3156,10 @@ impl FolderMetadata {
         self
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: Option<super::common::SharedFolderId>,
+    ) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
@@ -2721,7 +3174,10 @@ impl FolderMetadata {
         self
     }
 
-    pub fn with_property_groups(mut self, value: Option<Vec<super::file_properties::PropertyGroup>>) -> Self {
+    pub fn with_property_groups(
+        mut self,
+        value: Option<Vec<super::file_properties::PropertyGroup>>,
+    ) -> Self {
         self.property_groups = value;
         self
     }
@@ -2737,7 +3193,9 @@ const FOLDER_METADATA_FIELDS: &'static [&'static str] = &["name",
                                                           "sharing_info",
                                                           "property_groups"];
 impl FolderMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FolderMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FolderMetadata, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_id = None;
@@ -2812,7 +3270,10 @@ impl FolderMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("id", &self.id)?;
@@ -2883,7 +3344,10 @@ impl FolderSharingInfo {
         }
     }
 
-    pub fn with_parent_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
+    pub fn with_parent_shared_folder_id(
+        mut self,
+        value: Option<super::common::SharedFolderId>,
+    ) -> Self {
         self.parent_shared_folder_id = value;
         self
     }
@@ -2911,7 +3375,9 @@ const FOLDER_SHARING_INFO_FIELDS: &'static [&'static str] = &["read_only",
                                                               "traverse_only",
                                                               "no_access"];
 impl FolderSharingInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<FolderSharingInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FolderSharingInfo, V::Error> {
         use serde::de;
         let mut field_read_only = None;
         let mut field_parent_shared_folder_id = None;
@@ -2962,7 +3428,10 @@ impl FolderSharingInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("read_only", &self.read_only)?;
         s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
@@ -3017,7 +3486,9 @@ impl GetCopyReferenceArg {
 
 const GET_COPY_REFERENCE_ARG_FIELDS: &'static [&'static str] = &["path"];
 impl GetCopyReferenceArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetCopyReferenceArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetCopyReferenceArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         while let Some(key) = map.next_key()? {
@@ -3036,7 +3507,10 @@ impl GetCopyReferenceArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)
     }
@@ -3150,7 +3624,11 @@ pub struct GetCopyReferenceResult {
 }
 
 impl GetCopyReferenceResult {
-    pub fn new(metadata: Metadata, copy_reference: String, expires: super::common::DropboxTimestamp) -> Self {
+    pub fn new(
+        metadata: Metadata,
+        copy_reference: String,
+        expires: super::common::DropboxTimestamp,
+    ) -> Self {
         GetCopyReferenceResult {
             metadata,
             copy_reference,
@@ -3164,7 +3642,9 @@ const GET_COPY_REFERENCE_RESULT_FIELDS: &'static [&'static str] = &["metadata",
                                                                     "copy_reference",
                                                                     "expires"];
 impl GetCopyReferenceResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetCopyReferenceResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetCopyReferenceResult, V::Error> {
         use serde::de;
         let mut field_metadata = None;
         let mut field_copy_reference = None;
@@ -3199,7 +3679,10 @@ impl GetCopyReferenceResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)?;
         s.serialize_field("copy_reference", &self.copy_reference)?;
@@ -3281,7 +3764,9 @@ const GET_METADATA_ARG_FIELDS: &'static [&'static str] = &["path",
                                                            "include_deleted",
                                                            "include_has_explicit_shared_members"];
 impl GetMetadataArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetMetadataArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetMetadataArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_include_media_info = None;
@@ -3324,7 +3809,10 @@ impl GetMetadataArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("include_media_info", &self.include_media_info)?;
@@ -3443,7 +3931,9 @@ impl GetTemporaryLinkArg {
 
 const GET_TEMPORARY_LINK_ARG_FIELDS: &'static [&'static str] = &["path"];
 impl GetTemporaryLinkArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetTemporaryLinkArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetTemporaryLinkArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         while let Some(key) = map.next_key()? {
@@ -3462,7 +3952,10 @@ impl GetTemporaryLinkArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)
     }
@@ -3585,7 +4078,9 @@ impl GetTemporaryLinkResult {
 const GET_TEMPORARY_LINK_RESULT_FIELDS: &'static [&'static str] = &["metadata",
                                                                     "link"];
 impl GetTemporaryLinkResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetTemporaryLinkResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetTemporaryLinkResult, V::Error> {
         use serde::de;
         let mut field_metadata = None;
         let mut field_link = None;
@@ -3612,7 +4107,10 @@ impl GetTemporaryLinkResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)?;
         s.serialize_field("link", &self.link)
@@ -3665,7 +4163,9 @@ impl GetThumbnailBatchArg {
 
 const GET_THUMBNAIL_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries"];
 impl GetThumbnailBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetThumbnailBatchArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetThumbnailBatchArg, V::Error> {
         use serde::de;
         let mut field_entries = None;
         while let Some(key) = map.next_key()? {
@@ -3684,7 +4184,10 @@ impl GetThumbnailBatchArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)
     }
@@ -3797,7 +4300,9 @@ impl GetThumbnailBatchResult {
 
 const GET_THUMBNAIL_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
 impl GetThumbnailBatchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetThumbnailBatchResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetThumbnailBatchResult, V::Error> {
         use serde::de;
         let mut field_entries = None;
         while let Some(key) = map.next_key()? {
@@ -3816,7 +4321,10 @@ impl GetThumbnailBatchResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)
     }
@@ -3869,7 +4377,9 @@ impl GetThumbnailBatchResultData {
 const GET_THUMBNAIL_BATCH_RESULT_DATA_FIELDS: &'static [&'static str] = &["metadata",
                                                                           "thumbnail"];
 impl GetThumbnailBatchResultData {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GetThumbnailBatchResultData, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GetThumbnailBatchResultData, V::Error> {
         use serde::de;
         let mut field_metadata = None;
         let mut field_thumbnail = None;
@@ -3896,7 +4406,10 @@ impl GetThumbnailBatchResultData {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)?;
         s.serialize_field("thumbnail", &self.thumbnail)
@@ -4020,7 +4533,9 @@ impl GpsCoordinates {
 const GPS_COORDINATES_FIELDS: &'static [&'static str] = &["latitude",
                                                           "longitude"];
 impl GpsCoordinates {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<GpsCoordinates, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<GpsCoordinates, V::Error> {
         use serde::de;
         let mut field_latitude = None;
         let mut field_longitude = None;
@@ -4047,7 +4562,10 @@ impl GpsCoordinates {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("latitude", &self.latitude)?;
         s.serialize_field("longitude", &self.longitude)
@@ -4169,7 +4687,9 @@ const LIST_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
                                                           "limit",
                                                           "shared_link"];
 impl ListFolderArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFolderArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_recursive = None;
@@ -4244,7 +4764,10 @@ impl ListFolderArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("recursive", &self.recursive)?;
@@ -4303,7 +4826,9 @@ impl ListFolderContinueArg {
 
 const LIST_FOLDER_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
 impl ListFolderContinueArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderContinueArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFolderContinueArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -4322,7 +4847,10 @@ impl ListFolderContinueArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -4521,7 +5049,9 @@ impl ListFolderGetLatestCursorResult {
 
 const LIST_FOLDER_GET_LATEST_CURSOR_RESULT_FIELDS: &'static [&'static str] = &["cursor"];
 impl ListFolderGetLatestCursorResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderGetLatestCursorResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFolderGetLatestCursorResult, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
@@ -4540,7 +5070,10 @@ impl ListFolderGetLatestCursorResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)
     }
@@ -4604,7 +5137,9 @@ impl ListFolderLongpollArg {
 const LIST_FOLDER_LONGPOLL_ARG_FIELDS: &'static [&'static str] = &["cursor",
                                                                    "timeout"];
 impl ListFolderLongpollArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderLongpollArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFolderLongpollArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         let mut field_timeout = None;
@@ -4631,7 +5166,10 @@ impl ListFolderLongpollArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)?;
         s.serialize_field("timeout", &self.timeout)
@@ -4757,7 +5295,9 @@ impl ListFolderLongpollResult {
 const LIST_FOLDER_LONGPOLL_RESULT_FIELDS: &'static [&'static str] = &["changes",
                                                                       "backoff"];
 impl ListFolderLongpollResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderLongpollResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFolderLongpollResult, V::Error> {
         use serde::de;
         let mut field_changes = None;
         let mut field_backoff = None;
@@ -4784,7 +5324,10 @@ impl ListFolderLongpollResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("changes", &self.changes)?;
         s.serialize_field("backoff", &self.backoff)
@@ -4846,7 +5389,9 @@ const LIST_FOLDER_RESULT_FIELDS: &'static [&'static str] = &["entries",
                                                              "cursor",
                                                              "has_more"];
 impl ListFolderResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListFolderResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFolderResult, V::Error> {
         use serde::de;
         let mut field_entries = None;
         let mut field_cursor = None;
@@ -4881,7 +5426,10 @@ impl ListFolderResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
         s.serialize_field("cursor", &self.cursor)?;
@@ -4952,7 +5500,9 @@ const LIST_REVISIONS_ARG_FIELDS: &'static [&'static str] = &["path",
                                                              "mode",
                                                              "limit"];
 impl ListRevisionsArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListRevisionsArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListRevisionsArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_mode = None;
@@ -4987,7 +5537,10 @@ impl ListRevisionsArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("mode", &self.mode)?;
@@ -5183,7 +5736,9 @@ const LIST_REVISIONS_RESULT_FIELDS: &'static [&'static str] = &["is_deleted",
                                                                 "entries",
                                                                 "server_deleted"];
 impl ListRevisionsResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ListRevisionsResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListRevisionsResult, V::Error> {
         use serde::de;
         let mut field_is_deleted = None;
         let mut field_entries = None;
@@ -5218,7 +5773,10 @@ impl ListRevisionsResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("is_deleted", &self.is_deleted)?;
         s.serialize_field("entries", &self.entries)?;
@@ -5601,7 +6159,9 @@ const PHOTO_METADATA_FIELDS: &'static [&'static str] = &["dimensions",
                                                          "location",
                                                          "time_taken"];
 impl PhotoMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PhotoMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PhotoMetadata, V::Error> {
         use serde::de;
         let mut field_dimensions = None;
         let mut field_location = None;
@@ -5636,7 +6196,10 @@ impl PhotoMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("dimensions", &self.dimensions)?;
         s.serialize_field("location", &self.location)?;
@@ -5698,7 +6261,9 @@ impl PreviewArg {
 const PREVIEW_ARG_FIELDS: &'static [&'static str] = &["path",
                                                       "rev"];
 impl PreviewArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<PreviewArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PreviewArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_rev = None;
@@ -5725,7 +6290,10 @@ impl PreviewArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("rev", &self.rev)
@@ -5908,7 +6476,9 @@ const RELOCATION_ARG_FIELDS: &'static [&'static str] = &["from_path",
                                                          "autorename",
                                                          "allow_ownership_transfer"];
 impl RelocationArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RelocationArg, V::Error> {
         use serde::de;
         let mut field_from_path = None;
         let mut field_to_path = None;
@@ -5959,7 +6529,10 @@ impl RelocationArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("from_path", &self.from_path)?;
         s.serialize_field("to_path", &self.to_path)?;
@@ -6046,7 +6619,9 @@ const RELOCATION_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries",
                                                                "autorename",
                                                                "allow_ownership_transfer"];
 impl RelocationBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationBatchArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RelocationBatchArg, V::Error> {
         use serde::de;
         let mut field_entries = None;
         let mut field_allow_shared_folder = None;
@@ -6089,7 +6664,10 @@ impl RelocationBatchArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
         s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
@@ -6459,7 +7037,9 @@ impl RelocationBatchResult {
 
 const RELOCATION_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
 impl RelocationBatchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationBatchResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RelocationBatchResult, V::Error> {
         use serde::de;
         let mut field_entries = None;
         while let Some(key) = map.next_key()? {
@@ -6478,7 +7058,10 @@ impl RelocationBatchResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)
     }
@@ -6529,7 +7112,9 @@ impl RelocationBatchResultData {
 
 const RELOCATION_BATCH_RESULT_DATA_FIELDS: &'static [&'static str] = &["metadata"];
 impl RelocationBatchResultData {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationBatchResultData, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RelocationBatchResultData, V::Error> {
         use serde::de;
         let mut field_metadata = None;
         while let Some(key) = map.next_key()? {
@@ -6548,7 +7133,10 @@ impl RelocationBatchResultData {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)
     }
@@ -6765,7 +7353,9 @@ impl RelocationPath {
 const RELOCATION_PATH_FIELDS: &'static [&'static str] = &["from_path",
                                                           "to_path"];
 impl RelocationPath {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationPath, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RelocationPath, V::Error> {
         use serde::de;
         let mut field_from_path = None;
         let mut field_to_path = None;
@@ -6792,7 +7382,10 @@ impl RelocationPath {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("from_path", &self.from_path)?;
         s.serialize_field("to_path", &self.to_path)
@@ -6844,7 +7437,9 @@ impl RelocationResult {
 
 const RELOCATION_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
 impl RelocationResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RelocationResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RelocationResult, V::Error> {
         use serde::de;
         let mut field_metadata = None;
         while let Some(key) = map.next_key()? {
@@ -6863,7 +7458,10 @@ impl RelocationResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)
     }
@@ -6918,7 +7516,9 @@ impl RestoreArg {
 const RESTORE_ARG_FIELDS: &'static [&'static str] = &["path",
                                                       "rev"];
 impl RestoreArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<RestoreArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RestoreArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_rev = None;
@@ -6945,7 +7545,10 @@ impl RestoreArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("rev", &self.rev)
@@ -7097,7 +7700,9 @@ impl SaveCopyReferenceArg {
 const SAVE_COPY_REFERENCE_ARG_FIELDS: &'static [&'static str] = &["copy_reference",
                                                                   "path"];
 impl SaveCopyReferenceArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SaveCopyReferenceArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SaveCopyReferenceArg, V::Error> {
         use serde::de;
         let mut field_copy_reference = None;
         let mut field_path = None;
@@ -7124,7 +7729,10 @@ impl SaveCopyReferenceArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("copy_reference", &self.copy_reference)?;
         s.serialize_field("path", &self.path)
@@ -7285,7 +7893,9 @@ impl SaveCopyReferenceResult {
 
 const SAVE_COPY_REFERENCE_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
 impl SaveCopyReferenceResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SaveCopyReferenceResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SaveCopyReferenceResult, V::Error> {
         use serde::de;
         let mut field_metadata = None;
         while let Some(key) = map.next_key()? {
@@ -7304,7 +7914,10 @@ impl SaveCopyReferenceResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)
     }
@@ -7359,7 +7972,9 @@ impl SaveUrlArg {
 const SAVE_URL_ARG_FIELDS: &'static [&'static str] = &["path",
                                                        "url"];
 impl SaveUrlArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SaveUrlArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SaveUrlArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_url = None;
@@ -7386,7 +8001,10 @@ impl SaveUrlArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("url", &self.url)
@@ -7710,7 +8328,9 @@ const SEARCH_ARG_FIELDS: &'static [&'static str] = &["path",
                                                      "max_results",
                                                      "mode"];
 impl SearchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SearchArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SearchArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_query = None;
@@ -7761,7 +8381,10 @@ impl SearchArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("query", &self.query)?;
@@ -7888,7 +8511,9 @@ impl SearchMatch {
 const SEARCH_MATCH_FIELDS: &'static [&'static str] = &["match_type",
                                                        "metadata"];
 impl SearchMatch {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SearchMatch, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SearchMatch, V::Error> {
         use serde::de;
         let mut field_match_type = None;
         let mut field_metadata = None;
@@ -7915,7 +8540,10 @@ impl SearchMatch {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("match_type", &self.match_type)?;
         s.serialize_field("metadata", &self.metadata)
@@ -8112,7 +8740,9 @@ const SEARCH_RESULT_FIELDS: &'static [&'static str] = &["matches",
                                                         "more",
                                                         "start"];
 impl SearchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SearchResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SearchResult, V::Error> {
         use serde::de;
         let mut field_matches = None;
         let mut field_more = None;
@@ -8147,7 +8777,10 @@ impl SearchResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("matches", &self.matches)?;
         s.serialize_field("more", &self.more)?;
@@ -8209,7 +8842,9 @@ impl SharedLink {
 const SHARED_LINK_FIELDS: &'static [&'static str] = &["url",
                                                       "password"];
 impl SharedLink {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharedLink, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedLink, V::Error> {
         use serde::de;
         let mut field_url = None;
         let mut field_password = None;
@@ -8236,7 +8871,10 @@ impl SharedLink {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("url", &self.url)?;
         s.serialize_field("password", &self.password)
@@ -8289,7 +8927,9 @@ impl SharingInfo {
 
 const SHARING_INFO_FIELDS: &'static [&'static str] = &["read_only"];
 impl SharingInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<SharingInfo, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharingInfo, V::Error> {
         use serde::de;
         let mut field_read_only = None;
         while let Some(key) = map.next_key()? {
@@ -8308,7 +8948,10 @@ impl SharingInfo {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("read_only", &self.read_only)
     }
@@ -8378,7 +9021,9 @@ const THUMBNAIL_ARG_FIELDS: &'static [&'static str] = &["path",
                                                         "format",
                                                         "size"];
 impl ThumbnailArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<ThumbnailArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ThumbnailArg, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_format = None;
@@ -8413,7 +9058,10 @@ impl ThumbnailArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("format", &self.format)?;
@@ -8844,7 +9492,9 @@ impl UploadSessionAppendArg {
 const UPLOAD_SESSION_APPEND_ARG_FIELDS: &'static [&'static str] = &["cursor",
                                                                     "close"];
 impl UploadSessionAppendArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionAppendArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UploadSessionAppendArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         let mut field_close = None;
@@ -8871,7 +9521,10 @@ impl UploadSessionAppendArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)?;
         s.serialize_field("close", &self.close)
@@ -8928,7 +9581,9 @@ impl UploadSessionCursor {
 const UPLOAD_SESSION_CURSOR_FIELDS: &'static [&'static str] = &["session_id",
                                                                 "offset"];
 impl UploadSessionCursor {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionCursor, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UploadSessionCursor, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_offset = None;
@@ -8955,7 +9610,10 @@ impl UploadSessionCursor {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)?;
         s.serialize_field("offset", &self.offset)
@@ -9011,7 +9669,9 @@ impl UploadSessionFinishArg {
 const UPLOAD_SESSION_FINISH_ARG_FIELDS: &'static [&'static str] = &["cursor",
                                                                     "commit"];
 impl UploadSessionFinishArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionFinishArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UploadSessionFinishArg, V::Error> {
         use serde::de;
         let mut field_cursor = None;
         let mut field_commit = None;
@@ -9038,7 +9698,10 @@ impl UploadSessionFinishArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("cursor", &self.cursor)?;
         s.serialize_field("commit", &self.commit)
@@ -9090,7 +9753,9 @@ impl UploadSessionFinishBatchArg {
 
 const UPLOAD_SESSION_FINISH_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries"];
 impl UploadSessionFinishBatchArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionFinishBatchArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UploadSessionFinishBatchArg, V::Error> {
         use serde::de;
         let mut field_entries = None;
         while let Some(key) = map.next_key()? {
@@ -9109,7 +9774,10 @@ impl UploadSessionFinishBatchArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)
     }
@@ -9288,7 +9956,9 @@ impl UploadSessionFinishBatchResult {
 
 const UPLOAD_SESSION_FINISH_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
 impl UploadSessionFinishBatchResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionFinishBatchResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UploadSessionFinishBatchResult, V::Error> {
         use serde::de;
         let mut field_entries = None;
         while let Some(key) = map.next_key()? {
@@ -9307,7 +9977,10 @@ impl UploadSessionFinishBatchResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)
     }
@@ -9625,7 +10298,9 @@ impl UploadSessionOffsetError {
 
 const UPLOAD_SESSION_OFFSET_ERROR_FIELDS: &'static [&'static str] = &["correct_offset"];
 impl UploadSessionOffsetError {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionOffsetError, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UploadSessionOffsetError, V::Error> {
         use serde::de;
         let mut field_correct_offset = None;
         while let Some(key) = map.next_key()? {
@@ -9644,7 +10319,10 @@ impl UploadSessionOffsetError {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("correct_offset", &self.correct_offset)
     }
@@ -9695,7 +10373,9 @@ impl Default for UploadSessionStartArg {
 
 const UPLOAD_SESSION_START_ARG_FIELDS: &'static [&'static str] = &["close"];
 impl UploadSessionStartArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionStartArg, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UploadSessionStartArg, V::Error> {
         use serde::de;
         let mut field_close = None;
         while let Some(key) = map.next_key()? {
@@ -9714,7 +10394,10 @@ impl UploadSessionStartArg {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("close", &self.close)
     }
@@ -9766,7 +10449,9 @@ impl UploadSessionStartResult {
 
 const UPLOAD_SESSION_START_RESULT_FIELDS: &'static [&'static str] = &["session_id"];
 impl UploadSessionStartResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadSessionStartResult, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UploadSessionStartResult, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         while let Some(key) = map.next_key()? {
@@ -9785,7 +10470,10 @@ impl UploadSessionStartResult {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("session_id", &self.session_id)
     }
@@ -9840,7 +10528,9 @@ impl UploadWriteFailed {
 const UPLOAD_WRITE_FAILED_FIELDS: &'static [&'static str] = &["reason",
                                                               "upload_session_id"];
 impl UploadWriteFailed {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<UploadWriteFailed, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<UploadWriteFailed, V::Error> {
         use serde::de;
         let mut field_reason = None;
         let mut field_upload_session_id = None;
@@ -9867,7 +10557,10 @@ impl UploadWriteFailed {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("reason", &self.reason)?;
         s.serialize_field("upload_session_id", &self.upload_session_id)
@@ -9931,7 +10624,9 @@ const VIDEO_METADATA_FIELDS: &'static [&'static str] = &["dimensions",
                                                          "time_taken",
                                                          "duration"];
 impl VideoMetadata {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(mut map: V) -> Result<VideoMetadata, V::Error> {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<VideoMetadata, V::Error> {
         use serde::de;
         let mut field_dimensions = None;
         let mut field_location = None;
@@ -9974,7 +10669,10 @@ impl VideoMetadata {
         })
     }
 
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(&self, s: &mut S::SerializeStruct) -> Result<(), S::Error> {
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("dimensions", &self.dimensions)?;
         s.serialize_field("location", &self.location)?;
