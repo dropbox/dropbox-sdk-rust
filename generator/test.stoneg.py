@@ -118,7 +118,9 @@ class TestBackend(RustHelperBackend):
         with self.output_to_relative_path('mod.rs'):
             self._emit_header()
             for ns in api.namespaces:
+                self.emit(u'#[cfg(feature = "dbx_{}")]'.format(ns))
                 self.emit(u'mod {};'.format(ns))
+                self.emit()
 
     def _emit_header(self):
         self.emit(u'// DO NOT EDIT')

@@ -26,7 +26,9 @@ class RustBackend(RustHelperBackend):
         with self.output_to_relative_path('mod.rs'):
             self._emit_header()
             for module in self._modules:
+                self.emit(u'#[cfg(feature = "dbx_{}")]'.format(module))
                 self.emit(u'pub mod {};'.format(module))
+                self.emit()
 
     # Type Emitters
 

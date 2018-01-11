@@ -8,17 +8,45 @@
     doc_markdown,
 )]
 
+#[cfg(feature = "dbx_async")]
 pub mod async;
+
+#[cfg(feature = "dbx_auth")]
 pub mod auth;
+
+#[cfg(feature = "dbx_common")]
 pub mod common;
+
+#[cfg(feature = "dbx_file_properties")]
 pub mod file_properties;
+
+#[cfg(feature = "dbx_file_requests")]
 pub mod file_requests;
+
+#[cfg(feature = "dbx_files")]
 pub mod files;
+
+#[cfg(feature = "dbx_paper")]
 pub mod paper;
+
+#[cfg(feature = "dbx_sharing")]
 pub mod sharing;
+
+#[cfg(feature = "dbx_team")]
 pub mod team;
+
+#[cfg(feature = "dbx_team_common")]
 pub mod team_common;
+
+#[cfg(feature = "dbx_team_log")]
 pub mod team_log;
+
+#[cfg(feature = "dbx_team_policies")]
 pub mod team_policies;
+
+#[cfg(feature = "dbx_users")]
 pub mod users;
+
+#[cfg(feature = "dbx_users_common")]
 pub mod users_common;
+

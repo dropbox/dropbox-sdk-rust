@@ -13,11 +13,47 @@ serde_json = "1.0"
 url = "1.5"
 
 [dev-dependencies]
-env_logger = "*"
+env_logger = "0.4"
 
 [[example]]
 name = "demo"
-required-features = ["hyper_client"]
+required-features = ["dbx_files", "hyper_client"]
 
 [features]
+# dbx_* features each correspond to one Stone spec file.
+# The lists of dependencies must be kept in sync with the 'import' statements in them.
+dbx_async = []
+dbx_auth = ["dbx_common"]
+dbx_common = []
+dbx_file_properties = []
+dbx_file_requests = ["dbx_common", "dbx_files"]
+dbx_files = ["dbx_async", "dbx_auth", "dbx_common", "dbx_file_properties", "dbx_users_common"]
+dbx_paper = ["dbx_common", "dbx_sharing"]
+dbx_sharing = ["dbx_common", "dbx_files", "dbx_users"]
+dbx_team = ["dbx_common", "dbx_file_properties", "dbx_team_common", "dbx_team_policies", "dbx_users_common"]
+dbx_team_common = ["dbx_common"]
+dbx_team_log = ["dbx_async", "dbx_team", "dbx_team_common", "dbx_users_common"]
+dbx_team_policies = []
+dbx_users = ["dbx_common", "dbx_team_policies", "dbx_users_common"]
+dbx_users_common = ["dbx_common"]
+
 hyper_client = ["hyper", "hyper-native-tls"]
+
+# Include everything by default.
+default = [
+    "dbx_async",
+    "dbx_auth",
+    "dbx_common",
+    "dbx_file_properties",
+    "dbx_file_requests",
+    "dbx_files",
+    "dbx_paper",
+    "dbx_sharing",
+    "dbx_team",
+    "dbx_team_common",
+    "dbx_team_log",
+    "dbx_team_policies",
+    "dbx_users",
+    "dbx_users_common",
+    "hyper_client",
+    ]
