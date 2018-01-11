@@ -29,11 +29,24 @@ dbx_file_properties = []
 dbx_file_requests = ["dbx_common", "dbx_files"]
 dbx_files = ["dbx_async", "dbx_auth", "dbx_common", "dbx_file_properties", "dbx_users_common"]
 dbx_paper = ["dbx_common", "dbx_sharing"]
+dbx_shared_content_links = ["dbx_common"]
+dbx_shared_links = ["dbx_common", "dbx_files", "dbx_users"]
 dbx_sharing = ["dbx_common", "dbx_files", "dbx_users"]
+dbx_sharing_files = ["dbx_common", "dbx_files", "dbx_users"]
+dbx_sharing_folders = ["dbx_async", "dbx_common", "dbx_files", "dbx_team_common", "dbx_users_common"]
 dbx_team = ["dbx_common", "dbx_file_properties", "dbx_team_common", "dbx_team_policies", "dbx_users_common"]
 dbx_team_common = ["dbx_common"]
+dbx_team_devices = ["dbx_common"]
+dbx_team_folders = ["dbx_async", "dbx_common"]
+dbx_team_groups = ["dbx_async", "dbx_team_common"]
+dbx_team_linked_apps = ["dbx_common"]
 dbx_team_log = ["dbx_async", "dbx_team", "dbx_team_common", "dbx_users_common"]
+dbx_team_log_generated = ["dbx_async", "dbx_common", "dbx_team_common", "dbx_users_common", "dbx_files", "dbx_team_policies"]
+dbx_team_member_space_limits = []
+dbx_team_members = ["dbx_async", "dbx_users", "dbx_common", "dbx_team_common"]
+dbx_team_namespaces = ["dbx_common", "dbx_team_common"]
 dbx_team_policies = []
+dbx_team_reports = ["dbx_common"]
 dbx_users = ["dbx_common", "dbx_team_policies", "dbx_users_common"]
 dbx_users_common = ["dbx_common"]
 
@@ -48,11 +61,24 @@ default = [
     "dbx_file_requests",
     "dbx_files",
     "dbx_paper",
+    "dbx_shared_content_links",
+    "dbx_shared_links",
     "dbx_sharing",
+    "dbx_sharing_files",
+    "dbx_sharing_folders",
     "dbx_team",
     "dbx_team_common",
+    "dbx_team_devices",
+    "dbx_team_folders",
+    "dbx_team_groups",
+    "dbx_team_linked_apps",
     "dbx_team_log",
+    "dbx_team_log_generated",
+    "dbx_team_member_space_limits",
+    "dbx_team_members",
+    "dbx_team_namespaces",
     "dbx_team_policies",
+    "dbx_team_reports",
     "dbx_users",
     "dbx_users_common",
     "hyper_client",
