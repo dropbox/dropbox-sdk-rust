@@ -5,3 +5,4 @@ Cargo.lock
 .env
 .vscode/
 tests/generated/
+deps.dot*

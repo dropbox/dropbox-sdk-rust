@@ -15,14 +15,35 @@ for root, dirs, files in os.walk(stone_root):
 
 deps = {}
 for filepath in stone_files:
-    module = os.path.basename(filepath).split('.')[0]
-    if module == "stone_cfg":
-        continue
-    deps[module] = []
+    module = None
     with open(filepath) as f:
         for line in f:
-            if line.startswith("import "):
-                deps[module].append(line.strip().split("import ")[1])
+            if line.startswith('namespace '):
+                module = line.strip().split('namespace ')[1]
+                break
+    if module is None or module == "":
+        raise RuntimeError('unknown namespace for ' + filepath)
+    print('{} = {}'.format(filepath, module))
+    if module == "stone_cfg":
+        continue
+    if not module in deps:
+        deps[module] = set()
+    with open(filepath) as f:
+        for line in f:
+            if line.startswith('import '):
+                imported = line.strip().split('import ')[1]
+                deps[module].add(imported)
+
+with open('deps.dot', 'w') as dot:
+    dot.write('digraph deps {\n')
+    for module, imports in deps.items():
+        if len(imports) == 0:
+            dot.write('    {};\n'.format(module))
+        else:
+            dot.write('    {} -> {{ {} }};\n'.format(
+                module,
+                ' '.join(imports)))
+    dot.write('}\n')
 
 # super hacky toml reader and editor
 in_features = False
@@ -35,7 +56,8 @@ with open("Cargo.toml", "r") as old, open("Cargo.toml.new", "w") as new:
                 continue
             else:
                 # found the end
-                for module in deps:
+                # write an indented list of features
+                for module in sorted(deps):
                     new.write('    "dbx_{}",\n'.format(module))
 
                 in_features = False
@@ -46,16 +68,16 @@ with open("Cargo.toml", "r") as old, open("Cargo.toml.new", "w") as new:
             else:
                 # found the end of the features list.
                 # write out the new features list
-                for module, imports in deps.items():
+                for module in sorted(deps):
                     new.write('dbx_{} = [{}]\n'.format(
-                            module,
-                            ', '.join(map(lambda x: '"dbx_{}"'.format(x), imports))))
+                        module,
+                        ', '.join(map(lambda x: '"dbx_{}"'.format(x), sorted(deps[module])))))
                 in_features = False
         else:
-            if line.startswith("dbx_"):
+            if line.startswith('dbx_'):
                 in_features = True
                 continue
-            elif line == "default = [\n":
+            elif line == 'default = [\n':
                 in_default = True
 
         new.write(line)
