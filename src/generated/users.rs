@@ -430,6 +430,8 @@ pub struct FullAccount {
     pub is_paired: bool,
     /// What type of account this user has.
     pub account_type: super::users_common::AccountType,
+    /// The root info for this account.
+    pub root_info: super::common::RootInfo,
     /// URL for the photo representing the user, if one is set.
     pub profile_photo_url: Option<String>,
     /// The user's two-letter country code, if available. Country codes are based on :link:`ISO
@@ -453,6 +455,7 @@ impl FullAccount {
         referral_link: String,
         is_paired: bool,
         account_type: super::users_common::AccountType,
+        root_info: super::common::RootInfo,
     ) -> Self {
         FullAccount {
             account_id,
@@ -464,6 +467,7 @@ impl FullAccount {
             referral_link,
             is_paired,
             account_type,
+            root_info,
             profile_photo_url: None,
             country: None,
             team: None,
@@ -502,6 +506,7 @@ const FULL_ACCOUNT_FIELDS: &'static [&'static str] = &["account_id",
                                                        "referral_link",
                                                        "is_paired",
                                                        "account_type",
+                                                       "root_info",
                                                        "profile_photo_url",
                                                        "country",
                                                        "team",
@@ -520,6 +525,7 @@ impl FullAccount {
         let mut field_referral_link = None;
         let mut field_is_paired = None;
         let mut field_account_type = None;
+        let mut field_root_info = None;
         let mut field_profile_photo_url = None;
         let mut field_country = None;
         let mut field_team = None;
@@ -580,6 +586,12 @@ impl FullAccount {
                     }
                     field_account_type = Some(map.next_value()?);
                 }
+                "root_info" => {
+                    if field_root_info.is_some() {
+                        return Err(de::Error::duplicate_field("root_info"));
+                    }
+                    field_root_info = Some(map.next_value()?);
+                }
                 "profile_photo_url" => {
                     if field_profile_photo_url.is_some() {
                         return Err(de::Error::duplicate_field("profile_photo_url"));
@@ -617,6 +629,7 @@ impl FullAccount {
             referral_link: field_referral_link.ok_or_else(|| de::Error::missing_field("referral_link"))?,
             is_paired: field_is_paired.ok_or_else(|| de::Error::missing_field("is_paired"))?,
             account_type: field_account_type.ok_or_else(|| de::Error::missing_field("account_type"))?,
+            root_info: field_root_info.ok_or_else(|| de::Error::missing_field("root_info"))?,
             profile_photo_url: field_profile_photo_url,
             country: field_country,
             team: field_team,
@@ -638,6 +651,7 @@ impl FullAccount {
         s.serialize_field("referral_link", &self.referral_link)?;
         s.serialize_field("is_paired", &self.is_paired)?;
         s.serialize_field("account_type", &self.account_type)?;
+        s.serialize_field("root_info", &self.root_info)?;
         s.serialize_field("profile_photo_url", &self.profile_photo_url)?;
         s.serialize_field("country", &self.country)?;
         s.serialize_field("team", &self.team)?;
@@ -667,7 +681,7 @@ impl ::serde::ser::Serialize for FullAccount {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FullAccount", 13)?;
+        let mut s = serializer.serialize_struct("FullAccount", 14)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

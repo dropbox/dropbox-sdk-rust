@@ -18,10 +18,19 @@
 //! the data within a property group. The possible key names and value types are explicitly
 //! enumerated using :type:`PropertyFieldTemplate` objects.  You can think of a property group
 //! template as a class definition for a particular key/value metadata object, and the property
-//! groups themselves as the instantiations of these objects.
+//! groups themselves as the instantiations of these objects.  Templates are owned either by a
+//! user/app pair or team/app pair. Templates and their associated properties can't be accessed by
+//! any app other than the app that created them, and even then, only when the app is linked with
+//! the owner of the template (either a user or team).  User-owned templates are accessed via the
+//! user-auth template/*_for_user endpoints, while team-owned templates are accessed via the
+//! team-auth template/*_for_team endpoints. Properties associated with either type of template can
+//! be accessed via the user-auth properties/* endpoints.  Finally, properties can be accessed from
+//! a number of endpoints that return metadata, including `files/get_metadata`, and
+//! `files/list_folder`. Properties can also be added during upload, using `files/upload`.
 
 pub type Id = String;
 pub type PathOrId = String;
+pub type PropertiesSearchCursor = String;
 pub type TemplateId = String;
 
 /// Add property groups to a Dropbox file. See :route:`templates/add_for_user` or
@@ -55,8 +64,8 @@ pub fn properties_overwrite(
         None)
 }
 
-/// Remove the specified property group from the file. To remove specific property field key value
-/// pairs, see :route:`properties/update`. To update a template, see
+/// Permanently removes the specified property group from the file. To remove specific property
+/// field key value pairs, see :route:`properties/update`. To update a template, see
 /// :route:`templates/update_for_user` or :route:`templates/update_for_team`. Templates can't be
 /// removed once created.
 pub fn properties_remove(
@@ -84,6 +93,20 @@ pub fn properties_search(
         None)
 }
 
+/// Once a cursor has been retrieved from :route:`properties/search`, use this to paginate through
+/// all search results.
+pub fn properties_search_continue(
+    client: &::client_trait::HttpClient,
+    arg: &PropertiesSearchContinueArg,
+) -> ::Result<Result<PropertiesSearchResult, PropertiesSearchContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/properties/search/continue",
+        arg,
+        None)
+}
+
 /// Add, update or remove properties associated with the supplied file and templates. This endpoint
 /// should be used instead of :route:`properties/overwrite` when property groups are being updated
 /// via a "delta" instead of via a "snapshot" . In other words, this endpoint will not delete any
@@ -102,7 +125,7 @@ pub fn properties_update(
 }
 
 /// Add a template associated with a team. See :route:`properties/add` to add properties to a file
-/// or folder.
+/// or folder. Note: this endpoint will create team-owned templates.
 pub fn templates_add_for_team(
     client: &::client_trait::HttpClient,
     arg: &AddTemplateArg,
@@ -181,6 +204,34 @@ pub fn templates_list_for_user(
         client,
         ::client_trait::Endpoint::Api,
         "file_properties/templates/list_for_user",
+        arg,
+        None)
+}
+
+/// Permanently removes the specified template created from :route:`templates/add_for_user`. All
+/// properties associated with the template will also be removed. This action cannot be undone.
+pub fn templates_remove_for_team(
+    client: &::client_trait::HttpClient,
+    arg: &RemoveTemplateArg,
+) -> ::Result<Result<(), TemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/templates/remove_for_team",
+        arg,
+        None)
+}
+
+/// Permanently removes the specified template created from :route:`templates/add_for_user`. All
+/// properties associated with the template will also be removed. This action cannot be undone.
+pub fn templates_remove_for_user(
+    client: &::client_trait::HttpClient,
+    arg: &RemoveTemplateArg,
+) -> ::Result<Result<(), TemplateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "file_properties/templates/remove_for_user",
         arg,
         None)
 }
@@ -1623,6 +1674,145 @@ impl ::serde::ser::Serialize for PropertiesSearchArg {
 }
 
 #[derive(Debug)]
+pub struct PropertiesSearchContinueArg {
+    /// The cursor returned by your last call to :route:`properties/search` or
+    /// :route:`properties/search/continue`.
+    pub cursor: PropertiesSearchCursor,
+}
+
+impl PropertiesSearchContinueArg {
+    pub fn new(cursor: PropertiesSearchCursor) -> Self {
+        PropertiesSearchContinueArg {
+            cursor,
+        }
+    }
+
+}
+
+const PROPERTIES_SEARCH_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+impl PropertiesSearchContinueArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PropertiesSearchContinueArg, V::Error> {
+        use serde::de;
+        let mut field_cursor = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, PROPERTIES_SEARCH_CONTINUE_ARG_FIELDS))
+            }
+        }
+        Ok(PropertiesSearchContinueArg {
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("cursor", &self.cursor)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchContinueArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PropertiesSearchContinueArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PropertiesSearchContinueArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PropertiesSearchContinueArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PropertiesSearchContinueArg", PROPERTIES_SEARCH_CONTINUE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PropertiesSearchContinueArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PropertiesSearchContinueArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum PropertiesSearchContinueError {
+    /// Indicates that the cursor has been invalidated. Call :route:`properties/search` to obtain a
+    /// new cursor.
+    Reset,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchContinueError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PropertiesSearchContinueError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PropertiesSearchContinueError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "reset" => Ok(PropertiesSearchContinueError::Reset),
+                    _ => Ok(PropertiesSearchContinueError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["reset",
+                                                    "other"];
+        deserializer.deserialize_struct("PropertiesSearchContinueError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PropertiesSearchContinueError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PropertiesSearchContinueError::Reset => {
+                // unit
+                let mut s = serializer.serialize_struct("PropertiesSearchContinueError", 1)?;
+                s.serialize_field(".tag", "reset")?;
+                s.end()
+            }
+            PropertiesSearchContinueError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for PropertiesSearchContinueError {
+    fn description(&self) -> &str {
+        "PropertiesSearchContinueError"
+    }
+}
+
+impl ::std::fmt::Display for PropertiesSearchContinueError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
 pub enum PropertiesSearchError {
     PropertyGroupLookup(LookUpPropertiesError),
     Other,
@@ -1696,15 +1886,23 @@ pub struct PropertiesSearchMatch {
     pub id: Id,
     /// The path for the matched file or folder.
     pub path: String,
+    /// Whether the file or folder is deleted.
+    pub is_deleted: bool,
     /// List of custom property groups associated with the file.
     pub property_groups: Vec<PropertyGroup>,
 }
 
 impl PropertiesSearchMatch {
-    pub fn new(id: Id, path: String, property_groups: Vec<PropertyGroup>) -> Self {
+    pub fn new(
+        id: Id,
+        path: String,
+        is_deleted: bool,
+        property_groups: Vec<PropertyGroup>,
+    ) -> Self {
         PropertiesSearchMatch {
             id,
             path,
+            is_deleted,
             property_groups,
         }
     }
@@ -1713,6 +1911,7 @@ impl PropertiesSearchMatch {
 
 const PROPERTIES_SEARCH_MATCH_FIELDS: &'static [&'static str] = &["id",
                                                                   "path",
+                                                                  "is_deleted",
                                                                   "property_groups"];
 impl PropertiesSearchMatch {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -1721,6 +1920,7 @@ impl PropertiesSearchMatch {
         use serde::de;
         let mut field_id = None;
         let mut field_path = None;
+        let mut field_is_deleted = None;
         let mut field_property_groups = None;
         while let Some(key) = map.next_key()? {
             match key {
@@ -1736,6 +1936,12 @@ impl PropertiesSearchMatch {
                     }
                     field_path = Some(map.next_value()?);
                 }
+                "is_deleted" => {
+                    if field_is_deleted.is_some() {
+                        return Err(de::Error::duplicate_field("is_deleted"));
+                    }
+                    field_is_deleted = Some(map.next_value()?);
+                }
                 "property_groups" => {
                     if field_property_groups.is_some() {
                         return Err(de::Error::duplicate_field("property_groups"));
@@ -1748,6 +1954,7 @@ impl PropertiesSearchMatch {
         Ok(PropertiesSearchMatch {
             id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            is_deleted: field_is_deleted.ok_or_else(|| de::Error::missing_field("is_deleted"))?,
             property_groups: field_property_groups.ok_or_else(|| de::Error::missing_field("property_groups"))?,
         })
     }
@@ -1759,6 +1966,7 @@ impl PropertiesSearchMatch {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
         s.serialize_field("path", &self.path)?;
+        s.serialize_field("is_deleted", &self.is_deleted)?;
         s.serialize_field("property_groups", &self.property_groups)
     }
 }
@@ -1785,7 +1993,7 @@ impl ::serde::ser::Serialize for PropertiesSearchMatch {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PropertiesSearchMatch", 3)?;
+        let mut s = serializer.serialize_struct("PropertiesSearchMatch", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -1958,24 +2166,35 @@ impl ::serde::ser::Serialize for PropertiesSearchQuery {
 pub struct PropertiesSearchResult {
     /// A list (possibly empty) of matches for the query.
     pub matches: Vec<PropertiesSearchMatch>,
+    /// Pass the cursor into :route:`properties/search/continue` to continue to receive search
+    /// results. Cursor will be null when there are no more results.
+    pub cursor: Option<PropertiesSearchCursor>,
 }
 
 impl PropertiesSearchResult {
     pub fn new(matches: Vec<PropertiesSearchMatch>) -> Self {
         PropertiesSearchResult {
             matches,
+            cursor: None,
         }
+    }
+
+    pub fn with_cursor(mut self, value: Option<PropertiesSearchCursor>) -> Self {
+        self.cursor = value;
+        self
     }
 
 }
 
-const PROPERTIES_SEARCH_RESULT_FIELDS: &'static [&'static str] = &["matches"];
+const PROPERTIES_SEARCH_RESULT_FIELDS: &'static [&'static str] = &["matches",
+                                                                   "cursor"];
 impl PropertiesSearchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<PropertiesSearchResult, V::Error> {
         use serde::de;
         let mut field_matches = None;
+        let mut field_cursor = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "matches" => {
@@ -1984,11 +2203,18 @@ impl PropertiesSearchResult {
                     }
                     field_matches = Some(map.next_value()?);
                 }
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, PROPERTIES_SEARCH_RESULT_FIELDS))
             }
         }
         Ok(PropertiesSearchResult {
             matches: field_matches.ok_or_else(|| de::Error::missing_field("matches"))?,
+            cursor: field_cursor,
         })
     }
 
@@ -1997,7 +2223,8 @@ impl PropertiesSearchResult {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("matches", &self.matches)
+        s.serialize_field("matches", &self.matches)?;
+        s.serialize_field("cursor", &self.cursor)
     }
 }
 
@@ -2023,7 +2250,7 @@ impl ::serde::ser::Serialize for PropertiesSearchResult {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("PropertiesSearchResult", 1)?;
+        let mut s = serializer.serialize_struct("PropertiesSearchResult", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -2793,6 +3020,82 @@ impl ::std::fmt::Display for RemovePropertiesError {
 }
 
 #[derive(Debug)]
+pub struct RemoveTemplateArg {
+    /// An identifier for a template created by :route:`templates/add_for_user` or
+    /// :route:`templates/add_for_team`.
+    pub template_id: TemplateId,
+}
+
+impl RemoveTemplateArg {
+    pub fn new(template_id: TemplateId) -> Self {
+        RemoveTemplateArg {
+            template_id,
+        }
+    }
+
+}
+
+const REMOVE_TEMPLATE_ARG_FIELDS: &'static [&'static str] = &["template_id"];
+impl RemoveTemplateArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<RemoveTemplateArg, V::Error> {
+        use serde::de;
+        let mut field_template_id = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "template_id" => {
+                    if field_template_id.is_some() {
+                        return Err(de::Error::duplicate_field("template_id"));
+                    }
+                    field_template_id = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, REMOVE_TEMPLATE_ARG_FIELDS))
+            }
+        }
+        Ok(RemoveTemplateArg {
+            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("template_id", &self.template_id)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RemoveTemplateArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RemoveTemplateArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RemoveTemplateArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RemoveTemplateArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RemoveTemplateArg", REMOVE_TEMPLATE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RemoveTemplateArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RemoveTemplateArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub enum TemplateError {
     /// Template does not exist for the given identifier.
     TemplateNotFound(TemplateId),
@@ -2873,12 +3176,12 @@ impl ::std::fmt::Display for TemplateError {
 
 #[derive(Debug)]
 pub enum TemplateFilter {
-    /// No templates will be filtered from the result (all templates will be returned).
-    FilterNone,
     /// Only templates with an ID in the supplied list will be returned (a subset of templates will
     /// be returned).
     FilterSome(Vec<TemplateId>),
     Other,
+    /// No templates will be filtered from the result (all templates will be returned).
+    FilterNone,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TemplateFilter {
@@ -2897,7 +3200,6 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateFilter {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "filter_none" => Ok(TemplateFilter::FilterNone),
                     "filter_some" => {
                         match map.next_key()? {
                             Some("filter_some") => Ok(TemplateFilter::FilterSome(map.next_value()?)),
@@ -2905,13 +3207,14 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateFilter {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "filter_none" => Ok(TemplateFilter::FilterNone),
                     _ => Ok(TemplateFilter::Other)
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["filter_none",
-                                                    "filter_some",
-                                                    "other"];
+        const VARIANTS: &'static [&'static str] = &["filter_some",
+                                                    "other",
+                                                    "filter_none"];
         deserializer.deserialize_struct("TemplateFilter", VARIANTS, EnumVisitor)
     }
 }
@@ -2921,12 +3224,6 @@ impl ::serde::ser::Serialize for TemplateFilter {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            TemplateFilter::FilterNone => {
-                // unit
-                let mut s = serializer.serialize_struct("TemplateFilter", 1)?;
-                s.serialize_field(".tag", "filter_none")?;
-                s.end()
-            }
             TemplateFilter::FilterSome(ref x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("{}", 2)?;
@@ -2934,7 +3231,71 @@ impl ::serde::ser::Serialize for TemplateFilter {
                 s.serialize_field("filter_some", x)?;
                 s.end()
             }
+            TemplateFilter::FilterNone => {
+                // unit
+                let mut s = serializer.serialize_struct("TemplateFilter", 1)?;
+                s.serialize_field(".tag", "filter_none")?;
+                s.end()
+            }
             TemplateFilter::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum TemplateFilterBase {
+    /// Only templates with an ID in the supplied list will be returned (a subset of templates will
+    /// be returned).
+    FilterSome(Vec<TemplateId>),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TemplateFilterBase {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TemplateFilterBase;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a TemplateFilterBase structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "filter_some" => {
+                        match map.next_key()? {
+                            Some("filter_some") => Ok(TemplateFilterBase::FilterSome(map.next_value()?)),
+                            None => Err(de::Error::missing_field("filter_some")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => Ok(TemplateFilterBase::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["filter_some",
+                                                    "other"];
+        deserializer.deserialize_struct("TemplateFilterBase", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TemplateFilterBase {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            TemplateFilterBase::FilterSome(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "filter_some")?;
+                s.serialize_field("filter_some", x)?;
+                s.end()
+            }
+            TemplateFilterBase::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }

@@ -334,6 +334,58 @@ pub fn linked_apps_revoke_linked_app_batch(
         None)
 }
 
+/// Add users to member space limits excluded users list.
+pub fn member_space_limits_excluded_users_add(
+    client: &::client_trait::HttpClient,
+    arg: &ExcludedUsersUpdateArg,
+) -> ::Result<Result<ExcludedUsersUpdateResult, ExcludedUsersUpdateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/member_space_limits/excluded_users/add",
+        arg,
+        None)
+}
+
+/// List member space limits excluded users.
+pub fn member_space_limits_excluded_users_list(
+    client: &::client_trait::HttpClient,
+    arg: &ExcludedUsersListArg,
+) -> ::Result<Result<ExcludedUsersListResult, ExcludedUsersListError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/member_space_limits/excluded_users/list",
+        arg,
+        None)
+}
+
+/// Continue listing member space limits excluded users.
+pub fn member_space_limits_excluded_users_list_continue(
+    client: &::client_trait::HttpClient,
+    arg: &ExcludedUsersListContinueArg,
+) -> ::Result<Result<ExcludedUsersListResult, ExcludedUsersListContinueError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/member_space_limits/excluded_users/list/continue",
+        arg,
+        None)
+}
+
+/// Remove users from member space limits excluded users list.
+pub fn member_space_limits_excluded_users_remove(
+    client: &::client_trait::HttpClient,
+    arg: &ExcludedUsersUpdateArg,
+) -> ::Result<Result<ExcludedUsersUpdateResult, ExcludedUsersUpdateError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/member_space_limits/excluded_users/remove",
+        arg,
+        None)
+}
+
 /// Get users custom quota. Returns none as the custom quota if none was set. A maximum of 1000
 /// members can be specified in a single call.
 pub fn member_space_limits_get_custom_quota(
@@ -361,12 +413,12 @@ pub fn member_space_limits_remove_custom_quota(
         None)
 }
 
-/// Set users custom quota. Custom quota has to be at least 25GB. A maximum of 1000 members can be
+/// Set users custom quota. Custom quota has to be at least 15GB. A maximum of 1000 members can be
 /// specified in a single call.
 pub fn member_space_limits_set_custom_quota(
     client: &::client_trait::HttpClient,
     arg: &SetCustomQuotaArg,
-) -> ::Result<Result<Vec<CustomQuotaResult>, CustomQuotaError>> {
+) -> ::Result<Result<Vec<CustomQuotaResult>, SetCustomQuotaError>> {
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
@@ -1445,7 +1497,7 @@ impl ::std::fmt::Display for BaseTeamFolderError {
     }
 }
 
-/// Error returned by setting member custom quota.
+/// Error returned when getting member custom quota.
 #[derive(Debug)]
 pub enum CustomQuotaError {
     /// A maximum of 1000 users can be set for a single call.
@@ -2480,6 +2532,668 @@ impl ::serde::ser::Serialize for DevicesActive {
     }
 }
 
+/// Excluded users list argument.
+#[derive(Debug)]
+pub struct ExcludedUsersListArg {
+    /// Number of results to return per call.
+    pub limit: u32,
+}
+
+impl Default for ExcludedUsersListArg {
+    fn default() -> Self {
+        ExcludedUsersListArg {
+            limit: 1000,
+        }
+    }
+}
+
+const EXCLUDED_USERS_LIST_ARG_FIELDS: &'static [&'static str] = &["limit"];
+impl ExcludedUsersListArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ExcludedUsersListArg, V::Error> {
+        use serde::de;
+        let mut field_limit = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "limit" => {
+                    if field_limit.is_some() {
+                        return Err(de::Error::duplicate_field("limit"));
+                    }
+                    field_limit = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, EXCLUDED_USERS_LIST_ARG_FIELDS))
+            }
+        }
+        Ok(ExcludedUsersListArg {
+            limit: field_limit.unwrap_or(1000),
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("limit", &self.limit)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersListArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ExcludedUsersListArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ExcludedUsersListArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ExcludedUsersListArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ExcludedUsersListArg", EXCLUDED_USERS_LIST_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExcludedUsersListArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ExcludedUsersListArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Excluded users list continue argument.
+#[derive(Debug)]
+pub struct ExcludedUsersListContinueArg {
+    /// Indicates from what point to get the next set of users.
+    pub cursor: String,
+}
+
+impl ExcludedUsersListContinueArg {
+    pub fn new(cursor: String) -> Self {
+        ExcludedUsersListContinueArg {
+            cursor,
+        }
+    }
+
+}
+
+const EXCLUDED_USERS_LIST_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+impl ExcludedUsersListContinueArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ExcludedUsersListContinueArg, V::Error> {
+        use serde::de;
+        let mut field_cursor = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, EXCLUDED_USERS_LIST_CONTINUE_ARG_FIELDS))
+            }
+        }
+        Ok(ExcludedUsersListContinueArg {
+            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("cursor", &self.cursor)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersListContinueArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ExcludedUsersListContinueArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ExcludedUsersListContinueArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ExcludedUsersListContinueArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ExcludedUsersListContinueArg", EXCLUDED_USERS_LIST_CONTINUE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExcludedUsersListContinueArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ExcludedUsersListContinueArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Excluded users list continue error.
+#[derive(Debug)]
+pub enum ExcludedUsersListContinueError {
+    /// The cursor is invalid.
+    InvalidCursor,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersListContinueError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ExcludedUsersListContinueError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ExcludedUsersListContinueError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "invalid_cursor" => Ok(ExcludedUsersListContinueError::InvalidCursor),
+                    _ => Ok(ExcludedUsersListContinueError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["invalid_cursor",
+                                                    "other"];
+        deserializer.deserialize_struct("ExcludedUsersListContinueError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExcludedUsersListContinueError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ExcludedUsersListContinueError::InvalidCursor => {
+                // unit
+                let mut s = serializer.serialize_struct("ExcludedUsersListContinueError", 1)?;
+                s.serialize_field(".tag", "invalid_cursor")?;
+                s.end()
+            }
+            ExcludedUsersListContinueError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for ExcludedUsersListContinueError {
+    fn description(&self) -> &str {
+        "ExcludedUsersListContinueError"
+    }
+}
+
+impl ::std::fmt::Display for ExcludedUsersListContinueError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// Excluded users list error.
+#[derive(Debug)]
+pub enum ExcludedUsersListError {
+    /// An error occurred.
+    ListError,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersListError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ExcludedUsersListError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ExcludedUsersListError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "list_error" => Ok(ExcludedUsersListError::ListError),
+                    _ => Ok(ExcludedUsersListError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["list_error",
+                                                    "other"];
+        deserializer.deserialize_struct("ExcludedUsersListError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExcludedUsersListError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ExcludedUsersListError::ListError => {
+                // unit
+                let mut s = serializer.serialize_struct("ExcludedUsersListError", 1)?;
+                s.serialize_field(".tag", "list_error")?;
+                s.end()
+            }
+            ExcludedUsersListError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for ExcludedUsersListError {
+    fn description(&self) -> &str {
+        "ExcludedUsersListError"
+    }
+}
+
+impl ::std::fmt::Display for ExcludedUsersListError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// Excluded users list result.
+#[derive(Debug)]
+pub struct ExcludedUsersListResult {
+    pub users: Vec<MemberProfile>,
+    /// Is true if there are additional excluded users that have not been returned yet. An
+    /// additional call to :route:`member_space_limits/excluded_users/list/continue` can retrieve
+    /// them.
+    pub has_more: bool,
+    /// Pass the cursor into :route:`member_space_limits/excluded_users/list/continue` to obtain
+    /// additional excluded users.
+    pub cursor: Option<String>,
+}
+
+impl ExcludedUsersListResult {
+    pub fn new(users: Vec<MemberProfile>, has_more: bool) -> Self {
+        ExcludedUsersListResult {
+            users,
+            has_more,
+            cursor: None,
+        }
+    }
+
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
+        self.cursor = value;
+        self
+    }
+
+}
+
+const EXCLUDED_USERS_LIST_RESULT_FIELDS: &'static [&'static str] = &["users",
+                                                                     "has_more",
+                                                                     "cursor"];
+impl ExcludedUsersListResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ExcludedUsersListResult, V::Error> {
+        use serde::de;
+        let mut field_users = None;
+        let mut field_has_more = None;
+        let mut field_cursor = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "users" => {
+                    if field_users.is_some() {
+                        return Err(de::Error::duplicate_field("users"));
+                    }
+                    field_users = Some(map.next_value()?);
+                }
+                "has_more" => {
+                    if field_has_more.is_some() {
+                        return Err(de::Error::duplicate_field("has_more"));
+                    }
+                    field_has_more = Some(map.next_value()?);
+                }
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, EXCLUDED_USERS_LIST_RESULT_FIELDS))
+            }
+        }
+        Ok(ExcludedUsersListResult {
+            users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
+            has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
+            cursor: field_cursor,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("users", &self.users)?;
+        s.serialize_field("has_more", &self.has_more)?;
+        s.serialize_field("cursor", &self.cursor)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersListResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ExcludedUsersListResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ExcludedUsersListResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ExcludedUsersListResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ExcludedUsersListResult", EXCLUDED_USERS_LIST_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExcludedUsersListResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ExcludedUsersListResult", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Argument of excluded users update operation. Should include a list of users to add/remove
+/// (according to endpoint), Maximum size of the list is 1000 users.
+#[derive(Debug)]
+pub struct ExcludedUsersUpdateArg {
+    /// List of users to be added/removed.
+    pub users: Option<Vec<UserSelectorArg>>,
+}
+
+impl Default for ExcludedUsersUpdateArg {
+    fn default() -> Self {
+        ExcludedUsersUpdateArg {
+            users: None,
+        }
+    }
+}
+
+const EXCLUDED_USERS_UPDATE_ARG_FIELDS: &'static [&'static str] = &["users"];
+impl ExcludedUsersUpdateArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ExcludedUsersUpdateArg, V::Error> {
+        use serde::de;
+        let mut field_users = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "users" => {
+                    if field_users.is_some() {
+                        return Err(de::Error::duplicate_field("users"));
+                    }
+                    field_users = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, EXCLUDED_USERS_UPDATE_ARG_FIELDS))
+            }
+        }
+        Ok(ExcludedUsersUpdateArg {
+            users: field_users,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("users", &self.users)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersUpdateArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ExcludedUsersUpdateArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ExcludedUsersUpdateArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ExcludedUsersUpdateArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ExcludedUsersUpdateArg", EXCLUDED_USERS_UPDATE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExcludedUsersUpdateArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ExcludedUsersUpdateArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Excluded users update error.
+#[derive(Debug)]
+pub enum ExcludedUsersUpdateError {
+    /// At least one of the users is not part of your team.
+    UsersNotInTeam,
+    /// A maximum of 1000 users for each of addition/removal can be supplied.
+    TooManyUsers,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersUpdateError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ExcludedUsersUpdateError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ExcludedUsersUpdateError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "users_not_in_team" => Ok(ExcludedUsersUpdateError::UsersNotInTeam),
+                    "too_many_users" => Ok(ExcludedUsersUpdateError::TooManyUsers),
+                    _ => Ok(ExcludedUsersUpdateError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["users_not_in_team",
+                                                    "too_many_users",
+                                                    "other"];
+        deserializer.deserialize_struct("ExcludedUsersUpdateError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExcludedUsersUpdateError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ExcludedUsersUpdateError::UsersNotInTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("ExcludedUsersUpdateError", 1)?;
+                s.serialize_field(".tag", "users_not_in_team")?;
+                s.end()
+            }
+            ExcludedUsersUpdateError::TooManyUsers => {
+                // unit
+                let mut s = serializer.serialize_struct("ExcludedUsersUpdateError", 1)?;
+                s.serialize_field(".tag", "too_many_users")?;
+                s.end()
+            }
+            ExcludedUsersUpdateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for ExcludedUsersUpdateError {
+    fn description(&self) -> &str {
+        "ExcludedUsersUpdateError"
+    }
+}
+
+impl ::std::fmt::Display for ExcludedUsersUpdateError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// Excluded users update result.
+#[derive(Debug)]
+pub struct ExcludedUsersUpdateResult {
+    /// Update status.
+    pub status: ExcludedUsersUpdateStatus,
+}
+
+impl ExcludedUsersUpdateResult {
+    pub fn new(status: ExcludedUsersUpdateStatus) -> Self {
+        ExcludedUsersUpdateResult {
+            status,
+        }
+    }
+
+}
+
+const EXCLUDED_USERS_UPDATE_RESULT_FIELDS: &'static [&'static str] = &["status"];
+impl ExcludedUsersUpdateResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ExcludedUsersUpdateResult, V::Error> {
+        use serde::de;
+        let mut field_status = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "status" => {
+                    if field_status.is_some() {
+                        return Err(de::Error::duplicate_field("status"));
+                    }
+                    field_status = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, EXCLUDED_USERS_UPDATE_RESULT_FIELDS))
+            }
+        }
+        Ok(ExcludedUsersUpdateResult {
+            status: field_status.ok_or_else(|| de::Error::missing_field("status"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("status", &self.status)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersUpdateResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ExcludedUsersUpdateResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ExcludedUsersUpdateResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ExcludedUsersUpdateResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ExcludedUsersUpdateResult", EXCLUDED_USERS_UPDATE_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExcludedUsersUpdateResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ExcludedUsersUpdateResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Excluded users update operation status.
+#[derive(Debug)]
+pub enum ExcludedUsersUpdateStatus {
+    /// Update successful.
+    Success,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersUpdateStatus {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ExcludedUsersUpdateStatus;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ExcludedUsersUpdateStatus structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "success" => Ok(ExcludedUsersUpdateStatus::Success),
+                    _ => Ok(ExcludedUsersUpdateStatus::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["success",
+                                                    "other"];
+        deserializer.deserialize_struct("ExcludedUsersUpdateStatus", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExcludedUsersUpdateStatus {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ExcludedUsersUpdateStatus::Success => {
+                // unit
+                let mut s = serializer.serialize_struct("ExcludedUsersUpdateStatus", 1)?;
+                s.serialize_field(".tag", "success")?;
+                s.end()
+            }
+            ExcludedUsersUpdateStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// A set of features that Dropbox for Business account support.
 #[derive(Debug)]
 pub enum Feature {
@@ -2487,6 +3201,8 @@ pub enum Feature {
     UploadApiRateLimit,
     /// Does this team have a have a company shared dropbox.
     HasTeamSharedDropbox,
+    /// Does this team have file events.
+    HasTeamFileEvents,
     Other,
 }
 
@@ -2508,12 +3224,14 @@ impl<'de> ::serde::de::Deserialize<'de> for Feature {
                 match tag {
                     "upload_api_rate_limit" => Ok(Feature::UploadApiRateLimit),
                     "has_team_shared_dropbox" => Ok(Feature::HasTeamSharedDropbox),
+                    "has_team_file_events" => Ok(Feature::HasTeamFileEvents),
                     _ => Ok(Feature::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["upload_api_rate_limit",
                                                     "has_team_shared_dropbox",
+                                                    "has_team_file_events",
                                                     "other"];
         deserializer.deserialize_struct("Feature", VARIANTS, EnumVisitor)
     }
@@ -2536,6 +3254,12 @@ impl ::serde::ser::Serialize for Feature {
                 s.serialize_field(".tag", "has_team_shared_dropbox")?;
                 s.end()
             }
+            Feature::HasTeamFileEvents => {
+                // unit
+                let mut s = serializer.serialize_struct("Feature", 1)?;
+                s.serialize_field(".tag", "has_team_file_events")?;
+                s.end()
+            }
             Feature::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -2547,6 +3271,7 @@ impl ::serde::ser::Serialize for Feature {
 pub enum FeatureValue {
     UploadApiRateLimit(UploadApiRateLimitValue),
     HasTeamSharedDropbox(HasTeamSharedDropboxValue),
+    HasTeamFileEvents(HasTeamFileEventsValue),
     Other,
 }
 
@@ -2580,12 +3305,20 @@ impl<'de> ::serde::de::Deserialize<'de> for FeatureValue {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "has_team_file_events" => {
+                        match map.next_key()? {
+                            Some("has_team_file_events") => Ok(FeatureValue::HasTeamFileEvents(map.next_value()?)),
+                            None => Err(de::Error::missing_field("has_team_file_events")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => Ok(FeatureValue::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["upload_api_rate_limit",
                                                     "has_team_shared_dropbox",
+                                                    "has_team_file_events",
                                                     "other"];
         deserializer.deserialize_struct("FeatureValue", VARIANTS, EnumVisitor)
     }
@@ -2608,6 +3341,13 @@ impl ::serde::ser::Serialize for FeatureValue {
                 let mut s = serializer.serialize_struct("{}", 2)?;
                 s.serialize_field(".tag", "has_team_shared_dropbox")?;
                 s.serialize_field("has_team_shared_dropbox", x)?;
+                s.end()
+            }
+            FeatureValue::HasTeamFileEvents(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "has_team_file_events")?;
+                s.serialize_field("has_team_file_events", x)?;
                 s.end()
             }
             FeatureValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -6683,6 +7423,64 @@ impl ::serde::ser::Serialize for GroupsSelector {
                 s.serialize_field("group_external_ids", x)?;
                 s.end()
             }
+        }
+    }
+}
+
+/// The value for :field:`Feature.has_team_file_events`.
+#[derive(Debug)]
+pub enum HasTeamFileEventsValue {
+    /// Does this team have file events.
+    Enabled(bool),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for HasTeamFileEventsValue {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = HasTeamFileEventsValue;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a HasTeamFileEventsValue structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "enabled" => {
+                        match map.next_key()? {
+                            Some("enabled") => Ok(HasTeamFileEventsValue::Enabled(map.next_value()?)),
+                            None => Err(de::Error::missing_field("enabled")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => Ok(HasTeamFileEventsValue::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["enabled",
+                                                    "other"];
+        deserializer.deserialize_struct("HasTeamFileEventsValue", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for HasTeamFileEventsValue {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            HasTeamFileEventsValue::Enabled(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.serialize_field("enabled", x)?;
+                s.end()
+            }
+            HasTeamFileEventsValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -13632,6 +14430,79 @@ impl ::serde::ser::Serialize for SetCustomQuotaArg {
         let mut s = serializer.serialize_struct("SetCustomQuotaArg", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+/// Error returned when setting member custom quota.
+#[derive(Debug)]
+pub enum SetCustomQuotaError {
+    /// A maximum of 1000 users can be set for a single call.
+    TooManyUsers,
+    Other,
+    /// Some of the users are on the excluded users list and can't have custom quota set.
+    SomeUsersAreExcluded,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SetCustomQuotaError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SetCustomQuotaError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SetCustomQuotaError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "too_many_users" => Ok(SetCustomQuotaError::TooManyUsers),
+                    "some_users_are_excluded" => Ok(SetCustomQuotaError::SomeUsersAreExcluded),
+                    _ => Ok(SetCustomQuotaError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["too_many_users",
+                                                    "other",
+                                                    "some_users_are_excluded"];
+        deserializer.deserialize_struct("SetCustomQuotaError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SetCustomQuotaError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SetCustomQuotaError::TooManyUsers => {
+                // unit
+                let mut s = serializer.serialize_struct("SetCustomQuotaError", 1)?;
+                s.serialize_field(".tag", "too_many_users")?;
+                s.end()
+            }
+            SetCustomQuotaError::SomeUsersAreExcluded => {
+                // unit
+                let mut s = serializer.serialize_struct("SetCustomQuotaError", 1)?;
+                s.serialize_field(".tag", "some_users_are_excluded")?;
+                s.end()
+            }
+            SetCustomQuotaError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for SetCustomQuotaError {
+    fn description(&self) -> &str {
+        "SetCustomQuotaError"
+    }
+}
+
+impl ::std::fmt::Display for SetCustomQuotaError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
     }
 }
 

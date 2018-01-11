@@ -223,6 +223,24 @@ pub fn download(
         range_end)
 }
 
+/// Download a folder from the user's Dropbox, as a zip file. The folder must be less than 1 GB in
+/// size and have fewer than 10,000 total files. The input cannot be a single file.
+pub fn download_zip(
+    client: &::client_trait::HttpClient,
+    arg: &DownloadZipArg,
+    range_start: Option<u64>,
+    range_end: Option<u64>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<DownloadZipResult>, DownloadZipError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Content,
+        "files/download_zip",
+        arg,
+        None,
+        range_start,
+        range_end)
+}
+
 /// Returns the metadata for a file or folder. Note: Metadata for the root folder is unsupported.
 pub fn get_metadata(
     client: &::client_trait::HttpClient,
@@ -710,6 +728,9 @@ pub struct AlphaGetMetadataArg {
     /// If true, the results will include a flag for each file indicating whether or not  that file
     /// has any explicit members.
     pub include_has_explicit_shared_members: bool,
+    /// If set to a valid list of template IDs, :field:`FileMetadata.property_groups` is set if
+    /// there exists property data associated with the file and each of the listed templates.
+    pub include_property_groups: Option<super::file_properties::TemplateFilterBase>,
     /// If set to a valid list of template IDs, :field:`FileMetadata.property_groups` is set for
     /// files with custom properties.
     pub include_property_templates: Option<Vec<super::file_properties::TemplateId>>,
@@ -722,6 +743,7 @@ impl AlphaGetMetadataArg {
             include_media_info: false,
             include_deleted: false,
             include_has_explicit_shared_members: false,
+            include_property_groups: None,
             include_property_templates: None,
         }
     }
@@ -741,6 +763,14 @@ impl AlphaGetMetadataArg {
         self
     }
 
+    pub fn with_include_property_groups(
+        mut self,
+        value: Option<super::file_properties::TemplateFilterBase>,
+    ) -> Self {
+        self.include_property_groups = value;
+        self
+    }
+
     pub fn with_include_property_templates(
         mut self,
         value: Option<Vec<super::file_properties::TemplateId>>,
@@ -755,6 +785,7 @@ const ALPHA_GET_METADATA_ARG_FIELDS: &'static [&'static str] = &["path",
                                                                  "include_media_info",
                                                                  "include_deleted",
                                                                  "include_has_explicit_shared_members",
+                                                                 "include_property_groups",
                                                                  "include_property_templates"];
 impl AlphaGetMetadataArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -765,6 +796,7 @@ impl AlphaGetMetadataArg {
         let mut field_include_media_info = None;
         let mut field_include_deleted = None;
         let mut field_include_has_explicit_shared_members = None;
+        let mut field_include_property_groups = None;
         let mut field_include_property_templates = None;
         while let Some(key) = map.next_key()? {
             match key {
@@ -792,6 +824,12 @@ impl AlphaGetMetadataArg {
                     }
                     field_include_has_explicit_shared_members = Some(map.next_value()?);
                 }
+                "include_property_groups" => {
+                    if field_include_property_groups.is_some() {
+                        return Err(de::Error::duplicate_field("include_property_groups"));
+                    }
+                    field_include_property_groups = Some(map.next_value()?);
+                }
                 "include_property_templates" => {
                     if field_include_property_templates.is_some() {
                         return Err(de::Error::duplicate_field("include_property_templates"));
@@ -806,6 +844,7 @@ impl AlphaGetMetadataArg {
             include_media_info: field_include_media_info.unwrap_or(false),
             include_deleted: field_include_deleted.unwrap_or(false),
             include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
+            include_property_groups: field_include_property_groups,
             include_property_templates: field_include_property_templates,
         })
     }
@@ -819,6 +858,7 @@ impl AlphaGetMetadataArg {
         s.serialize_field("include_media_info", &self.include_media_info)?;
         s.serialize_field("include_deleted", &self.include_deleted)?;
         s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
+        s.serialize_field("include_property_groups", &self.include_property_groups)?;
         s.serialize_field("include_property_templates", &self.include_property_templates)
     }
 }
@@ -845,7 +885,7 @@ impl ::serde::ser::Serialize for AlphaGetMetadataArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("AlphaGetMetadataArg", 5)?;
+        let mut s = serializer.serialize_struct("AlphaGetMetadataArg", 6)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -950,6 +990,8 @@ pub struct CommitInfo {
     /// notifications in the client software. If :val:`true`, this tells the clients that this
     /// modification shouldn't result in a user notification.
     pub mute: bool,
+    /// List of custom properties to add to file.
+    pub property_groups: Option<Vec<super::file_properties::PropertyGroup>>,
 }
 
 impl CommitInfo {
@@ -960,6 +1002,7 @@ impl CommitInfo {
             autorename: false,
             client_modified: None,
             mute: false,
+            property_groups: None,
         }
     }
 
@@ -983,13 +1026,22 @@ impl CommitInfo {
         self
     }
 
+    pub fn with_property_groups(
+        mut self,
+        value: Option<Vec<super::file_properties::PropertyGroup>>,
+    ) -> Self {
+        self.property_groups = value;
+        self
+    }
+
 }
 
 const COMMIT_INFO_FIELDS: &'static [&'static str] = &["path",
                                                       "mode",
                                                       "autorename",
                                                       "client_modified",
-                                                      "mute"];
+                                                      "mute",
+                                                      "property_groups"];
 impl CommitInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1000,6 +1052,7 @@ impl CommitInfo {
         let mut field_autorename = None;
         let mut field_client_modified = None;
         let mut field_mute = None;
+        let mut field_property_groups = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "path" => {
@@ -1032,6 +1085,12 @@ impl CommitInfo {
                     }
                     field_mute = Some(map.next_value()?);
                 }
+                "property_groups" => {
+                    if field_property_groups.is_some() {
+                        return Err(de::Error::duplicate_field("property_groups"));
+                    }
+                    field_property_groups = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, COMMIT_INFO_FIELDS))
             }
         }
@@ -1041,6 +1100,7 @@ impl CommitInfo {
             autorename: field_autorename.unwrap_or(false),
             client_modified: field_client_modified,
             mute: field_mute.unwrap_or(false),
+            property_groups: field_property_groups,
         })
     }
 
@@ -1053,7 +1113,8 @@ impl CommitInfo {
         s.serialize_field("mode", &self.mode)?;
         s.serialize_field("autorename", &self.autorename)?;
         s.serialize_field("client_modified", &self.client_modified)?;
-        s.serialize_field("mute", &self.mute)
+        s.serialize_field("mute", &self.mute)?;
+        s.serialize_field("property_groups", &self.property_groups)
     }
 }
 
@@ -1079,7 +1140,7 @@ impl ::serde::ser::Serialize for CommitInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("CommitInfo", 5)?;
+        let mut s = serializer.serialize_struct("CommitInfo", 6)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -2634,6 +2695,243 @@ impl ::std::fmt::Display for DownloadError {
 }
 
 #[derive(Debug)]
+pub struct DownloadZipArg {
+    /// The path of the folder to download.
+    pub path: ReadPath,
+}
+
+impl DownloadZipArg {
+    pub fn new(path: ReadPath) -> Self {
+        DownloadZipArg {
+            path,
+        }
+    }
+
+}
+
+const DOWNLOAD_ZIP_ARG_FIELDS: &'static [&'static str] = &["path"];
+impl DownloadZipArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DownloadZipArg, V::Error> {
+        use serde::de;
+        let mut field_path = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, DOWNLOAD_ZIP_ARG_FIELDS))
+            }
+        }
+        Ok(DownloadZipArg {
+            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DownloadZipArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DownloadZipArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DownloadZipArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DownloadZipArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DownloadZipArg", DOWNLOAD_ZIP_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DownloadZipArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DownloadZipArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum DownloadZipError {
+    Path(LookupError),
+    /// The folder is too large to download.
+    TooLarge,
+    /// The folder has too many files to download.
+    TooManyFiles,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DownloadZipError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = DownloadZipError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DownloadZipError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        match map.next_key()? {
+                            Some("path") => Ok(DownloadZipError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "too_large" => Ok(DownloadZipError::TooLarge),
+                    "too_many_files" => Ok(DownloadZipError::TooManyFiles),
+                    _ => Ok(DownloadZipError::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["path",
+                                                    "too_large",
+                                                    "too_many_files",
+                                                    "other"];
+        deserializer.deserialize_struct("DownloadZipError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DownloadZipError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            DownloadZipError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            DownloadZipError::TooLarge => {
+                // unit
+                let mut s = serializer.serialize_struct("DownloadZipError", 1)?;
+                s.serialize_field(".tag", "too_large")?;
+                s.end()
+            }
+            DownloadZipError::TooManyFiles => {
+                // unit
+                let mut s = serializer.serialize_struct("DownloadZipError", 1)?;
+                s.serialize_field(".tag", "too_many_files")?;
+                s.end()
+            }
+            DownloadZipError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for DownloadZipError {
+    fn description(&self) -> &str {
+        "DownloadZipError"
+    }
+}
+
+impl ::std::fmt::Display for DownloadZipError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct DownloadZipResult {
+    pub metadata: FolderMetadata,
+}
+
+impl DownloadZipResult {
+    pub fn new(metadata: FolderMetadata) -> Self {
+        DownloadZipResult {
+            metadata,
+        }
+    }
+
+}
+
+const DOWNLOAD_ZIP_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
+impl DownloadZipResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DownloadZipResult, V::Error> {
+        use serde::de;
+        let mut field_metadata = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, DOWNLOAD_ZIP_RESULT_FIELDS))
+            }
+        }
+        Ok(DownloadZipResult {
+            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("metadata", &self.metadata)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DownloadZipResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DownloadZipResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DownloadZipResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DownloadZipResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DownloadZipResult", DOWNLOAD_ZIP_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DownloadZipResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DownloadZipResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub struct FileMetadata {
     /// The last component of the path (including extension). This never contains a slash.
     pub name: String,
@@ -3128,7 +3426,8 @@ pub struct FolderMetadata {
     /// Set if the folder is contained in a shared folder or is a shared folder mount point.
     pub sharing_info: Option<FolderSharingInfo>,
     /// Additional information if the file has custom properties with the property template
-    /// specified.
+    /// specified. Note that only properties associated with user-owned templates, not team-owned
+    /// templates, can be attached to folders.
     pub property_groups: Option<Vec<super::file_properties::PropertyGroup>>,
 }
 
@@ -3730,6 +4029,9 @@ pub struct GetMetadataArg {
     /// If true, the results will include a flag for each file indicating whether or not  that file
     /// has any explicit members.
     pub include_has_explicit_shared_members: bool,
+    /// If set to a valid list of template IDs, :field:`FileMetadata.property_groups` is set if
+    /// there exists property data associated with the file and each of the listed templates.
+    pub include_property_groups: Option<super::file_properties::TemplateFilterBase>,
 }
 
 impl GetMetadataArg {
@@ -3739,6 +4041,7 @@ impl GetMetadataArg {
             include_media_info: false,
             include_deleted: false,
             include_has_explicit_shared_members: false,
+            include_property_groups: None,
         }
     }
 
@@ -3757,12 +4060,21 @@ impl GetMetadataArg {
         self
     }
 
+    pub fn with_include_property_groups(
+        mut self,
+        value: Option<super::file_properties::TemplateFilterBase>,
+    ) -> Self {
+        self.include_property_groups = value;
+        self
+    }
+
 }
 
 const GET_METADATA_ARG_FIELDS: &'static [&'static str] = &["path",
                                                            "include_media_info",
                                                            "include_deleted",
-                                                           "include_has_explicit_shared_members"];
+                                                           "include_has_explicit_shared_members",
+                                                           "include_property_groups"];
 impl GetMetadataArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3772,6 +4084,7 @@ impl GetMetadataArg {
         let mut field_include_media_info = None;
         let mut field_include_deleted = None;
         let mut field_include_has_explicit_shared_members = None;
+        let mut field_include_property_groups = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "path" => {
@@ -3798,6 +4111,12 @@ impl GetMetadataArg {
                     }
                     field_include_has_explicit_shared_members = Some(map.next_value()?);
                 }
+                "include_property_groups" => {
+                    if field_include_property_groups.is_some() {
+                        return Err(de::Error::duplicate_field("include_property_groups"));
+                    }
+                    field_include_property_groups = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, GET_METADATA_ARG_FIELDS))
             }
         }
@@ -3806,6 +4125,7 @@ impl GetMetadataArg {
             include_media_info: field_include_media_info.unwrap_or(false),
             include_deleted: field_include_deleted.unwrap_or(false),
             include_has_explicit_shared_members: field_include_has_explicit_shared_members.unwrap_or(false),
+            include_property_groups: field_include_property_groups,
         })
     }
 
@@ -3817,7 +4137,8 @@ impl GetMetadataArg {
         s.serialize_field("path", &self.path)?;
         s.serialize_field("include_media_info", &self.include_media_info)?;
         s.serialize_field("include_deleted", &self.include_deleted)?;
-        s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)
+        s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
+        s.serialize_field("include_property_groups", &self.include_property_groups)
     }
 }
 
@@ -3843,7 +4164,7 @@ impl ::serde::ser::Serialize for GetMetadataArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GetMetadataArg", 4)?;
+        let mut s = serializer.serialize_struct("GetMetadataArg", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -4625,6 +4946,9 @@ pub struct ListFolderArg {
     /// be provided. If this field is present, :field:`ListFolderArg.path` will be relative to root
     /// of the shared link. Only non-recursive mode is supported for shared link.
     pub shared_link: Option<SharedLink>,
+    /// If set to a valid list of template IDs, :field:`FileMetadata.property_groups` is set if
+    /// there exists property data associated with the file and each of the listed templates.
+    pub include_property_groups: Option<super::file_properties::TemplateFilterBase>,
 }
 
 impl ListFolderArg {
@@ -4638,6 +4962,7 @@ impl ListFolderArg {
             include_mounted_folders: true,
             limit: None,
             shared_link: None,
+            include_property_groups: None,
         }
     }
 
@@ -4676,6 +5001,14 @@ impl ListFolderArg {
         self
     }
 
+    pub fn with_include_property_groups(
+        mut self,
+        value: Option<super::file_properties::TemplateFilterBase>,
+    ) -> Self {
+        self.include_property_groups = value;
+        self
+    }
+
 }
 
 const LIST_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
@@ -4685,7 +5018,8 @@ const LIST_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
                                                           "include_has_explicit_shared_members",
                                                           "include_mounted_folders",
                                                           "limit",
-                                                          "shared_link"];
+                                                          "shared_link",
+                                                          "include_property_groups"];
 impl ListFolderArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4699,6 +5033,7 @@ impl ListFolderArg {
         let mut field_include_mounted_folders = None;
         let mut field_limit = None;
         let mut field_shared_link = None;
+        let mut field_include_property_groups = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "path" => {
@@ -4749,6 +5084,12 @@ impl ListFolderArg {
                     }
                     field_shared_link = Some(map.next_value()?);
                 }
+                "include_property_groups" => {
+                    if field_include_property_groups.is_some() {
+                        return Err(de::Error::duplicate_field("include_property_groups"));
+                    }
+                    field_include_property_groups = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_ARG_FIELDS))
             }
         }
@@ -4761,6 +5102,7 @@ impl ListFolderArg {
             include_mounted_folders: field_include_mounted_folders.unwrap_or(true),
             limit: field_limit,
             shared_link: field_shared_link,
+            include_property_groups: field_include_property_groups,
         })
     }
 
@@ -4776,7 +5118,8 @@ impl ListFolderArg {
         s.serialize_field("include_has_explicit_shared_members", &self.include_has_explicit_shared_members)?;
         s.serialize_field("include_mounted_folders", &self.include_mounted_folders)?;
         s.serialize_field("limit", &self.limit)?;
-        s.serialize_field("shared_link", &self.shared_link)
+        s.serialize_field("shared_link", &self.shared_link)?;
+        s.serialize_field("include_property_groups", &self.include_property_groups)
     }
 }
 
@@ -4802,7 +5145,7 @@ impl ::serde::ser::Serialize for ListFolderArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListFolderArg", 8)?;
+        let mut s = serializer.serialize_struct("ListFolderArg", 9)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -6723,6 +7066,8 @@ pub enum RelocationBatchError {
     /// Your move operation would result in an ownership transfer. You may reissue the request with
     /// the field :field:`RelocationArg.allow_ownership_transfer` to true.
     CantTransferOwnership,
+    /// The current user does not have enough space to move or copy the files.
+    InsufficientQuota,
     Other,
     /// There are too many write operations in user's Dropbox. Please retry this request.
     TooManyWriteOperations,
@@ -6771,6 +7116,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                     "too_many_files" => Ok(RelocationBatchError::TooManyFiles),
                     "duplicated_or_nested_paths" => Ok(RelocationBatchError::DuplicatedOrNestedPaths),
                     "cant_transfer_ownership" => Ok(RelocationBatchError::CantTransferOwnership),
+                    "insufficient_quota" => Ok(RelocationBatchError::InsufficientQuota),
                     "too_many_write_operations" => Ok(RelocationBatchError::TooManyWriteOperations),
                     _ => Ok(RelocationBatchError::Other)
                 }
@@ -6785,6 +7131,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                                                     "too_many_files",
                                                     "duplicated_or_nested_paths",
                                                     "cant_transfer_ownership",
+                                                    "insufficient_quota",
                                                     "other",
                                                     "too_many_write_operations"];
         deserializer.deserialize_struct("RelocationBatchError", VARIANTS, EnumVisitor)
@@ -6851,6 +7198,12 @@ impl ::serde::ser::Serialize for RelocationBatchError {
                 // unit
                 let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
                 s.serialize_field(".tag", "cant_transfer_ownership")?;
+                s.end()
+            }
+            RelocationBatchError::InsufficientQuota => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
+                s.serialize_field(".tag", "insufficient_quota")?;
                 s.end()
             }
             RelocationBatchError::TooManyWriteOperations => {
@@ -7189,6 +7542,8 @@ pub enum RelocationError {
     /// Your move operation would result in an ownership transfer. You may reissue the request with
     /// the field :field:`RelocationArg.allow_ownership_transfer` to true.
     CantTransferOwnership,
+    /// The current user does not have enough space to move or copy the files.
+    InsufficientQuota,
     Other,
 }
 
@@ -7235,6 +7590,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                     "too_many_files" => Ok(RelocationError::TooManyFiles),
                     "duplicated_or_nested_paths" => Ok(RelocationError::DuplicatedOrNestedPaths),
                     "cant_transfer_ownership" => Ok(RelocationError::CantTransferOwnership),
+                    "insufficient_quota" => Ok(RelocationError::InsufficientQuota),
                     _ => Ok(RelocationError::Other)
                 }
             }
@@ -7248,6 +7604,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                                                     "too_many_files",
                                                     "duplicated_or_nested_paths",
                                                     "cant_transfer_ownership",
+                                                    "insufficient_quota",
                                                     "other"];
         deserializer.deserialize_struct("RelocationError", VARIANTS, EnumVisitor)
     }
@@ -7313,6 +7670,12 @@ impl ::serde::ser::Serialize for RelocationError {
                 // unit
                 let mut s = serializer.serialize_struct("RelocationError", 1)?;
                 s.serialize_field(".tag", "cant_transfer_ownership")?;
+                s.end()
+            }
+            RelocationError::InsufficientQuota => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationError", 1)?;
+                s.serialize_field(".tag", "insufficient_quota")?;
                 s.end()
             }
             RelocationError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -9339,6 +9702,8 @@ impl ::serde::ser::Serialize for ThumbnailSize {
 pub enum UploadError {
     /// Unable to save the uploaded contents to a file.
     Path(UploadWriteFailed),
+    /// The supplied property group is invalid.
+    PropertiesError(super::file_properties::InvalidPropertyGroupError),
     Other,
 }
 
@@ -9359,11 +9724,19 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadError {
                 };
                 match tag {
                     "path" => Ok(UploadError::Path(UploadWriteFailed::internal_deserialize(map)?)),
+                    "properties_error" => {
+                        match map.next_key()? {
+                            Some("properties_error") => Ok(UploadError::PropertiesError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("properties_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => Ok(UploadError::Other)
                 }
             }
         }
         const VARIANTS: &'static [&'static str] = &["path",
+                                                    "properties_error",
                                                     "other"];
         deserializer.deserialize_struct("UploadError", VARIANTS, EnumVisitor)
     }
@@ -9379,6 +9752,13 @@ impl ::serde::ser::Serialize for UploadError {
                 let mut s = serializer.serialize_struct("UploadError", 3)?;
                 s.serialize_field(".tag", "path")?;
                 x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            UploadError::PropertiesError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "properties_error")?;
+                s.serialize_field("properties_error", x)?;
                 s.end()
             }
             UploadError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -9402,8 +9782,9 @@ impl ::std::fmt::Display for UploadError {
 pub enum UploadErrorWithProperties {
     /// Unable to save the uploaded contents to a file.
     Path(UploadWriteFailed),
-    Other,
+    /// The supplied property group is invalid.
     PropertiesError(super::file_properties::InvalidPropertyGroupError),
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for UploadErrorWithProperties {
@@ -9435,8 +9816,8 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadErrorWithProperties {
             }
         }
         const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other",
-                                                    "properties_error"];
+                                                    "properties_error",
+                                                    "other"];
         deserializer.deserialize_struct("UploadErrorWithProperties", VARIANTS, EnumVisitor)
     }
 }

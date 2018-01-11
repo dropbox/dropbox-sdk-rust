@@ -79,6 +79,63 @@ impl ::serde::ser::Serialize for EmmState {
 }
 
 #[derive(Debug)]
+pub enum GroupCreation {
+    /// Team admins and members can create groups.
+    AdminsAndMembers,
+    /// Only team admins can create groups.
+    AdminsOnly,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GroupCreation {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = GroupCreation;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GroupCreation structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "admins_and_members" => Ok(GroupCreation::AdminsAndMembers),
+                    "admins_only" => Ok(GroupCreation::AdminsOnly),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["admins_and_members",
+                                                    "admins_only"];
+        deserializer.deserialize_struct("GroupCreation", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GroupCreation {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            GroupCreation::AdminsAndMembers => {
+                // unit
+                let mut s = serializer.serialize_struct("GroupCreation", 1)?;
+                s.serialize_field(".tag", "admins_and_members")?;
+                s.end()
+            }
+            GroupCreation::AdminsOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("GroupCreation", 1)?;
+                s.serialize_field(".tag", "admins_only")?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug)]
 pub enum OfficeAddInPolicy {
     /// Office Add-In is disabled.
     Disabled,
@@ -599,6 +656,66 @@ impl ::serde::ser::Serialize for SharedLinkCreatePolicy {
                 s.end()
             }
             SharedLinkCreatePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum SmartSyncPolicy {
+    /// The specified content will be synced as local files by default.
+    Local,
+    /// The specified content will be synced as on-demand files by default.
+    OnDemand,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SmartSyncPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SmartSyncPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SmartSyncPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "local" => Ok(SmartSyncPolicy::Local),
+                    "on_demand" => Ok(SmartSyncPolicy::OnDemand),
+                    _ => Ok(SmartSyncPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["local",
+                                                    "on_demand",
+                                                    "other"];
+        deserializer.deserialize_struct("SmartSyncPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SmartSyncPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SmartSyncPolicy::Local => {
+                // unit
+                let mut s = serializer.serialize_struct("SmartSyncPolicy", 1)?;
+                s.serialize_field(".tag", "local")?;
+                s.end()
+            }
+            SmartSyncPolicy::OnDemand => {
+                // unit
+                let mut s = serializer.serialize_struct("SmartSyncPolicy", 1)?;
+                s.serialize_field(".tag", "on_demand")?;
+                s.end()
+            }
+            SmartSyncPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }

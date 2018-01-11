@@ -3589,7 +3589,7 @@ pub enum FolderAction {
     Unshare,
     /// Keep a copy of the contents upon leaving or being kicked from the folder.
     LeaveACopy,
-    /// This action is deprecated. Use create_link instead.
+    /// Use create_link instead.
     ShareLink,
     /// Create a shared link for folder.
     CreateLink,
@@ -11011,6 +11011,9 @@ pub enum RemoveFolderMemberError {
     TeamFolder,
     /// The current user does not have permission to perform this action.
     NoPermission,
+    /// This shared folder has too many files for leaving a copy. You can still remove this user
+    /// without leaving a copy.
+    TooManyFiles,
     Other,
 }
 
@@ -11048,6 +11051,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveFolderMemberError {
                     "group_access" => Ok(RemoveFolderMemberError::GroupAccess),
                     "team_folder" => Ok(RemoveFolderMemberError::TeamFolder),
                     "no_permission" => Ok(RemoveFolderMemberError::NoPermission),
+                    "too_many_files" => Ok(RemoveFolderMemberError::TooManyFiles),
                     _ => Ok(RemoveFolderMemberError::Other)
                 }
             }
@@ -11058,6 +11062,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveFolderMemberError {
                                                     "group_access",
                                                     "team_folder",
                                                     "no_permission",
+                                                    "too_many_files",
                                                     "other"];
         deserializer.deserialize_struct("RemoveFolderMemberError", VARIANTS, EnumVisitor)
     }
@@ -11104,6 +11109,12 @@ impl ::serde::ser::Serialize for RemoveFolderMemberError {
                 // unit
                 let mut s = serializer.serialize_struct("RemoveFolderMemberError", 1)?;
                 s.serialize_field(".tag", "no_permission")?;
+                s.end()
+            }
+            RemoveFolderMemberError::TooManyFiles => {
+                // unit
+                let mut s = serializer.serialize_struct("RemoveFolderMemberError", 1)?;
+                s.serialize_field(".tag", "too_many_files")?;
                 s.end()
             }
             RemoveFolderMemberError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

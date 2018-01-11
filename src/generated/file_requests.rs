@@ -533,7 +533,8 @@ impl ::serde::ser::Serialize for FileRequest {
 pub struct FileRequestDeadline {
     /// The deadline for this file request.
     pub deadline: super::common::DropboxTimestamp,
-    /// If set, allow uploads after the deadline has passed. These uploads will be marked overdue.
+    /// If set, allow uploads after the deadline has passed. These     uploads will be marked
+    /// overdue.
     pub allow_late_uploads: Option<GracePeriod>,
 }
 
