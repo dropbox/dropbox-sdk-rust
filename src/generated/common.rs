@@ -69,10 +69,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRoot {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["home",
-                                                    "root",
-                                                    "namespace_id",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["home",
+                                    "root",
+                                    "namespace_id",
+                                    "other"];
         deserializer.deserialize_struct("PathRoot", VARIANTS, EnumVisitor)
     }
 }
@@ -145,9 +145,9 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRootError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_root",
-                                                    "no_permission",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_root",
+                                    "no_permission",
+                                    "other"];
         deserializer.deserialize_struct("PathRootError", VARIANTS, EnumVisitor)
     }
 }
@@ -217,8 +217,8 @@ impl<'de> ::serde::de::Deserialize<'de> for RootInfo {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user",
-                                                    "user"];
+        const VARIANTS: &[&str] = &["user",
+                                    "user"];
         deserializer.deserialize_struct("RootInfo", VARIANTS, EnumVisitor)
     }
 }
@@ -276,9 +276,9 @@ impl TeamRootInfo {
 
 }
 
-const TEAM_ROOT_INFO_FIELDS: &'static [&'static str] = &["root_namespace_id",
-                                                         "home_namespace_id",
-                                                         "home_path"];
+const TEAM_ROOT_INFO_FIELDS: &[&str] = &["root_namespace_id",
+                                         "home_namespace_id",
+                                         "home_path"];
 impl TeamRootInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -378,8 +378,8 @@ impl UserRootInfo {
 
 }
 
-const USER_ROOT_INFO_FIELDS: &'static [&'static str] = &["root_namespace_id",
-                                                         "home_namespace_id"];
+const USER_ROOT_INFO_FIELDS: &[&str] = &["root_namespace_id",
+                                         "home_namespace_id"];
 impl UserRootInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,

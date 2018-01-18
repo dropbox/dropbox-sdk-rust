@@ -674,11 +674,11 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessLevel {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["owner",
-                                                    "editor",
-                                                    "viewer",
-                                                    "viewer_no_comment",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["owner",
+                                    "editor",
+                                    "viewer",
+                                    "viewer_no_comment",
+                                    "other"];
         deserializer.deserialize_struct("AccessLevel", VARIANTS, EnumVisitor)
     }
 }
@@ -750,9 +750,9 @@ impl<'de> ::serde::de::Deserialize<'de> for AclUpdatePolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["owner",
-                                                    "editors",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["owner",
+                                    "editors",
+                                    "other"];
         deserializer.deserialize_struct("AclUpdatePolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -831,12 +831,12 @@ impl AddFileMemberArgs {
 
 }
 
-const ADD_FILE_MEMBER_ARGS_FIELDS: &'static [&'static str] = &["file",
-                                                               "members",
-                                                               "custom_message",
-                                                               "quiet",
-                                                               "access_level",
-                                                               "add_message_as_comment"];
+const ADD_FILE_MEMBER_ARGS_FIELDS: &[&str] = &["file",
+                                               "members",
+                                               "custom_message",
+                                               "quiet",
+                                               "access_level",
+                                               "add_message_as_comment"];
 impl AddFileMemberArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -989,11 +989,11 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFileMemberError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_error",
-                                                    "access_error",
-                                                    "rate_limit",
-                                                    "invalid_comment",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_error",
+                                    "access_error",
+                                    "rate_limit",
+                                    "invalid_comment",
+                                    "other"];
         deserializer.deserialize_struct("AddFileMemberError", VARIANTS, EnumVisitor)
     }
 }
@@ -1081,10 +1081,10 @@ impl AddFolderMemberArg {
 
 }
 
-const ADD_FOLDER_MEMBER_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id",
-                                                                "members",
-                                                                "quiet",
-                                                                "custom_message"];
+const ADD_FOLDER_MEMBER_ARG_FIELDS: &[&str] = &["shared_folder_id",
+                                                "members",
+                                                "quiet",
+                                                "custom_message"];
 impl AddFolderMemberArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1255,18 +1255,18 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "email_unverified",
-                                                    "bad_member",
-                                                    "cant_share_outside_team",
-                                                    "too_many_members",
-                                                    "too_many_pending_invites",
-                                                    "rate_limit",
-                                                    "too_many_invitees",
-                                                    "insufficient_plan",
-                                                    "team_folder",
-                                                    "no_permission",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "email_unverified",
+                                    "bad_member",
+                                    "cant_share_outside_team",
+                                    "too_many_members",
+                                    "too_many_pending_invites",
+                                    "rate_limit",
+                                    "too_many_invitees",
+                                    "insufficient_plan",
+                                    "team_folder",
+                                    "no_permission",
+                                    "other"];
         deserializer.deserialize_struct("AddFolderMemberError", VARIANTS, EnumVisitor)
     }
 }
@@ -1388,8 +1388,8 @@ impl AddMember {
 
 }
 
-const ADD_MEMBER_FIELDS: &'static [&'static str] = &["member",
-                                                     "access_level"];
+const ADD_MEMBER_FIELDS: &[&str] = &["member",
+                                     "access_level"];
 impl AddMember {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1520,13 +1520,13 @@ impl<'de> ::serde::de::Deserialize<'de> for AddMemberSelectorError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["automatic_group",
-                                                    "invalid_dropbox_id",
-                                                    "invalid_email",
-                                                    "unverified_dropbox_id",
-                                                    "group_deleted",
-                                                    "group_not_on_team",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["automatic_group",
+                                    "invalid_dropbox_id",
+                                    "invalid_email",
+                                    "unverified_dropbox_id",
+                                    "group_deleted",
+                                    "group_not_on_team",
+                                    "other"];
         deserializer.deserialize_struct("AddMemberSelectorError", VARIANTS, EnumVisitor)
     }
 }
@@ -1608,7 +1608,7 @@ impl AudienceExceptionContentInfo {
 
 }
 
-const AUDIENCE_EXCEPTION_CONTENT_INFO_FIELDS: &'static [&'static str] = &["name"];
+const AUDIENCE_EXCEPTION_CONTENT_INFO_FIELDS: &[&str] = &["name"];
 impl AudienceExceptionContentInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1689,8 +1689,8 @@ impl AudienceExceptions {
 
 }
 
-const AUDIENCE_EXCEPTIONS_FIELDS: &'static [&'static str] = &["count",
-                                                              "exceptions"];
+const AUDIENCE_EXCEPTIONS_FIELDS: &[&str] = &["count",
+                                              "exceptions"];
 impl AudienceExceptions {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1786,9 +1786,9 @@ impl AudienceRestrictingSharedFolder {
 
 }
 
-const AUDIENCE_RESTRICTING_SHARED_FOLDER_FIELDS: &'static [&'static str] = &["shared_folder_id",
-                                                                             "name",
-                                                                             "audience"];
+const AUDIENCE_RESTRICTING_SHARED_FOLDER_FIELDS: &[&str] = &["shared_folder_id",
+                                                             "name",
+                                                             "audience"];
 impl AudienceRestrictingSharedFolder {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1888,9 +1888,9 @@ impl ChangeFileMemberAccessArgs {
 
 }
 
-const CHANGE_FILE_MEMBER_ACCESS_ARGS_FIELDS: &'static [&'static str] = &["file",
-                                                                         "member",
-                                                                         "access_level"];
+const CHANGE_FILE_MEMBER_ACCESS_ARGS_FIELDS: &[&str] = &["file",
+                                                         "member",
+                                                         "access_level"];
 impl ChangeFileMemberAccessArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1995,9 +1995,9 @@ impl CollectionLinkMetadata {
 
 }
 
-const COLLECTION_LINK_METADATA_FIELDS: &'static [&'static str] = &["url",
-                                                                   "visibility",
-                                                                   "expires"];
+const COLLECTION_LINK_METADATA_FIELDS: &[&str] = &["url",
+                                                   "visibility",
+                                                   "expires"];
 impl CollectionLinkMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2108,9 +2108,9 @@ impl CreateSharedLinkArg {
 
 }
 
-const CREATE_SHARED_LINK_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                                 "short_url",
-                                                                 "pending_upload"];
+const CREATE_SHARED_LINK_ARG_FIELDS: &[&str] = &["path",
+                                                 "short_url",
+                                                 "pending_upload"];
 impl CreateSharedLinkArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2221,8 +2221,8 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "other"];
         deserializer.deserialize_struct("CreateSharedLinkError", VARIANTS, EnumVisitor)
     }
 }
@@ -2279,8 +2279,8 @@ impl CreateSharedLinkWithSettingsArg {
 
 }
 
-const CREATE_SHARED_LINK_WITH_SETTINGS_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                                               "settings"];
+const CREATE_SHARED_LINK_WITH_SETTINGS_ARG_FIELDS: &[&str] = &["path",
+                                                               "settings"];
 impl CreateSharedLinkWithSettingsArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2400,11 +2400,11 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkWithSettingsError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "email_not_verified",
-                                                    "shared_link_already_exists",
-                                                    "settings_error",
-                                                    "access_denied"];
+        const VARIANTS: &[&str] = &["path",
+                                    "email_not_verified",
+                                    "shared_link_already_exists",
+                                    "settings_error",
+                                    "access_denied"];
         deserializer.deserialize_struct("CreateSharedLinkWithSettingsError", VARIANTS, EnumVisitor)
     }
 }
@@ -2524,13 +2524,13 @@ impl ExpectedSharedContentLinkMetadata {
 
 }
 
-const EXPECTED_SHARED_CONTENT_LINK_METADATA_FIELDS: &'static [&'static str] = &["audience_options",
-                                                                                "current_audience",
-                                                                                "link_permissions",
-                                                                                "password_protected",
-                                                                                "access_level",
-                                                                                "audience_restricting_shared_folder",
-                                                                                "expiry"];
+const EXPECTED_SHARED_CONTENT_LINK_METADATA_FIELDS: &[&str] = &["audience_options",
+                                                                "current_audience",
+                                                                "link_permissions",
+                                                                "password_protected",
+                                                                "access_level",
+                                                                "audience_restricting_shared_folder",
+                                                                "expiry"];
 impl ExpectedSharedContentLinkMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2697,16 +2697,16 @@ impl<'de> ::serde::de::Deserialize<'de> for FileAction {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disable_viewer_info",
-                                                    "edit_contents",
-                                                    "enable_viewer_info",
-                                                    "invite_viewer",
-                                                    "invite_viewer_no_comment",
-                                                    "unshare",
-                                                    "relinquish_membership",
-                                                    "share_link",
-                                                    "create_link",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disable_viewer_info",
+                                    "edit_contents",
+                                    "enable_viewer_info",
+                                    "invite_viewer",
+                                    "invite_viewer_no_comment",
+                                    "unshare",
+                                    "relinquish_membership",
+                                    "share_link",
+                                    "create_link",
+                                    "other"];
         deserializer.deserialize_struct("FileAction", VARIANTS, EnumVisitor)
     }
 }
@@ -2827,10 +2827,10 @@ impl<'de> ::serde::de::Deserialize<'de> for FileErrorResult {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["file_not_found_error",
-                                                    "invalid_file_action_error",
-                                                    "permission_denied_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["file_not_found_error",
+                                    "invalid_file_action_error",
+                                    "permission_denied_error",
+                                    "other"];
         deserializer.deserialize_struct("FileErrorResult", VARIANTS, EnumVisitor)
     }
 }
@@ -2956,18 +2956,18 @@ impl FileLinkMetadata {
 
 }
 
-const FILE_LINK_METADATA_FIELDS: &'static [&'static str] = &["url",
-                                                             "name",
-                                                             "link_permissions",
-                                                             "client_modified",
-                                                             "server_modified",
-                                                             "rev",
-                                                             "size",
-                                                             "id",
-                                                             "expires",
-                                                             "path_lower",
-                                                             "team_member_info",
-                                                             "content_owner_team_info"];
+const FILE_LINK_METADATA_FIELDS: &[&str] = &["url",
+                                             "name",
+                                             "link_permissions",
+                                             "client_modified",
+                                             "server_modified",
+                                             "rev",
+                                             "size",
+                                             "id",
+                                             "expires",
+                                             "path_lower",
+                                             "team_member_info",
+                                             "content_owner_team_info"];
 impl FileLinkMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3171,11 +3171,11 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMemberActionError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_member",
-                                                    "no_permission",
-                                                    "access_error",
-                                                    "no_explicit_access",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_member",
+                                    "no_permission",
+                                    "access_error",
+                                    "no_explicit_access",
+                                    "other"];
         deserializer.deserialize_struct("FileMemberActionError", VARIANTS, EnumVisitor)
     }
 }
@@ -3271,8 +3271,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMemberActionIndividualResult {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["success",
-                                                    "member_error"];
+        const VARIANTS: &[&str] = &["success",
+                                    "member_error"];
         deserializer.deserialize_struct("FileMemberActionIndividualResult", VARIANTS, EnumVisitor)
     }
 }
@@ -3319,8 +3319,8 @@ impl FileMemberActionResult {
 
 }
 
-const FILE_MEMBER_ACTION_RESULT_FIELDS: &'static [&'static str] = &["member",
-                                                                    "result"];
+const FILE_MEMBER_ACTION_RESULT_FIELDS: &[&str] = &["member",
+                                                    "result"];
 impl FileMemberActionResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3426,9 +3426,9 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMemberRemoveActionResult {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["success",
-                                                    "member_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["success",
+                                    "member_error",
+                                    "other"];
         deserializer.deserialize_struct("FileMemberRemoveActionResult", VARIANTS, EnumVisitor)
     }
 }
@@ -3484,9 +3484,9 @@ impl FilePermission {
 
 }
 
-const FILE_PERMISSION_FIELDS: &'static [&'static str] = &["action",
-                                                          "allow",
-                                                          "reason"];
+const FILE_PERMISSION_FIELDS: &[&str] = &["action",
+                                          "allow",
+                                          "reason"];
 impl FilePermission {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3629,20 +3629,20 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderAction {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["change_options",
-                                                    "disable_viewer_info",
-                                                    "edit_contents",
-                                                    "enable_viewer_info",
-                                                    "invite_editor",
-                                                    "invite_viewer",
-                                                    "invite_viewer_no_comment",
-                                                    "relinquish_membership",
-                                                    "unmount",
-                                                    "unshare",
-                                                    "leave_a_copy",
-                                                    "share_link",
-                                                    "create_link",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["change_options",
+                                    "disable_viewer_info",
+                                    "edit_contents",
+                                    "enable_viewer_info",
+                                    "invite_editor",
+                                    "invite_viewer",
+                                    "invite_viewer_no_comment",
+                                    "relinquish_membership",
+                                    "unmount",
+                                    "unshare",
+                                    "leave_a_copy",
+                                    "share_link",
+                                    "create_link",
+                                    "other"];
         deserializer.deserialize_struct("FolderAction", VARIANTS, EnumVisitor)
     }
 }
@@ -3801,14 +3801,14 @@ impl FolderLinkMetadata {
 
 }
 
-const FOLDER_LINK_METADATA_FIELDS: &'static [&'static str] = &["url",
-                                                               "name",
-                                                               "link_permissions",
-                                                               "id",
-                                                               "expires",
-                                                               "path_lower",
-                                                               "team_member_info",
-                                                               "content_owner_team_info"];
+const FOLDER_LINK_METADATA_FIELDS: &[&str] = &["url",
+                                               "name",
+                                               "link_permissions",
+                                               "id",
+                                               "expires",
+                                               "path_lower",
+                                               "team_member_info",
+                                               "content_owner_team_info"];
 impl FolderLinkMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3959,9 +3959,9 @@ impl FolderPermission {
 
 }
 
-const FOLDER_PERMISSION_FIELDS: &'static [&'static str] = &["action",
-                                                            "allow",
-                                                            "reason"];
+const FOLDER_PERMISSION_FIELDS: &[&str] = &["action",
+                                            "allow",
+                                            "reason"];
 impl FolderPermission {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4086,11 +4086,11 @@ impl FolderPolicy {
 
 }
 
-const FOLDER_POLICY_FIELDS: &'static [&'static str] = &["acl_update_policy",
-                                                        "shared_link_policy",
-                                                        "member_policy",
-                                                        "resolved_member_policy",
-                                                        "viewer_info_policy"];
+const FOLDER_POLICY_FIELDS: &[&str] = &["acl_update_policy",
+                                        "shared_link_policy",
+                                        "member_policy",
+                                        "resolved_member_policy",
+                                        "viewer_info_policy"];
 impl FolderPolicy {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4212,8 +4212,8 @@ impl GetFileMetadataArg {
 
 }
 
-const GET_FILE_METADATA_ARG_FIELDS: &'static [&'static str] = &["file",
-                                                                "actions"];
+const GET_FILE_METADATA_ARG_FIELDS: &[&str] = &["file",
+                                                "actions"];
 impl GetFileMetadataArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4308,8 +4308,8 @@ impl GetFileMetadataBatchArg {
 
 }
 
-const GET_FILE_METADATA_BATCH_ARG_FIELDS: &'static [&'static str] = &["files",
-                                                                      "actions"];
+const GET_FILE_METADATA_BATCH_ARG_FIELDS: &[&str] = &["files",
+                                                      "actions"];
 impl GetFileMetadataBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4398,8 +4398,8 @@ impl GetFileMetadataBatchResult {
 
 }
 
-const GET_FILE_METADATA_BATCH_RESULT_FIELDS: &'static [&'static str] = &["file",
-                                                                         "result"];
+const GET_FILE_METADATA_BATCH_RESULT_FIELDS: &[&str] = &["file",
+                                                         "result"];
 impl GetFileMetadataBatchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4510,9 +4510,9 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileMetadataError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_error",
-                                                    "access_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_error",
+                                    "access_error",
+                                    "other"];
         deserializer.deserialize_struct("GetFileMetadataError", VARIANTS, EnumVisitor)
     }
 }
@@ -4590,9 +4590,9 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileMetadataIndividualResult {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["metadata",
-                                                    "access_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["metadata",
+                                    "access_error",
+                                    "other"];
         deserializer.deserialize_struct("GetFileMetadataIndividualResult", VARIANTS, EnumVisitor)
     }
 }
@@ -4646,8 +4646,8 @@ impl GetMetadataArgs {
 
 }
 
-const GET_METADATA_ARGS_FIELDS: &'static [&'static str] = &["shared_folder_id",
-                                                            "actions"];
+const GET_METADATA_ARGS_FIELDS: &[&str] = &["shared_folder_id",
+                                            "actions"];
 impl GetMetadataArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4753,11 +4753,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GetSharedLinkFileError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["shared_link_not_found",
-                                                    "shared_link_access_denied",
-                                                    "unsupported_link_type",
-                                                    "other",
-                                                    "shared_link_is_directory"];
+        const VARIANTS: &[&str] = &["shared_link_not_found",
+                                    "shared_link_access_denied",
+                                    "unsupported_link_type",
+                                    "other",
+                                    "shared_link_is_directory"];
         deserializer.deserialize_struct("GetSharedLinkFileError", VARIANTS, EnumVisitor)
     }
 }
@@ -4840,9 +4840,9 @@ impl GetSharedLinkMetadataArg {
 
 }
 
-const GET_SHARED_LINK_METADATA_ARG_FIELDS: &'static [&'static str] = &["url",
-                                                                       "path",
-                                                                       "link_password"];
+const GET_SHARED_LINK_METADATA_ARG_FIELDS: &[&str] = &["url",
+                                                       "path",
+                                                       "link_password"];
 impl GetSharedLinkMetadataArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4934,7 +4934,7 @@ impl Default for GetSharedLinksArg {
     }
 }
 
-const GET_SHARED_LINKS_ARG_FIELDS: &'static [&'static str] = &["path"];
+const GET_SHARED_LINKS_ARG_FIELDS: &[&str] = &["path"];
 impl GetSharedLinksArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5027,8 +5027,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GetSharedLinksError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "other"];
         deserializer.deserialize_struct("GetSharedLinksError", VARIANTS, EnumVisitor)
     }
 }
@@ -5077,7 +5077,7 @@ impl GetSharedLinksResult {
 
 }
 
-const GET_SHARED_LINKS_RESULT_FIELDS: &'static [&'static str] = &["links"];
+const GET_SHARED_LINKS_RESULT_FIELDS: &[&str] = &["links"];
 impl GetSharedLinksResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5197,15 +5197,15 @@ impl GroupInfo {
 
 }
 
-const GROUP_INFO_FIELDS: &'static [&'static str] = &["group_name",
-                                                     "group_id",
-                                                     "group_management_type",
-                                                     "group_type",
-                                                     "is_member",
-                                                     "is_owner",
-                                                     "same_team",
-                                                     "group_external_id",
-                                                     "member_count"];
+const GROUP_INFO_FIELDS: &[&str] = &["group_name",
+                                     "group_id",
+                                     "group_management_type",
+                                     "group_type",
+                                     "is_member",
+                                     "is_owner",
+                                     "same_team",
+                                     "group_external_id",
+                                     "member_count"];
 impl GroupInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5381,11 +5381,11 @@ impl GroupMembershipInfo {
 
 }
 
-const GROUP_MEMBERSHIP_INFO_FIELDS: &'static [&'static str] = &["access_type",
-                                                                "group",
-                                                                "permissions",
-                                                                "initials",
-                                                                "is_inherited"];
+const GROUP_MEMBERSHIP_INFO_FIELDS: &[&str] = &["access_type",
+                                                "group",
+                                                "permissions",
+                                                "initials",
+                                                "is_inherited"];
 impl GroupMembershipInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5505,8 +5505,8 @@ impl InsufficientPlan {
 
 }
 
-const INSUFFICIENT_PLAN_FIELDS: &'static [&'static str] = &["message",
-                                                            "upsell_url"];
+const INSUFFICIENT_PLAN_FIELDS: &[&str] = &["message",
+                                            "upsell_url"];
 impl InsufficientPlan {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5596,9 +5596,9 @@ impl InsufficientQuotaAmounts {
 
 }
 
-const INSUFFICIENT_QUOTA_AMOUNTS_FIELDS: &'static [&'static str] = &["space_needed",
-                                                                     "space_shortage",
-                                                                     "space_left"];
+const INSUFFICIENT_QUOTA_AMOUNTS_FIELDS: &[&str] = &["space_needed",
+                                                     "space_shortage",
+                                                     "space_left"];
 impl InsufficientQuotaAmounts {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5711,8 +5711,8 @@ impl<'de> ::serde::de::Deserialize<'de> for InviteeInfo {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["email",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["email",
+                                    "other"];
         deserializer.deserialize_struct("InviteeInfo", VARIANTS, EnumVisitor)
     }
 }
@@ -5786,12 +5786,12 @@ impl InviteeMembershipInfo {
 
 }
 
-const INVITEE_MEMBERSHIP_INFO_FIELDS: &'static [&'static str] = &["access_type",
-                                                                  "invitee",
-                                                                  "permissions",
-                                                                  "initials",
-                                                                  "is_inherited",
-                                                                  "user"];
+const INVITEE_MEMBERSHIP_INFO_FIELDS: &[&str] = &["access_type",
+                                                  "invitee",
+                                                  "permissions",
+                                                  "initials",
+                                                  "is_inherited",
+                                                  "user"];
 impl InviteeMembershipInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5950,10 +5950,10 @@ impl<'de> ::serde::de::Deserialize<'de> for JobError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["unshare_folder_error",
-                                                    "remove_folder_member_error",
-                                                    "relinquish_folder_membership_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["unshare_folder_error",
+                                    "remove_folder_member_error",
+                                    "relinquish_folder_membership_error",
+                                    "other"];
         deserializer.deserialize_struct("JobError", VARIANTS, EnumVisitor)
     }
 }
@@ -6040,9 +6040,9 @@ impl<'de> ::serde::de::Deserialize<'de> for JobStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete",
-                                                    "failed"];
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed"];
         deserializer.deserialize_struct("JobStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -6119,13 +6119,13 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAction {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["change_access_level",
-                                                    "change_audience",
-                                                    "remove_expiry",
-                                                    "remove_password",
-                                                    "set_expiry",
-                                                    "set_password",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["change_access_level",
+                                    "change_audience",
+                                    "remove_expiry",
+                                    "remove_password",
+                                    "set_expiry",
+                                    "set_password",
+                                    "other"];
         deserializer.deserialize_struct("LinkAction", VARIANTS, EnumVisitor)
     }
 }
@@ -6210,10 +6210,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["public",
-                                                    "team",
-                                                    "members",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["public",
+                                    "team",
+                                    "members",
+                                    "other"];
         deserializer.deserialize_struct("LinkAudience", VARIANTS, EnumVisitor)
     }
 }
@@ -6283,9 +6283,9 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkExpiry {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["remove_expiry",
-                                                    "set_expiry",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["remove_expiry",
+                                    "set_expiry",
+                                    "other"];
         deserializer.deserialize_struct("LinkExpiry", VARIANTS, EnumVisitor)
     }
 }
@@ -6344,8 +6344,8 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkMetadata {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["collection",
-                                                    "collection"];
+        const VARIANTS: &[&str] = &["collection",
+                                    "collection"];
         deserializer.deserialize_struct("LinkMetadata", VARIANTS, EnumVisitor)
     }
 }
@@ -6414,9 +6414,9 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkPassword {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["remove_password",
-                                                    "set_password",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["remove_password",
+                                    "set_password",
+                                    "other"];
         deserializer.deserialize_struct("LinkPassword", VARIANTS, EnumVisitor)
     }
 }
@@ -6468,9 +6468,9 @@ impl LinkPermission {
 
 }
 
-const LINK_PERMISSION_FIELDS: &'static [&'static str] = &["action",
-                                                          "allow",
-                                                          "reason"];
+const LINK_PERMISSION_FIELDS: &[&str] = &["action",
+                                          "allow",
+                                          "reason"];
 impl LinkPermission {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6596,10 +6596,10 @@ impl LinkPermissions {
 
 }
 
-const LINK_PERMISSIONS_FIELDS: &'static [&'static str] = &["can_revoke",
-                                                           "resolved_visibility",
-                                                           "requested_visibility",
-                                                           "revoke_failure_reason"];
+const LINK_PERMISSIONS_FIELDS: &[&str] = &["can_revoke",
+                                           "resolved_visibility",
+                                           "requested_visibility",
+                                           "revoke_failure_reason"];
 impl LinkPermissions {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6711,10 +6711,10 @@ impl Default for LinkSettings {
     }
 }
 
-const LINK_SETTINGS_FIELDS: &'static [&'static str] = &["access_level",
-                                                        "audience",
-                                                        "expiry",
-                                                        "password"];
+const LINK_SETTINGS_FIELDS: &[&str] = &["access_level",
+                                        "audience",
+                                        "expiry",
+                                        "password"];
 impl LinkSettings {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6841,10 +6841,10 @@ impl ListFileMembersArg {
 
 }
 
-const LIST_FILE_MEMBERS_ARG_FIELDS: &'static [&'static str] = &["file",
-                                                                "actions",
-                                                                "include_inherited",
-                                                                "limit"];
+const LIST_FILE_MEMBERS_ARG_FIELDS: &[&str] = &["file",
+                                                "actions",
+                                                "include_inherited",
+                                                "limit"];
 impl ListFileMembersArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6955,8 +6955,8 @@ impl ListFileMembersBatchArg {
 
 }
 
-const LIST_FILE_MEMBERS_BATCH_ARG_FIELDS: &'static [&'static str] = &["files",
-                                                                      "limit"];
+const LIST_FILE_MEMBERS_BATCH_ARG_FIELDS: &[&str] = &["files",
+                                                      "limit"];
 impl ListFileMembersBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7044,8 +7044,8 @@ impl ListFileMembersBatchResult {
 
 }
 
-const LIST_FILE_MEMBERS_BATCH_RESULT_FIELDS: &'static [&'static str] = &["file",
-                                                                         "result"];
+const LIST_FILE_MEMBERS_BATCH_RESULT_FIELDS: &[&str] = &["file",
+                                                         "result"];
 impl ListFileMembersBatchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7131,7 +7131,7 @@ impl ListFileMembersContinueArg {
 
 }
 
-const LIST_FILE_MEMBERS_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const LIST_FILE_MEMBERS_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl ListFileMembersContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7236,10 +7236,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_error",
-                                                    "access_error",
-                                                    "invalid_cursor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_error",
+                                    "access_error",
+                                    "invalid_cursor",
+                                    "other"];
         deserializer.deserialize_struct("ListFileMembersContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -7304,8 +7304,8 @@ impl ListFileMembersCountResult {
 
 }
 
-const LIST_FILE_MEMBERS_COUNT_RESULT_FIELDS: &'static [&'static str] = &["members",
-                                                                         "member_count"];
+const LIST_FILE_MEMBERS_COUNT_RESULT_FIELDS: &[&str] = &["members",
+                                                         "member_count"];
 impl ListFileMembersCountResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7416,9 +7416,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_error",
-                                                    "access_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_error",
+                                    "access_error",
+                                    "other"];
         deserializer.deserialize_struct("ListFileMembersError", VARIANTS, EnumVisitor)
     }
 }
@@ -7496,9 +7496,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersIndividualResult {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["result",
-                                                    "access_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["result",
+                                    "access_error",
+                                    "other"];
         deserializer.deserialize_struct("ListFileMembersIndividualResult", VARIANTS, EnumVisitor)
     }
 }
@@ -7547,8 +7547,8 @@ impl Default for ListFilesArg {
     }
 }
 
-const LIST_FILES_ARG_FIELDS: &'static [&'static str] = &["limit",
-                                                         "actions"];
+const LIST_FILES_ARG_FIELDS: &[&str] = &["limit",
+                                         "actions"];
 impl ListFilesArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7633,7 +7633,7 @@ impl ListFilesContinueArg {
 
 }
 
-const LIST_FILES_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const LIST_FILES_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl ListFilesContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7731,9 +7731,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFilesContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_error",
-                                                    "invalid_cursor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_error",
+                                    "invalid_cursor",
+                                    "other"];
         deserializer.deserialize_struct("ListFilesContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -7797,8 +7797,8 @@ impl ListFilesResult {
 
 }
 
-const LIST_FILES_RESULT_FIELDS: &'static [&'static str] = &["entries",
-                                                            "cursor"];
+const LIST_FILES_RESULT_FIELDS: &[&str] = &["entries",
+                                            "cursor"];
 impl ListFilesResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7901,9 +7901,9 @@ impl ListFolderMembersArgs {
 
 }
 
-const LIST_FOLDER_MEMBERS_ARGS_FIELDS: &'static [&'static str] = &["shared_folder_id",
-                                                                   "actions",
-                                                                   "limit"];
+const LIST_FOLDER_MEMBERS_ARGS_FIELDS: &[&str] = &["shared_folder_id",
+                                                   "actions",
+                                                   "limit"];
 impl ListFolderMembersArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7997,7 +7997,7 @@ impl ListFolderMembersContinueArg {
 
 }
 
-const LIST_FOLDER_MEMBERS_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const LIST_FOLDER_MEMBERS_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl ListFolderMembersContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8093,9 +8093,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderMembersContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "invalid_cursor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "invalid_cursor",
+                                    "other"];
         deserializer.deserialize_struct("ListFolderMembersContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -8155,8 +8155,8 @@ impl Default for ListFolderMembersCursorArg {
     }
 }
 
-const LIST_FOLDER_MEMBERS_CURSOR_ARG_FIELDS: &'static [&'static str] = &["actions",
-                                                                         "limit"];
+const LIST_FOLDER_MEMBERS_CURSOR_ARG_FIELDS: &[&str] = &["actions",
+                                                         "limit"];
 impl ListFolderMembersCursorArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8244,8 +8244,8 @@ impl Default for ListFoldersArgs {
     }
 }
 
-const LIST_FOLDERS_ARGS_FIELDS: &'static [&'static str] = &["limit",
-                                                            "actions"];
+const LIST_FOLDERS_ARGS_FIELDS: &[&str] = &["limit",
+                                            "actions"];
 impl ListFoldersArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8329,7 +8329,7 @@ impl ListFoldersContinueArg {
 
 }
 
-const LIST_FOLDERS_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const LIST_FOLDERS_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl ListFoldersContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8417,8 +8417,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFoldersContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_cursor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_cursor",
+                                    "other"];
         deserializer.deserialize_struct("ListFoldersContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -8479,8 +8479,8 @@ impl ListFoldersResult {
 
 }
 
-const LIST_FOLDERS_RESULT_FIELDS: &'static [&'static str] = &["entries",
-                                                              "cursor"];
+const LIST_FOLDERS_RESULT_FIELDS: &[&str] = &["entries",
+                                              "cursor"];
 impl ListFoldersResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8569,9 +8569,9 @@ impl Default for ListSharedLinksArg {
     }
 }
 
-const LIST_SHARED_LINKS_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                                "cursor",
-                                                                "direct_only"];
+const LIST_SHARED_LINKS_ARG_FIELDS: &[&str] = &["path",
+                                                "cursor",
+                                                "direct_only"];
 impl ListSharedLinksArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8686,9 +8686,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ListSharedLinksError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "reset",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "reset",
+                                    "other"];
         deserializer.deserialize_struct("ListSharedLinksError", VARIANTS, EnumVisitor)
     }
 }
@@ -8756,9 +8756,9 @@ impl ListSharedLinksResult {
 
 }
 
-const LIST_SHARED_LINKS_RESULT_FIELDS: &'static [&'static str] = &["links",
-                                                                   "has_more",
-                                                                   "cursor"];
+const LIST_SHARED_LINKS_RESULT_FIELDS: &[&str] = &["links",
+                                                   "has_more",
+                                                   "cursor"];
 impl ListSharedLinksResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8859,9 +8859,9 @@ impl Default for MemberAccessLevelResult {
     }
 }
 
-const MEMBER_ACCESS_LEVEL_RESULT_FIELDS: &'static [&'static str] = &["access_level",
-                                                                     "warning",
-                                                                     "access_details"];
+const MEMBER_ACCESS_LEVEL_RESULT_FIELDS: &[&str] = &["access_level",
+                                                     "warning",
+                                                     "access_details"];
 impl MemberAccessLevelResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8983,13 +8983,13 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberAction {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["leave_a_copy",
-                                                    "make_editor",
-                                                    "make_owner",
-                                                    "make_viewer",
-                                                    "make_viewer_no_comment",
-                                                    "remove",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["leave_a_copy",
+                                    "make_editor",
+                                    "make_owner",
+                                    "make_viewer",
+                                    "make_viewer_no_comment",
+                                    "remove",
+                                    "other"];
         deserializer.deserialize_struct("MemberAction", VARIANTS, EnumVisitor)
     }
 }
@@ -9067,9 +9067,9 @@ impl MemberPermission {
 
 }
 
-const MEMBER_PERMISSION_FIELDS: &'static [&'static str] = &["action",
-                                                            "allow",
-                                                            "reason"];
+const MEMBER_PERMISSION_FIELDS: &[&str] = &["action",
+                                            "allow",
+                                            "reason"];
 impl MemberPermission {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9180,9 +9180,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["team",
-                                                    "anyone",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["team",
+                                    "anyone",
+                                    "other"];
         deserializer.deserialize_struct("MemberPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -9253,9 +9253,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSelector {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["dropbox_id",
-                                                    "email",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["dropbox_id",
+                                    "email",
+                                    "other"];
         deserializer.deserialize_struct("MemberSelector", VARIANTS, EnumVisitor)
     }
 }
@@ -9325,10 +9325,10 @@ impl MembershipInfo {
 
 }
 
-const MEMBERSHIP_INFO_FIELDS: &'static [&'static str] = &["access_type",
-                                                          "permissions",
-                                                          "initials",
-                                                          "is_inherited"];
+const MEMBERSHIP_INFO_FIELDS: &[&str] = &["access_type",
+                                          "permissions",
+                                          "initials",
+                                          "is_inherited"];
 impl MembershipInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9441,9 +9441,9 @@ impl ModifySharedLinkSettingsArgs {
 
 }
 
-const MODIFY_SHARED_LINK_SETTINGS_ARGS_FIELDS: &'static [&'static str] = &["url",
-                                                                           "settings",
-                                                                           "remove_expiration"];
+const MODIFY_SHARED_LINK_SETTINGS_ARGS_FIELDS: &[&str] = &["url",
+                                                           "settings",
+                                                           "remove_expiration"];
 impl ModifySharedLinkSettingsArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9567,12 +9567,12 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifySharedLinkSettingsError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["shared_link_not_found",
-                                                    "shared_link_access_denied",
-                                                    "unsupported_link_type",
-                                                    "other",
-                                                    "settings_error",
-                                                    "email_not_verified"];
+        const VARIANTS: &[&str] = &["shared_link_not_found",
+                                    "shared_link_access_denied",
+                                    "unsupported_link_type",
+                                    "other",
+                                    "settings_error",
+                                    "email_not_verified"];
         deserializer.deserialize_struct("ModifySharedLinkSettingsError", VARIANTS, EnumVisitor)
     }
 }
@@ -9645,7 +9645,7 @@ impl MountFolderArg {
 
 }
 
-const MOUNT_FOLDER_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id"];
+const MOUNT_FOLDER_ARG_FIELDS: &[&str] = &["shared_folder_id"];
 impl MountFolderArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9754,13 +9754,13 @@ impl<'de> ::serde::de::Deserialize<'de> for MountFolderError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "inside_shared_folder",
-                                                    "insufficient_quota",
-                                                    "already_mounted",
-                                                    "no_permission",
-                                                    "not_mountable",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "inside_shared_folder",
+                                    "insufficient_quota",
+                                    "already_mounted",
+                                    "no_permission",
+                                    "not_mountable",
+                                    "other"];
         deserializer.deserialize_struct("MountFolderError", VARIANTS, EnumVisitor)
     }
 }
@@ -9855,10 +9855,10 @@ impl ParentFolderAccessInfo {
 
 }
 
-const PARENT_FOLDER_ACCESS_INFO_FIELDS: &'static [&'static str] = &["folder_name",
-                                                                    "shared_folder_id",
-                                                                    "permissions",
-                                                                    "path"];
+const PARENT_FOLDER_ACCESS_INFO_FIELDS: &[&str] = &["folder_name",
+                                                    "shared_folder_id",
+                                                    "permissions",
+                                                    "path"];
 impl ParentFolderAccessInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9975,10 +9975,10 @@ impl PathLinkMetadata {
 
 }
 
-const PATH_LINK_METADATA_FIELDS: &'static [&'static str] = &["url",
-                                                             "visibility",
-                                                             "path",
-                                                             "expires"];
+const PATH_LINK_METADATA_FIELDS: &[&str] = &["url",
+                                             "visibility",
+                                             "path",
+                                             "expires"];
 impl PathLinkMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10096,8 +10096,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PendingUploadMode {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["file",
-                                                    "folder"];
+        const VARIANTS: &[&str] = &["file",
+                                    "folder"];
         deserializer.deserialize_struct("PendingUploadMode", VARIANTS, EnumVisitor)
     }
 }
@@ -10193,22 +10193,22 @@ impl<'de> ::serde::de::Deserialize<'de> for PermissionDeniedReason {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_not_same_team_as_owner",
-                                                    "user_not_allowed_by_owner",
-                                                    "target_is_indirect_member",
-                                                    "target_is_owner",
-                                                    "target_is_self",
-                                                    "target_not_active",
-                                                    "folder_is_limited_team_folder",
-                                                    "owner_not_on_team",
-                                                    "permission_denied",
-                                                    "restricted_by_team",
-                                                    "user_account_type",
-                                                    "user_not_on_team",
-                                                    "folder_is_inside_shared_folder",
-                                                    "restricted_by_parent_folder",
-                                                    "insufficient_plan",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_not_same_team_as_owner",
+                                    "user_not_allowed_by_owner",
+                                    "target_is_indirect_member",
+                                    "target_is_owner",
+                                    "target_is_self",
+                                    "target_not_active",
+                                    "folder_is_limited_team_folder",
+                                    "owner_not_on_team",
+                                    "permission_denied",
+                                    "restricted_by_team",
+                                    "user_account_type",
+                                    "user_not_on_team",
+                                    "folder_is_inside_shared_folder",
+                                    "restricted_by_parent_folder",
+                                    "insufficient_plan",
+                                    "other"];
         deserializer.deserialize_struct("PermissionDeniedReason", VARIANTS, EnumVisitor)
     }
 }
@@ -10329,7 +10329,7 @@ impl RelinquishFileMembershipArg {
 
 }
 
-const RELINQUISH_FILE_MEMBERSHIP_ARG_FIELDS: &'static [&'static str] = &["file"];
+const RELINQUISH_FILE_MEMBERSHIP_ARG_FIELDS: &[&str] = &["file"];
 impl RelinquishFileMembershipArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10429,10 +10429,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RelinquishFileMembershipError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "group_access",
-                                                    "no_permission",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "group_access",
+                                    "no_permission",
+                                    "other"];
         deserializer.deserialize_struct("RelinquishFileMembershipError", VARIANTS, EnumVisitor)
     }
 }
@@ -10501,8 +10501,8 @@ impl RelinquishFolderMembershipArg {
 
 }
 
-const RELINQUISH_FOLDER_MEMBERSHIP_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id",
-                                                                           "leave_a_copy"];
+const RELINQUISH_FOLDER_MEMBERSHIP_ARG_FIELDS: &[&str] = &["shared_folder_id",
+                                                           "leave_a_copy"];
 impl RelinquishFolderMembershipArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10626,14 +10626,14 @@ impl<'de> ::serde::de::Deserialize<'de> for RelinquishFolderMembershipError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "folder_owner",
-                                                    "mounted",
-                                                    "group_access",
-                                                    "team_folder",
-                                                    "no_permission",
-                                                    "no_explicit_access",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "folder_owner",
+                                    "mounted",
+                                    "group_access",
+                                    "team_folder",
+                                    "no_permission",
+                                    "no_explicit_access",
+                                    "other"];
         deserializer.deserialize_struct("RelinquishFolderMembershipError", VARIANTS, EnumVisitor)
     }
 }
@@ -10724,8 +10724,8 @@ impl RemoveFileMemberArg {
 
 }
 
-const REMOVE_FILE_MEMBER_ARG_FIELDS: &'static [&'static str] = &["file",
-                                                                 "member"];
+const REMOVE_FILE_MEMBER_ARG_FIELDS: &[&str] = &["file",
+                                                 "member"];
 impl RemoveFileMemberArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10840,10 +10840,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveFileMemberError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_error",
-                                                    "access_error",
-                                                    "no_explicit_access",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_error",
+                                    "access_error",
+                                    "no_explicit_access",
+                                    "other"];
         deserializer.deserialize_struct("RemoveFileMemberError", VARIANTS, EnumVisitor)
     }
 }
@@ -10918,9 +10918,9 @@ impl RemoveFolderMemberArg {
 
 }
 
-const REMOVE_FOLDER_MEMBER_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id",
-                                                                   "member",
-                                                                   "leave_a_copy"];
+const REMOVE_FOLDER_MEMBER_ARG_FIELDS: &[&str] = &["shared_folder_id",
+                                                   "member",
+                                                   "leave_a_copy"];
 impl RemoveFolderMemberArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -11056,14 +11056,14 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveFolderMemberError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "member_error",
-                                                    "folder_owner",
-                                                    "group_access",
-                                                    "team_folder",
-                                                    "no_permission",
-                                                    "too_many_files",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "member_error",
+                                    "folder_owner",
+                                    "group_access",
+                                    "team_folder",
+                                    "no_permission",
+                                    "too_many_files",
+                                    "other"];
         deserializer.deserialize_struct("RemoveFolderMemberError", VARIANTS, EnumVisitor)
     }
 }
@@ -11173,9 +11173,9 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveMemberJobStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete",
-                                                    "failed"];
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed"];
         deserializer.deserialize_struct("RemoveMemberJobStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -11246,9 +11246,9 @@ impl<'de> ::serde::de::Deserialize<'de> for RequestedVisibility {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["public",
-                                                    "team_only",
-                                                    "password"];
+        const VARIANTS: &[&str] = &["public",
+                                    "team_only",
+                                    "password"];
         deserializer.deserialize_struct("RequestedVisibility", VARIANTS, EnumVisitor)
     }
 }
@@ -11325,12 +11325,12 @@ impl<'de> ::serde::de::Deserialize<'de> for ResolvedVisibility {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["public",
-                                                    "team_only",
-                                                    "password",
-                                                    "team_and_password",
-                                                    "shared_folder_only",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["public",
+                                    "team_only",
+                                    "password",
+                                    "team_and_password",
+                                    "shared_folder_only",
+                                    "other"];
         deserializer.deserialize_struct("ResolvedVisibility", VARIANTS, EnumVisitor)
     }
 }
@@ -11390,7 +11390,7 @@ impl RevokeSharedLinkArg {
 
 }
 
-const REVOKE_SHARED_LINK_ARG_FIELDS: &'static [&'static str] = &["url"];
+const REVOKE_SHARED_LINK_ARG_FIELDS: &[&str] = &["url"];
 impl RevokeSharedLinkArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -11487,11 +11487,11 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeSharedLinkError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["shared_link_not_found",
-                                                    "shared_link_access_denied",
-                                                    "unsupported_link_type",
-                                                    "other",
-                                                    "shared_link_malformed"];
+        const VARIANTS: &[&str] = &["shared_link_not_found",
+                                    "shared_link_access_denied",
+                                    "unsupported_link_type",
+                                    "other",
+                                    "shared_link_malformed"];
         deserializer.deserialize_struct("RevokeSharedLinkError", VARIANTS, EnumVisitor)
     }
 }
@@ -11616,14 +11616,14 @@ impl ShareFolderArg {
 
 }
 
-const SHARE_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                           "acl_update_policy",
-                                                           "force_async",
-                                                           "member_policy",
-                                                           "shared_link_policy",
-                                                           "viewer_info_policy",
-                                                           "actions",
-                                                           "link_settings"];
+const SHARE_FOLDER_ARG_FIELDS: &[&str] = &["path",
+                                           "acl_update_policy",
+                                           "force_async",
+                                           "member_policy",
+                                           "shared_link_policy",
+                                           "viewer_info_policy",
+                                           "actions",
+                                           "link_settings"];
 impl ShareFolderArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -11802,12 +11802,12 @@ impl ShareFolderArgBase {
 
 }
 
-const SHARE_FOLDER_ARG_BASE_FIELDS: &'static [&'static str] = &["path",
-                                                                "acl_update_policy",
-                                                                "force_async",
-                                                                "member_policy",
-                                                                "shared_link_policy",
-                                                                "viewer_info_policy"];
+const SHARE_FOLDER_ARG_BASE_FIELDS: &[&str] = &["path",
+                                                "acl_update_policy",
+                                                "force_async",
+                                                "member_policy",
+                                                "shared_link_policy",
+                                                "viewer_info_policy"];
 impl ShareFolderArgBase {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -11959,12 +11959,12 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["email_unverified",
-                                                    "bad_path",
-                                                    "team_policy_disallows_member_policy",
-                                                    "disallowed_shared_link_policy",
-                                                    "other",
-                                                    "no_permission"];
+        const VARIANTS: &[&str] = &["email_unverified",
+                                    "bad_path",
+                                    "team_policy_disallows_member_policy",
+                                    "disallowed_shared_link_policy",
+                                    "other",
+                                    "no_permission"];
         deserializer.deserialize_struct("ShareFolderError", VARIANTS, EnumVisitor)
     }
 }
@@ -12066,11 +12066,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderErrorBase {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["email_unverified",
-                                                    "bad_path",
-                                                    "team_policy_disallows_member_policy",
-                                                    "disallowed_shared_link_policy",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["email_unverified",
+                                    "bad_path",
+                                    "team_policy_disallows_member_policy",
+                                    "disallowed_shared_link_policy",
+                                    "other"];
         deserializer.deserialize_struct("ShareFolderErrorBase", VARIANTS, EnumVisitor)
     }
 }
@@ -12148,9 +12148,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderJobStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete",
-                                                    "failed"];
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed"];
         deserializer.deserialize_struct("ShareFolderJobStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -12220,8 +12220,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderLaunch {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["async_job_id",
-                                                    "complete"];
+        const VARIANTS: &[&str] = &["async_job_id",
+                                    "complete"];
         deserializer.deserialize_struct("ShareFolderLaunch", VARIANTS, EnumVisitor)
     }
 }
@@ -12313,20 +12313,20 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["is_file",
-                                                    "inside_shared_folder",
-                                                    "contains_shared_folder",
-                                                    "contains_app_folder",
-                                                    "contains_team_folder",
-                                                    "is_app_folder",
-                                                    "inside_app_folder",
-                                                    "is_public_folder",
-                                                    "inside_public_folder",
-                                                    "already_shared",
-                                                    "invalid_path",
-                                                    "is_osx_package",
-                                                    "inside_osx_package",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["is_file",
+                                    "inside_shared_folder",
+                                    "contains_shared_folder",
+                                    "contains_app_folder",
+                                    "contains_team_folder",
+                                    "is_app_folder",
+                                    "inside_app_folder",
+                                    "is_public_folder",
+                                    "inside_public_folder",
+                                    "already_shared",
+                                    "invalid_path",
+                                    "is_osx_package",
+                                    "inside_osx_package",
+                                    "other"];
         deserializer.deserialize_struct("SharePathError", VARIANTS, EnumVisitor)
     }
 }
@@ -12507,15 +12507,15 @@ impl SharedContentLinkMetadata {
 
 }
 
-const SHARED_CONTENT_LINK_METADATA_FIELDS: &'static [&'static str] = &["audience_options",
-                                                                       "current_audience",
-                                                                       "link_permissions",
-                                                                       "password_protected",
-                                                                       "url",
-                                                                       "access_level",
-                                                                       "audience_restricting_shared_folder",
-                                                                       "expiry",
-                                                                       "audience_exceptions"];
+const SHARED_CONTENT_LINK_METADATA_FIELDS: &[&str] = &["audience_options",
+                                                       "current_audience",
+                                                       "link_permissions",
+                                                       "password_protected",
+                                                       "url",
+                                                       "access_level",
+                                                       "audience_restricting_shared_folder",
+                                                       "expiry",
+                                                       "audience_exceptions"];
 impl SharedContentLinkMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -12707,13 +12707,13 @@ impl SharedContentLinkMetadataBase {
 
 }
 
-const SHARED_CONTENT_LINK_METADATA_BASE_FIELDS: &'static [&'static str] = &["audience_options",
-                                                                            "current_audience",
-                                                                            "link_permissions",
-                                                                            "password_protected",
-                                                                            "access_level",
-                                                                            "audience_restricting_shared_folder",
-                                                                            "expiry"];
+const SHARED_CONTENT_LINK_METADATA_BASE_FIELDS: &[&str] = &["audience_options",
+                                                            "current_audience",
+                                                            "link_permissions",
+                                                            "password_protected",
+                                                            "access_level",
+                                                            "audience_restricting_shared_folder",
+                                                            "expiry"];
 impl SharedContentLinkMetadataBase {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -12864,10 +12864,10 @@ impl SharedFileMembers {
 
 }
 
-const SHARED_FILE_MEMBERS_FIELDS: &'static [&'static str] = &["users",
-                                                              "groups",
-                                                              "invitees",
-                                                              "cursor"];
+const SHARED_FILE_MEMBERS_FIELDS: &[&str] = &["users",
+                                              "groups",
+                                              "invitees",
+                                              "cursor"];
 impl SharedFileMembers {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -13076,20 +13076,20 @@ impl SharedFileMetadata {
 
 }
 
-const SHARED_FILE_METADATA_FIELDS: &'static [&'static str] = &["id",
-                                                               "name",
-                                                               "policy",
-                                                               "preview_url",
-                                                               "access_type",
-                                                               "expected_link_metadata",
-                                                               "link_metadata",
-                                                               "owner_display_names",
-                                                               "owner_team",
-                                                               "parent_shared_folder_id",
-                                                               "path_display",
-                                                               "path_lower",
-                                                               "permissions",
-                                                               "time_invited"];
+const SHARED_FILE_METADATA_FIELDS: &[&str] = &["id",
+                                               "name",
+                                               "policy",
+                                               "preview_url",
+                                               "access_type",
+                                               "expected_link_metadata",
+                                               "link_metadata",
+                                               "owner_display_names",
+                                               "owner_team",
+                                               "parent_shared_folder_id",
+                                               "path_display",
+                                               "path_lower",
+                                               "permissions",
+                                               "time_invited"];
 impl SharedFileMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -13304,11 +13304,11 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderAccessError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_id",
-                                                    "not_a_member",
-                                                    "email_unverified",
-                                                    "unmounted",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_id",
+                                    "not_a_member",
+                                    "email_unverified",
+                                    "unmounted",
+                                    "other"];
         deserializer.deserialize_struct("SharedFolderAccessError", VARIANTS, EnumVisitor)
     }
 }
@@ -13393,10 +13393,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_dropbox_id",
-                                                    "not_a_member",
-                                                    "no_explicit_access",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_dropbox_id",
+                                    "not_a_member",
+                                    "no_explicit_access",
+                                    "other"];
         deserializer.deserialize_struct("SharedFolderMemberError", VARIANTS, EnumVisitor)
     }
 }
@@ -13477,10 +13477,10 @@ impl SharedFolderMembers {
 
 }
 
-const SHARED_FOLDER_MEMBERS_FIELDS: &'static [&'static str] = &["users",
-                                                                "groups",
-                                                                "invitees",
-                                                                "cursor"];
+const SHARED_FOLDER_MEMBERS_FIELDS: &[&str] = &["users",
+                                                "groups",
+                                                "invitees",
+                                                "cursor"];
 impl SharedFolderMembers {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -13670,20 +13670,20 @@ impl SharedFolderMetadata {
 
 }
 
-const SHARED_FOLDER_METADATA_FIELDS: &'static [&'static str] = &["access_type",
-                                                                 "is_inside_team_folder",
-                                                                 "is_team_folder",
-                                                                 "name",
-                                                                 "policy",
-                                                                 "preview_url",
-                                                                 "shared_folder_id",
-                                                                 "time_invited",
-                                                                 "owner_display_names",
-                                                                 "owner_team",
-                                                                 "parent_shared_folder_id",
-                                                                 "path_lower",
-                                                                 "link_metadata",
-                                                                 "permissions"];
+const SHARED_FOLDER_METADATA_FIELDS: &[&str] = &["access_type",
+                                                 "is_inside_team_folder",
+                                                 "is_team_folder",
+                                                 "name",
+                                                 "policy",
+                                                 "preview_url",
+                                                 "shared_folder_id",
+                                                 "time_invited",
+                                                 "owner_display_names",
+                                                 "owner_team",
+                                                 "parent_shared_folder_id",
+                                                 "path_lower",
+                                                 "link_metadata",
+                                                 "permissions"];
 impl SharedFolderMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -13925,13 +13925,13 @@ impl SharedFolderMetadataBase {
 
 }
 
-const SHARED_FOLDER_METADATA_BASE_FIELDS: &'static [&'static str] = &["access_type",
-                                                                      "is_inside_team_folder",
-                                                                      "is_team_folder",
-                                                                      "owner_display_names",
-                                                                      "owner_team",
-                                                                      "parent_shared_folder_id",
-                                                                      "path_lower"];
+const SHARED_FOLDER_METADATA_BASE_FIELDS: &[&str] = &["access_type",
+                                                      "is_inside_team_folder",
+                                                      "is_team_folder",
+                                                      "owner_display_names",
+                                                      "owner_team",
+                                                      "parent_shared_folder_id",
+                                                      "path_lower"];
 impl SharedFolderMetadataBase {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14085,12 +14085,12 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkAccessFailureReason {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["login_required",
-                                                    "email_verify_required",
-                                                    "password_required",
-                                                    "team_only",
-                                                    "owner_only",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["login_required",
+                                    "email_verify_required",
+                                    "password_required",
+                                    "team_only",
+                                    "owner_only",
+                                    "other"];
         deserializer.deserialize_struct("SharedLinkAccessFailureReason", VARIANTS, EnumVisitor)
     }
 }
@@ -14169,10 +14169,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["shared_link_not_found",
-                                                    "shared_link_access_denied",
-                                                    "unsupported_link_type",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["shared_link_not_found",
+                                    "shared_link_access_denied",
+                                    "unsupported_link_type",
+                                    "other"];
         deserializer.deserialize_struct("SharedLinkError", VARIANTS, EnumVisitor)
     }
 }
@@ -14247,8 +14247,8 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkMetadata {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["folder",
-                                                    "folder"];
+        const VARIANTS: &[&str] = &["folder",
+                                    "folder"];
         deserializer.deserialize_struct("SharedLinkMetadata", VARIANTS, EnumVisitor)
     }
 }
@@ -14328,10 +14328,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["anyone",
-                                                    "team",
-                                                    "members",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["anyone",
+                                    "team",
+                                    "members",
+                                    "other"];
         deserializer.deserialize_struct("SharedLinkPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -14385,9 +14385,9 @@ impl Default for SharedLinkSettings {
     }
 }
 
-const SHARED_LINK_SETTINGS_FIELDS: &'static [&'static str] = &["requested_visibility",
-                                                               "link_password",
-                                                               "expires"];
+const SHARED_LINK_SETTINGS_FIELDS: &[&str] = &["requested_visibility",
+                                               "link_password",
+                                               "expires"];
 impl SharedLinkSettings {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14500,8 +14500,8 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkSettingsError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_settings",
-                                                    "not_authorized"];
+        const VARIANTS: &[&str] = &["invalid_settings",
+                                    "not_authorized"];
         deserializer.deserialize_struct("SharedLinkSettingsError", VARIANTS, EnumVisitor)
     }
 }
@@ -14580,12 +14580,12 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingFileAccessError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["no_permission",
-                                                    "invalid_file",
-                                                    "is_folder",
-                                                    "inside_public_folder",
-                                                    "inside_osx_package",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["no_permission",
+                                    "invalid_file",
+                                    "is_folder",
+                                    "inside_public_folder",
+                                    "inside_osx_package",
+                                    "other"];
         deserializer.deserialize_struct("SharingFileAccessError", VARIANTS, EnumVisitor)
     }
 }
@@ -14671,8 +14671,8 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingUserError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["email_unverified",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["email_unverified",
+                                    "other"];
         deserializer.deserialize_struct("SharingUserError", VARIANTS, EnumVisitor)
     }
 }
@@ -14733,9 +14733,9 @@ impl TeamMemberInfo {
 
 }
 
-const TEAM_MEMBER_INFO_FIELDS: &'static [&'static str] = &["team_info",
-                                                           "display_name",
-                                                           "member_id"];
+const TEAM_MEMBER_INFO_FIELDS: &[&str] = &["team_info",
+                                           "display_name",
+                                           "member_id"];
 impl TeamMemberInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14831,8 +14831,8 @@ impl TransferFolderArg {
 
 }
 
-const TRANSFER_FOLDER_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id",
-                                                              "to_dropbox_id"];
+const TRANSFER_FOLDER_ARG_FIELDS: &[&str] = &["shared_folder_id",
+                                              "to_dropbox_id"];
 impl TransferFolderArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14952,14 +14952,14 @@ impl<'de> ::serde::de::Deserialize<'de> for TransferFolderError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "invalid_dropbox_id",
-                                                    "new_owner_not_a_member",
-                                                    "new_owner_unmounted",
-                                                    "new_owner_email_unverified",
-                                                    "team_folder",
-                                                    "no_permission",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "invalid_dropbox_id",
+                                    "new_owner_not_a_member",
+                                    "new_owner_unmounted",
+                                    "new_owner_email_unverified",
+                                    "team_folder",
+                                    "no_permission",
+                                    "other"];
         deserializer.deserialize_struct("TransferFolderError", VARIANTS, EnumVisitor)
     }
 }
@@ -15044,7 +15044,7 @@ impl UnmountFolderArg {
 
 }
 
-const UNMOUNT_FOLDER_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id"];
+const UNMOUNT_FOLDER_ARG_FIELDS: &[&str] = &["shared_folder_id"];
 impl UnmountFolderArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15144,10 +15144,10 @@ impl<'de> ::serde::de::Deserialize<'de> for UnmountFolderError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "no_permission",
-                                                    "not_unmountable",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "no_permission",
+                                    "not_unmountable",
+                                    "other"];
         deserializer.deserialize_struct("UnmountFolderError", VARIANTS, EnumVisitor)
     }
 }
@@ -15209,7 +15209,7 @@ impl UnshareFileArg {
 
 }
 
-const UNSHARE_FILE_ARG_FIELDS: &'static [&'static str] = &["file"];
+const UNSHARE_FILE_ARG_FIELDS: &[&str] = &["file"];
 impl UnshareFileArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15311,9 +15311,9 @@ impl<'de> ::serde::de::Deserialize<'de> for UnshareFileError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_error",
-                                                    "access_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_error",
+                                    "access_error",
+                                    "other"];
         deserializer.deserialize_struct("UnshareFileError", VARIANTS, EnumVisitor)
     }
 }
@@ -15379,8 +15379,8 @@ impl UnshareFolderArg {
 
 }
 
-const UNSHARE_FOLDER_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id",
-                                                             "leave_a_copy"];
+const UNSHARE_FOLDER_ARG_FIELDS: &[&str] = &["shared_folder_id",
+                                             "leave_a_copy"];
 impl UnshareFolderArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15491,11 +15491,11 @@ impl<'de> ::serde::de::Deserialize<'de> for UnshareFolderError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "team_folder",
-                                                    "no_permission",
-                                                    "too_many_files",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "team_folder",
+                                    "no_permission",
+                                    "too_many_files",
+                                    "other"];
         deserializer.deserialize_struct("UnshareFolderError", VARIANTS, EnumVisitor)
     }
 }
@@ -15569,9 +15569,9 @@ impl UpdateFileMemberArgs {
 
 }
 
-const UPDATE_FILE_MEMBER_ARGS_FIELDS: &'static [&'static str] = &["file",
-                                                                  "member",
-                                                                  "access_level"];
+const UPDATE_FILE_MEMBER_ARGS_FIELDS: &[&str] = &["file",
+                                                  "member",
+                                                  "access_level"];
 impl UpdateFileMemberArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15675,9 +15675,9 @@ impl UpdateFolderMemberArg {
 
 }
 
-const UPDATE_FOLDER_MEMBER_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id",
-                                                                   "member",
-                                                                   "access_level"];
+const UPDATE_FOLDER_MEMBER_ARG_FIELDS: &[&str] = &["shared_folder_id",
+                                                   "member",
+                                                   "access_level"];
 impl UpdateFolderMemberArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15814,12 +15814,12 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFolderMemberError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "member_error",
-                                                    "no_explicit_access",
-                                                    "insufficient_plan",
-                                                    "no_permission",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "member_error",
+                                    "no_explicit_access",
+                                    "insufficient_plan",
+                                    "no_permission",
+                                    "other"];
         deserializer.deserialize_struct("UpdateFolderMemberError", VARIANTS, EnumVisitor)
     }
 }
@@ -15946,13 +15946,13 @@ impl UpdateFolderPolicyArg {
 
 }
 
-const UPDATE_FOLDER_POLICY_ARG_FIELDS: &'static [&'static str] = &["shared_folder_id",
-                                                                   "member_policy",
-                                                                   "acl_update_policy",
-                                                                   "viewer_info_policy",
-                                                                   "shared_link_policy",
-                                                                   "link_settings",
-                                                                   "actions"];
+const UPDATE_FOLDER_POLICY_ARG_FIELDS: &[&str] = &["shared_folder_id",
+                                                   "member_policy",
+                                                   "acl_update_policy",
+                                                   "viewer_info_policy",
+                                                   "shared_link_policy",
+                                                   "link_settings",
+                                                   "actions"];
 impl UpdateFolderPolicyArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16115,13 +16115,13 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFolderPolicyError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "not_on_team",
-                                                    "team_policy_disallows_member_policy",
-                                                    "disallowed_shared_link_policy",
-                                                    "no_permission",
-                                                    "team_folder",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "not_on_team",
+                                    "team_policy_disallows_member_policy",
+                                    "disallowed_shared_link_policy",
+                                    "no_permission",
+                                    "team_folder",
+                                    "other"];
         deserializer.deserialize_struct("UpdateFolderPolicyError", VARIANTS, EnumVisitor)
     }
 }
@@ -16237,12 +16237,12 @@ impl UserFileMembershipInfo {
 
 }
 
-const USER_FILE_MEMBERSHIP_INFO_FIELDS: &'static [&'static str] = &["access_type",
-                                                                    "user",
-                                                                    "permissions",
-                                                                    "initials",
-                                                                    "is_inherited",
-                                                                    "time_last_seen"];
+const USER_FILE_MEMBERSHIP_INFO_FIELDS: &[&str] = &["access_type",
+                                                    "user",
+                                                    "permissions",
+                                                    "initials",
+                                                    "is_inherited",
+                                                    "time_last_seen"];
 impl UserFileMembershipInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16375,9 +16375,9 @@ impl UserInfo {
 
 }
 
-const USER_INFO_FIELDS: &'static [&'static str] = &["account_id",
-                                                    "same_team",
-                                                    "team_member_id"];
+const USER_INFO_FIELDS: &[&str] = &["account_id",
+                                    "same_team",
+                                    "team_member_id"];
 impl UserInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16499,11 +16499,11 @@ impl UserMembershipInfo {
 
 }
 
-const USER_MEMBERSHIP_INFO_FIELDS: &'static [&'static str] = &["access_type",
-                                                               "user",
-                                                               "permissions",
-                                                               "initials",
-                                                               "is_inherited"];
+const USER_MEMBERSHIP_INFO_FIELDS: &[&str] = &["access_type",
+                                               "user",
+                                               "permissions",
+                                               "initials",
+                                               "is_inherited"];
 impl UserMembershipInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16630,9 +16630,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ViewerInfoPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["enabled",
-                                                    "disabled",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["enabled",
+                                    "disabled",
+                                    "other"];
         deserializer.deserialize_struct("ViewerInfoPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -16702,12 +16702,12 @@ impl<'de> ::serde::de::Deserialize<'de> for Visibility {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["public",
-                                                    "team_only",
-                                                    "password",
-                                                    "team_and_password",
-                                                    "shared_folder_only",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["public",
+                                    "team_only",
+                                    "password",
+                                    "team_and_password",
+                                    "shared_folder_only",
+                                    "other"];
         deserializer.deserialize_struct("Visibility", VARIANTS, EnumVisitor)
     }
 }

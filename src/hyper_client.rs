@@ -11,7 +11,7 @@ use hyper_native_tls;
 use serde_json;
 use url::form_urlencoded::Serializer as UrlEncoder;
 
-const USER_AGENT: &'static str = "Dropbox-APIv2-Rust/0.1";
+const USER_AGENT: &str = "Dropbox-APIv2-Rust/0.1";
 
 pub struct HyperClient {
     client: hyper::client::Client,
@@ -210,6 +210,7 @@ impl HttpClient for HyperClient {
 }
 
 /// Builds a URL that can be given to the user to visit to have Dropbox authorize your app.
+#[derive(Debug)]
 pub struct Oauth2AuthorizeUrlBuilder<'a> {
     client_id: &'a str,
     response_type: &'a str,
@@ -223,6 +224,7 @@ pub struct Oauth2AuthorizeUrlBuilder<'a> {
 }
 
 /// Which type of OAuth2 flow to use.
+#[derive(Debug, Copy, Clone)]
 pub enum Oauth2Type {
     /// Authorization yields a temporary authorization code which must be turned into an OAuth2
     /// token by making another call. This can be used without a redirect URI, where the user inputs

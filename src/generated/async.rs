@@ -49,8 +49,8 @@ impl<'de> ::serde::de::Deserialize<'de> for LaunchEmptyResult {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["async_job_id",
-                                                    "complete"];
+        const VARIANTS: &[&str] = &["async_job_id",
+                                    "complete"];
         deserializer.deserialize_struct("LaunchEmptyResult", VARIANTS, EnumVisitor)
     }
 }
@@ -115,7 +115,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LaunchResultBase {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["async_job_id"];
+        const VARIANTS: &[&str] = &["async_job_id"];
         deserializer.deserialize_struct("LaunchResultBase", VARIANTS, EnumVisitor)
     }
 }
@@ -153,7 +153,7 @@ impl PollArg {
 
 }
 
-const POLL_ARG_FIELDS: &'static [&'static str] = &["async_job_id"];
+const POLL_ARG_FIELDS: &[&str] = &["async_job_id"];
 impl PollArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -245,8 +245,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PollEmptyResult {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete"];
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete"];
         deserializer.deserialize_struct("PollEmptyResult", VARIANTS, EnumVisitor)
     }
 }
@@ -305,9 +305,9 @@ impl<'de> ::serde::de::Deserialize<'de> for PollError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_async_job_id",
-                                                    "internal_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_async_job_id",
+                                    "internal_error",
+                                    "other"];
         deserializer.deserialize_struct("PollError", VARIANTS, EnumVisitor)
     }
 }
@@ -376,7 +376,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PollResultBase {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["in_progress"];
+        const VARIANTS: &[&str] = &["in_progress"];
         deserializer.deserialize_struct("PollResultBase", VARIANTS, EnumVisitor)
     }
 }

@@ -59,7 +59,7 @@ impl<'de, T: DeserializeOwned> Deserialize<'de> for TopLevelError<T> {
                 })
             }
         }
-        const FIELDS: &'static [&'static str] = &["error_summary", "user_message", "error"];
+        const FIELDS: &[&str] = &["error_summary", "user_message", "error"];
         deserializer.deserialize_struct("<top level error>", FIELDS, StructVisitor { phantom: PhantomData })
     }
 }

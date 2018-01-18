@@ -103,10 +103,10 @@ impl CreateFileRequestArgs {
 
 }
 
-const CREATE_FILE_REQUEST_ARGS_FIELDS: &'static [&'static str] = &["title",
-                                                                   "destination",
-                                                                   "deadline",
-                                                                   "open"];
+const CREATE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["title",
+                                                   "destination",
+                                                   "deadline",
+                                                   "open"];
 impl CreateFileRequestArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -251,16 +251,16 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFileRequestError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled_for_team",
-                                                    "other",
-                                                    "not_found",
-                                                    "not_a_folder",
-                                                    "app_lacks_access",
-                                                    "no_permission",
-                                                    "email_unverified",
-                                                    "validation_error",
-                                                    "invalid_location",
-                                                    "rate_limit"];
+        const VARIANTS: &[&str] = &["disabled_for_team",
+                                    "other",
+                                    "not_found",
+                                    "not_a_folder",
+                                    "app_lacks_access",
+                                    "no_permission",
+                                    "email_unverified",
+                                    "validation_error",
+                                    "invalid_location",
+                                    "rate_limit"];
         deserializer.deserialize_struct("CreateFileRequestError", VARIANTS, EnumVisitor)
     }
 }
@@ -399,14 +399,14 @@ impl FileRequest {
 
 }
 
-const FILE_REQUEST_FIELDS: &'static [&'static str] = &["id",
-                                                       "url",
-                                                       "title",
-                                                       "created",
-                                                       "is_open",
-                                                       "file_count",
-                                                       "destination",
-                                                       "deadline"];
+const FILE_REQUEST_FIELDS: &[&str] = &["id",
+                                       "url",
+                                       "title",
+                                       "created",
+                                       "is_open",
+                                       "file_count",
+                                       "destination",
+                                       "deadline"];
 impl FileRequest {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -553,8 +553,8 @@ impl FileRequestDeadline {
 
 }
 
-const FILE_REQUEST_DEADLINE_FIELDS: &'static [&'static str] = &["deadline",
-                                                                "allow_late_uploads"];
+const FILE_REQUEST_DEADLINE_FIELDS: &[&str] = &["deadline",
+                                                "allow_late_uploads"];
 impl FileRequestDeadline {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -674,14 +674,14 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled_for_team",
-                                                    "other",
-                                                    "not_found",
-                                                    "not_a_folder",
-                                                    "app_lacks_access",
-                                                    "no_permission",
-                                                    "email_unverified",
-                                                    "validation_error"];
+        const VARIANTS: &[&str] = &["disabled_for_team",
+                                    "other",
+                                    "not_found",
+                                    "not_a_folder",
+                                    "app_lacks_access",
+                                    "no_permission",
+                                    "email_unverified",
+                                    "validation_error"];
         deserializer.deserialize_struct("FileRequestError", VARIANTS, EnumVisitor)
     }
 }
@@ -779,8 +779,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GeneralFileRequestsError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled_for_team",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled_for_team",
+                                    "other"];
         deserializer.deserialize_struct("GeneralFileRequestsError", VARIANTS, EnumVisitor)
     }
 }
@@ -829,7 +829,7 @@ impl GetFileRequestArgs {
 
 }
 
-const GET_FILE_REQUEST_ARGS_FIELDS: &'static [&'static str] = &["id"];
+const GET_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["id"];
 impl GetFileRequestArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -940,14 +940,14 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileRequestError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled_for_team",
-                                                    "other",
-                                                    "not_found",
-                                                    "not_a_folder",
-                                                    "app_lacks_access",
-                                                    "no_permission",
-                                                    "email_unverified",
-                                                    "validation_error"];
+        const VARIANTS: &[&str] = &["disabled_for_team",
+                                    "other",
+                                    "not_found",
+                                    "not_a_folder",
+                                    "app_lacks_access",
+                                    "no_permission",
+                                    "email_unverified",
+                                    "validation_error"];
         deserializer.deserialize_struct("GetFileRequestError", VARIANTS, EnumVisitor)
     }
 }
@@ -1051,12 +1051,12 @@ impl<'de> ::serde::de::Deserialize<'de> for GracePeriod {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["one_day",
-                                                    "two_days",
-                                                    "seven_days",
-                                                    "thirty_days",
-                                                    "always",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["one_day",
+                                    "two_days",
+                                    "seven_days",
+                                    "thirty_days",
+                                    "always",
+                                    "other"];
         deserializer.deserialize_struct("GracePeriod", VARIANTS, EnumVisitor)
     }
 }
@@ -1130,8 +1130,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileRequestsError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled_for_team",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled_for_team",
+                                    "other"];
         deserializer.deserialize_struct("ListFileRequestsError", VARIANTS, EnumVisitor)
     }
 }
@@ -1181,7 +1181,7 @@ impl ListFileRequestsResult {
 
 }
 
-const LIST_FILE_REQUESTS_RESULT_FIELDS: &'static [&'static str] = &["file_requests"];
+const LIST_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_requests"];
 impl ListFileRequestsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1290,11 +1290,11 @@ impl UpdateFileRequestArgs {
 
 }
 
-const UPDATE_FILE_REQUEST_ARGS_FIELDS: &'static [&'static str] = &["id",
-                                                                   "title",
-                                                                   "destination",
-                                                                   "deadline",
-                                                                   "open"];
+const UPDATE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["id",
+                                                   "title",
+                                                   "destination",
+                                                   "deadline",
+                                                   "open"];
 impl UpdateFileRequestArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1427,9 +1427,9 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestDeadline {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["no_update",
-                                                    "update",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["no_update",
+                                    "update",
+                                    "other"];
         deserializer.deserialize_struct("UpdateFileRequestDeadline", VARIANTS, EnumVisitor)
     }
 }
@@ -1508,14 +1508,14 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled_for_team",
-                                                    "other",
-                                                    "not_found",
-                                                    "not_a_folder",
-                                                    "app_lacks_access",
-                                                    "no_permission",
-                                                    "email_unverified",
-                                                    "validation_error"];
+        const VARIANTS: &[&str] = &["disabled_for_team",
+                                    "other",
+                                    "not_found",
+                                    "not_a_folder",
+                                    "app_lacks_access",
+                                    "no_permission",
+                                    "email_unverified",
+                                    "validation_error"];
         deserializer.deserialize_struct("UpdateFileRequestError", VARIANTS, EnumVisitor)
     }
 }

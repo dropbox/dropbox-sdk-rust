@@ -283,8 +283,8 @@ impl AddPropertiesArg {
 
 }
 
-const ADD_PROPERTIES_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                             "property_groups"];
+const ADD_PROPERTIES_ARG_FIELDS: &[&str] = &["path",
+                                             "property_groups"];
 impl AddPropertiesArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -410,14 +410,14 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPropertiesError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path",
-                                                    "unsupported_folder",
-                                                    "property_field_too_large",
-                                                    "does_not_fit_template",
-                                                    "property_group_already_exists"];
+        const VARIANTS: &[&str] = &["template_not_found",
+                                    "restricted_content",
+                                    "other",
+                                    "path",
+                                    "unsupported_folder",
+                                    "property_field_too_large",
+                                    "does_not_fit_template",
+                                    "property_group_already_exists"];
         deserializer.deserialize_struct("AddPropertiesError", VARIANTS, EnumVisitor)
     }
 }
@@ -510,9 +510,9 @@ impl AddTemplateArg {
 
 }
 
-const ADD_TEMPLATE_ARG_FIELDS: &'static [&'static str] = &["name",
-                                                           "description",
-                                                           "fields"];
+const ADD_TEMPLATE_ARG_FIELDS: &[&str] = &["name",
+                                           "description",
+                                           "fields"];
 impl AddTemplateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -606,7 +606,7 @@ impl AddTemplateResult {
 
 }
 
-const ADD_TEMPLATE_RESULT_FIELDS: &'static [&'static str] = &["template_id"];
+const ADD_TEMPLATE_RESULT_FIELDS: &[&str] = &["template_id"];
 impl AddTemplateResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -682,7 +682,7 @@ impl GetTemplateArg {
 
 }
 
-const GET_TEMPLATE_ARG_FIELDS: &'static [&'static str] = &["template_id"];
+const GET_TEMPLATE_ARG_FIELDS: &[&str] = &["template_id"];
 impl GetTemplateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -764,9 +764,9 @@ impl GetTemplateResult {
 
 }
 
-const GET_TEMPLATE_RESULT_FIELDS: &'static [&'static str] = &["name",
-                                                              "description",
-                                                              "fields"];
+const GET_TEMPLATE_RESULT_FIELDS: &[&str] = &["name",
+                                              "description",
+                                              "fields"];
 impl GetTemplateResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -898,13 +898,13 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path",
-                                                    "unsupported_folder",
-                                                    "property_field_too_large",
-                                                    "does_not_fit_template"];
+        const VARIANTS: &[&str] = &["template_not_found",
+                                    "restricted_content",
+                                    "other",
+                                    "path",
+                                    "unsupported_folder",
+                                    "property_field_too_large",
+                                    "does_not_fit_template"];
         deserializer.deserialize_struct("InvalidPropertyGroupError", VARIANTS, EnumVisitor)
     }
 }
@@ -985,7 +985,7 @@ impl ListTemplateResult {
 
 }
 
-const LIST_TEMPLATE_RESULT_FIELDS: &'static [&'static str] = &["template_ids"];
+const LIST_TEMPLATE_RESULT_FIELDS: &[&str] = &["template_ids"];
 impl ListTemplateResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1074,8 +1074,8 @@ impl<'de> ::serde::de::Deserialize<'de> for LogicalOperator {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["or_operator",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["or_operator",
+                                    "other"];
         deserializer.deserialize_struct("LogicalOperator", VARIANTS, EnumVisitor)
     }
 }
@@ -1124,8 +1124,8 @@ impl<'de> ::serde::de::Deserialize<'de> for LookUpPropertiesError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["property_group_not_found",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["property_group_not_found",
+                                    "other"];
         deserializer.deserialize_struct("LookUpPropertiesError", VARIANTS, EnumVisitor)
     }
 }
@@ -1204,12 +1204,12 @@ impl<'de> ::serde::de::Deserialize<'de> for LookupError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["malformed_path",
-                                                    "not_found",
-                                                    "not_file",
-                                                    "not_folder",
-                                                    "restricted_content",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["malformed_path",
+                                    "not_found",
+                                    "not_file",
+                                    "not_folder",
+                                    "restricted_content",
+                                    "other"];
         deserializer.deserialize_struct("LookupError", VARIANTS, EnumVisitor)
     }
 }
@@ -1317,13 +1317,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifyTemplateError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "conflicting_property_names",
-                                                    "too_many_properties",
-                                                    "too_many_templates",
-                                                    "template_attribute_too_large"];
+        const VARIANTS: &[&str] = &["template_not_found",
+                                    "restricted_content",
+                                    "other",
+                                    "conflicting_property_names",
+                                    "too_many_properties",
+                                    "too_many_templates",
+                                    "template_attribute_too_large"];
         deserializer.deserialize_struct("ModifyTemplateError", VARIANTS, EnumVisitor)
     }
 }
@@ -1405,8 +1405,8 @@ impl OverwritePropertyGroupArg {
 
 }
 
-const OVERWRITE_PROPERTY_GROUP_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                                       "property_groups"];
+const OVERWRITE_PROPERTY_GROUP_ARG_FIELDS: &[&str] = &["path",
+                                                       "property_groups"];
 impl OverwritePropertyGroupArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1523,11 +1523,11 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path",
-                                                    "unsupported_folder"];
+        const VARIANTS: &[&str] = &["template_not_found",
+                                    "restricted_content",
+                                    "other",
+                                    "path",
+                                    "unsupported_folder"];
         deserializer.deserialize_struct("PropertiesError", VARIANTS, EnumVisitor)
     }
 }
@@ -1603,8 +1603,8 @@ impl PropertiesSearchArg {
 
 }
 
-const PROPERTIES_SEARCH_ARG_FIELDS: &'static [&'static str] = &["queries",
-                                                                "template_filter"];
+const PROPERTIES_SEARCH_ARG_FIELDS: &[&str] = &["queries",
+                                                "template_filter"];
 impl PropertiesSearchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1689,7 +1689,7 @@ impl PropertiesSearchContinueArg {
 
 }
 
-const PROPERTIES_SEARCH_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const PROPERTIES_SEARCH_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl PropertiesSearchContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1778,8 +1778,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["reset",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["reset",
+                                    "other"];
         deserializer.deserialize_struct("PropertiesSearchContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -1845,8 +1845,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["property_group_lookup",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["property_group_lookup",
+                                    "other"];
         deserializer.deserialize_struct("PropertiesSearchError", VARIANTS, EnumVisitor)
     }
 }
@@ -1909,10 +1909,10 @@ impl PropertiesSearchMatch {
 
 }
 
-const PROPERTIES_SEARCH_MATCH_FIELDS: &'static [&'static str] = &["id",
-                                                                  "path",
-                                                                  "is_deleted",
-                                                                  "property_groups"];
+const PROPERTIES_SEARCH_MATCH_FIELDS: &[&str] = &["id",
+                                                  "path",
+                                                  "is_deleted",
+                                                  "property_groups"];
 impl PropertiesSearchMatch {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2033,8 +2033,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchMode {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["field_name",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["field_name",
+                                    "other"];
         deserializer.deserialize_struct("PropertiesSearchMode", VARIANTS, EnumVisitor)
     }
 }
@@ -2082,9 +2082,9 @@ impl PropertiesSearchQuery {
 
 }
 
-const PROPERTIES_SEARCH_QUERY_FIELDS: &'static [&'static str] = &["query",
-                                                                  "mode",
-                                                                  "logical_operator"];
+const PROPERTIES_SEARCH_QUERY_FIELDS: &[&str] = &["query",
+                                                  "mode",
+                                                  "logical_operator"];
 impl PropertiesSearchQuery {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2186,8 +2186,8 @@ impl PropertiesSearchResult {
 
 }
 
-const PROPERTIES_SEARCH_RESULT_FIELDS: &'static [&'static str] = &["matches",
-                                                                   "cursor"];
+const PROPERTIES_SEARCH_RESULT_FIELDS: &[&str] = &["matches",
+                                                   "cursor"];
 impl PropertiesSearchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2277,8 +2277,8 @@ impl PropertyField {
 
 }
 
-const PROPERTY_FIELD_FIELDS: &'static [&'static str] = &["name",
-                                                         "value"];
+const PROPERTY_FIELD_FIELDS: &[&str] = &["name",
+                                         "value"];
 impl PropertyField {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2371,9 +2371,9 @@ impl PropertyFieldTemplate {
 
 }
 
-const PROPERTY_FIELD_TEMPLATE_FIELDS: &'static [&'static str] = &["name",
-                                                                  "description",
-                                                                  "type"];
+const PROPERTY_FIELD_TEMPLATE_FIELDS: &[&str] = &["name",
+                                                  "description",
+                                                  "type"];
 impl PropertyFieldTemplate {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2473,8 +2473,8 @@ impl PropertyGroup {
 
 }
 
-const PROPERTY_GROUP_FIELDS: &'static [&'static str] = &["template_id",
-                                                         "fields"];
+const PROPERTY_GROUP_FIELDS: &[&str] = &["template_id",
+                                         "fields"];
 impl PropertyGroup {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2566,9 +2566,9 @@ impl PropertyGroupTemplate {
 
 }
 
-const PROPERTY_GROUP_TEMPLATE_FIELDS: &'static [&'static str] = &["name",
-                                                                  "description",
-                                                                  "fields"];
+const PROPERTY_GROUP_TEMPLATE_FIELDS: &[&str] = &["name",
+                                                  "description",
+                                                  "fields"];
 impl PropertyGroupTemplate {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2678,9 +2678,9 @@ impl PropertyGroupUpdate {
 
 }
 
-const PROPERTY_GROUP_UPDATE_FIELDS: &'static [&'static str] = &["template_id",
-                                                                "add_or_update_fields",
-                                                                "remove_fields"];
+const PROPERTY_GROUP_UPDATE_FIELDS: &[&str] = &["template_id",
+                                                "add_or_update_fields",
+                                                "remove_fields"];
 impl PropertyGroupUpdate {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2787,8 +2787,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["string",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["string",
+                                    "other"];
         deserializer.deserialize_struct("PropertyType", VARIANTS, EnumVisitor)
     }
 }
@@ -2828,8 +2828,8 @@ impl RemovePropertiesArg {
 
 }
 
-const REMOVE_PROPERTIES_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                                "property_template_ids"];
+const REMOVE_PROPERTIES_ARG_FIELDS: &[&str] = &["path",
+                                                "property_template_ids"];
 impl RemovePropertiesArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2954,12 +2954,12 @@ impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path",
-                                                    "unsupported_folder",
-                                                    "property_group_lookup"];
+        const VARIANTS: &[&str] = &["template_not_found",
+                                    "restricted_content",
+                                    "other",
+                                    "path",
+                                    "unsupported_folder",
+                                    "property_group_lookup"];
         deserializer.deserialize_struct("RemovePropertiesError", VARIANTS, EnumVisitor)
     }
 }
@@ -3035,7 +3035,7 @@ impl RemoveTemplateArg {
 
 }
 
-const REMOVE_TEMPLATE_ARG_FIELDS: &'static [&'static str] = &["template_id"];
+const REMOVE_TEMPLATE_ARG_FIELDS: &[&str] = &["template_id"];
 impl RemoveTemplateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3132,9 +3132,9 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["template_not_found",
+                                    "restricted_content",
+                                    "other"];
         deserializer.deserialize_struct("TemplateError", VARIANTS, EnumVisitor)
     }
 }
@@ -3212,9 +3212,9 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateFilter {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["filter_some",
-                                                    "other",
-                                                    "filter_none"];
+        const VARIANTS: &[&str] = &["filter_some",
+                                    "other",
+                                    "filter_none"];
         deserializer.deserialize_struct("TemplateFilter", VARIANTS, EnumVisitor)
     }
 }
@@ -3277,8 +3277,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateFilterBase {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["filter_some",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["filter_some",
+                                    "other"];
         deserializer.deserialize_struct("TemplateFilterBase", VARIANTS, EnumVisitor)
     }
 }
@@ -3331,9 +3331,9 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateOwnerType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user",
-                                                    "team",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user",
+                                    "team",
+                                    "other"];
         deserializer.deserialize_struct("TemplateOwnerType", VARIANTS, EnumVisitor)
     }
 }
@@ -3378,8 +3378,8 @@ impl UpdatePropertiesArg {
 
 }
 
-const UPDATE_PROPERTIES_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                                "update_property_groups"];
+const UPDATE_PROPERTIES_ARG_FIELDS: &[&str] = &["path",
+                                                "update_property_groups"];
 impl UpdatePropertiesArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3510,14 +3510,14 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["template_not_found",
-                                                    "restricted_content",
-                                                    "other",
-                                                    "path",
-                                                    "unsupported_folder",
-                                                    "property_field_too_large",
-                                                    "does_not_fit_template",
-                                                    "property_group_lookup"];
+        const VARIANTS: &[&str] = &["template_not_found",
+                                    "restricted_content",
+                                    "other",
+                                    "path",
+                                    "unsupported_folder",
+                                    "property_field_too_large",
+                                    "does_not_fit_template",
+                                    "property_group_lookup"];
         deserializer.deserialize_struct("UpdatePropertiesError", VARIANTS, EnumVisitor)
     }
 }
@@ -3630,10 +3630,10 @@ impl UpdateTemplateArg {
 
 }
 
-const UPDATE_TEMPLATE_ARG_FIELDS: &'static [&'static str] = &["template_id",
-                                                              "name",
-                                                              "description",
-                                                              "add_fields"];
+const UPDATE_TEMPLATE_ARG_FIELDS: &[&str] = &["template_id",
+                                              "name",
+                                              "description",
+                                              "add_fields"];
 impl UpdateTemplateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3736,7 +3736,7 @@ impl UpdateTemplateResult {
 
 }
 
-const UPDATE_TEMPLATE_RESULT_FIELDS: &'static [&'static str] = &["template_id"];
+const UPDATE_TEMPLATE_RESULT_FIELDS: &[&str] = &["template_id"];
 impl UpdateTemplateResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,

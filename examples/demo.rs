@@ -8,8 +8,8 @@ use std::collections::VecDeque;
 use std::env;
 use std::io::{self, Read, Write};
 
-const CLIENT_ID: &'static str = "this is a fake client id";
-const CLIENT_SECRET: &'static str = "this is a fake client secret";
+const CLIENT_ID: &str = "this is a fake client id";
+const CLIENT_SECRET: &str = "this is a fake client secret";
 
 fn main() {
     env_logger::init().unwrap();

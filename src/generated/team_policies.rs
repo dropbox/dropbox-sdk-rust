@@ -42,10 +42,10 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmState {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "optional",
-                                                    "required",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "optional",
+                                    "required",
+                                    "other"];
         deserializer.deserialize_struct("EmmState", VARIANTS, EnumVisitor)
     }
 }
@@ -108,8 +108,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupCreation {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["admins_and_members",
-                                                    "admins_only"];
+        const VARIANTS: &[&str] = &["admins_and_members",
+                                    "admins_only"];
         deserializer.deserialize_struct("GroupCreation", VARIANTS, EnumVisitor)
     }
 }
@@ -166,9 +166,9 @@ impl<'de> ::serde::de::Deserialize<'de> for OfficeAddInPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
         deserializer.deserialize_struct("OfficeAddInPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -227,9 +227,9 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDeploymentPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["full",
-                                                    "partial",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["full",
+                                    "partial",
+                                    "other"];
         deserializer.deserialize_struct("PaperDeploymentPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -290,10 +290,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperEnabledPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "unspecified",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "unspecified",
+                                    "other"];
         deserializer.deserialize_struct("PaperEnabledPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -360,10 +360,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordStrengthPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["minimal_requirements",
-                                                    "moderate_password",
-                                                    "strong_password",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["minimal_requirements",
+                                    "moderate_password",
+                                    "strong_password",
+                                    "other"];
         deserializer.deserialize_struct("PasswordStrengthPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -429,9 +429,9 @@ impl<'de> ::serde::de::Deserialize<'de> for RolloutMethod {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["unlink_all",
-                                                    "unlink_most_inactive",
-                                                    "add_member_to_exceptions"];
+        const VARIANTS: &[&str] = &["unlink_all",
+                                    "unlink_most_inactive",
+                                    "add_member_to_exceptions"];
         deserializer.deserialize_struct("RolloutMethod", VARIANTS, EnumVisitor)
     }
 }
@@ -495,9 +495,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderJoinPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["from_team_only",
-                                                    "from_anyone",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["from_team_only",
+                                    "from_anyone",
+                                    "other"];
         deserializer.deserialize_struct("SharedFolderJoinPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -556,9 +556,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["team",
-                                                    "anyone",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["team",
+                                    "anyone",
+                                    "other"];
         deserializer.deserialize_struct("SharedFolderMemberPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -624,10 +624,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkCreatePolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["default_public",
-                                                    "default_team_only",
-                                                    "team_only",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["default_public",
+                                    "default_team_only",
+                                    "team_only",
+                                    "other"];
         deserializer.deserialize_struct("SharedLinkCreatePolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -691,9 +691,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["local",
-                                                    "on_demand",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["local",
+                                    "on_demand",
+                                    "other"];
         deserializer.deserialize_struct("SmartSyncPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -754,10 +754,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "optional",
-                                                    "required",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "optional",
+                                    "required",
+                                    "other"];
         deserializer.deserialize_struct("SsoPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -820,9 +820,9 @@ impl TeamMemberPolicies {
 
 }
 
-const TEAM_MEMBER_POLICIES_FIELDS: &'static [&'static str] = &["sharing",
-                                                               "emm_state",
-                                                               "office_addin"];
+const TEAM_MEMBER_POLICIES_FIELDS: &[&str] = &["sharing",
+                                               "emm_state",
+                                               "office_addin"];
 impl TeamMemberPolicies {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -926,9 +926,9 @@ impl TeamSharingPolicies {
 
 }
 
-const TEAM_SHARING_POLICIES_FIELDS: &'static [&'static str] = &["shared_folder_member_policy",
-                                                                "shared_folder_join_policy",
-                                                                "shared_link_create_policy"];
+const TEAM_SHARING_POLICIES_FIELDS: &[&str] = &["shared_folder_member_policy",
+                                                "shared_folder_join_policy",
+                                                "shared_link_create_policy"];
 impl TeamSharingPolicies {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1037,9 +1037,9 @@ impl<'de> ::serde::de::Deserialize<'de> for TwoStepVerificationPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["require_tfa_enable",
-                                                    "require_tfa_disable",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["require_tfa_enable",
+                                    "require_tfa_disable",
+                                    "other"];
         deserializer.deserialize_struct("TwoStepVerificationPolicy", VARIANTS, EnumVisitor)
     }
 }

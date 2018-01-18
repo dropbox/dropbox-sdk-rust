@@ -218,7 +218,7 @@ class RustBackend(RustHelperBackend):
         field_list_name = u'{}_FIELDS'.format(fmt_shouting_snake(struct.name))
         self.generate_multiline_list(
             list(u'"{}"'.format(field.name) for field in struct.all_fields),
-            before='const {}: &\'static [&\'static str] = &'.format(field_list_name),
+            before='const {}: &[&str] = &'.format(field_list_name),
             after=';',
             delim=(u'[', u']'))
         with self._impl_struct(struct):
@@ -366,7 +366,7 @@ class RustBackend(RustHelperBackend):
             self.generate_multiline_list(
                 list(u'"{}"'.format(subtype.name)
                      for field in struct.get_enumerated_subtypes()),
-                before='const VARIANTS: &\'static [&\'static str] = &',
+                before='const VARIANTS: &[&str] = &',
                 after=';',
                 delim=(u'[', u']'))
             self.emit(u'deserializer.deserialize_struct("{}", VARIANTS, EnumVisitor)'.format(
@@ -450,7 +450,7 @@ class RustBackend(RustHelperBackend):
                             self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(
                     list(u'"{}"'.format(field.name) for field in union.all_fields),
-                    before='const VARIANTS: &\'static [&\'static str] = &',
+                    before='const VARIANTS: &[&str] = &',
                     after=';',
                     delim=(u'[', u']'),)
             self.emit(u'deserializer.deserialize_struct("{}", VARIANTS, EnumVisitor)'.format(

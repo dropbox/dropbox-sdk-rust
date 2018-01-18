@@ -46,9 +46,9 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["basic",
-                                                    "pro",
-                                                    "business"];
+        const VARIANTS: &[&str] = &["basic",
+                                    "pro",
+                                    "business"];
         deserializer.deserialize_struct("AccountType", VARIANTS, EnumVisitor)
     }
 }

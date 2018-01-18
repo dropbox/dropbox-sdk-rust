@@ -49,10 +49,10 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupManagementType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_managed",
-                                                    "company_managed",
-                                                    "system_managed",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_managed",
+                                    "company_managed",
+                                    "system_managed",
+                                    "other"];
         deserializer.deserialize_struct("GroupManagementType", VARIANTS, EnumVisitor)
     }
 }
@@ -125,11 +125,11 @@ impl GroupSummary {
 
 }
 
-const GROUP_SUMMARY_FIELDS: &'static [&'static str] = &["group_name",
-                                                        "group_id",
-                                                        "group_management_type",
-                                                        "group_external_id",
-                                                        "member_count"];
+const GROUP_SUMMARY_FIELDS: &[&str] = &["group_name",
+                                        "group_id",
+                                        "group_management_type",
+                                        "group_external_id",
+                                        "member_count"];
 impl GroupSummary {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -258,9 +258,9 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["team",
-                                                    "user_managed",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["team",
+                                    "user_managed",
+                                    "other"];
         deserializer.deserialize_struct("GroupType", VARIANTS, EnumVisitor)
     }
 }
@@ -324,10 +324,10 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["off",
-                                                    "alert_only",
-                                                    "stop_sync",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["off",
+                                    "alert_only",
+                                    "stop_sync",
+                                    "other"];
         deserializer.deserialize_struct("MemberSpaceLimitType", VARIANTS, EnumVisitor)
     }
 }
@@ -378,8 +378,8 @@ impl Default for TimeRange {
     }
 }
 
-const TIME_RANGE_FIELDS: &'static [&'static str] = &["start_time",
-                                                     "end_time"];
+const TIME_RANGE_FIELDS: &[&str] = &["start_time",
+                                     "end_time"];
 impl TimeRange {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,

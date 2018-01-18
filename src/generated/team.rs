@@ -946,15 +946,15 @@ impl ActiveWebSession {
 
 }
 
-const ACTIVE_WEB_SESSION_FIELDS: &'static [&'static str] = &["session_id",
-                                                             "user_agent",
-                                                             "os",
-                                                             "browser",
-                                                             "ip_address",
-                                                             "country",
-                                                             "created",
-                                                             "updated",
-                                                             "expires"];
+const ACTIVE_WEB_SESSION_FIELDS: &[&str] = &["session_id",
+                                             "user_agent",
+                                             "os",
+                                             "browser",
+                                             "ip_address",
+                                             "country",
+                                             "created",
+                                             "updated",
+                                             "expires"];
 impl ActiveWebSession {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1123,10 +1123,10 @@ impl<'de> ::serde::de::Deserialize<'de> for AdminTier {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["team_admin",
-                                                    "user_management_admin",
-                                                    "support_admin",
-                                                    "member_only"];
+        const VARIANTS: &[&str] = &["team_admin",
+                                    "user_management_admin",
+                                    "support_admin",
+                                    "member_only"];
         deserializer.deserialize_struct("AdminTier", VARIANTS, EnumVisitor)
     }
 }
@@ -1210,12 +1210,12 @@ impl ApiApp {
 
 }
 
-const API_APP_FIELDS: &'static [&'static str] = &["app_id",
-                                                  "app_name",
-                                                  "is_app_folder",
-                                                  "publisher",
-                                                  "publisher_url",
-                                                  "linked"];
+const API_APP_FIELDS: &[&str] = &["app_id",
+                                  "app_name",
+                                  "is_app_folder",
+                                  "publisher",
+                                  "publisher_url",
+                                  "linked"];
 impl ApiApp {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1336,7 +1336,7 @@ impl BaseDfbReport {
 
 }
 
-const BASE_DFB_REPORT_FIELDS: &'static [&'static str] = &["start_date"];
+const BASE_DFB_REPORT_FIELDS: &[&str] = &["start_date"];
 impl BaseDfbReport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1446,10 +1446,10 @@ impl<'de> ::serde::de::Deserialize<'de> for BaseTeamFolderError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "status_error",
-                                                    "team_shared_dropbox_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "status_error",
+                                    "team_shared_dropbox_error",
+                                    "other"];
         deserializer.deserialize_struct("BaseTeamFolderError", VARIANTS, EnumVisitor)
     }
 }
@@ -1526,8 +1526,8 @@ impl<'de> ::serde::de::Deserialize<'de> for CustomQuotaError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["too_many_users",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["too_many_users",
+                                    "other"];
         deserializer.deserialize_struct("CustomQuotaError", VARIANTS, EnumVisitor)
     }
 }
@@ -1598,9 +1598,9 @@ impl<'de> ::serde::de::Deserialize<'de> for CustomQuotaResult {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["success",
-                                                    "invalid_user",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["success",
+                                    "invalid_user",
+                                    "other"];
         deserializer.deserialize_struct("CustomQuotaResult", VARIANTS, EnumVisitor)
     }
 }
@@ -1644,7 +1644,7 @@ impl CustomQuotaUsersArg {
 
 }
 
-const CUSTOM_QUOTA_USERS_ARG_FIELDS: &'static [&'static str] = &["users"];
+const CUSTOM_QUOTA_USERS_ARG_FIELDS: &[&str] = &["users"];
 impl CustomQuotaUsersArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1722,8 +1722,8 @@ impl Default for DateRange {
     }
 }
 
-const DATE_RANGE_FIELDS: &'static [&'static str] = &["start_date",
-                                                     "end_date"];
+const DATE_RANGE_FIELDS: &[&str] = &["start_date",
+                                     "end_date"];
 impl DateRange {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1818,7 +1818,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DateRangeError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["other"];
+        const VARIANTS: &[&str] = &["other"];
         deserializer.deserialize_struct("DateRangeError", VARIANTS, EnumVisitor)
     }
 }
@@ -1913,16 +1913,16 @@ impl DesktopClientSession {
 
 }
 
-const DESKTOP_CLIENT_SESSION_FIELDS: &'static [&'static str] = &["session_id",
-                                                                 "host_name",
-                                                                 "client_type",
-                                                                 "client_version",
-                                                                 "platform",
-                                                                 "is_delete_on_unlink_supported",
-                                                                 "ip_address",
-                                                                 "country",
-                                                                 "created",
-                                                                 "updated"];
+const DESKTOP_CLIENT_SESSION_FIELDS: &[&str] = &["session_id",
+                                                 "host_name",
+                                                 "client_type",
+                                                 "client_version",
+                                                 "platform",
+                                                 "is_delete_on_unlink_supported",
+                                                 "ip_address",
+                                                 "country",
+                                                 "created",
+                                                 "updated"];
 impl DesktopClientSession {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2097,10 +2097,10 @@ impl<'de> ::serde::de::Deserialize<'de> for DesktopPlatform {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["windows",
-                                                    "mac",
-                                                    "linux",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["windows",
+                                    "mac",
+                                    "linux",
+                                    "other"];
         deserializer.deserialize_struct("DesktopPlatform", VARIANTS, EnumVisitor)
     }
 }
@@ -2180,11 +2180,11 @@ impl DeviceSession {
 
 }
 
-const DEVICE_SESSION_FIELDS: &'static [&'static str] = &["session_id",
-                                                         "ip_address",
-                                                         "country",
-                                                         "created",
-                                                         "updated"];
+const DEVICE_SESSION_FIELDS: &[&str] = &["session_id",
+                                         "ip_address",
+                                         "country",
+                                         "created",
+                                         "updated"];
 impl DeviceSession {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2298,8 +2298,8 @@ impl DeviceSessionArg {
 
 }
 
-const DEVICE_SESSION_ARG_FIELDS: &'static [&'static str] = &["session_id",
-                                                             "team_member_id"];
+const DEVICE_SESSION_ARG_FIELDS: &[&str] = &["session_id",
+                                             "team_member_id"];
 impl DeviceSessionArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2412,13 +2412,13 @@ impl DevicesActive {
 
 }
 
-const DEVICES_ACTIVE_FIELDS: &'static [&'static str] = &["windows",
-                                                         "macos",
-                                                         "linux",
-                                                         "ios",
-                                                         "android",
-                                                         "other",
-                                                         "total"];
+const DEVICES_ACTIVE_FIELDS: &[&str] = &["windows",
+                                         "macos",
+                                         "linux",
+                                         "ios",
+                                         "android",
+                                         "other",
+                                         "total"];
 impl DevicesActive {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2547,7 +2547,7 @@ impl Default for ExcludedUsersListArg {
     }
 }
 
-const EXCLUDED_USERS_LIST_ARG_FIELDS: &'static [&'static str] = &["limit"];
+const EXCLUDED_USERS_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl ExcludedUsersListArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2623,7 +2623,7 @@ impl ExcludedUsersListContinueArg {
 
 }
 
-const EXCLUDED_USERS_LIST_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const EXCLUDED_USERS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl ExcludedUsersListContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2712,8 +2712,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersListContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_cursor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_cursor",
+                                    "other"];
         deserializer.deserialize_struct("ExcludedUsersListContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -2775,8 +2775,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersListError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["list_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["list_error",
+                                    "other"];
         deserializer.deserialize_struct("ExcludedUsersListError", VARIANTS, EnumVisitor)
     }
 }
@@ -2838,9 +2838,9 @@ impl ExcludedUsersListResult {
 
 }
 
-const EXCLUDED_USERS_LIST_RESULT_FIELDS: &'static [&'static str] = &["users",
-                                                                     "has_more",
-                                                                     "cursor"];
+const EXCLUDED_USERS_LIST_RESULT_FIELDS: &[&str] = &["users",
+                                                     "has_more",
+                                                     "cursor"];
 impl ExcludedUsersListResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2934,7 +2934,7 @@ impl Default for ExcludedUsersUpdateArg {
     }
 }
 
-const EXCLUDED_USERS_UPDATE_ARG_FIELDS: &'static [&'static str] = &["users"];
+const EXCLUDED_USERS_UPDATE_ARG_FIELDS: &[&str] = &["users"];
 impl ExcludedUsersUpdateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3026,9 +3026,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersUpdateError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["users_not_in_team",
-                                                    "too_many_users",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["users_not_in_team",
+                                    "too_many_users",
+                                    "other"];
         deserializer.deserialize_struct("ExcludedUsersUpdateError", VARIANTS, EnumVisitor)
     }
 }
@@ -3083,7 +3083,7 @@ impl ExcludedUsersUpdateResult {
 
 }
 
-const EXCLUDED_USERS_UPDATE_RESULT_FIELDS: &'static [&'static str] = &["status"];
+const EXCLUDED_USERS_UPDATE_RESULT_FIELDS: &[&str] = &["status"];
 impl ExcludedUsersUpdateResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3172,8 +3172,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersUpdateStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["success",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["success",
+                                    "other"];
         deserializer.deserialize_struct("ExcludedUsersUpdateStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -3229,10 +3229,10 @@ impl<'de> ::serde::de::Deserialize<'de> for Feature {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["upload_api_rate_limit",
-                                                    "has_team_shared_dropbox",
-                                                    "has_team_file_events",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["upload_api_rate_limit",
+                                    "has_team_shared_dropbox",
+                                    "has_team_file_events",
+                                    "other"];
         deserializer.deserialize_struct("Feature", VARIANTS, EnumVisitor)
     }
 }
@@ -3316,10 +3316,10 @@ impl<'de> ::serde::de::Deserialize<'de> for FeatureValue {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["upload_api_rate_limit",
-                                                    "has_team_shared_dropbox",
-                                                    "has_team_file_events",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["upload_api_rate_limit",
+                                    "has_team_shared_dropbox",
+                                    "has_team_file_events",
+                                    "other"];
         deserializer.deserialize_struct("FeatureValue", VARIANTS, EnumVisitor)
     }
 }
@@ -3371,7 +3371,7 @@ impl FeaturesGetValuesBatchArg {
 
 }
 
-const FEATURES_GET_VALUES_BATCH_ARG_FIELDS: &'static [&'static str] = &["features"];
+const FEATURES_GET_VALUES_BATCH_ARG_FIELDS: &[&str] = &["features"];
 impl FeaturesGetValuesBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3460,8 +3460,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FeaturesGetValuesBatchError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["empty_features_list",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["empty_features_list",
+                                    "other"];
         deserializer.deserialize_struct("FeaturesGetValuesBatchError", VARIANTS, EnumVisitor)
     }
 }
@@ -3508,7 +3508,7 @@ impl FeaturesGetValuesBatchResult {
 
 }
 
-const FEATURES_GET_VALUES_BATCH_RESULT_FIELDS: &'static [&'static str] = &["values"];
+const FEATURES_GET_VALUES_BATCH_RESULT_FIELDS: &[&str] = &["values"];
 impl FeaturesGetValuesBatchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3645,21 +3645,21 @@ impl GetActivityReport {
 
 }
 
-const GET_ACTIVITY_REPORT_FIELDS: &'static [&'static str] = &["start_date",
-                                                              "adds",
-                                                              "edits",
-                                                              "deletes",
-                                                              "active_users_28_day",
-                                                              "active_users_7_day",
-                                                              "active_users_1_day",
-                                                              "active_shared_folders_28_day",
-                                                              "active_shared_folders_7_day",
-                                                              "active_shared_folders_1_day",
-                                                              "shared_links_created",
-                                                              "shared_links_viewed_by_team",
-                                                              "shared_links_viewed_by_outside_user",
-                                                              "shared_links_viewed_by_not_logged_in",
-                                                              "shared_links_viewed_total"];
+const GET_ACTIVITY_REPORT_FIELDS: &[&str] = &["start_date",
+                                              "adds",
+                                              "edits",
+                                              "deletes",
+                                              "active_users_28_day",
+                                              "active_users_7_day",
+                                              "active_users_1_day",
+                                              "active_shared_folders_28_day",
+                                              "active_shared_folders_7_day",
+                                              "active_shared_folders_1_day",
+                                              "shared_links_created",
+                                              "shared_links_viewed_by_team",
+                                              "shared_links_viewed_by_outside_user",
+                                              "shared_links_viewed_by_not_logged_in",
+                                              "shared_links_viewed_total"];
 impl GetActivityReport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3877,10 +3877,10 @@ impl GetDevicesReport {
 
 }
 
-const GET_DEVICES_REPORT_FIELDS: &'static [&'static str] = &["start_date",
-                                                             "active_1_day",
-                                                             "active_7_day",
-                                                             "active_28_day"];
+const GET_DEVICES_REPORT_FIELDS: &[&str] = &["start_date",
+                                             "active_1_day",
+                                             "active_7_day",
+                                             "active_28_day"];
 impl GetDevicesReport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4006,12 +4006,12 @@ impl GetMembershipReport {
 
 }
 
-const GET_MEMBERSHIP_REPORT_FIELDS: &'static [&'static str] = &["start_date",
-                                                                "team_size",
-                                                                "pending_invites",
-                                                                "members_joined",
-                                                                "suspended_members",
-                                                                "licenses"];
+const GET_MEMBERSHIP_REPORT_FIELDS: &[&str] = &["start_date",
+                                                "team_size",
+                                                "pending_invites",
+                                                "members_joined",
+                                                "suspended_members",
+                                                "licenses"];
 impl GetMembershipReport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4158,12 +4158,12 @@ impl GetStorageReport {
 
 }
 
-const GET_STORAGE_REPORT_FIELDS: &'static [&'static str] = &["start_date",
-                                                             "total_usage",
-                                                             "shared_usage",
-                                                             "unshared_usage",
-                                                             "shared_folders",
-                                                             "member_storage_map"];
+const GET_STORAGE_REPORT_FIELDS: &[&str] = &["start_date",
+                                             "total_usage",
+                                             "shared_usage",
+                                             "unshared_usage",
+                                             "shared_folders",
+                                             "member_storage_map"];
 impl GetStorageReport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4299,8 +4299,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupAccessType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["member",
-                                                    "owner"];
+        const VARIANTS: &[&str] = &["member",
+                                    "owner"];
         deserializer.deserialize_struct("GroupAccessType", VARIANTS, EnumVisitor)
     }
 }
@@ -4363,9 +4363,9 @@ impl GroupCreateArg {
 
 }
 
-const GROUP_CREATE_ARG_FIELDS: &'static [&'static str] = &["group_name",
-                                                           "group_external_id",
-                                                           "group_management_type"];
+const GROUP_CREATE_ARG_FIELDS: &[&str] = &["group_name",
+                                           "group_external_id",
+                                           "group_management_type"];
 impl GroupCreateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4480,11 +4480,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupCreateError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_name_already_used",
-                                                    "group_name_invalid",
-                                                    "external_id_already_in_use",
-                                                    "system_managed_group_disallowed",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["group_name_already_used",
+                                    "group_name_invalid",
+                                    "external_id_already_in_use",
+                                    "system_managed_group_disallowed",
+                                    "other"];
         deserializer.deserialize_struct("GroupCreateError", VARIANTS, EnumVisitor)
     }
 }
@@ -4569,10 +4569,10 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupDeleteError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_not_found",
-                                                    "other",
-                                                    "system_managed_group_disallowed",
-                                                    "group_already_deleted"];
+        const VARIANTS: &[&str] = &["group_not_found",
+                                    "other",
+                                    "system_managed_group_disallowed",
+                                    "group_already_deleted"];
         deserializer.deserialize_struct("GroupDeleteError", VARIANTS, EnumVisitor)
     }
 }
@@ -4672,13 +4672,13 @@ impl GroupFullInfo {
 
 }
 
-const GROUP_FULL_INFO_FIELDS: &'static [&'static str] = &["group_name",
-                                                          "group_id",
-                                                          "group_management_type",
-                                                          "created",
-                                                          "group_external_id",
-                                                          "member_count",
-                                                          "members"];
+const GROUP_FULL_INFO_FIELDS: &[&str] = &["group_name",
+                                          "group_id",
+                                          "group_management_type",
+                                          "created",
+                                          "group_external_id",
+                                          "member_count",
+                                          "members"];
 impl GroupFullInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4811,8 +4811,8 @@ impl GroupMemberInfo {
 
 }
 
-const GROUP_MEMBER_INFO_FIELDS: &'static [&'static str] = &["profile",
-                                                            "access_type"];
+const GROUP_MEMBER_INFO_FIELDS: &[&str] = &["profile",
+                                            "access_type"];
 impl GroupMemberInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4900,8 +4900,8 @@ impl GroupMemberSelector {
 
 }
 
-const GROUP_MEMBER_SELECTOR_FIELDS: &'static [&'static str] = &["group",
-                                                                "user"];
+const GROUP_MEMBER_SELECTOR_FIELDS: &[&str] = &["group",
+                                                "user"];
 impl GroupMemberSelector {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5006,10 +5006,10 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMemberSelectorError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_not_found",
-                                                    "other",
-                                                    "system_managed_group_disallowed",
-                                                    "member_not_in_group"];
+        const VARIANTS: &[&str] = &["group_not_found",
+                                    "other",
+                                    "system_managed_group_disallowed",
+                                    "member_not_in_group"];
         deserializer.deserialize_struct("GroupMemberSelectorError", VARIANTS, EnumVisitor)
     }
 }
@@ -5091,11 +5091,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMemberSetAccessTypeError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_not_found",
-                                                    "other",
-                                                    "system_managed_group_disallowed",
-                                                    "member_not_in_group",
-                                                    "user_cannot_be_manager_of_company_managed_group"];
+        const VARIANTS: &[&str] = &["group_not_found",
+                                    "other",
+                                    "system_managed_group_disallowed",
+                                    "member_not_in_group",
+                                    "user_cannot_be_manager_of_company_managed_group"];
         deserializer.deserialize_struct("GroupMemberSetAccessTypeError", VARIANTS, EnumVisitor)
     }
 }
@@ -5174,9 +5174,9 @@ impl GroupMembersAddArg {
 
 }
 
-const GROUP_MEMBERS_ADD_ARG_FIELDS: &'static [&'static str] = &["group",
-                                                                "members",
-                                                                "return_members"];
+const GROUP_MEMBERS_ADD_ARG_FIELDS: &[&str] = &["group",
+                                                "members",
+                                                "return_members"];
 impl GroupMembersAddArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5324,15 +5324,15 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMembersAddError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_not_found",
-                                                    "other",
-                                                    "system_managed_group_disallowed",
-                                                    "duplicate_user",
-                                                    "group_not_in_team",
-                                                    "members_not_in_team",
-                                                    "users_not_found",
-                                                    "user_must_be_active_to_be_owner",
-                                                    "user_cannot_be_manager_of_company_managed_group"];
+        const VARIANTS: &[&str] = &["group_not_found",
+                                    "other",
+                                    "system_managed_group_disallowed",
+                                    "duplicate_user",
+                                    "group_not_in_team",
+                                    "members_not_in_team",
+                                    "users_not_found",
+                                    "user_must_be_active_to_be_owner",
+                                    "user_cannot_be_manager_of_company_managed_group"];
         deserializer.deserialize_struct("GroupMembersAddError", VARIANTS, EnumVisitor)
     }
 }
@@ -5429,8 +5429,8 @@ impl GroupMembersChangeResult {
 
 }
 
-const GROUP_MEMBERS_CHANGE_RESULT_FIELDS: &'static [&'static str] = &["group_info",
-                                                                      "async_job_id"];
+const GROUP_MEMBERS_CHANGE_RESULT_FIELDS: &[&str] = &["group_info",
+                                                      "async_job_id"];
 impl GroupMembersChangeResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5527,9 +5527,9 @@ impl GroupMembersRemoveArg {
 
 }
 
-const GROUP_MEMBERS_REMOVE_ARG_FIELDS: &'static [&'static str] = &["group",
-                                                                   "users",
-                                                                   "return_members"];
+const GROUP_MEMBERS_REMOVE_ARG_FIELDS: &[&str] = &["group",
+                                                   "users",
+                                                   "return_members"];
 impl GroupMembersRemoveArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5663,13 +5663,13 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMembersRemoveError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_not_found",
-                                                    "other",
-                                                    "system_managed_group_disallowed",
-                                                    "member_not_in_group",
-                                                    "group_not_in_team",
-                                                    "members_not_in_team",
-                                                    "users_not_found"];
+        const VARIANTS: &[&str] = &["group_not_found",
+                                    "other",
+                                    "system_managed_group_disallowed",
+                                    "member_not_in_group",
+                                    "group_not_in_team",
+                                    "members_not_in_team",
+                                    "users_not_found"];
         deserializer.deserialize_struct("GroupMembersRemoveError", VARIANTS, EnumVisitor)
     }
 }
@@ -5753,8 +5753,8 @@ impl GroupMembersSelector {
 
 }
 
-const GROUP_MEMBERS_SELECTOR_FIELDS: &'static [&'static str] = &["group",
-                                                                 "users"];
+const GROUP_MEMBERS_SELECTOR_FIELDS: &[&str] = &["group",
+                                                 "users"];
 impl GroupMembersSelector {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5859,10 +5859,10 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMembersSelectorError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_not_found",
-                                                    "other",
-                                                    "system_managed_group_disallowed",
-                                                    "member_not_in_group"];
+        const VARIANTS: &[&str] = &["group_not_found",
+                                    "other",
+                                    "system_managed_group_disallowed",
+                                    "member_not_in_group"];
         deserializer.deserialize_struct("GroupMembersSelectorError", VARIANTS, EnumVisitor)
     }
 }
@@ -5938,10 +5938,10 @@ impl GroupMembersSetAccessTypeArg {
 
 }
 
-const GROUP_MEMBERS_SET_ACCESS_TYPE_ARG_FIELDS: &'static [&'static str] = &["group",
-                                                                            "user",
-                                                                            "access_type",
-                                                                            "return_members"];
+const GROUP_MEMBERS_SET_ACCESS_TYPE_ARG_FIELDS: &[&str] = &["group",
+                                                            "user",
+                                                            "access_type",
+                                                            "return_members"];
 impl GroupMembersSetAccessTypeArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6071,8 +6071,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupSelector {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_id",
-                                                    "group_external_id"];
+        const VARIANTS: &[&str] = &["group_id",
+                                    "group_external_id"];
         deserializer.deserialize_struct("GroupSelector", VARIANTS, EnumVisitor)
     }
 }
@@ -6129,8 +6129,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupSelectorError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_not_found",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["group_not_found",
+                                    "other"];
         deserializer.deserialize_struct("GroupSelectorError", VARIANTS, EnumVisitor)
     }
 }
@@ -6196,9 +6196,9 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupSelectorWithTeamGroupError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_not_found",
-                                                    "other",
-                                                    "system_managed_group_disallowed"];
+        const VARIANTS: &[&str] = &["group_not_found",
+                                    "other",
+                                    "system_managed_group_disallowed"];
         deserializer.deserialize_struct("GroupSelectorWithTeamGroupError", VARIANTS, EnumVisitor)
     }
 }
@@ -6293,11 +6293,11 @@ impl GroupUpdateArgs {
 
 }
 
-const GROUP_UPDATE_ARGS_FIELDS: &'static [&'static str] = &["group",
-                                                            "return_members",
-                                                            "new_group_name",
-                                                            "new_group_external_id",
-                                                            "new_group_management_type"];
+const GROUP_UPDATE_ARGS_FIELDS: &[&str] = &["group",
+                                            "return_members",
+                                            "new_group_name",
+                                            "new_group_external_id",
+                                            "new_group_management_type"];
 impl GroupUpdateArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6433,12 +6433,12 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupUpdateError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_not_found",
-                                                    "other",
-                                                    "system_managed_group_disallowed",
-                                                    "group_name_already_used",
-                                                    "group_name_invalid",
-                                                    "external_id_already_in_use"];
+        const VARIANTS: &[&str] = &["group_not_found",
+                                    "other",
+                                    "system_managed_group_disallowed",
+                                    "group_name_already_used",
+                                    "group_name_invalid",
+                                    "external_id_already_in_use"];
         deserializer.deserialize_struct("GroupUpdateError", VARIANTS, EnumVisitor)
     }
 }
@@ -6523,8 +6523,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupsGetInfoError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_not_on_team",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["group_not_on_team",
+                                    "other"];
         deserializer.deserialize_struct("GroupsGetInfoError", VARIANTS, EnumVisitor)
     }
 }
@@ -6595,8 +6595,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupsGetInfoItem {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["id_not_found",
-                                                    "group_info"];
+        const VARIANTS: &[&str] = &["id_not_found",
+                                    "group_info"];
         deserializer.deserialize_struct("GroupsGetInfoItem", VARIANTS, EnumVisitor)
     }
 }
@@ -6638,7 +6638,7 @@ impl Default for GroupsListArg {
     }
 }
 
-const GROUPS_LIST_ARG_FIELDS: &'static [&'static str] = &["limit"];
+const GROUPS_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl GroupsListArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6713,7 +6713,7 @@ impl GroupsListContinueArg {
 
 }
 
-const GROUPS_LIST_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const GROUPS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl GroupsListContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6801,8 +6801,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupsListContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_cursor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_cursor",
+                                    "other"];
         deserializer.deserialize_struct("GroupsListContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -6860,9 +6860,9 @@ impl GroupsListResult {
 
 }
 
-const GROUPS_LIST_RESULT_FIELDS: &'static [&'static str] = &["groups",
-                                                             "cursor",
-                                                             "has_more"];
+const GROUPS_LIST_RESULT_FIELDS: &[&str] = &["groups",
+                                             "cursor",
+                                             "has_more"];
 impl GroupsListResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6963,8 +6963,8 @@ impl GroupsMembersListArg {
 
 }
 
-const GROUPS_MEMBERS_LIST_ARG_FIELDS: &'static [&'static str] = &["group",
-                                                                  "limit"];
+const GROUPS_MEMBERS_LIST_ARG_FIELDS: &[&str] = &["group",
+                                                  "limit"];
 impl GroupsMembersListArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7048,7 +7048,7 @@ impl GroupsMembersListContinueArg {
 
 }
 
-const GROUPS_MEMBERS_LIST_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const GROUPS_MEMBERS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl GroupsMembersListContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7136,8 +7136,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupsMembersListContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_cursor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_cursor",
+                                    "other"];
         deserializer.deserialize_struct("GroupsMembersListContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -7192,9 +7192,9 @@ impl GroupsMembersListResult {
 
 }
 
-const GROUPS_MEMBERS_LIST_RESULT_FIELDS: &'static [&'static str] = &["members",
-                                                                     "cursor",
-                                                                     "has_more"];
+const GROUPS_MEMBERS_LIST_RESULT_FIELDS: &[&str] = &["members",
+                                                     "cursor",
+                                                     "has_more"];
 impl GroupsMembersListResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7307,10 +7307,10 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupsPollError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_async_job_id",
-                                                    "internal_error",
-                                                    "other",
-                                                    "access_denied"];
+        const VARIANTS: &[&str] = &["invalid_async_job_id",
+                                    "internal_error",
+                                    "other",
+                                    "access_denied"];
         deserializer.deserialize_struct("GroupsPollError", VARIANTS, EnumVisitor)
     }
 }
@@ -7398,8 +7398,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupsSelector {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["group_ids",
-                                                    "group_external_ids"];
+        const VARIANTS: &[&str] = &["group_ids",
+                                    "group_external_ids"];
         deserializer.deserialize_struct("GroupsSelector", VARIANTS, EnumVisitor)
     }
 }
@@ -7462,8 +7462,8 @@ impl<'de> ::serde::de::Deserialize<'de> for HasTeamFileEventsValue {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["enabled",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["enabled",
+                                    "other"];
         deserializer.deserialize_struct("HasTeamFileEventsValue", VARIANTS, EnumVisitor)
     }
 }
@@ -7520,8 +7520,8 @@ impl<'de> ::serde::de::Deserialize<'de> for HasTeamSharedDropboxValue {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["has_team_shared_dropbox",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["has_team_shared_dropbox",
+                                    "other"];
         deserializer.deserialize_struct("HasTeamSharedDropboxValue", VARIANTS, EnumVisitor)
     }
 }
@@ -7559,7 +7559,7 @@ impl Default for IncludeMembersArg {
     }
 }
 
-const INCLUDE_MEMBERS_ARG_FIELDS: &'static [&'static str] = &["return_members"];
+const INCLUDE_MEMBERS_ARG_FIELDS: &[&str] = &["return_members"];
 impl IncludeMembersArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7634,7 +7634,7 @@ impl ListMemberAppsArg {
 
 }
 
-const LIST_MEMBER_APPS_ARG_FIELDS: &'static [&'static str] = &["team_member_id"];
+const LIST_MEMBER_APPS_ARG_FIELDS: &[&str] = &["team_member_id"];
 impl ListMemberAppsArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7723,8 +7723,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListMemberAppsError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["member_not_found",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["member_not_found",
+                                    "other"];
         deserializer.deserialize_struct("ListMemberAppsError", VARIANTS, EnumVisitor)
     }
 }
@@ -7772,7 +7772,7 @@ impl ListMemberAppsResult {
 
 }
 
-const LIST_MEMBER_APPS_RESULT_FIELDS: &'static [&'static str] = &["linked_api_apps"];
+const LIST_MEMBER_APPS_RESULT_FIELDS: &[&str] = &["linked_api_apps"];
 impl ListMemberAppsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7871,10 +7871,10 @@ impl ListMemberDevicesArg {
 
 }
 
-const LIST_MEMBER_DEVICES_ARG_FIELDS: &'static [&'static str] = &["team_member_id",
-                                                                  "include_web_sessions",
-                                                                  "include_desktop_clients",
-                                                                  "include_mobile_clients"];
+const LIST_MEMBER_DEVICES_ARG_FIELDS: &[&str] = &["team_member_id",
+                                                  "include_web_sessions",
+                                                  "include_desktop_clients",
+                                                  "include_mobile_clients"];
 impl ListMemberDevicesArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7989,8 +7989,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListMemberDevicesError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["member_not_found",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["member_not_found",
+                                    "other"];
         deserializer.deserialize_struct("ListMemberDevicesError", VARIANTS, EnumVisitor)
     }
 }
@@ -8043,9 +8043,9 @@ impl Default for ListMemberDevicesResult {
     }
 }
 
-const LIST_MEMBER_DEVICES_RESULT_FIELDS: &'static [&'static str] = &["active_web_sessions",
-                                                                     "desktop_client_sessions",
-                                                                     "mobile_client_sessions"];
+const LIST_MEMBER_DEVICES_RESULT_FIELDS: &[&str] = &["active_web_sessions",
+                                                     "desktop_client_sessions",
+                                                     "mobile_client_sessions"];
 impl ListMemberDevicesResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8140,7 +8140,7 @@ impl Default for ListMembersAppsArg {
     }
 }
 
-const LIST_MEMBERS_APPS_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const LIST_MEMBERS_APPS_ARG_FIELDS: &[&str] = &["cursor"];
 impl ListMembersAppsArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8231,8 +8231,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListMembersAppsError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["reset",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["reset",
+                                    "other"];
         deserializer.deserialize_struct("ListMembersAppsError", VARIANTS, EnumVisitor)
     }
 }
@@ -8294,9 +8294,9 @@ impl ListMembersAppsResult {
 
 }
 
-const LIST_MEMBERS_APPS_RESULT_FIELDS: &'static [&'static str] = &["apps",
-                                                                   "has_more",
-                                                                   "cursor"];
+const LIST_MEMBERS_APPS_RESULT_FIELDS: &[&str] = &["apps",
+                                                   "has_more",
+                                                   "cursor"];
 impl ListMembersAppsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8399,10 +8399,10 @@ impl Default for ListMembersDevicesArg {
     }
 }
 
-const LIST_MEMBERS_DEVICES_ARG_FIELDS: &'static [&'static str] = &["cursor",
-                                                                   "include_web_sessions",
-                                                                   "include_desktop_clients",
-                                                                   "include_mobile_clients"];
+const LIST_MEMBERS_DEVICES_ARG_FIELDS: &[&str] = &["cursor",
+                                                   "include_web_sessions",
+                                                   "include_desktop_clients",
+                                                   "include_mobile_clients"];
 impl ListMembersDevicesArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8518,8 +8518,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListMembersDevicesError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["reset",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["reset",
+                                    "other"];
         deserializer.deserialize_struct("ListMembersDevicesError", VARIANTS, EnumVisitor)
     }
 }
@@ -8580,9 +8580,9 @@ impl ListMembersDevicesResult {
 
 }
 
-const LIST_MEMBERS_DEVICES_RESULT_FIELDS: &'static [&'static str] = &["devices",
-                                                                      "has_more",
-                                                                      "cursor"];
+const LIST_MEMBERS_DEVICES_RESULT_FIELDS: &[&str] = &["devices",
+                                                      "has_more",
+                                                      "cursor"];
 impl ListMembersDevicesResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8677,7 +8677,7 @@ impl Default for ListTeamAppsArg {
     }
 }
 
-const LIST_TEAM_APPS_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const LIST_TEAM_APPS_ARG_FIELDS: &[&str] = &["cursor"];
 impl ListTeamAppsArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8768,8 +8768,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListTeamAppsError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["reset",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["reset",
+                                    "other"];
         deserializer.deserialize_struct("ListTeamAppsError", VARIANTS, EnumVisitor)
     }
 }
@@ -8831,9 +8831,9 @@ impl ListTeamAppsResult {
 
 }
 
-const LIST_TEAM_APPS_RESULT_FIELDS: &'static [&'static str] = &["apps",
-                                                                "has_more",
-                                                                "cursor"];
+const LIST_TEAM_APPS_RESULT_FIELDS: &[&str] = &["apps",
+                                                "has_more",
+                                                "cursor"];
 impl ListTeamAppsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8936,10 +8936,10 @@ impl Default for ListTeamDevicesArg {
     }
 }
 
-const LIST_TEAM_DEVICES_ARG_FIELDS: &'static [&'static str] = &["cursor",
-                                                                "include_web_sessions",
-                                                                "include_desktop_clients",
-                                                                "include_mobile_clients"];
+const LIST_TEAM_DEVICES_ARG_FIELDS: &[&str] = &["cursor",
+                                                "include_web_sessions",
+                                                "include_desktop_clients",
+                                                "include_mobile_clients"];
 impl ListTeamDevicesArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9055,8 +9055,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListTeamDevicesError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["reset",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["reset",
+                                    "other"];
         deserializer.deserialize_struct("ListTeamDevicesError", VARIANTS, EnumVisitor)
     }
 }
@@ -9117,9 +9117,9 @@ impl ListTeamDevicesResult {
 
 }
 
-const LIST_TEAM_DEVICES_RESULT_FIELDS: &'static [&'static str] = &["devices",
-                                                                   "has_more",
-                                                                   "cursor"];
+const LIST_TEAM_DEVICES_RESULT_FIELDS: &[&str] = &["devices",
+                                                   "has_more",
+                                                   "cursor"];
 impl ListTeamDevicesResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9216,8 +9216,8 @@ impl MemberAccess {
 
 }
 
-const MEMBER_ACCESS_FIELDS: &'static [&'static str] = &["user",
-                                                        "access_type"];
+const MEMBER_ACCESS_FIELDS: &[&str] = &["user",
+                                        "access_type"];
 impl MemberAccess {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9356,13 +9356,13 @@ impl MemberAddArg {
 
 }
 
-const MEMBER_ADD_ARG_FIELDS: &'static [&'static str] = &["member_email",
-                                                         "member_given_name",
-                                                         "member_surname",
-                                                         "member_external_id",
-                                                         "member_persistent_id",
-                                                         "send_welcome_email",
-                                                         "role"];
+const MEMBER_ADD_ARG_FIELDS: &[&str] = &["member_email",
+                                         "member_given_name",
+                                         "member_surname",
+                                         "member_external_id",
+                                         "member_persistent_id",
+                                         "send_welcome_email",
+                                         "role"];
 impl MemberAddArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9601,17 +9601,17 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberAddResult {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["success",
-                                                    "team_license_limit",
-                                                    "free_team_member_limit_reached",
-                                                    "user_already_on_team",
-                                                    "user_on_another_team",
-                                                    "user_already_paired",
-                                                    "user_migration_failed",
-                                                    "duplicate_external_member_id",
-                                                    "duplicate_member_persistent_id",
-                                                    "persistent_id_disabled",
-                                                    "user_creation_failed"];
+        const VARIANTS: &[&str] = &["success",
+                                    "team_license_limit",
+                                    "free_team_member_limit_reached",
+                                    "user_already_on_team",
+                                    "user_on_another_team",
+                                    "user_already_paired",
+                                    "user_migration_failed",
+                                    "duplicate_external_member_id",
+                                    "duplicate_member_persistent_id",
+                                    "persistent_id_disabled",
+                                    "user_creation_failed"];
         deserializer.deserialize_struct("MemberAddResult", VARIANTS, EnumVisitor)
     }
 }
@@ -9742,10 +9742,10 @@ impl MemberDevices {
 
 }
 
-const MEMBER_DEVICES_FIELDS: &'static [&'static str] = &["team_member_id",
-                                                         "web_sessions",
-                                                         "desktop_clients",
-                                                         "mobile_clients"];
+const MEMBER_DEVICES_FIELDS: &[&str] = &["team_member_id",
+                                         "web_sessions",
+                                         "desktop_clients",
+                                         "mobile_clients"];
 impl MemberDevices {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9851,8 +9851,8 @@ impl MemberLinkedApps {
 
 }
 
-const MEMBER_LINKED_APPS_FIELDS: &'static [&'static str] = &["team_member_id",
-                                                             "linked_api_apps"];
+const MEMBER_LINKED_APPS_FIELDS: &[&str] = &["team_member_id",
+                                             "linked_api_apps"];
 impl MemberLinkedApps {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9994,16 +9994,16 @@ impl MemberProfile {
 
 }
 
-const MEMBER_PROFILE_FIELDS: &'static [&'static str] = &["team_member_id",
-                                                         "email",
-                                                         "email_verified",
-                                                         "status",
-                                                         "name",
-                                                         "membership_type",
-                                                         "external_id",
-                                                         "account_id",
-                                                         "joined_on",
-                                                         "persistent_id"];
+const MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
+                                         "email",
+                                         "email_verified",
+                                         "status",
+                                         "name",
+                                         "membership_type",
+                                         "external_id",
+                                         "account_id",
+                                         "joined_on",
+                                         "persistent_id"];
 impl MemberProfile {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10175,8 +10175,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSelectorError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_not_found",
-                                                    "user_not_in_team"];
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_not_in_team"];
         deserializer.deserialize_struct("MemberSelectorError", VARIANTS, EnumVisitor)
     }
 }
@@ -10237,8 +10237,8 @@ impl MembersAddArg {
 
 }
 
-const MEMBERS_ADD_ARG_FIELDS: &'static [&'static str] = &["new_members",
-                                                          "force_async"];
+const MEMBERS_ADD_ARG_FIELDS: &[&str] = &["new_members",
+                                          "force_async"];
 impl MembersAddArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10354,9 +10354,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersAddJobStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete",
-                                                    "failed"];
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed"];
         deserializer.deserialize_struct("MembersAddJobStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -10432,8 +10432,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersAddLaunch {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["async_job_id",
-                                                    "complete"];
+        const VARIANTS: &[&str] = &["async_job_id",
+                                    "complete"];
         deserializer.deserialize_struct("MembersAddLaunch", VARIANTS, EnumVisitor)
     }
 }
@@ -10486,8 +10486,8 @@ impl MembersDeactivateArg {
 
 }
 
-const MEMBERS_DEACTIVATE_ARG_FIELDS: &'static [&'static str] = &["user",
-                                                                 "wipe_data"];
+const MEMBERS_DEACTIVATE_ARG_FIELDS: &[&str] = &["user",
+                                                 "wipe_data"];
 impl MembersDeactivateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10588,9 +10588,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersDeactivateError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_not_found",
-                                                    "user_not_in_team",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_not_in_team",
+                                    "other"];
         deserializer.deserialize_struct("MembersDeactivateError", VARIANTS, EnumVisitor)
     }
 }
@@ -10644,7 +10644,7 @@ impl MembersGetInfoArgs {
 
 }
 
-const MEMBERS_GET_INFO_ARGS_FIELDS: &'static [&'static str] = &["members"];
+const MEMBERS_GET_INFO_ARGS_FIELDS: &[&str] = &["members"];
 impl MembersGetInfoArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10730,7 +10730,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersGetInfoError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["other"];
+        const VARIANTS: &[&str] = &["other"];
         deserializer.deserialize_struct("MembersGetInfoError", VARIANTS, EnumVisitor)
     }
 }
@@ -10795,8 +10795,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersGetInfoItem {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["id_not_found",
-                                                    "member_info"];
+        const VARIANTS: &[&str] = &["id_not_found",
+                                    "member_info"];
         deserializer.deserialize_struct("MembersGetInfoItem", VARIANTS, EnumVisitor)
     }
 }
@@ -10841,8 +10841,8 @@ impl Default for MembersListArg {
     }
 }
 
-const MEMBERS_LIST_ARG_FIELDS: &'static [&'static str] = &["limit",
-                                                           "include_removed"];
+const MEMBERS_LIST_ARG_FIELDS: &[&str] = &["limit",
+                                           "include_removed"];
 impl MembersListArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10926,7 +10926,7 @@ impl MembersListContinueArg {
 
 }
 
-const MEMBERS_LIST_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const MEMBERS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl MembersListContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -11014,8 +11014,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersListContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_cursor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_cursor",
+                                    "other"];
         deserializer.deserialize_struct("MembersListContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -11074,7 +11074,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersListError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["other"];
+        const VARIANTS: &[&str] = &["other"];
         deserializer.deserialize_struct("MembersListError", VARIANTS, EnumVisitor)
     }
 }
@@ -11121,9 +11121,9 @@ impl MembersListResult {
 
 }
 
-const MEMBERS_LIST_RESULT_FIELDS: &'static [&'static str] = &["members",
-                                                              "cursor",
-                                                              "has_more"];
+const MEMBERS_LIST_RESULT_FIELDS: &[&str] = &["members",
+                                              "cursor",
+                                              "has_more"];
 impl MembersListResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -11218,7 +11218,7 @@ impl MembersRecoverArg {
 
 }
 
-const MEMBERS_RECOVER_ARG_FIELDS: &'static [&'static str] = &["user"];
+const MEMBERS_RECOVER_ARG_FIELDS: &[&str] = &["user"];
 impl MembersRecoverArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -11316,11 +11316,11 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRecoverError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_not_found",
-                                                    "user_unrecoverable",
-                                                    "user_not_in_team",
-                                                    "team_license_limit",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_unrecoverable",
+                                    "user_not_in_team",
+                                    "team_license_limit",
+                                    "other"];
         deserializer.deserialize_struct("MembersRecoverError", VARIANTS, EnumVisitor)
     }
 }
@@ -11421,11 +11421,11 @@ impl MembersRemoveArg {
 
 }
 
-const MEMBERS_REMOVE_ARG_FIELDS: &'static [&'static str] = &["user",
-                                                             "wipe_data",
-                                                             "transfer_dest_id",
-                                                             "transfer_admin_id",
-                                                             "keep_account"];
+const MEMBERS_REMOVE_ARG_FIELDS: &[&str] = &["user",
+                                             "wipe_data",
+                                             "transfer_dest_id",
+                                             "transfer_admin_id",
+                                             "keep_account"];
 impl MembersRemoveArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -11593,22 +11593,22 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_not_found",
-                                                    "user_not_in_team",
-                                                    "other",
-                                                    "remove_last_admin",
-                                                    "removed_and_transfer_dest_should_differ",
-                                                    "removed_and_transfer_admin_should_differ",
-                                                    "transfer_dest_user_not_found",
-                                                    "transfer_dest_user_not_in_team",
-                                                    "transfer_admin_user_not_found",
-                                                    "transfer_admin_user_not_in_team",
-                                                    "unspecified_transfer_admin_id",
-                                                    "transfer_admin_is_not_admin",
-                                                    "cannot_keep_account_and_transfer",
-                                                    "cannot_keep_account_and_delete_data",
-                                                    "email_address_too_long_to_be_disabled",
-                                                    "cannot_keep_invited_user_account"];
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_not_in_team",
+                                    "other",
+                                    "remove_last_admin",
+                                    "removed_and_transfer_dest_should_differ",
+                                    "removed_and_transfer_admin_should_differ",
+                                    "transfer_dest_user_not_found",
+                                    "transfer_dest_user_not_in_team",
+                                    "transfer_admin_user_not_found",
+                                    "transfer_admin_user_not_in_team",
+                                    "unspecified_transfer_admin_id",
+                                    "transfer_admin_is_not_admin",
+                                    "cannot_keep_account_and_transfer",
+                                    "cannot_keep_account_and_delete_data",
+                                    "email_address_too_long_to_be_disabled",
+                                    "cannot_keep_invited_user_account"];
         deserializer.deserialize_struct("MembersRemoveError", VARIANTS, EnumVisitor)
     }
 }
@@ -11758,9 +11758,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersSendWelcomeError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_not_found",
-                                                    "user_not_in_team",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_not_in_team",
+                                    "other"];
         deserializer.deserialize_struct("MembersSendWelcomeError", VARIANTS, EnumVisitor)
     }
 }
@@ -11819,8 +11819,8 @@ impl MembersSetPermissionsArg {
 
 }
 
-const MEMBERS_SET_PERMISSIONS_ARG_FIELDS: &'static [&'static str] = &["user",
-                                                                      "new_role"];
+const MEMBERS_SET_PERMISSIONS_ARG_FIELDS: &[&str] = &["user",
+                                                      "new_role"];
 impl MembersSetPermissionsArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -11930,12 +11930,12 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersSetPermissionsError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_not_found",
-                                                    "last_admin",
-                                                    "user_not_in_team",
-                                                    "cannot_set_permissions",
-                                                    "team_license_limit",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "last_admin",
+                                    "user_not_in_team",
+                                    "cannot_set_permissions",
+                                    "team_license_limit",
+                                    "other"];
         deserializer.deserialize_struct("MembersSetPermissionsError", VARIANTS, EnumVisitor)
     }
 }
@@ -12010,8 +12010,8 @@ impl MembersSetPermissionsResult {
 
 }
 
-const MEMBERS_SET_PERMISSIONS_RESULT_FIELDS: &'static [&'static str] = &["team_member_id",
-                                                                         "role"];
+const MEMBERS_SET_PERMISSIONS_RESULT_FIELDS: &[&str] = &["team_member_id",
+                                                         "role"];
 impl MembersSetPermissionsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -12142,12 +12142,12 @@ impl MembersSetProfileArg {
 
 }
 
-const MEMBERS_SET_PROFILE_ARG_FIELDS: &'static [&'static str] = &["user",
-                                                                  "new_email",
-                                                                  "new_external_id",
-                                                                  "new_given_name",
-                                                                  "new_surname",
-                                                                  "new_persistent_id"];
+const MEMBERS_SET_PROFILE_ARG_FIELDS: &[&str] = &["user",
+                                                  "new_email",
+                                                  "new_external_id",
+                                                  "new_given_name",
+                                                  "new_surname",
+                                                  "new_persistent_id"];
 impl MembersSetProfileArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -12309,17 +12309,17 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersSetProfileError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_not_found",
-                                                    "user_not_in_team",
-                                                    "external_id_and_new_external_id_unsafe",
-                                                    "no_new_data_specified",
-                                                    "email_reserved_for_other_user",
-                                                    "external_id_used_by_other_user",
-                                                    "set_profile_disallowed",
-                                                    "param_cannot_be_empty",
-                                                    "persistent_id_disabled",
-                                                    "persistent_id_used_by_other_user",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_not_in_team",
+                                    "external_id_and_new_external_id_unsafe",
+                                    "no_new_data_specified",
+                                    "email_reserved_for_other_user",
+                                    "external_id_used_by_other_user",
+                                    "set_profile_disallowed",
+                                    "param_cannot_be_empty",
+                                    "persistent_id_disabled",
+                                    "persistent_id_used_by_other_user",
+                                    "other"];
         deserializer.deserialize_struct("MembersSetProfileError", VARIANTS, EnumVisitor)
     }
 }
@@ -12447,12 +12447,12 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersSuspendError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_not_found",
-                                                    "user_not_in_team",
-                                                    "other",
-                                                    "suspend_inactive_user",
-                                                    "suspend_last_admin",
-                                                    "team_license_limit"];
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_not_in_team",
+                                    "other",
+                                    "suspend_inactive_user",
+                                    "suspend_last_admin",
+                                    "team_license_limit"];
         deserializer.deserialize_struct("MembersSuspendError", VARIANTS, EnumVisitor)
     }
 }
@@ -12526,7 +12526,7 @@ impl MembersUnsuspendArg {
 
 }
 
-const MEMBERS_UNSUSPEND_ARG_FIELDS: &'static [&'static str] = &["user"];
+const MEMBERS_UNSUSPEND_ARG_FIELDS: &[&str] = &["user"];
 impl MembersUnsuspendArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -12624,11 +12624,11 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersUnsuspendError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_not_found",
-                                                    "user_not_in_team",
-                                                    "other",
-                                                    "unsuspend_non_suspended_member",
-                                                    "team_license_limit"];
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_not_in_team",
+                                    "other",
+                                    "unsuspend_non_suspended_member",
+                                    "team_license_limit"];
         deserializer.deserialize_struct("MembersUnsuspendError", VARIANTS, EnumVisitor)
     }
 }
@@ -12719,12 +12719,12 @@ impl<'de> ::serde::de::Deserialize<'de> for MobileClientPlatform {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["iphone",
-                                                    "ipad",
-                                                    "android",
-                                                    "windows_phone",
-                                                    "blackberry",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["iphone",
+                                    "ipad",
+                                    "android",
+                                    "windows_phone",
+                                    "blackberry",
+                                    "other"];
         deserializer.deserialize_struct("MobileClientPlatform", VARIANTS, EnumVisitor)
     }
 }
@@ -12851,16 +12851,16 @@ impl MobileClientSession {
 
 }
 
-const MOBILE_CLIENT_SESSION_FIELDS: &'static [&'static str] = &["session_id",
-                                                                "device_name",
-                                                                "client_type",
-                                                                "ip_address",
-                                                                "country",
-                                                                "created",
-                                                                "updated",
-                                                                "client_version",
-                                                                "os_version",
-                                                                "last_carrier"];
+const MOBILE_CLIENT_SESSION_FIELDS: &[&str] = &["session_id",
+                                                "device_name",
+                                                "client_type",
+                                                "ip_address",
+                                                "country",
+                                                "created",
+                                                "updated",
+                                                "client_version",
+                                                "os_version",
+                                                "last_carrier"];
 impl MobileClientSession {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -13036,10 +13036,10 @@ impl NamespaceMetadata {
 
 }
 
-const NAMESPACE_METADATA_FIELDS: &'static [&'static str] = &["name",
-                                                             "namespace_id",
-                                                             "namespace_type",
-                                                             "team_member_id"];
+const NAMESPACE_METADATA_FIELDS: &[&str] = &["name",
+                                             "namespace_id",
+                                             "namespace_type",
+                                             "team_member_id"];
 impl NamespaceMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -13163,11 +13163,11 @@ impl<'de> ::serde::de::Deserialize<'de> for NamespaceType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["app_folder",
-                                                    "shared_folder",
-                                                    "team_folder",
-                                                    "team_member_folder",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["app_folder",
+                                    "shared_folder",
+                                    "team_folder",
+                                    "team_member_folder",
+                                    "other"];
         deserializer.deserialize_struct("NamespaceType", VARIANTS, EnumVisitor)
     }
 }
@@ -13250,9 +13250,9 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveCustomQuotaResult {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["success",
-                                                    "invalid_user",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["success",
+                                    "invalid_user",
+                                    "other"];
         deserializer.deserialize_struct("RemoveCustomQuotaResult", VARIANTS, EnumVisitor)
     }
 }
@@ -13296,7 +13296,7 @@ impl RemovedStatus {
 
 }
 
-const REMOVED_STATUS_FIELDS: &'static [&'static str] = &["is_recoverable"];
+const REMOVED_STATUS_FIELDS: &[&str] = &["is_recoverable"];
 impl RemovedStatus {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -13383,9 +13383,9 @@ impl RevokeDesktopClientArg {
 
 }
 
-const REVOKE_DESKTOP_CLIENT_ARG_FIELDS: &'static [&'static str] = &["session_id",
-                                                                    "team_member_id",
-                                                                    "delete_on_unlink"];
+const REVOKE_DESKTOP_CLIENT_ARG_FIELDS: &[&str] = &["session_id",
+                                                    "team_member_id",
+                                                    "delete_on_unlink"];
 impl RevokeDesktopClientArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -13496,9 +13496,9 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeDeviceSessionArg {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["web_session",
-                                                    "desktop_client",
-                                                    "mobile_client"];
+        const VARIANTS: &[&str] = &["web_session",
+                                    "desktop_client",
+                                    "mobile_client"];
         deserializer.deserialize_struct("RevokeDeviceSessionArg", VARIANTS, EnumVisitor)
     }
 }
@@ -13547,7 +13547,7 @@ impl RevokeDeviceSessionBatchArg {
 
 }
 
-const REVOKE_DEVICE_SESSION_BATCH_ARG_FIELDS: &'static [&'static str] = &["revoke_devices"];
+const REVOKE_DEVICE_SESSION_BATCH_ARG_FIELDS: &[&str] = &["revoke_devices"];
 impl RevokeDeviceSessionBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -13633,7 +13633,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeDeviceSessionBatchError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["other"];
+        const VARIANTS: &[&str] = &["other"];
         deserializer.deserialize_struct("RevokeDeviceSessionBatchError", VARIANTS, EnumVisitor)
     }
 }
@@ -13672,7 +13672,7 @@ impl RevokeDeviceSessionBatchResult {
 
 }
 
-const REVOKE_DEVICE_SESSION_BATCH_RESULT_FIELDS: &'static [&'static str] = &["revoke_devices_status"];
+const REVOKE_DEVICE_SESSION_BATCH_RESULT_FIELDS: &[&str] = &["revoke_devices_status"];
 impl RevokeDeviceSessionBatchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -13763,9 +13763,9 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeDeviceSessionError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["device_session_not_found",
-                                                    "member_not_found",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["device_session_not_found",
+                                    "member_not_found",
+                                    "other"];
         deserializer.deserialize_struct("RevokeDeviceSessionError", VARIANTS, EnumVisitor)
     }
 }
@@ -13827,8 +13827,8 @@ impl RevokeDeviceSessionStatus {
 
 }
 
-const REVOKE_DEVICE_SESSION_STATUS_FIELDS: &'static [&'static str] = &["success",
-                                                                       "error_type"];
+const REVOKE_DEVICE_SESSION_STATUS_FIELDS: &[&str] = &["success",
+                                                       "error_type"];
 impl RevokeDeviceSessionStatus {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -13923,9 +13923,9 @@ impl RevokeLinkedApiAppArg {
 
 }
 
-const REVOKE_LINKED_API_APP_ARG_FIELDS: &'static [&'static str] = &["app_id",
-                                                                    "team_member_id",
-                                                                    "keep_app_folder"];
+const REVOKE_LINKED_API_APP_ARG_FIELDS: &[&str] = &["app_id",
+                                                    "team_member_id",
+                                                    "keep_app_folder"];
 impl RevokeLinkedApiAppArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14017,7 +14017,7 @@ impl RevokeLinkedApiAppBatchArg {
 
 }
 
-const REVOKE_LINKED_API_APP_BATCH_ARG_FIELDS: &'static [&'static str] = &["revoke_linked_app"];
+const REVOKE_LINKED_API_APP_BATCH_ARG_FIELDS: &[&str] = &["revoke_linked_app"];
 impl RevokeLinkedApiAppBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14103,7 +14103,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeLinkedAppBatchError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["other"];
+        const VARIANTS: &[&str] = &["other"];
         deserializer.deserialize_struct("RevokeLinkedAppBatchError", VARIANTS, EnumVisitor)
     }
 }
@@ -14142,7 +14142,7 @@ impl RevokeLinkedAppBatchResult {
 
 }
 
-const REVOKE_LINKED_APP_BATCH_RESULT_FIELDS: &'static [&'static str] = &["revoke_linked_app_status"];
+const REVOKE_LINKED_APP_BATCH_RESULT_FIELDS: &[&str] = &["revoke_linked_app_status"];
 impl RevokeLinkedAppBatchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14234,9 +14234,9 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeLinkedAppError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["app_not_found",
-                                                    "member_not_found",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["app_not_found",
+                                    "member_not_found",
+                                    "other"];
         deserializer.deserialize_struct("RevokeLinkedAppError", VARIANTS, EnumVisitor)
     }
 }
@@ -14298,8 +14298,8 @@ impl RevokeLinkedAppStatus {
 
 }
 
-const REVOKE_LINKED_APP_STATUS_FIELDS: &'static [&'static str] = &["success",
-                                                                   "error_type"];
+const REVOKE_LINKED_APP_STATUS_FIELDS: &[&str] = &["success",
+                                                   "error_type"];
 impl RevokeLinkedAppStatus {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14383,7 +14383,7 @@ impl SetCustomQuotaArg {
 
 }
 
-const SET_CUSTOM_QUOTA_ARG_FIELDS: &'static [&'static str] = &["users_and_quotas"];
+const SET_CUSTOM_QUOTA_ARG_FIELDS: &[&str] = &["users_and_quotas"];
 impl SetCustomQuotaArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14475,9 +14475,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SetCustomQuotaError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["too_many_users",
-                                                    "other",
-                                                    "some_users_are_excluded"];
+        const VARIANTS: &[&str] = &["too_many_users",
+                                    "other",
+                                    "some_users_are_excluded"];
         deserializer.deserialize_struct("SetCustomQuotaError", VARIANTS, EnumVisitor)
     }
 }
@@ -14536,8 +14536,8 @@ impl StorageBucket {
 
 }
 
-const STORAGE_BUCKET_FIELDS: &'static [&'static str] = &["bucket",
-                                                         "users"];
+const STORAGE_BUCKET_FIELDS: &[&str] = &["bucket",
+                                         "users"];
 impl StorageBucket {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14637,9 +14637,9 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderAccessError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_team_folder_id",
-                                                    "no_access",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_team_folder_id",
+                                    "no_access",
+                                    "other"];
         deserializer.deserialize_struct("TeamFolderAccessError", VARIANTS, EnumVisitor)
     }
 }
@@ -14728,10 +14728,10 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderActivateError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "status_error",
-                                                    "team_shared_dropbox_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "status_error",
+                                    "team_shared_dropbox_error",
+                                    "other"];
         deserializer.deserialize_struct("TeamFolderActivateError", VARIANTS, EnumVisitor)
     }
 }
@@ -14802,8 +14802,8 @@ impl TeamFolderArchiveArg {
 
 }
 
-const TEAM_FOLDER_ARCHIVE_ARG_FIELDS: &'static [&'static str] = &["team_folder_id",
-                                                                  "force_async_off"];
+const TEAM_FOLDER_ARCHIVE_ARG_FIELDS: &[&str] = &["team_folder_id",
+                                                  "force_async_off"];
 impl TeamFolderArchiveArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14922,10 +14922,10 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderArchiveError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "status_error",
-                                                    "team_shared_dropbox_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "status_error",
+                                    "team_shared_dropbox_error",
+                                    "other"];
         deserializer.deserialize_struct("TeamFolderArchiveError", VARIANTS, EnumVisitor)
     }
 }
@@ -15012,9 +15012,9 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderArchiveJobStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete",
-                                                    "failed"];
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed"];
         deserializer.deserialize_struct("TeamFolderArchiveJobStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -15084,8 +15084,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderArchiveLaunch {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["async_job_id",
-                                                    "complete"];
+        const VARIANTS: &[&str] = &["async_job_id",
+                                    "complete"];
         deserializer.deserialize_struct("TeamFolderArchiveLaunch", VARIANTS, EnumVisitor)
     }
 }
@@ -15128,7 +15128,7 @@ impl TeamFolderCreateArg {
 
 }
 
-const TEAM_FOLDER_CREATE_ARG_FIELDS: &'static [&'static str] = &["name"];
+const TEAM_FOLDER_CREATE_ARG_FIELDS: &[&str] = &["name"];
 impl TeamFolderCreateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15222,10 +15222,10 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderCreateError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_folder_name",
-                                                    "folder_name_already_used",
-                                                    "folder_name_reserved",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_folder_name",
+                                    "folder_name_already_used",
+                                    "folder_name_reserved",
+                                    "other"];
         deserializer.deserialize_struct("TeamFolderCreateError", VARIANTS, EnumVisitor)
     }
 }
@@ -15307,8 +15307,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderGetInfoItem {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["id_not_found",
-                                                    "team_folder_metadata"];
+        const VARIANTS: &[&str] = &["id_not_found",
+                                    "team_folder_metadata"];
         deserializer.deserialize_struct("TeamFolderGetInfoItem", VARIANTS, EnumVisitor)
     }
 }
@@ -15351,7 +15351,7 @@ impl TeamFolderIdArg {
 
 }
 
-const TEAM_FOLDER_ID_ARG_FIELDS: &'static [&'static str] = &["team_folder_id"];
+const TEAM_FOLDER_ID_ARG_FIELDS: &[&str] = &["team_folder_id"];
 impl TeamFolderIdArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15426,7 +15426,7 @@ impl TeamFolderIdListArg {
 
 }
 
-const TEAM_FOLDER_ID_LIST_ARG_FIELDS: &'static [&'static str] = &["team_folder_ids"];
+const TEAM_FOLDER_ID_LIST_ARG_FIELDS: &[&str] = &["team_folder_ids"];
 impl TeamFolderIdListArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15520,10 +15520,10 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderInvalidStatusError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["active",
-                                                    "archived",
-                                                    "archive_in_progress",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["active",
+                                    "archived",
+                                    "archive_in_progress",
+                                    "other"];
         deserializer.deserialize_struct("TeamFolderInvalidStatusError", VARIANTS, EnumVisitor)
     }
 }
@@ -15582,7 +15582,7 @@ impl Default for TeamFolderListArg {
     }
 }
 
-const TEAM_FOLDER_LIST_ARG_FIELDS: &'static [&'static str] = &["limit"];
+const TEAM_FOLDER_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl TeamFolderListArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15657,7 +15657,7 @@ impl TeamFolderListContinueArg {
 
 }
 
-const TEAM_FOLDER_LIST_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const TEAM_FOLDER_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl TeamFolderListContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15745,8 +15745,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderListContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_cursor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_cursor",
+                                    "other"];
         deserializer.deserialize_struct("TeamFolderListContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -15793,7 +15793,7 @@ impl TeamFolderListError {
 
 }
 
-const TEAM_FOLDER_LIST_ERROR_FIELDS: &'static [&'static str] = &["access_error"];
+const TEAM_FOLDER_LIST_ERROR_FIELDS: &[&str] = &["access_error"];
 impl TeamFolderListError {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15876,9 +15876,9 @@ impl TeamFolderListResult {
 
 }
 
-const TEAM_FOLDER_LIST_RESULT_FIELDS: &'static [&'static str] = &["team_folders",
-                                                                  "cursor",
-                                                                  "has_more"];
+const TEAM_FOLDER_LIST_RESULT_FIELDS: &[&str] = &["team_folders",
+                                                  "cursor",
+                                                  "has_more"];
 impl TeamFolderListResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15986,10 +15986,10 @@ impl TeamFolderMetadata {
 
 }
 
-const TEAM_FOLDER_METADATA_FIELDS: &'static [&'static str] = &["team_folder_id",
-                                                               "name",
-                                                               "status",
-                                                               "is_team_shared_dropbox"];
+const TEAM_FOLDER_METADATA_FIELDS: &[&str] = &["team_folder_id",
+                                               "name",
+                                               "status",
+                                               "is_team_shared_dropbox"];
 impl TeamFolderMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16126,10 +16126,10 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderPermanentlyDeleteError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "status_error",
-                                                    "team_shared_dropbox_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "status_error",
+                                    "team_shared_dropbox_error",
+                                    "other"];
         deserializer.deserialize_struct("TeamFolderPermanentlyDeleteError", VARIANTS, EnumVisitor)
     }
 }
@@ -16195,8 +16195,8 @@ impl TeamFolderRenameArg {
 
 }
 
-const TEAM_FOLDER_RENAME_ARG_FIELDS: &'static [&'static str] = &["team_folder_id",
-                                                                 "name"];
+const TEAM_FOLDER_RENAME_ARG_FIELDS: &[&str] = &["team_folder_id",
+                                                 "name"];
 impl TeamFolderRenameArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16323,13 +16323,13 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderRenameError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["access_error",
-                                                    "status_error",
-                                                    "team_shared_dropbox_error",
-                                                    "other",
-                                                    "invalid_folder_name",
-                                                    "folder_name_already_used",
-                                                    "folder_name_reserved"];
+        const VARIANTS: &[&str] = &["access_error",
+                                    "status_error",
+                                    "team_shared_dropbox_error",
+                                    "other",
+                                    "invalid_folder_name",
+                                    "folder_name_already_used",
+                                    "folder_name_reserved"];
         deserializer.deserialize_struct("TeamFolderRenameError", VARIANTS, EnumVisitor)
     }
 }
@@ -16429,10 +16429,10 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["active",
-                                                    "archived",
-                                                    "archive_in_progress",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["active",
+                                    "archived",
+                                    "archive_in_progress",
+                                    "other"];
         deserializer.deserialize_struct("TeamFolderStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -16493,8 +16493,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderTeamSharedDropboxError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disallowed",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disallowed",
+                                    "other"];
         deserializer.deserialize_struct("TeamFolderTeamSharedDropboxError", VARIANTS, EnumVisitor)
     }
 }
@@ -16559,11 +16559,11 @@ impl TeamGetInfoResult {
 
 }
 
-const TEAM_GET_INFO_RESULT_FIELDS: &'static [&'static str] = &["name",
-                                                               "team_id",
-                                                               "num_licensed_users",
-                                                               "num_provisioned_users",
-                                                               "policies"];
+const TEAM_GET_INFO_RESULT_FIELDS: &[&str] = &["name",
+                                               "team_id",
+                                               "num_licensed_users",
+                                               "num_provisioned_users",
+                                               "policies"];
 impl TeamGetInfoResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16678,8 +16678,8 @@ impl TeamMemberInfo {
 
 }
 
-const TEAM_MEMBER_INFO_FIELDS: &'static [&'static str] = &["profile",
-                                                           "role"];
+const TEAM_MEMBER_INFO_FIELDS: &[&str] = &["profile",
+                                           "role"];
 impl TeamMemberInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16829,18 +16829,18 @@ impl TeamMemberProfile {
 
 }
 
-const TEAM_MEMBER_PROFILE_FIELDS: &'static [&'static str] = &["team_member_id",
-                                                              "email",
-                                                              "email_verified",
-                                                              "status",
-                                                              "name",
-                                                              "membership_type",
-                                                              "groups",
-                                                              "member_folder_id",
-                                                              "external_id",
-                                                              "account_id",
-                                                              "joined_on",
-                                                              "persistent_id"];
+const TEAM_MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
+                                              "email",
+                                              "email_verified",
+                                              "status",
+                                              "name",
+                                              "membership_type",
+                                              "groups",
+                                              "member_folder_id",
+                                              "external_id",
+                                              "account_id",
+                                              "joined_on",
+                                              "persistent_id"];
 impl TeamMemberProfile {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17038,10 +17038,10 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamMemberStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["active",
-                                                    "invited",
-                                                    "suspended",
-                                                    "removed"];
+        const VARIANTS: &[&str] = &["active",
+                                    "invited",
+                                    "suspended",
+                                    "removed"];
         deserializer.deserialize_struct("TeamMemberStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -17111,8 +17111,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamMembershipType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["full",
-                                                    "limited"];
+        const VARIANTS: &[&str] = &["full",
+                                    "limited"];
         deserializer.deserialize_struct("TeamMembershipType", VARIANTS, EnumVisitor)
     }
 }
@@ -17152,7 +17152,7 @@ impl Default for TeamNamespacesListArg {
     }
 }
 
-const TEAM_NAMESPACES_LIST_ARG_FIELDS: &'static [&'static str] = &["limit"];
+const TEAM_NAMESPACES_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl TeamNamespacesListArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17227,7 +17227,7 @@ impl TeamNamespacesListContinueArg {
 
 }
 
-const TEAM_NAMESPACES_LIST_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const TEAM_NAMESPACES_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl TeamNamespacesListContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17315,8 +17315,8 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamNamespacesListContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_cursor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_cursor",
+                                    "other"];
         deserializer.deserialize_struct("TeamNamespacesListContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -17372,9 +17372,9 @@ impl TeamNamespacesListResult {
 
 }
 
-const TEAM_NAMESPACES_LIST_RESULT_FIELDS: &'static [&'static str] = &["namespaces",
-                                                                      "cursor",
-                                                                      "has_more"];
+const TEAM_NAMESPACES_LIST_RESULT_FIELDS: &[&str] = &["namespaces",
+                                                      "cursor",
+                                                      "has_more"];
 impl TeamNamespacesListResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17487,9 +17487,9 @@ impl<'de> ::serde::de::Deserialize<'de> for TokenGetAuthenticatedAdminError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["mapping_not_found",
-                                                    "admin_not_active",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["mapping_not_found",
+                                    "admin_not_active",
+                                    "other"];
         deserializer.deserialize_struct("TokenGetAuthenticatedAdminError", VARIANTS, EnumVisitor)
     }
 }
@@ -17544,7 +17544,7 @@ impl TokenGetAuthenticatedAdminResult {
 
 }
 
-const TOKEN_GET_AUTHENTICATED_ADMIN_RESULT_FIELDS: &'static [&'static str] = &["admin_profile"];
+const TOKEN_GET_AUTHENTICATED_ADMIN_RESULT_FIELDS: &[&str] = &["admin_profile"];
 impl TokenGetAuthenticatedAdminResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17643,9 +17643,9 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadApiRateLimitValue {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["unlimited",
-                                                    "limit",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["unlimited",
+                                    "limit",
+                                    "other"];
         deserializer.deserialize_struct("UploadApiRateLimitValue", VARIANTS, EnumVisitor)
     }
 }
@@ -17690,8 +17690,8 @@ impl UserCustomQuotaArg {
 
 }
 
-const USER_CUSTOM_QUOTA_ARG_FIELDS: &'static [&'static str] = &["user",
-                                                                "quota_gb"];
+const USER_CUSTOM_QUOTA_ARG_FIELDS: &[&str] = &["user",
+                                                "quota_gb"];
 impl UserCustomQuotaArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17783,8 +17783,8 @@ impl UserCustomQuotaResult {
 
 }
 
-const USER_CUSTOM_QUOTA_RESULT_FIELDS: &'static [&'static str] = &["user",
-                                                                   "quota_gb"];
+const USER_CUSTOM_QUOTA_RESULT_FIELDS: &[&str] = &["user",
+                                                   "quota_gb"];
 impl UserCustomQuotaResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17902,9 +17902,9 @@ impl<'de> ::serde::de::Deserialize<'de> for UserSelectorArg {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["team_member_id",
-                                                    "external_id",
-                                                    "email"];
+        const VARIANTS: &[&str] = &["team_member_id",
+                                    "external_id",
+                                    "email"];
         deserializer.deserialize_struct("UserSelectorArg", VARIANTS, EnumVisitor)
     }
 }
@@ -17968,7 +17968,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UserSelectorError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user_not_found"];
+        const VARIANTS: &[&str] = &["user_not_found"];
         deserializer.deserialize_struct("UserSelectorError", VARIANTS, EnumVisitor)
     }
 }
@@ -18052,9 +18052,9 @@ impl<'de> ::serde::de::Deserialize<'de> for UsersSelectorArg {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["team_member_ids",
-                                                    "external_ids",
-                                                    "emails"];
+        const VARIANTS: &[&str] = &["team_member_ids",
+                                    "external_ids",
+                                    "emails"];
         deserializer.deserialize_struct("UsersSelectorArg", VARIANTS, EnumVisitor)
     }
 }

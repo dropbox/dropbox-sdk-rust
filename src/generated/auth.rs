@@ -75,9 +75,9 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_account_type",
-                                                    "paper_access_denied",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_account_type",
+                                    "paper_access_denied",
+                                    "other"];
         deserializer.deserialize_struct("AccessError", VARIANTS, EnumVisitor)
     }
 }
@@ -156,11 +156,11 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_access_token",
-                                                    "invalid_select_user",
-                                                    "invalid_select_admin",
-                                                    "user_suspended",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_access_token",
+                                    "invalid_select_user",
+                                    "invalid_select_admin",
+                                    "user_suspended",
+                                    "other"];
         deserializer.deserialize_struct("AuthError", VARIANTS, EnumVisitor)
     }
 }
@@ -242,9 +242,9 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidAccountTypeError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["endpoint",
-                                                    "feature",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["endpoint",
+                                    "feature",
+                                    "other"];
         deserializer.deserialize_struct("InvalidAccountTypeError", VARIANTS, EnumVisitor)
     }
 }
@@ -314,9 +314,9 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperAccessError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["paper_disabled",
-                                                    "not_paper_user",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["paper_disabled",
+                                    "not_paper_user",
+                                    "other"];
         deserializer.deserialize_struct("PaperAccessError", VARIANTS, EnumVisitor)
     }
 }
@@ -379,8 +379,8 @@ impl RateLimitError {
 
 }
 
-const RATE_LIMIT_ERROR_FIELDS: &'static [&'static str] = &["reason",
-                                                           "retry_after"];
+const RATE_LIMIT_ERROR_FIELDS: &[&str] = &["reason",
+                                           "retry_after"];
 impl RateLimitError {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -480,9 +480,9 @@ impl<'de> ::serde::de::Deserialize<'de> for RateLimitReason {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["too_many_requests",
-                                                    "too_many_write_operations",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["too_many_requests",
+                                    "too_many_write_operations",
+                                    "other"];
         deserializer.deserialize_struct("RateLimitReason", VARIANTS, EnumVisitor)
     }
 }
@@ -527,8 +527,8 @@ impl TokenFromOAuth1Arg {
 
 }
 
-const TOKEN_FROM_O_AUTH1_ARG_FIELDS: &'static [&'static str] = &["oauth1_token",
-                                                                 "oauth1_token_secret"];
+const TOKEN_FROM_O_AUTH1_ARG_FIELDS: &[&str] = &["oauth1_token",
+                                                 "oauth1_token_secret"];
 impl TokenFromOAuth1Arg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -628,9 +628,9 @@ impl<'de> ::serde::de::Deserialize<'de> for TokenFromOAuth1Error {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["invalid_oauth1_token_info",
-                                                    "app_id_mismatch",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_oauth1_token_info",
+                                    "app_id_mismatch",
+                                    "other"];
         deserializer.deserialize_struct("TokenFromOAuth1Error", VARIANTS, EnumVisitor)
     }
 }
@@ -684,7 +684,7 @@ impl TokenFromOAuth1Result {
 
 }
 
-const TOKEN_FROM_O_AUTH1_RESULT_FIELDS: &'static [&'static str] = &["oauth2_token"];
+const TOKEN_FROM_O_AUTH1_RESULT_FIELDS: &[&str] = &["oauth2_token"];
 impl TokenFromOAuth1Result {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,

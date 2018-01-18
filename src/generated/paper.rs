@@ -269,8 +269,8 @@ impl AddMember {
 
 }
 
-const ADD_MEMBER_FIELDS: &'static [&'static str] = &["member",
-                                                     "permission_level"];
+const ADD_MEMBER_FIELDS: &[&str] = &["member",
+                                     "permission_level"];
 impl AddMember {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -374,10 +374,10 @@ impl AddPaperDocUser {
 
 }
 
-const ADD_PAPER_DOC_USER_FIELDS: &'static [&'static str] = &["doc_id",
-                                                             "members",
-                                                             "custom_message",
-                                                             "quiet"];
+const ADD_PAPER_DOC_USER_FIELDS: &[&str] = &["doc_id",
+                                             "members",
+                                             "custom_message",
+                                             "quiet"];
 impl AddPaperDocUser {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -483,8 +483,8 @@ impl AddPaperDocUserMemberResult {
 
 }
 
-const ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS: &'static [&'static str] = &["member",
-                                                                           "result"];
+const ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS: &[&str] = &["member",
+                                                           "result"];
 impl AddPaperDocUserMemberResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -599,14 +599,14 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPaperDocUserResult {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["success",
-                                                    "unknown_error",
-                                                    "sharing_outside_team_disabled",
-                                                    "daily_limit_reached",
-                                                    "user_is_owner",
-                                                    "failed_user_data_retrieval",
-                                                    "permission_already_granted",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["success",
+                                    "unknown_error",
+                                    "sharing_outside_team_disabled",
+                                    "daily_limit_reached",
+                                    "user_is_owner",
+                                    "failed_user_data_retrieval",
+                                    "permission_already_granted",
+                                    "other"];
         deserializer.deserialize_struct("AddPaperDocUserResult", VARIANTS, EnumVisitor)
     }
 }
@@ -695,8 +695,8 @@ impl Cursor {
 
 }
 
-const CURSOR_FIELDS: &'static [&'static str] = &["value",
-                                                 "expiration"];
+const CURSOR_FIELDS: &[&str] = &["value",
+                                 "expiration"];
 impl Cursor {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -796,9 +796,9 @@ impl<'de> ::serde::de::Deserialize<'de> for DocLookupError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["insufficient_permissions",
-                                                    "other",
-                                                    "doc_not_found"];
+        const VARIANTS: &[&str] = &["insufficient_permissions",
+                                    "other",
+                                    "doc_not_found"];
         deserializer.deserialize_struct("DocLookupError", VARIANTS, EnumVisitor)
     }
 }
@@ -874,10 +874,10 @@ impl<'de> ::serde::de::Deserialize<'de> for DocSubscriptionLevel {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["default",
-                                                    "ignore",
-                                                    "every",
-                                                    "no_email"];
+        const VARIANTS: &[&str] = &["default",
+                                    "ignore",
+                                    "every",
+                                    "no_email"];
         deserializer.deserialize_struct("DocSubscriptionLevel", VARIANTS, EnumVisitor)
     }
 }
@@ -947,9 +947,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ExportFormat {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["html",
-                                                    "markdown",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["html",
+                                    "markdown",
+                                    "other"];
         deserializer.deserialize_struct("ExportFormat", VARIANTS, EnumVisitor)
     }
 }
@@ -995,8 +995,8 @@ impl Folder {
 
 }
 
-const FOLDER_FIELDS: &'static [&'static str] = &["id",
-                                                 "name"];
+const FOLDER_FIELDS: &[&str] = &["id",
+                                 "name"];
 impl Folder {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1097,8 +1097,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderSharingPolicyType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["team",
-                                                    "invite_only"];
+        const VARIANTS: &[&str] = &["team",
+                                    "invite_only"];
         deserializer.deserialize_struct("FolderSharingPolicyType", VARIANTS, EnumVisitor)
     }
 }
@@ -1161,10 +1161,10 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderSubscriptionLevel {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["none",
-                                                    "activity_only",
-                                                    "daily_emails",
-                                                    "weekly_emails"];
+        const VARIANTS: &[&str] = &["none",
+                                    "activity_only",
+                                    "daily_emails",
+                                    "weekly_emails"];
         deserializer.deserialize_struct("FolderSubscriptionLevel", VARIANTS, EnumVisitor)
     }
 }
@@ -1220,8 +1220,8 @@ impl Default for FoldersContainingPaperDoc {
     }
 }
 
-const FOLDERS_CONTAINING_PAPER_DOC_FIELDS: &'static [&'static str] = &["folder_sharing_policy_type",
-                                                                       "folders"];
+const FOLDERS_CONTAINING_PAPER_DOC_FIELDS: &[&str] = &["folder_sharing_policy_type",
+                                                       "folders"];
 impl FoldersContainingPaperDoc {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1327,10 +1327,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ImportFormat {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["html",
-                                                    "markdown",
-                                                    "plain_text",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["html",
+                                    "markdown",
+                                    "plain_text",
+                                    "other"];
         deserializer.deserialize_struct("ImportFormat", VARIANTS, EnumVisitor)
     }
 }
@@ -1384,8 +1384,8 @@ impl InviteeInfoWithPermissionLevel {
 
 }
 
-const INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS: &'static [&'static str] = &["invitee",
-                                                                             "permission_level"];
+const INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS: &[&str] = &["invitee",
+                                                             "permission_level"];
 impl InviteeInfoWithPermissionLevel {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1487,8 +1487,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListDocsCursorError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["cursor_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["cursor_error",
+                                    "other"];
         deserializer.deserialize_struct("ListDocsCursorError", VARIANTS, EnumVisitor)
     }
 }
@@ -1546,10 +1546,10 @@ impl Default for ListPaperDocsArgs {
     }
 }
 
-const LIST_PAPER_DOCS_ARGS_FIELDS: &'static [&'static str] = &["filter_by",
-                                                               "sort_by",
-                                                               "sort_order",
-                                                               "limit"];
+const LIST_PAPER_DOCS_ARGS_FIELDS: &[&str] = &["filter_by",
+                                               "sort_by",
+                                               "sort_order",
+                                               "limit"];
 impl ListPaperDocsArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1652,7 +1652,7 @@ impl ListPaperDocsContinueArgs {
 
 }
 
-const LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS: &'static [&'static str] = &["cursor"];
+const LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS: &[&str] = &["cursor"];
 impl ListPaperDocsContinueArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1743,9 +1743,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsFilterBy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["docs_accessed",
-                                                    "docs_created",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["docs_accessed",
+                                    "docs_created",
+                                    "other"];
         deserializer.deserialize_struct("ListPaperDocsFilterBy", VARIANTS, EnumVisitor)
     }
 }
@@ -1798,9 +1798,9 @@ impl ListPaperDocsResponse {
 
 }
 
-const LIST_PAPER_DOCS_RESPONSE_FIELDS: &'static [&'static str] = &["doc_ids",
-                                                                   "cursor",
-                                                                   "has_more"];
+const LIST_PAPER_DOCS_RESPONSE_FIELDS: &[&str] = &["doc_ids",
+                                                   "cursor",
+                                                   "has_more"];
 impl ListPaperDocsResponse {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1912,10 +1912,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsSortBy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["accessed",
-                                                    "modified",
-                                                    "created",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["accessed",
+                                    "modified",
+                                    "created",
+                                    "other"];
         deserializer.deserialize_struct("ListPaperDocsSortBy", VARIANTS, EnumVisitor)
     }
 }
@@ -1979,9 +1979,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsSortOrder {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["ascending",
-                                                    "descending",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["ascending",
+                                    "descending",
+                                    "other"];
         deserializer.deserialize_struct("ListPaperDocsSortOrder", VARIANTS, EnumVisitor)
     }
 }
@@ -2047,10 +2047,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ListUsersCursorError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["insufficient_permissions",
-                                                    "other",
-                                                    "doc_not_found",
-                                                    "cursor_error"];
+        const VARIANTS: &[&str] = &["insufficient_permissions",
+                                    "other",
+                                    "doc_not_found",
+                                    "cursor_error"];
         deserializer.deserialize_struct("ListUsersCursorError", VARIANTS, EnumVisitor)
     }
 }
@@ -2120,8 +2120,8 @@ impl ListUsersOnFolderArgs {
 
 }
 
-const LIST_USERS_ON_FOLDER_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                    "limit"];
+const LIST_USERS_ON_FOLDER_ARGS_FIELDS: &[&str] = &["doc_id",
+                                                    "limit"];
 impl ListUsersOnFolderArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2209,8 +2209,8 @@ impl ListUsersOnFolderContinueArgs {
 
 }
 
-const LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                             "cursor"];
+const LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS: &[&str] = &["doc_id",
+                                                             "cursor"];
 impl ListUsersOnFolderContinueArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2313,10 +2313,10 @@ impl ListUsersOnFolderResponse {
 
 }
 
-const LIST_USERS_ON_FOLDER_RESPONSE_FIELDS: &'static [&'static str] = &["invitees",
-                                                                        "users",
-                                                                        "cursor",
-                                                                        "has_more"];
+const LIST_USERS_ON_FOLDER_RESPONSE_FIELDS: &[&str] = &["invitees",
+                                                        "users",
+                                                        "cursor",
+                                                        "has_more"];
 impl ListUsersOnFolderResponse {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2435,9 +2435,9 @@ impl ListUsersOnPaperDocArgs {
 
 }
 
-const LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                       "limit",
-                                                                       "filter_by"];
+const LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS: &[&str] = &["doc_id",
+                                                       "limit",
+                                                       "filter_by"];
 impl ListUsersOnPaperDocArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2534,8 +2534,8 @@ impl ListUsersOnPaperDocContinueArgs {
 
 }
 
-const LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                                "cursor"];
+const LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS: &[&str] = &["doc_id",
+                                                                "cursor"];
 impl ListUsersOnPaperDocContinueArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2642,11 +2642,11 @@ impl ListUsersOnPaperDocResponse {
 
 }
 
-const LIST_USERS_ON_PAPER_DOC_RESPONSE_FIELDS: &'static [&'static str] = &["invitees",
-                                                                           "users",
-                                                                           "doc_owner",
-                                                                           "cursor",
-                                                                           "has_more"];
+const LIST_USERS_ON_PAPER_DOC_RESPONSE_FIELDS: &[&str] = &["invitees",
+                                                           "users",
+                                                           "doc_owner",
+                                                           "cursor",
+                                                           "has_more"];
 impl ListUsersOnPaperDocResponse {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2770,8 +2770,8 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperApiBaseError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["insufficient_permissions",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["insufficient_permissions",
+                                    "other"];
         deserializer.deserialize_struct("PaperApiBaseError", VARIANTS, EnumVisitor)
     }
 }
@@ -2842,11 +2842,11 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperApiCursorError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["expired_cursor",
-                                                    "invalid_cursor",
-                                                    "wrong_user_in_cursor",
-                                                    "reset",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["expired_cursor",
+                                    "invalid_cursor",
+                                    "wrong_user_in_cursor",
+                                    "reset",
+                                    "other"];
         deserializer.deserialize_struct("PaperApiCursorError", VARIANTS, EnumVisitor)
     }
 }
@@ -2921,8 +2921,8 @@ impl PaperDocCreateArgs {
 
 }
 
-const PAPER_DOC_CREATE_ARGS_FIELDS: &'static [&'static str] = &["import_format",
-                                                                "parent_folder_id"];
+const PAPER_DOC_CREATE_ARGS_FIELDS: &[&str] = &["import_format",
+                                                "parent_folder_id"];
 impl PaperDocCreateArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3032,12 +3032,12 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocCreateError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["insufficient_permissions",
-                                                    "other",
-                                                    "content_malformed",
-                                                    "folder_not_found",
-                                                    "doc_length_exceeded",
-                                                    "image_size_exceeded"];
+        const VARIANTS: &[&str] = &["insufficient_permissions",
+                                    "other",
+                                    "content_malformed",
+                                    "folder_not_found",
+                                    "doc_length_exceeded",
+                                    "image_size_exceeded"];
         deserializer.deserialize_struct("PaperDocCreateError", VARIANTS, EnumVisitor)
     }
 }
@@ -3115,9 +3115,9 @@ impl PaperDocCreateUpdateResult {
 
 }
 
-const PAPER_DOC_CREATE_UPDATE_RESULT_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                         "revision",
-                                                                         "title"];
+const PAPER_DOC_CREATE_UPDATE_RESULT_FIELDS: &[&str] = &["doc_id",
+                                                         "revision",
+                                                         "title"];
 impl PaperDocCreateUpdateResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3212,8 +3212,8 @@ impl PaperDocExport {
 
 }
 
-const PAPER_DOC_EXPORT_FIELDS: &'static [&'static str] = &["doc_id",
-                                                           "export_format"];
+const PAPER_DOC_EXPORT_FIELDS: &[&str] = &["doc_id",
+                                           "export_format"];
 impl PaperDocExport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3306,10 +3306,10 @@ impl PaperDocExportResult {
 
 }
 
-const PAPER_DOC_EXPORT_RESULT_FIELDS: &'static [&'static str] = &["owner",
-                                                                  "title",
-                                                                  "revision",
-                                                                  "mime_type"];
+const PAPER_DOC_EXPORT_RESULT_FIELDS: &[&str] = &["owner",
+                                                  "title",
+                                                  "revision",
+                                                  "mime_type"];
 impl PaperDocExportResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3427,9 +3427,9 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocPermissionLevel {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["edit",
-                                                    "view_and_comment",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["edit",
+                                    "view_and_comment",
+                                    "other"];
         deserializer.deserialize_struct("PaperDocPermissionLevel", VARIANTS, EnumVisitor)
     }
 }
@@ -3474,8 +3474,8 @@ impl PaperDocSharingPolicy {
 
 }
 
-const PAPER_DOC_SHARING_POLICY_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                   "sharing_policy"];
+const PAPER_DOC_SHARING_POLICY_FIELDS: &[&str] = &["doc_id",
+                                                   "sharing_policy"];
 impl PaperDocSharingPolicy {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3574,10 +3574,10 @@ impl PaperDocUpdateArgs {
 
 }
 
-const PAPER_DOC_UPDATE_ARGS_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                "doc_update_policy",
-                                                                "revision",
-                                                                "import_format"];
+const PAPER_DOC_UPDATE_ARGS_FIELDS: &[&str] = &["doc_id",
+                                                "doc_update_policy",
+                                                "revision",
+                                                "import_format"];
 impl PaperDocUpdateArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3714,15 +3714,15 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdateError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["insufficient_permissions",
-                                                    "other",
-                                                    "doc_not_found",
-                                                    "content_malformed",
-                                                    "revision_mismatch",
-                                                    "doc_length_exceeded",
-                                                    "image_size_exceeded",
-                                                    "doc_archived",
-                                                    "doc_deleted"];
+        const VARIANTS: &[&str] = &["insufficient_permissions",
+                                    "other",
+                                    "doc_not_found",
+                                    "content_malformed",
+                                    "revision_mismatch",
+                                    "doc_length_exceeded",
+                                    "image_size_exceeded",
+                                    "doc_archived",
+                                    "doc_deleted"];
         deserializer.deserialize_struct("PaperDocUpdateError", VARIANTS, EnumVisitor)
     }
 }
@@ -3831,10 +3831,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdatePolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["append",
-                                                    "prepend",
-                                                    "overwrite_all",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["append",
+                                    "prepend",
+                                    "overwrite_all",
+                                    "other"];
         deserializer.deserialize_struct("PaperDocUpdatePolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -3882,7 +3882,7 @@ impl RefPaperDoc {
 
 }
 
-const REF_PAPER_DOC_FIELDS: &'static [&'static str] = &["doc_id"];
+const REF_PAPER_DOC_FIELDS: &[&str] = &["doc_id"];
 impl RefPaperDoc {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3961,8 +3961,8 @@ impl RemovePaperDocUser {
 
 }
 
-const REMOVE_PAPER_DOC_USER_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                "member"];
+const REMOVE_PAPER_DOC_USER_FIELDS: &[&str] = &["doc_id",
+                                                "member"];
 impl RemovePaperDocUser {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4049,8 +4049,8 @@ impl Default for SharingPolicy {
     }
 }
 
-const SHARING_POLICY_FIELDS: &'static [&'static str] = &["public_sharing_policy",
-                                                         "team_sharing_policy"];
+const SHARING_POLICY_FIELDS: &[&str] = &["public_sharing_policy",
+                                         "team_sharing_policy"];
 impl SharingPolicy {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4155,10 +4155,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingPublicPolicyType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["people_with_link_can_edit",
-                                                    "people_with_link_can_view_and_comment",
-                                                    "invite_only",
-                                                    "disabled"];
+        const VARIANTS: &[&str] = &["people_with_link_can_edit",
+                                    "people_with_link_can_view_and_comment",
+                                    "invite_only",
+                                    "disabled"];
         deserializer.deserialize_struct("SharingPublicPolicyType", VARIANTS, EnumVisitor)
     }
 }
@@ -4230,9 +4230,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingTeamPolicyType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["people_with_link_can_edit",
-                                                    "people_with_link_can_view_and_comment",
-                                                    "invite_only"];
+        const VARIANTS: &[&str] = &["people_with_link_can_edit",
+                                    "people_with_link_can_view_and_comment",
+                                    "invite_only"];
         deserializer.deserialize_struct("SharingTeamPolicyType", VARIANTS, EnumVisitor)
     }
 }
@@ -4282,8 +4282,8 @@ impl UserInfoWithPermissionLevel {
 
 }
 
-const USER_INFO_WITH_PERMISSION_LEVEL_FIELDS: &'static [&'static str] = &["user",
-                                                                          "permission_level"];
+const USER_INFO_WITH_PERMISSION_LEVEL_FIELDS: &[&str] = &["user",
+                                                          "permission_level"];
 impl UserInfoWithPermissionLevel {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4384,9 +4384,9 @@ impl<'de> ::serde::de::Deserialize<'de> for UserOnPaperDocFilter {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["visited",
-                                                    "shared",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["visited",
+                                    "shared",
+                                    "other"];
         deserializer.deserialize_struct("UserOnPaperDocFilter", VARIANTS, EnumVisitor)
     }
 }

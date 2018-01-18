@@ -108,12 +108,12 @@ impl Account {
 
 }
 
-const ACCOUNT_FIELDS: &'static [&'static str] = &["account_id",
-                                                  "name",
-                                                  "email",
-                                                  "email_verified",
-                                                  "disabled",
-                                                  "profile_photo_url"];
+const ACCOUNT_FIELDS: &[&str] = &["account_id",
+                                  "name",
+                                  "email",
+                                  "email_verified",
+                                  "disabled",
+                                  "profile_photo_url"];
 impl Account {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -275,14 +275,14 @@ impl BasicAccount {
 
 }
 
-const BASIC_ACCOUNT_FIELDS: &'static [&'static str] = &["account_id",
-                                                        "name",
-                                                        "email",
-                                                        "email_verified",
-                                                        "disabled",
-                                                        "is_teammate",
-                                                        "profile_photo_url",
-                                                        "team_member_id"];
+const BASIC_ACCOUNT_FIELDS: &[&str] = &["account_id",
+                                        "name",
+                                        "email",
+                                        "email_verified",
+                                        "disabled",
+                                        "is_teammate",
+                                        "profile_photo_url",
+                                        "team_member_id"];
 impl BasicAccount {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -497,20 +497,20 @@ impl FullAccount {
 
 }
 
-const FULL_ACCOUNT_FIELDS: &'static [&'static str] = &["account_id",
-                                                       "name",
-                                                       "email",
-                                                       "email_verified",
-                                                       "disabled",
-                                                       "locale",
-                                                       "referral_link",
-                                                       "is_paired",
-                                                       "account_type",
-                                                       "root_info",
-                                                       "profile_photo_url",
-                                                       "country",
-                                                       "team",
-                                                       "team_member_id"];
+const FULL_ACCOUNT_FIELDS: &[&str] = &["account_id",
+                                       "name",
+                                       "email",
+                                       "email_verified",
+                                       "disabled",
+                                       "locale",
+                                       "referral_link",
+                                       "is_paired",
+                                       "account_type",
+                                       "root_info",
+                                       "profile_photo_url",
+                                       "country",
+                                       "team",
+                                       "team_member_id"];
 impl FullAccount {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -717,10 +717,10 @@ impl FullTeam {
 
 }
 
-const FULL_TEAM_FIELDS: &'static [&'static str] = &["id",
-                                                    "name",
-                                                    "sharing_policies",
-                                                    "office_addin_policy"];
+const FULL_TEAM_FIELDS: &[&str] = &["id",
+                                    "name",
+                                    "sharing_policies",
+                                    "office_addin_policy"];
 impl FullTeam {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -822,7 +822,7 @@ impl GetAccountArg {
 
 }
 
-const GET_ACCOUNT_ARG_FIELDS: &'static [&'static str] = &["account_id"];
+const GET_ACCOUNT_ARG_FIELDS: &[&str] = &["account_id"];
 impl GetAccountArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -897,7 +897,7 @@ impl GetAccountBatchArg {
 
 }
 
-const GET_ACCOUNT_BATCH_ARG_FIELDS: &'static [&'static str] = &["account_ids"];
+const GET_ACCOUNT_BATCH_ARG_FIELDS: &[&str] = &["account_ids"];
 impl GetAccountBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -992,8 +992,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["no_account",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["no_account",
+                                    "other"];
         deserializer.deserialize_struct("GetAccountBatchError", VARIANTS, EnumVisitor)
     }
 }
@@ -1055,8 +1055,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GetAccountError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["no_account",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["no_account",
+                                    "other"];
         deserializer.deserialize_struct("GetAccountError", VARIANTS, EnumVisitor)
     }
 }
@@ -1104,7 +1104,7 @@ impl IndividualSpaceAllocation {
 
 }
 
-const INDIVIDUAL_SPACE_ALLOCATION_FIELDS: &'static [&'static str] = &["allocated"];
+const INDIVIDUAL_SPACE_ALLOCATION_FIELDS: &[&str] = &["allocated"];
 impl IndividualSpaceAllocation {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1200,11 +1200,11 @@ impl Name {
 
 }
 
-const NAME_FIELDS: &'static [&'static str] = &["given_name",
-                                               "surname",
-                                               "familiar_name",
-                                               "display_name",
-                                               "abbreviated_name"];
+const NAME_FIELDS: &[&str] = &["given_name",
+                               "surname",
+                               "familiar_name",
+                               "display_name",
+                               "abbreviated_name"];
 impl Name {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1332,9 +1332,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceAllocation {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["individual",
-                                                    "team",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["individual",
+                                    "team",
+                                    "other"];
         deserializer.deserialize_struct("SpaceAllocation", VARIANTS, EnumVisitor)
     }
 }
@@ -1382,8 +1382,8 @@ impl SpaceUsage {
 
 }
 
-const SPACE_USAGE_FIELDS: &'static [&'static str] = &["used",
-                                                      "allocation"];
+const SPACE_USAGE_FIELDS: &[&str] = &["used",
+                                      "allocation"];
 impl SpaceUsage {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1471,8 +1471,8 @@ impl Team {
 
 }
 
-const TEAM_FIELDS: &'static [&'static str] = &["id",
-                                               "name"];
+const TEAM_FIELDS: &[&str] = &["id",
+                               "name"];
 impl Team {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1571,10 +1571,10 @@ impl TeamSpaceAllocation {
 
 }
 
-const TEAM_SPACE_ALLOCATION_FIELDS: &'static [&'static str] = &["used",
-                                                                "allocated",
-                                                                "user_within_team_space_allocated",
-                                                                "user_within_team_space_limit_type"];
+const TEAM_SPACE_ALLOCATION_FIELDS: &[&str] = &["used",
+                                                "allocated",
+                                                "user_within_team_space_allocated",
+                                                "user_within_team_space_limit_type"];
 impl TeamSpaceAllocation {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,

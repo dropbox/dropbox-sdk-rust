@@ -91,12 +91,12 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessMethodLogInfo {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["end_user",
-                                                    "sign_in_as",
-                                                    "content_manager",
-                                                    "admin_console",
-                                                    "api",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["end_user",
+                                    "sign_in_as",
+                                    "content_manager",
+                                    "admin_console",
+                                    "api",
+                                    "other"];
         deserializer.deserialize_struct("AccessMethodLogInfo", VARIANTS, EnumVisitor)
     }
 }
@@ -175,9 +175,9 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureAvailability {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["unavailable",
-                                                    "available",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["unavailable",
+                                    "available",
+                                    "other"];
         deserializer.deserialize_struct("AccountCaptureAvailability", VARIANTS, EnumVisitor)
     }
 }
@@ -228,8 +228,8 @@ impl AccountCaptureChangeAvailabilityDetails {
 
 }
 
-const ACCOUNT_CAPTURE_CHANGE_AVAILABILITY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                      "previous_value"];
+const ACCOUNT_CAPTURE_CHANGE_AVAILABILITY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                      "previous_value"];
 impl AccountCaptureChangeAvailabilityDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -312,7 +312,7 @@ impl AccountCaptureChangeAvailabilityType {
 
 }
 
-const ACCOUNT_CAPTURE_CHANGE_AVAILABILITY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const ACCOUNT_CAPTURE_CHANGE_AVAILABILITY_TYPE_FIELDS: &[&str] = &["description"];
 impl AccountCaptureChangeAvailabilityType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -396,8 +396,8 @@ impl AccountCaptureChangePolicyDetails {
 
 }
 
-const ACCOUNT_CAPTURE_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                "previous_value"];
+const ACCOUNT_CAPTURE_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                "previous_value"];
 impl AccountCaptureChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -480,7 +480,7 @@ impl AccountCaptureChangePolicyType {
 
 }
 
-const ACCOUNT_CAPTURE_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const ACCOUNT_CAPTURE_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl AccountCaptureChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -556,7 +556,7 @@ impl AccountCaptureMigrateAccountDetails {
 
 }
 
-const ACCOUNT_CAPTURE_MIGRATE_ACCOUNT_DETAILS_FIELDS: &'static [&'static str] = &["domain_name"];
+const ACCOUNT_CAPTURE_MIGRATE_ACCOUNT_DETAILS_FIELDS: &[&str] = &["domain_name"];
 impl AccountCaptureMigrateAccountDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -630,7 +630,7 @@ impl AccountCaptureMigrateAccountType {
 
 }
 
-const ACCOUNT_CAPTURE_MIGRATE_ACCOUNT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const ACCOUNT_CAPTURE_MIGRATE_ACCOUNT_TYPE_FIELDS: &[&str] = &["description"];
 impl AccountCaptureMigrateAccountType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -706,7 +706,7 @@ impl AccountCaptureNotificationEmailsSentDetails {
 
 }
 
-const ACCOUNT_CAPTURE_NOTIFICATION_EMAILS_SENT_DETAILS_FIELDS: &'static [&'static str] = &["domain_name"];
+const ACCOUNT_CAPTURE_NOTIFICATION_EMAILS_SENT_DETAILS_FIELDS: &[&str] = &["domain_name"];
 impl AccountCaptureNotificationEmailsSentDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -780,7 +780,7 @@ impl AccountCaptureNotificationEmailsSentType {
 
 }
 
-const ACCOUNT_CAPTURE_NOTIFICATION_EMAILS_SENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const ACCOUNT_CAPTURE_NOTIFICATION_EMAILS_SENT_TYPE_FIELDS: &[&str] = &["description"];
 impl AccountCaptureNotificationEmailsSentType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -871,10 +871,10 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountCapturePolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "invited_users",
-                                                    "all_users",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "invited_users",
+                                    "all_users",
+                                    "other"];
         deserializer.deserialize_struct("AccountCapturePolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -924,7 +924,7 @@ impl AccountCaptureRelinquishAccountDetails {
 
 }
 
-const ACCOUNT_CAPTURE_RELINQUISH_ACCOUNT_DETAILS_FIELDS: &'static [&'static str] = &["domain_name"];
+const ACCOUNT_CAPTURE_RELINQUISH_ACCOUNT_DETAILS_FIELDS: &[&str] = &["domain_name"];
 impl AccountCaptureRelinquishAccountDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -998,7 +998,7 @@ impl AccountCaptureRelinquishAccountType {
 
 }
 
-const ACCOUNT_CAPTURE_RELINQUISH_ACCOUNT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const ACCOUNT_CAPTURE_RELINQUISH_ACCOUNT_TYPE_FIELDS: &[&str] = &["description"];
 impl AccountCaptureRelinquishAccountType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1096,9 +1096,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ActionDetails {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["team_join_details",
-                                                    "remove_action",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["team_join_details",
+                                    "remove_action",
+                                    "other"];
         deserializer.deserialize_struct("ActionDetails", VARIANTS, EnumVisitor)
     }
 }
@@ -1189,13 +1189,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ActorLogInfo {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user",
-                                                    "admin",
-                                                    "app",
-                                                    "reseller",
-                                                    "dropbox",
-                                                    "anonymous",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user",
+                                    "admin",
+                                    "app",
+                                    "reseller",
+                                    "dropbox",
+                                    "anonymous",
+                                    "other"];
         deserializer.deserialize_struct("ActorLogInfo", VARIANTS, EnumVisitor)
     }
 }
@@ -1285,12 +1285,12 @@ impl<'de> ::serde::de::Deserialize<'de> for AdminRole {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["team_admin",
-                                                    "user_management_admin",
-                                                    "support_admin",
-                                                    "limited_admin",
-                                                    "member_only",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["team_admin",
+                                    "user_management_admin",
+                                    "support_admin",
+                                    "limited_admin",
+                                    "member_only",
+                                    "other"];
         deserializer.deserialize_struct("AdminRole", VARIANTS, EnumVisitor)
     }
 }
@@ -1347,7 +1347,7 @@ impl Default for AllowDownloadDisabledDetails {
     }
 }
 
-const ALLOW_DOWNLOAD_DISABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
+const ALLOW_DOWNLOAD_DISABLED_DETAILS_FIELDS: &[&str] = &[];
 impl AllowDownloadDisabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1401,7 +1401,7 @@ impl AllowDownloadDisabledType {
 
 }
 
-const ALLOW_DOWNLOAD_DISABLED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const ALLOW_DOWNLOAD_DISABLED_TYPE_FIELDS: &[&str] = &["description"];
 impl AllowDownloadDisabledType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1473,7 +1473,7 @@ impl Default for AllowDownloadEnabledDetails {
     }
 }
 
-const ALLOW_DOWNLOAD_ENABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
+const ALLOW_DOWNLOAD_ENABLED_DETAILS_FIELDS: &[&str] = &[];
 impl AllowDownloadEnabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1527,7 +1527,7 @@ impl AllowDownloadEnabledType {
 
 }
 
-const ALLOW_DOWNLOAD_ENABLED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const ALLOW_DOWNLOAD_ENABLED_TYPE_FIELDS: &[&str] = &["description"];
 impl AllowDownloadEnabledType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1603,7 +1603,7 @@ impl ApiSessionLogInfo {
 
 }
 
-const API_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["request_id"];
+const API_SESSION_LOG_INFO_FIELDS: &[&str] = &["request_id"];
 impl ApiSessionLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1679,7 +1679,7 @@ impl AppLinkTeamDetails {
 
 }
 
-const APP_LINK_TEAM_DETAILS_FIELDS: &'static [&'static str] = &["app_info"];
+const APP_LINK_TEAM_DETAILS_FIELDS: &[&str] = &["app_info"];
 impl AppLinkTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1753,7 +1753,7 @@ impl AppLinkTeamType {
 
 }
 
-const APP_LINK_TEAM_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const APP_LINK_TEAM_TYPE_FIELDS: &[&str] = &["description"];
 impl AppLinkTeamType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1829,7 +1829,7 @@ impl AppLinkUserDetails {
 
 }
 
-const APP_LINK_USER_DETAILS_FIELDS: &'static [&'static str] = &["app_info"];
+const APP_LINK_USER_DETAILS_FIELDS: &[&str] = &["app_info"];
 impl AppLinkUserDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1903,7 +1903,7 @@ impl AppLinkUserType {
 
 }
 
-const APP_LINK_USER_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const APP_LINK_USER_TYPE_FIELDS: &[&str] = &["description"];
 impl AppLinkUserType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1995,9 +1995,9 @@ impl<'de> ::serde::de::Deserialize<'de> for AppLogInfo {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["team_linked_app",
-                                                    "team_linked_app",
-                                                    "team_linked_app"];
+        const VARIANTS: &[&str] = &["team_linked_app",
+                                    "team_linked_app",
+                                    "team_linked_app"];
         deserializer.deserialize_struct("AppLogInfo", VARIANTS, EnumVisitor)
     }
 }
@@ -2049,7 +2049,7 @@ impl AppUnlinkTeamDetails {
 
 }
 
-const APP_UNLINK_TEAM_DETAILS_FIELDS: &'static [&'static str] = &["app_info"];
+const APP_UNLINK_TEAM_DETAILS_FIELDS: &[&str] = &["app_info"];
 impl AppUnlinkTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2123,7 +2123,7 @@ impl AppUnlinkTeamType {
 
 }
 
-const APP_UNLINK_TEAM_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const APP_UNLINK_TEAM_TYPE_FIELDS: &[&str] = &["description"];
 impl AppUnlinkTeamType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2199,7 +2199,7 @@ impl AppUnlinkUserDetails {
 
 }
 
-const APP_UNLINK_USER_DETAILS_FIELDS: &'static [&'static str] = &["app_info"];
+const APP_UNLINK_USER_DETAILS_FIELDS: &[&str] = &["app_info"];
 impl AppUnlinkUserDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2273,7 +2273,7 @@ impl AppUnlinkUserType {
 
 }
 
-const APP_UNLINK_USER_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const APP_UNLINK_USER_TYPE_FIELDS: &[&str] = &["description"];
 impl AppUnlinkUserType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2371,11 +2371,11 @@ impl<'de> ::serde::de::Deserialize<'de> for AssetLogInfo {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["file",
-                                                    "folder",
-                                                    "paper_document",
-                                                    "paper_folder",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["file",
+                                    "folder",
+                                    "paper_document",
+                                    "paper_folder",
+                                    "other"];
         deserializer.deserialize_struct("AssetLogInfo", VARIANTS, EnumVisitor)
     }
 }
@@ -2464,13 +2464,13 @@ impl Certificate {
 
 }
 
-const CERTIFICATE_FIELDS: &'static [&'static str] = &["subject",
-                                                      "issuer",
-                                                      "issue_date",
-                                                      "expiration_date",
-                                                      "serial_number",
-                                                      "sha1_fingerprint",
-                                                      "common_name"];
+const CERTIFICATE_FIELDS: &[&str] = &["subject",
+                                      "issuer",
+                                      "issue_date",
+                                      "expiration_date",
+                                      "serial_number",
+                                      "sha1_fingerprint",
+                                      "common_name"];
 impl Certificate {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2600,7 +2600,7 @@ impl CollectionShareDetails {
 
 }
 
-const COLLECTION_SHARE_DETAILS_FIELDS: &'static [&'static str] = &["album_name"];
+const COLLECTION_SHARE_DETAILS_FIELDS: &[&str] = &["album_name"];
 impl CollectionShareDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2674,7 +2674,7 @@ impl CollectionShareType {
 
 }
 
-const COLLECTION_SHARE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const COLLECTION_SHARE_TYPE_FIELDS: &[&str] = &["description"];
 impl CollectionShareType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2764,9 +2764,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ContentPermanentDeletePolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
         deserializer.deserialize_struct("ContentPermanentDeletePolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -2831,11 +2831,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ContextLogInfo {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["team_member",
-                                                    "non_team_member",
-                                                    "anonymous",
-                                                    "team",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["team_member",
+                                    "non_team_member",
+                                    "anonymous",
+                                    "team",
+                                    "other"];
         deserializer.deserialize_struct("ContextLogInfo", VARIANTS, EnumVisitor)
     }
 }
@@ -2888,7 +2888,7 @@ impl Default for CreateFolderDetails {
     }
 }
 
-const CREATE_FOLDER_DETAILS_FIELDS: &'static [&'static str] = &[];
+const CREATE_FOLDER_DETAILS_FIELDS: &[&str] = &[];
 impl CreateFolderDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2942,7 +2942,7 @@ impl CreateFolderType {
 
 }
 
-const CREATE_FOLDER_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const CREATE_FOLDER_TYPE_FIELDS: &[&str] = &["description"];
 impl CreateFolderType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3021,8 +3021,8 @@ impl DataPlacementRestrictionChangePolicyDetails {
 
 }
 
-const DATA_PLACEMENT_RESTRICTION_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
-                                                                                           "new_value"];
+const DATA_PLACEMENT_RESTRICTION_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                                           "new_value"];
 impl DataPlacementRestrictionChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3105,7 +3105,7 @@ impl DataPlacementRestrictionChangePolicyType {
 
 }
 
-const DATA_PLACEMENT_RESTRICTION_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DATA_PLACEMENT_RESTRICTION_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl DataPlacementRestrictionChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3182,7 +3182,7 @@ impl DataPlacementRestrictionSatisfyPolicyDetails {
 
 }
 
-const DATA_PLACEMENT_RESTRICTION_SATISFY_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["placement_restriction"];
+const DATA_PLACEMENT_RESTRICTION_SATISFY_POLICY_DETAILS_FIELDS: &[&str] = &["placement_restriction"];
 impl DataPlacementRestrictionSatisfyPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3256,7 +3256,7 @@ impl DataPlacementRestrictionSatisfyPolicyType {
 
 }
 
-const DATA_PLACEMENT_RESTRICTION_SATISFY_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DATA_PLACEMENT_RESTRICTION_SATISFY_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl DataPlacementRestrictionSatisfyPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3388,15 +3388,15 @@ impl DesktopDeviceSessionLogInfo {
 
 }
 
-const DESKTOP_DEVICE_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["host_name",
-                                                                          "client_type",
-                                                                          "platform",
-                                                                          "is_delete_on_unlink_supported",
-                                                                          "session_id",
-                                                                          "ip_address",
-                                                                          "created",
-                                                                          "updated",
-                                                                          "client_version"];
+const DESKTOP_DEVICE_SESSION_LOG_INFO_FIELDS: &[&str] = &["host_name",
+                                                          "client_type",
+                                                          "platform",
+                                                          "is_delete_on_unlink_supported",
+                                                          "session_id",
+                                                          "ip_address",
+                                                          "created",
+                                                          "updated",
+                                                          "client_version"];
 impl DesktopDeviceSessionLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3543,7 +3543,7 @@ impl Default for DesktopSessionLogInfo {
     }
 }
 
-const DESKTOP_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["session_id"];
+const DESKTOP_SESSION_LOG_INFO_FIELDS: &[&str] = &["session_id"];
 impl DesktopSessionLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3622,8 +3622,8 @@ impl Default for DeviceApprovalsChangeDesktopPolicyDetails {
     }
 }
 
-const DEVICE_APPROVALS_CHANGE_DESKTOP_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                         "previous_value"];
+const DEVICE_APPROVALS_CHANGE_DESKTOP_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                         "previous_value"];
 impl DeviceApprovalsChangeDesktopPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3706,7 +3706,7 @@ impl DeviceApprovalsChangeDesktopPolicyType {
 
 }
 
-const DEVICE_APPROVALS_CHANGE_DESKTOP_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_APPROVALS_CHANGE_DESKTOP_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceApprovalsChangeDesktopPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3785,8 +3785,8 @@ impl Default for DeviceApprovalsChangeMobilePolicyDetails {
     }
 }
 
-const DEVICE_APPROVALS_CHANGE_MOBILE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                        "previous_value"];
+const DEVICE_APPROVALS_CHANGE_MOBILE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                        "previous_value"];
 impl DeviceApprovalsChangeMobilePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3869,7 +3869,7 @@ impl DeviceApprovalsChangeMobilePolicyType {
 
 }
 
-const DEVICE_APPROVALS_CHANGE_MOBILE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_APPROVALS_CHANGE_MOBILE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceApprovalsChangeMobilePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3948,8 +3948,8 @@ impl Default for DeviceApprovalsChangeOverageActionDetails {
     }
 }
 
-const DEVICE_APPROVALS_CHANGE_OVERAGE_ACTION_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                         "previous_value"];
+const DEVICE_APPROVALS_CHANGE_OVERAGE_ACTION_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                         "previous_value"];
 impl DeviceApprovalsChangeOverageActionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4032,7 +4032,7 @@ impl DeviceApprovalsChangeOverageActionType {
 
 }
 
-const DEVICE_APPROVALS_CHANGE_OVERAGE_ACTION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_APPROVALS_CHANGE_OVERAGE_ACTION_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceApprovalsChangeOverageActionType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4111,8 +4111,8 @@ impl Default for DeviceApprovalsChangeUnlinkActionDetails {
     }
 }
 
-const DEVICE_APPROVALS_CHANGE_UNLINK_ACTION_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                        "previous_value"];
+const DEVICE_APPROVALS_CHANGE_UNLINK_ACTION_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                        "previous_value"];
 impl DeviceApprovalsChangeUnlinkActionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4195,7 +4195,7 @@ impl DeviceApprovalsChangeUnlinkActionType {
 
 }
 
-const DEVICE_APPROVALS_CHANGE_UNLINK_ACTION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_APPROVALS_CHANGE_UNLINK_ACTION_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceApprovalsChangeUnlinkActionType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4284,9 +4284,9 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceApprovalsPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["unlimited",
-                                                    "limited",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["unlimited",
+                                    "limited",
+                                    "other"];
         deserializer.deserialize_struct("DeviceApprovalsPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -4329,7 +4329,7 @@ impl DeviceChangeIpDesktopDetails {
 
 }
 
-const DEVICE_CHANGE_IP_DESKTOP_DETAILS_FIELDS: &'static [&'static str] = &["device_session_info"];
+const DEVICE_CHANGE_IP_DESKTOP_DETAILS_FIELDS: &[&str] = &["device_session_info"];
 impl DeviceChangeIpDesktopDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4403,7 +4403,7 @@ impl DeviceChangeIpDesktopType {
 
 }
 
-const DEVICE_CHANGE_IP_DESKTOP_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_CHANGE_IP_DESKTOP_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceChangeIpDesktopType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4479,7 +4479,7 @@ impl DeviceChangeIpMobileDetails {
 
 }
 
-const DEVICE_CHANGE_IP_MOBILE_DETAILS_FIELDS: &'static [&'static str] = &["device_session_info"];
+const DEVICE_CHANGE_IP_MOBILE_DETAILS_FIELDS: &[&str] = &["device_session_info"];
 impl DeviceChangeIpMobileDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4553,7 +4553,7 @@ impl DeviceChangeIpMobileType {
 
 }
 
-const DEVICE_CHANGE_IP_MOBILE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_CHANGE_IP_MOBILE_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceChangeIpMobileType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4637,8 +4637,8 @@ impl DeviceChangeIpWebDetails {
 
 }
 
-const DEVICE_CHANGE_IP_WEB_DETAILS_FIELDS: &'static [&'static str] = &["user_agent",
-                                                                       "device_session_info"];
+const DEVICE_CHANGE_IP_WEB_DETAILS_FIELDS: &[&str] = &["user_agent",
+                                                       "device_session_info"];
 impl DeviceChangeIpWebDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4721,7 +4721,7 @@ impl DeviceChangeIpWebType {
 
 }
 
-const DEVICE_CHANGE_IP_WEB_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_CHANGE_IP_WEB_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceChangeIpWebType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4813,9 +4813,9 @@ impl DeviceDeleteOnUnlinkFailDetails {
 
 }
 
-const DEVICE_DELETE_ON_UNLINK_FAIL_DETAILS_FIELDS: &'static [&'static str] = &["num_failures",
-                                                                               "session_id",
-                                                                               "display_name"];
+const DEVICE_DELETE_ON_UNLINK_FAIL_DETAILS_FIELDS: &[&str] = &["num_failures",
+                                                               "session_id",
+                                                               "display_name"];
 impl DeviceDeleteOnUnlinkFailDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4907,7 +4907,7 @@ impl DeviceDeleteOnUnlinkFailType {
 
 }
 
-const DEVICE_DELETE_ON_UNLINK_FAIL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_DELETE_ON_UNLINK_FAIL_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceDeleteOnUnlinkFailType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4985,8 +4985,8 @@ impl Default for DeviceDeleteOnUnlinkSuccessDetails {
     }
 }
 
-const DEVICE_DELETE_ON_UNLINK_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &["session_id",
-                                                                                  "display_name"];
+const DEVICE_DELETE_ON_UNLINK_SUCCESS_DETAILS_FIELDS: &[&str] = &["session_id",
+                                                                  "display_name"];
 impl DeviceDeleteOnUnlinkSuccessDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5069,7 +5069,7 @@ impl DeviceDeleteOnUnlinkSuccessType {
 
 }
 
-const DEVICE_DELETE_ON_UNLINK_SUCCESS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_DELETE_ON_UNLINK_SUCCESS_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceDeleteOnUnlinkSuccessType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5153,8 +5153,8 @@ impl DeviceLinkFailDetails {
 
 }
 
-const DEVICE_LINK_FAIL_DETAILS_FIELDS: &'static [&'static str] = &["device_type",
-                                                                   "ip_address"];
+const DEVICE_LINK_FAIL_DETAILS_FIELDS: &[&str] = &["device_type",
+                                                   "ip_address"];
 impl DeviceLinkFailDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5237,7 +5237,7 @@ impl DeviceLinkFailType {
 
 }
 
-const DEVICE_LINK_FAIL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_LINK_FAIL_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceLinkFailType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5313,7 +5313,7 @@ impl DeviceLinkSuccessDetails {
 
 }
 
-const DEVICE_LINK_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &["device_session_info"];
+const DEVICE_LINK_SUCCESS_DETAILS_FIELDS: &[&str] = &["device_session_info"];
 impl DeviceLinkSuccessDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5387,7 +5387,7 @@ impl DeviceLinkSuccessType {
 
 }
 
-const DEVICE_LINK_SUCCESS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_LINK_SUCCESS_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceLinkSuccessType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5459,7 +5459,7 @@ impl Default for DeviceManagementDisabledDetails {
     }
 }
 
-const DEVICE_MANAGEMENT_DISABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
+const DEVICE_MANAGEMENT_DISABLED_DETAILS_FIELDS: &[&str] = &[];
 impl DeviceManagementDisabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5513,7 +5513,7 @@ impl DeviceManagementDisabledType {
 
 }
 
-const DEVICE_MANAGEMENT_DISABLED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_MANAGEMENT_DISABLED_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceManagementDisabledType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5585,7 +5585,7 @@ impl Default for DeviceManagementEnabledDetails {
     }
 }
 
-const DEVICE_MANAGEMENT_ENABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
+const DEVICE_MANAGEMENT_ENABLED_DETAILS_FIELDS: &[&str] = &[];
 impl DeviceManagementEnabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5639,7 +5639,7 @@ impl DeviceManagementEnabledType {
 
 }
 
-const DEVICE_MANAGEMENT_ENABLED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_MANAGEMENT_ENABLED_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceManagementEnabledType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5733,10 +5733,10 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceSessionLogInfo {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["legacy_device_session",
-                                                    "legacy_device_session",
-                                                    "legacy_device_session",
-                                                    "legacy_device_session"];
+        const VARIANTS: &[&str] = &["legacy_device_session",
+                                    "legacy_device_session",
+                                    "legacy_device_session",
+                                    "legacy_device_session"];
         deserializer.deserialize_struct("DeviceSessionLogInfo", VARIANTS, EnumVisitor)
     }
 }
@@ -5837,9 +5837,9 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["desktop",
-                                                    "mobile",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["desktop",
+                                    "mobile",
+                                    "other"];
         deserializer.deserialize_struct("DeviceType", VARIANTS, EnumVisitor)
     }
 }
@@ -5898,9 +5898,9 @@ impl DeviceUnlinkDetails {
 
 }
 
-const DEVICE_UNLINK_DETAILS_FIELDS: &'static [&'static str] = &["delete_data",
-                                                                "session_id",
-                                                                "display_name"];
+const DEVICE_UNLINK_DETAILS_FIELDS: &[&str] = &["delete_data",
+                                                "session_id",
+                                                "display_name"];
 impl DeviceUnlinkDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6007,9 +6007,9 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceUnlinkPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["remove",
-                                                    "keep",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["remove",
+                                    "keep",
+                                    "other"];
         deserializer.deserialize_struct("DeviceUnlinkPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -6050,7 +6050,7 @@ impl DeviceUnlinkType {
 
 }
 
-const DEVICE_UNLINK_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DEVICE_UNLINK_TYPE_FIELDS: &[&str] = &["description"];
 impl DeviceUnlinkType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6122,7 +6122,7 @@ impl Default for DisabledDomainInvitesDetails {
     }
 }
 
-const DISABLED_DOMAIN_INVITES_DETAILS_FIELDS: &'static [&'static str] = &[];
+const DISABLED_DOMAIN_INVITES_DETAILS_FIELDS: &[&str] = &[];
 impl DisabledDomainInvitesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6176,7 +6176,7 @@ impl DisabledDomainInvitesType {
 
 }
 
-const DISABLED_DOMAIN_INVITES_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DISABLED_DOMAIN_INVITES_TYPE_FIELDS: &[&str] = &["description"];
 impl DisabledDomainInvitesType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6248,7 +6248,7 @@ impl Default for DomainInvitesApproveRequestToJoinTeamDetails {
     }
 }
 
-const DOMAIN_INVITES_APPROVE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS: &'static [&'static str] = &[];
+const DOMAIN_INVITES_APPROVE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS: &[&str] = &[];
 impl DomainInvitesApproveRequestToJoinTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6302,7 +6302,7 @@ impl DomainInvitesApproveRequestToJoinTeamType {
 
 }
 
-const DOMAIN_INVITES_APPROVE_REQUEST_TO_JOIN_TEAM_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DOMAIN_INVITES_APPROVE_REQUEST_TO_JOIN_TEAM_TYPE_FIELDS: &[&str] = &["description"];
 impl DomainInvitesApproveRequestToJoinTeamType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6374,7 +6374,7 @@ impl Default for DomainInvitesDeclineRequestToJoinTeamDetails {
     }
 }
 
-const DOMAIN_INVITES_DECLINE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS: &'static [&'static str] = &[];
+const DOMAIN_INVITES_DECLINE_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS: &[&str] = &[];
 impl DomainInvitesDeclineRequestToJoinTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6428,7 +6428,7 @@ impl DomainInvitesDeclineRequestToJoinTeamType {
 
 }
 
-const DOMAIN_INVITES_DECLINE_REQUEST_TO_JOIN_TEAM_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DOMAIN_INVITES_DECLINE_REQUEST_TO_JOIN_TEAM_TYPE_FIELDS: &[&str] = &["description"];
 impl DomainInvitesDeclineRequestToJoinTeamType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6507,8 +6507,8 @@ impl DomainInvitesEmailExistingUsersDetails {
 
 }
 
-const DOMAIN_INVITES_EMAIL_EXISTING_USERS_DETAILS_FIELDS: &'static [&'static str] = &["domain_name",
-                                                                                      "num_recipients"];
+const DOMAIN_INVITES_EMAIL_EXISTING_USERS_DETAILS_FIELDS: &[&str] = &["domain_name",
+                                                                      "num_recipients"];
 impl DomainInvitesEmailExistingUsersDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6591,7 +6591,7 @@ impl DomainInvitesEmailExistingUsersType {
 
 }
 
-const DOMAIN_INVITES_EMAIL_EXISTING_USERS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DOMAIN_INVITES_EMAIL_EXISTING_USERS_TYPE_FIELDS: &[&str] = &["description"];
 impl DomainInvitesEmailExistingUsersType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6663,7 +6663,7 @@ impl Default for DomainInvitesRequestToJoinTeamDetails {
     }
 }
 
-const DOMAIN_INVITES_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS: &'static [&'static str] = &[];
+const DOMAIN_INVITES_REQUEST_TO_JOIN_TEAM_DETAILS_FIELDS: &[&str] = &[];
 impl DomainInvitesRequestToJoinTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6717,7 +6717,7 @@ impl DomainInvitesRequestToJoinTeamType {
 
 }
 
-const DOMAIN_INVITES_REQUEST_TO_JOIN_TEAM_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DOMAIN_INVITES_REQUEST_TO_JOIN_TEAM_TYPE_FIELDS: &[&str] = &["description"];
 impl DomainInvitesRequestToJoinTeamType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6789,7 +6789,7 @@ impl Default for DomainInvitesSetInviteNewUserPrefToNoDetails {
     }
 }
 
-const DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_NO_DETAILS_FIELDS: &'static [&'static str] = &[];
+const DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_NO_DETAILS_FIELDS: &[&str] = &[];
 impl DomainInvitesSetInviteNewUserPrefToNoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6843,7 +6843,7 @@ impl DomainInvitesSetInviteNewUserPrefToNoType {
 
 }
 
-const DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_NO_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_NO_TYPE_FIELDS: &[&str] = &["description"];
 impl DomainInvitesSetInviteNewUserPrefToNoType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6915,7 +6915,7 @@ impl Default for DomainInvitesSetInviteNewUserPrefToYesDetails {
     }
 }
 
-const DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_YES_DETAILS_FIELDS: &'static [&'static str] = &[];
+const DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_YES_DETAILS_FIELDS: &[&str] = &[];
 impl DomainInvitesSetInviteNewUserPrefToYesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6969,7 +6969,7 @@ impl DomainInvitesSetInviteNewUserPrefToYesType {
 
 }
 
-const DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_YES_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DOMAIN_INVITES_SET_INVITE_NEW_USER_PREF_TO_YES_TYPE_FIELDS: &[&str] = &["description"];
 impl DomainInvitesSetInviteNewUserPrefToYesType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7053,8 +7053,8 @@ impl DomainVerificationAddDomainFailDetails {
 
 }
 
-const DOMAIN_VERIFICATION_ADD_DOMAIN_FAIL_DETAILS_FIELDS: &'static [&'static str] = &["domain_name",
-                                                                                      "verification_method"];
+const DOMAIN_VERIFICATION_ADD_DOMAIN_FAIL_DETAILS_FIELDS: &[&str] = &["domain_name",
+                                                                      "verification_method"];
 impl DomainVerificationAddDomainFailDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7137,7 +7137,7 @@ impl DomainVerificationAddDomainFailType {
 
 }
 
-const DOMAIN_VERIFICATION_ADD_DOMAIN_FAIL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DOMAIN_VERIFICATION_ADD_DOMAIN_FAIL_TYPE_FIELDS: &[&str] = &["description"];
 impl DomainVerificationAddDomainFailType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7221,8 +7221,8 @@ impl DomainVerificationAddDomainSuccessDetails {
 
 }
 
-const DOMAIN_VERIFICATION_ADD_DOMAIN_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &["domain_names",
-                                                                                         "verification_method"];
+const DOMAIN_VERIFICATION_ADD_DOMAIN_SUCCESS_DETAILS_FIELDS: &[&str] = &["domain_names",
+                                                                         "verification_method"];
 impl DomainVerificationAddDomainSuccessDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7305,7 +7305,7 @@ impl DomainVerificationAddDomainSuccessType {
 
 }
 
-const DOMAIN_VERIFICATION_ADD_DOMAIN_SUCCESS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DOMAIN_VERIFICATION_ADD_DOMAIN_SUCCESS_TYPE_FIELDS: &[&str] = &["description"];
 impl DomainVerificationAddDomainSuccessType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7381,7 +7381,7 @@ impl DomainVerificationRemoveDomainDetails {
 
 }
 
-const DOMAIN_VERIFICATION_REMOVE_DOMAIN_DETAILS_FIELDS: &'static [&'static str] = &["domain_names"];
+const DOMAIN_VERIFICATION_REMOVE_DOMAIN_DETAILS_FIELDS: &[&str] = &["domain_names"];
 impl DomainVerificationRemoveDomainDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7455,7 +7455,7 @@ impl DomainVerificationRemoveDomainType {
 
 }
 
-const DOMAIN_VERIFICATION_REMOVE_DOMAIN_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const DOMAIN_VERIFICATION_REMOVE_DOMAIN_TYPE_FIELDS: &[&str] = &["description"];
 impl DomainVerificationRemoveDomainType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7545,9 +7545,9 @@ impl<'de> ::serde::de::Deserialize<'de> for DownloadPolicyType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["allow",
-                                                    "disallow",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["allow",
+                                    "disallow",
+                                    "other"];
         deserializer.deserialize_struct("DownloadPolicyType", VARIANTS, EnumVisitor)
     }
 }
@@ -7593,8 +7593,8 @@ impl DurationLogInfo {
 
 }
 
-const DURATION_LOG_INFO_FIELDS: &'static [&'static str] = &["unit",
-                                                            "amount"];
+const DURATION_LOG_INFO_FIELDS: &[&str] = &["unit",
+                                            "amount"];
 impl DurationLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7676,7 +7676,7 @@ impl Default for EmmAddExceptionDetails {
     }
 }
 
-const EMM_ADD_EXCEPTION_DETAILS_FIELDS: &'static [&'static str] = &[];
+const EMM_ADD_EXCEPTION_DETAILS_FIELDS: &[&str] = &[];
 impl EmmAddExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7730,7 +7730,7 @@ impl EmmAddExceptionType {
 
 }
 
-const EMM_ADD_EXCEPTION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const EMM_ADD_EXCEPTION_TYPE_FIELDS: &[&str] = &["description"];
 impl EmmAddExceptionType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7814,8 +7814,8 @@ impl EmmChangePolicyDetails {
 
 }
 
-const EMM_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                    "previous_value"];
+const EMM_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                    "previous_value"];
 impl EmmChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7898,7 +7898,7 @@ impl EmmChangePolicyType {
 
 }
 
-const EMM_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const EMM_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl EmmChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7970,7 +7970,7 @@ impl Default for EmmCreateExceptionsReportDetails {
     }
 }
 
-const EMM_CREATE_EXCEPTIONS_REPORT_DETAILS_FIELDS: &'static [&'static str] = &[];
+const EMM_CREATE_EXCEPTIONS_REPORT_DETAILS_FIELDS: &[&str] = &[];
 impl EmmCreateExceptionsReportDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8024,7 +8024,7 @@ impl EmmCreateExceptionsReportType {
 
 }
 
-const EMM_CREATE_EXCEPTIONS_REPORT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const EMM_CREATE_EXCEPTIONS_REPORT_TYPE_FIELDS: &[&str] = &["description"];
 impl EmmCreateExceptionsReportType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8096,7 +8096,7 @@ impl Default for EmmCreateUsageReportDetails {
     }
 }
 
-const EMM_CREATE_USAGE_REPORT_DETAILS_FIELDS: &'static [&'static str] = &[];
+const EMM_CREATE_USAGE_REPORT_DETAILS_FIELDS: &[&str] = &[];
 impl EmmCreateUsageReportDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8150,7 +8150,7 @@ impl EmmCreateUsageReportType {
 
 }
 
-const EMM_CREATE_USAGE_REPORT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const EMM_CREATE_USAGE_REPORT_TYPE_FIELDS: &[&str] = &["description"];
 impl EmmCreateUsageReportType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8226,7 +8226,7 @@ impl EmmErrorDetails {
 
 }
 
-const EMM_ERROR_DETAILS_FIELDS: &'static [&'static str] = &["error_details"];
+const EMM_ERROR_DETAILS_FIELDS: &[&str] = &["error_details"];
 impl EmmErrorDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8300,7 +8300,7 @@ impl EmmErrorType {
 
 }
 
-const EMM_ERROR_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const EMM_ERROR_TYPE_FIELDS: &[&str] = &["description"];
 impl EmmErrorType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8372,7 +8372,7 @@ impl Default for EmmRefreshAuthTokenDetails {
     }
 }
 
-const EMM_REFRESH_AUTH_TOKEN_DETAILS_FIELDS: &'static [&'static str] = &[];
+const EMM_REFRESH_AUTH_TOKEN_DETAILS_FIELDS: &[&str] = &[];
 impl EmmRefreshAuthTokenDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8426,7 +8426,7 @@ impl EmmRefreshAuthTokenType {
 
 }
 
-const EMM_REFRESH_AUTH_TOKEN_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const EMM_REFRESH_AUTH_TOKEN_TYPE_FIELDS: &[&str] = &["description"];
 impl EmmRefreshAuthTokenType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8499,7 +8499,7 @@ impl Default for EmmRemoveExceptionDetails {
     }
 }
 
-const EMM_REMOVE_EXCEPTION_DETAILS_FIELDS: &'static [&'static str] = &[];
+const EMM_REMOVE_EXCEPTION_DETAILS_FIELDS: &[&str] = &[];
 impl EmmRemoveExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8553,7 +8553,7 @@ impl EmmRemoveExceptionType {
 
 }
 
-const EMM_REMOVE_EXCEPTION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const EMM_REMOVE_EXCEPTION_TYPE_FIELDS: &[&str] = &["description"];
 impl EmmRemoveExceptionType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8625,7 +8625,7 @@ impl Default for EnabledDomainInvitesDetails {
     }
 }
 
-const ENABLED_DOMAIN_INVITES_DETAILS_FIELDS: &'static [&'static str] = &[];
+const ENABLED_DOMAIN_INVITES_DETAILS_FIELDS: &[&str] = &[];
 impl EnabledDomainInvitesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8679,7 +8679,7 @@ impl EnabledDomainInvitesType {
 
 }
 
-const ENABLED_DOMAIN_INVITES_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const ENABLED_DOMAIN_INVITES_TYPE_FIELDS: &[&str] = &["description"];
 impl EnabledDomainInvitesType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8823,25 +8823,25 @@ impl<'de> ::serde::de::Deserialize<'de> for EventCategory {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["apps",
-                                                    "comments",
-                                                    "devices",
-                                                    "domains",
-                                                    "file_operations",
-                                                    "file_requests",
-                                                    "groups",
-                                                    "logins",
-                                                    "members",
-                                                    "paper",
-                                                    "passwords",
-                                                    "reports",
-                                                    "sharing",
-                                                    "sso",
-                                                    "team_folders",
-                                                    "team_policies",
-                                                    "team_profile",
-                                                    "tfa",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["apps",
+                                    "comments",
+                                    "devices",
+                                    "domains",
+                                    "file_operations",
+                                    "file_requests",
+                                    "groups",
+                                    "logins",
+                                    "members",
+                                    "paper",
+                                    "passwords",
+                                    "reports",
+                                    "sharing",
+                                    "sso",
+                                    "team_folders",
+                                    "team_policies",
+                                    "team_profile",
+                                    "tfa",
+                                    "other"];
         deserializer.deserialize_struct("EventCategory", VARIANTS, EnumVisitor)
     }
 }
@@ -9537,280 +9537,280 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["app_link_team_details",
-                                                    "app_link_user_details",
-                                                    "app_unlink_team_details",
-                                                    "app_unlink_user_details",
-                                                    "file_add_comment_details",
-                                                    "file_change_comment_subscription_details",
-                                                    "file_delete_comment_details",
-                                                    "file_like_comment_details",
-                                                    "file_resolve_comment_details",
-                                                    "file_unlike_comment_details",
-                                                    "file_unresolve_comment_details",
-                                                    "device_change_ip_desktop_details",
-                                                    "device_change_ip_mobile_details",
-                                                    "device_change_ip_web_details",
-                                                    "device_delete_on_unlink_fail_details",
-                                                    "device_delete_on_unlink_success_details",
-                                                    "device_link_fail_details",
-                                                    "device_link_success_details",
-                                                    "device_management_disabled_details",
-                                                    "device_management_enabled_details",
-                                                    "device_unlink_details",
-                                                    "emm_refresh_auth_token_details",
-                                                    "account_capture_change_availability_details",
-                                                    "account_capture_migrate_account_details",
-                                                    "account_capture_notification_emails_sent_details",
-                                                    "account_capture_relinquish_account_details",
-                                                    "disabled_domain_invites_details",
-                                                    "domain_invites_approve_request_to_join_team_details",
-                                                    "domain_invites_decline_request_to_join_team_details",
-                                                    "domain_invites_email_existing_users_details",
-                                                    "domain_invites_request_to_join_team_details",
-                                                    "domain_invites_set_invite_new_user_pref_to_no_details",
-                                                    "domain_invites_set_invite_new_user_pref_to_yes_details",
-                                                    "domain_verification_add_domain_fail_details",
-                                                    "domain_verification_add_domain_success_details",
-                                                    "domain_verification_remove_domain_details",
-                                                    "enabled_domain_invites_details",
-                                                    "create_folder_details",
-                                                    "file_add_details",
-                                                    "file_copy_details",
-                                                    "file_delete_details",
-                                                    "file_download_details",
-                                                    "file_edit_details",
-                                                    "file_get_copy_reference_details",
-                                                    "file_move_details",
-                                                    "file_permanently_delete_details",
-                                                    "file_preview_details",
-                                                    "file_rename_details",
-                                                    "file_restore_details",
-                                                    "file_revert_details",
-                                                    "file_rollback_changes_details",
-                                                    "file_save_copy_reference_details",
-                                                    "file_request_change_details",
-                                                    "file_request_close_details",
-                                                    "file_request_create_details",
-                                                    "file_request_receive_file_details",
-                                                    "group_add_external_id_details",
-                                                    "group_add_member_details",
-                                                    "group_change_external_id_details",
-                                                    "group_change_management_type_details",
-                                                    "group_change_member_role_details",
-                                                    "group_create_details",
-                                                    "group_delete_details",
-                                                    "group_moved_details",
-                                                    "group_remove_external_id_details",
-                                                    "group_remove_member_details",
-                                                    "group_rename_details",
-                                                    "emm_error_details",
-                                                    "login_fail_details",
-                                                    "login_success_details",
-                                                    "logout_details",
-                                                    "reseller_support_session_end_details",
-                                                    "reseller_support_session_start_details",
-                                                    "sign_in_as_session_end_details",
-                                                    "sign_in_as_session_start_details",
-                                                    "sso_error_details",
-                                                    "member_add_name_details",
-                                                    "member_change_admin_role_details",
-                                                    "member_change_email_details",
-                                                    "member_change_membership_type_details",
-                                                    "member_change_name_details",
-                                                    "member_change_status_details",
-                                                    "member_permanently_delete_account_contents_details",
-                                                    "member_space_limits_add_custom_quota_details",
-                                                    "member_space_limits_change_custom_quota_details",
-                                                    "member_space_limits_change_status_details",
-                                                    "member_space_limits_remove_custom_quota_details",
-                                                    "member_suggest_details",
-                                                    "member_transfer_account_contents_details",
-                                                    "paper_content_add_member_details",
-                                                    "paper_content_add_to_folder_details",
-                                                    "paper_content_archive_details",
-                                                    "paper_content_create_details",
-                                                    "paper_content_permanently_delete_details",
-                                                    "paper_content_remove_from_folder_details",
-                                                    "paper_content_remove_member_details",
-                                                    "paper_content_rename_details",
-                                                    "paper_content_restore_details",
-                                                    "paper_doc_add_comment_details",
-                                                    "paper_doc_change_member_role_details",
-                                                    "paper_doc_change_sharing_policy_details",
-                                                    "paper_doc_change_subscription_details",
-                                                    "paper_doc_deleted_details",
-                                                    "paper_doc_delete_comment_details",
-                                                    "paper_doc_download_details",
-                                                    "paper_doc_edit_details",
-                                                    "paper_doc_edit_comment_details",
-                                                    "paper_doc_followed_details",
-                                                    "paper_doc_mention_details",
-                                                    "paper_doc_request_access_details",
-                                                    "paper_doc_resolve_comment_details",
-                                                    "paper_doc_revert_details",
-                                                    "paper_doc_slack_share_details",
-                                                    "paper_doc_team_invite_details",
-                                                    "paper_doc_trashed_details",
-                                                    "paper_doc_unresolve_comment_details",
-                                                    "paper_doc_untrashed_details",
-                                                    "paper_doc_view_details",
-                                                    "paper_external_view_allow_details",
-                                                    "paper_external_view_default_team_details",
-                                                    "paper_external_view_forbid_details",
-                                                    "paper_folder_change_subscription_details",
-                                                    "paper_folder_deleted_details",
-                                                    "paper_folder_followed_details",
-                                                    "paper_folder_team_invite_details",
-                                                    "password_change_details",
-                                                    "password_reset_details",
-                                                    "password_reset_all_details",
-                                                    "emm_create_exceptions_report_details",
-                                                    "emm_create_usage_report_details",
-                                                    "export_members_report_details",
-                                                    "paper_admin_export_start_details",
-                                                    "smart_sync_create_admin_privilege_report_details",
-                                                    "team_activity_create_report_details",
-                                                    "collection_share_details",
-                                                    "note_acl_invite_only_details",
-                                                    "note_acl_link_details",
-                                                    "note_acl_team_link_details",
-                                                    "note_shared_details",
-                                                    "note_share_receive_details",
-                                                    "open_note_shared_details",
-                                                    "sf_add_group_details",
-                                                    "sf_allow_non_members_to_view_shared_links_details",
-                                                    "sf_external_invite_warn_details",
-                                                    "sf_fb_invite_details",
-                                                    "sf_fb_invite_change_role_details",
-                                                    "sf_fb_uninvite_details",
-                                                    "sf_invite_group_details",
-                                                    "sf_team_grant_access_details",
-                                                    "sf_team_invite_details",
-                                                    "sf_team_invite_change_role_details",
-                                                    "sf_team_join_details",
-                                                    "sf_team_join_from_oob_link_details",
-                                                    "sf_team_uninvite_details",
-                                                    "shared_content_add_invitees_details",
-                                                    "shared_content_add_link_expiry_details",
-                                                    "shared_content_add_link_password_details",
-                                                    "shared_content_add_member_details",
-                                                    "shared_content_change_downloads_policy_details",
-                                                    "shared_content_change_invitee_role_details",
-                                                    "shared_content_change_link_audience_details",
-                                                    "shared_content_change_link_expiry_details",
-                                                    "shared_content_change_link_password_details",
-                                                    "shared_content_change_member_role_details",
-                                                    "shared_content_change_viewer_info_policy_details",
-                                                    "shared_content_claim_invitation_details",
-                                                    "shared_content_copy_details",
-                                                    "shared_content_download_details",
-                                                    "shared_content_relinquish_membership_details",
-                                                    "shared_content_remove_invitees_details",
-                                                    "shared_content_remove_link_expiry_details",
-                                                    "shared_content_remove_link_password_details",
-                                                    "shared_content_remove_member_details",
-                                                    "shared_content_request_access_details",
-                                                    "shared_content_unshare_details",
-                                                    "shared_content_view_details",
-                                                    "shared_folder_change_link_policy_details",
-                                                    "shared_folder_change_members_inheritance_policy_details",
-                                                    "shared_folder_change_members_management_policy_details",
-                                                    "shared_folder_change_members_policy_details",
-                                                    "shared_folder_create_details",
-                                                    "shared_folder_decline_invitation_details",
-                                                    "shared_folder_mount_details",
-                                                    "shared_folder_nest_details",
-                                                    "shared_folder_transfer_ownership_details",
-                                                    "shared_folder_unmount_details",
-                                                    "shared_link_add_expiry_details",
-                                                    "shared_link_change_expiry_details",
-                                                    "shared_link_change_visibility_details",
-                                                    "shared_link_copy_details",
-                                                    "shared_link_create_details",
-                                                    "shared_link_disable_details",
-                                                    "shared_link_download_details",
-                                                    "shared_link_remove_expiry_details",
-                                                    "shared_link_share_details",
-                                                    "shared_link_view_details",
-                                                    "shared_note_opened_details",
-                                                    "shmodel_group_share_details",
-                                                    "sso_add_cert_details",
-                                                    "sso_add_login_url_details",
-                                                    "sso_add_logout_url_details",
-                                                    "sso_change_cert_details",
-                                                    "sso_change_login_url_details",
-                                                    "sso_change_logout_url_details",
-                                                    "sso_change_saml_identity_mode_details",
-                                                    "sso_remove_cert_details",
-                                                    "sso_remove_login_url_details",
-                                                    "sso_remove_logout_url_details",
-                                                    "team_folder_change_status_details",
-                                                    "team_folder_create_details",
-                                                    "team_folder_downgrade_details",
-                                                    "team_folder_permanently_delete_details",
-                                                    "team_folder_rename_details",
-                                                    "account_capture_change_policy_details",
-                                                    "allow_download_disabled_details",
-                                                    "allow_download_enabled_details",
-                                                    "data_placement_restriction_change_policy_details",
-                                                    "data_placement_restriction_satisfy_policy_details",
-                                                    "device_approvals_change_desktop_policy_details",
-                                                    "device_approvals_change_mobile_policy_details",
-                                                    "device_approvals_change_overage_action_details",
-                                                    "device_approvals_change_unlink_action_details",
-                                                    "emm_add_exception_details",
-                                                    "emm_change_policy_details",
-                                                    "emm_remove_exception_details",
-                                                    "extended_version_history_change_policy_details",
-                                                    "file_comments_change_policy_details",
-                                                    "file_requests_change_policy_details",
-                                                    "file_requests_emails_enabled_details",
-                                                    "file_requests_emails_restricted_to_team_only_details",
-                                                    "google_sso_change_policy_details",
-                                                    "group_user_management_change_policy_details",
-                                                    "member_requests_change_policy_details",
-                                                    "member_space_limits_add_exception_details",
-                                                    "member_space_limits_change_caps_type_policy_details",
-                                                    "member_space_limits_change_policy_details",
-                                                    "member_space_limits_remove_exception_details",
-                                                    "member_suggestions_change_policy_details",
-                                                    "microsoft_office_addin_change_policy_details",
-                                                    "network_control_change_policy_details",
-                                                    "paper_change_deployment_policy_details",
-                                                    "paper_change_member_link_policy_details",
-                                                    "paper_change_member_policy_details",
-                                                    "paper_change_policy_details",
-                                                    "paper_enabled_users_group_addition_details",
-                                                    "paper_enabled_users_group_removal_details",
-                                                    "permanent_delete_change_policy_details",
-                                                    "sharing_change_folder_join_policy_details",
-                                                    "sharing_change_link_policy_details",
-                                                    "sharing_change_member_policy_details",
-                                                    "smart_sync_change_policy_details",
-                                                    "smart_sync_not_opt_out_details",
-                                                    "smart_sync_opt_out_details",
-                                                    "sso_change_policy_details",
-                                                    "tfa_change_policy_details",
-                                                    "two_account_change_policy_details",
-                                                    "web_sessions_change_fixed_length_policy_details",
-                                                    "web_sessions_change_idle_length_policy_details",
-                                                    "team_merge_from_details",
-                                                    "team_merge_to_details",
-                                                    "team_profile_add_logo_details",
-                                                    "team_profile_change_default_language_details",
-                                                    "team_profile_change_logo_details",
-                                                    "team_profile_change_name_details",
-                                                    "team_profile_remove_logo_details",
-                                                    "tfa_add_backup_phone_details",
-                                                    "tfa_add_security_key_details",
-                                                    "tfa_change_backup_phone_details",
-                                                    "tfa_change_status_details",
-                                                    "tfa_remove_backup_phone_details",
-                                                    "tfa_remove_security_key_details",
-                                                    "tfa_reset_details",
-                                                    "missing_details",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["app_link_team_details",
+                                    "app_link_user_details",
+                                    "app_unlink_team_details",
+                                    "app_unlink_user_details",
+                                    "file_add_comment_details",
+                                    "file_change_comment_subscription_details",
+                                    "file_delete_comment_details",
+                                    "file_like_comment_details",
+                                    "file_resolve_comment_details",
+                                    "file_unlike_comment_details",
+                                    "file_unresolve_comment_details",
+                                    "device_change_ip_desktop_details",
+                                    "device_change_ip_mobile_details",
+                                    "device_change_ip_web_details",
+                                    "device_delete_on_unlink_fail_details",
+                                    "device_delete_on_unlink_success_details",
+                                    "device_link_fail_details",
+                                    "device_link_success_details",
+                                    "device_management_disabled_details",
+                                    "device_management_enabled_details",
+                                    "device_unlink_details",
+                                    "emm_refresh_auth_token_details",
+                                    "account_capture_change_availability_details",
+                                    "account_capture_migrate_account_details",
+                                    "account_capture_notification_emails_sent_details",
+                                    "account_capture_relinquish_account_details",
+                                    "disabled_domain_invites_details",
+                                    "domain_invites_approve_request_to_join_team_details",
+                                    "domain_invites_decline_request_to_join_team_details",
+                                    "domain_invites_email_existing_users_details",
+                                    "domain_invites_request_to_join_team_details",
+                                    "domain_invites_set_invite_new_user_pref_to_no_details",
+                                    "domain_invites_set_invite_new_user_pref_to_yes_details",
+                                    "domain_verification_add_domain_fail_details",
+                                    "domain_verification_add_domain_success_details",
+                                    "domain_verification_remove_domain_details",
+                                    "enabled_domain_invites_details",
+                                    "create_folder_details",
+                                    "file_add_details",
+                                    "file_copy_details",
+                                    "file_delete_details",
+                                    "file_download_details",
+                                    "file_edit_details",
+                                    "file_get_copy_reference_details",
+                                    "file_move_details",
+                                    "file_permanently_delete_details",
+                                    "file_preview_details",
+                                    "file_rename_details",
+                                    "file_restore_details",
+                                    "file_revert_details",
+                                    "file_rollback_changes_details",
+                                    "file_save_copy_reference_details",
+                                    "file_request_change_details",
+                                    "file_request_close_details",
+                                    "file_request_create_details",
+                                    "file_request_receive_file_details",
+                                    "group_add_external_id_details",
+                                    "group_add_member_details",
+                                    "group_change_external_id_details",
+                                    "group_change_management_type_details",
+                                    "group_change_member_role_details",
+                                    "group_create_details",
+                                    "group_delete_details",
+                                    "group_moved_details",
+                                    "group_remove_external_id_details",
+                                    "group_remove_member_details",
+                                    "group_rename_details",
+                                    "emm_error_details",
+                                    "login_fail_details",
+                                    "login_success_details",
+                                    "logout_details",
+                                    "reseller_support_session_end_details",
+                                    "reseller_support_session_start_details",
+                                    "sign_in_as_session_end_details",
+                                    "sign_in_as_session_start_details",
+                                    "sso_error_details",
+                                    "member_add_name_details",
+                                    "member_change_admin_role_details",
+                                    "member_change_email_details",
+                                    "member_change_membership_type_details",
+                                    "member_change_name_details",
+                                    "member_change_status_details",
+                                    "member_permanently_delete_account_contents_details",
+                                    "member_space_limits_add_custom_quota_details",
+                                    "member_space_limits_change_custom_quota_details",
+                                    "member_space_limits_change_status_details",
+                                    "member_space_limits_remove_custom_quota_details",
+                                    "member_suggest_details",
+                                    "member_transfer_account_contents_details",
+                                    "paper_content_add_member_details",
+                                    "paper_content_add_to_folder_details",
+                                    "paper_content_archive_details",
+                                    "paper_content_create_details",
+                                    "paper_content_permanently_delete_details",
+                                    "paper_content_remove_from_folder_details",
+                                    "paper_content_remove_member_details",
+                                    "paper_content_rename_details",
+                                    "paper_content_restore_details",
+                                    "paper_doc_add_comment_details",
+                                    "paper_doc_change_member_role_details",
+                                    "paper_doc_change_sharing_policy_details",
+                                    "paper_doc_change_subscription_details",
+                                    "paper_doc_deleted_details",
+                                    "paper_doc_delete_comment_details",
+                                    "paper_doc_download_details",
+                                    "paper_doc_edit_details",
+                                    "paper_doc_edit_comment_details",
+                                    "paper_doc_followed_details",
+                                    "paper_doc_mention_details",
+                                    "paper_doc_request_access_details",
+                                    "paper_doc_resolve_comment_details",
+                                    "paper_doc_revert_details",
+                                    "paper_doc_slack_share_details",
+                                    "paper_doc_team_invite_details",
+                                    "paper_doc_trashed_details",
+                                    "paper_doc_unresolve_comment_details",
+                                    "paper_doc_untrashed_details",
+                                    "paper_doc_view_details",
+                                    "paper_external_view_allow_details",
+                                    "paper_external_view_default_team_details",
+                                    "paper_external_view_forbid_details",
+                                    "paper_folder_change_subscription_details",
+                                    "paper_folder_deleted_details",
+                                    "paper_folder_followed_details",
+                                    "paper_folder_team_invite_details",
+                                    "password_change_details",
+                                    "password_reset_details",
+                                    "password_reset_all_details",
+                                    "emm_create_exceptions_report_details",
+                                    "emm_create_usage_report_details",
+                                    "export_members_report_details",
+                                    "paper_admin_export_start_details",
+                                    "smart_sync_create_admin_privilege_report_details",
+                                    "team_activity_create_report_details",
+                                    "collection_share_details",
+                                    "note_acl_invite_only_details",
+                                    "note_acl_link_details",
+                                    "note_acl_team_link_details",
+                                    "note_shared_details",
+                                    "note_share_receive_details",
+                                    "open_note_shared_details",
+                                    "sf_add_group_details",
+                                    "sf_allow_non_members_to_view_shared_links_details",
+                                    "sf_external_invite_warn_details",
+                                    "sf_fb_invite_details",
+                                    "sf_fb_invite_change_role_details",
+                                    "sf_fb_uninvite_details",
+                                    "sf_invite_group_details",
+                                    "sf_team_grant_access_details",
+                                    "sf_team_invite_details",
+                                    "sf_team_invite_change_role_details",
+                                    "sf_team_join_details",
+                                    "sf_team_join_from_oob_link_details",
+                                    "sf_team_uninvite_details",
+                                    "shared_content_add_invitees_details",
+                                    "shared_content_add_link_expiry_details",
+                                    "shared_content_add_link_password_details",
+                                    "shared_content_add_member_details",
+                                    "shared_content_change_downloads_policy_details",
+                                    "shared_content_change_invitee_role_details",
+                                    "shared_content_change_link_audience_details",
+                                    "shared_content_change_link_expiry_details",
+                                    "shared_content_change_link_password_details",
+                                    "shared_content_change_member_role_details",
+                                    "shared_content_change_viewer_info_policy_details",
+                                    "shared_content_claim_invitation_details",
+                                    "shared_content_copy_details",
+                                    "shared_content_download_details",
+                                    "shared_content_relinquish_membership_details",
+                                    "shared_content_remove_invitees_details",
+                                    "shared_content_remove_link_expiry_details",
+                                    "shared_content_remove_link_password_details",
+                                    "shared_content_remove_member_details",
+                                    "shared_content_request_access_details",
+                                    "shared_content_unshare_details",
+                                    "shared_content_view_details",
+                                    "shared_folder_change_link_policy_details",
+                                    "shared_folder_change_members_inheritance_policy_details",
+                                    "shared_folder_change_members_management_policy_details",
+                                    "shared_folder_change_members_policy_details",
+                                    "shared_folder_create_details",
+                                    "shared_folder_decline_invitation_details",
+                                    "shared_folder_mount_details",
+                                    "shared_folder_nest_details",
+                                    "shared_folder_transfer_ownership_details",
+                                    "shared_folder_unmount_details",
+                                    "shared_link_add_expiry_details",
+                                    "shared_link_change_expiry_details",
+                                    "shared_link_change_visibility_details",
+                                    "shared_link_copy_details",
+                                    "shared_link_create_details",
+                                    "shared_link_disable_details",
+                                    "shared_link_download_details",
+                                    "shared_link_remove_expiry_details",
+                                    "shared_link_share_details",
+                                    "shared_link_view_details",
+                                    "shared_note_opened_details",
+                                    "shmodel_group_share_details",
+                                    "sso_add_cert_details",
+                                    "sso_add_login_url_details",
+                                    "sso_add_logout_url_details",
+                                    "sso_change_cert_details",
+                                    "sso_change_login_url_details",
+                                    "sso_change_logout_url_details",
+                                    "sso_change_saml_identity_mode_details",
+                                    "sso_remove_cert_details",
+                                    "sso_remove_login_url_details",
+                                    "sso_remove_logout_url_details",
+                                    "team_folder_change_status_details",
+                                    "team_folder_create_details",
+                                    "team_folder_downgrade_details",
+                                    "team_folder_permanently_delete_details",
+                                    "team_folder_rename_details",
+                                    "account_capture_change_policy_details",
+                                    "allow_download_disabled_details",
+                                    "allow_download_enabled_details",
+                                    "data_placement_restriction_change_policy_details",
+                                    "data_placement_restriction_satisfy_policy_details",
+                                    "device_approvals_change_desktop_policy_details",
+                                    "device_approvals_change_mobile_policy_details",
+                                    "device_approvals_change_overage_action_details",
+                                    "device_approvals_change_unlink_action_details",
+                                    "emm_add_exception_details",
+                                    "emm_change_policy_details",
+                                    "emm_remove_exception_details",
+                                    "extended_version_history_change_policy_details",
+                                    "file_comments_change_policy_details",
+                                    "file_requests_change_policy_details",
+                                    "file_requests_emails_enabled_details",
+                                    "file_requests_emails_restricted_to_team_only_details",
+                                    "google_sso_change_policy_details",
+                                    "group_user_management_change_policy_details",
+                                    "member_requests_change_policy_details",
+                                    "member_space_limits_add_exception_details",
+                                    "member_space_limits_change_caps_type_policy_details",
+                                    "member_space_limits_change_policy_details",
+                                    "member_space_limits_remove_exception_details",
+                                    "member_suggestions_change_policy_details",
+                                    "microsoft_office_addin_change_policy_details",
+                                    "network_control_change_policy_details",
+                                    "paper_change_deployment_policy_details",
+                                    "paper_change_member_link_policy_details",
+                                    "paper_change_member_policy_details",
+                                    "paper_change_policy_details",
+                                    "paper_enabled_users_group_addition_details",
+                                    "paper_enabled_users_group_removal_details",
+                                    "permanent_delete_change_policy_details",
+                                    "sharing_change_folder_join_policy_details",
+                                    "sharing_change_link_policy_details",
+                                    "sharing_change_member_policy_details",
+                                    "smart_sync_change_policy_details",
+                                    "smart_sync_not_opt_out_details",
+                                    "smart_sync_opt_out_details",
+                                    "sso_change_policy_details",
+                                    "tfa_change_policy_details",
+                                    "two_account_change_policy_details",
+                                    "web_sessions_change_fixed_length_policy_details",
+                                    "web_sessions_change_idle_length_policy_details",
+                                    "team_merge_from_details",
+                                    "team_merge_to_details",
+                                    "team_profile_add_logo_details",
+                                    "team_profile_change_default_language_details",
+                                    "team_profile_change_logo_details",
+                                    "team_profile_change_name_details",
+                                    "team_profile_remove_logo_details",
+                                    "tfa_add_backup_phone_details",
+                                    "tfa_add_security_key_details",
+                                    "tfa_change_backup_phone_details",
+                                    "tfa_change_status_details",
+                                    "tfa_remove_backup_phone_details",
+                                    "tfa_remove_security_key_details",
+                                    "tfa_reset_details",
+                                    "missing_details",
+                                    "other"];
         deserializer.deserialize_struct("EventDetails", VARIANTS, EnumVisitor)
     }
 }
@@ -12583,279 +12583,279 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["app_link_team",
-                                                    "app_link_user",
-                                                    "app_unlink_team",
-                                                    "app_unlink_user",
-                                                    "file_add_comment",
-                                                    "file_change_comment_subscription",
-                                                    "file_delete_comment",
-                                                    "file_like_comment",
-                                                    "file_resolve_comment",
-                                                    "file_unlike_comment",
-                                                    "file_unresolve_comment",
-                                                    "device_change_ip_desktop",
-                                                    "device_change_ip_mobile",
-                                                    "device_change_ip_web",
-                                                    "device_delete_on_unlink_fail",
-                                                    "device_delete_on_unlink_success",
-                                                    "device_link_fail",
-                                                    "device_link_success",
-                                                    "device_management_disabled",
-                                                    "device_management_enabled",
-                                                    "device_unlink",
-                                                    "emm_refresh_auth_token",
-                                                    "account_capture_change_availability",
-                                                    "account_capture_migrate_account",
-                                                    "account_capture_notification_emails_sent",
-                                                    "account_capture_relinquish_account",
-                                                    "disabled_domain_invites",
-                                                    "domain_invites_approve_request_to_join_team",
-                                                    "domain_invites_decline_request_to_join_team",
-                                                    "domain_invites_email_existing_users",
-                                                    "domain_invites_request_to_join_team",
-                                                    "domain_invites_set_invite_new_user_pref_to_no",
-                                                    "domain_invites_set_invite_new_user_pref_to_yes",
-                                                    "domain_verification_add_domain_fail",
-                                                    "domain_verification_add_domain_success",
-                                                    "domain_verification_remove_domain",
-                                                    "enabled_domain_invites",
-                                                    "create_folder",
-                                                    "file_add",
-                                                    "file_copy",
-                                                    "file_delete",
-                                                    "file_download",
-                                                    "file_edit",
-                                                    "file_get_copy_reference",
-                                                    "file_move",
-                                                    "file_permanently_delete",
-                                                    "file_preview",
-                                                    "file_rename",
-                                                    "file_restore",
-                                                    "file_revert",
-                                                    "file_rollback_changes",
-                                                    "file_save_copy_reference",
-                                                    "file_request_change",
-                                                    "file_request_close",
-                                                    "file_request_create",
-                                                    "file_request_receive_file",
-                                                    "group_add_external_id",
-                                                    "group_add_member",
-                                                    "group_change_external_id",
-                                                    "group_change_management_type",
-                                                    "group_change_member_role",
-                                                    "group_create",
-                                                    "group_delete",
-                                                    "group_moved",
-                                                    "group_remove_external_id",
-                                                    "group_remove_member",
-                                                    "group_rename",
-                                                    "emm_error",
-                                                    "login_fail",
-                                                    "login_success",
-                                                    "logout",
-                                                    "reseller_support_session_end",
-                                                    "reseller_support_session_start",
-                                                    "sign_in_as_session_end",
-                                                    "sign_in_as_session_start",
-                                                    "sso_error",
-                                                    "member_add_name",
-                                                    "member_change_admin_role",
-                                                    "member_change_email",
-                                                    "member_change_membership_type",
-                                                    "member_change_name",
-                                                    "member_change_status",
-                                                    "member_permanently_delete_account_contents",
-                                                    "member_space_limits_add_custom_quota",
-                                                    "member_space_limits_change_custom_quota",
-                                                    "member_space_limits_change_status",
-                                                    "member_space_limits_remove_custom_quota",
-                                                    "member_suggest",
-                                                    "member_transfer_account_contents",
-                                                    "paper_content_add_member",
-                                                    "paper_content_add_to_folder",
-                                                    "paper_content_archive",
-                                                    "paper_content_create",
-                                                    "paper_content_permanently_delete",
-                                                    "paper_content_remove_from_folder",
-                                                    "paper_content_remove_member",
-                                                    "paper_content_rename",
-                                                    "paper_content_restore",
-                                                    "paper_doc_add_comment",
-                                                    "paper_doc_change_member_role",
-                                                    "paper_doc_change_sharing_policy",
-                                                    "paper_doc_change_subscription",
-                                                    "paper_doc_deleted",
-                                                    "paper_doc_delete_comment",
-                                                    "paper_doc_download",
-                                                    "paper_doc_edit",
-                                                    "paper_doc_edit_comment",
-                                                    "paper_doc_followed",
-                                                    "paper_doc_mention",
-                                                    "paper_doc_request_access",
-                                                    "paper_doc_resolve_comment",
-                                                    "paper_doc_revert",
-                                                    "paper_doc_slack_share",
-                                                    "paper_doc_team_invite",
-                                                    "paper_doc_trashed",
-                                                    "paper_doc_unresolve_comment",
-                                                    "paper_doc_untrashed",
-                                                    "paper_doc_view",
-                                                    "paper_external_view_allow",
-                                                    "paper_external_view_default_team",
-                                                    "paper_external_view_forbid",
-                                                    "paper_folder_change_subscription",
-                                                    "paper_folder_deleted",
-                                                    "paper_folder_followed",
-                                                    "paper_folder_team_invite",
-                                                    "password_change",
-                                                    "password_reset",
-                                                    "password_reset_all",
-                                                    "emm_create_exceptions_report",
-                                                    "emm_create_usage_report",
-                                                    "export_members_report",
-                                                    "paper_admin_export_start",
-                                                    "smart_sync_create_admin_privilege_report",
-                                                    "team_activity_create_report",
-                                                    "collection_share",
-                                                    "note_acl_invite_only",
-                                                    "note_acl_link",
-                                                    "note_acl_team_link",
-                                                    "note_shared",
-                                                    "note_share_receive",
-                                                    "open_note_shared",
-                                                    "sf_add_group",
-                                                    "sf_allow_non_members_to_view_shared_links",
-                                                    "sf_external_invite_warn",
-                                                    "sf_fb_invite",
-                                                    "sf_fb_invite_change_role",
-                                                    "sf_fb_uninvite",
-                                                    "sf_invite_group",
-                                                    "sf_team_grant_access",
-                                                    "sf_team_invite",
-                                                    "sf_team_invite_change_role",
-                                                    "sf_team_join",
-                                                    "sf_team_join_from_oob_link",
-                                                    "sf_team_uninvite",
-                                                    "shared_content_add_invitees",
-                                                    "shared_content_add_link_expiry",
-                                                    "shared_content_add_link_password",
-                                                    "shared_content_add_member",
-                                                    "shared_content_change_downloads_policy",
-                                                    "shared_content_change_invitee_role",
-                                                    "shared_content_change_link_audience",
-                                                    "shared_content_change_link_expiry",
-                                                    "shared_content_change_link_password",
-                                                    "shared_content_change_member_role",
-                                                    "shared_content_change_viewer_info_policy",
-                                                    "shared_content_claim_invitation",
-                                                    "shared_content_copy",
-                                                    "shared_content_download",
-                                                    "shared_content_relinquish_membership",
-                                                    "shared_content_remove_invitees",
-                                                    "shared_content_remove_link_expiry",
-                                                    "shared_content_remove_link_password",
-                                                    "shared_content_remove_member",
-                                                    "shared_content_request_access",
-                                                    "shared_content_unshare",
-                                                    "shared_content_view",
-                                                    "shared_folder_change_link_policy",
-                                                    "shared_folder_change_members_inheritance_policy",
-                                                    "shared_folder_change_members_management_policy",
-                                                    "shared_folder_change_members_policy",
-                                                    "shared_folder_create",
-                                                    "shared_folder_decline_invitation",
-                                                    "shared_folder_mount",
-                                                    "shared_folder_nest",
-                                                    "shared_folder_transfer_ownership",
-                                                    "shared_folder_unmount",
-                                                    "shared_link_add_expiry",
-                                                    "shared_link_change_expiry",
-                                                    "shared_link_change_visibility",
-                                                    "shared_link_copy",
-                                                    "shared_link_create",
-                                                    "shared_link_disable",
-                                                    "shared_link_download",
-                                                    "shared_link_remove_expiry",
-                                                    "shared_link_share",
-                                                    "shared_link_view",
-                                                    "shared_note_opened",
-                                                    "shmodel_group_share",
-                                                    "sso_add_cert",
-                                                    "sso_add_login_url",
-                                                    "sso_add_logout_url",
-                                                    "sso_change_cert",
-                                                    "sso_change_login_url",
-                                                    "sso_change_logout_url",
-                                                    "sso_change_saml_identity_mode",
-                                                    "sso_remove_cert",
-                                                    "sso_remove_login_url",
-                                                    "sso_remove_logout_url",
-                                                    "team_folder_change_status",
-                                                    "team_folder_create",
-                                                    "team_folder_downgrade",
-                                                    "team_folder_permanently_delete",
-                                                    "team_folder_rename",
-                                                    "account_capture_change_policy",
-                                                    "allow_download_disabled",
-                                                    "allow_download_enabled",
-                                                    "data_placement_restriction_change_policy",
-                                                    "data_placement_restriction_satisfy_policy",
-                                                    "device_approvals_change_desktop_policy",
-                                                    "device_approvals_change_mobile_policy",
-                                                    "device_approvals_change_overage_action",
-                                                    "device_approvals_change_unlink_action",
-                                                    "emm_add_exception",
-                                                    "emm_change_policy",
-                                                    "emm_remove_exception",
-                                                    "extended_version_history_change_policy",
-                                                    "file_comments_change_policy",
-                                                    "file_requests_change_policy",
-                                                    "file_requests_emails_enabled",
-                                                    "file_requests_emails_restricted_to_team_only",
-                                                    "google_sso_change_policy",
-                                                    "group_user_management_change_policy",
-                                                    "member_requests_change_policy",
-                                                    "member_space_limits_add_exception",
-                                                    "member_space_limits_change_caps_type_policy",
-                                                    "member_space_limits_change_policy",
-                                                    "member_space_limits_remove_exception",
-                                                    "member_suggestions_change_policy",
-                                                    "microsoft_office_addin_change_policy",
-                                                    "network_control_change_policy",
-                                                    "paper_change_deployment_policy",
-                                                    "paper_change_member_link_policy",
-                                                    "paper_change_member_policy",
-                                                    "paper_change_policy",
-                                                    "paper_enabled_users_group_addition",
-                                                    "paper_enabled_users_group_removal",
-                                                    "permanent_delete_change_policy",
-                                                    "sharing_change_folder_join_policy",
-                                                    "sharing_change_link_policy",
-                                                    "sharing_change_member_policy",
-                                                    "smart_sync_change_policy",
-                                                    "smart_sync_not_opt_out",
-                                                    "smart_sync_opt_out",
-                                                    "sso_change_policy",
-                                                    "tfa_change_policy",
-                                                    "two_account_change_policy",
-                                                    "web_sessions_change_fixed_length_policy",
-                                                    "web_sessions_change_idle_length_policy",
-                                                    "team_merge_from",
-                                                    "team_merge_to",
-                                                    "team_profile_add_logo",
-                                                    "team_profile_change_default_language",
-                                                    "team_profile_change_logo",
-                                                    "team_profile_change_name",
-                                                    "team_profile_remove_logo",
-                                                    "tfa_add_backup_phone",
-                                                    "tfa_add_security_key",
-                                                    "tfa_change_backup_phone",
-                                                    "tfa_change_status",
-                                                    "tfa_remove_backup_phone",
-                                                    "tfa_remove_security_key",
-                                                    "tfa_reset",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["app_link_team",
+                                    "app_link_user",
+                                    "app_unlink_team",
+                                    "app_unlink_user",
+                                    "file_add_comment",
+                                    "file_change_comment_subscription",
+                                    "file_delete_comment",
+                                    "file_like_comment",
+                                    "file_resolve_comment",
+                                    "file_unlike_comment",
+                                    "file_unresolve_comment",
+                                    "device_change_ip_desktop",
+                                    "device_change_ip_mobile",
+                                    "device_change_ip_web",
+                                    "device_delete_on_unlink_fail",
+                                    "device_delete_on_unlink_success",
+                                    "device_link_fail",
+                                    "device_link_success",
+                                    "device_management_disabled",
+                                    "device_management_enabled",
+                                    "device_unlink",
+                                    "emm_refresh_auth_token",
+                                    "account_capture_change_availability",
+                                    "account_capture_migrate_account",
+                                    "account_capture_notification_emails_sent",
+                                    "account_capture_relinquish_account",
+                                    "disabled_domain_invites",
+                                    "domain_invites_approve_request_to_join_team",
+                                    "domain_invites_decline_request_to_join_team",
+                                    "domain_invites_email_existing_users",
+                                    "domain_invites_request_to_join_team",
+                                    "domain_invites_set_invite_new_user_pref_to_no",
+                                    "domain_invites_set_invite_new_user_pref_to_yes",
+                                    "domain_verification_add_domain_fail",
+                                    "domain_verification_add_domain_success",
+                                    "domain_verification_remove_domain",
+                                    "enabled_domain_invites",
+                                    "create_folder",
+                                    "file_add",
+                                    "file_copy",
+                                    "file_delete",
+                                    "file_download",
+                                    "file_edit",
+                                    "file_get_copy_reference",
+                                    "file_move",
+                                    "file_permanently_delete",
+                                    "file_preview",
+                                    "file_rename",
+                                    "file_restore",
+                                    "file_revert",
+                                    "file_rollback_changes",
+                                    "file_save_copy_reference",
+                                    "file_request_change",
+                                    "file_request_close",
+                                    "file_request_create",
+                                    "file_request_receive_file",
+                                    "group_add_external_id",
+                                    "group_add_member",
+                                    "group_change_external_id",
+                                    "group_change_management_type",
+                                    "group_change_member_role",
+                                    "group_create",
+                                    "group_delete",
+                                    "group_moved",
+                                    "group_remove_external_id",
+                                    "group_remove_member",
+                                    "group_rename",
+                                    "emm_error",
+                                    "login_fail",
+                                    "login_success",
+                                    "logout",
+                                    "reseller_support_session_end",
+                                    "reseller_support_session_start",
+                                    "sign_in_as_session_end",
+                                    "sign_in_as_session_start",
+                                    "sso_error",
+                                    "member_add_name",
+                                    "member_change_admin_role",
+                                    "member_change_email",
+                                    "member_change_membership_type",
+                                    "member_change_name",
+                                    "member_change_status",
+                                    "member_permanently_delete_account_contents",
+                                    "member_space_limits_add_custom_quota",
+                                    "member_space_limits_change_custom_quota",
+                                    "member_space_limits_change_status",
+                                    "member_space_limits_remove_custom_quota",
+                                    "member_suggest",
+                                    "member_transfer_account_contents",
+                                    "paper_content_add_member",
+                                    "paper_content_add_to_folder",
+                                    "paper_content_archive",
+                                    "paper_content_create",
+                                    "paper_content_permanently_delete",
+                                    "paper_content_remove_from_folder",
+                                    "paper_content_remove_member",
+                                    "paper_content_rename",
+                                    "paper_content_restore",
+                                    "paper_doc_add_comment",
+                                    "paper_doc_change_member_role",
+                                    "paper_doc_change_sharing_policy",
+                                    "paper_doc_change_subscription",
+                                    "paper_doc_deleted",
+                                    "paper_doc_delete_comment",
+                                    "paper_doc_download",
+                                    "paper_doc_edit",
+                                    "paper_doc_edit_comment",
+                                    "paper_doc_followed",
+                                    "paper_doc_mention",
+                                    "paper_doc_request_access",
+                                    "paper_doc_resolve_comment",
+                                    "paper_doc_revert",
+                                    "paper_doc_slack_share",
+                                    "paper_doc_team_invite",
+                                    "paper_doc_trashed",
+                                    "paper_doc_unresolve_comment",
+                                    "paper_doc_untrashed",
+                                    "paper_doc_view",
+                                    "paper_external_view_allow",
+                                    "paper_external_view_default_team",
+                                    "paper_external_view_forbid",
+                                    "paper_folder_change_subscription",
+                                    "paper_folder_deleted",
+                                    "paper_folder_followed",
+                                    "paper_folder_team_invite",
+                                    "password_change",
+                                    "password_reset",
+                                    "password_reset_all",
+                                    "emm_create_exceptions_report",
+                                    "emm_create_usage_report",
+                                    "export_members_report",
+                                    "paper_admin_export_start",
+                                    "smart_sync_create_admin_privilege_report",
+                                    "team_activity_create_report",
+                                    "collection_share",
+                                    "note_acl_invite_only",
+                                    "note_acl_link",
+                                    "note_acl_team_link",
+                                    "note_shared",
+                                    "note_share_receive",
+                                    "open_note_shared",
+                                    "sf_add_group",
+                                    "sf_allow_non_members_to_view_shared_links",
+                                    "sf_external_invite_warn",
+                                    "sf_fb_invite",
+                                    "sf_fb_invite_change_role",
+                                    "sf_fb_uninvite",
+                                    "sf_invite_group",
+                                    "sf_team_grant_access",
+                                    "sf_team_invite",
+                                    "sf_team_invite_change_role",
+                                    "sf_team_join",
+                                    "sf_team_join_from_oob_link",
+                                    "sf_team_uninvite",
+                                    "shared_content_add_invitees",
+                                    "shared_content_add_link_expiry",
+                                    "shared_content_add_link_password",
+                                    "shared_content_add_member",
+                                    "shared_content_change_downloads_policy",
+                                    "shared_content_change_invitee_role",
+                                    "shared_content_change_link_audience",
+                                    "shared_content_change_link_expiry",
+                                    "shared_content_change_link_password",
+                                    "shared_content_change_member_role",
+                                    "shared_content_change_viewer_info_policy",
+                                    "shared_content_claim_invitation",
+                                    "shared_content_copy",
+                                    "shared_content_download",
+                                    "shared_content_relinquish_membership",
+                                    "shared_content_remove_invitees",
+                                    "shared_content_remove_link_expiry",
+                                    "shared_content_remove_link_password",
+                                    "shared_content_remove_member",
+                                    "shared_content_request_access",
+                                    "shared_content_unshare",
+                                    "shared_content_view",
+                                    "shared_folder_change_link_policy",
+                                    "shared_folder_change_members_inheritance_policy",
+                                    "shared_folder_change_members_management_policy",
+                                    "shared_folder_change_members_policy",
+                                    "shared_folder_create",
+                                    "shared_folder_decline_invitation",
+                                    "shared_folder_mount",
+                                    "shared_folder_nest",
+                                    "shared_folder_transfer_ownership",
+                                    "shared_folder_unmount",
+                                    "shared_link_add_expiry",
+                                    "shared_link_change_expiry",
+                                    "shared_link_change_visibility",
+                                    "shared_link_copy",
+                                    "shared_link_create",
+                                    "shared_link_disable",
+                                    "shared_link_download",
+                                    "shared_link_remove_expiry",
+                                    "shared_link_share",
+                                    "shared_link_view",
+                                    "shared_note_opened",
+                                    "shmodel_group_share",
+                                    "sso_add_cert",
+                                    "sso_add_login_url",
+                                    "sso_add_logout_url",
+                                    "sso_change_cert",
+                                    "sso_change_login_url",
+                                    "sso_change_logout_url",
+                                    "sso_change_saml_identity_mode",
+                                    "sso_remove_cert",
+                                    "sso_remove_login_url",
+                                    "sso_remove_logout_url",
+                                    "team_folder_change_status",
+                                    "team_folder_create",
+                                    "team_folder_downgrade",
+                                    "team_folder_permanently_delete",
+                                    "team_folder_rename",
+                                    "account_capture_change_policy",
+                                    "allow_download_disabled",
+                                    "allow_download_enabled",
+                                    "data_placement_restriction_change_policy",
+                                    "data_placement_restriction_satisfy_policy",
+                                    "device_approvals_change_desktop_policy",
+                                    "device_approvals_change_mobile_policy",
+                                    "device_approvals_change_overage_action",
+                                    "device_approvals_change_unlink_action",
+                                    "emm_add_exception",
+                                    "emm_change_policy",
+                                    "emm_remove_exception",
+                                    "extended_version_history_change_policy",
+                                    "file_comments_change_policy",
+                                    "file_requests_change_policy",
+                                    "file_requests_emails_enabled",
+                                    "file_requests_emails_restricted_to_team_only",
+                                    "google_sso_change_policy",
+                                    "group_user_management_change_policy",
+                                    "member_requests_change_policy",
+                                    "member_space_limits_add_exception",
+                                    "member_space_limits_change_caps_type_policy",
+                                    "member_space_limits_change_policy",
+                                    "member_space_limits_remove_exception",
+                                    "member_suggestions_change_policy",
+                                    "microsoft_office_addin_change_policy",
+                                    "network_control_change_policy",
+                                    "paper_change_deployment_policy",
+                                    "paper_change_member_link_policy",
+                                    "paper_change_member_policy",
+                                    "paper_change_policy",
+                                    "paper_enabled_users_group_addition",
+                                    "paper_enabled_users_group_removal",
+                                    "permanent_delete_change_policy",
+                                    "sharing_change_folder_join_policy",
+                                    "sharing_change_link_policy",
+                                    "sharing_change_member_policy",
+                                    "smart_sync_change_policy",
+                                    "smart_sync_not_opt_out",
+                                    "smart_sync_opt_out",
+                                    "sso_change_policy",
+                                    "tfa_change_policy",
+                                    "two_account_change_policy",
+                                    "web_sessions_change_fixed_length_policy",
+                                    "web_sessions_change_idle_length_policy",
+                                    "team_merge_from",
+                                    "team_merge_to",
+                                    "team_profile_add_logo",
+                                    "team_profile_change_default_language",
+                                    "team_profile_change_logo",
+                                    "team_profile_change_name",
+                                    "team_profile_remove_logo",
+                                    "tfa_add_backup_phone",
+                                    "tfa_add_security_key",
+                                    "tfa_change_backup_phone",
+                                    "tfa_change_status",
+                                    "tfa_remove_backup_phone",
+                                    "tfa_remove_security_key",
+                                    "tfa_reset",
+                                    "other"];
         deserializer.deserialize_struct("EventType", VARIANTS, EnumVisitor)
     }
 }
@@ -14786,7 +14786,7 @@ impl Default for ExportMembersReportDetails {
     }
 }
 
-const EXPORT_MEMBERS_REPORT_DETAILS_FIELDS: &'static [&'static str] = &[];
+const EXPORT_MEMBERS_REPORT_DETAILS_FIELDS: &[&str] = &[];
 impl ExportMembersReportDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14840,7 +14840,7 @@ impl ExportMembersReportType {
 
 }
 
-const EXPORT_MEMBERS_REPORT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const EXPORT_MEMBERS_REPORT_TYPE_FIELDS: &[&str] = &["description"];
 impl ExportMembersReportType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -14924,8 +14924,8 @@ impl ExtendedVersionHistoryChangePolicyDetails {
 
 }
 
-const EXTENDED_VERSION_HISTORY_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                         "previous_value"];
+const EXTENDED_VERSION_HISTORY_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                         "previous_value"];
 impl ExtendedVersionHistoryChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15008,7 +15008,7 @@ impl ExtendedVersionHistoryChangePolicyType {
 
 }
 
-const EXTENDED_VERSION_HISTORY_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const EXTENDED_VERSION_HISTORY_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl ExtendedVersionHistoryChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15099,10 +15099,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ExtendedVersionHistoryPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["explicitly_limited",
-                                                    "explicitly_unlimited",
-                                                    "implicitly_limited",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["explicitly_limited",
+                                    "explicitly_unlimited",
+                                    "implicitly_limited",
+                                    "other"];
         deserializer.deserialize_struct("ExtendedVersionHistoryPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -15154,8 +15154,8 @@ impl ExternalUserLogInfo {
 
 }
 
-const EXTERNAL_USER_LOG_INFO_FIELDS: &'static [&'static str] = &["user_identifier",
-                                                                 "identifier_type"];
+const EXTERNAL_USER_LOG_INFO_FIELDS: &[&str] = &["user_identifier",
+                                                 "identifier_type"];
 impl ExternalUserLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15242,8 +15242,8 @@ impl Default for FailureDetailsLogInfo {
     }
 }
 
-const FAILURE_DETAILS_LOG_INFO_FIELDS: &'static [&'static str] = &["user_friendly_message",
-                                                                   "technical_error_message"];
+const FAILURE_DETAILS_LOG_INFO_FIELDS: &[&str] = &["user_friendly_message",
+                                                   "technical_error_message"];
 impl FailureDetailsLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15327,7 +15327,7 @@ impl Default for FileAddCommentDetails {
     }
 }
 
-const FILE_ADD_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["comment_text"];
+const FILE_ADD_COMMENT_DETAILS_FIELDS: &[&str] = &["comment_text"];
 impl FileAddCommentDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15401,7 +15401,7 @@ impl FileAddCommentType {
 
 }
 
-const FILE_ADD_COMMENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_ADD_COMMENT_TYPE_FIELDS: &[&str] = &["description"];
 impl FileAddCommentType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15473,7 +15473,7 @@ impl Default for FileAddDetails {
     }
 }
 
-const FILE_ADD_DETAILS_FIELDS: &'static [&'static str] = &[];
+const FILE_ADD_DETAILS_FIELDS: &[&str] = &[];
 impl FileAddDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15527,7 +15527,7 @@ impl FileAddType {
 
 }
 
-const FILE_ADD_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_ADD_TYPE_FIELDS: &[&str] = &["description"];
 impl FileAddType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15611,8 +15611,8 @@ impl FileChangeCommentSubscriptionDetails {
 
 }
 
-const FILE_CHANGE_COMMENT_SUBSCRIPTION_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                   "previous_value"];
+const FILE_CHANGE_COMMENT_SUBSCRIPTION_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                   "previous_value"];
 impl FileChangeCommentSubscriptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15695,7 +15695,7 @@ impl FileChangeCommentSubscriptionType {
 
 }
 
-const FILE_CHANGE_COMMENT_SUBSCRIPTION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_CHANGE_COMMENT_SUBSCRIPTION_TYPE_FIELDS: &[&str] = &["description"];
 impl FileChangeCommentSubscriptionType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15785,9 +15785,9 @@ impl<'de> ::serde::de::Deserialize<'de> for FileCommentNotificationPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
         deserializer.deserialize_struct("FileCommentNotificationPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -15838,8 +15838,8 @@ impl FileCommentsChangePolicyDetails {
 
 }
 
-const FILE_COMMENTS_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                              "previous_value"];
+const FILE_COMMENTS_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                              "previous_value"];
 impl FileCommentsChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -15922,7 +15922,7 @@ impl FileCommentsChangePolicyType {
 
 }
 
-const FILE_COMMENTS_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_COMMENTS_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl FileCommentsChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16012,9 +16012,9 @@ impl<'de> ::serde::de::Deserialize<'de> for FileCommentsPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
         deserializer.deserialize_struct("FileCommentsPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -16057,7 +16057,7 @@ impl FileCopyDetails {
 
 }
 
-const FILE_COPY_DETAILS_FIELDS: &'static [&'static str] = &["relocate_action_details"];
+const FILE_COPY_DETAILS_FIELDS: &[&str] = &["relocate_action_details"];
 impl FileCopyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16131,7 +16131,7 @@ impl FileCopyType {
 
 }
 
-const FILE_COPY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_COPY_TYPE_FIELDS: &[&str] = &["description"];
 impl FileCopyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16206,7 +16206,7 @@ impl Default for FileDeleteCommentDetails {
     }
 }
 
-const FILE_DELETE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["comment_text"];
+const FILE_DELETE_COMMENT_DETAILS_FIELDS: &[&str] = &["comment_text"];
 impl FileDeleteCommentDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16280,7 +16280,7 @@ impl FileDeleteCommentType {
 
 }
 
-const FILE_DELETE_COMMENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_DELETE_COMMENT_TYPE_FIELDS: &[&str] = &["description"];
 impl FileDeleteCommentType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16352,7 +16352,7 @@ impl Default for FileDeleteDetails {
     }
 }
 
-const FILE_DELETE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const FILE_DELETE_DETAILS_FIELDS: &[&str] = &[];
 impl FileDeleteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16406,7 +16406,7 @@ impl FileDeleteType {
 
 }
 
-const FILE_DELETE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_DELETE_TYPE_FIELDS: &[&str] = &["description"];
 impl FileDeleteType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16478,7 +16478,7 @@ impl Default for FileDownloadDetails {
     }
 }
 
-const FILE_DOWNLOAD_DETAILS_FIELDS: &'static [&'static str] = &[];
+const FILE_DOWNLOAD_DETAILS_FIELDS: &[&str] = &[];
 impl FileDownloadDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16532,7 +16532,7 @@ impl FileDownloadType {
 
 }
 
-const FILE_DOWNLOAD_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_DOWNLOAD_TYPE_FIELDS: &[&str] = &["description"];
 impl FileDownloadType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16604,7 +16604,7 @@ impl Default for FileEditDetails {
     }
 }
 
-const FILE_EDIT_DETAILS_FIELDS: &'static [&'static str] = &[];
+const FILE_EDIT_DETAILS_FIELDS: &[&str] = &[];
 impl FileEditDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16658,7 +16658,7 @@ impl FileEditType {
 
 }
 
-const FILE_EDIT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_EDIT_TYPE_FIELDS: &[&str] = &["description"];
 impl FileEditType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16730,7 +16730,7 @@ impl Default for FileGetCopyReferenceDetails {
     }
 }
 
-const FILE_GET_COPY_REFERENCE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const FILE_GET_COPY_REFERENCE_DETAILS_FIELDS: &[&str] = &[];
 impl FileGetCopyReferenceDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16784,7 +16784,7 @@ impl FileGetCopyReferenceType {
 
 }
 
-const FILE_GET_COPY_REFERENCE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_GET_COPY_REFERENCE_TYPE_FIELDS: &[&str] = &["description"];
 impl FileGetCopyReferenceType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16859,7 +16859,7 @@ impl Default for FileLikeCommentDetails {
     }
 }
 
-const FILE_LIKE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["comment_text"];
+const FILE_LIKE_COMMENT_DETAILS_FIELDS: &[&str] = &["comment_text"];
 impl FileLikeCommentDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -16933,7 +16933,7 @@ impl FileLikeCommentType {
 
 }
 
-const FILE_LIKE_COMMENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_LIKE_COMMENT_TYPE_FIELDS: &[&str] = &["description"];
 impl FileLikeCommentType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17025,9 +17025,9 @@ impl FileLogInfo {
 
 }
 
-const FILE_LOG_INFO_FIELDS: &'static [&'static str] = &["path",
-                                                        "display_name",
-                                                        "file_id"];
+const FILE_LOG_INFO_FIELDS: &[&str] = &["path",
+                                        "display_name",
+                                        "file_id"];
 impl FileLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17121,7 +17121,7 @@ impl FileMoveDetails {
 
 }
 
-const FILE_MOVE_DETAILS_FIELDS: &'static [&'static str] = &["relocate_action_details"];
+const FILE_MOVE_DETAILS_FIELDS: &[&str] = &["relocate_action_details"];
 impl FileMoveDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17195,7 +17195,7 @@ impl FileMoveType {
 
 }
 
-const FILE_MOVE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_MOVE_TYPE_FIELDS: &[&str] = &["description"];
 impl FileMoveType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17287,9 +17287,9 @@ impl FileOrFolderLogInfo {
 
 }
 
-const FILE_OR_FOLDER_LOG_INFO_FIELDS: &'static [&'static str] = &["path",
-                                                                  "display_name",
-                                                                  "file_id"];
+const FILE_OR_FOLDER_LOG_INFO_FIELDS: &[&str] = &["path",
+                                                  "display_name",
+                                                  "file_id"];
 impl FileOrFolderLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17379,7 +17379,7 @@ impl Default for FilePermanentlyDeleteDetails {
     }
 }
 
-const FILE_PERMANENTLY_DELETE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const FILE_PERMANENTLY_DELETE_DETAILS_FIELDS: &[&str] = &[];
 impl FilePermanentlyDeleteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17433,7 +17433,7 @@ impl FilePermanentlyDeleteType {
 
 }
 
-const FILE_PERMANENTLY_DELETE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_PERMANENTLY_DELETE_TYPE_FIELDS: &[&str] = &["description"];
 impl FilePermanentlyDeleteType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17505,7 +17505,7 @@ impl Default for FilePreviewDetails {
     }
 }
 
-const FILE_PREVIEW_DETAILS_FIELDS: &'static [&'static str] = &[];
+const FILE_PREVIEW_DETAILS_FIELDS: &[&str] = &[];
 impl FilePreviewDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17559,7 +17559,7 @@ impl FilePreviewType {
 
 }
 
-const FILE_PREVIEW_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_PREVIEW_TYPE_FIELDS: &[&str] = &["description"];
 impl FilePreviewType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17635,7 +17635,7 @@ impl FileRenameDetails {
 
 }
 
-const FILE_RENAME_DETAILS_FIELDS: &'static [&'static str] = &["relocate_action_details"];
+const FILE_RENAME_DETAILS_FIELDS: &[&str] = &["relocate_action_details"];
 impl FileRenameDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17709,7 +17709,7 @@ impl FileRenameType {
 
 }
 
-const FILE_RENAME_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_RENAME_TYPE_FIELDS: &[&str] = &["description"];
 impl FileRenameType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17804,9 +17804,9 @@ impl FileRequestChangeDetails {
 
 }
 
-const FILE_REQUEST_CHANGE_DETAILS_FIELDS: &'static [&'static str] = &["new_details",
-                                                                      "file_request_id",
-                                                                      "previous_details"];
+const FILE_REQUEST_CHANGE_DETAILS_FIELDS: &[&str] = &["new_details",
+                                                      "file_request_id",
+                                                      "previous_details"];
 impl FileRequestChangeDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17898,7 +17898,7 @@ impl FileRequestChangeType {
 
 }
 
-const FILE_REQUEST_CHANGE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_REQUEST_CHANGE_TYPE_FIELDS: &[&str] = &["description"];
 impl FileRequestChangeType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -17976,8 +17976,8 @@ impl Default for FileRequestCloseDetails {
     }
 }
 
-const FILE_REQUEST_CLOSE_DETAILS_FIELDS: &'static [&'static str] = &["file_request_id",
-                                                                     "previous_details"];
+const FILE_REQUEST_CLOSE_DETAILS_FIELDS: &[&str] = &["file_request_id",
+                                                     "previous_details"];
 impl FileRequestCloseDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18060,7 +18060,7 @@ impl FileRequestCloseType {
 
 }
 
-const FILE_REQUEST_CLOSE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_REQUEST_CLOSE_TYPE_FIELDS: &[&str] = &["description"];
 impl FileRequestCloseType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18138,8 +18138,8 @@ impl Default for FileRequestCreateDetails {
     }
 }
 
-const FILE_REQUEST_CREATE_DETAILS_FIELDS: &'static [&'static str] = &["file_request_id",
-                                                                      "request_details"];
+const FILE_REQUEST_CREATE_DETAILS_FIELDS: &[&str] = &["file_request_id",
+                                                      "request_details"];
 impl FileRequestCreateDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18222,7 +18222,7 @@ impl FileRequestCreateType {
 
 }
 
-const FILE_REQUEST_CREATE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_REQUEST_CREATE_TYPE_FIELDS: &[&str] = &["description"];
 impl FileRequestCreateType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18301,8 +18301,8 @@ impl Default for FileRequestDeadline {
     }
 }
 
-const FILE_REQUEST_DEADLINE_FIELDS: &'static [&'static str] = &["deadline",
-                                                                "allow_late_uploads"];
+const FILE_REQUEST_DEADLINE_FIELDS: &[&str] = &["deadline",
+                                                "allow_late_uploads"];
 impl FileRequestDeadline {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18395,8 +18395,8 @@ impl FileRequestDetails {
 
 }
 
-const FILE_REQUEST_DETAILS_FIELDS: &'static [&'static str] = &["asset_index",
-                                                               "deadline"];
+const FILE_REQUEST_DETAILS_FIELDS: &[&str] = &["asset_index",
+                                               "deadline"];
 impl FileRequestDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18516,11 +18516,11 @@ impl FileRequestReceiveFileDetails {
 
 }
 
-const FILE_REQUEST_RECEIVE_FILE_DETAILS_FIELDS: &'static [&'static str] = &["submitted_file_names",
-                                                                            "file_request_id",
-                                                                            "file_request_details",
-                                                                            "submitter_name",
-                                                                            "submitter_email"];
+const FILE_REQUEST_RECEIVE_FILE_DETAILS_FIELDS: &[&str] = &["submitted_file_names",
+                                                            "file_request_id",
+                                                            "file_request_details",
+                                                            "submitter_name",
+                                                            "submitter_email"];
 impl FileRequestReceiveFileDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18630,7 +18630,7 @@ impl FileRequestReceiveFileType {
 
 }
 
-const FILE_REQUEST_RECEIVE_FILE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_REQUEST_RECEIVE_FILE_TYPE_FIELDS: &[&str] = &["description"];
 impl FileRequestReceiveFileType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18714,8 +18714,8 @@ impl FileRequestsChangePolicyDetails {
 
 }
 
-const FILE_REQUESTS_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                              "previous_value"];
+const FILE_REQUESTS_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                              "previous_value"];
 impl FileRequestsChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18798,7 +18798,7 @@ impl FileRequestsChangePolicyType {
 
 }
 
-const FILE_REQUESTS_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_REQUESTS_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl FileRequestsChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18870,7 +18870,7 @@ impl Default for FileRequestsEmailsEnabledDetails {
     }
 }
 
-const FILE_REQUESTS_EMAILS_ENABLED_DETAILS_FIELDS: &'static [&'static str] = &[];
+const FILE_REQUESTS_EMAILS_ENABLED_DETAILS_FIELDS: &[&str] = &[];
 impl FileRequestsEmailsEnabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18924,7 +18924,7 @@ impl FileRequestsEmailsEnabledType {
 
 }
 
-const FILE_REQUESTS_EMAILS_ENABLED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_REQUESTS_EMAILS_ENABLED_TYPE_FIELDS: &[&str] = &["description"];
 impl FileRequestsEmailsEnabledType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18996,7 +18996,7 @@ impl Default for FileRequestsEmailsRestrictedToTeamOnlyDetails {
     }
 }
 
-const FILE_REQUESTS_EMAILS_RESTRICTED_TO_TEAM_ONLY_DETAILS_FIELDS: &'static [&'static str] = &[];
+const FILE_REQUESTS_EMAILS_RESTRICTED_TO_TEAM_ONLY_DETAILS_FIELDS: &[&str] = &[];
 impl FileRequestsEmailsRestrictedToTeamOnlyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19050,7 +19050,7 @@ impl FileRequestsEmailsRestrictedToTeamOnlyType {
 
 }
 
-const FILE_REQUESTS_EMAILS_RESTRICTED_TO_TEAM_ONLY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_REQUESTS_EMAILS_RESTRICTED_TO_TEAM_ONLY_TYPE_FIELDS: &[&str] = &["description"];
 impl FileRequestsEmailsRestrictedToTeamOnlyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19140,9 +19140,9 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestsPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
         deserializer.deserialize_struct("FileRequestsPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -19184,7 +19184,7 @@ impl Default for FileResolveCommentDetails {
     }
 }
 
-const FILE_RESOLVE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["comment_text"];
+const FILE_RESOLVE_COMMENT_DETAILS_FIELDS: &[&str] = &["comment_text"];
 impl FileResolveCommentDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19258,7 +19258,7 @@ impl FileResolveCommentType {
 
 }
 
-const FILE_RESOLVE_COMMENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_RESOLVE_COMMENT_TYPE_FIELDS: &[&str] = &["description"];
 impl FileResolveCommentType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19330,7 +19330,7 @@ impl Default for FileRestoreDetails {
     }
 }
 
-const FILE_RESTORE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const FILE_RESTORE_DETAILS_FIELDS: &[&str] = &[];
 impl FileRestoreDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19384,7 +19384,7 @@ impl FileRestoreType {
 
 }
 
-const FILE_RESTORE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_RESTORE_TYPE_FIELDS: &[&str] = &["description"];
 impl FileRestoreType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19456,7 +19456,7 @@ impl Default for FileRevertDetails {
     }
 }
 
-const FILE_REVERT_DETAILS_FIELDS: &'static [&'static str] = &[];
+const FILE_REVERT_DETAILS_FIELDS: &[&str] = &[];
 impl FileRevertDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19510,7 +19510,7 @@ impl FileRevertType {
 
 }
 
-const FILE_REVERT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_REVERT_TYPE_FIELDS: &[&str] = &["description"];
 impl FileRevertType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19582,7 +19582,7 @@ impl Default for FileRollbackChangesDetails {
     }
 }
 
-const FILE_ROLLBACK_CHANGES_DETAILS_FIELDS: &'static [&'static str] = &[];
+const FILE_ROLLBACK_CHANGES_DETAILS_FIELDS: &[&str] = &[];
 impl FileRollbackChangesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19636,7 +19636,7 @@ impl FileRollbackChangesType {
 
 }
 
-const FILE_ROLLBACK_CHANGES_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_ROLLBACK_CHANGES_TYPE_FIELDS: &[&str] = &["description"];
 impl FileRollbackChangesType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19712,7 +19712,7 @@ impl FileSaveCopyReferenceDetails {
 
 }
 
-const FILE_SAVE_COPY_REFERENCE_DETAILS_FIELDS: &'static [&'static str] = &["relocate_action_details"];
+const FILE_SAVE_COPY_REFERENCE_DETAILS_FIELDS: &[&str] = &["relocate_action_details"];
 impl FileSaveCopyReferenceDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19786,7 +19786,7 @@ impl FileSaveCopyReferenceType {
 
 }
 
-const FILE_SAVE_COPY_REFERENCE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_SAVE_COPY_REFERENCE_TYPE_FIELDS: &[&str] = &["description"];
 impl FileSaveCopyReferenceType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19861,7 +19861,7 @@ impl Default for FileUnlikeCommentDetails {
     }
 }
 
-const FILE_UNLIKE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["comment_text"];
+const FILE_UNLIKE_COMMENT_DETAILS_FIELDS: &[&str] = &["comment_text"];
 impl FileUnlikeCommentDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -19935,7 +19935,7 @@ impl FileUnlikeCommentType {
 
 }
 
-const FILE_UNLIKE_COMMENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_UNLIKE_COMMENT_TYPE_FIELDS: &[&str] = &["description"];
 impl FileUnlikeCommentType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -20010,7 +20010,7 @@ impl Default for FileUnresolveCommentDetails {
     }
 }
 
-const FILE_UNRESOLVE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["comment_text"];
+const FILE_UNRESOLVE_COMMENT_DETAILS_FIELDS: &[&str] = &["comment_text"];
 impl FileUnresolveCommentDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -20084,7 +20084,7 @@ impl FileUnresolveCommentType {
 
 }
 
-const FILE_UNRESOLVE_COMMENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const FILE_UNRESOLVE_COMMENT_TYPE_FIELDS: &[&str] = &["description"];
 impl FileUnresolveCommentType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -20176,9 +20176,9 @@ impl FolderLogInfo {
 
 }
 
-const FOLDER_LOG_INFO_FIELDS: &'static [&'static str] = &["path",
-                                                          "display_name",
-                                                          "file_id"];
+const FOLDER_LOG_INFO_FIELDS: &[&str] = &["path",
+                                          "display_name",
+                                          "file_id"];
 impl FolderLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -20296,10 +20296,10 @@ impl GeoLocationLogInfo {
 
 }
 
-const GEO_LOCATION_LOG_INFO_FIELDS: &'static [&'static str] = &["ip_address",
-                                                                "city",
-                                                                "region",
-                                                                "country"];
+const GEO_LOCATION_LOG_INFO_FIELDS: &[&str] = &["ip_address",
+                                                "city",
+                                                "region",
+                                                "country"];
 impl GeoLocationLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -20410,10 +20410,10 @@ impl Default for GetTeamEventsArg {
     }
 }
 
-const GET_TEAM_EVENTS_ARG_FIELDS: &'static [&'static str] = &["limit",
-                                                              "account_id",
-                                                              "time",
-                                                              "category"];
+const GET_TEAM_EVENTS_ARG_FIELDS: &[&str] = &["limit",
+                                              "account_id",
+                                              "time",
+                                              "category"];
 impl GetTeamEventsArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -20515,7 +20515,7 @@ impl GetTeamEventsContinueArg {
 
 }
 
-const GET_TEAM_EVENTS_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const GET_TEAM_EVENTS_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl GetTeamEventsContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -20604,8 +20604,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTeamEventsContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["bad_cursor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["bad_cursor",
+                                    "other"];
         deserializer.deserialize_struct("GetTeamEventsContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -20670,9 +20670,9 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTeamEventsError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["account_id_not_found",
-                                                    "invalid_time_range",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["account_id_not_found",
+                                    "invalid_time_range",
+                                    "other"];
         deserializer.deserialize_struct("GetTeamEventsError", VARIANTS, EnumVisitor)
     }
 }
@@ -20733,9 +20733,9 @@ impl GetTeamEventsResult {
 
 }
 
-const GET_TEAM_EVENTS_RESULT_FIELDS: &'static [&'static str] = &["events",
-                                                                 "cursor",
-                                                                 "has_more"];
+const GET_TEAM_EVENTS_RESULT_FIELDS: &[&str] = &["events",
+                                                 "cursor",
+                                                 "has_more"];
 impl GetTeamEventsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -20837,8 +20837,8 @@ impl GoogleSsoChangePolicyDetails {
 
 }
 
-const GOOGLE_SSO_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                           "previous_value"];
+const GOOGLE_SSO_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                           "previous_value"];
 impl GoogleSsoChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -20921,7 +20921,7 @@ impl GoogleSsoChangePolicyType {
 
 }
 
-const GOOGLE_SSO_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GOOGLE_SSO_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl GoogleSsoChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -21011,9 +21011,9 @@ impl<'de> ::serde::de::Deserialize<'de> for GoogleSsoPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
         deserializer.deserialize_struct("GoogleSsoPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -21056,7 +21056,7 @@ impl GroupAddExternalIdDetails {
 
 }
 
-const GROUP_ADD_EXTERNAL_ID_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
+const GROUP_ADD_EXTERNAL_ID_DETAILS_FIELDS: &[&str] = &["new_value"];
 impl GroupAddExternalIdDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -21130,7 +21130,7 @@ impl GroupAddExternalIdType {
 
 }
 
-const GROUP_ADD_EXTERNAL_ID_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GROUP_ADD_EXTERNAL_ID_TYPE_FIELDS: &[&str] = &["description"];
 impl GroupAddExternalIdType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -21206,7 +21206,7 @@ impl GroupAddMemberDetails {
 
 }
 
-const GROUP_ADD_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["is_group_owner"];
+const GROUP_ADD_MEMBER_DETAILS_FIELDS: &[&str] = &["is_group_owner"];
 impl GroupAddMemberDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -21280,7 +21280,7 @@ impl GroupAddMemberType {
 
 }
 
-const GROUP_ADD_MEMBER_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GROUP_ADD_MEMBER_TYPE_FIELDS: &[&str] = &["description"];
 impl GroupAddMemberType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -21362,8 +21362,8 @@ impl GroupChangeExternalIdDetails {
 
 }
 
-const GROUP_CHANGE_EXTERNAL_ID_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                           "previous_value"];
+const GROUP_CHANGE_EXTERNAL_ID_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                           "previous_value"];
 impl GroupChangeExternalIdDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -21446,7 +21446,7 @@ impl GroupChangeExternalIdType {
 
 }
 
-const GROUP_CHANGE_EXTERNAL_ID_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GROUP_CHANGE_EXTERNAL_ID_TYPE_FIELDS: &[&str] = &["description"];
 impl GroupChangeExternalIdType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -21533,8 +21533,8 @@ impl GroupChangeManagementTypeDetails {
 
 }
 
-const GROUP_CHANGE_MANAGEMENT_TYPE_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                               "previous_value"];
+const GROUP_CHANGE_MANAGEMENT_TYPE_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                               "previous_value"];
 impl GroupChangeManagementTypeDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -21617,7 +21617,7 @@ impl GroupChangeManagementTypeType {
 
 }
 
-const GROUP_CHANGE_MANAGEMENT_TYPE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GROUP_CHANGE_MANAGEMENT_TYPE_TYPE_FIELDS: &[&str] = &["description"];
 impl GroupChangeManagementTypeType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -21693,7 +21693,7 @@ impl GroupChangeMemberRoleDetails {
 
 }
 
-const GROUP_CHANGE_MEMBER_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["is_group_owner"];
+const GROUP_CHANGE_MEMBER_ROLE_DETAILS_FIELDS: &[&str] = &["is_group_owner"];
 impl GroupChangeMemberRoleDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -21767,7 +21767,7 @@ impl GroupChangeMemberRoleType {
 
 }
 
-const GROUP_CHANGE_MEMBER_ROLE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GROUP_CHANGE_MEMBER_ROLE_TYPE_FIELDS: &[&str] = &["description"];
 impl GroupChangeMemberRoleType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -21851,8 +21851,8 @@ impl GroupCreateDetails {
 
 }
 
-const GROUP_CREATE_DETAILS_FIELDS: &'static [&'static str] = &["join_policy",
-                                                               "is_company_managed"];
+const GROUP_CREATE_DETAILS_FIELDS: &[&str] = &["join_policy",
+                                               "is_company_managed"];
 impl GroupCreateDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -21935,7 +21935,7 @@ impl GroupCreateType {
 
 }
 
-const GROUP_CREATE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GROUP_CREATE_TYPE_FIELDS: &[&str] = &["description"];
 impl GroupCreateType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22010,7 +22010,7 @@ impl Default for GroupDeleteDetails {
     }
 }
 
-const GROUP_DELETE_DETAILS_FIELDS: &'static [&'static str] = &["is_company_managed"];
+const GROUP_DELETE_DETAILS_FIELDS: &[&str] = &["is_company_managed"];
 impl GroupDeleteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22084,7 +22084,7 @@ impl GroupDeleteType {
 
 }
 
-const GROUP_DELETE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GROUP_DELETE_TYPE_FIELDS: &[&str] = &["description"];
 impl GroupDeleteType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22173,9 +22173,9 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupJoinPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["open",
-                                                    "request_to_join",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["open",
+                                    "request_to_join",
+                                    "other"];
         deserializer.deserialize_struct("GroupJoinPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -22234,9 +22234,9 @@ impl GroupLogInfo {
 
 }
 
-const GROUP_LOG_INFO_FIELDS: &'static [&'static str] = &["display_name",
-                                                         "group_id",
-                                                         "external_id"];
+const GROUP_LOG_INFO_FIELDS: &[&str] = &["display_name",
+                                         "group_id",
+                                         "external_id"];
 impl GroupLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22326,7 +22326,7 @@ impl Default for GroupMovedDetails {
     }
 }
 
-const GROUP_MOVED_DETAILS_FIELDS: &'static [&'static str] = &[];
+const GROUP_MOVED_DETAILS_FIELDS: &[&str] = &[];
 impl GroupMovedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22380,7 +22380,7 @@ impl GroupMovedType {
 
 }
 
-const GROUP_MOVED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GROUP_MOVED_TYPE_FIELDS: &[&str] = &["description"];
 impl GroupMovedType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22456,7 +22456,7 @@ impl GroupRemoveExternalIdDetails {
 
 }
 
-const GROUP_REMOVE_EXTERNAL_ID_DETAILS_FIELDS: &'static [&'static str] = &["previous_value"];
+const GROUP_REMOVE_EXTERNAL_ID_DETAILS_FIELDS: &[&str] = &["previous_value"];
 impl GroupRemoveExternalIdDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22530,7 +22530,7 @@ impl GroupRemoveExternalIdType {
 
 }
 
-const GROUP_REMOVE_EXTERNAL_ID_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GROUP_REMOVE_EXTERNAL_ID_TYPE_FIELDS: &[&str] = &["description"];
 impl GroupRemoveExternalIdType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22602,7 +22602,7 @@ impl Default for GroupRemoveMemberDetails {
     }
 }
 
-const GROUP_REMOVE_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &[];
+const GROUP_REMOVE_MEMBER_DETAILS_FIELDS: &[&str] = &[];
 impl GroupRemoveMemberDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22656,7 +22656,7 @@ impl GroupRemoveMemberType {
 
 }
 
-const GROUP_REMOVE_MEMBER_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GROUP_REMOVE_MEMBER_TYPE_FIELDS: &[&str] = &["description"];
 impl GroupRemoveMemberType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22735,8 +22735,8 @@ impl GroupRenameDetails {
 
 }
 
-const GROUP_RENAME_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
-                                                               "new_value"];
+const GROUP_RENAME_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                               "new_value"];
 impl GroupRenameDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22819,7 +22819,7 @@ impl GroupRenameType {
 
 }
 
-const GROUP_RENAME_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GROUP_RENAME_TYPE_FIELDS: &[&str] = &["description"];
 impl GroupRenameType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22906,8 +22906,8 @@ impl GroupUserManagementChangePolicyDetails {
 
 }
 
-const GROUP_USER_MANAGEMENT_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                      "previous_value"];
+const GROUP_USER_MANAGEMENT_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                      "previous_value"];
 impl GroupUserManagementChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -22990,7 +22990,7 @@ impl GroupUserManagementChangePolicyType {
 
 }
 
-const GROUP_USER_MANAGEMENT_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const GROUP_USER_MANAGEMENT_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl GroupUserManagementChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -23079,9 +23079,9 @@ impl<'de> ::serde::de::Deserialize<'de> for IdentifierType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["email",
-                                                    "facebook_profile_name",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["email",
+                                    "facebook_profile_name",
+                                    "other"];
         deserializer.deserialize_struct("IdentifierType", VARIANTS, EnumVisitor)
     }
 }
@@ -23134,9 +23134,9 @@ impl JoinTeamDetails {
 
 }
 
-const JOIN_TEAM_DETAILS_FIELDS: &'static [&'static str] = &["linked_apps",
-                                                            "linked_devices",
-                                                            "linked_shared_folders"];
+const JOIN_TEAM_DETAILS_FIELDS: &[&str] = &["linked_apps",
+                                            "linked_devices",
+                                            "linked_shared_folders"];
 impl JoinTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -23266,18 +23266,18 @@ impl Default for LegacyDeviceSessionLogInfo {
     }
 }
 
-const LEGACY_DEVICE_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["session_id",
-                                                                         "ip_address",
-                                                                         "created",
-                                                                         "updated",
-                                                                         "display_name",
-                                                                         "is_emm_managed",
-                                                                         "platform",
-                                                                         "mac_address",
-                                                                         "os_version",
-                                                                         "device_type",
-                                                                         "client_version",
-                                                                         "legacy_uniq_id"];
+const LEGACY_DEVICE_SESSION_LOG_INFO_FIELDS: &[&str] = &["session_id",
+                                                         "ip_address",
+                                                         "created",
+                                                         "updated",
+                                                         "display_name",
+                                                         "is_emm_managed",
+                                                         "platform",
+                                                         "mac_address",
+                                                         "os_version",
+                                                         "device_type",
+                                                         "client_version",
+                                                         "legacy_uniq_id"];
 impl LegacyDeviceSessionLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -23484,11 +23484,11 @@ impl LinkedDeviceLogInfo {
 
 }
 
-const LINKED_DEVICE_LOG_INFO_FIELDS: &'static [&'static str] = &["device_type",
-                                                                 "display_name",
-                                                                 "ip_address",
-                                                                 "last_activity",
-                                                                 "platform"];
+const LINKED_DEVICE_LOG_INFO_FIELDS: &[&str] = &["device_type",
+                                                 "display_name",
+                                                 "ip_address",
+                                                 "last_activity",
+                                                 "platform"];
 impl LinkedDeviceLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -23611,9 +23611,9 @@ impl LoginFailDetails {
 
 }
 
-const LOGIN_FAIL_DETAILS_FIELDS: &'static [&'static str] = &["login_method",
-                                                             "error_details",
-                                                             "is_emm_managed"];
+const LOGIN_FAIL_DETAILS_FIELDS: &[&str] = &["login_method",
+                                             "error_details",
+                                             "is_emm_managed"];
 impl LoginFailDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -23705,7 +23705,7 @@ impl LoginFailType {
 
 }
 
-const LOGIN_FAIL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const LOGIN_FAIL_TYPE_FIELDS: &[&str] = &["description"];
 impl LoginFailType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -23796,10 +23796,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LoginMethod {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["password",
-                                                    "two_factor_authentication",
-                                                    "saml",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["password",
+                                    "two_factor_authentication",
+                                    "saml",
+                                    "other"];
         deserializer.deserialize_struct("LoginMethod", VARIANTS, EnumVisitor)
     }
 }
@@ -23856,8 +23856,8 @@ impl LoginSuccessDetails {
 
 }
 
-const LOGIN_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &["login_method",
-                                                                "is_emm_managed"];
+const LOGIN_SUCCESS_DETAILS_FIELDS: &[&str] = &["login_method",
+                                                "is_emm_managed"];
 impl LoginSuccessDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -23940,7 +23940,7 @@ impl LoginSuccessType {
 
 }
 
-const LOGIN_SUCCESS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const LOGIN_SUCCESS_TYPE_FIELDS: &[&str] = &["description"];
 impl LoginSuccessType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24012,7 +24012,7 @@ impl Default for LogoutDetails {
     }
 }
 
-const LOGOUT_DETAILS_FIELDS: &'static [&'static str] = &[];
+const LOGOUT_DETAILS_FIELDS: &[&str] = &[];
 impl LogoutDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24066,7 +24066,7 @@ impl LogoutType {
 
 }
 
-const LOGOUT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const LOGOUT_TYPE_FIELDS: &[&str] = &["description"];
 impl LogoutType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24142,7 +24142,7 @@ impl MemberAddNameDetails {
 
 }
 
-const MEMBER_ADD_NAME_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
+const MEMBER_ADD_NAME_DETAILS_FIELDS: &[&str] = &["new_value"];
 impl MemberAddNameDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24216,7 +24216,7 @@ impl MemberAddNameType {
 
 }
 
-const MEMBER_ADD_NAME_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_ADD_NAME_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberAddNameType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24296,8 +24296,8 @@ impl Default for MemberChangeAdminRoleDetails {
     }
 }
 
-const MEMBER_CHANGE_ADMIN_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                           "previous_value"];
+const MEMBER_CHANGE_ADMIN_ROLE_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                           "previous_value"];
 impl MemberChangeAdminRoleDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24380,7 +24380,7 @@ impl MemberChangeAdminRoleType {
 
 }
 
-const MEMBER_CHANGE_ADMIN_ROLE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_CHANGE_ADMIN_ROLE_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberChangeAdminRoleType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24464,8 +24464,8 @@ impl MemberChangeEmailDetails {
 
 }
 
-const MEMBER_CHANGE_EMAIL_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                      "previous_value"];
+const MEMBER_CHANGE_EMAIL_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                      "previous_value"];
 impl MemberChangeEmailDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24548,7 +24548,7 @@ impl MemberChangeEmailType {
 
 }
 
-const MEMBER_CHANGE_EMAIL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_CHANGE_EMAIL_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberChangeEmailType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24627,8 +24627,8 @@ impl MemberChangeMembershipTypeDetails {
 
 }
 
-const MEMBER_CHANGE_MEMBERSHIP_TYPE_DETAILS_FIELDS: &'static [&'static str] = &["prev_value",
-                                                                                "new_value"];
+const MEMBER_CHANGE_MEMBERSHIP_TYPE_DETAILS_FIELDS: &[&str] = &["prev_value",
+                                                                "new_value"];
 impl MemberChangeMembershipTypeDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24711,7 +24711,7 @@ impl MemberChangeMembershipTypeType {
 
 }
 
-const MEMBER_CHANGE_MEMBERSHIP_TYPE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_CHANGE_MEMBERSHIP_TYPE_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberChangeMembershipTypeType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24795,8 +24795,8 @@ impl MemberChangeNameDetails {
 
 }
 
-const MEMBER_CHANGE_NAME_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                     "previous_value"];
+const MEMBER_CHANGE_NAME_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                     "previous_value"];
 impl MemberChangeNameDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24879,7 +24879,7 @@ impl MemberChangeNameType {
 
 }
 
-const MEMBER_CHANGE_NAME_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_CHANGE_NAME_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberChangeNameType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24971,9 +24971,9 @@ impl MemberChangeStatusDetails {
 
 }
 
-const MEMBER_CHANGE_STATUS_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                       "previous_value",
-                                                                       "action"];
+const MEMBER_CHANGE_STATUS_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                       "previous_value",
+                                                       "action"];
 impl MemberChangeStatusDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -25065,7 +25065,7 @@ impl MemberChangeStatusType {
 
 }
 
-const MEMBER_CHANGE_STATUS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_CHANGE_STATUS_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberChangeStatusType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -25137,7 +25137,7 @@ impl Default for MemberPermanentlyDeleteAccountContentsDetails {
     }
 }
 
-const MEMBER_PERMANENTLY_DELETE_ACCOUNT_CONTENTS_DETAILS_FIELDS: &'static [&'static str] = &[];
+const MEMBER_PERMANENTLY_DELETE_ACCOUNT_CONTENTS_DETAILS_FIELDS: &[&str] = &[];
 impl MemberPermanentlyDeleteAccountContentsDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -25191,7 +25191,7 @@ impl MemberPermanentlyDeleteAccountContentsType {
 
 }
 
-const MEMBER_PERMANENTLY_DELETE_ACCOUNT_CONTENTS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_PERMANENTLY_DELETE_ACCOUNT_CONTENTS_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberPermanentlyDeleteAccountContentsType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -25282,10 +25282,10 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberRemoveActionType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["delete",
-                                                    "offboard",
-                                                    "leave",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["delete",
+                                    "offboard",
+                                    "leave",
+                                    "other"];
         deserializer.deserialize_struct("MemberRemoveActionType", VARIANTS, EnumVisitor)
     }
 }
@@ -25342,8 +25342,8 @@ impl MemberRequestsChangePolicyDetails {
 
 }
 
-const MEMBER_REQUESTS_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                "previous_value"];
+const MEMBER_REQUESTS_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                "previous_value"];
 impl MemberRequestsChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -25426,7 +25426,7 @@ impl MemberRequestsChangePolicyType {
 
 }
 
-const MEMBER_REQUESTS_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_REQUESTS_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberRequestsChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -25517,10 +25517,10 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberRequestsPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["auto_accept",
-                                                    "disabled",
-                                                    "require_approval",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["auto_accept",
+                                    "disabled",
+                                    "require_approval",
+                                    "other"];
         deserializer.deserialize_struct("MemberRequestsPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -25569,7 +25569,7 @@ impl MemberSpaceLimitsAddCustomQuotaDetails {
 
 }
 
-const MEMBER_SPACE_LIMITS_ADD_CUSTOM_QUOTA_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
+const MEMBER_SPACE_LIMITS_ADD_CUSTOM_QUOTA_DETAILS_FIELDS: &[&str] = &["new_value"];
 impl MemberSpaceLimitsAddCustomQuotaDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -25643,7 +25643,7 @@ impl MemberSpaceLimitsAddCustomQuotaType {
 
 }
 
-const MEMBER_SPACE_LIMITS_ADD_CUSTOM_QUOTA_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_SPACE_LIMITS_ADD_CUSTOM_QUOTA_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberSpaceLimitsAddCustomQuotaType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -25715,7 +25715,7 @@ impl Default for MemberSpaceLimitsAddExceptionDetails {
     }
 }
 
-const MEMBER_SPACE_LIMITS_ADD_EXCEPTION_DETAILS_FIELDS: &'static [&'static str] = &[];
+const MEMBER_SPACE_LIMITS_ADD_EXCEPTION_DETAILS_FIELDS: &[&str] = &[];
 impl MemberSpaceLimitsAddExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -25769,7 +25769,7 @@ impl MemberSpaceLimitsAddExceptionType {
 
 }
 
-const MEMBER_SPACE_LIMITS_ADD_EXCEPTION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_SPACE_LIMITS_ADD_EXCEPTION_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberSpaceLimitsAddExceptionType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -25848,8 +25848,8 @@ impl MemberSpaceLimitsChangeCapsTypePolicyDetails {
 
 }
 
-const MEMBER_SPACE_LIMITS_CHANGE_CAPS_TYPE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
-                                                                                              "new_value"];
+const MEMBER_SPACE_LIMITS_CHANGE_CAPS_TYPE_POLICY_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                                              "new_value"];
 impl MemberSpaceLimitsChangeCapsTypePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -25932,7 +25932,7 @@ impl MemberSpaceLimitsChangeCapsTypePolicyType {
 
 }
 
-const MEMBER_SPACE_LIMITS_CHANGE_CAPS_TYPE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_SPACE_LIMITS_CHANGE_CAPS_TYPE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberSpaceLimitsChangeCapsTypePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26011,8 +26011,8 @@ impl MemberSpaceLimitsChangeCustomQuotaDetails {
 
 }
 
-const MEMBER_SPACE_LIMITS_CHANGE_CUSTOM_QUOTA_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
-                                                                                          "new_value"];
+const MEMBER_SPACE_LIMITS_CHANGE_CUSTOM_QUOTA_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                                          "new_value"];
 impl MemberSpaceLimitsChangeCustomQuotaDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26095,7 +26095,7 @@ impl MemberSpaceLimitsChangeCustomQuotaType {
 
 }
 
-const MEMBER_SPACE_LIMITS_CHANGE_CUSTOM_QUOTA_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_SPACE_LIMITS_CHANGE_CUSTOM_QUOTA_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberSpaceLimitsChangeCustomQuotaType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26173,8 +26173,8 @@ impl Default for MemberSpaceLimitsChangePolicyDetails {
     }
 }
 
-const MEMBER_SPACE_LIMITS_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
-                                                                                    "new_value"];
+const MEMBER_SPACE_LIMITS_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                                    "new_value"];
 impl MemberSpaceLimitsChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26257,7 +26257,7 @@ impl MemberSpaceLimitsChangePolicyType {
 
 }
 
-const MEMBER_SPACE_LIMITS_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_SPACE_LIMITS_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberSpaceLimitsChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26337,8 +26337,8 @@ impl MemberSpaceLimitsChangeStatusDetails {
 
 }
 
-const MEMBER_SPACE_LIMITS_CHANGE_STATUS_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
-                                                                                    "new_value"];
+const MEMBER_SPACE_LIMITS_CHANGE_STATUS_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                                    "new_value"];
 impl MemberSpaceLimitsChangeStatusDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26421,7 +26421,7 @@ impl MemberSpaceLimitsChangeStatusType {
 
 }
 
-const MEMBER_SPACE_LIMITS_CHANGE_STATUS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_SPACE_LIMITS_CHANGE_STATUS_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberSpaceLimitsChangeStatusType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26493,7 +26493,7 @@ impl Default for MemberSpaceLimitsRemoveCustomQuotaDetails {
     }
 }
 
-const MEMBER_SPACE_LIMITS_REMOVE_CUSTOM_QUOTA_DETAILS_FIELDS: &'static [&'static str] = &[];
+const MEMBER_SPACE_LIMITS_REMOVE_CUSTOM_QUOTA_DETAILS_FIELDS: &[&str] = &[];
 impl MemberSpaceLimitsRemoveCustomQuotaDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26547,7 +26547,7 @@ impl MemberSpaceLimitsRemoveCustomQuotaType {
 
 }
 
-const MEMBER_SPACE_LIMITS_REMOVE_CUSTOM_QUOTA_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_SPACE_LIMITS_REMOVE_CUSTOM_QUOTA_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberSpaceLimitsRemoveCustomQuotaType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26619,7 +26619,7 @@ impl Default for MemberSpaceLimitsRemoveExceptionDetails {
     }
 }
 
-const MEMBER_SPACE_LIMITS_REMOVE_EXCEPTION_DETAILS_FIELDS: &'static [&'static str] = &[];
+const MEMBER_SPACE_LIMITS_REMOVE_EXCEPTION_DETAILS_FIELDS: &[&str] = &[];
 impl MemberSpaceLimitsRemoveExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26673,7 +26673,7 @@ impl MemberSpaceLimitsRemoveExceptionType {
 
 }
 
-const MEMBER_SPACE_LIMITS_REMOVE_EXCEPTION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_SPACE_LIMITS_REMOVE_EXCEPTION_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberSpaceLimitsRemoveExceptionType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26768,12 +26768,12 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["not_joined",
-                                                    "invited",
-                                                    "active",
-                                                    "suspended",
-                                                    "removed",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["not_joined",
+                                    "invited",
+                                    "active",
+                                    "suspended",
+                                    "removed",
+                                    "other"];
         deserializer.deserialize_struct("MemberStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -26834,7 +26834,7 @@ impl MemberSuggestDetails {
 
 }
 
-const MEMBER_SUGGEST_DETAILS_FIELDS: &'static [&'static str] = &["suggested_members"];
+const MEMBER_SUGGEST_DETAILS_FIELDS: &[&str] = &["suggested_members"];
 impl MemberSuggestDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26908,7 +26908,7 @@ impl MemberSuggestType {
 
 }
 
-const MEMBER_SUGGEST_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_SUGGEST_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberSuggestType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -26992,8 +26992,8 @@ impl MemberSuggestionsChangePolicyDetails {
 
 }
 
-const MEMBER_SUGGESTIONS_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                   "previous_value"];
+const MEMBER_SUGGESTIONS_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                   "previous_value"];
 impl MemberSuggestionsChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -27076,7 +27076,7 @@ impl MemberSuggestionsChangePolicyType {
 
 }
 
-const MEMBER_SUGGESTIONS_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_SUGGESTIONS_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberSuggestionsChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -27166,9 +27166,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSuggestionsPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
         deserializer.deserialize_struct("MemberSuggestionsPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -27207,7 +27207,7 @@ impl Default for MemberTransferAccountContentsDetails {
     }
 }
 
-const MEMBER_TRANSFER_ACCOUNT_CONTENTS_DETAILS_FIELDS: &'static [&'static str] = &[];
+const MEMBER_TRANSFER_ACCOUNT_CONTENTS_DETAILS_FIELDS: &[&str] = &[];
 impl MemberTransferAccountContentsDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -27261,7 +27261,7 @@ impl MemberTransferAccountContentsType {
 
 }
 
-const MEMBER_TRANSFER_ACCOUNT_CONTENTS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MEMBER_TRANSFER_ACCOUNT_CONTENTS_TYPE_FIELDS: &[&str] = &["description"];
 impl MemberTransferAccountContentsType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -27346,8 +27346,8 @@ impl MicrosoftOfficeAddinChangePolicyDetails {
 
 }
 
-const MICROSOFT_OFFICE_ADDIN_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                       "previous_value"];
+const MICROSOFT_OFFICE_ADDIN_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                       "previous_value"];
 impl MicrosoftOfficeAddinChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -27430,7 +27430,7 @@ impl MicrosoftOfficeAddinChangePolicyType {
 
 }
 
-const MICROSOFT_OFFICE_ADDIN_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const MICROSOFT_OFFICE_ADDIN_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl MicrosoftOfficeAddinChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -27520,9 +27520,9 @@ impl<'de> ::serde::de::Deserialize<'de> for MicrosoftOfficeAddinPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
         deserializer.deserialize_struct("MicrosoftOfficeAddinPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -27565,7 +27565,7 @@ impl Default for MissingDetails {
     }
 }
 
-const MISSING_DETAILS_FIELDS: &'static [&'static str] = &["source_event_fields"];
+const MISSING_DETAILS_FIELDS: &[&str] = &["source_event_fields"];
 impl MissingDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -27697,15 +27697,15 @@ impl MobileDeviceSessionLogInfo {
 
 }
 
-const MOBILE_DEVICE_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["device_name",
-                                                                         "client_type",
-                                                                         "client_version",
-                                                                         "last_carrier",
-                                                                         "session_id",
-                                                                         "ip_address",
-                                                                         "created",
-                                                                         "updated",
-                                                                         "os_version"];
+const MOBILE_DEVICE_SESSION_LOG_INFO_FIELDS: &[&str] = &["device_name",
+                                                         "client_type",
+                                                         "client_version",
+                                                         "last_carrier",
+                                                         "session_id",
+                                                         "ip_address",
+                                                         "created",
+                                                         "updated",
+                                                         "os_version"];
 impl MobileDeviceSessionLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -27852,7 +27852,7 @@ impl Default for MobileSessionLogInfo {
     }
 }
 
-const MOBILE_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["session_id"];
+const MOBILE_SESSION_LOG_INFO_FIELDS: &[&str] = &["session_id"];
 impl MobileSessionLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -27930,8 +27930,8 @@ impl Default for NamespaceRelativePathLogInfo {
     }
 }
 
-const NAMESPACE_RELATIVE_PATH_LOG_INFO_FIELDS: &'static [&'static str] = &["ns_id",
-                                                                           "relative_path"];
+const NAMESPACE_RELATIVE_PATH_LOG_INFO_FIELDS: &[&str] = &["ns_id",
+                                                           "relative_path"];
 impl NamespaceRelativePathLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28024,8 +28024,8 @@ impl NetworkControlChangePolicyDetails {
 
 }
 
-const NETWORK_CONTROL_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                "previous_value"];
+const NETWORK_CONTROL_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                "previous_value"];
 impl NetworkControlChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28108,7 +28108,7 @@ impl NetworkControlChangePolicyType {
 
 }
 
-const NETWORK_CONTROL_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const NETWORK_CONTROL_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl NetworkControlChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28198,9 +28198,9 @@ impl<'de> ::serde::de::Deserialize<'de> for NetworkControlPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
         deserializer.deserialize_struct("NetworkControlPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -28248,9 +28248,9 @@ impl Default for NonTeamMemberLogInfo {
     }
 }
 
-const NON_TEAM_MEMBER_LOG_INFO_FIELDS: &'static [&'static str] = &["account_id",
-                                                                   "display_name",
-                                                                   "email"];
+const NON_TEAM_MEMBER_LOG_INFO_FIELDS: &[&str] = &["account_id",
+                                                   "display_name",
+                                                   "email"];
 impl NonTeamMemberLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28340,7 +28340,7 @@ impl Default for NoteAclInviteOnlyDetails {
     }
 }
 
-const NOTE_ACL_INVITE_ONLY_DETAILS_FIELDS: &'static [&'static str] = &[];
+const NOTE_ACL_INVITE_ONLY_DETAILS_FIELDS: &[&str] = &[];
 impl NoteAclInviteOnlyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28394,7 +28394,7 @@ impl NoteAclInviteOnlyType {
 
 }
 
-const NOTE_ACL_INVITE_ONLY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const NOTE_ACL_INVITE_ONLY_TYPE_FIELDS: &[&str] = &["description"];
 impl NoteAclInviteOnlyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28466,7 +28466,7 @@ impl Default for NoteAclLinkDetails {
     }
 }
 
-const NOTE_ACL_LINK_DETAILS_FIELDS: &'static [&'static str] = &[];
+const NOTE_ACL_LINK_DETAILS_FIELDS: &[&str] = &[];
 impl NoteAclLinkDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28520,7 +28520,7 @@ impl NoteAclLinkType {
 
 }
 
-const NOTE_ACL_LINK_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const NOTE_ACL_LINK_TYPE_FIELDS: &[&str] = &["description"];
 impl NoteAclLinkType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28592,7 +28592,7 @@ impl Default for NoteAclTeamLinkDetails {
     }
 }
 
-const NOTE_ACL_TEAM_LINK_DETAILS_FIELDS: &'static [&'static str] = &[];
+const NOTE_ACL_TEAM_LINK_DETAILS_FIELDS: &[&str] = &[];
 impl NoteAclTeamLinkDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28646,7 +28646,7 @@ impl NoteAclTeamLinkType {
 
 }
 
-const NOTE_ACL_TEAM_LINK_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const NOTE_ACL_TEAM_LINK_TYPE_FIELDS: &[&str] = &["description"];
 impl NoteAclTeamLinkType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28718,7 +28718,7 @@ impl Default for NoteShareReceiveDetails {
     }
 }
 
-const NOTE_SHARE_RECEIVE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const NOTE_SHARE_RECEIVE_DETAILS_FIELDS: &[&str] = &[];
 impl NoteShareReceiveDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28772,7 +28772,7 @@ impl NoteShareReceiveType {
 
 }
 
-const NOTE_SHARE_RECEIVE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const NOTE_SHARE_RECEIVE_TYPE_FIELDS: &[&str] = &["description"];
 impl NoteShareReceiveType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28844,7 +28844,7 @@ impl Default for NoteSharedDetails {
     }
 }
 
-const NOTE_SHARED_DETAILS_FIELDS: &'static [&'static str] = &[];
+const NOTE_SHARED_DETAILS_FIELDS: &[&str] = &[];
 impl NoteSharedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28898,7 +28898,7 @@ impl NoteSharedType {
 
 }
 
-const NOTE_SHARED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const NOTE_SHARED_TYPE_FIELDS: &[&str] = &["description"];
 impl NoteSharedType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -28970,7 +28970,7 @@ impl Default for OpenNoteSharedDetails {
     }
 }
 
-const OPEN_NOTE_SHARED_DETAILS_FIELDS: &'static [&'static str] = &[];
+const OPEN_NOTE_SHARED_DETAILS_FIELDS: &[&str] = &[];
 impl OpenNoteSharedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -29024,7 +29024,7 @@ impl OpenNoteSharedType {
 
 }
 
-const OPEN_NOTE_SHARED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const OPEN_NOTE_SHARED_TYPE_FIELDS: &[&str] = &["description"];
 impl OpenNoteSharedType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -29108,8 +29108,8 @@ impl OriginLogInfo {
 
 }
 
-const ORIGIN_LOG_INFO_FIELDS: &'static [&'static str] = &["access_method",
-                                                          "geo_location"];
+const ORIGIN_LOG_INFO_FIELDS: &[&str] = &["access_method",
+                                          "geo_location"];
 impl OriginLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -29209,10 +29209,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperAccessType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["viewer",
-                                                    "commenter",
-                                                    "editor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["viewer",
+                                    "commenter",
+                                    "editor",
+                                    "other"];
         deserializer.deserialize_struct("PaperAccessType", VARIANTS, EnumVisitor)
     }
 }
@@ -29257,7 +29257,7 @@ impl Default for PaperAdminExportStartDetails {
     }
 }
 
-const PAPER_ADMIN_EXPORT_START_DETAILS_FIELDS: &'static [&'static str] = &[];
+const PAPER_ADMIN_EXPORT_START_DETAILS_FIELDS: &[&str] = &[];
 impl PaperAdminExportStartDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -29311,7 +29311,7 @@ impl PaperAdminExportStartType {
 
 }
 
-const PAPER_ADMIN_EXPORT_START_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_ADMIN_EXPORT_START_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperAdminExportStartType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -29399,8 +29399,8 @@ impl PaperChangeDeploymentPolicyDetails {
 
 }
 
-const PAPER_CHANGE_DEPLOYMENT_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                 "previous_value"];
+const PAPER_CHANGE_DEPLOYMENT_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                 "previous_value"];
 impl PaperChangeDeploymentPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -29483,7 +29483,7 @@ impl PaperChangeDeploymentPolicyType {
 
 }
 
-const PAPER_CHANGE_DEPLOYMENT_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CHANGE_DEPLOYMENT_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperChangeDeploymentPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -29559,7 +29559,7 @@ impl PaperChangeMemberLinkPolicyDetails {
 
 }
 
-const PAPER_CHANGE_MEMBER_LINK_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
+const PAPER_CHANGE_MEMBER_LINK_POLICY_DETAILS_FIELDS: &[&str] = &["new_value"];
 impl PaperChangeMemberLinkPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -29633,7 +29633,7 @@ impl PaperChangeMemberLinkPolicyType {
 
 }
 
-const PAPER_CHANGE_MEMBER_LINK_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CHANGE_MEMBER_LINK_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperChangeMemberLinkPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -29718,8 +29718,8 @@ impl PaperChangeMemberPolicyDetails {
 
 }
 
-const PAPER_CHANGE_MEMBER_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                             "previous_value"];
+const PAPER_CHANGE_MEMBER_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                             "previous_value"];
 impl PaperChangeMemberPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -29802,7 +29802,7 @@ impl PaperChangeMemberPolicyType {
 
 }
 
-const PAPER_CHANGE_MEMBER_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CHANGE_MEMBER_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperChangeMemberPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -29889,8 +29889,8 @@ impl PaperChangePolicyDetails {
 
 }
 
-const PAPER_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                      "previous_value"];
+const PAPER_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                      "previous_value"];
 impl PaperChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -29973,7 +29973,7 @@ impl PaperChangePolicyType {
 
 }
 
-const PAPER_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30049,7 +30049,7 @@ impl PaperContentAddMemberDetails {
 
 }
 
-const PAPER_CONTENT_ADD_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_CONTENT_ADD_MEMBER_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperContentAddMemberDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30123,7 +30123,7 @@ impl PaperContentAddMemberType {
 
 }
 
-const PAPER_CONTENT_ADD_MEMBER_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CONTENT_ADD_MEMBER_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperContentAddMemberType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30205,9 +30205,9 @@ impl PaperContentAddToFolderDetails {
 
 }
 
-const PAPER_CONTENT_ADD_TO_FOLDER_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
-                                                                              "target_asset_index",
-                                                                              "parent_asset_index"];
+const PAPER_CONTENT_ADD_TO_FOLDER_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                              "target_asset_index",
+                                                              "parent_asset_index"];
 impl PaperContentAddToFolderDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30299,7 +30299,7 @@ impl PaperContentAddToFolderType {
 
 }
 
-const PAPER_CONTENT_ADD_TO_FOLDER_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CONTENT_ADD_TO_FOLDER_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperContentAddToFolderType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30375,7 +30375,7 @@ impl PaperContentArchiveDetails {
 
 }
 
-const PAPER_CONTENT_ARCHIVE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_CONTENT_ARCHIVE_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperContentArchiveDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30449,7 +30449,7 @@ impl PaperContentArchiveType {
 
 }
 
-const PAPER_CONTENT_ARCHIVE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CONTENT_ARCHIVE_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperContentArchiveType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30525,7 +30525,7 @@ impl PaperContentCreateDetails {
 
 }
 
-const PAPER_CONTENT_CREATE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_CONTENT_CREATE_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperContentCreateDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30599,7 +30599,7 @@ impl PaperContentCreateType {
 
 }
 
-const PAPER_CONTENT_CREATE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CONTENT_CREATE_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperContentCreateType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30675,7 +30675,7 @@ impl PaperContentPermanentlyDeleteDetails {
 
 }
 
-const PAPER_CONTENT_PERMANENTLY_DELETE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_CONTENT_PERMANENTLY_DELETE_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperContentPermanentlyDeleteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30749,7 +30749,7 @@ impl PaperContentPermanentlyDeleteType {
 
 }
 
-const PAPER_CONTENT_PERMANENTLY_DELETE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CONTENT_PERMANENTLY_DELETE_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperContentPermanentlyDeleteType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30825,7 +30825,7 @@ impl PaperContentRemoveFromFolderDetails {
 
 }
 
-const PAPER_CONTENT_REMOVE_FROM_FOLDER_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_CONTENT_REMOVE_FROM_FOLDER_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperContentRemoveFromFolderDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30899,7 +30899,7 @@ impl PaperContentRemoveFromFolderType {
 
 }
 
-const PAPER_CONTENT_REMOVE_FROM_FOLDER_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CONTENT_REMOVE_FROM_FOLDER_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperContentRemoveFromFolderType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -30975,7 +30975,7 @@ impl PaperContentRemoveMemberDetails {
 
 }
 
-const PAPER_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperContentRemoveMemberDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -31049,7 +31049,7 @@ impl PaperContentRemoveMemberType {
 
 }
 
-const PAPER_CONTENT_REMOVE_MEMBER_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CONTENT_REMOVE_MEMBER_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperContentRemoveMemberType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -31125,7 +31125,7 @@ impl PaperContentRenameDetails {
 
 }
 
-const PAPER_CONTENT_RENAME_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_CONTENT_RENAME_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperContentRenameDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -31199,7 +31199,7 @@ impl PaperContentRenameType {
 
 }
 
-const PAPER_CONTENT_RENAME_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CONTENT_RENAME_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperContentRenameType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -31275,7 +31275,7 @@ impl PaperContentRestoreDetails {
 
 }
 
-const PAPER_CONTENT_RESTORE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_CONTENT_RESTORE_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperContentRestoreDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -31349,7 +31349,7 @@ impl PaperContentRestoreType {
 
 }
 
-const PAPER_CONTENT_RESTORE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_CONTENT_RESTORE_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperContentRestoreType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -31433,8 +31433,8 @@ impl PaperDocAddCommentDetails {
 
 }
 
-const PAPER_DOC_ADD_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
-                                                                        "comment_text"];
+const PAPER_DOC_ADD_COMMENT_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                        "comment_text"];
 impl PaperDocAddCommentDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -31517,7 +31517,7 @@ impl PaperDocAddCommentType {
 
 }
 
-const PAPER_DOC_ADD_COMMENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_ADD_COMMENT_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocAddCommentType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -31596,8 +31596,8 @@ impl PaperDocChangeMemberRoleDetails {
 
 }
 
-const PAPER_DOC_CHANGE_MEMBER_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
-                                                                               "access_type"];
+const PAPER_DOC_CHANGE_MEMBER_ROLE_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                               "access_type"];
 impl PaperDocChangeMemberRoleDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -31680,7 +31680,7 @@ impl PaperDocChangeMemberRoleType {
 
 }
 
-const PAPER_DOC_CHANGE_MEMBER_ROLE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_CHANGE_MEMBER_ROLE_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocChangeMemberRoleType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -31772,9 +31772,9 @@ impl PaperDocChangeSharingPolicyDetails {
 
 }
 
-const PAPER_DOC_CHANGE_SHARING_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
-                                                                                  "public_sharing_policy",
-                                                                                  "team_sharing_policy"];
+const PAPER_DOC_CHANGE_SHARING_POLICY_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                                  "public_sharing_policy",
+                                                                  "team_sharing_policy"];
 impl PaperDocChangeSharingPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -31866,7 +31866,7 @@ impl PaperDocChangeSharingPolicyType {
 
 }
 
-const PAPER_DOC_CHANGE_SHARING_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_CHANGE_SHARING_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocChangeSharingPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -31953,9 +31953,9 @@ impl PaperDocChangeSubscriptionDetails {
 
 }
 
-const PAPER_DOC_CHANGE_SUBSCRIPTION_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
-                                                                                "new_subscription_level",
-                                                                                "previous_subscription_level"];
+const PAPER_DOC_CHANGE_SUBSCRIPTION_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                                "new_subscription_level",
+                                                                "previous_subscription_level"];
 impl PaperDocChangeSubscriptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32047,7 +32047,7 @@ impl PaperDocChangeSubscriptionType {
 
 }
 
-const PAPER_DOC_CHANGE_SUBSCRIPTION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_CHANGE_SUBSCRIPTION_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocChangeSubscriptionType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32131,8 +32131,8 @@ impl PaperDocDeleteCommentDetails {
 
 }
 
-const PAPER_DOC_DELETE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
-                                                                           "comment_text"];
+const PAPER_DOC_DELETE_COMMENT_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                           "comment_text"];
 impl PaperDocDeleteCommentDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32215,7 +32215,7 @@ impl PaperDocDeleteCommentType {
 
 }
 
-const PAPER_DOC_DELETE_COMMENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_DELETE_COMMENT_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocDeleteCommentType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32291,7 +32291,7 @@ impl PaperDocDeletedDetails {
 
 }
 
-const PAPER_DOC_DELETED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_DOC_DELETED_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperDocDeletedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32365,7 +32365,7 @@ impl PaperDocDeletedType {
 
 }
 
-const PAPER_DOC_DELETED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_DELETED_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocDeletedType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32444,8 +32444,8 @@ impl PaperDocDownloadDetails {
 
 }
 
-const PAPER_DOC_DOWNLOAD_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
-                                                                     "export_file_format"];
+const PAPER_DOC_DOWNLOAD_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                     "export_file_format"];
 impl PaperDocDownloadDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32528,7 +32528,7 @@ impl PaperDocDownloadType {
 
 }
 
-const PAPER_DOC_DOWNLOAD_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_DOWNLOAD_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocDownloadType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32612,8 +32612,8 @@ impl PaperDocEditCommentDetails {
 
 }
 
-const PAPER_DOC_EDIT_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
-                                                                         "comment_text"];
+const PAPER_DOC_EDIT_COMMENT_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                         "comment_text"];
 impl PaperDocEditCommentDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32696,7 +32696,7 @@ impl PaperDocEditCommentType {
 
 }
 
-const PAPER_DOC_EDIT_COMMENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_EDIT_COMMENT_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocEditCommentType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32772,7 +32772,7 @@ impl PaperDocEditDetails {
 
 }
 
-const PAPER_DOC_EDIT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_DOC_EDIT_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperDocEditDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32846,7 +32846,7 @@ impl PaperDocEditType {
 
 }
 
-const PAPER_DOC_EDIT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_EDIT_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocEditType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32922,7 +32922,7 @@ impl PaperDocFollowedDetails {
 
 }
 
-const PAPER_DOC_FOLLOWED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_DOC_FOLLOWED_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperDocFollowedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -32996,7 +32996,7 @@ impl PaperDocFollowedType {
 
 }
 
-const PAPER_DOC_FOLLOWED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_FOLLOWED_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocFollowedType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33072,7 +33072,7 @@ impl PaperDocMentionDetails {
 
 }
 
-const PAPER_DOC_MENTION_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_DOC_MENTION_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperDocMentionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33146,7 +33146,7 @@ impl PaperDocMentionType {
 
 }
 
-const PAPER_DOC_MENTION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_MENTION_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocMentionType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33222,7 +33222,7 @@ impl PaperDocRequestAccessDetails {
 
 }
 
-const PAPER_DOC_REQUEST_ACCESS_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_DOC_REQUEST_ACCESS_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperDocRequestAccessDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33296,7 +33296,7 @@ impl PaperDocRequestAccessType {
 
 }
 
-const PAPER_DOC_REQUEST_ACCESS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_REQUEST_ACCESS_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocRequestAccessType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33380,8 +33380,8 @@ impl PaperDocResolveCommentDetails {
 
 }
 
-const PAPER_DOC_RESOLVE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
-                                                                            "comment_text"];
+const PAPER_DOC_RESOLVE_COMMENT_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                            "comment_text"];
 impl PaperDocResolveCommentDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33464,7 +33464,7 @@ impl PaperDocResolveCommentType {
 
 }
 
-const PAPER_DOC_RESOLVE_COMMENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_RESOLVE_COMMENT_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocResolveCommentType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33540,7 +33540,7 @@ impl PaperDocRevertDetails {
 
 }
 
-const PAPER_DOC_REVERT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_DOC_REVERT_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperDocRevertDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33614,7 +33614,7 @@ impl PaperDocRevertType {
 
 }
 
-const PAPER_DOC_REVERT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_REVERT_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocRevertType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33690,7 +33690,7 @@ impl PaperDocSlackShareDetails {
 
 }
 
-const PAPER_DOC_SLACK_SHARE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_DOC_SLACK_SHARE_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperDocSlackShareDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33764,7 +33764,7 @@ impl PaperDocSlackShareType {
 
 }
 
-const PAPER_DOC_SLACK_SHARE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_SLACK_SHARE_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocSlackShareType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33840,7 +33840,7 @@ impl PaperDocTeamInviteDetails {
 
 }
 
-const PAPER_DOC_TEAM_INVITE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_DOC_TEAM_INVITE_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperDocTeamInviteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33914,7 +33914,7 @@ impl PaperDocTeamInviteType {
 
 }
 
-const PAPER_DOC_TEAM_INVITE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_TEAM_INVITE_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocTeamInviteType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -33990,7 +33990,7 @@ impl PaperDocTrashedDetails {
 
 }
 
-const PAPER_DOC_TRASHED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_DOC_TRASHED_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperDocTrashedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -34064,7 +34064,7 @@ impl PaperDocTrashedType {
 
 }
 
-const PAPER_DOC_TRASHED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_TRASHED_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocTrashedType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -34148,8 +34148,8 @@ impl PaperDocUnresolveCommentDetails {
 
 }
 
-const PAPER_DOC_UNRESOLVE_COMMENT_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
-                                                                              "comment_text"];
+const PAPER_DOC_UNRESOLVE_COMMENT_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                              "comment_text"];
 impl PaperDocUnresolveCommentDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -34232,7 +34232,7 @@ impl PaperDocUnresolveCommentType {
 
 }
 
-const PAPER_DOC_UNRESOLVE_COMMENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_UNRESOLVE_COMMENT_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocUnresolveCommentType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -34308,7 +34308,7 @@ impl PaperDocUntrashedDetails {
 
 }
 
-const PAPER_DOC_UNTRASHED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_DOC_UNTRASHED_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperDocUntrashedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -34382,7 +34382,7 @@ impl PaperDocUntrashedType {
 
 }
 
-const PAPER_DOC_UNTRASHED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_UNTRASHED_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocUntrashedType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -34458,7 +34458,7 @@ impl PaperDocViewDetails {
 
 }
 
-const PAPER_DOC_VIEW_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_DOC_VIEW_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperDocViewDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -34532,7 +34532,7 @@ impl PaperDocViewType {
 
 }
 
-const PAPER_DOC_VIEW_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_DOC_VIEW_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperDocViewType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -34611,8 +34611,8 @@ impl PaperDocumentLogInfo {
 
 }
 
-const PAPER_DOCUMENT_LOG_INFO_FIELDS: &'static [&'static str] = &["doc_id",
-                                                                  "doc_title"];
+const PAPER_DOCUMENT_LOG_INFO_FIELDS: &[&str] = &["doc_id",
+                                                  "doc_title"];
 impl PaperDocumentLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -34712,10 +34712,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDownloadFormat {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["docx",
-                                                    "html",
-                                                    "markdown",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["docx",
+                                    "html",
+                                    "markdown",
+                                    "other"];
         deserializer.deserialize_struct("PaperDownloadFormat", VARIANTS, EnumVisitor)
     }
 }
@@ -34760,7 +34760,7 @@ impl Default for PaperEnabledUsersGroupAdditionDetails {
     }
 }
 
-const PAPER_ENABLED_USERS_GROUP_ADDITION_DETAILS_FIELDS: &'static [&'static str] = &[];
+const PAPER_ENABLED_USERS_GROUP_ADDITION_DETAILS_FIELDS: &[&str] = &[];
 impl PaperEnabledUsersGroupAdditionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -34814,7 +34814,7 @@ impl PaperEnabledUsersGroupAdditionType {
 
 }
 
-const PAPER_ENABLED_USERS_GROUP_ADDITION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_ENABLED_USERS_GROUP_ADDITION_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperEnabledUsersGroupAdditionType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -34886,7 +34886,7 @@ impl Default for PaperEnabledUsersGroupRemovalDetails {
     }
 }
 
-const PAPER_ENABLED_USERS_GROUP_REMOVAL_DETAILS_FIELDS: &'static [&'static str] = &[];
+const PAPER_ENABLED_USERS_GROUP_REMOVAL_DETAILS_FIELDS: &[&str] = &[];
 impl PaperEnabledUsersGroupRemovalDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -34940,7 +34940,7 @@ impl PaperEnabledUsersGroupRemovalType {
 
 }
 
-const PAPER_ENABLED_USERS_GROUP_REMOVAL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_ENABLED_USERS_GROUP_REMOVAL_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperEnabledUsersGroupRemovalType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35016,7 +35016,7 @@ impl PaperExternalViewAllowDetails {
 
 }
 
-const PAPER_EXTERNAL_VIEW_ALLOW_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_EXTERNAL_VIEW_ALLOW_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperExternalViewAllowDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35090,7 +35090,7 @@ impl PaperExternalViewAllowType {
 
 }
 
-const PAPER_EXTERNAL_VIEW_ALLOW_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_EXTERNAL_VIEW_ALLOW_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperExternalViewAllowType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35166,7 +35166,7 @@ impl PaperExternalViewDefaultTeamDetails {
 
 }
 
-const PAPER_EXTERNAL_VIEW_DEFAULT_TEAM_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_EXTERNAL_VIEW_DEFAULT_TEAM_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperExternalViewDefaultTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35240,7 +35240,7 @@ impl PaperExternalViewDefaultTeamType {
 
 }
 
-const PAPER_EXTERNAL_VIEW_DEFAULT_TEAM_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_EXTERNAL_VIEW_DEFAULT_TEAM_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperExternalViewDefaultTeamType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35316,7 +35316,7 @@ impl PaperExternalViewForbidDetails {
 
 }
 
-const PAPER_EXTERNAL_VIEW_FORBID_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_EXTERNAL_VIEW_FORBID_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperExternalViewForbidDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35390,7 +35390,7 @@ impl PaperExternalViewForbidType {
 
 }
 
-const PAPER_EXTERNAL_VIEW_FORBID_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_EXTERNAL_VIEW_FORBID_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperExternalViewForbidType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35477,9 +35477,9 @@ impl PaperFolderChangeSubscriptionDetails {
 
 }
 
-const PAPER_FOLDER_CHANGE_SUBSCRIPTION_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid",
-                                                                                   "new_subscription_level",
-                                                                                   "previous_subscription_level"];
+const PAPER_FOLDER_CHANGE_SUBSCRIPTION_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                                   "new_subscription_level",
+                                                                   "previous_subscription_level"];
 impl PaperFolderChangeSubscriptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35571,7 +35571,7 @@ impl PaperFolderChangeSubscriptionType {
 
 }
 
-const PAPER_FOLDER_CHANGE_SUBSCRIPTION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_FOLDER_CHANGE_SUBSCRIPTION_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperFolderChangeSubscriptionType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35647,7 +35647,7 @@ impl PaperFolderDeletedDetails {
 
 }
 
-const PAPER_FOLDER_DELETED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_FOLDER_DELETED_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperFolderDeletedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35721,7 +35721,7 @@ impl PaperFolderDeletedType {
 
 }
 
-const PAPER_FOLDER_DELETED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_FOLDER_DELETED_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperFolderDeletedType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35797,7 +35797,7 @@ impl PaperFolderFollowedDetails {
 
 }
 
-const PAPER_FOLDER_FOLLOWED_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_FOLDER_FOLLOWED_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperFolderFollowedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35871,7 +35871,7 @@ impl PaperFolderFollowedType {
 
 }
 
-const PAPER_FOLDER_FOLLOWED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_FOLDER_FOLLOWED_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperFolderFollowedType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -35950,8 +35950,8 @@ impl PaperFolderLogInfo {
 
 }
 
-const PAPER_FOLDER_LOG_INFO_FIELDS: &'static [&'static str] = &["folder_id",
-                                                                "folder_name"];
+const PAPER_FOLDER_LOG_INFO_FIELDS: &[&str] = &["folder_id",
+                                                "folder_name"];
 impl PaperFolderLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -36036,7 +36036,7 @@ impl PaperFolderTeamInviteDetails {
 
 }
 
-const PAPER_FOLDER_TEAM_INVITE_DETAILS_FIELDS: &'static [&'static str] = &["event_uuid"];
+const PAPER_FOLDER_TEAM_INVITE_DETAILS_FIELDS: &[&str] = &["event_uuid"];
 impl PaperFolderTeamInviteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -36110,7 +36110,7 @@ impl PaperFolderTeamInviteType {
 
 }
 
-const PAPER_FOLDER_TEAM_INVITE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PAPER_FOLDER_TEAM_INVITE_TYPE_FIELDS: &[&str] = &["description"];
 impl PaperFolderTeamInviteType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -36202,10 +36202,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperMemberPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["anyone_with_link",
-                                                    "only_team",
-                                                    "team_and_explicitly_shared",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["anyone_with_link",
+                                    "only_team",
+                                    "team_and_explicitly_shared",
+                                    "other"];
         deserializer.deserialize_struct("PaperMemberPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -36276,9 +36276,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ParticipantLogInfo {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["user",
-                                                    "group",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["user",
+                                    "group",
+                                    "other"];
         deserializer.deserialize_struct("ParticipantLogInfo", VARIANTS, EnumVisitor)
     }
 }
@@ -36319,7 +36319,7 @@ impl Default for PasswordChangeDetails {
     }
 }
 
-const PASSWORD_CHANGE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const PASSWORD_CHANGE_DETAILS_FIELDS: &[&str] = &[];
 impl PasswordChangeDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -36373,7 +36373,7 @@ impl PasswordChangeType {
 
 }
 
-const PASSWORD_CHANGE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PASSWORD_CHANGE_TYPE_FIELDS: &[&str] = &["description"];
 impl PasswordChangeType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -36445,7 +36445,7 @@ impl Default for PasswordResetAllDetails {
     }
 }
 
-const PASSWORD_RESET_ALL_DETAILS_FIELDS: &'static [&'static str] = &[];
+const PASSWORD_RESET_ALL_DETAILS_FIELDS: &[&str] = &[];
 impl PasswordResetAllDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -36499,7 +36499,7 @@ impl PasswordResetAllType {
 
 }
 
-const PASSWORD_RESET_ALL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PASSWORD_RESET_ALL_TYPE_FIELDS: &[&str] = &["description"];
 impl PasswordResetAllType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -36571,7 +36571,7 @@ impl Default for PasswordResetDetails {
     }
 }
 
-const PASSWORD_RESET_DETAILS_FIELDS: &'static [&'static str] = &[];
+const PASSWORD_RESET_DETAILS_FIELDS: &[&str] = &[];
 impl PasswordResetDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -36625,7 +36625,7 @@ impl PasswordResetType {
 
 }
 
-const PASSWORD_RESET_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PASSWORD_RESET_TYPE_FIELDS: &[&str] = &["description"];
 impl PasswordResetType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -36710,8 +36710,8 @@ impl PathLogInfo {
 
 }
 
-const PATH_LOG_INFO_FIELDS: &'static [&'static str] = &["namespace_relative",
-                                                        "contextual"];
+const PATH_LOG_INFO_FIELDS: &[&str] = &["namespace_relative",
+                                        "contextual"];
 impl PathLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -36804,8 +36804,8 @@ impl PermanentDeleteChangePolicyDetails {
 
 }
 
-const PERMANENT_DELETE_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                 "previous_value"];
+const PERMANENT_DELETE_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                 "previous_value"];
 impl PermanentDeleteChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -36888,7 +36888,7 @@ impl PermanentDeleteChangePolicyType {
 
 }
 
-const PERMANENT_DELETE_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const PERMANENT_DELETE_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl PermanentDeleteChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -36977,9 +36977,9 @@ impl<'de> ::serde::de::Deserialize<'de> for PlacementRestriction {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["europe_only",
-                                                    "none",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["europe_only",
+                                    "none",
+                                    "other"];
         deserializer.deserialize_struct("PlacementRestriction", VARIANTS, EnumVisitor)
     }
 }
@@ -37025,8 +37025,8 @@ impl RelocateAssetReferencesLogInfo {
 
 }
 
-const RELOCATE_ASSET_REFERENCES_LOG_INFO_FIELDS: &'static [&'static str] = &["src_asset_index",
-                                                                             "dest_asset_index"];
+const RELOCATE_ASSET_REFERENCES_LOG_INFO_FIELDS: &[&str] = &["src_asset_index",
+                                                             "dest_asset_index"];
 impl RelocateAssetReferencesLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -37114,8 +37114,8 @@ impl ResellerLogInfo {
 
 }
 
-const RESELLER_LOG_INFO_FIELDS: &'static [&'static str] = &["reseller_name",
-                                                            "reseller_email"];
+const RESELLER_LOG_INFO_FIELDS: &[&str] = &["reseller_name",
+                                            "reseller_email"];
 impl ResellerLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -37196,7 +37196,7 @@ impl Default for ResellerSupportSessionEndDetails {
     }
 }
 
-const RESELLER_SUPPORT_SESSION_END_DETAILS_FIELDS: &'static [&'static str] = &[];
+const RESELLER_SUPPORT_SESSION_END_DETAILS_FIELDS: &[&str] = &[];
 impl ResellerSupportSessionEndDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -37250,7 +37250,7 @@ impl ResellerSupportSessionEndType {
 
 }
 
-const RESELLER_SUPPORT_SESSION_END_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const RESELLER_SUPPORT_SESSION_END_TYPE_FIELDS: &[&str] = &["description"];
 impl ResellerSupportSessionEndType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -37322,7 +37322,7 @@ impl Default for ResellerSupportSessionStartDetails {
     }
 }
 
-const RESELLER_SUPPORT_SESSION_START_DETAILS_FIELDS: &'static [&'static str] = &[];
+const RESELLER_SUPPORT_SESSION_START_DETAILS_FIELDS: &[&str] = &[];
 impl ResellerSupportSessionStartDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -37376,7 +37376,7 @@ impl ResellerSupportSessionStartType {
 
 }
 
-const RESELLER_SUPPORT_SESSION_START_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const RESELLER_SUPPORT_SESSION_START_TYPE_FIELDS: &[&str] = &["description"];
 impl ResellerSupportSessionStartType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -37468,9 +37468,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SessionLogInfo {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["mobile",
-                                                    "mobile",
-                                                    "mobile"];
+        const VARIANTS: &[&str] = &["mobile",
+                                    "mobile",
+                                    "mobile"];
         deserializer.deserialize_struct("SessionLogInfo", VARIANTS, EnumVisitor)
     }
 }
@@ -37533,10 +37533,10 @@ impl SfAddGroupDetails {
 
 }
 
-const SF_ADD_GROUP_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                               "original_folder_name",
-                                                               "team_name",
-                                                               "sharing_permission"];
+const SF_ADD_GROUP_DETAILS_FIELDS: &[&str] = &["target_asset_index",
+                                               "original_folder_name",
+                                               "team_name",
+                                               "sharing_permission"];
 impl SfAddGroupDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -37637,7 +37637,7 @@ impl SfAddGroupType {
 
 }
 
-const SF_ADD_GROUP_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_ADD_GROUP_TYPE_FIELDS: &[&str] = &["description"];
 impl SfAddGroupType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -37724,9 +37724,9 @@ impl SfAllowNonMembersToViewSharedLinksDetails {
 
 }
 
-const SF_ALLOW_NON_MEMBERS_TO_VIEW_SHARED_LINKS_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                            "original_folder_name",
-                                                                                            "shared_folder_type"];
+const SF_ALLOW_NON_MEMBERS_TO_VIEW_SHARED_LINKS_DETAILS_FIELDS: &[&str] = &["target_asset_index",
+                                                                            "original_folder_name",
+                                                                            "shared_folder_type"];
 impl SfAllowNonMembersToViewSharedLinksDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -37818,7 +37818,7 @@ impl SfAllowNonMembersToViewSharedLinksType {
 
 }
 
-const SF_ALLOW_NON_MEMBERS_TO_VIEW_SHARED_LINKS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_ALLOW_NON_MEMBERS_TO_VIEW_SHARED_LINKS_TYPE_FIELDS: &[&str] = &["description"];
 impl SfAllowNonMembersToViewSharedLinksType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -37914,10 +37914,10 @@ impl SfExternalInviteWarnDetails {
 
 }
 
-const SF_EXTERNAL_INVITE_WARN_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                          "original_folder_name",
-                                                                          "new_sharing_permission",
-                                                                          "previous_sharing_permission"];
+const SF_EXTERNAL_INVITE_WARN_DETAILS_FIELDS: &[&str] = &["target_asset_index",
+                                                          "original_folder_name",
+                                                          "new_sharing_permission",
+                                                          "previous_sharing_permission"];
 impl SfExternalInviteWarnDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -38018,7 +38018,7 @@ impl SfExternalInviteWarnType {
 
 }
 
-const SF_EXTERNAL_INVITE_WARN_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_EXTERNAL_INVITE_WARN_TYPE_FIELDS: &[&str] = &["description"];
 impl SfExternalInviteWarnType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -38113,10 +38113,10 @@ impl SfFbInviteChangeRoleDetails {
 
 }
 
-const SF_FB_INVITE_CHANGE_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                           "original_folder_name",
-                                                                           "previous_sharing_permission",
-                                                                           "new_sharing_permission"];
+const SF_FB_INVITE_CHANGE_ROLE_DETAILS_FIELDS: &[&str] = &["target_asset_index",
+                                                           "original_folder_name",
+                                                           "previous_sharing_permission",
+                                                           "new_sharing_permission"];
 impl SfFbInviteChangeRoleDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -38217,7 +38217,7 @@ impl SfFbInviteChangeRoleType {
 
 }
 
-const SF_FB_INVITE_CHANGE_ROLE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_FB_INVITE_CHANGE_ROLE_TYPE_FIELDS: &[&str] = &["description"];
 impl SfFbInviteChangeRoleType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -38304,9 +38304,9 @@ impl SfFbInviteDetails {
 
 }
 
-const SF_FB_INVITE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                               "original_folder_name",
-                                                               "sharing_permission"];
+const SF_FB_INVITE_DETAILS_FIELDS: &[&str] = &["target_asset_index",
+                                               "original_folder_name",
+                                               "sharing_permission"];
 impl SfFbInviteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -38398,7 +38398,7 @@ impl SfFbInviteType {
 
 }
 
-const SF_FB_INVITE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_FB_INVITE_TYPE_FIELDS: &[&str] = &["description"];
 impl SfFbInviteType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -38477,8 +38477,8 @@ impl SfFbUninviteDetails {
 
 }
 
-const SF_FB_UNINVITE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                 "original_folder_name"];
+const SF_FB_UNINVITE_DETAILS_FIELDS: &[&str] = &["target_asset_index",
+                                                 "original_folder_name"];
 impl SfFbUninviteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -38561,7 +38561,7 @@ impl SfFbUninviteType {
 
 }
 
-const SF_FB_UNINVITE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_FB_UNINVITE_TYPE_FIELDS: &[&str] = &["description"];
 impl SfFbUninviteType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -38637,7 +38637,7 @@ impl SfInviteGroupDetails {
 
 }
 
-const SF_INVITE_GROUP_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index"];
+const SF_INVITE_GROUP_DETAILS_FIELDS: &[&str] = &["target_asset_index"];
 impl SfInviteGroupDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -38711,7 +38711,7 @@ impl SfInviteGroupType {
 
 }
 
-const SF_INVITE_GROUP_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_INVITE_GROUP_TYPE_FIELDS: &[&str] = &["description"];
 impl SfInviteGroupType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -38790,8 +38790,8 @@ impl SfTeamGrantAccessDetails {
 
 }
 
-const SF_TEAM_GRANT_ACCESS_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                       "original_folder_name"];
+const SF_TEAM_GRANT_ACCESS_DETAILS_FIELDS: &[&str] = &["target_asset_index",
+                                                       "original_folder_name"];
 impl SfTeamGrantAccessDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -38874,7 +38874,7 @@ impl SfTeamGrantAccessType {
 
 }
 
-const SF_TEAM_GRANT_ACCESS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_TEAM_GRANT_ACCESS_TYPE_FIELDS: &[&str] = &["description"];
 impl SfTeamGrantAccessType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -38969,10 +38969,10 @@ impl SfTeamInviteChangeRoleDetails {
 
 }
 
-const SF_TEAM_INVITE_CHANGE_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                             "original_folder_name",
-                                                                             "new_sharing_permission",
-                                                                             "previous_sharing_permission"];
+const SF_TEAM_INVITE_CHANGE_ROLE_DETAILS_FIELDS: &[&str] = &["target_asset_index",
+                                                             "original_folder_name",
+                                                             "new_sharing_permission",
+                                                             "previous_sharing_permission"];
 impl SfTeamInviteChangeRoleDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -39073,7 +39073,7 @@ impl SfTeamInviteChangeRoleType {
 
 }
 
-const SF_TEAM_INVITE_CHANGE_ROLE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_TEAM_INVITE_CHANGE_ROLE_TYPE_FIELDS: &[&str] = &["description"];
 impl SfTeamInviteChangeRoleType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -39160,9 +39160,9 @@ impl SfTeamInviteDetails {
 
 }
 
-const SF_TEAM_INVITE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                 "original_folder_name",
-                                                                 "sharing_permission"];
+const SF_TEAM_INVITE_DETAILS_FIELDS: &[&str] = &["target_asset_index",
+                                                 "original_folder_name",
+                                                 "sharing_permission"];
 impl SfTeamInviteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -39254,7 +39254,7 @@ impl SfTeamInviteType {
 
 }
 
-const SF_TEAM_INVITE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_TEAM_INVITE_TYPE_FIELDS: &[&str] = &["description"];
 impl SfTeamInviteType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -39333,8 +39333,8 @@ impl SfTeamJoinDetails {
 
 }
 
-const SF_TEAM_JOIN_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                               "original_folder_name"];
+const SF_TEAM_JOIN_DETAILS_FIELDS: &[&str] = &["target_asset_index",
+                                               "original_folder_name"];
 impl SfTeamJoinDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -39438,10 +39438,10 @@ impl SfTeamJoinFromOobLinkDetails {
 
 }
 
-const SF_TEAM_JOIN_FROM_OOB_LINK_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                             "original_folder_name",
-                                                                             "token_key",
-                                                                             "sharing_permission"];
+const SF_TEAM_JOIN_FROM_OOB_LINK_DETAILS_FIELDS: &[&str] = &["target_asset_index",
+                                                             "original_folder_name",
+                                                             "token_key",
+                                                             "sharing_permission"];
 impl SfTeamJoinFromOobLinkDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -39542,7 +39542,7 @@ impl SfTeamJoinFromOobLinkType {
 
 }
 
-const SF_TEAM_JOIN_FROM_OOB_LINK_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_TEAM_JOIN_FROM_OOB_LINK_TYPE_FIELDS: &[&str] = &["description"];
 impl SfTeamJoinFromOobLinkType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -39616,7 +39616,7 @@ impl SfTeamJoinType {
 
 }
 
-const SF_TEAM_JOIN_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_TEAM_JOIN_TYPE_FIELDS: &[&str] = &["description"];
 impl SfTeamJoinType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -39695,8 +39695,8 @@ impl SfTeamUninviteDetails {
 
 }
 
-const SF_TEAM_UNINVITE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                   "original_folder_name"];
+const SF_TEAM_UNINVITE_DETAILS_FIELDS: &[&str] = &["target_asset_index",
+                                                   "original_folder_name"];
 impl SfTeamUninviteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -39779,7 +39779,7 @@ impl SfTeamUninviteType {
 
 }
 
-const SF_TEAM_UNINVITE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SF_TEAM_UNINVITE_TYPE_FIELDS: &[&str] = &["description"];
 impl SfTeamUninviteType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -39861,8 +39861,8 @@ impl SharedContentAddInviteesDetails {
 
 }
 
-const SHARED_CONTENT_ADD_INVITEES_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_access_level",
-                                                                              "invitees"];
+const SHARED_CONTENT_ADD_INVITEES_DETAILS_FIELDS: &[&str] = &["shared_content_access_level",
+                                                              "invitees"];
 impl SharedContentAddInviteesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -39945,7 +39945,7 @@ impl SharedContentAddInviteesType {
 
 }
 
-const SHARED_CONTENT_ADD_INVITEES_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_ADD_INVITEES_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentAddInviteesType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40020,7 +40020,7 @@ impl Default for SharedContentAddLinkExpiryDetails {
     }
 }
 
-const SHARED_CONTENT_ADD_LINK_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
+const SHARED_CONTENT_ADD_LINK_EXPIRY_DETAILS_FIELDS: &[&str] = &["new_value"];
 impl SharedContentAddLinkExpiryDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40094,7 +40094,7 @@ impl SharedContentAddLinkExpiryType {
 
 }
 
-const SHARED_CONTENT_ADD_LINK_EXPIRY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_ADD_LINK_EXPIRY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentAddLinkExpiryType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40166,7 +40166,7 @@ impl Default for SharedContentAddLinkPasswordDetails {
     }
 }
 
-const SHARED_CONTENT_ADD_LINK_PASSWORD_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SHARED_CONTENT_ADD_LINK_PASSWORD_DETAILS_FIELDS: &[&str] = &[];
 impl SharedContentAddLinkPasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40220,7 +40220,7 @@ impl SharedContentAddLinkPasswordType {
 
 }
 
-const SHARED_CONTENT_ADD_LINK_PASSWORD_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_ADD_LINK_PASSWORD_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentAddLinkPasswordType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40296,7 +40296,7 @@ impl SharedContentAddMemberDetails {
 
 }
 
-const SHARED_CONTENT_ADD_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_access_level"];
+const SHARED_CONTENT_ADD_MEMBER_DETAILS_FIELDS: &[&str] = &["shared_content_access_level"];
 impl SharedContentAddMemberDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40370,7 +40370,7 @@ impl SharedContentAddMemberType {
 
 }
 
-const SHARED_CONTENT_ADD_MEMBER_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_ADD_MEMBER_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentAddMemberType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40454,8 +40454,8 @@ impl SharedContentChangeDownloadsPolicyDetails {
 
 }
 
-const SHARED_CONTENT_CHANGE_DOWNLOADS_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                         "previous_value"];
+const SHARED_CONTENT_CHANGE_DOWNLOADS_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                         "previous_value"];
 impl SharedContentChangeDownloadsPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40538,7 +40538,7 @@ impl SharedContentChangeDownloadsPolicyType {
 
 }
 
-const SHARED_CONTENT_CHANGE_DOWNLOADS_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_CHANGE_DOWNLOADS_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentChangeDownloadsPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40629,9 +40629,9 @@ impl SharedContentChangeInviteeRoleDetails {
 
 }
 
-const SHARED_CONTENT_CHANGE_INVITEE_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["new_access_level",
-                                                                                     "invitee",
-                                                                                     "previous_access_level"];
+const SHARED_CONTENT_CHANGE_INVITEE_ROLE_DETAILS_FIELDS: &[&str] = &["new_access_level",
+                                                                     "invitee",
+                                                                     "previous_access_level"];
 impl SharedContentChangeInviteeRoleDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40723,7 +40723,7 @@ impl SharedContentChangeInviteeRoleType {
 
 }
 
-const SHARED_CONTENT_CHANGE_INVITEE_ROLE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_CHANGE_INVITEE_ROLE_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentChangeInviteeRoleType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40807,8 +40807,8 @@ impl SharedContentChangeLinkAudienceDetails {
 
 }
 
-const SHARED_CONTENT_CHANGE_LINK_AUDIENCE_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                      "previous_value"];
+const SHARED_CONTENT_CHANGE_LINK_AUDIENCE_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                      "previous_value"];
 impl SharedContentChangeLinkAudienceDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40891,7 +40891,7 @@ impl SharedContentChangeLinkAudienceType {
 
 }
 
-const SHARED_CONTENT_CHANGE_LINK_AUDIENCE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_CHANGE_LINK_AUDIENCE_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentChangeLinkAudienceType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -40969,8 +40969,8 @@ impl Default for SharedContentChangeLinkExpiryDetails {
     }
 }
 
-const SHARED_CONTENT_CHANGE_LINK_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                    "previous_value"];
+const SHARED_CONTENT_CHANGE_LINK_EXPIRY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                    "previous_value"];
 impl SharedContentChangeLinkExpiryDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -41053,7 +41053,7 @@ impl SharedContentChangeLinkExpiryType {
 
 }
 
-const SHARED_CONTENT_CHANGE_LINK_EXPIRY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_CHANGE_LINK_EXPIRY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentChangeLinkExpiryType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -41125,7 +41125,7 @@ impl Default for SharedContentChangeLinkPasswordDetails {
     }
 }
 
-const SHARED_CONTENT_CHANGE_LINK_PASSWORD_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SHARED_CONTENT_CHANGE_LINK_PASSWORD_DETAILS_FIELDS: &[&str] = &[];
 impl SharedContentChangeLinkPasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -41179,7 +41179,7 @@ impl SharedContentChangeLinkPasswordType {
 
 }
 
-const SHARED_CONTENT_CHANGE_LINK_PASSWORD_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_CHANGE_LINK_PASSWORD_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentChangeLinkPasswordType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -41266,8 +41266,8 @@ impl SharedContentChangeMemberRoleDetails {
 
 }
 
-const SHARED_CONTENT_CHANGE_MEMBER_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["new_access_level",
-                                                                                    "previous_access_level"];
+const SHARED_CONTENT_CHANGE_MEMBER_ROLE_DETAILS_FIELDS: &[&str] = &["new_access_level",
+                                                                    "previous_access_level"];
 impl SharedContentChangeMemberRoleDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -41350,7 +41350,7 @@ impl SharedContentChangeMemberRoleType {
 
 }
 
-const SHARED_CONTENT_CHANGE_MEMBER_ROLE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_CHANGE_MEMBER_ROLE_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentChangeMemberRoleType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -41434,8 +41434,8 @@ impl SharedContentChangeViewerInfoPolicyDetails {
 
 }
 
-const SHARED_CONTENT_CHANGE_VIEWER_INFO_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                           "previous_value"];
+const SHARED_CONTENT_CHANGE_VIEWER_INFO_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                           "previous_value"];
 impl SharedContentChangeViewerInfoPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -41518,7 +41518,7 @@ impl SharedContentChangeViewerInfoPolicyType {
 
 }
 
-const SHARED_CONTENT_CHANGE_VIEWER_INFO_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_CHANGE_VIEWER_INFO_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentChangeViewerInfoPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -41593,7 +41593,7 @@ impl Default for SharedContentClaimInvitationDetails {
     }
 }
 
-const SHARED_CONTENT_CLAIM_INVITATION_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_link"];
+const SHARED_CONTENT_CLAIM_INVITATION_DETAILS_FIELDS: &[&str] = &["shared_content_link"];
 impl SharedContentClaimInvitationDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -41667,7 +41667,7 @@ impl SharedContentClaimInvitationType {
 
 }
 
-const SHARED_CONTENT_CLAIM_INVITATION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_CLAIM_INVITATION_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentClaimInvitationType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -41761,10 +41761,10 @@ impl SharedContentCopyDetails {
 
 }
 
-const SHARED_CONTENT_COPY_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_link",
-                                                                      "shared_content_access_level",
-                                                                      "destination_path",
-                                                                      "shared_content_owner"];
+const SHARED_CONTENT_COPY_DETAILS_FIELDS: &[&str] = &["shared_content_link",
+                                                      "shared_content_access_level",
+                                                      "destination_path",
+                                                      "shared_content_owner"];
 impl SharedContentCopyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -41865,7 +41865,7 @@ impl SharedContentCopyType {
 
 }
 
-const SHARED_CONTENT_COPY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_COPY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentCopyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -41955,9 +41955,9 @@ impl SharedContentDownloadDetails {
 
 }
 
-const SHARED_CONTENT_DOWNLOAD_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_link",
-                                                                          "shared_content_access_level",
-                                                                          "shared_content_owner"];
+const SHARED_CONTENT_DOWNLOAD_DETAILS_FIELDS: &[&str] = &["shared_content_link",
+                                                          "shared_content_access_level",
+                                                          "shared_content_owner"];
 impl SharedContentDownloadDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42049,7 +42049,7 @@ impl SharedContentDownloadType {
 
 }
 
-const SHARED_CONTENT_DOWNLOAD_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_DOWNLOAD_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentDownloadType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42121,7 +42121,7 @@ impl Default for SharedContentRelinquishMembershipDetails {
     }
 }
 
-const SHARED_CONTENT_RELINQUISH_MEMBERSHIP_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SHARED_CONTENT_RELINQUISH_MEMBERSHIP_DETAILS_FIELDS: &[&str] = &[];
 impl SharedContentRelinquishMembershipDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42175,7 +42175,7 @@ impl SharedContentRelinquishMembershipType {
 
 }
 
-const SHARED_CONTENT_RELINQUISH_MEMBERSHIP_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_RELINQUISH_MEMBERSHIP_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentRelinquishMembershipType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42251,7 +42251,7 @@ impl SharedContentRemoveInviteesDetails {
 
 }
 
-const SHARED_CONTENT_REMOVE_INVITEES_DETAILS_FIELDS: &'static [&'static str] = &["invitees"];
+const SHARED_CONTENT_REMOVE_INVITEES_DETAILS_FIELDS: &[&str] = &["invitees"];
 impl SharedContentRemoveInviteesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42325,7 +42325,7 @@ impl SharedContentRemoveInviteesType {
 
 }
 
-const SHARED_CONTENT_REMOVE_INVITEES_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_REMOVE_INVITEES_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentRemoveInviteesType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42400,7 +42400,7 @@ impl Default for SharedContentRemoveLinkExpiryDetails {
     }
 }
 
-const SHARED_CONTENT_REMOVE_LINK_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &["previous_value"];
+const SHARED_CONTENT_REMOVE_LINK_EXPIRY_DETAILS_FIELDS: &[&str] = &["previous_value"];
 impl SharedContentRemoveLinkExpiryDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42474,7 +42474,7 @@ impl SharedContentRemoveLinkExpiryType {
 
 }
 
-const SHARED_CONTENT_REMOVE_LINK_EXPIRY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_REMOVE_LINK_EXPIRY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentRemoveLinkExpiryType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42546,7 +42546,7 @@ impl Default for SharedContentRemoveLinkPasswordDetails {
     }
 }
 
-const SHARED_CONTENT_REMOVE_LINK_PASSWORD_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SHARED_CONTENT_REMOVE_LINK_PASSWORD_DETAILS_FIELDS: &[&str] = &[];
 impl SharedContentRemoveLinkPasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42600,7 +42600,7 @@ impl SharedContentRemoveLinkPasswordType {
 
 }
 
-const SHARED_CONTENT_REMOVE_LINK_PASSWORD_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_REMOVE_LINK_PASSWORD_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentRemoveLinkPasswordType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42675,7 +42675,7 @@ impl Default for SharedContentRemoveMemberDetails {
     }
 }
 
-const SHARED_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_access_level"];
+const SHARED_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS: &[&str] = &["shared_content_access_level"];
 impl SharedContentRemoveMemberDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42749,7 +42749,7 @@ impl SharedContentRemoveMemberType {
 
 }
 
-const SHARED_CONTENT_REMOVE_MEMBER_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_REMOVE_MEMBER_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentRemoveMemberType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42824,7 +42824,7 @@ impl Default for SharedContentRequestAccessDetails {
     }
 }
 
-const SHARED_CONTENT_REQUEST_ACCESS_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_link"];
+const SHARED_CONTENT_REQUEST_ACCESS_DETAILS_FIELDS: &[&str] = &["shared_content_link"];
 impl SharedContentRequestAccessDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42898,7 +42898,7 @@ impl SharedContentRequestAccessType {
 
 }
 
-const SHARED_CONTENT_REQUEST_ACCESS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_REQUEST_ACCESS_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentRequestAccessType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -42970,7 +42970,7 @@ impl Default for SharedContentUnshareDetails {
     }
 }
 
-const SHARED_CONTENT_UNSHARE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SHARED_CONTENT_UNSHARE_DETAILS_FIELDS: &[&str] = &[];
 impl SharedContentUnshareDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -43024,7 +43024,7 @@ impl SharedContentUnshareType {
 
 }
 
-const SHARED_CONTENT_UNSHARE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_UNSHARE_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentUnshareType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -43114,9 +43114,9 @@ impl SharedContentViewDetails {
 
 }
 
-const SHARED_CONTENT_VIEW_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_link",
-                                                                      "shared_content_access_level",
-                                                                      "shared_content_owner"];
+const SHARED_CONTENT_VIEW_DETAILS_FIELDS: &[&str] = &["shared_content_link",
+                                                      "shared_content_access_level",
+                                                      "shared_content_owner"];
 impl SharedContentViewDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -43208,7 +43208,7 @@ impl SharedContentViewType {
 
 }
 
-const SHARED_CONTENT_VIEW_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_CONTENT_VIEW_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedContentViewType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -43292,8 +43292,8 @@ impl SharedFolderChangeLinkPolicyDetails {
 
 }
 
-const SHARED_FOLDER_CHANGE_LINK_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                   "previous_value"];
+const SHARED_FOLDER_CHANGE_LINK_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                   "previous_value"];
 impl SharedFolderChangeLinkPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -43376,7 +43376,7 @@ impl SharedFolderChangeLinkPolicyType {
 
 }
 
-const SHARED_FOLDER_CHANGE_LINK_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_FOLDER_CHANGE_LINK_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedFolderChangeLinkPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -43463,8 +43463,8 @@ impl SharedFolderChangeMembersInheritancePolicyDetails {
 
 }
 
-const SHARED_FOLDER_CHANGE_MEMBERS_INHERITANCE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                                  "previous_value"];
+const SHARED_FOLDER_CHANGE_MEMBERS_INHERITANCE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                                  "previous_value"];
 impl SharedFolderChangeMembersInheritancePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -43547,7 +43547,7 @@ impl SharedFolderChangeMembersInheritancePolicyType {
 
 }
 
-const SHARED_FOLDER_CHANGE_MEMBERS_INHERITANCE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_FOLDER_CHANGE_MEMBERS_INHERITANCE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedFolderChangeMembersInheritancePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -43631,8 +43631,8 @@ impl SharedFolderChangeMembersManagementPolicyDetails {
 
 }
 
-const SHARED_FOLDER_CHANGE_MEMBERS_MANAGEMENT_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                                 "previous_value"];
+const SHARED_FOLDER_CHANGE_MEMBERS_MANAGEMENT_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                                 "previous_value"];
 impl SharedFolderChangeMembersManagementPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -43715,7 +43715,7 @@ impl SharedFolderChangeMembersManagementPolicyType {
 
 }
 
-const SHARED_FOLDER_CHANGE_MEMBERS_MANAGEMENT_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_FOLDER_CHANGE_MEMBERS_MANAGEMENT_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedFolderChangeMembersManagementPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -43799,8 +43799,8 @@ impl SharedFolderChangeMembersPolicyDetails {
 
 }
 
-const SHARED_FOLDER_CHANGE_MEMBERS_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                      "previous_value"];
+const SHARED_FOLDER_CHANGE_MEMBERS_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                      "previous_value"];
 impl SharedFolderChangeMembersPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -43883,7 +43883,7 @@ impl SharedFolderChangeMembersPolicyType {
 
 }
 
-const SHARED_FOLDER_CHANGE_MEMBERS_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_FOLDER_CHANGE_MEMBERS_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedFolderChangeMembersPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -43958,7 +43958,7 @@ impl Default for SharedFolderCreateDetails {
     }
 }
 
-const SHARED_FOLDER_CREATE_DETAILS_FIELDS: &'static [&'static str] = &["target_ns_id"];
+const SHARED_FOLDER_CREATE_DETAILS_FIELDS: &[&str] = &["target_ns_id"];
 impl SharedFolderCreateDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -44032,7 +44032,7 @@ impl SharedFolderCreateType {
 
 }
 
-const SHARED_FOLDER_CREATE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_FOLDER_CREATE_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedFolderCreateType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -44104,7 +44104,7 @@ impl Default for SharedFolderDeclineInvitationDetails {
     }
 }
 
-const SHARED_FOLDER_DECLINE_INVITATION_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SHARED_FOLDER_DECLINE_INVITATION_DETAILS_FIELDS: &[&str] = &[];
 impl SharedFolderDeclineInvitationDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -44158,7 +44158,7 @@ impl SharedFolderDeclineInvitationType {
 
 }
 
-const SHARED_FOLDER_DECLINE_INVITATION_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_FOLDER_DECLINE_INVITATION_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedFolderDeclineInvitationType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -44248,9 +44248,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMembersInheritancePolicy
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["inherit_members",
-                                                    "dont_inherit_members",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["inherit_members",
+                                    "dont_inherit_members",
+                                    "other"];
         deserializer.deserialize_struct("SharedFolderMembersInheritancePolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -44289,7 +44289,7 @@ impl Default for SharedFolderMountDetails {
     }
 }
 
-const SHARED_FOLDER_MOUNT_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SHARED_FOLDER_MOUNT_DETAILS_FIELDS: &[&str] = &[];
 impl SharedFolderMountDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -44343,7 +44343,7 @@ impl SharedFolderMountType {
 
 }
 
-const SHARED_FOLDER_MOUNT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_FOLDER_MOUNT_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedFolderMountType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -44421,8 +44421,8 @@ impl Default for SharedFolderNestDetails {
     }
 }
 
-const SHARED_FOLDER_NEST_DETAILS_FIELDS: &'static [&'static str] = &["previous_parent_ns_id",
-                                                                     "new_parent_ns_id"];
+const SHARED_FOLDER_NEST_DETAILS_FIELDS: &[&str] = &["previous_parent_ns_id",
+                                                     "new_parent_ns_id"];
 impl SharedFolderNestDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -44505,7 +44505,7 @@ impl SharedFolderNestType {
 
 }
 
-const SHARED_FOLDER_NEST_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_FOLDER_NEST_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedFolderNestType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -44589,8 +44589,8 @@ impl SharedFolderTransferOwnershipDetails {
 
 }
 
-const SHARED_FOLDER_TRANSFER_OWNERSHIP_DETAILS_FIELDS: &'static [&'static str] = &["new_owner_email",
-                                                                                   "previous_owner_email"];
+const SHARED_FOLDER_TRANSFER_OWNERSHIP_DETAILS_FIELDS: &[&str] = &["new_owner_email",
+                                                                   "previous_owner_email"];
 impl SharedFolderTransferOwnershipDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -44673,7 +44673,7 @@ impl SharedFolderTransferOwnershipType {
 
 }
 
-const SHARED_FOLDER_TRANSFER_OWNERSHIP_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_FOLDER_TRANSFER_OWNERSHIP_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedFolderTransferOwnershipType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -44745,7 +44745,7 @@ impl Default for SharedFolderUnmountDetails {
     }
 }
 
-const SHARED_FOLDER_UNMOUNT_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SHARED_FOLDER_UNMOUNT_DETAILS_FIELDS: &[&str] = &[];
 impl SharedFolderUnmountDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -44799,7 +44799,7 @@ impl SharedFolderUnmountType {
 
 }
 
-const SHARED_FOLDER_UNMOUNT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_FOLDER_UNMOUNT_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedFolderUnmountType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -44891,10 +44891,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkAccessLevel {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["none",
-                                                    "reader",
-                                                    "writer",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["none",
+                                    "reader",
+                                    "writer",
+                                    "other"];
         deserializer.deserialize_struct("SharedLinkAccessLevel", VARIANTS, EnumVisitor)
     }
 }
@@ -44943,7 +44943,7 @@ impl SharedLinkAddExpiryDetails {
 
 }
 
-const SHARED_LINK_ADD_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
+const SHARED_LINK_ADD_EXPIRY_DETAILS_FIELDS: &[&str] = &["new_value"];
 impl SharedLinkAddExpiryDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45017,7 +45017,7 @@ impl SharedLinkAddExpiryType {
 
 }
 
-const SHARED_LINK_ADD_EXPIRY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_LINK_ADD_EXPIRY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedLinkAddExpiryType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45095,8 +45095,8 @@ impl Default for SharedLinkChangeExpiryDetails {
     }
 }
 
-const SHARED_LINK_CHANGE_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                            "previous_value"];
+const SHARED_LINK_CHANGE_EXPIRY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                            "previous_value"];
 impl SharedLinkChangeExpiryDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45179,7 +45179,7 @@ impl SharedLinkChangeExpiryType {
 
 }
 
-const SHARED_LINK_CHANGE_EXPIRY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_LINK_CHANGE_EXPIRY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedLinkChangeExpiryType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45263,8 +45263,8 @@ impl SharedLinkChangeVisibilityDetails {
 
 }
 
-const SHARED_LINK_CHANGE_VISIBILITY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                "previous_value"];
+const SHARED_LINK_CHANGE_VISIBILITY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                "previous_value"];
 impl SharedLinkChangeVisibilityDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45347,7 +45347,7 @@ impl SharedLinkChangeVisibilityType {
 
 }
 
-const SHARED_LINK_CHANGE_VISIBILITY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_LINK_CHANGE_VISIBILITY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedLinkChangeVisibilityType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45422,7 +45422,7 @@ impl Default for SharedLinkCopyDetails {
     }
 }
 
-const SHARED_LINK_COPY_DETAILS_FIELDS: &'static [&'static str] = &["shared_link_owner"];
+const SHARED_LINK_COPY_DETAILS_FIELDS: &[&str] = &["shared_link_owner"];
 impl SharedLinkCopyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45496,7 +45496,7 @@ impl SharedLinkCopyType {
 
 }
 
-const SHARED_LINK_COPY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_LINK_COPY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedLinkCopyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45571,7 +45571,7 @@ impl Default for SharedLinkCreateDetails {
     }
 }
 
-const SHARED_LINK_CREATE_DETAILS_FIELDS: &'static [&'static str] = &["shared_link_access_level"];
+const SHARED_LINK_CREATE_DETAILS_FIELDS: &[&str] = &["shared_link_access_level"];
 impl SharedLinkCreateDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45645,7 +45645,7 @@ impl SharedLinkCreateType {
 
 }
 
-const SHARED_LINK_CREATE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_LINK_CREATE_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedLinkCreateType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45720,7 +45720,7 @@ impl Default for SharedLinkDisableDetails {
     }
 }
 
-const SHARED_LINK_DISABLE_DETAILS_FIELDS: &'static [&'static str] = &["shared_link_owner"];
+const SHARED_LINK_DISABLE_DETAILS_FIELDS: &[&str] = &["shared_link_owner"];
 impl SharedLinkDisableDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45794,7 +45794,7 @@ impl SharedLinkDisableType {
 
 }
 
-const SHARED_LINK_DISABLE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_LINK_DISABLE_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedLinkDisableType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45869,7 +45869,7 @@ impl Default for SharedLinkDownloadDetails {
     }
 }
 
-const SHARED_LINK_DOWNLOAD_DETAILS_FIELDS: &'static [&'static str] = &["shared_link_owner"];
+const SHARED_LINK_DOWNLOAD_DETAILS_FIELDS: &[&str] = &["shared_link_owner"];
 impl SharedLinkDownloadDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -45943,7 +45943,7 @@ impl SharedLinkDownloadType {
 
 }
 
-const SHARED_LINK_DOWNLOAD_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_LINK_DOWNLOAD_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedLinkDownloadType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -46018,7 +46018,7 @@ impl Default for SharedLinkRemoveExpiryDetails {
     }
 }
 
-const SHARED_LINK_REMOVE_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &["previous_value"];
+const SHARED_LINK_REMOVE_EXPIRY_DETAILS_FIELDS: &[&str] = &["previous_value"];
 impl SharedLinkRemoveExpiryDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -46092,7 +46092,7 @@ impl SharedLinkRemoveExpiryType {
 
 }
 
-const SHARED_LINK_REMOVE_EXPIRY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_LINK_REMOVE_EXPIRY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedLinkRemoveExpiryType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -46170,8 +46170,8 @@ impl Default for SharedLinkShareDetails {
     }
 }
 
-const SHARED_LINK_SHARE_DETAILS_FIELDS: &'static [&'static str] = &["shared_link_owner",
-                                                                    "external_users"];
+const SHARED_LINK_SHARE_DETAILS_FIELDS: &[&str] = &["shared_link_owner",
+                                                    "external_users"];
 impl SharedLinkShareDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -46254,7 +46254,7 @@ impl SharedLinkShareType {
 
 }
 
-const SHARED_LINK_SHARE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_LINK_SHARE_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedLinkShareType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -46329,7 +46329,7 @@ impl Default for SharedLinkViewDetails {
     }
 }
 
-const SHARED_LINK_VIEW_DETAILS_FIELDS: &'static [&'static str] = &["shared_link_owner"];
+const SHARED_LINK_VIEW_DETAILS_FIELDS: &[&str] = &["shared_link_owner"];
 impl SharedLinkViewDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -46403,7 +46403,7 @@ impl SharedLinkViewType {
 
 }
 
-const SHARED_LINK_VIEW_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_LINK_VIEW_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedLinkViewType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -46495,10 +46495,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkVisibility {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["password",
-                                                    "public",
-                                                    "team_only",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["password",
+                                    "public",
+                                    "team_only",
+                                    "other"];
         deserializer.deserialize_struct("SharedLinkVisibility", VARIANTS, EnumVisitor)
     }
 }
@@ -46543,7 +46543,7 @@ impl Default for SharedNoteOpenedDetails {
     }
 }
 
-const SHARED_NOTE_OPENED_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SHARED_NOTE_OPENED_DETAILS_FIELDS: &[&str] = &[];
 impl SharedNoteOpenedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -46597,7 +46597,7 @@ impl SharedNoteOpenedType {
 
 }
 
-const SHARED_NOTE_OPENED_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARED_NOTE_OPENED_TYPE_FIELDS: &[&str] = &["description"];
 impl SharedNoteOpenedType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -46681,8 +46681,8 @@ impl SharingChangeFolderJoinPolicyDetails {
 
 }
 
-const SHARING_CHANGE_FOLDER_JOIN_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                    "previous_value"];
+const SHARING_CHANGE_FOLDER_JOIN_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                    "previous_value"];
 impl SharingChangeFolderJoinPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -46765,7 +46765,7 @@ impl SharingChangeFolderJoinPolicyType {
 
 }
 
-const SHARING_CHANGE_FOLDER_JOIN_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARING_CHANGE_FOLDER_JOIN_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharingChangeFolderJoinPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -46850,8 +46850,8 @@ impl SharingChangeLinkPolicyDetails {
 
 }
 
-const SHARING_CHANGE_LINK_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                             "previous_value"];
+const SHARING_CHANGE_LINK_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                             "previous_value"];
 impl SharingChangeLinkPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -46934,7 +46934,7 @@ impl SharingChangeLinkPolicyType {
 
 }
 
-const SHARING_CHANGE_LINK_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARING_CHANGE_LINK_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharingChangeLinkPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -47018,8 +47018,8 @@ impl SharingChangeMemberPolicyDetails {
 
 }
 
-const SHARING_CHANGE_MEMBER_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                               "previous_value"];
+const SHARING_CHANGE_MEMBER_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                               "previous_value"];
 impl SharingChangeMemberPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -47102,7 +47102,7 @@ impl SharingChangeMemberPolicyType {
 
 }
 
-const SHARING_CHANGE_MEMBER_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHARING_CHANGE_MEMBER_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl SharingChangeMemberPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -47192,9 +47192,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingFolderJoinPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["from_anyone",
-                                                    "from_team_only",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["from_anyone",
+                                    "from_team_only",
+                                    "other"];
         deserializer.deserialize_struct("SharingFolderJoinPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -47253,10 +47253,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingLinkPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["default_private",
-                                                    "default_public",
-                                                    "only_private",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["default_private",
+                                    "default_public",
+                                    "only_private",
+                                    "other"];
         deserializer.deserialize_struct("SharingLinkPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -47319,9 +47319,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingMemberPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["allow",
-                                                    "forbid",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["allow",
+                                    "forbid",
+                                    "other"];
         deserializer.deserialize_struct("SharingMemberPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -47360,7 +47360,7 @@ impl Default for ShmodelGroupShareDetails {
     }
 }
 
-const SHMODEL_GROUP_SHARE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SHMODEL_GROUP_SHARE_DETAILS_FIELDS: &[&str] = &[];
 impl ShmodelGroupShareDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -47414,7 +47414,7 @@ impl ShmodelGroupShareType {
 
 }
 
-const SHMODEL_GROUP_SHARE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SHMODEL_GROUP_SHARE_TYPE_FIELDS: &[&str] = &["description"];
 impl ShmodelGroupShareType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -47486,7 +47486,7 @@ impl Default for SignInAsSessionEndDetails {
     }
 }
 
-const SIGN_IN_AS_SESSION_END_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SIGN_IN_AS_SESSION_END_DETAILS_FIELDS: &[&str] = &[];
 impl SignInAsSessionEndDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -47540,7 +47540,7 @@ impl SignInAsSessionEndType {
 
 }
 
-const SIGN_IN_AS_SESSION_END_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SIGN_IN_AS_SESSION_END_TYPE_FIELDS: &[&str] = &["description"];
 impl SignInAsSessionEndType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -47612,7 +47612,7 @@ impl Default for SignInAsSessionStartDetails {
     }
 }
 
-const SIGN_IN_AS_SESSION_START_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SIGN_IN_AS_SESSION_START_DETAILS_FIELDS: &[&str] = &[];
 impl SignInAsSessionStartDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -47666,7 +47666,7 @@ impl SignInAsSessionStartType {
 
 }
 
-const SIGN_IN_AS_SESSION_START_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SIGN_IN_AS_SESSION_START_TYPE_FIELDS: &[&str] = &["description"];
 impl SignInAsSessionStartType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -47744,8 +47744,8 @@ impl Default for SmartSyncChangePolicyDetails {
     }
 }
 
-const SMART_SYNC_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                           "previous_value"];
+const SMART_SYNC_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                           "previous_value"];
 impl SmartSyncChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -47828,7 +47828,7 @@ impl SmartSyncChangePolicyType {
 
 }
 
-const SMART_SYNC_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SMART_SYNC_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl SmartSyncChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -47900,7 +47900,7 @@ impl Default for SmartSyncCreateAdminPrivilegeReportDetails {
     }
 }
 
-const SMART_SYNC_CREATE_ADMIN_PRIVILEGE_REPORT_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SMART_SYNC_CREATE_ADMIN_PRIVILEGE_REPORT_DETAILS_FIELDS: &[&str] = &[];
 impl SmartSyncCreateAdminPrivilegeReportDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -47954,7 +47954,7 @@ impl SmartSyncCreateAdminPrivilegeReportType {
 
 }
 
-const SMART_SYNC_CREATE_ADMIN_PRIVILEGE_REPORT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SMART_SYNC_CREATE_ADMIN_PRIVILEGE_REPORT_TYPE_FIELDS: &[&str] = &["description"];
 impl SmartSyncCreateAdminPrivilegeReportType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -48033,8 +48033,8 @@ impl SmartSyncNotOptOutDetails {
 
 }
 
-const SMART_SYNC_NOT_OPT_OUT_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
-                                                                         "new_value"];
+const SMART_SYNC_NOT_OPT_OUT_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                         "new_value"];
 impl SmartSyncNotOptOutDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -48117,7 +48117,7 @@ impl SmartSyncNotOptOutType {
 
 }
 
-const SMART_SYNC_NOT_OPT_OUT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SMART_SYNC_NOT_OPT_OUT_TYPE_FIELDS: &[&str] = &["description"];
 impl SmartSyncNotOptOutType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -48196,8 +48196,8 @@ impl SmartSyncOptOutDetails {
 
 }
 
-const SMART_SYNC_OPT_OUT_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
-                                                                     "new_value"];
+const SMART_SYNC_OPT_OUT_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                     "new_value"];
 impl SmartSyncOptOutDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -48295,9 +48295,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncOptOutPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["default",
-                                                    "opted_out",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["default",
+                                    "opted_out",
+                                    "other"];
         deserializer.deserialize_struct("SmartSyncOptOutPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -48338,7 +48338,7 @@ impl SmartSyncOptOutType {
 
 }
 
-const SMART_SYNC_OPT_OUT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SMART_SYNC_OPT_OUT_TYPE_FIELDS: &[&str] = &["description"];
 impl SmartSyncOptOutType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -48430,10 +48430,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceCapsType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["hard",
-                                                    "off",
-                                                    "soft",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["hard",
+                                    "off",
+                                    "soft",
+                                    "other"];
         deserializer.deserialize_struct("SpaceCapsType", VARIANTS, EnumVisitor)
     }
 }
@@ -48497,10 +48497,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceLimitsStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["within_quota",
-                                                    "near_quota",
-                                                    "over_quota",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["within_quota",
+                                    "near_quota",
+                                    "over_quota",
+                                    "other"];
         deserializer.deserialize_struct("SpaceLimitsStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -48549,7 +48549,7 @@ impl SsoAddCertDetails {
 
 }
 
-const SSO_ADD_CERT_DETAILS_FIELDS: &'static [&'static str] = &["certificate_details"];
+const SSO_ADD_CERT_DETAILS_FIELDS: &[&str] = &["certificate_details"];
 impl SsoAddCertDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -48623,7 +48623,7 @@ impl SsoAddCertType {
 
 }
 
-const SSO_ADD_CERT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SSO_ADD_CERT_TYPE_FIELDS: &[&str] = &["description"];
 impl SsoAddCertType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -48699,7 +48699,7 @@ impl SsoAddLoginUrlDetails {
 
 }
 
-const SSO_ADD_LOGIN_URL_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
+const SSO_ADD_LOGIN_URL_DETAILS_FIELDS: &[&str] = &["new_value"];
 impl SsoAddLoginUrlDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -48773,7 +48773,7 @@ impl SsoAddLoginUrlType {
 
 }
 
-const SSO_ADD_LOGIN_URL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SSO_ADD_LOGIN_URL_TYPE_FIELDS: &[&str] = &["description"];
 impl SsoAddLoginUrlType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -48848,7 +48848,7 @@ impl Default for SsoAddLogoutUrlDetails {
     }
 }
 
-const SSO_ADD_LOGOUT_URL_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
+const SSO_ADD_LOGOUT_URL_DETAILS_FIELDS: &[&str] = &["new_value"];
 impl SsoAddLogoutUrlDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -48922,7 +48922,7 @@ impl SsoAddLogoutUrlType {
 
 }
 
-const SSO_ADD_LOGOUT_URL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SSO_ADD_LOGOUT_URL_TYPE_FIELDS: &[&str] = &["description"];
 impl SsoAddLogoutUrlType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49006,8 +49006,8 @@ impl SsoChangeCertDetails {
 
 }
 
-const SSO_CHANGE_CERT_DETAILS_FIELDS: &'static [&'static str] = &["new_certificate_details",
-                                                                  "previous_certificate_details"];
+const SSO_CHANGE_CERT_DETAILS_FIELDS: &[&str] = &["new_certificate_details",
+                                                  "previous_certificate_details"];
 impl SsoChangeCertDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49090,7 +49090,7 @@ impl SsoChangeCertType {
 
 }
 
-const SSO_CHANGE_CERT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SSO_CHANGE_CERT_TYPE_FIELDS: &[&str] = &["description"];
 impl SsoChangeCertType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49169,8 +49169,8 @@ impl SsoChangeLoginUrlDetails {
 
 }
 
-const SSO_CHANGE_LOGIN_URL_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
-                                                                       "new_value"];
+const SSO_CHANGE_LOGIN_URL_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                       "new_value"];
 impl SsoChangeLoginUrlDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49253,7 +49253,7 @@ impl SsoChangeLoginUrlType {
 
 }
 
-const SSO_CHANGE_LOGIN_URL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SSO_CHANGE_LOGIN_URL_TYPE_FIELDS: &[&str] = &["description"];
 impl SsoChangeLoginUrlType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49331,8 +49331,8 @@ impl Default for SsoChangeLogoutUrlDetails {
     }
 }
 
-const SSO_CHANGE_LOGOUT_URL_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
-                                                                        "new_value"];
+const SSO_CHANGE_LOGOUT_URL_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                        "new_value"];
 impl SsoChangeLogoutUrlDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49415,7 +49415,7 @@ impl SsoChangeLogoutUrlType {
 
 }
 
-const SSO_CHANGE_LOGOUT_URL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SSO_CHANGE_LOGOUT_URL_TYPE_FIELDS: &[&str] = &["description"];
 impl SsoChangeLogoutUrlType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49499,8 +49499,8 @@ impl SsoChangePolicyDetails {
 
 }
 
-const SSO_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                    "previous_value"];
+const SSO_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                    "previous_value"];
 impl SsoChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49583,7 +49583,7 @@ impl SsoChangePolicyType {
 
 }
 
-const SSO_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SSO_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl SsoChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49662,8 +49662,8 @@ impl SsoChangeSamlIdentityModeDetails {
 
 }
 
-const SSO_CHANGE_SAML_IDENTITY_MODE_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
-                                                                                "new_value"];
+const SSO_CHANGE_SAML_IDENTITY_MODE_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                                "new_value"];
 impl SsoChangeSamlIdentityModeDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49746,7 +49746,7 @@ impl SsoChangeSamlIdentityModeType {
 
 }
 
-const SSO_CHANGE_SAML_IDENTITY_MODE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SSO_CHANGE_SAML_IDENTITY_MODE_TYPE_FIELDS: &[&str] = &["description"];
 impl SsoChangeSamlIdentityModeType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49822,7 +49822,7 @@ impl SsoErrorDetails {
 
 }
 
-const SSO_ERROR_DETAILS_FIELDS: &'static [&'static str] = &["error_details"];
+const SSO_ERROR_DETAILS_FIELDS: &[&str] = &["error_details"];
 impl SsoErrorDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49896,7 +49896,7 @@ impl SsoErrorType {
 
 }
 
-const SSO_ERROR_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SSO_ERROR_TYPE_FIELDS: &[&str] = &["description"];
 impl SsoErrorType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -49968,7 +49968,7 @@ impl Default for SsoRemoveCertDetails {
     }
 }
 
-const SSO_REMOVE_CERT_DETAILS_FIELDS: &'static [&'static str] = &[];
+const SSO_REMOVE_CERT_DETAILS_FIELDS: &[&str] = &[];
 impl SsoRemoveCertDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -50022,7 +50022,7 @@ impl SsoRemoveCertType {
 
 }
 
-const SSO_REMOVE_CERT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SSO_REMOVE_CERT_TYPE_FIELDS: &[&str] = &["description"];
 impl SsoRemoveCertType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -50098,7 +50098,7 @@ impl SsoRemoveLoginUrlDetails {
 
 }
 
-const SSO_REMOVE_LOGIN_URL_DETAILS_FIELDS: &'static [&'static str] = &["previous_value"];
+const SSO_REMOVE_LOGIN_URL_DETAILS_FIELDS: &[&str] = &["previous_value"];
 impl SsoRemoveLoginUrlDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -50172,7 +50172,7 @@ impl SsoRemoveLoginUrlType {
 
 }
 
-const SSO_REMOVE_LOGIN_URL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SSO_REMOVE_LOGIN_URL_TYPE_FIELDS: &[&str] = &["description"];
 impl SsoRemoveLoginUrlType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -50248,7 +50248,7 @@ impl SsoRemoveLogoutUrlDetails {
 
 }
 
-const SSO_REMOVE_LOGOUT_URL_DETAILS_FIELDS: &'static [&'static str] = &["previous_value"];
+const SSO_REMOVE_LOGOUT_URL_DETAILS_FIELDS: &[&str] = &["previous_value"];
 impl SsoRemoveLogoutUrlDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -50322,7 +50322,7 @@ impl SsoRemoveLogoutUrlType {
 
 }
 
-const SSO_REMOVE_LOGOUT_URL_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const SSO_REMOVE_LOGOUT_URL_TYPE_FIELDS: &[&str] = &["description"];
 impl SsoRemoveLogoutUrlType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -50404,8 +50404,8 @@ impl TeamActivityCreateReportDetails {
 
 }
 
-const TEAM_ACTIVITY_CREATE_REPORT_DETAILS_FIELDS: &'static [&'static str] = &["start_date",
-                                                                              "end_date"];
+const TEAM_ACTIVITY_CREATE_REPORT_DETAILS_FIELDS: &[&str] = &["start_date",
+                                                              "end_date"];
 impl TeamActivityCreateReportDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -50488,7 +50488,7 @@ impl TeamActivityCreateReportType {
 
 }
 
-const TEAM_ACTIVITY_CREATE_REPORT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_ACTIVITY_CREATE_REPORT_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamActivityCreateReportType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -50634,16 +50634,16 @@ impl TeamEvent {
 
 }
 
-const TEAM_EVENT_FIELDS: &'static [&'static str] = &["timestamp",
-                                                     "event_category",
-                                                     "event_type",
-                                                     "details",
-                                                     "actor",
-                                                     "origin",
-                                                     "involve_non_team_member",
-                                                     "context",
-                                                     "participants",
-                                                     "assets"];
+const TEAM_EVENT_FIELDS: &[&str] = &["timestamp",
+                                     "event_category",
+                                     "event_type",
+                                     "details",
+                                     "actor",
+                                     "origin",
+                                     "involve_non_team_member",
+                                     "context",
+                                     "participants",
+                                     "assets"];
 impl TeamEvent {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -50808,8 +50808,8 @@ impl TeamFolderChangeStatusDetails {
 
 }
 
-const TEAM_FOLDER_CHANGE_STATUS_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                            "previous_value"];
+const TEAM_FOLDER_CHANGE_STATUS_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                            "previous_value"];
 impl TeamFolderChangeStatusDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -50892,7 +50892,7 @@ impl TeamFolderChangeStatusType {
 
 }
 
-const TEAM_FOLDER_CHANGE_STATUS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_FOLDER_CHANGE_STATUS_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamFolderChangeStatusType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -50964,7 +50964,7 @@ impl Default for TeamFolderCreateDetails {
     }
 }
 
-const TEAM_FOLDER_CREATE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const TEAM_FOLDER_CREATE_DETAILS_FIELDS: &[&str] = &[];
 impl TeamFolderCreateDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -51018,7 +51018,7 @@ impl TeamFolderCreateType {
 
 }
 
-const TEAM_FOLDER_CREATE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_FOLDER_CREATE_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamFolderCreateType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -51094,7 +51094,7 @@ impl TeamFolderDowngradeDetails {
 
 }
 
-const TEAM_FOLDER_DOWNGRADE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index"];
+const TEAM_FOLDER_DOWNGRADE_DETAILS_FIELDS: &[&str] = &["target_asset_index"];
 impl TeamFolderDowngradeDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -51168,7 +51168,7 @@ impl TeamFolderDowngradeType {
 
 }
 
-const TEAM_FOLDER_DOWNGRADE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_FOLDER_DOWNGRADE_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamFolderDowngradeType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -51240,7 +51240,7 @@ impl Default for TeamFolderPermanentlyDeleteDetails {
     }
 }
 
-const TEAM_FOLDER_PERMANENTLY_DELETE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const TEAM_FOLDER_PERMANENTLY_DELETE_DETAILS_FIELDS: &[&str] = &[];
 impl TeamFolderPermanentlyDeleteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -51294,7 +51294,7 @@ impl TeamFolderPermanentlyDeleteType {
 
 }
 
-const TEAM_FOLDER_PERMANENTLY_DELETE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_FOLDER_PERMANENTLY_DELETE_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamFolderPermanentlyDeleteType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -51373,8 +51373,8 @@ impl TeamFolderRenameDetails {
 
 }
 
-const TEAM_FOLDER_RENAME_DETAILS_FIELDS: &'static [&'static str] = &["previous_folder_name",
-                                                                     "new_folder_name"];
+const TEAM_FOLDER_RENAME_DETAILS_FIELDS: &[&str] = &["previous_folder_name",
+                                                     "new_folder_name"];
 impl TeamFolderRenameDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -51457,7 +51457,7 @@ impl TeamFolderRenameType {
 
 }
 
-const TEAM_FOLDER_RENAME_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_FOLDER_RENAME_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamFolderRenameType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -51535,8 +51535,8 @@ impl Default for TeamLinkedAppLogInfo {
     }
 }
 
-const TEAM_LINKED_APP_LOG_INFO_FIELDS: &'static [&'static str] = &["app_id",
-                                                                   "display_name"];
+const TEAM_LINKED_APP_LOG_INFO_FIELDS: &[&str] = &["app_id",
+                                                   "display_name"];
 impl TeamLinkedAppLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -51632,11 +51632,11 @@ impl Default for TeamMemberLogInfo {
     }
 }
 
-const TEAM_MEMBER_LOG_INFO_FIELDS: &'static [&'static str] = &["account_id",
-                                                               "display_name",
-                                                               "email",
-                                                               "team_member_id",
-                                                               "member_external_id"];
+const TEAM_MEMBER_LOG_INFO_FIELDS: &[&str] = &["account_id",
+                                               "display_name",
+                                               "email",
+                                               "team_member_id",
+                                               "member_external_id"];
 impl TeamMemberLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -51761,9 +51761,9 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamMembershipType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["free",
-                                                    "full",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["free",
+                                    "full",
+                                    "other"];
         deserializer.deserialize_struct("TeamMembershipType", VARIANTS, EnumVisitor)
     }
 }
@@ -51806,7 +51806,7 @@ impl TeamMergeFromDetails {
 
 }
 
-const TEAM_MERGE_FROM_DETAILS_FIELDS: &'static [&'static str] = &["team_name"];
+const TEAM_MERGE_FROM_DETAILS_FIELDS: &[&str] = &["team_name"];
 impl TeamMergeFromDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -51880,7 +51880,7 @@ impl TeamMergeFromType {
 
 }
 
-const TEAM_MERGE_FROM_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_MERGE_FROM_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamMergeFromType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -51956,7 +51956,7 @@ impl TeamMergeToDetails {
 
 }
 
-const TEAM_MERGE_TO_DETAILS_FIELDS: &'static [&'static str] = &["team_name"];
+const TEAM_MERGE_TO_DETAILS_FIELDS: &[&str] = &["team_name"];
 impl TeamMergeToDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52030,7 +52030,7 @@ impl TeamMergeToType {
 
 }
 
-const TEAM_MERGE_TO_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_MERGE_TO_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamMergeToType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52109,8 +52109,8 @@ impl TeamName {
 
 }
 
-const TEAM_NAME_FIELDS: &'static [&'static str] = &["team_display_name",
-                                                    "team_legal_name"];
+const TEAM_NAME_FIELDS: &[&str] = &["team_display_name",
+                                    "team_legal_name"];
 impl TeamName {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52191,7 +52191,7 @@ impl Default for TeamProfileAddLogoDetails {
     }
 }
 
-const TEAM_PROFILE_ADD_LOGO_DETAILS_FIELDS: &'static [&'static str] = &[];
+const TEAM_PROFILE_ADD_LOGO_DETAILS_FIELDS: &[&str] = &[];
 impl TeamProfileAddLogoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52245,7 +52245,7 @@ impl TeamProfileAddLogoType {
 
 }
 
-const TEAM_PROFILE_ADD_LOGO_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_PROFILE_ADD_LOGO_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamProfileAddLogoType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52327,8 +52327,8 @@ impl TeamProfileChangeDefaultLanguageDetails {
 
 }
 
-const TEAM_PROFILE_CHANGE_DEFAULT_LANGUAGE_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                       "previous_value"];
+const TEAM_PROFILE_CHANGE_DEFAULT_LANGUAGE_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                       "previous_value"];
 impl TeamProfileChangeDefaultLanguageDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52411,7 +52411,7 @@ impl TeamProfileChangeDefaultLanguageType {
 
 }
 
-const TEAM_PROFILE_CHANGE_DEFAULT_LANGUAGE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_PROFILE_CHANGE_DEFAULT_LANGUAGE_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamProfileChangeDefaultLanguageType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52483,7 +52483,7 @@ impl Default for TeamProfileChangeLogoDetails {
     }
 }
 
-const TEAM_PROFILE_CHANGE_LOGO_DETAILS_FIELDS: &'static [&'static str] = &[];
+const TEAM_PROFILE_CHANGE_LOGO_DETAILS_FIELDS: &[&str] = &[];
 impl TeamProfileChangeLogoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52537,7 +52537,7 @@ impl TeamProfileChangeLogoType {
 
 }
 
-const TEAM_PROFILE_CHANGE_LOGO_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_PROFILE_CHANGE_LOGO_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamProfileChangeLogoType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52621,8 +52621,8 @@ impl TeamProfileChangeNameDetails {
 
 }
 
-const TEAM_PROFILE_CHANGE_NAME_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                           "previous_value"];
+const TEAM_PROFILE_CHANGE_NAME_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                           "previous_value"];
 impl TeamProfileChangeNameDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52705,7 +52705,7 @@ impl TeamProfileChangeNameType {
 
 }
 
-const TEAM_PROFILE_CHANGE_NAME_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_PROFILE_CHANGE_NAME_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamProfileChangeNameType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52777,7 +52777,7 @@ impl Default for TeamProfileRemoveLogoDetails {
     }
 }
 
-const TEAM_PROFILE_REMOVE_LOGO_DETAILS_FIELDS: &'static [&'static str] = &[];
+const TEAM_PROFILE_REMOVE_LOGO_DETAILS_FIELDS: &[&str] = &[];
 impl TeamProfileRemoveLogoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52831,7 +52831,7 @@ impl TeamProfileRemoveLogoType {
 
 }
 
-const TEAM_PROFILE_REMOVE_LOGO_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TEAM_PROFILE_REMOVE_LOGO_TYPE_FIELDS: &[&str] = &["description"];
 impl TeamProfileRemoveLogoType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52903,7 +52903,7 @@ impl Default for TfaAddBackupPhoneDetails {
     }
 }
 
-const TFA_ADD_BACKUP_PHONE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const TFA_ADD_BACKUP_PHONE_DETAILS_FIELDS: &[&str] = &[];
 impl TfaAddBackupPhoneDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -52957,7 +52957,7 @@ impl TfaAddBackupPhoneType {
 
 }
 
-const TFA_ADD_BACKUP_PHONE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TFA_ADD_BACKUP_PHONE_TYPE_FIELDS: &[&str] = &["description"];
 impl TfaAddBackupPhoneType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53029,7 +53029,7 @@ impl Default for TfaAddSecurityKeyDetails {
     }
 }
 
-const TFA_ADD_SECURITY_KEY_DETAILS_FIELDS: &'static [&'static str] = &[];
+const TFA_ADD_SECURITY_KEY_DETAILS_FIELDS: &[&str] = &[];
 impl TfaAddSecurityKeyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53083,7 +53083,7 @@ impl TfaAddSecurityKeyType {
 
 }
 
-const TFA_ADD_SECURITY_KEY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TFA_ADD_SECURITY_KEY_TYPE_FIELDS: &[&str] = &["description"];
 impl TfaAddSecurityKeyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53155,7 +53155,7 @@ impl Default for TfaChangeBackupPhoneDetails {
     }
 }
 
-const TFA_CHANGE_BACKUP_PHONE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const TFA_CHANGE_BACKUP_PHONE_DETAILS_FIELDS: &[&str] = &[];
 impl TfaChangeBackupPhoneDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53209,7 +53209,7 @@ impl TfaChangeBackupPhoneType {
 
 }
 
-const TFA_CHANGE_BACKUP_PHONE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TFA_CHANGE_BACKUP_PHONE_TYPE_FIELDS: &[&str] = &["description"];
 impl TfaChangeBackupPhoneType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53296,8 +53296,8 @@ impl TfaChangePolicyDetails {
 
 }
 
-const TFA_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                    "previous_value"];
+const TFA_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                    "previous_value"];
 impl TfaChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53380,7 +53380,7 @@ impl TfaChangePolicyType {
 
 }
 
-const TFA_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TFA_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl TfaChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53474,9 +53474,9 @@ impl TfaChangeStatusDetails {
 
 }
 
-const TFA_CHANGE_STATUS_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                    "previous_value",
-                                                                    "used_rescue_code"];
+const TFA_CHANGE_STATUS_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                    "previous_value",
+                                                    "used_rescue_code"];
 impl TfaChangeStatusDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53568,7 +53568,7 @@ impl TfaChangeStatusType {
 
 }
 
-const TFA_CHANGE_STATUS_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TFA_CHANGE_STATUS_TYPE_FIELDS: &[&str] = &["description"];
 impl TfaChangeStatusType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53662,11 +53662,11 @@ impl<'de> ::serde::de::Deserialize<'de> for TfaConfiguration {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "sms",
-                                                    "authenticator",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "sms",
+                                    "authenticator",
+                                    "other"];
         deserializer.deserialize_struct("TfaConfiguration", VARIANTS, EnumVisitor)
     }
 }
@@ -53717,7 +53717,7 @@ impl Default for TfaRemoveBackupPhoneDetails {
     }
 }
 
-const TFA_REMOVE_BACKUP_PHONE_DETAILS_FIELDS: &'static [&'static str] = &[];
+const TFA_REMOVE_BACKUP_PHONE_DETAILS_FIELDS: &[&str] = &[];
 impl TfaRemoveBackupPhoneDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53771,7 +53771,7 @@ impl TfaRemoveBackupPhoneType {
 
 }
 
-const TFA_REMOVE_BACKUP_PHONE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TFA_REMOVE_BACKUP_PHONE_TYPE_FIELDS: &[&str] = &["description"];
 impl TfaRemoveBackupPhoneType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53843,7 +53843,7 @@ impl Default for TfaRemoveSecurityKeyDetails {
     }
 }
 
-const TFA_REMOVE_SECURITY_KEY_DETAILS_FIELDS: &'static [&'static str] = &[];
+const TFA_REMOVE_SECURITY_KEY_DETAILS_FIELDS: &[&str] = &[];
 impl TfaRemoveSecurityKeyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53897,7 +53897,7 @@ impl TfaRemoveSecurityKeyType {
 
 }
 
-const TFA_REMOVE_SECURITY_KEY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TFA_REMOVE_SECURITY_KEY_TYPE_FIELDS: &[&str] = &["description"];
 impl TfaRemoveSecurityKeyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -53969,7 +53969,7 @@ impl Default for TfaResetDetails {
     }
 }
 
-const TFA_RESET_DETAILS_FIELDS: &'static [&'static str] = &[];
+const TFA_RESET_DETAILS_FIELDS: &[&str] = &[];
 impl TfaResetDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -54023,7 +54023,7 @@ impl TfaResetType {
 
 }
 
-const TFA_RESET_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TFA_RESET_TYPE_FIELDS: &[&str] = &["description"];
 impl TfaResetType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -54124,15 +54124,15 @@ impl<'de> ::serde::de::Deserialize<'de> for TimeUnit {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["milliseconds",
-                                                    "seconds",
-                                                    "minutes",
-                                                    "hours",
-                                                    "days",
-                                                    "weeks",
-                                                    "months",
-                                                    "years",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["milliseconds",
+                                    "seconds",
+                                    "minutes",
+                                    "hours",
+                                    "days",
+                                    "weeks",
+                                    "months",
+                                    "years",
+                                    "other"];
         deserializer.deserialize_struct("TimeUnit", VARIANTS, EnumVisitor)
     }
 }
@@ -54220,8 +54220,8 @@ impl TwoAccountChangePolicyDetails {
 
 }
 
-const TWO_ACCOUNT_CHANGE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                            "previous_value"];
+const TWO_ACCOUNT_CHANGE_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                            "previous_value"];
 impl TwoAccountChangePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -54304,7 +54304,7 @@ impl TwoAccountChangePolicyType {
 
 }
 
-const TWO_ACCOUNT_CHANGE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const TWO_ACCOUNT_CHANGE_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl TwoAccountChangePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -54394,9 +54394,9 @@ impl<'de> ::serde::de::Deserialize<'de> for TwoAccountPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
         deserializer.deserialize_struct("TwoAccountPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -54441,8 +54441,8 @@ impl Default for UserLinkedAppLogInfo {
     }
 }
 
-const USER_LINKED_APP_LOG_INFO_FIELDS: &'static [&'static str] = &["app_id",
-                                                                   "display_name"];
+const USER_LINKED_APP_LOG_INFO_FIELDS: &[&str] = &["app_id",
+                                                   "display_name"];
 impl UserLinkedAppLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -54541,8 +54541,8 @@ impl<'de> ::serde::de::Deserialize<'de> for UserLogInfo {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["non_team_member",
-                                                    "non_team_member"];
+        const VARIANTS: &[&str] = &["non_team_member",
+                                    "non_team_member"];
         deserializer.deserialize_struct("UserLogInfo", VARIANTS, EnumVisitor)
     }
 }
@@ -54602,9 +54602,9 @@ impl UserNameLogInfo {
 
 }
 
-const USER_NAME_LOG_INFO_FIELDS: &'static [&'static str] = &["given_name",
-                                                             "surname",
-                                                             "locale"];
+const USER_NAME_LOG_INFO_FIELDS: &[&str] = &["given_name",
+                                             "surname",
+                                             "locale"];
 impl UserNameLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -54700,8 +54700,8 @@ impl Default for UserOrTeamLinkedAppLogInfo {
     }
 }
 
-const USER_OR_TEAM_LINKED_APP_LOG_INFO_FIELDS: &'static [&'static str] = &["app_id",
-                                                                           "display_name"];
+const USER_OR_TEAM_LINKED_APP_LOG_INFO_FIELDS: &[&str] = &["app_id",
+                                                           "display_name"];
 impl UserOrTeamLinkedAppLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -54826,13 +54826,13 @@ impl WebDeviceSessionLogInfo {
 
 }
 
-const WEB_DEVICE_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["user_agent",
-                                                                      "os",
-                                                                      "browser",
-                                                                      "session_id",
-                                                                      "ip_address",
-                                                                      "created",
-                                                                      "updated"];
+const WEB_DEVICE_SESSION_LOG_INFO_FIELDS: &[&str] = &["user_agent",
+                                                      "os",
+                                                      "browser",
+                                                      "session_id",
+                                                      "ip_address",
+                                                      "created",
+                                                      "updated"];
 impl WebDeviceSessionLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -54961,7 +54961,7 @@ impl Default for WebSessionLogInfo {
     }
 }
 
-const WEB_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["session_id"];
+const WEB_SESSION_LOG_INFO_FIELDS: &[&str] = &["session_id"];
 impl WebSessionLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -55039,8 +55039,8 @@ impl Default for WebSessionsChangeFixedLengthPolicyDetails {
     }
 }
 
-const WEB_SESSIONS_CHANGE_FIXED_LENGTH_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                          "previous_value"];
+const WEB_SESSIONS_CHANGE_FIXED_LENGTH_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                          "previous_value"];
 impl WebSessionsChangeFixedLengthPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -55123,7 +55123,7 @@ impl WebSessionsChangeFixedLengthPolicyType {
 
 }
 
-const WEB_SESSIONS_CHANGE_FIXED_LENGTH_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const WEB_SESSIONS_CHANGE_FIXED_LENGTH_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl WebSessionsChangeFixedLengthPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -55201,8 +55201,8 @@ impl Default for WebSessionsChangeIdleLengthPolicyDetails {
     }
 }
 
-const WEB_SESSIONS_CHANGE_IDLE_LENGTH_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                         "previous_value"];
+const WEB_SESSIONS_CHANGE_IDLE_LENGTH_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                         "previous_value"];
 impl WebSessionsChangeIdleLengthPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -55285,7 +55285,7 @@ impl WebSessionsChangeIdleLengthPolicyType {
 
 }
 
-const WEB_SESSIONS_CHANGE_IDLE_LENGTH_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+const WEB_SESSIONS_CHANGE_IDLE_LENGTH_POLICY_TYPE_FIELDS: &[&str] = &["description"];
 impl WebSessionsChangeIdleLengthPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -55377,9 +55377,9 @@ impl<'de> ::serde::de::Deserialize<'de> for WebSessionsFixedLengthPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["defined",
-                                                    "undefined",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["defined",
+                                    "undefined",
+                                    "other"];
         deserializer.deserialize_struct("WebSessionsFixedLengthPolicy", VARIANTS, EnumVisitor)
     }
 }
@@ -55439,9 +55439,9 @@ impl<'de> ::serde::de::Deserialize<'de> for WebSessionsIdleLengthPolicy {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["defined",
-                                                    "undefined",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["defined",
+                                    "undefined",
+                                    "other"];
         deserializer.deserialize_struct("WebSessionsIdleLengthPolicy", VARIANTS, EnumVisitor)
     }
 }

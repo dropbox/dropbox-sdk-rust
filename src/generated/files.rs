@@ -781,12 +781,12 @@ impl AlphaGetMetadataArg {
 
 }
 
-const ALPHA_GET_METADATA_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                                 "include_media_info",
-                                                                 "include_deleted",
-                                                                 "include_has_explicit_shared_members",
-                                                                 "include_property_groups",
-                                                                 "include_property_templates"];
+const ALPHA_GET_METADATA_ARG_FIELDS: &[&str] = &["path",
+                                                 "include_media_info",
+                                                 "include_deleted",
+                                                 "include_has_explicit_shared_members",
+                                                 "include_property_groups",
+                                                 "include_property_templates"];
 impl AlphaGetMetadataArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -931,8 +931,8 @@ impl<'de> ::serde::de::Deserialize<'de> for AlphaGetMetadataError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "properties_error"];
+        const VARIANTS: &[&str] = &["path",
+                                    "properties_error"];
         deserializer.deserialize_struct("AlphaGetMetadataError", VARIANTS, EnumVisitor)
     }
 }
@@ -1036,12 +1036,12 @@ impl CommitInfo {
 
 }
 
-const COMMIT_INFO_FIELDS: &'static [&'static str] = &["path",
-                                                      "mode",
-                                                      "autorename",
-                                                      "client_modified",
-                                                      "mute",
-                                                      "property_groups"];
+const COMMIT_INFO_FIELDS: &[&str] = &["path",
+                                      "mode",
+                                      "autorename",
+                                      "client_modified",
+                                      "mute",
+                                      "property_groups"];
 impl CommitInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1210,12 +1210,12 @@ impl CommitInfoWithProperties {
 
 }
 
-const COMMIT_INFO_WITH_PROPERTIES_FIELDS: &'static [&'static str] = &["path",
-                                                                      "mode",
-                                                                      "autorename",
-                                                                      "client_modified",
-                                                                      "mute",
-                                                                      "property_groups"];
+const COMMIT_INFO_WITH_PROPERTIES_FIELDS: &[&str] = &["path",
+                                                      "mode",
+                                                      "autorename",
+                                                      "client_modified",
+                                                      "mute",
+                                                      "property_groups"];
 impl CommitInfoWithProperties {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1344,8 +1344,8 @@ impl CreateFolderArg {
 
 }
 
-const CREATE_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                            "autorename"];
+const CREATE_FOLDER_ARG_FIELDS: &[&str] = &["path",
+                                            "autorename"];
 impl CreateFolderArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1446,7 +1446,7 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path"];
+        const VARIANTS: &[&str] = &["path"];
         deserializer.deserialize_struct("CreateFolderError", VARIANTS, EnumVisitor)
     }
 }
@@ -1494,7 +1494,7 @@ impl CreateFolderResult {
 
 }
 
-const CREATE_FOLDER_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
+const CREATE_FOLDER_RESULT_FIELDS: &[&str] = &["metadata"];
 impl CreateFolderResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1569,7 +1569,7 @@ impl DeleteArg {
 
 }
 
-const DELETE_ARG_FIELDS: &'static [&'static str] = &["path"];
+const DELETE_ARG_FIELDS: &[&str] = &["path"];
 impl DeleteArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1643,7 +1643,7 @@ impl DeleteBatchArg {
 
 }
 
-const DELETE_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries"];
+const DELETE_BATCH_ARG_FIELDS: &[&str] = &["entries"];
 impl DeleteBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1732,8 +1732,8 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["too_many_write_operations",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["too_many_write_operations",
+                                    "other"];
         deserializer.deserialize_struct("DeleteBatchError", VARIANTS, EnumVisitor)
     }
 }
@@ -1806,10 +1806,10 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchJobStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete",
-                                                    "failed",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed",
+                                    "other"];
         deserializer.deserialize_struct("DeleteBatchJobStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -1883,9 +1883,9 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchLaunch {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["async_job_id",
-                                                    "complete",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["async_job_id",
+                                    "complete",
+                                    "other"];
         deserializer.deserialize_struct("DeleteBatchLaunch", VARIANTS, EnumVisitor)
     }
 }
@@ -1928,7 +1928,7 @@ impl DeleteBatchResult {
 
 }
 
-const DELETE_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
+const DELETE_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
 impl DeleteBatchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2003,7 +2003,7 @@ impl DeleteBatchResultData {
 
 }
 
-const DELETE_BATCH_RESULT_DATA_FIELDS: &'static [&'static str] = &["metadata"];
+const DELETE_BATCH_RESULT_DATA_FIELDS: &[&str] = &["metadata"];
 impl DeleteBatchResultData {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2097,8 +2097,8 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchResultEntry {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["success",
-                                                    "failure"];
+        const VARIANTS: &[&str] = &["success",
+                                    "failure"];
         deserializer.deserialize_struct("DeleteBatchResultEntry", VARIANTS, EnumVisitor)
     }
 }
@@ -2173,11 +2173,11 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path_lookup",
-                                                    "path_write",
-                                                    "too_many_write_operations",
-                                                    "too_many_files",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path_lookup",
+                                    "path_write",
+                                    "too_many_write_operations",
+                                    "too_many_files",
+                                    "other"];
         deserializer.deserialize_struct("DeleteError", VARIANTS, EnumVisitor)
     }
 }
@@ -2245,7 +2245,7 @@ impl DeleteResult {
 
 }
 
-const DELETE_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
+const DELETE_RESULT_FIELDS: &[&str] = &["metadata"];
 impl DeleteResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2354,10 +2354,10 @@ impl DeletedMetadata {
 
 }
 
-const DELETED_METADATA_FIELDS: &'static [&'static str] = &["name",
-                                                           "path_lower",
-                                                           "path_display",
-                                                           "parent_shared_folder_id"];
+const DELETED_METADATA_FIELDS: &[&str] = &["name",
+                                           "path_lower",
+                                           "path_display",
+                                           "parent_shared_folder_id"];
 impl DeletedMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2463,8 +2463,8 @@ impl Dimensions {
 
 }
 
-const DIMENSIONS_FIELDS: &'static [&'static str] = &["height",
-                                                     "width"];
+const DIMENSIONS_FIELDS: &[&str] = &["height",
+                                     "width"];
 impl Dimensions {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2556,8 +2556,8 @@ impl DownloadArg {
 
 }
 
-const DOWNLOAD_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                       "rev"];
+const DOWNLOAD_ARG_FIELDS: &[&str] = &["path",
+                                       "rev"];
 impl DownloadArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2659,8 +2659,8 @@ impl<'de> ::serde::de::Deserialize<'de> for DownloadError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "other"];
         deserializer.deserialize_struct("DownloadError", VARIANTS, EnumVisitor)
     }
 }
@@ -2709,7 +2709,7 @@ impl DownloadZipArg {
 
 }
 
-const DOWNLOAD_ZIP_ARG_FIELDS: &'static [&'static str] = &["path"];
+const DOWNLOAD_ZIP_ARG_FIELDS: &[&str] = &["path"];
 impl DownloadZipArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -2808,10 +2808,10 @@ impl<'de> ::serde::de::Deserialize<'de> for DownloadZipError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "too_large",
-                                                    "too_many_files",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "too_large",
+                                    "too_many_files",
+                                    "other"];
         deserializer.deserialize_struct("DownloadZipError", VARIANTS, EnumVisitor)
     }
 }
@@ -2871,7 +2871,7 @@ impl DownloadZipResult {
 
 }
 
-const DOWNLOAD_ZIP_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
+const DOWNLOAD_ZIP_RESULT_FIELDS: &[&str] = &["metadata"];
 impl DownloadZipResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3054,20 +3054,20 @@ impl FileMetadata {
 
 }
 
-const FILE_METADATA_FIELDS: &'static [&'static str] = &["name",
-                                                        "id",
-                                                        "client_modified",
-                                                        "server_modified",
-                                                        "rev",
-                                                        "size",
-                                                        "path_lower",
-                                                        "path_display",
-                                                        "parent_shared_folder_id",
-                                                        "media_info",
-                                                        "sharing_info",
-                                                        "property_groups",
-                                                        "has_explicit_shared_members",
-                                                        "content_hash"];
+const FILE_METADATA_FIELDS: &[&str] = &["name",
+                                        "id",
+                                        "client_modified",
+                                        "server_modified",
+                                        "rev",
+                                        "size",
+                                        "path_lower",
+                                        "path_display",
+                                        "parent_shared_folder_id",
+                                        "media_info",
+                                        "sharing_info",
+                                        "property_groups",
+                                        "has_explicit_shared_members",
+                                        "content_hash"];
 impl FileMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3255,7 +3255,7 @@ impl Default for FileOpsResult {
     }
 }
 
-const FILE_OPS_RESULT_FIELDS: &'static [&'static str] = &[];
+const FILE_OPS_RESULT_FIELDS: &[&str] = &[];
 impl FileOpsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3323,9 +3323,9 @@ impl FileSharingInfo {
 
 }
 
-const FILE_SHARING_INFO_FIELDS: &'static [&'static str] = &["read_only",
-                                                            "parent_shared_folder_id",
-                                                            "modified_by"];
+const FILE_SHARING_INFO_FIELDS: &[&str] = &["read_only",
+                                            "parent_shared_folder_id",
+                                            "modified_by"];
 impl FileSharingInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3483,14 +3483,14 @@ impl FolderMetadata {
 
 }
 
-const FOLDER_METADATA_FIELDS: &'static [&'static str] = &["name",
-                                                          "id",
-                                                          "path_lower",
-                                                          "path_display",
-                                                          "parent_shared_folder_id",
-                                                          "shared_folder_id",
-                                                          "sharing_info",
-                                                          "property_groups"];
+const FOLDER_METADATA_FIELDS: &[&str] = &["name",
+                                          "id",
+                                          "path_lower",
+                                          "path_display",
+                                          "parent_shared_folder_id",
+                                          "shared_folder_id",
+                                          "sharing_info",
+                                          "property_groups"];
 impl FolderMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3668,11 +3668,11 @@ impl FolderSharingInfo {
 
 }
 
-const FOLDER_SHARING_INFO_FIELDS: &'static [&'static str] = &["read_only",
-                                                              "parent_shared_folder_id",
-                                                              "shared_folder_id",
-                                                              "traverse_only",
-                                                              "no_access"];
+const FOLDER_SHARING_INFO_FIELDS: &[&str] = &["read_only",
+                                              "parent_shared_folder_id",
+                                              "shared_folder_id",
+                                              "traverse_only",
+                                              "no_access"];
 impl FolderSharingInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3783,7 +3783,7 @@ impl GetCopyReferenceArg {
 
 }
 
-const GET_COPY_REFERENCE_ARG_FIELDS: &'static [&'static str] = &["path"];
+const GET_COPY_REFERENCE_ARG_FIELDS: &[&str] = &["path"];
 impl GetCopyReferenceArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -3876,8 +3876,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GetCopyReferenceError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "other"];
         deserializer.deserialize_struct("GetCopyReferenceError", VARIANTS, EnumVisitor)
     }
 }
@@ -3937,9 +3937,9 @@ impl GetCopyReferenceResult {
 
 }
 
-const GET_COPY_REFERENCE_RESULT_FIELDS: &'static [&'static str] = &["metadata",
-                                                                    "copy_reference",
-                                                                    "expires"];
+const GET_COPY_REFERENCE_RESULT_FIELDS: &[&str] = &["metadata",
+                                                    "copy_reference",
+                                                    "expires"];
 impl GetCopyReferenceResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4070,11 +4070,11 @@ impl GetMetadataArg {
 
 }
 
-const GET_METADATA_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                           "include_media_info",
-                                                           "include_deleted",
-                                                           "include_has_explicit_shared_members",
-                                                           "include_property_groups"];
+const GET_METADATA_ARG_FIELDS: &[&str] = &["path",
+                                           "include_media_info",
+                                           "include_deleted",
+                                           "include_has_explicit_shared_members",
+                                           "include_property_groups"];
 impl GetMetadataArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4202,7 +4202,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetMetadataError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path"];
+        const VARIANTS: &[&str] = &["path"];
         deserializer.deserialize_struct("GetMetadataError", VARIANTS, EnumVisitor)
     }
 }
@@ -4250,7 +4250,7 @@ impl GetTemporaryLinkArg {
 
 }
 
-const GET_TEMPORARY_LINK_ARG_FIELDS: &'static [&'static str] = &["path"];
+const GET_TEMPORARY_LINK_ARG_FIELDS: &[&str] = &["path"];
 impl GetTemporaryLinkArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4343,8 +4343,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "other"];
         deserializer.deserialize_struct("GetTemporaryLinkError", VARIANTS, EnumVisitor)
     }
 }
@@ -4396,8 +4396,8 @@ impl GetTemporaryLinkResult {
 
 }
 
-const GET_TEMPORARY_LINK_RESULT_FIELDS: &'static [&'static str] = &["metadata",
-                                                                    "link"];
+const GET_TEMPORARY_LINK_RESULT_FIELDS: &[&str] = &["metadata",
+                                                    "link"];
 impl GetTemporaryLinkResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4482,7 +4482,7 @@ impl GetThumbnailBatchArg {
 
 }
 
-const GET_THUMBNAIL_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries"];
+const GET_THUMBNAIL_BATCH_ARG_FIELDS: &[&str] = &["entries"];
 impl GetThumbnailBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4570,8 +4570,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GetThumbnailBatchError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["too_many_files",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["too_many_files",
+                                    "other"];
         deserializer.deserialize_struct("GetThumbnailBatchError", VARIANTS, EnumVisitor)
     }
 }
@@ -4619,7 +4619,7 @@ impl GetThumbnailBatchResult {
 
 }
 
-const GET_THUMBNAIL_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
+const GET_THUMBNAIL_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
 impl GetThumbnailBatchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4695,8 +4695,8 @@ impl GetThumbnailBatchResultData {
 
 }
 
-const GET_THUMBNAIL_BATCH_RESULT_DATA_FIELDS: &'static [&'static str] = &["metadata",
-                                                                          "thumbnail"];
+const GET_THUMBNAIL_BATCH_RESULT_DATA_FIELDS: &[&str] = &["metadata",
+                                                          "thumbnail"];
 impl GetThumbnailBatchResultData {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -4801,9 +4801,9 @@ impl<'de> ::serde::de::Deserialize<'de> for GetThumbnailBatchResultEntry {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["success",
-                                                    "failure",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["success",
+                                    "failure",
+                                    "other"];
         deserializer.deserialize_struct("GetThumbnailBatchResultEntry", VARIANTS, EnumVisitor)
     }
 }
@@ -4851,8 +4851,8 @@ impl GpsCoordinates {
 
 }
 
-const GPS_COORDINATES_FIELDS: &'static [&'static str] = &["latitude",
-                                                          "longitude"];
+const GPS_COORDINATES_FIELDS: &[&str] = &["latitude",
+                                          "longitude"];
 impl GpsCoordinates {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5011,15 +5011,15 @@ impl ListFolderArg {
 
 }
 
-const LIST_FOLDER_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                          "recursive",
-                                                          "include_media_info",
-                                                          "include_deleted",
-                                                          "include_has_explicit_shared_members",
-                                                          "include_mounted_folders",
-                                                          "limit",
-                                                          "shared_link",
-                                                          "include_property_groups"];
+const LIST_FOLDER_ARG_FIELDS: &[&str] = &["path",
+                                          "recursive",
+                                          "include_media_info",
+                                          "include_deleted",
+                                          "include_has_explicit_shared_members",
+                                          "include_mounted_folders",
+                                          "limit",
+                                          "shared_link",
+                                          "include_property_groups"];
 impl ListFolderArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5167,7 +5167,7 @@ impl ListFolderContinueArg {
 
 }
 
-const LIST_FOLDER_CONTINUE_ARG_FIELDS: &'static [&'static str] = &["cursor"];
+const LIST_FOLDER_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl ListFolderContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5264,9 +5264,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderContinueError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "reset",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "reset",
+                                    "other"];
         deserializer.deserialize_struct("ListFolderContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -5339,8 +5339,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "other"];
         deserializer.deserialize_struct("ListFolderError", VARIANTS, EnumVisitor)
     }
 }
@@ -5390,7 +5390,7 @@ impl ListFolderGetLatestCursorResult {
 
 }
 
-const LIST_FOLDER_GET_LATEST_CURSOR_RESULT_FIELDS: &'static [&'static str] = &["cursor"];
+const LIST_FOLDER_GET_LATEST_CURSOR_RESULT_FIELDS: &[&str] = &["cursor"];
 impl ListFolderGetLatestCursorResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5477,8 +5477,8 @@ impl ListFolderLongpollArg {
 
 }
 
-const LIST_FOLDER_LONGPOLL_ARG_FIELDS: &'static [&'static str] = &["cursor",
-                                                                   "timeout"];
+const LIST_FOLDER_LONGPOLL_ARG_FIELDS: &[&str] = &["cursor",
+                                                   "timeout"];
 impl ListFolderLongpollArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5576,8 +5576,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderLongpollError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["reset",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["reset",
+                                    "other"];
         deserializer.deserialize_struct("ListFolderLongpollError", VARIANTS, EnumVisitor)
     }
 }
@@ -5635,8 +5635,8 @@ impl ListFolderLongpollResult {
 
 }
 
-const LIST_FOLDER_LONGPOLL_RESULT_FIELDS: &'static [&'static str] = &["changes",
-                                                                      "backoff"];
+const LIST_FOLDER_LONGPOLL_RESULT_FIELDS: &[&str] = &["changes",
+                                                      "backoff"];
 impl ListFolderLongpollResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5728,9 +5728,9 @@ impl ListFolderResult {
 
 }
 
-const LIST_FOLDER_RESULT_FIELDS: &'static [&'static str] = &["entries",
-                                                             "cursor",
-                                                             "has_more"];
+const LIST_FOLDER_RESULT_FIELDS: &[&str] = &["entries",
+                                             "cursor",
+                                             "has_more"];
 impl ListFolderResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5839,9 +5839,9 @@ impl ListRevisionsArg {
 
 }
 
-const LIST_REVISIONS_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                             "mode",
-                                                             "limit"];
+const LIST_REVISIONS_ARG_FIELDS: &[&str] = &["path",
+                                             "mode",
+                                             "limit"];
 impl ListRevisionsArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -5952,8 +5952,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "other"];
         deserializer.deserialize_struct("ListRevisionsError", VARIANTS, EnumVisitor)
     }
 }
@@ -6020,9 +6020,9 @@ impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsMode {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "id",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "id",
+                                    "other"];
         deserializer.deserialize_struct("ListRevisionsMode", VARIANTS, EnumVisitor)
     }
 }
@@ -6075,9 +6075,9 @@ impl ListRevisionsResult {
 
 }
 
-const LIST_REVISIONS_RESULT_FIELDS: &'static [&'static str] = &["is_deleted",
-                                                                "entries",
-                                                                "server_deleted"];
+const LIST_REVISIONS_RESULT_FIELDS: &[&str] = &["is_deleted",
+                                                "entries",
+                                                "server_deleted"];
 impl ListRevisionsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6201,12 +6201,12 @@ impl<'de> ::serde::de::Deserialize<'de> for LookupError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["malformed_path",
-                                                    "not_found",
-                                                    "not_file",
-                                                    "not_folder",
-                                                    "restricted_content",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["malformed_path",
+                                    "not_found",
+                                    "not_file",
+                                    "not_folder",
+                                    "restricted_content",
+                                    "other"];
         deserializer.deserialize_struct("LookupError", VARIANTS, EnumVisitor)
     }
 }
@@ -6300,8 +6300,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MediaInfo {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["pending",
-                                                    "metadata"];
+        const VARIANTS: &[&str] = &["pending",
+                                    "metadata"];
         deserializer.deserialize_struct("MediaInfo", VARIANTS, EnumVisitor)
     }
 }
@@ -6357,8 +6357,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MediaMetadata {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["video",
-                                                    "video"];
+        const VARIANTS: &[&str] = &["video",
+                                    "video"];
         deserializer.deserialize_struct("MediaMetadata", VARIANTS, EnumVisitor)
     }
 }
@@ -6420,9 +6420,9 @@ impl<'de> ::serde::de::Deserialize<'de> for Metadata {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["deleted",
-                                                    "deleted",
-                                                    "deleted"];
+        const VARIANTS: &[&str] = &["deleted",
+                                    "deleted",
+                                    "deleted"];
         deserializer.deserialize_struct("Metadata", VARIANTS, EnumVisitor)
     }
 }
@@ -6498,9 +6498,9 @@ impl Default for PhotoMetadata {
     }
 }
 
-const PHOTO_METADATA_FIELDS: &'static [&'static str] = &["dimensions",
-                                                         "location",
-                                                         "time_taken"];
+const PHOTO_METADATA_FIELDS: &[&str] = &["dimensions",
+                                         "location",
+                                         "time_taken"];
 impl PhotoMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6601,8 +6601,8 @@ impl PreviewArg {
 
 }
 
-const PREVIEW_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                      "rev"];
+const PREVIEW_ARG_FIELDS: &[&str] = &["path",
+                                      "rev"];
 impl PreviewArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6713,10 +6713,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PreviewError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "in_progress",
-                                                    "unsupported_extension",
-                                                    "unsupported_content"];
+        const VARIANTS: &[&str] = &["path",
+                                    "in_progress",
+                                    "unsupported_extension",
+                                    "unsupported_content"];
         deserializer.deserialize_struct("PreviewError", VARIANTS, EnumVisitor)
     }
 }
@@ -6813,11 +6813,11 @@ impl RelocationArg {
 
 }
 
-const RELOCATION_ARG_FIELDS: &'static [&'static str] = &["from_path",
-                                                         "to_path",
-                                                         "allow_shared_folder",
-                                                         "autorename",
-                                                         "allow_ownership_transfer"];
+const RELOCATION_ARG_FIELDS: &[&str] = &["from_path",
+                                         "to_path",
+                                         "allow_shared_folder",
+                                         "autorename",
+                                         "allow_ownership_transfer"];
 impl RelocationArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -6957,10 +6957,10 @@ impl RelocationBatchArg {
 
 }
 
-const RELOCATION_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries",
-                                                               "allow_shared_folder",
-                                                               "autorename",
-                                                               "allow_ownership_transfer"];
+const RELOCATION_BATCH_ARG_FIELDS: &[&str] = &["entries",
+                                               "allow_shared_folder",
+                                               "autorename",
+                                               "allow_ownership_transfer"];
 impl RelocationBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7122,18 +7122,18 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["from_lookup",
-                                                    "from_write",
-                                                    "to",
-                                                    "cant_copy_shared_folder",
-                                                    "cant_nest_shared_folder",
-                                                    "cant_move_folder_into_itself",
-                                                    "too_many_files",
-                                                    "duplicated_or_nested_paths",
-                                                    "cant_transfer_ownership",
-                                                    "insufficient_quota",
-                                                    "other",
-                                                    "too_many_write_operations"];
+        const VARIANTS: &[&str] = &["from_lookup",
+                                    "from_write",
+                                    "to",
+                                    "cant_copy_shared_folder",
+                                    "cant_nest_shared_folder",
+                                    "cant_move_folder_into_itself",
+                                    "too_many_files",
+                                    "duplicated_or_nested_paths",
+                                    "cant_transfer_ownership",
+                                    "insufficient_quota",
+                                    "other",
+                                    "too_many_write_operations"];
         deserializer.deserialize_struct("RelocationBatchError", VARIANTS, EnumVisitor)
     }
 }
@@ -7268,9 +7268,9 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchJobStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete",
-                                                    "failed"];
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed"];
         deserializer.deserialize_struct("RelocationBatchJobStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -7343,9 +7343,9 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchLaunch {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["async_job_id",
-                                                    "complete",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["async_job_id",
+                                    "complete",
+                                    "other"];
         deserializer.deserialize_struct("RelocationBatchLaunch", VARIANTS, EnumVisitor)
     }
 }
@@ -7388,7 +7388,7 @@ impl RelocationBatchResult {
 
 }
 
-const RELOCATION_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
+const RELOCATION_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
 impl RelocationBatchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7463,7 +7463,7 @@ impl RelocationBatchResultData {
 
 }
 
-const RELOCATION_BATCH_RESULT_DATA_FIELDS: &'static [&'static str] = &["metadata"];
+const RELOCATION_BATCH_RESULT_DATA_FIELDS: &[&str] = &["metadata"];
 impl RelocationBatchResultData {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7595,17 +7595,17 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["from_lookup",
-                                                    "from_write",
-                                                    "to",
-                                                    "cant_copy_shared_folder",
-                                                    "cant_nest_shared_folder",
-                                                    "cant_move_folder_into_itself",
-                                                    "too_many_files",
-                                                    "duplicated_or_nested_paths",
-                                                    "cant_transfer_ownership",
-                                                    "insufficient_quota",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["from_lookup",
+                                    "from_write",
+                                    "to",
+                                    "cant_copy_shared_folder",
+                                    "cant_nest_shared_folder",
+                                    "cant_move_folder_into_itself",
+                                    "too_many_files",
+                                    "duplicated_or_nested_paths",
+                                    "cant_transfer_ownership",
+                                    "insufficient_quota",
+                                    "other"];
         deserializer.deserialize_struct("RelocationError", VARIANTS, EnumVisitor)
     }
 }
@@ -7713,8 +7713,8 @@ impl RelocationPath {
 
 }
 
-const RELOCATION_PATH_FIELDS: &'static [&'static str] = &["from_path",
-                                                          "to_path"];
+const RELOCATION_PATH_FIELDS: &[&str] = &["from_path",
+                                          "to_path"];
 impl RelocationPath {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7798,7 +7798,7 @@ impl RelocationResult {
 
 }
 
-const RELOCATION_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
+const RELOCATION_RESULT_FIELDS: &[&str] = &["metadata"];
 impl RelocationResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7876,8 +7876,8 @@ impl RestoreArg {
 
 }
 
-const RESTORE_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                      "rev"];
+const RESTORE_ARG_FIELDS: &[&str] = &["path",
+                                      "rev"];
 impl RestoreArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -7992,10 +7992,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RestoreError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path_lookup",
-                                                    "path_write",
-                                                    "invalid_revision",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path_lookup",
+                                    "path_write",
+                                    "invalid_revision",
+                                    "other"];
         deserializer.deserialize_struct("RestoreError", VARIANTS, EnumVisitor)
     }
 }
@@ -8060,8 +8060,8 @@ impl SaveCopyReferenceArg {
 
 }
 
-const SAVE_COPY_REFERENCE_ARG_FIELDS: &'static [&'static str] = &["copy_reference",
-                                                                  "path"];
+const SAVE_COPY_REFERENCE_ARG_FIELDS: &[&str] = &["copy_reference",
+                                                  "path"];
 impl SaveCopyReferenceArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8176,12 +8176,12 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveCopyReferenceError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "invalid_copy_reference",
-                                                    "no_permission",
-                                                    "not_found",
-                                                    "too_many_files",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "invalid_copy_reference",
+                                    "no_permission",
+                                    "not_found",
+                                    "too_many_files",
+                                    "other"];
         deserializer.deserialize_struct("SaveCopyReferenceError", VARIANTS, EnumVisitor)
     }
 }
@@ -8254,7 +8254,7 @@ impl SaveCopyReferenceResult {
 
 }
 
-const SAVE_COPY_REFERENCE_RESULT_FIELDS: &'static [&'static str] = &["metadata"];
+const SAVE_COPY_REFERENCE_RESULT_FIELDS: &[&str] = &["metadata"];
 impl SaveCopyReferenceResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8332,8 +8332,8 @@ impl SaveUrlArg {
 
 }
 
-const SAVE_URL_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                       "url"];
+const SAVE_URL_ARG_FIELDS: &[&str] = &["path",
+                                       "url"];
 impl SaveUrlArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8444,11 +8444,11 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveUrlError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "download_failed",
-                                                    "invalid_url",
-                                                    "not_found",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "download_failed",
+                                    "invalid_url",
+                                    "not_found",
+                                    "other"];
         deserializer.deserialize_struct("SaveUrlError", VARIANTS, EnumVisitor)
     }
 }
@@ -8538,9 +8538,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveUrlJobStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete",
-                                                    "failed"];
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed"];
         deserializer.deserialize_struct("SaveUrlJobStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -8611,8 +8611,8 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveUrlResult {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["async_job_id",
-                                                    "complete"];
+        const VARIANTS: &[&str] = &["async_job_id",
+                                    "complete"];
         deserializer.deserialize_struct("SaveUrlResult", VARIANTS, EnumVisitor)
     }
 }
@@ -8685,11 +8685,11 @@ impl SearchArg {
 
 }
 
-const SEARCH_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                     "query",
-                                                     "start",
-                                                     "max_results",
-                                                     "mode"];
+const SEARCH_ARG_FIELDS: &[&str] = &["path",
+                                     "query",
+                                     "start",
+                                     "max_results",
+                                     "mode"];
 impl SearchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8818,8 +8818,8 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "other"];
         deserializer.deserialize_struct("SearchError", VARIANTS, EnumVisitor)
     }
 }
@@ -8871,8 +8871,8 @@ impl SearchMatch {
 
 }
 
-const SEARCH_MATCH_FIELDS: &'static [&'static str] = &["match_type",
-                                                       "metadata"];
+const SEARCH_MATCH_FIELDS: &[&str] = &["match_type",
+                                       "metadata"];
 impl SearchMatch {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -8975,9 +8975,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchMatchType {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["filename",
-                                                    "content",
-                                                    "both"];
+        const VARIANTS: &[&str] = &["filename",
+                                    "content",
+                                    "both"];
         deserializer.deserialize_struct("SearchMatchType", VARIANTS, EnumVisitor)
     }
 }
@@ -9042,9 +9042,9 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchMode {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["filename",
-                                                    "filename_and_content",
-                                                    "deleted_filename"];
+        const VARIANTS: &[&str] = &["filename",
+                                    "filename_and_content",
+                                    "deleted_filename"];
         deserializer.deserialize_struct("SearchMode", VARIANTS, EnumVisitor)
     }
 }
@@ -9099,9 +9099,9 @@ impl SearchResult {
 
 }
 
-const SEARCH_RESULT_FIELDS: &'static [&'static str] = &["matches",
-                                                        "more",
-                                                        "start"];
+const SEARCH_RESULT_FIELDS: &[&str] = &["matches",
+                                        "more",
+                                        "start"];
 impl SearchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9202,8 +9202,8 @@ impl SharedLink {
 
 }
 
-const SHARED_LINK_FIELDS: &'static [&'static str] = &["url",
-                                                      "password"];
+const SHARED_LINK_FIELDS: &[&str] = &["url",
+                                      "password"];
 impl SharedLink {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9288,7 +9288,7 @@ impl SharingInfo {
 
 }
 
-const SHARING_INFO_FIELDS: &'static [&'static str] = &["read_only"];
+const SHARING_INFO_FIELDS: &[&str] = &["read_only"];
 impl SharingInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9380,9 +9380,9 @@ impl ThumbnailArg {
 
 }
 
-const THUMBNAIL_ARG_FIELDS: &'static [&'static str] = &["path",
-                                                        "format",
-                                                        "size"];
+const THUMBNAIL_ARG_FIELDS: &[&str] = &["path",
+                                        "format",
+                                        "size"];
 impl ThumbnailArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9502,10 +9502,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "unsupported_extension",
-                                                    "unsupported_image",
-                                                    "conversion_error"];
+        const VARIANTS: &[&str] = &["path",
+                                    "unsupported_extension",
+                                    "unsupported_image",
+                                    "conversion_error"];
         deserializer.deserialize_struct("ThumbnailError", VARIANTS, EnumVisitor)
     }
 }
@@ -9584,8 +9584,8 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailFormat {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["jpeg",
-                                                    "png"];
+        const VARIANTS: &[&str] = &["jpeg",
+                                    "png"];
         deserializer.deserialize_struct("ThumbnailFormat", VARIANTS, EnumVisitor)
     }
 }
@@ -9650,11 +9650,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["w32h32",
-                                                    "w64h64",
-                                                    "w128h128",
-                                                    "w640h480",
-                                                    "w1024h768"];
+        const VARIANTS: &[&str] = &["w32h32",
+                                    "w64h64",
+                                    "w128h128",
+                                    "w640h480",
+                                    "w1024h768"];
         deserializer.deserialize_struct("ThumbnailSize", VARIANTS, EnumVisitor)
     }
 }
@@ -9735,9 +9735,9 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "properties_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "properties_error",
+                                    "other"];
         deserializer.deserialize_struct("UploadError", VARIANTS, EnumVisitor)
     }
 }
@@ -9815,9 +9815,9 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadErrorWithProperties {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["path",
-                                                    "properties_error",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["path",
+                                    "properties_error",
+                                    "other"];
         deserializer.deserialize_struct("UploadErrorWithProperties", VARIANTS, EnumVisitor)
     }
 }
@@ -9870,8 +9870,8 @@ impl UploadSessionAppendArg {
 
 }
 
-const UPLOAD_SESSION_APPEND_ARG_FIELDS: &'static [&'static str] = &["cursor",
-                                                                    "close"];
+const UPLOAD_SESSION_APPEND_ARG_FIELDS: &[&str] = &["cursor",
+                                                    "close"];
 impl UploadSessionAppendArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -9959,8 +9959,8 @@ impl UploadSessionCursor {
 
 }
 
-const UPLOAD_SESSION_CURSOR_FIELDS: &'static [&'static str] = &["session_id",
-                                                                "offset"];
+const UPLOAD_SESSION_CURSOR_FIELDS: &[&str] = &["session_id",
+                                                "offset"];
 impl UploadSessionCursor {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10047,8 +10047,8 @@ impl UploadSessionFinishArg {
 
 }
 
-const UPLOAD_SESSION_FINISH_ARG_FIELDS: &'static [&'static str] = &["cursor",
-                                                                    "commit"];
+const UPLOAD_SESSION_FINISH_ARG_FIELDS: &[&str] = &["cursor",
+                                                    "commit"];
 impl UploadSessionFinishArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10132,7 +10132,7 @@ impl UploadSessionFinishBatchArg {
 
 }
 
-const UPLOAD_SESSION_FINISH_BATCH_ARG_FIELDS: &'static [&'static str] = &["entries"];
+const UPLOAD_SESSION_FINISH_BATCH_ARG_FIELDS: &[&str] = &["entries"];
 impl UploadSessionFinishBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10222,8 +10222,8 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchJobStatus {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["in_progress",
-                                                    "complete"];
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete"];
         deserializer.deserialize_struct("UploadSessionFinishBatchJobStatus", VARIANTS, EnumVisitor)
     }
 }
@@ -10289,9 +10289,9 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchLaunch {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["async_job_id",
-                                                    "complete",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["async_job_id",
+                                    "complete",
+                                    "other"];
         deserializer.deserialize_struct("UploadSessionFinishBatchLaunch", VARIANTS, EnumVisitor)
     }
 }
@@ -10335,7 +10335,7 @@ impl UploadSessionFinishBatchResult {
 
 }
 
-const UPLOAD_SESSION_FINISH_BATCH_RESULT_FIELDS: &'static [&'static str] = &["entries"];
+const UPLOAD_SESSION_FINISH_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
 impl UploadSessionFinishBatchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10429,8 +10429,8 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchResultEntry 
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["success",
-                                                    "failure"];
+        const VARIANTS: &[&str] = &["success",
+                                    "failure"];
         deserializer.deserialize_struct("UploadSessionFinishBatchResultEntry", VARIANTS, EnumVisitor)
     }
 }
@@ -10509,11 +10509,11 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["lookup_failed",
-                                                    "path",
-                                                    "too_many_shared_folder_targets",
-                                                    "too_many_write_operations",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["lookup_failed",
+                                    "path",
+                                    "too_many_shared_folder_targets",
+                                    "too_many_write_operations",
+                                    "other"];
         deserializer.deserialize_struct("UploadSessionFinishError", VARIANTS, EnumVisitor)
     }
 }
@@ -10606,11 +10606,11 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionLookupError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["not_found",
-                                                    "incorrect_offset",
-                                                    "closed",
-                                                    "not_closed",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["not_found",
+                                    "incorrect_offset",
+                                    "closed",
+                                    "not_closed",
+                                    "other"];
         deserializer.deserialize_struct("UploadSessionLookupError", VARIANTS, EnumVisitor)
     }
 }
@@ -10677,7 +10677,7 @@ impl UploadSessionOffsetError {
 
 }
 
-const UPLOAD_SESSION_OFFSET_ERROR_FIELDS: &'static [&'static str] = &["correct_offset"];
+const UPLOAD_SESSION_OFFSET_ERROR_FIELDS: &[&str] = &["correct_offset"];
 impl UploadSessionOffsetError {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10752,7 +10752,7 @@ impl Default for UploadSessionStartArg {
     }
 }
 
-const UPLOAD_SESSION_START_ARG_FIELDS: &'static [&'static str] = &["close"];
+const UPLOAD_SESSION_START_ARG_FIELDS: &[&str] = &["close"];
 impl UploadSessionStartArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10828,7 +10828,7 @@ impl UploadSessionStartResult {
 
 }
 
-const UPLOAD_SESSION_START_RESULT_FIELDS: &'static [&'static str] = &["session_id"];
+const UPLOAD_SESSION_START_RESULT_FIELDS: &[&str] = &["session_id"];
 impl UploadSessionStartResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -10906,8 +10906,8 @@ impl UploadWriteFailed {
 
 }
 
-const UPLOAD_WRITE_FAILED_FIELDS: &'static [&'static str] = &["reason",
-                                                              "upload_session_id"];
+const UPLOAD_WRITE_FAILED_FIELDS: &[&str] = &["reason",
+                                              "upload_session_id"];
 impl UploadWriteFailed {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -11000,10 +11000,10 @@ impl Default for VideoMetadata {
     }
 }
 
-const VIDEO_METADATA_FIELDS: &'static [&'static str] = &["dimensions",
-                                                         "location",
-                                                         "time_taken",
-                                                         "duration"];
+const VIDEO_METADATA_FIELDS: &[&str] = &["dimensions",
+                                         "location",
+                                         "time_taken",
+                                         "duration"];
 impl VideoMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -11124,10 +11124,10 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteConflictError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["file",
-                                                    "folder",
-                                                    "file_ancestor",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["file",
+                                    "folder",
+                                    "file_ancestor",
+                                    "other"];
         deserializer.deserialize_struct("WriteConflictError", VARIANTS, EnumVisitor)
     }
 }
@@ -11226,13 +11226,13 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteError {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["malformed_path",
-                                                    "conflict",
-                                                    "no_write_permission",
-                                                    "insufficient_space",
-                                                    "disallowed_name",
-                                                    "team_folder",
-                                                    "other"];
+        const VARIANTS: &[&str] = &["malformed_path",
+                                    "conflict",
+                                    "no_write_permission",
+                                    "insufficient_space",
+                                    "disallowed_name",
+                                    "team_folder",
+                                    "other"];
         deserializer.deserialize_struct("WriteError", VARIANTS, EnumVisitor)
     }
 }
@@ -11348,9 +11348,9 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteMode {
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["add",
-                                                    "overwrite",
-                                                    "update"];
+        const VARIANTS: &[&str] = &["add",
+                                    "overwrite",
+                                    "update"];
         deserializer.deserialize_struct("WriteMode", VARIANTS, EnumVisitor)
     }
 }
