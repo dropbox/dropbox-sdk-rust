@@ -1353,7 +1353,7 @@ impl ::serde::ser::Serialize for SpaceAllocation {
             }
             SpaceAllocation::Team(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SpaceAllocation", 3)?;
+                let mut s = serializer.serialize_struct("SpaceAllocation", 5)?;
                 s.serialize_field(".tag", "team")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -1547,20 +1547,34 @@ pub struct TeamSpaceAllocation {
     pub used: u64,
     /// The total space allocated to the user's team (bytes).
     pub allocated: u64,
+    /// The total space allocated to the user within its team allocated space (0 means that no
+    /// restriction is imposed on the user's quota within its team).
+    pub user_within_team_space_allocated: u64,
+    /// The type of the space limit imposed on the team member (off, alert_only, stop_sync).
+    pub user_within_team_space_limit_type: super::team_common::MemberSpaceLimitType,
 }
 
 impl TeamSpaceAllocation {
-    pub fn new(used: u64, allocated: u64) -> Self {
+    pub fn new(
+        used: u64,
+        allocated: u64,
+        user_within_team_space_allocated: u64,
+        user_within_team_space_limit_type: super::team_common::MemberSpaceLimitType,
+    ) -> Self {
         TeamSpaceAllocation {
             used,
             allocated,
+            user_within_team_space_allocated,
+            user_within_team_space_limit_type,
         }
     }
 
 }
 
 const TEAM_SPACE_ALLOCATION_FIELDS: &'static [&'static str] = &["used",
-                                                                "allocated"];
+                                                                "allocated",
+                                                                "user_within_team_space_allocated",
+                                                                "user_within_team_space_limit_type"];
 impl TeamSpaceAllocation {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -1568,6 +1582,8 @@ impl TeamSpaceAllocation {
         use serde::de;
         let mut field_used = None;
         let mut field_allocated = None;
+        let mut field_user_within_team_space_allocated = None;
+        let mut field_user_within_team_space_limit_type = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "used" => {
@@ -1582,12 +1598,26 @@ impl TeamSpaceAllocation {
                     }
                     field_allocated = Some(map.next_value()?);
                 }
+                "user_within_team_space_allocated" => {
+                    if field_user_within_team_space_allocated.is_some() {
+                        return Err(de::Error::duplicate_field("user_within_team_space_allocated"));
+                    }
+                    field_user_within_team_space_allocated = Some(map.next_value()?);
+                }
+                "user_within_team_space_limit_type" => {
+                    if field_user_within_team_space_limit_type.is_some() {
+                        return Err(de::Error::duplicate_field("user_within_team_space_limit_type"));
+                    }
+                    field_user_within_team_space_limit_type = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, TEAM_SPACE_ALLOCATION_FIELDS))
             }
         }
         Ok(TeamSpaceAllocation {
             used: field_used.ok_or_else(|| de::Error::missing_field("used"))?,
             allocated: field_allocated.ok_or_else(|| de::Error::missing_field("allocated"))?,
+            user_within_team_space_allocated: field_user_within_team_space_allocated.ok_or_else(|| de::Error::missing_field("user_within_team_space_allocated"))?,
+            user_within_team_space_limit_type: field_user_within_team_space_limit_type.ok_or_else(|| de::Error::missing_field("user_within_team_space_limit_type"))?,
         })
     }
 
@@ -1597,7 +1627,9 @@ impl TeamSpaceAllocation {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("used", &self.used)?;
-        s.serialize_field("allocated", &self.allocated)
+        s.serialize_field("allocated", &self.allocated)?;
+        s.serialize_field("user_within_team_space_allocated", &self.user_within_team_space_allocated)?;
+        s.serialize_field("user_within_team_space_limit_type", &self.user_within_team_space_limit_type)
     }
 }
 
@@ -1623,7 +1655,7 @@ impl ::serde::ser::Serialize for TeamSpaceAllocation {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamSpaceAllocation", 2)?;
+        let mut s = serializer.serialize_struct("TeamSpaceAllocation", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

@@ -287,6 +287,79 @@ impl ::serde::ser::Serialize for GroupType {
     }
 }
 
+/// The type of the space limit imposed on a team member.
+#[derive(Debug)]
+pub enum MemberSpaceLimitType {
+    /// The team member does not have imposed space limit.
+    Off,
+    /// The team member has soft imposed space limit - the limit is used for display and for
+    /// notifications.
+    AlertOnly,
+    /// The team member has hard imposed space limit - Dropbox file sync will stop after the limit
+    /// is reached.
+    StopSync,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MemberSpaceLimitType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MemberSpaceLimitType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "off" => Ok(MemberSpaceLimitType::Off),
+                    "alert_only" => Ok(MemberSpaceLimitType::AlertOnly),
+                    "stop_sync" => Ok(MemberSpaceLimitType::StopSync),
+                    _ => Ok(MemberSpaceLimitType::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["off",
+                                                    "alert_only",
+                                                    "stop_sync",
+                                                    "other"];
+        deserializer.deserialize_struct("MemberSpaceLimitType", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberSpaceLimitType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MemberSpaceLimitType::Off => {
+                // unit
+                let mut s = serializer.serialize_struct("MemberSpaceLimitType", 1)?;
+                s.serialize_field(".tag", "off")?;
+                s.end()
+            }
+            MemberSpaceLimitType::AlertOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("MemberSpaceLimitType", 1)?;
+                s.serialize_field(".tag", "alert_only")?;
+                s.end()
+            }
+            MemberSpaceLimitType::StopSync => {
+                // unit
+                let mut s = serializer.serialize_struct("MemberSpaceLimitType", 1)?;
+                s.serialize_field(".tag", "stop_sync")?;
+                s.end()
+            }
+            MemberSpaceLimitType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Time range.
 #[derive(Debug)]
 pub struct TimeRange {

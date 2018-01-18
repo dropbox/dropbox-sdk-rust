@@ -11554,6 +11554,8 @@ pub enum MembersRemoveError {
     CannotKeepAccountAndDeleteData,
     /// The email address of the user is too long to be disabled.
     EmailAddressTooLongToBeDisabled,
+    /// Cannot keep account of an invited user.
+    CannotKeepInvitedUserAccount,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
@@ -11586,6 +11588,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
                     "cannot_keep_account_and_transfer" => Ok(MembersRemoveError::CannotKeepAccountAndTransfer),
                     "cannot_keep_account_and_delete_data" => Ok(MembersRemoveError::CannotKeepAccountAndDeleteData),
                     "email_address_too_long_to_be_disabled" => Ok(MembersRemoveError::EmailAddressTooLongToBeDisabled),
+                    "cannot_keep_invited_user_account" => Ok(MembersRemoveError::CannotKeepInvitedUserAccount),
                     _ => Ok(MembersRemoveError::Other)
                 }
             }
@@ -11604,7 +11607,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
                                                     "transfer_admin_is_not_admin",
                                                     "cannot_keep_account_and_transfer",
                                                     "cannot_keep_account_and_delete_data",
-                                                    "email_address_too_long_to_be_disabled"];
+                                                    "email_address_too_long_to_be_disabled",
+                                                    "cannot_keep_invited_user_account"];
         deserializer.deserialize_struct("MembersRemoveError", VARIANTS, EnumVisitor)
     }
 }
@@ -11696,6 +11700,12 @@ impl ::serde::ser::Serialize for MembersRemoveError {
                 // unit
                 let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
                 s.serialize_field(".tag", "email_address_too_long_to_be_disabled")?;
+                s.end()
+            }
+            MembersRemoveError::CannotKeepInvitedUserAccount => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
+                s.serialize_field(".tag", "cannot_keep_invited_user_account")?;
                 s.end()
             }
             MembersRemoveError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -13000,8 +13010,8 @@ pub struct NamespaceMetadata {
     pub namespace_id: super::common::SharedFolderId,
     /// The type of this namespace.
     pub namespace_type: NamespaceType,
-    /// If this is a team member folder, the ID of the team member. Otherwise, this field is not
-    /// present.
+    /// If this is a team member or app folder, the ID of the owning team member. Otherwise, this
+    /// field is not present.
     pub team_member_id: Option<super::team_common::TeamMemberId>,
 }
 

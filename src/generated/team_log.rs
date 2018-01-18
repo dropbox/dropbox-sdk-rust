@@ -9,6 +9,7 @@
 )]
 
 pub type AppId = String;
+pub type DeviceSessionId = String;
 pub type EmailAddress = String;
 pub type FilePath = String;
 pub type IpAddress = String;
@@ -689,6 +690,156 @@ impl ::serde::ser::Serialize for AccountCaptureMigrateAccountType {
     }
 }
 
+/// Proactive account capture email sent to all unmanaged members.
+#[derive(Debug)]
+pub struct AccountCaptureNotificationEmailsSentDetails {
+    /// Domain name.
+    pub domain_name: String,
+}
+
+impl AccountCaptureNotificationEmailsSentDetails {
+    pub fn new(domain_name: String) -> Self {
+        AccountCaptureNotificationEmailsSentDetails {
+            domain_name,
+        }
+    }
+
+}
+
+const ACCOUNT_CAPTURE_NOTIFICATION_EMAILS_SENT_DETAILS_FIELDS: &'static [&'static str] = &["domain_name"];
+impl AccountCaptureNotificationEmailsSentDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AccountCaptureNotificationEmailsSentDetails, V::Error> {
+        use serde::de;
+        let mut field_domain_name = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "domain_name" => {
+                    if field_domain_name.is_some() {
+                        return Err(de::Error::duplicate_field("domain_name"));
+                    }
+                    field_domain_name = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, ACCOUNT_CAPTURE_NOTIFICATION_EMAILS_SENT_DETAILS_FIELDS))
+            }
+        }
+        Ok(AccountCaptureNotificationEmailsSentDetails {
+            domain_name: field_domain_name.ok_or_else(|| de::Error::missing_field("domain_name"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("domain_name", &self.domain_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureNotificationEmailsSentDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = AccountCaptureNotificationEmailsSentDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a AccountCaptureNotificationEmailsSentDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                AccountCaptureNotificationEmailsSentDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("AccountCaptureNotificationEmailsSentDetails", ACCOUNT_CAPTURE_NOTIFICATION_EMAILS_SENT_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AccountCaptureNotificationEmailsSentDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("AccountCaptureNotificationEmailsSentDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct AccountCaptureNotificationEmailsSentType {
+    pub description: String,
+}
+
+impl AccountCaptureNotificationEmailsSentType {
+    pub fn new(description: String) -> Self {
+        AccountCaptureNotificationEmailsSentType {
+            description,
+        }
+    }
+
+}
+
+const ACCOUNT_CAPTURE_NOTIFICATION_EMAILS_SENT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl AccountCaptureNotificationEmailsSentType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<AccountCaptureNotificationEmailsSentType, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, ACCOUNT_CAPTURE_NOTIFICATION_EMAILS_SENT_TYPE_FIELDS))
+            }
+        }
+        Ok(AccountCaptureNotificationEmailsSentType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AccountCaptureNotificationEmailsSentType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = AccountCaptureNotificationEmailsSentType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a AccountCaptureNotificationEmailsSentType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                AccountCaptureNotificationEmailsSentType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("AccountCaptureNotificationEmailsSentType", ACCOUNT_CAPTURE_NOTIFICATION_EMAILS_SENT_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AccountCaptureNotificationEmailsSentType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("AccountCaptureNotificationEmailsSentType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 #[derive(Debug)]
 pub enum AccountCapturePolicy {
     Disabled,
@@ -904,6 +1055,75 @@ impl ::serde::ser::Serialize for AccountCaptureRelinquishAccountType {
         let mut s = serializer.serialize_struct("AccountCaptureRelinquishAccountType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+/// Additional information indicating the action taken that caused status change.
+#[derive(Debug)]
+pub enum ActionDetails {
+    /// Additional information relevant when a new member joins the team.
+    TeamJoinDetails(JoinTeamDetails),
+    /// Define how the user was removed from the team.
+    RemoveAction(MemberRemoveActionType),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ActionDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ActionDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ActionDetails structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "team_join_details" => Ok(ActionDetails::TeamJoinDetails(JoinTeamDetails::internal_deserialize(map)?)),
+                    "remove_action" => {
+                        match map.next_key()? {
+                            Some("remove_action") => Ok(ActionDetails::RemoveAction(map.next_value()?)),
+                            None => Err(de::Error::missing_field("remove_action")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => Ok(ActionDetails::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["team_join_details",
+                                                    "remove_action",
+                                                    "other"];
+        deserializer.deserialize_struct("ActionDetails", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ActionDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ActionDetails::TeamJoinDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("ActionDetails", 4)?;
+                s.serialize_field(".tag", "team_join_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            ActionDetails::RemoveAction(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("{}", 2)?;
+                s.serialize_field(".tag", "remove_action")?;
+                s.serialize_field("remove_action", x)?;
+                s.end()
+            }
+            ActionDetails::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 
@@ -2514,64 +2734,6 @@ impl ::serde::ser::Serialize for CollectionShareType {
     }
 }
 
-#[derive(Debug)]
-pub enum Confidentiality {
-    Confidential,
-    NonConfidential,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for Confidentiality {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = Confidentiality;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a Confidentiality structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "confidential" => Ok(Confidentiality::Confidential),
-                    "non_confidential" => Ok(Confidentiality::NonConfidential),
-                    _ => Ok(Confidentiality::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["confidential",
-                                                    "non_confidential",
-                                                    "other"];
-        deserializer.deserialize_struct("Confidentiality", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for Confidentiality {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            Confidentiality::Confidential => {
-                // unit
-                let mut s = serializer.serialize_struct("Confidentiality", 1)?;
-                s.serialize_field(".tag", "confidential")?;
-                s.end()
-            }
-            Confidentiality::NonConfidential => {
-                // unit
-                let mut s = serializer.serialize_struct("Confidentiality", 1)?;
-                s.serialize_field(".tag", "non_confidential")?;
-                s.end()
-            }
-            Confidentiality::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
 /// Policy for pemanent content deletion
 #[derive(Debug)]
 pub enum ContentPermanentDeletePolicy {
@@ -3149,6 +3311,218 @@ impl ::serde::ser::Serialize for DataPlacementRestrictionSatisfyPolicyType {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("DataPlacementRestrictionSatisfyPolicyType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Information about linked Dropbox desktop client sessions
+#[derive(Debug)]
+pub struct DesktopDeviceSessionLogInfo {
+    /// Name of the hosting desktop.
+    pub host_name: String,
+    /// The Dropbox desktop client type.
+    pub client_type: super::team::DesktopPlatform,
+    /// Information on the hosting platform.
+    pub platform: String,
+    /// Whether itu2019s possible to delete all of the account files upon unlinking.
+    pub is_delete_on_unlink_supported: bool,
+    /// Session unique id. Might be missing due to historical data gap.
+    pub session_id: Option<DeviceSessionId>,
+    /// The IP address of the last activity from this session. Might be missing due to historical
+    /// data gap.
+    pub ip_address: Option<IpAddress>,
+    /// The time this session was created. Might be missing due to historical data gap.
+    pub created: Option<super::common::DropboxTimestamp>,
+    /// The time of the last activity from this session. Might be missing due to historical data
+    /// gap.
+    pub updated: Option<super::common::DropboxTimestamp>,
+    /// The Dropbox client version.
+    pub client_version: Option<String>,
+}
+
+impl DesktopDeviceSessionLogInfo {
+    pub fn new(
+        host_name: String,
+        client_type: super::team::DesktopPlatform,
+        platform: String,
+        is_delete_on_unlink_supported: bool,
+    ) -> Self {
+        DesktopDeviceSessionLogInfo {
+            host_name,
+            client_type,
+            platform,
+            is_delete_on_unlink_supported,
+            session_id: None,
+            ip_address: None,
+            created: None,
+            updated: None,
+            client_version: None,
+        }
+    }
+
+    pub fn with_session_id(mut self, value: Option<DeviceSessionId>) -> Self {
+        self.session_id = value;
+        self
+    }
+
+    pub fn with_ip_address(mut self, value: Option<IpAddress>) -> Self {
+        self.ip_address = value;
+        self
+    }
+
+    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.created = value;
+        self
+    }
+
+    pub fn with_updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.updated = value;
+        self
+    }
+
+    pub fn with_client_version(mut self, value: Option<String>) -> Self {
+        self.client_version = value;
+        self
+    }
+
+}
+
+const DESKTOP_DEVICE_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["host_name",
+                                                                          "client_type",
+                                                                          "platform",
+                                                                          "is_delete_on_unlink_supported",
+                                                                          "session_id",
+                                                                          "ip_address",
+                                                                          "created",
+                                                                          "updated",
+                                                                          "client_version"];
+impl DesktopDeviceSessionLogInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DesktopDeviceSessionLogInfo, V::Error> {
+        use serde::de;
+        let mut field_host_name = None;
+        let mut field_client_type = None;
+        let mut field_platform = None;
+        let mut field_is_delete_on_unlink_supported = None;
+        let mut field_session_id = None;
+        let mut field_ip_address = None;
+        let mut field_created = None;
+        let mut field_updated = None;
+        let mut field_client_version = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "host_name" => {
+                    if field_host_name.is_some() {
+                        return Err(de::Error::duplicate_field("host_name"));
+                    }
+                    field_host_name = Some(map.next_value()?);
+                }
+                "client_type" => {
+                    if field_client_type.is_some() {
+                        return Err(de::Error::duplicate_field("client_type"));
+                    }
+                    field_client_type = Some(map.next_value()?);
+                }
+                "platform" => {
+                    if field_platform.is_some() {
+                        return Err(de::Error::duplicate_field("platform"));
+                    }
+                    field_platform = Some(map.next_value()?);
+                }
+                "is_delete_on_unlink_supported" => {
+                    if field_is_delete_on_unlink_supported.is_some() {
+                        return Err(de::Error::duplicate_field("is_delete_on_unlink_supported"));
+                    }
+                    field_is_delete_on_unlink_supported = Some(map.next_value()?);
+                }
+                "session_id" => {
+                    if field_session_id.is_some() {
+                        return Err(de::Error::duplicate_field("session_id"));
+                    }
+                    field_session_id = Some(map.next_value()?);
+                }
+                "ip_address" => {
+                    if field_ip_address.is_some() {
+                        return Err(de::Error::duplicate_field("ip_address"));
+                    }
+                    field_ip_address = Some(map.next_value()?);
+                }
+                "created" => {
+                    if field_created.is_some() {
+                        return Err(de::Error::duplicate_field("created"));
+                    }
+                    field_created = Some(map.next_value()?);
+                }
+                "updated" => {
+                    if field_updated.is_some() {
+                        return Err(de::Error::duplicate_field("updated"));
+                    }
+                    field_updated = Some(map.next_value()?);
+                }
+                "client_version" => {
+                    if field_client_version.is_some() {
+                        return Err(de::Error::duplicate_field("client_version"));
+                    }
+                    field_client_version = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, DESKTOP_DEVICE_SESSION_LOG_INFO_FIELDS))
+            }
+        }
+        Ok(DesktopDeviceSessionLogInfo {
+            host_name: field_host_name.ok_or_else(|| de::Error::missing_field("host_name"))?,
+            client_type: field_client_type.ok_or_else(|| de::Error::missing_field("client_type"))?,
+            platform: field_platform.ok_or_else(|| de::Error::missing_field("platform"))?,
+            is_delete_on_unlink_supported: field_is_delete_on_unlink_supported.ok_or_else(|| de::Error::missing_field("is_delete_on_unlink_supported"))?,
+            session_id: field_session_id,
+            ip_address: field_ip_address,
+            created: field_created,
+            updated: field_updated,
+            client_version: field_client_version,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("host_name", &self.host_name)?;
+        s.serialize_field("client_type", &self.client_type)?;
+        s.serialize_field("platform", &self.platform)?;
+        s.serialize_field("is_delete_on_unlink_supported", &self.is_delete_on_unlink_supported)?;
+        s.serialize_field("session_id", &self.session_id)?;
+        s.serialize_field("ip_address", &self.ip_address)?;
+        s.serialize_field("created", &self.created)?;
+        s.serialize_field("updated", &self.updated)?;
+        s.serialize_field("client_version", &self.client_version)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DesktopDeviceSessionLogInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DesktopDeviceSessionLogInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DesktopDeviceSessionLogInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DesktopDeviceSessionLogInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DesktopDeviceSessionLogInfo", DESKTOP_DEVICE_SESSION_LOG_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DesktopDeviceSessionLogInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DesktopDeviceSessionLogInfo", 9)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -3942,39 +4316,39 @@ impl ::serde::ser::Serialize for DeviceApprovalsPolicy {
 /// IP address associated with active desktop session changed.
 #[derive(Debug)]
 pub struct DeviceChangeIpDesktopDetails {
-    /// Device information.
-    pub device_info: DeviceLogInfo,
+    /// Device's session logged information.
+    pub device_session_info: DeviceSessionLogInfo,
 }
 
 impl DeviceChangeIpDesktopDetails {
-    pub fn new(device_info: DeviceLogInfo) -> Self {
+    pub fn new(device_session_info: DeviceSessionLogInfo) -> Self {
         DeviceChangeIpDesktopDetails {
-            device_info,
+            device_session_info,
         }
     }
 
 }
 
-const DEVICE_CHANGE_IP_DESKTOP_DETAILS_FIELDS: &'static [&'static str] = &["device_info"];
+const DEVICE_CHANGE_IP_DESKTOP_DETAILS_FIELDS: &'static [&'static str] = &["device_session_info"];
 impl DeviceChangeIpDesktopDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DeviceChangeIpDesktopDetails, V::Error> {
         use serde::de;
-        let mut field_device_info = None;
+        let mut field_device_session_info = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "device_info" => {
-                    if field_device_info.is_some() {
-                        return Err(de::Error::duplicate_field("device_info"));
+                "device_session_info" => {
+                    if field_device_session_info.is_some() {
+                        return Err(de::Error::duplicate_field("device_session_info"));
                     }
-                    field_device_info = Some(map.next_value()?);
+                    field_device_session_info = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, DEVICE_CHANGE_IP_DESKTOP_DETAILS_FIELDS))
             }
         }
         Ok(DeviceChangeIpDesktopDetails {
-            device_info: field_device_info.ok_or_else(|| de::Error::missing_field("device_info"))?,
+            device_session_info: field_device_session_info.ok_or_else(|| de::Error::missing_field("device_session_info"))?,
         })
     }
 
@@ -3983,7 +4357,7 @@ impl DeviceChangeIpDesktopDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("device_info", &self.device_info)
+        s.serialize_field("device_session_info", &self.device_session_info)
     }
 }
 
@@ -4092,39 +4466,39 @@ impl ::serde::ser::Serialize for DeviceChangeIpDesktopType {
 /// IP address associated with active mobile session changed.
 #[derive(Debug)]
 pub struct DeviceChangeIpMobileDetails {
-    /// Device information.
-    pub device_info: DeviceLogInfo,
+    /// Device's session logged information.
+    pub device_session_info: DeviceSessionLogInfo,
 }
 
 impl DeviceChangeIpMobileDetails {
-    pub fn new(device_info: DeviceLogInfo) -> Self {
+    pub fn new(device_session_info: DeviceSessionLogInfo) -> Self {
         DeviceChangeIpMobileDetails {
-            device_info,
+            device_session_info,
         }
     }
 
 }
 
-const DEVICE_CHANGE_IP_MOBILE_DETAILS_FIELDS: &'static [&'static str] = &["device_info"];
+const DEVICE_CHANGE_IP_MOBILE_DETAILS_FIELDS: &'static [&'static str] = &["device_session_info"];
 impl DeviceChangeIpMobileDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DeviceChangeIpMobileDetails, V::Error> {
         use serde::de;
-        let mut field_device_info = None;
+        let mut field_device_session_info = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "device_info" => {
-                    if field_device_info.is_some() {
-                        return Err(de::Error::duplicate_field("device_info"));
+                "device_session_info" => {
+                    if field_device_session_info.is_some() {
+                        return Err(de::Error::duplicate_field("device_session_info"));
                     }
-                    field_device_info = Some(map.next_value()?);
+                    field_device_session_info = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, DEVICE_CHANGE_IP_MOBILE_DETAILS_FIELDS))
             }
         }
         Ok(DeviceChangeIpMobileDetails {
-            device_info: field_device_info.ok_or_else(|| de::Error::missing_field("device_info"))?,
+            device_session_info: field_device_session_info.ok_or_else(|| de::Error::missing_field("device_session_info"))?,
         })
     }
 
@@ -4133,7 +4507,7 @@ impl DeviceChangeIpMobileDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("device_info", &self.device_info)
+        s.serialize_field("device_session_info", &self.device_session_info)
     }
 }
 
@@ -4244,34 +4618,34 @@ impl ::serde::ser::Serialize for DeviceChangeIpMobileType {
 pub struct DeviceChangeIpWebDetails {
     /// Web browser name.
     pub user_agent: String,
-    /// Device information. Might be missing due to historical data gap.
-    pub device_info: Option<DeviceLogInfo>,
+    /// Device's session logged information. Might be missing due to historical data gap.
+    pub device_session_info: Option<DeviceSessionLogInfo>,
 }
 
 impl DeviceChangeIpWebDetails {
     pub fn new(user_agent: String) -> Self {
         DeviceChangeIpWebDetails {
             user_agent,
-            device_info: None,
+            device_session_info: None,
         }
     }
 
-    pub fn with_device_info(mut self, value: Option<DeviceLogInfo>) -> Self {
-        self.device_info = value;
+    pub fn with_device_session_info(mut self, value: Option<DeviceSessionLogInfo>) -> Self {
+        self.device_session_info = value;
         self
     }
 
 }
 
 const DEVICE_CHANGE_IP_WEB_DETAILS_FIELDS: &'static [&'static str] = &["user_agent",
-                                                                       "device_info"];
+                                                                       "device_session_info"];
 impl DeviceChangeIpWebDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DeviceChangeIpWebDetails, V::Error> {
         use serde::de;
         let mut field_user_agent = None;
-        let mut field_device_info = None;
+        let mut field_device_session_info = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "user_agent" => {
@@ -4280,18 +4654,18 @@ impl DeviceChangeIpWebDetails {
                     }
                     field_user_agent = Some(map.next_value()?);
                 }
-                "device_info" => {
-                    if field_device_info.is_some() {
-                        return Err(de::Error::duplicate_field("device_info"));
+                "device_session_info" => {
+                    if field_device_session_info.is_some() {
+                        return Err(de::Error::duplicate_field("device_session_info"));
                     }
-                    field_device_info = Some(map.next_value()?);
+                    field_device_session_info = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, DEVICE_CHANGE_IP_WEB_DETAILS_FIELDS))
             }
         }
         Ok(DeviceChangeIpWebDetails {
             user_agent: field_user_agent.ok_or_else(|| de::Error::missing_field("user_agent"))?,
-            device_info: field_device_info,
+            device_session_info: field_device_session_info,
         })
     }
 
@@ -4301,7 +4675,7 @@ impl DeviceChangeIpWebDetails {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("user_agent", &self.user_agent)?;
-        s.serialize_field("device_info", &self.device_info)
+        s.serialize_field("device_session_info", &self.device_session_info)
     }
 }
 
@@ -4410,51 +4784,73 @@ impl ::serde::ser::Serialize for DeviceChangeIpWebType {
 /// Failed to delete all files from an unlinked device.
 #[derive(Debug)]
 pub struct DeviceDeleteOnUnlinkFailDetails {
-    /// Device information.
-    pub device_info: DeviceLogInfo,
     /// The number of times that remote file deletion failed.
     pub num_failures: i64,
+    /// Session unique id. Might be missing due to historical data gap.
+    pub session_id: Option<DeviceSessionId>,
+    /// The device name. Might be missing due to historical data gap.
+    pub display_name: Option<String>,
 }
 
 impl DeviceDeleteOnUnlinkFailDetails {
-    pub fn new(device_info: DeviceLogInfo, num_failures: i64) -> Self {
+    pub fn new(num_failures: i64) -> Self {
         DeviceDeleteOnUnlinkFailDetails {
-            device_info,
             num_failures,
+            session_id: None,
+            display_name: None,
         }
+    }
+
+    pub fn with_session_id(mut self, value: Option<DeviceSessionId>) -> Self {
+        self.session_id = value;
+        self
+    }
+
+    pub fn with_display_name(mut self, value: Option<String>) -> Self {
+        self.display_name = value;
+        self
     }
 
 }
 
-const DEVICE_DELETE_ON_UNLINK_FAIL_DETAILS_FIELDS: &'static [&'static str] = &["device_info",
-                                                                               "num_failures"];
+const DEVICE_DELETE_ON_UNLINK_FAIL_DETAILS_FIELDS: &'static [&'static str] = &["num_failures",
+                                                                               "session_id",
+                                                                               "display_name"];
 impl DeviceDeleteOnUnlinkFailDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DeviceDeleteOnUnlinkFailDetails, V::Error> {
         use serde::de;
-        let mut field_device_info = None;
         let mut field_num_failures = None;
+        let mut field_session_id = None;
+        let mut field_display_name = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "device_info" => {
-                    if field_device_info.is_some() {
-                        return Err(de::Error::duplicate_field("device_info"));
-                    }
-                    field_device_info = Some(map.next_value()?);
-                }
                 "num_failures" => {
                     if field_num_failures.is_some() {
                         return Err(de::Error::duplicate_field("num_failures"));
                     }
                     field_num_failures = Some(map.next_value()?);
                 }
+                "session_id" => {
+                    if field_session_id.is_some() {
+                        return Err(de::Error::duplicate_field("session_id"));
+                    }
+                    field_session_id = Some(map.next_value()?);
+                }
+                "display_name" => {
+                    if field_display_name.is_some() {
+                        return Err(de::Error::duplicate_field("display_name"));
+                    }
+                    field_display_name = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, DEVICE_DELETE_ON_UNLINK_FAIL_DETAILS_FIELDS))
             }
         }
         Ok(DeviceDeleteOnUnlinkFailDetails {
-            device_info: field_device_info.ok_or_else(|| de::Error::missing_field("device_info"))?,
             num_failures: field_num_failures.ok_or_else(|| de::Error::missing_field("num_failures"))?,
+            session_id: field_session_id,
+            display_name: field_display_name,
         })
     }
 
@@ -4463,8 +4859,9 @@ impl DeviceDeleteOnUnlinkFailDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("device_info", &self.device_info)?;
-        s.serialize_field("num_failures", &self.num_failures)
+        s.serialize_field("num_failures", &self.num_failures)?;
+        s.serialize_field("session_id", &self.session_id)?;
+        s.serialize_field("display_name", &self.display_name)
     }
 }
 
@@ -4490,7 +4887,7 @@ impl ::serde::ser::Serialize for DeviceDeleteOnUnlinkFailDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DeviceDeleteOnUnlinkFailDetails", 2)?;
+        let mut s = serializer.serialize_struct("DeviceDeleteOnUnlinkFailDetails", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -4573,39 +4970,50 @@ impl ::serde::ser::Serialize for DeviceDeleteOnUnlinkFailType {
 /// Deleted all files from an unlinked device.
 #[derive(Debug)]
 pub struct DeviceDeleteOnUnlinkSuccessDetails {
-    /// Device information.
-    pub device_info: DeviceLogInfo,
+    /// Session unique id. Might be missing due to historical data gap.
+    pub session_id: Option<DeviceSessionId>,
+    /// The device name. Might be missing due to historical data gap.
+    pub display_name: Option<String>,
 }
 
-impl DeviceDeleteOnUnlinkSuccessDetails {
-    pub fn new(device_info: DeviceLogInfo) -> Self {
+impl Default for DeviceDeleteOnUnlinkSuccessDetails {
+    fn default() -> Self {
         DeviceDeleteOnUnlinkSuccessDetails {
-            device_info,
+            session_id: None,
+            display_name: None,
         }
     }
-
 }
 
-const DEVICE_DELETE_ON_UNLINK_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &["device_info"];
+const DEVICE_DELETE_ON_UNLINK_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &["session_id",
+                                                                                  "display_name"];
 impl DeviceDeleteOnUnlinkSuccessDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DeviceDeleteOnUnlinkSuccessDetails, V::Error> {
         use serde::de;
-        let mut field_device_info = None;
+        let mut field_session_id = None;
+        let mut field_display_name = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "device_info" => {
-                    if field_device_info.is_some() {
-                        return Err(de::Error::duplicate_field("device_info"));
+                "session_id" => {
+                    if field_session_id.is_some() {
+                        return Err(de::Error::duplicate_field("session_id"));
                     }
-                    field_device_info = Some(map.next_value()?);
+                    field_session_id = Some(map.next_value()?);
+                }
+                "display_name" => {
+                    if field_display_name.is_some() {
+                        return Err(de::Error::duplicate_field("display_name"));
+                    }
+                    field_display_name = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, DEVICE_DELETE_ON_UNLINK_SUCCESS_DETAILS_FIELDS))
             }
         }
         Ok(DeviceDeleteOnUnlinkSuccessDetails {
-            device_info: field_device_info.ok_or_else(|| de::Error::missing_field("device_info"))?,
+            session_id: field_session_id,
+            display_name: field_display_name,
         })
     }
 
@@ -4614,7 +5022,8 @@ impl DeviceDeleteOnUnlinkSuccessDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("device_info", &self.device_info)
+        s.serialize_field("session_id", &self.session_id)?;
+        s.serialize_field("display_name", &self.display_name)
     }
 }
 
@@ -4640,7 +5049,7 @@ impl ::serde::ser::Serialize for DeviceDeleteOnUnlinkSuccessDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DeviceDeleteOnUnlinkSuccessDetails", 1)?;
+        let mut s = serializer.serialize_struct("DeviceDeleteOnUnlinkSuccessDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -4725,34 +5134,34 @@ impl ::serde::ser::Serialize for DeviceDeleteOnUnlinkSuccessType {
 pub struct DeviceLinkFailDetails {
     /// A description of the device used while user approval blocked.
     pub device_type: DeviceType,
-    /// Device information. Might be missing due to historical data gap.
-    pub device_info: Option<DeviceLogInfo>,
+    /// IP address. Might be missing due to historical data gap.
+    pub ip_address: Option<IpAddress>,
 }
 
 impl DeviceLinkFailDetails {
     pub fn new(device_type: DeviceType) -> Self {
         DeviceLinkFailDetails {
             device_type,
-            device_info: None,
+            ip_address: None,
         }
     }
 
-    pub fn with_device_info(mut self, value: Option<DeviceLogInfo>) -> Self {
-        self.device_info = value;
+    pub fn with_ip_address(mut self, value: Option<IpAddress>) -> Self {
+        self.ip_address = value;
         self
     }
 
 }
 
 const DEVICE_LINK_FAIL_DETAILS_FIELDS: &'static [&'static str] = &["device_type",
-                                                                   "device_info"];
+                                                                   "ip_address"];
 impl DeviceLinkFailDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DeviceLinkFailDetails, V::Error> {
         use serde::de;
         let mut field_device_type = None;
-        let mut field_device_info = None;
+        let mut field_ip_address = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "device_type" => {
@@ -4761,18 +5170,18 @@ impl DeviceLinkFailDetails {
                     }
                     field_device_type = Some(map.next_value()?);
                 }
-                "device_info" => {
-                    if field_device_info.is_some() {
-                        return Err(de::Error::duplicate_field("device_info"));
+                "ip_address" => {
+                    if field_ip_address.is_some() {
+                        return Err(de::Error::duplicate_field("ip_address"));
                     }
-                    field_device_info = Some(map.next_value()?);
+                    field_ip_address = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, DEVICE_LINK_FAIL_DETAILS_FIELDS))
             }
         }
         Ok(DeviceLinkFailDetails {
             device_type: field_device_type.ok_or_else(|| de::Error::missing_field("device_type"))?,
-            device_info: field_device_info,
+            ip_address: field_ip_address,
         })
     }
 
@@ -4782,7 +5191,7 @@ impl DeviceLinkFailDetails {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("device_type", &self.device_type)?;
-        s.serialize_field("device_info", &self.device_info)
+        s.serialize_field("ip_address", &self.ip_address)
     }
 }
 
@@ -4891,39 +5300,39 @@ impl ::serde::ser::Serialize for DeviceLinkFailType {
 /// Linked a device.
 #[derive(Debug)]
 pub struct DeviceLinkSuccessDetails {
-    /// Device information.
-    pub device_info: DeviceLogInfo,
+    /// Device's session logged information.
+    pub device_session_info: DeviceSessionLogInfo,
 }
 
 impl DeviceLinkSuccessDetails {
-    pub fn new(device_info: DeviceLogInfo) -> Self {
+    pub fn new(device_session_info: DeviceSessionLogInfo) -> Self {
         DeviceLinkSuccessDetails {
-            device_info,
+            device_session_info,
         }
     }
 
 }
 
-const DEVICE_LINK_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &["device_info"];
+const DEVICE_LINK_SUCCESS_DETAILS_FIELDS: &'static [&'static str] = &["device_session_info"];
 impl DeviceLinkSuccessDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DeviceLinkSuccessDetails, V::Error> {
         use serde::de;
-        let mut field_device_info = None;
+        let mut field_device_session_info = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "device_info" => {
-                    if field_device_info.is_some() {
-                        return Err(de::Error::duplicate_field("device_info"));
+                "device_session_info" => {
+                    if field_device_session_info.is_some() {
+                        return Err(de::Error::duplicate_field("device_session_info"));
                     }
-                    field_device_info = Some(map.next_value()?);
+                    field_device_session_info = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, DEVICE_LINK_SUCCESS_DETAILS_FIELDS))
             }
         }
         Ok(DeviceLinkSuccessDetails {
-            device_info: field_device_info.ok_or_else(|| de::Error::missing_field("device_info"))?,
+            device_session_info: field_device_session_info.ok_or_else(|| de::Error::missing_field("device_session_info"))?,
         })
     }
 
@@ -4932,7 +5341,7 @@ impl DeviceLinkSuccessDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("device_info", &self.device_info)
+        s.serialize_field("device_session_info", &self.device_session_info)
     }
 }
 
@@ -5033,199 +5442,6 @@ impl ::serde::ser::Serialize for DeviceLinkSuccessType {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("DeviceLinkSuccessType", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Device's logged information.
-#[derive(Debug)]
-pub struct DeviceLogInfo {
-    /// Device unique id. Might be missing due to historical data gap.
-    pub device_id: Option<String>,
-    /// Device display name. Might be missing due to historical data gap.
-    pub display_name: Option<String>,
-    /// True if this device is emm managed, false otherwise. Might be missing due to historical data
-    /// gap.
-    pub is_emm_managed: Option<bool>,
-    /// Device platform name. Might be missing due to historical data gap.
-    pub platform: Option<String>,
-    /// Device mac address. Might be missing due to historical data gap.
-    pub mac_address: Option<String>,
-    /// Device OS version. Might be missing due to historical data gap.
-    pub os_version: Option<String>,
-    /// Device type. Might be missing due to historical data gap.
-    pub device_type: Option<String>,
-    /// IP address. Might be missing due to historical data gap.
-    pub ip_address: Option<IpAddress>,
-    /// Last activity. Might be missing due to historical data gap.
-    pub last_activity: Option<String>,
-    /// Linking app version. Might be missing due to historical data gap.
-    pub app_version: Option<String>,
-}
-
-impl Default for DeviceLogInfo {
-    fn default() -> Self {
-        DeviceLogInfo {
-            device_id: None,
-            display_name: None,
-            is_emm_managed: None,
-            platform: None,
-            mac_address: None,
-            os_version: None,
-            device_type: None,
-            ip_address: None,
-            last_activity: None,
-            app_version: None,
-        }
-    }
-}
-
-const DEVICE_LOG_INFO_FIELDS: &'static [&'static str] = &["device_id",
-                                                          "display_name",
-                                                          "is_emm_managed",
-                                                          "platform",
-                                                          "mac_address",
-                                                          "os_version",
-                                                          "device_type",
-                                                          "ip_address",
-                                                          "last_activity",
-                                                          "app_version"];
-impl DeviceLogInfo {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<DeviceLogInfo, V::Error> {
-        use serde::de;
-        let mut field_device_id = None;
-        let mut field_display_name = None;
-        let mut field_is_emm_managed = None;
-        let mut field_platform = None;
-        let mut field_mac_address = None;
-        let mut field_os_version = None;
-        let mut field_device_type = None;
-        let mut field_ip_address = None;
-        let mut field_last_activity = None;
-        let mut field_app_version = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "device_id" => {
-                    if field_device_id.is_some() {
-                        return Err(de::Error::duplicate_field("device_id"));
-                    }
-                    field_device_id = Some(map.next_value()?);
-                }
-                "display_name" => {
-                    if field_display_name.is_some() {
-                        return Err(de::Error::duplicate_field("display_name"));
-                    }
-                    field_display_name = Some(map.next_value()?);
-                }
-                "is_emm_managed" => {
-                    if field_is_emm_managed.is_some() {
-                        return Err(de::Error::duplicate_field("is_emm_managed"));
-                    }
-                    field_is_emm_managed = Some(map.next_value()?);
-                }
-                "platform" => {
-                    if field_platform.is_some() {
-                        return Err(de::Error::duplicate_field("platform"));
-                    }
-                    field_platform = Some(map.next_value()?);
-                }
-                "mac_address" => {
-                    if field_mac_address.is_some() {
-                        return Err(de::Error::duplicate_field("mac_address"));
-                    }
-                    field_mac_address = Some(map.next_value()?);
-                }
-                "os_version" => {
-                    if field_os_version.is_some() {
-                        return Err(de::Error::duplicate_field("os_version"));
-                    }
-                    field_os_version = Some(map.next_value()?);
-                }
-                "device_type" => {
-                    if field_device_type.is_some() {
-                        return Err(de::Error::duplicate_field("device_type"));
-                    }
-                    field_device_type = Some(map.next_value()?);
-                }
-                "ip_address" => {
-                    if field_ip_address.is_some() {
-                        return Err(de::Error::duplicate_field("ip_address"));
-                    }
-                    field_ip_address = Some(map.next_value()?);
-                }
-                "last_activity" => {
-                    if field_last_activity.is_some() {
-                        return Err(de::Error::duplicate_field("last_activity"));
-                    }
-                    field_last_activity = Some(map.next_value()?);
-                }
-                "app_version" => {
-                    if field_app_version.is_some() {
-                        return Err(de::Error::duplicate_field("app_version"));
-                    }
-                    field_app_version = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, DEVICE_LOG_INFO_FIELDS))
-            }
-        }
-        Ok(DeviceLogInfo {
-            device_id: field_device_id,
-            display_name: field_display_name,
-            is_emm_managed: field_is_emm_managed,
-            platform: field_platform,
-            mac_address: field_mac_address,
-            os_version: field_os_version,
-            device_type: field_device_type,
-            ip_address: field_ip_address,
-            last_activity: field_last_activity,
-            app_version: field_app_version,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("device_id", &self.device_id)?;
-        s.serialize_field("display_name", &self.display_name)?;
-        s.serialize_field("is_emm_managed", &self.is_emm_managed)?;
-        s.serialize_field("platform", &self.platform)?;
-        s.serialize_field("mac_address", &self.mac_address)?;
-        s.serialize_field("os_version", &self.os_version)?;
-        s.serialize_field("device_type", &self.device_type)?;
-        s.serialize_field("ip_address", &self.ip_address)?;
-        s.serialize_field("last_activity", &self.last_activity)?;
-        s.serialize_field("app_version", &self.app_version)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for DeviceLogInfo {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = DeviceLogInfo;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a DeviceLogInfo struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                DeviceLogInfo::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("DeviceLogInfo", DEVICE_LOG_INFO_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for DeviceLogInfo {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DeviceLogInfo", 10)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -5483,6 +5699,115 @@ impl ::serde::ser::Serialize for DeviceManagementEnabledType {
     }
 }
 
+/// Device's session logged information.
+#[derive(Debug)]
+pub enum DeviceSessionLogInfo {
+    DesktopDeviceSession(DesktopDeviceSessionLogInfo),
+    MobileDeviceSession(MobileDeviceSessionLogInfo),
+    WebDeviceSession(WebDeviceSessionLogInfo),
+    LegacyDeviceSession(LegacyDeviceSessionLogInfo),
+    _Unknown
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeviceSessionLogInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // polymorphic struct deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = DeviceSessionLogInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DeviceSessionLogInfo structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "desktop_device_session" => Ok(DeviceSessionLogInfo::DesktopDeviceSession(DesktopDeviceSessionLogInfo::internal_deserialize(map)?)),
+                    "mobile_device_session" => Ok(DeviceSessionLogInfo::MobileDeviceSession(MobileDeviceSessionLogInfo::internal_deserialize(map)?)),
+                    "web_device_session" => Ok(DeviceSessionLogInfo::WebDeviceSession(WebDeviceSessionLogInfo::internal_deserialize(map)?)),
+                    "legacy_device_session" => Ok(DeviceSessionLogInfo::LegacyDeviceSession(LegacyDeviceSessionLogInfo::internal_deserialize(map)?)),
+                    _ => Ok(DeviceSessionLogInfo::_Unknown)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["legacy_device_session",
+                                                    "legacy_device_session",
+                                                    "legacy_device_session",
+                                                    "legacy_device_session"];
+        deserializer.deserialize_struct("DeviceSessionLogInfo", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeviceSessionLogInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // polymorphic struct serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            DeviceSessionLogInfo::DesktopDeviceSession(ref x) => {
+                let mut s = serializer.serialize_struct("DeviceSessionLogInfo", 10)?;
+                s.serialize_field(".tag", "desktop_device_session")?;
+                s.serialize_field("host_name", &x.host_name)?;
+                s.serialize_field("client_type", &x.client_type)?;
+                s.serialize_field("platform", &x.platform)?;
+                s.serialize_field("is_delete_on_unlink_supported", &x.is_delete_on_unlink_supported)?;
+                s.serialize_field("session_id", &x.session_id)?;
+                s.serialize_field("ip_address", &x.ip_address)?;
+                s.serialize_field("created", &x.created)?;
+                s.serialize_field("updated", &x.updated)?;
+                s.serialize_field("client_version", &x.client_version)?;
+                s.end()
+            }
+            DeviceSessionLogInfo::MobileDeviceSession(ref x) => {
+                let mut s = serializer.serialize_struct("DeviceSessionLogInfo", 10)?;
+                s.serialize_field(".tag", "mobile_device_session")?;
+                s.serialize_field("device_name", &x.device_name)?;
+                s.serialize_field("client_type", &x.client_type)?;
+                s.serialize_field("client_version", &x.client_version)?;
+                s.serialize_field("last_carrier", &x.last_carrier)?;
+                s.serialize_field("session_id", &x.session_id)?;
+                s.serialize_field("ip_address", &x.ip_address)?;
+                s.serialize_field("created", &x.created)?;
+                s.serialize_field("updated", &x.updated)?;
+                s.serialize_field("os_version", &x.os_version)?;
+                s.end()
+            }
+            DeviceSessionLogInfo::WebDeviceSession(ref x) => {
+                let mut s = serializer.serialize_struct("DeviceSessionLogInfo", 8)?;
+                s.serialize_field(".tag", "web_device_session")?;
+                s.serialize_field("user_agent", &x.user_agent)?;
+                s.serialize_field("os", &x.os)?;
+                s.serialize_field("browser", &x.browser)?;
+                s.serialize_field("session_id", &x.session_id)?;
+                s.serialize_field("ip_address", &x.ip_address)?;
+                s.serialize_field("created", &x.created)?;
+                s.serialize_field("updated", &x.updated)?;
+                s.end()
+            }
+            DeviceSessionLogInfo::LegacyDeviceSession(ref x) => {
+                let mut s = serializer.serialize_struct("DeviceSessionLogInfo", 13)?;
+                s.serialize_field(".tag", "legacy_device_session")?;
+                s.serialize_field("session_id", &x.session_id)?;
+                s.serialize_field("ip_address", &x.ip_address)?;
+                s.serialize_field("created", &x.created)?;
+                s.serialize_field("updated", &x.updated)?;
+                s.serialize_field("display_name", &x.display_name)?;
+                s.serialize_field("is_emm_managed", &x.is_emm_managed)?;
+                s.serialize_field("platform", &x.platform)?;
+                s.serialize_field("mac_address", &x.mac_address)?;
+                s.serialize_field("os_version", &x.os_version)?;
+                s.serialize_field("device_type", &x.device_type)?;
+                s.serialize_field("client_version", &x.client_version)?;
+                s.serialize_field("legacy_uniq_id", &x.legacy_uniq_id)?;
+                s.end()
+            }
+            DeviceSessionLogInfo::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+        }
+    }
+}
+
 #[derive(Debug)]
 pub enum DeviceType {
     Desktop,
@@ -5544,51 +5869,73 @@ impl ::serde::ser::Serialize for DeviceType {
 /// Disconnected a device.
 #[derive(Debug)]
 pub struct DeviceUnlinkDetails {
-    /// Device information.
-    pub device_info: DeviceLogInfo,
     /// True if the user requested to delete data after device unlink, false otherwise.
     pub delete_data: bool,
+    /// Session unique id. Might be missing due to historical data gap.
+    pub session_id: Option<DeviceSessionId>,
+    /// The device name. Might be missing due to historical data gap.
+    pub display_name: Option<String>,
 }
 
 impl DeviceUnlinkDetails {
-    pub fn new(device_info: DeviceLogInfo, delete_data: bool) -> Self {
+    pub fn new(delete_data: bool) -> Self {
         DeviceUnlinkDetails {
-            device_info,
             delete_data,
+            session_id: None,
+            display_name: None,
         }
+    }
+
+    pub fn with_session_id(mut self, value: Option<DeviceSessionId>) -> Self {
+        self.session_id = value;
+        self
+    }
+
+    pub fn with_display_name(mut self, value: Option<String>) -> Self {
+        self.display_name = value;
+        self
     }
 
 }
 
-const DEVICE_UNLINK_DETAILS_FIELDS: &'static [&'static str] = &["device_info",
-                                                                "delete_data"];
+const DEVICE_UNLINK_DETAILS_FIELDS: &'static [&'static str] = &["delete_data",
+                                                                "session_id",
+                                                                "display_name"];
 impl DeviceUnlinkDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DeviceUnlinkDetails, V::Error> {
         use serde::de;
-        let mut field_device_info = None;
         let mut field_delete_data = None;
+        let mut field_session_id = None;
+        let mut field_display_name = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "device_info" => {
-                    if field_device_info.is_some() {
-                        return Err(de::Error::duplicate_field("device_info"));
-                    }
-                    field_device_info = Some(map.next_value()?);
-                }
                 "delete_data" => {
                     if field_delete_data.is_some() {
                         return Err(de::Error::duplicate_field("delete_data"));
                     }
                     field_delete_data = Some(map.next_value()?);
                 }
+                "session_id" => {
+                    if field_session_id.is_some() {
+                        return Err(de::Error::duplicate_field("session_id"));
+                    }
+                    field_session_id = Some(map.next_value()?);
+                }
+                "display_name" => {
+                    if field_display_name.is_some() {
+                        return Err(de::Error::duplicate_field("display_name"));
+                    }
+                    field_display_name = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, DEVICE_UNLINK_DETAILS_FIELDS))
             }
         }
         Ok(DeviceUnlinkDetails {
-            device_info: field_device_info.ok_or_else(|| de::Error::missing_field("device_info"))?,
             delete_data: field_delete_data.ok_or_else(|| de::Error::missing_field("delete_data"))?,
+            session_id: field_session_id,
+            display_name: field_display_name,
         })
     }
 
@@ -5597,8 +5944,9 @@ impl DeviceUnlinkDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("device_info", &self.device_info)?;
-        s.serialize_field("delete_data", &self.delete_data)
+        s.serialize_field("delete_data", &self.delete_data)?;
+        s.serialize_field("session_id", &self.session_id)?;
+        s.serialize_field("display_name", &self.display_name)
     }
 }
 
@@ -5624,7 +5972,7 @@ impl ::serde::ser::Serialize for DeviceUnlinkDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DeviceUnlinkDetails", 2)?;
+        let mut s = serializer.serialize_struct("DeviceUnlinkDetails", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -7167,6 +7515,65 @@ impl ::serde::ser::Serialize for DomainVerificationRemoveDomainType {
     }
 }
 
+/// Shared content downloads policy
+#[derive(Debug)]
+pub enum DownloadPolicyType {
+    Allow,
+    Disallow,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DownloadPolicyType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = DownloadPolicyType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DownloadPolicyType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "allow" => Ok(DownloadPolicyType::Allow),
+                    "disallow" => Ok(DownloadPolicyType::Disallow),
+                    _ => Ok(DownloadPolicyType::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["allow",
+                                                    "disallow",
+                                                    "other"];
+        deserializer.deserialize_struct("DownloadPolicyType", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DownloadPolicyType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            DownloadPolicyType::Allow => {
+                // unit
+                let mut s = serializer.serialize_struct("DownloadPolicyType", 1)?;
+                s.serialize_field(".tag", "allow")?;
+                s.end()
+            }
+            DownloadPolicyType::Disallow => {
+                // unit
+                let mut s = serializer.serialize_struct("DownloadPolicyType", 1)?;
+                s.serialize_field(".tag", "disallow")?;
+                s.end()
+            }
+            DownloadPolicyType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Represents a time duration: unit and amount
 #[derive(Debug)]
 pub struct DurationLogInfo {
@@ -8584,6 +8991,7 @@ pub enum EventDetails {
     EmmRefreshAuthTokenDetails(EmmRefreshAuthTokenDetails),
     AccountCaptureChangeAvailabilityDetails(AccountCaptureChangeAvailabilityDetails),
     AccountCaptureMigrateAccountDetails(AccountCaptureMigrateAccountDetails),
+    AccountCaptureNotificationEmailsSentDetails(AccountCaptureNotificationEmailsSentDetails),
     AccountCaptureRelinquishAccountDetails(AccountCaptureRelinquishAccountDetails),
     DisabledDomainInvitesDetails(DisabledDomainInvitesDetails),
     DomainInvitesApproveRequestToJoinTeamDetails(DomainInvitesApproveRequestToJoinTeamDetails),
@@ -8611,14 +9019,10 @@ pub enum EventDetails {
     FileRevertDetails(FileRevertDetails),
     FileRollbackChangesDetails(FileRollbackChangesDetails),
     FileSaveCopyReferenceDetails(FileSaveCopyReferenceDetails),
-    FileRequestAddDeadlineDetails(FileRequestAddDeadlineDetails),
     FileRequestChangeDetails(FileRequestChangeDetails),
-    FileRequestChangeFolderDetails(FileRequestChangeFolderDetails),
     FileRequestCloseDetails(FileRequestCloseDetails),
     FileRequestCreateDetails(FileRequestCreateDetails),
     FileRequestReceiveFileDetails(FileRequestReceiveFileDetails),
-    FileRequestRemoveDeadlineDetails(FileRequestRemoveDeadlineDetails),
-    FileRequestSendDetails(FileRequestSendDetails),
     GroupAddExternalIdDetails(GroupAddExternalIdDetails),
     GroupAddMemberDetails(GroupAddMemberDetails),
     GroupChangeExternalIdDetails(GroupChangeExternalIdDetails),
@@ -8639,13 +9043,17 @@ pub enum EventDetails {
     SignInAsSessionEndDetails(SignInAsSessionEndDetails),
     SignInAsSessionStartDetails(SignInAsSessionStartDetails),
     SsoErrorDetails(SsoErrorDetails),
+    MemberAddNameDetails(MemberAddNameDetails),
     MemberChangeAdminRoleDetails(MemberChangeAdminRoleDetails),
     MemberChangeEmailDetails(MemberChangeEmailDetails),
     MemberChangeMembershipTypeDetails(MemberChangeMembershipTypeDetails),
     MemberChangeNameDetails(MemberChangeNameDetails),
     MemberChangeStatusDetails(MemberChangeStatusDetails),
     MemberPermanentlyDeleteAccountContentsDetails(MemberPermanentlyDeleteAccountContentsDetails),
+    MemberSpaceLimitsAddCustomQuotaDetails(MemberSpaceLimitsAddCustomQuotaDetails),
+    MemberSpaceLimitsChangeCustomQuotaDetails(MemberSpaceLimitsChangeCustomQuotaDetails),
     MemberSpaceLimitsChangeStatusDetails(MemberSpaceLimitsChangeStatusDetails),
+    MemberSpaceLimitsRemoveCustomQuotaDetails(MemberSpaceLimitsRemoveCustomQuotaDetails),
     MemberSuggestDetails(MemberSuggestDetails),
     MemberTransferAccountContentsDetails(MemberTransferAccountContentsDetails),
     PaperContentAddMemberDetails(PaperContentAddMemberDetails),
@@ -8689,6 +9097,7 @@ pub enum EventDetails {
     PasswordResetAllDetails(PasswordResetAllDetails),
     EmmCreateExceptionsReportDetails(EmmCreateExceptionsReportDetails),
     EmmCreateUsageReportDetails(EmmCreateUsageReportDetails),
+    ExportMembersReportDetails(ExportMembersReportDetails),
     PaperAdminExportStartDetails(PaperAdminExportStartDetails),
     SmartSyncCreateAdminPrivilegeReportDetails(SmartSyncCreateAdminPrivilegeReportDetails),
     TeamActivityCreateReportDetails(TeamActivityCreateReportDetails),
@@ -8702,6 +9111,9 @@ pub enum EventDetails {
     SfAddGroupDetails(SfAddGroupDetails),
     SfAllowNonMembersToViewSharedLinksDetails(SfAllowNonMembersToViewSharedLinksDetails),
     SfExternalInviteWarnDetails(SfExternalInviteWarnDetails),
+    SfFbInviteDetails(SfFbInviteDetails),
+    SfFbInviteChangeRoleDetails(SfFbInviteChangeRoleDetails),
+    SfFbUninviteDetails(SfFbUninviteDetails),
     SfInviteGroupDetails(SfInviteGroupDetails),
     SfTeamGrantAccessDetails(SfTeamGrantAccessDetails),
     SfTeamInviteDetails(SfTeamInviteDetails),
@@ -8724,17 +9136,17 @@ pub enum EventDetails {
     SharedContentCopyDetails(SharedContentCopyDetails),
     SharedContentDownloadDetails(SharedContentDownloadDetails),
     SharedContentRelinquishMembershipDetails(SharedContentRelinquishMembershipDetails),
-    SharedContentRemoveInviteeDetails(SharedContentRemoveInviteeDetails),
+    SharedContentRemoveInviteesDetails(SharedContentRemoveInviteesDetails),
     SharedContentRemoveLinkExpiryDetails(SharedContentRemoveLinkExpiryDetails),
     SharedContentRemoveLinkPasswordDetails(SharedContentRemoveLinkPasswordDetails),
     SharedContentRemoveMemberDetails(SharedContentRemoveMemberDetails),
     SharedContentRequestAccessDetails(SharedContentRequestAccessDetails),
     SharedContentUnshareDetails(SharedContentUnshareDetails),
     SharedContentViewDetails(SharedContentViewDetails),
-    SharedFolderChangeConfidentialityDetails(SharedFolderChangeConfidentialityDetails),
     SharedFolderChangeLinkPolicyDetails(SharedFolderChangeLinkPolicyDetails),
-    SharedFolderChangeMemberManagementPolicyDetails(SharedFolderChangeMemberManagementPolicyDetails),
-    SharedFolderChangeMemberPolicyDetails(SharedFolderChangeMemberPolicyDetails),
+    SharedFolderChangeMembersInheritancePolicyDetails(SharedFolderChangeMembersInheritancePolicyDetails),
+    SharedFolderChangeMembersManagementPolicyDetails(SharedFolderChangeMembersManagementPolicyDetails),
+    SharedFolderChangeMembersPolicyDetails(SharedFolderChangeMembersPolicyDetails),
     SharedFolderCreateDetails(SharedFolderCreateDetails),
     SharedFolderDeclineInvitationDetails(SharedFolderDeclineInvitationDetails),
     SharedFolderMountDetails(SharedFolderMountDetails),
@@ -8789,6 +9201,7 @@ pub enum EventDetails {
     GroupUserManagementChangePolicyDetails(GroupUserManagementChangePolicyDetails),
     MemberRequestsChangePolicyDetails(MemberRequestsChangePolicyDetails),
     MemberSpaceLimitsAddExceptionDetails(MemberSpaceLimitsAddExceptionDetails),
+    MemberSpaceLimitsChangeCapsTypePolicyDetails(MemberSpaceLimitsChangeCapsTypePolicyDetails),
     MemberSpaceLimitsChangePolicyDetails(MemberSpaceLimitsChangePolicyDetails),
     MemberSpaceLimitsRemoveExceptionDetails(MemberSpaceLimitsRemoveExceptionDetails),
     MemberSuggestionsChangePolicyDetails(MemberSuggestionsChangePolicyDetails),
@@ -8871,6 +9284,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "emm_refresh_auth_token_details" => Ok(EventDetails::EmmRefreshAuthTokenDetails(EmmRefreshAuthTokenDetails::internal_deserialize(map)?)),
                     "account_capture_change_availability_details" => Ok(EventDetails::AccountCaptureChangeAvailabilityDetails(AccountCaptureChangeAvailabilityDetails::internal_deserialize(map)?)),
                     "account_capture_migrate_account_details" => Ok(EventDetails::AccountCaptureMigrateAccountDetails(AccountCaptureMigrateAccountDetails::internal_deserialize(map)?)),
+                    "account_capture_notification_emails_sent_details" => Ok(EventDetails::AccountCaptureNotificationEmailsSentDetails(AccountCaptureNotificationEmailsSentDetails::internal_deserialize(map)?)),
                     "account_capture_relinquish_account_details" => Ok(EventDetails::AccountCaptureRelinquishAccountDetails(AccountCaptureRelinquishAccountDetails::internal_deserialize(map)?)),
                     "disabled_domain_invites_details" => Ok(EventDetails::DisabledDomainInvitesDetails(DisabledDomainInvitesDetails::internal_deserialize(map)?)),
                     "domain_invites_approve_request_to_join_team_details" => Ok(EventDetails::DomainInvitesApproveRequestToJoinTeamDetails(DomainInvitesApproveRequestToJoinTeamDetails::internal_deserialize(map)?)),
@@ -8898,14 +9312,10 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "file_revert_details" => Ok(EventDetails::FileRevertDetails(FileRevertDetails::internal_deserialize(map)?)),
                     "file_rollback_changes_details" => Ok(EventDetails::FileRollbackChangesDetails(FileRollbackChangesDetails::internal_deserialize(map)?)),
                     "file_save_copy_reference_details" => Ok(EventDetails::FileSaveCopyReferenceDetails(FileSaveCopyReferenceDetails::internal_deserialize(map)?)),
-                    "file_request_add_deadline_details" => Ok(EventDetails::FileRequestAddDeadlineDetails(FileRequestAddDeadlineDetails::internal_deserialize(map)?)),
                     "file_request_change_details" => Ok(EventDetails::FileRequestChangeDetails(FileRequestChangeDetails::internal_deserialize(map)?)),
-                    "file_request_change_folder_details" => Ok(EventDetails::FileRequestChangeFolderDetails(FileRequestChangeFolderDetails::internal_deserialize(map)?)),
                     "file_request_close_details" => Ok(EventDetails::FileRequestCloseDetails(FileRequestCloseDetails::internal_deserialize(map)?)),
                     "file_request_create_details" => Ok(EventDetails::FileRequestCreateDetails(FileRequestCreateDetails::internal_deserialize(map)?)),
                     "file_request_receive_file_details" => Ok(EventDetails::FileRequestReceiveFileDetails(FileRequestReceiveFileDetails::internal_deserialize(map)?)),
-                    "file_request_remove_deadline_details" => Ok(EventDetails::FileRequestRemoveDeadlineDetails(FileRequestRemoveDeadlineDetails::internal_deserialize(map)?)),
-                    "file_request_send_details" => Ok(EventDetails::FileRequestSendDetails(FileRequestSendDetails::internal_deserialize(map)?)),
                     "group_add_external_id_details" => Ok(EventDetails::GroupAddExternalIdDetails(GroupAddExternalIdDetails::internal_deserialize(map)?)),
                     "group_add_member_details" => Ok(EventDetails::GroupAddMemberDetails(GroupAddMemberDetails::internal_deserialize(map)?)),
                     "group_change_external_id_details" => Ok(EventDetails::GroupChangeExternalIdDetails(GroupChangeExternalIdDetails::internal_deserialize(map)?)),
@@ -8926,13 +9336,17 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "sign_in_as_session_end_details" => Ok(EventDetails::SignInAsSessionEndDetails(SignInAsSessionEndDetails::internal_deserialize(map)?)),
                     "sign_in_as_session_start_details" => Ok(EventDetails::SignInAsSessionStartDetails(SignInAsSessionStartDetails::internal_deserialize(map)?)),
                     "sso_error_details" => Ok(EventDetails::SsoErrorDetails(SsoErrorDetails::internal_deserialize(map)?)),
+                    "member_add_name_details" => Ok(EventDetails::MemberAddNameDetails(MemberAddNameDetails::internal_deserialize(map)?)),
                     "member_change_admin_role_details" => Ok(EventDetails::MemberChangeAdminRoleDetails(MemberChangeAdminRoleDetails::internal_deserialize(map)?)),
                     "member_change_email_details" => Ok(EventDetails::MemberChangeEmailDetails(MemberChangeEmailDetails::internal_deserialize(map)?)),
                     "member_change_membership_type_details" => Ok(EventDetails::MemberChangeMembershipTypeDetails(MemberChangeMembershipTypeDetails::internal_deserialize(map)?)),
                     "member_change_name_details" => Ok(EventDetails::MemberChangeNameDetails(MemberChangeNameDetails::internal_deserialize(map)?)),
                     "member_change_status_details" => Ok(EventDetails::MemberChangeStatusDetails(MemberChangeStatusDetails::internal_deserialize(map)?)),
                     "member_permanently_delete_account_contents_details" => Ok(EventDetails::MemberPermanentlyDeleteAccountContentsDetails(MemberPermanentlyDeleteAccountContentsDetails::internal_deserialize(map)?)),
+                    "member_space_limits_add_custom_quota_details" => Ok(EventDetails::MemberSpaceLimitsAddCustomQuotaDetails(MemberSpaceLimitsAddCustomQuotaDetails::internal_deserialize(map)?)),
+                    "member_space_limits_change_custom_quota_details" => Ok(EventDetails::MemberSpaceLimitsChangeCustomQuotaDetails(MemberSpaceLimitsChangeCustomQuotaDetails::internal_deserialize(map)?)),
                     "member_space_limits_change_status_details" => Ok(EventDetails::MemberSpaceLimitsChangeStatusDetails(MemberSpaceLimitsChangeStatusDetails::internal_deserialize(map)?)),
+                    "member_space_limits_remove_custom_quota_details" => Ok(EventDetails::MemberSpaceLimitsRemoveCustomQuotaDetails(MemberSpaceLimitsRemoveCustomQuotaDetails::internal_deserialize(map)?)),
                     "member_suggest_details" => Ok(EventDetails::MemberSuggestDetails(MemberSuggestDetails::internal_deserialize(map)?)),
                     "member_transfer_account_contents_details" => Ok(EventDetails::MemberTransferAccountContentsDetails(MemberTransferAccountContentsDetails::internal_deserialize(map)?)),
                     "paper_content_add_member_details" => Ok(EventDetails::PaperContentAddMemberDetails(PaperContentAddMemberDetails::internal_deserialize(map)?)),
@@ -8976,6 +9390,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "password_reset_all_details" => Ok(EventDetails::PasswordResetAllDetails(PasswordResetAllDetails::internal_deserialize(map)?)),
                     "emm_create_exceptions_report_details" => Ok(EventDetails::EmmCreateExceptionsReportDetails(EmmCreateExceptionsReportDetails::internal_deserialize(map)?)),
                     "emm_create_usage_report_details" => Ok(EventDetails::EmmCreateUsageReportDetails(EmmCreateUsageReportDetails::internal_deserialize(map)?)),
+                    "export_members_report_details" => Ok(EventDetails::ExportMembersReportDetails(ExportMembersReportDetails::internal_deserialize(map)?)),
                     "paper_admin_export_start_details" => Ok(EventDetails::PaperAdminExportStartDetails(PaperAdminExportStartDetails::internal_deserialize(map)?)),
                     "smart_sync_create_admin_privilege_report_details" => Ok(EventDetails::SmartSyncCreateAdminPrivilegeReportDetails(SmartSyncCreateAdminPrivilegeReportDetails::internal_deserialize(map)?)),
                     "team_activity_create_report_details" => Ok(EventDetails::TeamActivityCreateReportDetails(TeamActivityCreateReportDetails::internal_deserialize(map)?)),
@@ -8989,6 +9404,9 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "sf_add_group_details" => Ok(EventDetails::SfAddGroupDetails(SfAddGroupDetails::internal_deserialize(map)?)),
                     "sf_allow_non_members_to_view_shared_links_details" => Ok(EventDetails::SfAllowNonMembersToViewSharedLinksDetails(SfAllowNonMembersToViewSharedLinksDetails::internal_deserialize(map)?)),
                     "sf_external_invite_warn_details" => Ok(EventDetails::SfExternalInviteWarnDetails(SfExternalInviteWarnDetails::internal_deserialize(map)?)),
+                    "sf_fb_invite_details" => Ok(EventDetails::SfFbInviteDetails(SfFbInviteDetails::internal_deserialize(map)?)),
+                    "sf_fb_invite_change_role_details" => Ok(EventDetails::SfFbInviteChangeRoleDetails(SfFbInviteChangeRoleDetails::internal_deserialize(map)?)),
+                    "sf_fb_uninvite_details" => Ok(EventDetails::SfFbUninviteDetails(SfFbUninviteDetails::internal_deserialize(map)?)),
                     "sf_invite_group_details" => Ok(EventDetails::SfInviteGroupDetails(SfInviteGroupDetails::internal_deserialize(map)?)),
                     "sf_team_grant_access_details" => Ok(EventDetails::SfTeamGrantAccessDetails(SfTeamGrantAccessDetails::internal_deserialize(map)?)),
                     "sf_team_invite_details" => Ok(EventDetails::SfTeamInviteDetails(SfTeamInviteDetails::internal_deserialize(map)?)),
@@ -9011,17 +9429,17 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "shared_content_copy_details" => Ok(EventDetails::SharedContentCopyDetails(SharedContentCopyDetails::internal_deserialize(map)?)),
                     "shared_content_download_details" => Ok(EventDetails::SharedContentDownloadDetails(SharedContentDownloadDetails::internal_deserialize(map)?)),
                     "shared_content_relinquish_membership_details" => Ok(EventDetails::SharedContentRelinquishMembershipDetails(SharedContentRelinquishMembershipDetails::internal_deserialize(map)?)),
-                    "shared_content_remove_invitee_details" => Ok(EventDetails::SharedContentRemoveInviteeDetails(SharedContentRemoveInviteeDetails::internal_deserialize(map)?)),
+                    "shared_content_remove_invitees_details" => Ok(EventDetails::SharedContentRemoveInviteesDetails(SharedContentRemoveInviteesDetails::internal_deserialize(map)?)),
                     "shared_content_remove_link_expiry_details" => Ok(EventDetails::SharedContentRemoveLinkExpiryDetails(SharedContentRemoveLinkExpiryDetails::internal_deserialize(map)?)),
                     "shared_content_remove_link_password_details" => Ok(EventDetails::SharedContentRemoveLinkPasswordDetails(SharedContentRemoveLinkPasswordDetails::internal_deserialize(map)?)),
                     "shared_content_remove_member_details" => Ok(EventDetails::SharedContentRemoveMemberDetails(SharedContentRemoveMemberDetails::internal_deserialize(map)?)),
                     "shared_content_request_access_details" => Ok(EventDetails::SharedContentRequestAccessDetails(SharedContentRequestAccessDetails::internal_deserialize(map)?)),
                     "shared_content_unshare_details" => Ok(EventDetails::SharedContentUnshareDetails(SharedContentUnshareDetails::internal_deserialize(map)?)),
                     "shared_content_view_details" => Ok(EventDetails::SharedContentViewDetails(SharedContentViewDetails::internal_deserialize(map)?)),
-                    "shared_folder_change_confidentiality_details" => Ok(EventDetails::SharedFolderChangeConfidentialityDetails(SharedFolderChangeConfidentialityDetails::internal_deserialize(map)?)),
                     "shared_folder_change_link_policy_details" => Ok(EventDetails::SharedFolderChangeLinkPolicyDetails(SharedFolderChangeLinkPolicyDetails::internal_deserialize(map)?)),
-                    "shared_folder_change_member_management_policy_details" => Ok(EventDetails::SharedFolderChangeMemberManagementPolicyDetails(SharedFolderChangeMemberManagementPolicyDetails::internal_deserialize(map)?)),
-                    "shared_folder_change_member_policy_details" => Ok(EventDetails::SharedFolderChangeMemberPolicyDetails(SharedFolderChangeMemberPolicyDetails::internal_deserialize(map)?)),
+                    "shared_folder_change_members_inheritance_policy_details" => Ok(EventDetails::SharedFolderChangeMembersInheritancePolicyDetails(SharedFolderChangeMembersInheritancePolicyDetails::internal_deserialize(map)?)),
+                    "shared_folder_change_members_management_policy_details" => Ok(EventDetails::SharedFolderChangeMembersManagementPolicyDetails(SharedFolderChangeMembersManagementPolicyDetails::internal_deserialize(map)?)),
+                    "shared_folder_change_members_policy_details" => Ok(EventDetails::SharedFolderChangeMembersPolicyDetails(SharedFolderChangeMembersPolicyDetails::internal_deserialize(map)?)),
                     "shared_folder_create_details" => Ok(EventDetails::SharedFolderCreateDetails(SharedFolderCreateDetails::internal_deserialize(map)?)),
                     "shared_folder_decline_invitation_details" => Ok(EventDetails::SharedFolderDeclineInvitationDetails(SharedFolderDeclineInvitationDetails::internal_deserialize(map)?)),
                     "shared_folder_mount_details" => Ok(EventDetails::SharedFolderMountDetails(SharedFolderMountDetails::internal_deserialize(map)?)),
@@ -9076,6 +9494,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "group_user_management_change_policy_details" => Ok(EventDetails::GroupUserManagementChangePolicyDetails(GroupUserManagementChangePolicyDetails::internal_deserialize(map)?)),
                     "member_requests_change_policy_details" => Ok(EventDetails::MemberRequestsChangePolicyDetails(MemberRequestsChangePolicyDetails::internal_deserialize(map)?)),
                     "member_space_limits_add_exception_details" => Ok(EventDetails::MemberSpaceLimitsAddExceptionDetails(MemberSpaceLimitsAddExceptionDetails::internal_deserialize(map)?)),
+                    "member_space_limits_change_caps_type_policy_details" => Ok(EventDetails::MemberSpaceLimitsChangeCapsTypePolicyDetails(MemberSpaceLimitsChangeCapsTypePolicyDetails::internal_deserialize(map)?)),
                     "member_space_limits_change_policy_details" => Ok(EventDetails::MemberSpaceLimitsChangePolicyDetails(MemberSpaceLimitsChangePolicyDetails::internal_deserialize(map)?)),
                     "member_space_limits_remove_exception_details" => Ok(EventDetails::MemberSpaceLimitsRemoveExceptionDetails(MemberSpaceLimitsRemoveExceptionDetails::internal_deserialize(map)?)),
                     "member_suggestions_change_policy_details" => Ok(EventDetails::MemberSuggestionsChangePolicyDetails(MemberSuggestionsChangePolicyDetails::internal_deserialize(map)?)),
@@ -9142,6 +9561,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "emm_refresh_auth_token_details",
                                                     "account_capture_change_availability_details",
                                                     "account_capture_migrate_account_details",
+                                                    "account_capture_notification_emails_sent_details",
                                                     "account_capture_relinquish_account_details",
                                                     "disabled_domain_invites_details",
                                                     "domain_invites_approve_request_to_join_team_details",
@@ -9169,14 +9589,10 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "file_revert_details",
                                                     "file_rollback_changes_details",
                                                     "file_save_copy_reference_details",
-                                                    "file_request_add_deadline_details",
                                                     "file_request_change_details",
-                                                    "file_request_change_folder_details",
                                                     "file_request_close_details",
                                                     "file_request_create_details",
                                                     "file_request_receive_file_details",
-                                                    "file_request_remove_deadline_details",
-                                                    "file_request_send_details",
                                                     "group_add_external_id_details",
                                                     "group_add_member_details",
                                                     "group_change_external_id_details",
@@ -9197,13 +9613,17 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "sign_in_as_session_end_details",
                                                     "sign_in_as_session_start_details",
                                                     "sso_error_details",
+                                                    "member_add_name_details",
                                                     "member_change_admin_role_details",
                                                     "member_change_email_details",
                                                     "member_change_membership_type_details",
                                                     "member_change_name_details",
                                                     "member_change_status_details",
                                                     "member_permanently_delete_account_contents_details",
+                                                    "member_space_limits_add_custom_quota_details",
+                                                    "member_space_limits_change_custom_quota_details",
                                                     "member_space_limits_change_status_details",
+                                                    "member_space_limits_remove_custom_quota_details",
                                                     "member_suggest_details",
                                                     "member_transfer_account_contents_details",
                                                     "paper_content_add_member_details",
@@ -9247,6 +9667,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "password_reset_all_details",
                                                     "emm_create_exceptions_report_details",
                                                     "emm_create_usage_report_details",
+                                                    "export_members_report_details",
                                                     "paper_admin_export_start_details",
                                                     "smart_sync_create_admin_privilege_report_details",
                                                     "team_activity_create_report_details",
@@ -9260,6 +9681,9 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "sf_add_group_details",
                                                     "sf_allow_non_members_to_view_shared_links_details",
                                                     "sf_external_invite_warn_details",
+                                                    "sf_fb_invite_details",
+                                                    "sf_fb_invite_change_role_details",
+                                                    "sf_fb_uninvite_details",
                                                     "sf_invite_group_details",
                                                     "sf_team_grant_access_details",
                                                     "sf_team_invite_details",
@@ -9282,17 +9706,17 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "shared_content_copy_details",
                                                     "shared_content_download_details",
                                                     "shared_content_relinquish_membership_details",
-                                                    "shared_content_remove_invitee_details",
+                                                    "shared_content_remove_invitees_details",
                                                     "shared_content_remove_link_expiry_details",
                                                     "shared_content_remove_link_password_details",
                                                     "shared_content_remove_member_details",
                                                     "shared_content_request_access_details",
                                                     "shared_content_unshare_details",
                                                     "shared_content_view_details",
-                                                    "shared_folder_change_confidentiality_details",
                                                     "shared_folder_change_link_policy_details",
-                                                    "shared_folder_change_member_management_policy_details",
-                                                    "shared_folder_change_member_policy_details",
+                                                    "shared_folder_change_members_inheritance_policy_details",
+                                                    "shared_folder_change_members_management_policy_details",
+                                                    "shared_folder_change_members_policy_details",
                                                     "shared_folder_create_details",
                                                     "shared_folder_decline_invitation_details",
                                                     "shared_folder_mount_details",
@@ -9347,6 +9771,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                                     "group_user_management_change_policy_details",
                                                     "member_requests_change_policy_details",
                                                     "member_space_limits_add_exception_details",
+                                                    "member_space_limits_change_caps_type_policy_details",
                                                     "member_space_limits_change_policy_details",
                                                     "member_space_limits_remove_exception_details",
                                                     "member_suggestions_change_policy_details",
@@ -9495,14 +9920,14 @@ impl ::serde::ser::Serialize for EventDetails {
             }
             EventDetails::DeviceDeleteOnUnlinkFailDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
                 s.serialize_field(".tag", "device_delete_on_unlink_fail_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::DeviceDeleteOnUnlinkSuccessDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "device_delete_on_unlink_success_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -9535,7 +9960,7 @@ impl ::serde::ser::Serialize for EventDetails {
             }
             EventDetails::DeviceUnlinkDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
                 s.serialize_field(".tag", "device_unlink_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -9557,6 +9982,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "account_capture_migrate_account_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::AccountCaptureNotificationEmailsSentDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "account_capture_notification_emails_sent_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -9731,24 +10163,10 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::FileRequestAddDeadlineDetails(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
-                s.serialize_field(".tag", "file_request_add_deadline_details")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
             EventDetails::FileRequestChangeDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 4)?;
                 s.serialize_field(".tag", "file_request_change_details")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            EventDetails::FileRequestChangeFolderDetails(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
-                s.serialize_field(".tag", "file_request_change_folder_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -9768,22 +10186,8 @@ impl ::serde::ser::Serialize for EventDetails {
             }
             EventDetails::FileRequestReceiveFileDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                let mut s = serializer.serialize_struct("EventDetails", 6)?;
                 s.serialize_field(".tag", "file_request_receive_file_details")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            EventDetails::FileRequestRemoveDeadlineDetails(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
-                s.serialize_field(".tag", "file_request_remove_deadline_details")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            EventDetails::FileRequestSendDetails(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
-                s.serialize_field(".tag", "file_request_send_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -9920,6 +10324,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventDetails::MemberAddNameDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "member_add_name_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::MemberChangeAdminRoleDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
@@ -9961,11 +10372,31 @@ impl ::serde::ser::Serialize for EventDetails {
                 s.serialize_field(".tag", "member_permanently_delete_account_contents_details")?;
                 s.end()
             }
+            EventDetails::MemberSpaceLimitsAddCustomQuotaDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "member_space_limits_add_custom_quota_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::MemberSpaceLimitsChangeCustomQuotaDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "member_space_limits_change_custom_quota_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::MemberSpaceLimitsChangeStatusDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "member_space_limits_change_status_details")?;
                 x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::MemberSpaceLimitsRemoveCustomQuotaDetails(_) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
+                s.serialize_field(".tag", "member_space_limits_remove_custom_quota_details")?;
                 s.end()
             }
             EventDetails::MemberSuggestDetails(ref x) => {
@@ -9975,11 +10406,10 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::MemberTransferAccountContentsDetails(ref x) => {
+            EventDetails::MemberTransferAccountContentsDetails(_) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
                 s.serialize_field(".tag", "member_transfer_account_contents_details")?;
-                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::PaperContentAddMemberDetails(ref x) => {
@@ -10264,6 +10694,12 @@ impl ::serde::ser::Serialize for EventDetails {
                 s.serialize_field(".tag", "emm_create_usage_report_details")?;
                 s.end()
             }
+            EventDetails::ExportMembersReportDetails(_) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
+                s.serialize_field(".tag", "export_members_report_details")?;
+                s.end()
+            }
             EventDetails::PaperAdminExportStartDetails(_) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 1)?;
@@ -10347,6 +10783,27 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventDetails::SfFbInviteDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                s.serialize_field(".tag", "sf_fb_invite_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::SfFbInviteChangeRoleDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 5)?;
+                s.serialize_field(".tag", "sf_fb_invite_change_role_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::SfFbUninviteDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "sf_fb_uninvite_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::SfInviteGroupDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 2)?;
@@ -10398,84 +10855,82 @@ impl ::serde::ser::Serialize for EventDetails {
             }
             EventDetails::SharedContentAddInviteesDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "shared_content_add_invitees_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentAddLinkExpiryDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 6)?;
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "shared_content_add_link_expiry_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::SharedContentAddLinkPasswordDetails(ref x) => {
+            EventDetails::SharedContentAddLinkPasswordDetails(_) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
                 s.serialize_field(".tag", "shared_content_add_link_password_details")?;
-                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentAddMemberDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 5)?;
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "shared_content_add_member_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentChangeDownloadsPolicyDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 6)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "shared_content_change_downloads_policy_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentChangeInviteeRoleDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 5)?;
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
                 s.serialize_field(".tag", "shared_content_change_invitee_role_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentChangeLinkAudienceDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 6)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "shared_content_change_link_audience_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentChangeLinkExpiryDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 6)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "shared_content_change_link_expiry_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::SharedContentChangeLinkPasswordDetails(ref x) => {
+            EventDetails::SharedContentChangeLinkPasswordDetails(_) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
                 s.serialize_field(".tag", "shared_content_change_link_password_details")?;
-                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentChangeMemberRoleDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 6)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "shared_content_change_member_role_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentChangeViewerInfoPolicyDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 6)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "shared_content_change_viewer_info_policy_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentClaimInvitationDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "shared_content_claim_invitation_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -10494,53 +10949,50 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::SharedContentRelinquishMembershipDetails(ref x) => {
+            EventDetails::SharedContentRelinquishMembershipDetails(_) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
                 s.serialize_field(".tag", "shared_content_relinquish_membership_details")?;
-                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::SharedContentRemoveInviteeDetails(ref x) => {
+            EventDetails::SharedContentRemoveInviteesDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
-                s.serialize_field(".tag", "shared_content_remove_invitee_details")?;
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "shared_content_remove_invitees_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentRemoveLinkExpiryDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "shared_content_remove_link_expiry_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::SharedContentRemoveLinkPasswordDetails(ref x) => {
+            EventDetails::SharedContentRemoveLinkPasswordDetails(_) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
                 s.serialize_field(".tag", "shared_content_remove_link_password_details")?;
-                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentRemoveMemberDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 5)?;
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "shared_content_remove_member_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentRequestAccessDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "shared_content_request_access_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::SharedContentUnshareDetails(ref x) => {
+            EventDetails::SharedContentUnshareDetails(_) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
                 s.serialize_field(".tag", "shared_content_unshare_details")?;
-                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedContentViewDetails(ref x) => {
@@ -10550,31 +11002,31 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::SharedFolderChangeConfidentialityDetails(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
-                s.serialize_field(".tag", "shared_folder_change_confidentiality_details")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
             EventDetails::SharedFolderChangeLinkPolicyDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 6)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "shared_folder_change_link_policy_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::SharedFolderChangeMemberManagementPolicyDetails(ref x) => {
+            EventDetails::SharedFolderChangeMembersInheritancePolicyDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 6)?;
-                s.serialize_field(".tag", "shared_folder_change_member_management_policy_details")?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "shared_folder_change_members_inheritance_policy_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::SharedFolderChangeMemberPolicyDetails(ref x) => {
+            EventDetails::SharedFolderChangeMembersManagementPolicyDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 6)?;
-                s.serialize_field(".tag", "shared_folder_change_member_policy_details")?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "shared_folder_change_members_management_policy_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::SharedFolderChangeMembersPolicyDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "shared_folder_change_members_policy_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -10591,11 +11043,10 @@ impl ::serde::ser::Serialize for EventDetails {
                 s.serialize_field(".tag", "shared_folder_decline_invitation_details")?;
                 s.end()
             }
-            EventDetails::SharedFolderMountDetails(ref x) => {
+            EventDetails::SharedFolderMountDetails(_) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
                 s.serialize_field(".tag", "shared_folder_mount_details")?;
-                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedFolderNestDetails(ref x) => {
@@ -10612,11 +11063,10 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventDetails::SharedFolderUnmountDetails(ref x) => {
+            EventDetails::SharedFolderUnmountDetails(_) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
                 s.serialize_field(".tag", "shared_folder_unmount_details")?;
-                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedLinkAddExpiryDetails(ref x) => {
@@ -10798,7 +11248,7 @@ impl ::serde::ser::Serialize for EventDetails {
             }
             EventDetails::TeamFolderRenameDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "team_folder_rename_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -10941,6 +11391,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 1)?;
                 s.serialize_field(".tag", "member_space_limits_add_exception_details")?;
+                s.end()
+            }
+            EventDetails::MemberSpaceLimitsChangeCapsTypePolicyDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "member_space_limits_change_caps_type_policy_details")?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::MemberSpaceLimitsChangePolicyDetails(ref x) => {
@@ -11190,10 +11647,11 @@ impl ::serde::ser::Serialize for EventDetails {
                 s.serialize_field(".tag", "tfa_reset_details")?;
                 s.end()
             }
-            EventDetails::MissingDetails(_) => {
+            EventDetails::MissingDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 1)?;
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "missing_details")?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -11257,6 +11715,8 @@ pub enum EventType {
     AccountCaptureChangeAvailability(AccountCaptureChangeAvailabilityType),
     /// (domains) Account captured user migrated their account to the team.
     AccountCaptureMigrateAccount(AccountCaptureMigrateAccountType),
+    /// (domains) Proactive account capture email sent to all unmanaged members.
+    AccountCaptureNotificationEmailsSent(AccountCaptureNotificationEmailsSentType),
     /// (domains) Account captured user relinquished their account by changing the email address
     /// associated with it.
     AccountCaptureRelinquishAccount(AccountCaptureRelinquishAccountType),
@@ -11317,26 +11777,14 @@ pub enum EventType {
     FileRollbackChanges(FileRollbackChangesType),
     /// (file_operations) Save a file or folder using a copy reference.
     FileSaveCopyReference(FileSaveCopyReferenceType),
-    /// (file_requests) Added a deadline to a file request. This event is replaced by
-    /// file_request_change and will not be logged going forward.
-    FileRequestAddDeadline(FileRequestAddDeadlineType),
     /// (file_requests) Change a file request.
     FileRequestChange(FileRequestChangeType),
-    /// (file_requests) Changed the file request folder. This event is replaced by
-    /// file_request_change and will not be logged going forward.
-    FileRequestChangeFolder(FileRequestChangeFolderType),
     /// (file_requests) Closed a file request.
     FileRequestClose(FileRequestCloseType),
     /// (file_requests) Created a file request.
     FileRequestCreate(FileRequestCreateType),
     /// (file_requests) Received files for a file request.
     FileRequestReceiveFile(FileRequestReceiveFileType),
-    /// (file_requests) Removed the file request deadline. This event is replaced by
-    /// file_request_change and will not be logged going forward.
-    FileRequestRemoveDeadline(FileRequestRemoveDeadlineType),
-    /// (file_requests) Sent file request to users via email. This event is replaced by
-    /// file_request_change and will not be logged going forward.
-    FileRequestSend(FileRequestSendType),
     /// (groups) Added an external ID for group.
     GroupAddExternalId(GroupAddExternalIdType),
     /// (groups) Added team members to a group.
@@ -11380,6 +11828,8 @@ pub enum EventType {
     /// (logins) Failed to sign in via SSO. This event is replaced by login_fail and will not be
     /// logged going forward.
     SsoError(SsoErrorType),
+    /// (members) Specify team member name.
+    MemberAddName(MemberAddNameType),
     /// (members) Change the admin role belonging to team member.
     MemberChangeAdminRole(MemberChangeAdminRoleType),
     /// (members) Changed team member email address.
@@ -11394,9 +11844,15 @@ pub enum EventType {
     MemberChangeStatus(MemberChangeStatusType),
     /// (members) Permanently deleted contents of a removed team member account.
     MemberPermanentlyDeleteAccountContents(MemberPermanentlyDeleteAccountContentsType),
+    /// (members) Set custom member space limit.
+    MemberSpaceLimitsAddCustomQuota(MemberSpaceLimitsAddCustomQuotaType),
+    /// (members) Changed custom member space limit.
+    MemberSpaceLimitsChangeCustomQuota(MemberSpaceLimitsChangeCustomQuotaType),
     /// (members) Changed the status with respect to whether the team member is under or over
     /// storage quota specified by policy.
     MemberSpaceLimitsChangeStatus(MemberSpaceLimitsChangeStatusType),
+    /// (members) Removed custom member space limit.
+    MemberSpaceLimitsRemoveCustomQuota(MemberSpaceLimitsRemoveCustomQuotaType),
     /// (members) Suggested a new team member to be added to the team.
     MemberSuggest(MemberSuggestType),
     /// (members) Transferred contents of a removed team member account to another member.
@@ -11492,6 +11948,8 @@ pub enum EventType {
     EmmCreateExceptionsReport(EmmCreateExceptionsReportType),
     /// (reports) EMM mobile app usage report created.
     EmmCreateUsageReport(EmmCreateUsageReportType),
+    /// (reports) Member data report created.
+    ExportMembersReport(ExportMembersReportType),
     /// (reports) Exported all Paper documents in the team.
     PaperAdminExportStart(PaperAdminExportStartType),
     /// (reports) Smart Sync non-admin devices report created.
@@ -11530,14 +11988,23 @@ pub enum EventType {
     /// (DEPRECATED FEATURE). This event is deprecated and will not be logged going forward as the
     /// associated product functionality no longer exists.
     SfExternalInviteWarn(SfExternalInviteWarnType),
+    /// (sharing) Invited Facebook users to a shared folder. This event is deprecated and will not
+    /// be logged going forward as the associated product functionality no longer exists.
+    SfFbInvite(SfFbInviteType),
+    /// (sharing) Changed a Facebook user's role in a shared folder. This event is deprecated and
+    /// will not be logged going forward as the associated product functionality no longer exists.
+    SfFbInviteChangeRole(SfFbInviteChangeRoleType),
+    /// (sharing) Uninvited a Facebook user from a shared folder. This event is deprecated and will
+    /// not be logged going forward as the associated product functionality no longer exists.
+    SfFbUninvite(SfFbUninviteType),
     /// (sharing) Invited a group to a shared folder. This event is deprecated and will not be
     /// logged going forward as the associated product functionality no longer exists.
     SfInviteGroup(SfInviteGroupType),
     /// (sharing) Granted access to a shared folder. This event is deprecated and will not be logged
     /// going forward as the associated product functionality no longer exists.
     SfTeamGrantAccess(SfTeamGrantAccessType),
-    /// (sharing) Invited team members to a shared folder. This event is deprecated and will not be
-    /// logged going forward as the associated product functionality no longer exists.
+    /// (sharing) Invited team members to a shared folder. This event is replaced by
+    /// shared_content_add_invitees and will not be logged going forward.
     SfTeamInvite(SfTeamInviteType),
     /// (sharing) Changed a team member's role in a shared folder. This event is deprecated and will
     /// not be logged going forward as the associated product functionality no longer exists.
@@ -11548,8 +12015,8 @@ pub enum EventType {
     /// (sharing) Joined a team member's shared folder from a link. This event is deprecated and
     /// will not be logged going forward as the associated product functionality no longer exists.
     SfTeamJoinFromOobLink(SfTeamJoinFromOobLinkType),
-    /// (sharing) Unshared a folder with a team member. This event is deprecated and will not be
-    /// logged going forward as the associated product functionality no longer exists.
+    /// (sharing) Unshared a folder with a team member. This event is replaced by
+    /// shared_content_remove_invitees and will not be logged going forward.
     SfTeamUninvite(SfTeamUninviteType),
     /// (sharing) Sent an email invitation to the membership of a shared file or folder.
     SharedContentAddInvitees(SharedContentAddInviteesType),
@@ -11574,7 +12041,7 @@ pub enum EventType {
     SharedContentChangeMemberRole(SharedContentChangeMemberRoleType),
     /// (sharing) Changed whether members can see who viewed the shared file or folder.
     SharedContentChangeViewerInfoPolicy(SharedContentChangeViewerInfoPolicyType),
-    /// (sharing) Claimed membership to a team member's shared folder.
+    /// (sharing) Acquired membership on a shared file or folder by claiming an invitation.
     SharedContentClaimInvitation(SharedContentClaimInvitationType),
     /// (sharing) Copied the shared file or folder to own Dropbox.
     SharedContentCopy(SharedContentCopyType),
@@ -11584,7 +12051,7 @@ pub enum EventType {
     SharedContentRelinquishMembership(SharedContentRelinquishMembershipType),
     /// (sharing) Removed an invitee from the membership of a shared file or folder before it was
     /// claimed.
-    SharedContentRemoveInvitee(SharedContentRemoveInviteeType),
+    SharedContentRemoveInvitees(SharedContentRemoveInviteesType),
     /// (sharing) Removed the expiry of the link for the shared file or folder.
     SharedContentRemoveLinkExpiry(SharedContentRemoveLinkExpiryType),
     /// (sharing) Removed the password on the link for the shared file or folder.
@@ -11598,14 +12065,14 @@ pub enum EventType {
     SharedContentUnshare(SharedContentUnshareType),
     /// (sharing) Previewed the shared file or folder.
     SharedContentView(SharedContentViewType),
-    /// (sharing) Set or unset the confidential flag on a shared folder.
-    SharedFolderChangeConfidentiality(SharedFolderChangeConfidentialityType),
     /// (sharing) Changed who can access the shared folder via a link.
     SharedFolderChangeLinkPolicy(SharedFolderChangeLinkPolicyType),
-    /// (sharing) Changed who can manage the membership of a shared folder.
-    SharedFolderChangeMemberManagementPolicy(SharedFolderChangeMemberManagementPolicyType),
+    /// (sharing) Specify if the shared folder inherits its members from the parent folder.
+    SharedFolderChangeMembersInheritancePolicy(SharedFolderChangeMembersInheritancePolicyType),
+    /// (sharing) Changed who can add or remove members of a shared folder.
+    SharedFolderChangeMembersManagementPolicy(SharedFolderChangeMembersManagementPolicyType),
     /// (sharing) Changed who can become a member of the shared folder.
-    SharedFolderChangeMemberPolicy(SharedFolderChangeMemberPolicyType),
+    SharedFolderChangeMembersPolicy(SharedFolderChangeMembersPolicyType),
     /// (sharing) Created a shared folder.
     SharedFolderCreate(SharedFolderCreateType),
     /// (sharing) Declined a team member's invitation to a shared folder.
@@ -11730,6 +12197,8 @@ pub enum EventType {
     /// (team_policies) Added an exception for one or more team members to bypass space limits
     /// imposed by policy.
     MemberSpaceLimitsAddException(MemberSpaceLimitsAddExceptionType),
+    /// (team_policies) Change the member space limit type for the team.
+    MemberSpaceLimitsChangeCapsTypePolicy(MemberSpaceLimitsChangeCapsTypePolicyType),
     /// (team_policies) Changed the team default limit level.
     MemberSpaceLimitsChangePolicy(MemberSpaceLimitsChangePolicyType),
     /// (team_policies) Removed an exception for one or more team members to bypass space limits
@@ -11862,6 +12331,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "emm_refresh_auth_token" => Ok(EventType::EmmRefreshAuthToken(EmmRefreshAuthTokenType::internal_deserialize(map)?)),
                     "account_capture_change_availability" => Ok(EventType::AccountCaptureChangeAvailability(AccountCaptureChangeAvailabilityType::internal_deserialize(map)?)),
                     "account_capture_migrate_account" => Ok(EventType::AccountCaptureMigrateAccount(AccountCaptureMigrateAccountType::internal_deserialize(map)?)),
+                    "account_capture_notification_emails_sent" => Ok(EventType::AccountCaptureNotificationEmailsSent(AccountCaptureNotificationEmailsSentType::internal_deserialize(map)?)),
                     "account_capture_relinquish_account" => Ok(EventType::AccountCaptureRelinquishAccount(AccountCaptureRelinquishAccountType::internal_deserialize(map)?)),
                     "disabled_domain_invites" => Ok(EventType::DisabledDomainInvites(DisabledDomainInvitesType::internal_deserialize(map)?)),
                     "domain_invites_approve_request_to_join_team" => Ok(EventType::DomainInvitesApproveRequestToJoinTeam(DomainInvitesApproveRequestToJoinTeamType::internal_deserialize(map)?)),
@@ -11889,14 +12359,10 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "file_revert" => Ok(EventType::FileRevert(FileRevertType::internal_deserialize(map)?)),
                     "file_rollback_changes" => Ok(EventType::FileRollbackChanges(FileRollbackChangesType::internal_deserialize(map)?)),
                     "file_save_copy_reference" => Ok(EventType::FileSaveCopyReference(FileSaveCopyReferenceType::internal_deserialize(map)?)),
-                    "file_request_add_deadline" => Ok(EventType::FileRequestAddDeadline(FileRequestAddDeadlineType::internal_deserialize(map)?)),
                     "file_request_change" => Ok(EventType::FileRequestChange(FileRequestChangeType::internal_deserialize(map)?)),
-                    "file_request_change_folder" => Ok(EventType::FileRequestChangeFolder(FileRequestChangeFolderType::internal_deserialize(map)?)),
                     "file_request_close" => Ok(EventType::FileRequestClose(FileRequestCloseType::internal_deserialize(map)?)),
                     "file_request_create" => Ok(EventType::FileRequestCreate(FileRequestCreateType::internal_deserialize(map)?)),
                     "file_request_receive_file" => Ok(EventType::FileRequestReceiveFile(FileRequestReceiveFileType::internal_deserialize(map)?)),
-                    "file_request_remove_deadline" => Ok(EventType::FileRequestRemoveDeadline(FileRequestRemoveDeadlineType::internal_deserialize(map)?)),
-                    "file_request_send" => Ok(EventType::FileRequestSend(FileRequestSendType::internal_deserialize(map)?)),
                     "group_add_external_id" => Ok(EventType::GroupAddExternalId(GroupAddExternalIdType::internal_deserialize(map)?)),
                     "group_add_member" => Ok(EventType::GroupAddMember(GroupAddMemberType::internal_deserialize(map)?)),
                     "group_change_external_id" => Ok(EventType::GroupChangeExternalId(GroupChangeExternalIdType::internal_deserialize(map)?)),
@@ -11917,13 +12383,17 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "sign_in_as_session_end" => Ok(EventType::SignInAsSessionEnd(SignInAsSessionEndType::internal_deserialize(map)?)),
                     "sign_in_as_session_start" => Ok(EventType::SignInAsSessionStart(SignInAsSessionStartType::internal_deserialize(map)?)),
                     "sso_error" => Ok(EventType::SsoError(SsoErrorType::internal_deserialize(map)?)),
+                    "member_add_name" => Ok(EventType::MemberAddName(MemberAddNameType::internal_deserialize(map)?)),
                     "member_change_admin_role" => Ok(EventType::MemberChangeAdminRole(MemberChangeAdminRoleType::internal_deserialize(map)?)),
                     "member_change_email" => Ok(EventType::MemberChangeEmail(MemberChangeEmailType::internal_deserialize(map)?)),
                     "member_change_membership_type" => Ok(EventType::MemberChangeMembershipType(MemberChangeMembershipTypeType::internal_deserialize(map)?)),
                     "member_change_name" => Ok(EventType::MemberChangeName(MemberChangeNameType::internal_deserialize(map)?)),
                     "member_change_status" => Ok(EventType::MemberChangeStatus(MemberChangeStatusType::internal_deserialize(map)?)),
                     "member_permanently_delete_account_contents" => Ok(EventType::MemberPermanentlyDeleteAccountContents(MemberPermanentlyDeleteAccountContentsType::internal_deserialize(map)?)),
+                    "member_space_limits_add_custom_quota" => Ok(EventType::MemberSpaceLimitsAddCustomQuota(MemberSpaceLimitsAddCustomQuotaType::internal_deserialize(map)?)),
+                    "member_space_limits_change_custom_quota" => Ok(EventType::MemberSpaceLimitsChangeCustomQuota(MemberSpaceLimitsChangeCustomQuotaType::internal_deserialize(map)?)),
                     "member_space_limits_change_status" => Ok(EventType::MemberSpaceLimitsChangeStatus(MemberSpaceLimitsChangeStatusType::internal_deserialize(map)?)),
+                    "member_space_limits_remove_custom_quota" => Ok(EventType::MemberSpaceLimitsRemoveCustomQuota(MemberSpaceLimitsRemoveCustomQuotaType::internal_deserialize(map)?)),
                     "member_suggest" => Ok(EventType::MemberSuggest(MemberSuggestType::internal_deserialize(map)?)),
                     "member_transfer_account_contents" => Ok(EventType::MemberTransferAccountContents(MemberTransferAccountContentsType::internal_deserialize(map)?)),
                     "paper_content_add_member" => Ok(EventType::PaperContentAddMember(PaperContentAddMemberType::internal_deserialize(map)?)),
@@ -11967,6 +12437,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "password_reset_all" => Ok(EventType::PasswordResetAll(PasswordResetAllType::internal_deserialize(map)?)),
                     "emm_create_exceptions_report" => Ok(EventType::EmmCreateExceptionsReport(EmmCreateExceptionsReportType::internal_deserialize(map)?)),
                     "emm_create_usage_report" => Ok(EventType::EmmCreateUsageReport(EmmCreateUsageReportType::internal_deserialize(map)?)),
+                    "export_members_report" => Ok(EventType::ExportMembersReport(ExportMembersReportType::internal_deserialize(map)?)),
                     "paper_admin_export_start" => Ok(EventType::PaperAdminExportStart(PaperAdminExportStartType::internal_deserialize(map)?)),
                     "smart_sync_create_admin_privilege_report" => Ok(EventType::SmartSyncCreateAdminPrivilegeReport(SmartSyncCreateAdminPrivilegeReportType::internal_deserialize(map)?)),
                     "team_activity_create_report" => Ok(EventType::TeamActivityCreateReport(TeamActivityCreateReportType::internal_deserialize(map)?)),
@@ -11980,6 +12451,9 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "sf_add_group" => Ok(EventType::SfAddGroup(SfAddGroupType::internal_deserialize(map)?)),
                     "sf_allow_non_members_to_view_shared_links" => Ok(EventType::SfAllowNonMembersToViewSharedLinks(SfAllowNonMembersToViewSharedLinksType::internal_deserialize(map)?)),
                     "sf_external_invite_warn" => Ok(EventType::SfExternalInviteWarn(SfExternalInviteWarnType::internal_deserialize(map)?)),
+                    "sf_fb_invite" => Ok(EventType::SfFbInvite(SfFbInviteType::internal_deserialize(map)?)),
+                    "sf_fb_invite_change_role" => Ok(EventType::SfFbInviteChangeRole(SfFbInviteChangeRoleType::internal_deserialize(map)?)),
+                    "sf_fb_uninvite" => Ok(EventType::SfFbUninvite(SfFbUninviteType::internal_deserialize(map)?)),
                     "sf_invite_group" => Ok(EventType::SfInviteGroup(SfInviteGroupType::internal_deserialize(map)?)),
                     "sf_team_grant_access" => Ok(EventType::SfTeamGrantAccess(SfTeamGrantAccessType::internal_deserialize(map)?)),
                     "sf_team_invite" => Ok(EventType::SfTeamInvite(SfTeamInviteType::internal_deserialize(map)?)),
@@ -12002,17 +12476,17 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "shared_content_copy" => Ok(EventType::SharedContentCopy(SharedContentCopyType::internal_deserialize(map)?)),
                     "shared_content_download" => Ok(EventType::SharedContentDownload(SharedContentDownloadType::internal_deserialize(map)?)),
                     "shared_content_relinquish_membership" => Ok(EventType::SharedContentRelinquishMembership(SharedContentRelinquishMembershipType::internal_deserialize(map)?)),
-                    "shared_content_remove_invitee" => Ok(EventType::SharedContentRemoveInvitee(SharedContentRemoveInviteeType::internal_deserialize(map)?)),
+                    "shared_content_remove_invitees" => Ok(EventType::SharedContentRemoveInvitees(SharedContentRemoveInviteesType::internal_deserialize(map)?)),
                     "shared_content_remove_link_expiry" => Ok(EventType::SharedContentRemoveLinkExpiry(SharedContentRemoveLinkExpiryType::internal_deserialize(map)?)),
                     "shared_content_remove_link_password" => Ok(EventType::SharedContentRemoveLinkPassword(SharedContentRemoveLinkPasswordType::internal_deserialize(map)?)),
                     "shared_content_remove_member" => Ok(EventType::SharedContentRemoveMember(SharedContentRemoveMemberType::internal_deserialize(map)?)),
                     "shared_content_request_access" => Ok(EventType::SharedContentRequestAccess(SharedContentRequestAccessType::internal_deserialize(map)?)),
                     "shared_content_unshare" => Ok(EventType::SharedContentUnshare(SharedContentUnshareType::internal_deserialize(map)?)),
                     "shared_content_view" => Ok(EventType::SharedContentView(SharedContentViewType::internal_deserialize(map)?)),
-                    "shared_folder_change_confidentiality" => Ok(EventType::SharedFolderChangeConfidentiality(SharedFolderChangeConfidentialityType::internal_deserialize(map)?)),
                     "shared_folder_change_link_policy" => Ok(EventType::SharedFolderChangeLinkPolicy(SharedFolderChangeLinkPolicyType::internal_deserialize(map)?)),
-                    "shared_folder_change_member_management_policy" => Ok(EventType::SharedFolderChangeMemberManagementPolicy(SharedFolderChangeMemberManagementPolicyType::internal_deserialize(map)?)),
-                    "shared_folder_change_member_policy" => Ok(EventType::SharedFolderChangeMemberPolicy(SharedFolderChangeMemberPolicyType::internal_deserialize(map)?)),
+                    "shared_folder_change_members_inheritance_policy" => Ok(EventType::SharedFolderChangeMembersInheritancePolicy(SharedFolderChangeMembersInheritancePolicyType::internal_deserialize(map)?)),
+                    "shared_folder_change_members_management_policy" => Ok(EventType::SharedFolderChangeMembersManagementPolicy(SharedFolderChangeMembersManagementPolicyType::internal_deserialize(map)?)),
+                    "shared_folder_change_members_policy" => Ok(EventType::SharedFolderChangeMembersPolicy(SharedFolderChangeMembersPolicyType::internal_deserialize(map)?)),
                     "shared_folder_create" => Ok(EventType::SharedFolderCreate(SharedFolderCreateType::internal_deserialize(map)?)),
                     "shared_folder_decline_invitation" => Ok(EventType::SharedFolderDeclineInvitation(SharedFolderDeclineInvitationType::internal_deserialize(map)?)),
                     "shared_folder_mount" => Ok(EventType::SharedFolderMount(SharedFolderMountType::internal_deserialize(map)?)),
@@ -12067,6 +12541,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "group_user_management_change_policy" => Ok(EventType::GroupUserManagementChangePolicy(GroupUserManagementChangePolicyType::internal_deserialize(map)?)),
                     "member_requests_change_policy" => Ok(EventType::MemberRequestsChangePolicy(MemberRequestsChangePolicyType::internal_deserialize(map)?)),
                     "member_space_limits_add_exception" => Ok(EventType::MemberSpaceLimitsAddException(MemberSpaceLimitsAddExceptionType::internal_deserialize(map)?)),
+                    "member_space_limits_change_caps_type_policy" => Ok(EventType::MemberSpaceLimitsChangeCapsTypePolicy(MemberSpaceLimitsChangeCapsTypePolicyType::internal_deserialize(map)?)),
                     "member_space_limits_change_policy" => Ok(EventType::MemberSpaceLimitsChangePolicy(MemberSpaceLimitsChangePolicyType::internal_deserialize(map)?)),
                     "member_space_limits_remove_exception" => Ok(EventType::MemberSpaceLimitsRemoveException(MemberSpaceLimitsRemoveExceptionType::internal_deserialize(map)?)),
                     "member_suggestions_change_policy" => Ok(EventType::MemberSuggestionsChangePolicy(MemberSuggestionsChangePolicyType::internal_deserialize(map)?)),
@@ -12132,6 +12607,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "emm_refresh_auth_token",
                                                     "account_capture_change_availability",
                                                     "account_capture_migrate_account",
+                                                    "account_capture_notification_emails_sent",
                                                     "account_capture_relinquish_account",
                                                     "disabled_domain_invites",
                                                     "domain_invites_approve_request_to_join_team",
@@ -12159,14 +12635,10 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "file_revert",
                                                     "file_rollback_changes",
                                                     "file_save_copy_reference",
-                                                    "file_request_add_deadline",
                                                     "file_request_change",
-                                                    "file_request_change_folder",
                                                     "file_request_close",
                                                     "file_request_create",
                                                     "file_request_receive_file",
-                                                    "file_request_remove_deadline",
-                                                    "file_request_send",
                                                     "group_add_external_id",
                                                     "group_add_member",
                                                     "group_change_external_id",
@@ -12187,13 +12659,17 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "sign_in_as_session_end",
                                                     "sign_in_as_session_start",
                                                     "sso_error",
+                                                    "member_add_name",
                                                     "member_change_admin_role",
                                                     "member_change_email",
                                                     "member_change_membership_type",
                                                     "member_change_name",
                                                     "member_change_status",
                                                     "member_permanently_delete_account_contents",
+                                                    "member_space_limits_add_custom_quota",
+                                                    "member_space_limits_change_custom_quota",
                                                     "member_space_limits_change_status",
+                                                    "member_space_limits_remove_custom_quota",
                                                     "member_suggest",
                                                     "member_transfer_account_contents",
                                                     "paper_content_add_member",
@@ -12237,6 +12713,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "password_reset_all",
                                                     "emm_create_exceptions_report",
                                                     "emm_create_usage_report",
+                                                    "export_members_report",
                                                     "paper_admin_export_start",
                                                     "smart_sync_create_admin_privilege_report",
                                                     "team_activity_create_report",
@@ -12250,6 +12727,9 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "sf_add_group",
                                                     "sf_allow_non_members_to_view_shared_links",
                                                     "sf_external_invite_warn",
+                                                    "sf_fb_invite",
+                                                    "sf_fb_invite_change_role",
+                                                    "sf_fb_uninvite",
                                                     "sf_invite_group",
                                                     "sf_team_grant_access",
                                                     "sf_team_invite",
@@ -12272,17 +12752,17 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "shared_content_copy",
                                                     "shared_content_download",
                                                     "shared_content_relinquish_membership",
-                                                    "shared_content_remove_invitee",
+                                                    "shared_content_remove_invitees",
                                                     "shared_content_remove_link_expiry",
                                                     "shared_content_remove_link_password",
                                                     "shared_content_remove_member",
                                                     "shared_content_request_access",
                                                     "shared_content_unshare",
                                                     "shared_content_view",
-                                                    "shared_folder_change_confidentiality",
                                                     "shared_folder_change_link_policy",
-                                                    "shared_folder_change_member_management_policy",
-                                                    "shared_folder_change_member_policy",
+                                                    "shared_folder_change_members_inheritance_policy",
+                                                    "shared_folder_change_members_management_policy",
+                                                    "shared_folder_change_members_policy",
                                                     "shared_folder_create",
                                                     "shared_folder_decline_invitation",
                                                     "shared_folder_mount",
@@ -12337,6 +12817,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                                     "group_user_management_change_policy",
                                                     "member_requests_change_policy",
                                                     "member_space_limits_add_exception",
+                                                    "member_space_limits_change_caps_type_policy",
                                                     "member_space_limits_change_policy",
                                                     "member_space_limits_remove_exception",
                                                     "member_suggestions_change_policy",
@@ -12552,6 +13033,13 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::AccountCaptureNotificationEmailsSent(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "account_capture_notification_emails_sent")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::AccountCaptureRelinquishAccount(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -12741,24 +13229,10 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventType::FileRequestAddDeadline(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventType", 2)?;
-                s.serialize_field(".tag", "file_request_add_deadline")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
             EventType::FileRequestChange(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "file_request_change")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            EventType::FileRequestChangeFolder(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventType", 2)?;
-                s.serialize_field(".tag", "file_request_change_folder")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -12780,20 +13254,6 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "file_request_receive_file")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            EventType::FileRequestRemoveDeadline(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventType", 2)?;
-                s.serialize_field(".tag", "file_request_remove_deadline")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
-            EventType::FileRequestSend(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventType", 2)?;
-                s.serialize_field(".tag", "file_request_send")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -12937,6 +13397,13 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::MemberAddName(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "member_add_name")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::MemberChangeAdminRole(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -12979,10 +13446,31 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::MemberSpaceLimitsAddCustomQuota(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "member_space_limits_add_custom_quota")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::MemberSpaceLimitsChangeCustomQuota(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "member_space_limits_change_custom_quota")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::MemberSpaceLimitsChangeStatus(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "member_space_limits_change_status")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::MemberSpaceLimitsRemoveCustomQuota(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "member_space_limits_remove_custom_quota")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -13287,6 +13775,13 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::ExportMembersReport(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "export_members_report")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::PaperAdminExportStart(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -13375,6 +13870,27 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "sf_external_invite_warn")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::SfFbInvite(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "sf_fb_invite")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::SfFbInviteChangeRole(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "sf_fb_invite_change_role")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::SfFbUninvite(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "sf_fb_uninvite")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -13532,10 +14048,10 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventType::SharedContentRemoveInvitee(ref x) => {
+            EventType::SharedContentRemoveInvitees(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
-                s.serialize_field(".tag", "shared_content_remove_invitee")?;
+                s.serialize_field(".tag", "shared_content_remove_invitees")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -13581,13 +14097,6 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventType::SharedFolderChangeConfidentiality(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("EventType", 2)?;
-                s.serialize_field(".tag", "shared_folder_change_confidentiality")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
             EventType::SharedFolderChangeLinkPolicy(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -13595,17 +14104,24 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventType::SharedFolderChangeMemberManagementPolicy(ref x) => {
+            EventType::SharedFolderChangeMembersInheritancePolicy(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
-                s.serialize_field(".tag", "shared_folder_change_member_management_policy")?;
+                s.serialize_field(".tag", "shared_folder_change_members_inheritance_policy")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
-            EventType::SharedFolderChangeMemberPolicy(ref x) => {
+            EventType::SharedFolderChangeMembersManagementPolicy(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
-                s.serialize_field(".tag", "shared_folder_change_member_policy")?;
+                s.serialize_field(".tag", "shared_folder_change_members_management_policy")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::SharedFolderChangeMembersPolicy(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "shared_folder_change_members_policy")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -13987,6 +14503,13 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::MemberSpaceLimitsChangeCapsTypePolicy(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "member_space_limits_change_caps_type_policy")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::MemberSpaceLimitsChangePolicy(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -14248,6 +14771,132 @@ impl ::serde::ser::Serialize for EventType {
             }
             EventType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
+    }
+}
+
+/// Member data report created.
+#[derive(Debug)]
+pub struct ExportMembersReportDetails {
+}
+
+impl Default for ExportMembersReportDetails {
+    fn default() -> Self {
+        ExportMembersReportDetails {
+        }
+    }
+}
+
+const EXPORT_MEMBERS_REPORT_DETAILS_FIELDS: &'static [&'static str] = &[];
+impl ExportMembersReportDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ExportMembersReportDetails, V::Error> {
+        use serde::de;
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, EXPORT_MEMBERS_REPORT_DETAILS_FIELDS));
+        }
+        Ok(ExportMembersReportDetails {
+        })
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExportMembersReportDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ExportMembersReportDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ExportMembersReportDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ExportMembersReportDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ExportMembersReportDetails", EXPORT_MEMBERS_REPORT_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExportMembersReportDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("ExportMembersReportDetails", 0)?.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ExportMembersReportType {
+    pub description: String,
+}
+
+impl ExportMembersReportType {
+    pub fn new(description: String) -> Self {
+        ExportMembersReportType {
+            description,
+        }
+    }
+
+}
+
+const EXPORT_MEMBERS_REPORT_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl ExportMembersReportType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ExportMembersReportType, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, EXPORT_MEMBERS_REPORT_TYPE_FIELDS))
+            }
+        }
+        Ok(ExportMembersReportType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExportMembersReportType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ExportMembersReportType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ExportMembersReportType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ExportMembersReportType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ExportMembersReportType", EXPORT_MEMBERS_REPORT_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExportMembersReportType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ExportMembersReportType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -17120,168 +17769,6 @@ impl ::serde::ser::Serialize for FileRenameType {
     }
 }
 
-/// Added a deadline to a file request.
-#[derive(Debug)]
-pub struct FileRequestAddDeadlineDetails {
-    /// File request id. Might be missing due to historical data gap.
-    pub file_request_id: Option<super::file_requests::FileRequestId>,
-    /// File request title.
-    pub request_title: Option<String>,
-}
-
-impl Default for FileRequestAddDeadlineDetails {
-    fn default() -> Self {
-        FileRequestAddDeadlineDetails {
-            file_request_id: None,
-            request_title: None,
-        }
-    }
-}
-
-const FILE_REQUEST_ADD_DEADLINE_DETAILS_FIELDS: &'static [&'static str] = &["file_request_id",
-                                                                            "request_title"];
-impl FileRequestAddDeadlineDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<FileRequestAddDeadlineDetails, V::Error> {
-        use serde::de;
-        let mut field_file_request_id = None;
-        let mut field_request_title = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "file_request_id" => {
-                    if field_file_request_id.is_some() {
-                        return Err(de::Error::duplicate_field("file_request_id"));
-                    }
-                    field_file_request_id = Some(map.next_value()?);
-                }
-                "request_title" => {
-                    if field_request_title.is_some() {
-                        return Err(de::Error::duplicate_field("request_title"));
-                    }
-                    field_request_title = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_ADD_DEADLINE_DETAILS_FIELDS))
-            }
-        }
-        Ok(FileRequestAddDeadlineDetails {
-            file_request_id: field_file_request_id,
-            request_title: field_request_title,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("file_request_id", &self.file_request_id)?;
-        s.serialize_field("request_title", &self.request_title)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FileRequestAddDeadlineDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FileRequestAddDeadlineDetails;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FileRequestAddDeadlineDetails struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FileRequestAddDeadlineDetails::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("FileRequestAddDeadlineDetails", FILE_REQUEST_ADD_DEADLINE_DETAILS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FileRequestAddDeadlineDetails {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileRequestAddDeadlineDetails", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct FileRequestAddDeadlineType {
-    pub description: String,
-}
-
-impl FileRequestAddDeadlineType {
-    pub fn new(description: String) -> Self {
-        FileRequestAddDeadlineType {
-            description,
-        }
-    }
-
-}
-
-const FILE_REQUEST_ADD_DEADLINE_TYPE_FIELDS: &'static [&'static str] = &["description"];
-impl FileRequestAddDeadlineType {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<FileRequestAddDeadlineType, V::Error> {
-        use serde::de;
-        let mut field_description = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "description" => {
-                    if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
-                    }
-                    field_description = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_ADD_DEADLINE_TYPE_FIELDS))
-            }
-        }
-        Ok(FileRequestAddDeadlineType {
-            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("description", &self.description)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FileRequestAddDeadlineType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FileRequestAddDeadlineType;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FileRequestAddDeadlineType struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FileRequestAddDeadlineType::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("FileRequestAddDeadlineType", FILE_REQUEST_ADD_DEADLINE_TYPE_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FileRequestAddDeadlineType {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileRequestAddDeadlineType", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
 /// Change a file request.
 #[derive(Debug)]
 pub struct FileRequestChangeDetails {
@@ -17392,168 +17879,6 @@ impl ::serde::ser::Serialize for FileRequestChangeDetails {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("FileRequestChangeDetails", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Changed the file request folder.
-#[derive(Debug)]
-pub struct FileRequestChangeFolderDetails {
-    /// File request id. Might be missing due to historical data gap.
-    pub file_request_id: Option<super::file_requests::FileRequestId>,
-    /// File request title.
-    pub request_title: Option<String>,
-}
-
-impl Default for FileRequestChangeFolderDetails {
-    fn default() -> Self {
-        FileRequestChangeFolderDetails {
-            file_request_id: None,
-            request_title: None,
-        }
-    }
-}
-
-const FILE_REQUEST_CHANGE_FOLDER_DETAILS_FIELDS: &'static [&'static str] = &["file_request_id",
-                                                                             "request_title"];
-impl FileRequestChangeFolderDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<FileRequestChangeFolderDetails, V::Error> {
-        use serde::de;
-        let mut field_file_request_id = None;
-        let mut field_request_title = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "file_request_id" => {
-                    if field_file_request_id.is_some() {
-                        return Err(de::Error::duplicate_field("file_request_id"));
-                    }
-                    field_file_request_id = Some(map.next_value()?);
-                }
-                "request_title" => {
-                    if field_request_title.is_some() {
-                        return Err(de::Error::duplicate_field("request_title"));
-                    }
-                    field_request_title = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_CHANGE_FOLDER_DETAILS_FIELDS))
-            }
-        }
-        Ok(FileRequestChangeFolderDetails {
-            file_request_id: field_file_request_id,
-            request_title: field_request_title,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("file_request_id", &self.file_request_id)?;
-        s.serialize_field("request_title", &self.request_title)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FileRequestChangeFolderDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FileRequestChangeFolderDetails;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FileRequestChangeFolderDetails struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FileRequestChangeFolderDetails::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("FileRequestChangeFolderDetails", FILE_REQUEST_CHANGE_FOLDER_DETAILS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FileRequestChangeFolderDetails {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileRequestChangeFolderDetails", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct FileRequestChangeFolderType {
-    pub description: String,
-}
-
-impl FileRequestChangeFolderType {
-    pub fn new(description: String) -> Self {
-        FileRequestChangeFolderType {
-            description,
-        }
-    }
-
-}
-
-const FILE_REQUEST_CHANGE_FOLDER_TYPE_FIELDS: &'static [&'static str] = &["description"];
-impl FileRequestChangeFolderType {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<FileRequestChangeFolderType, V::Error> {
-        use serde::de;
-        let mut field_description = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "description" => {
-                    if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
-                    }
-                    field_description = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_CHANGE_FOLDER_TYPE_FIELDS))
-            }
-        }
-        Ok(FileRequestChangeFolderType {
-            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("description", &self.description)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FileRequestChangeFolderType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FileRequestChangeFolderType;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FileRequestChangeFolderType struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FileRequestChangeFolderType::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("FileRequestChangeFolderType", FILE_REQUEST_CHANGE_FOLDER_TYPE_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FileRequestChangeFolderType {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileRequestChangeFolderType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -18147,8 +18472,12 @@ pub struct FileRequestReceiveFileDetails {
     pub submitted_file_names: Vec<String>,
     /// File request id. Might be missing due to historical data gap.
     pub file_request_id: Option<super::file_requests::FileRequestId>,
-    /// File request title.
-    pub request_title: Option<String>,
+    /// File request details. Might be missing due to historical data gap.
+    pub file_request_details: Option<FileRequestDetails>,
+    /// The name as provided by the submitter. Might be missing due to historical data gap.
+    pub submitter_name: Option<super::common::DisplayNameLegacy>,
+    /// The email as provided by the submitter. Might be missing due to historical data gap.
+    pub submitter_email: Option<EmailAddress>,
 }
 
 impl FileRequestReceiveFileDetails {
@@ -18156,7 +18485,9 @@ impl FileRequestReceiveFileDetails {
         FileRequestReceiveFileDetails {
             submitted_file_names,
             file_request_id: None,
-            request_title: None,
+            file_request_details: None,
+            submitter_name: None,
+            submitter_email: None,
         }
     }
 
@@ -18168,8 +18499,18 @@ impl FileRequestReceiveFileDetails {
         self
     }
 
-    pub fn with_request_title(mut self, value: Option<String>) -> Self {
-        self.request_title = value;
+    pub fn with_file_request_details(mut self, value: Option<FileRequestDetails>) -> Self {
+        self.file_request_details = value;
+        self
+    }
+
+    pub fn with_submitter_name(mut self, value: Option<super::common::DisplayNameLegacy>) -> Self {
+        self.submitter_name = value;
+        self
+    }
+
+    pub fn with_submitter_email(mut self, value: Option<EmailAddress>) -> Self {
+        self.submitter_email = value;
         self
     }
 
@@ -18177,7 +18518,9 @@ impl FileRequestReceiveFileDetails {
 
 const FILE_REQUEST_RECEIVE_FILE_DETAILS_FIELDS: &'static [&'static str] = &["submitted_file_names",
                                                                             "file_request_id",
-                                                                            "request_title"];
+                                                                            "file_request_details",
+                                                                            "submitter_name",
+                                                                            "submitter_email"];
 impl FileRequestReceiveFileDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -18185,7 +18528,9 @@ impl FileRequestReceiveFileDetails {
         use serde::de;
         let mut field_submitted_file_names = None;
         let mut field_file_request_id = None;
-        let mut field_request_title = None;
+        let mut field_file_request_details = None;
+        let mut field_submitter_name = None;
+        let mut field_submitter_email = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "submitted_file_names" => {
@@ -18200,11 +18545,23 @@ impl FileRequestReceiveFileDetails {
                     }
                     field_file_request_id = Some(map.next_value()?);
                 }
-                "request_title" => {
-                    if field_request_title.is_some() {
-                        return Err(de::Error::duplicate_field("request_title"));
+                "file_request_details" => {
+                    if field_file_request_details.is_some() {
+                        return Err(de::Error::duplicate_field("file_request_details"));
                     }
-                    field_request_title = Some(map.next_value()?);
+                    field_file_request_details = Some(map.next_value()?);
+                }
+                "submitter_name" => {
+                    if field_submitter_name.is_some() {
+                        return Err(de::Error::duplicate_field("submitter_name"));
+                    }
+                    field_submitter_name = Some(map.next_value()?);
+                }
+                "submitter_email" => {
+                    if field_submitter_email.is_some() {
+                        return Err(de::Error::duplicate_field("submitter_email"));
+                    }
+                    field_submitter_email = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_RECEIVE_FILE_DETAILS_FIELDS))
             }
@@ -18212,7 +18569,9 @@ impl FileRequestReceiveFileDetails {
         Ok(FileRequestReceiveFileDetails {
             submitted_file_names: field_submitted_file_names.ok_or_else(|| de::Error::missing_field("submitted_file_names"))?,
             file_request_id: field_file_request_id,
-            request_title: field_request_title,
+            file_request_details: field_file_request_details,
+            submitter_name: field_submitter_name,
+            submitter_email: field_submitter_email,
         })
     }
 
@@ -18223,7 +18582,9 @@ impl FileRequestReceiveFileDetails {
         use serde::ser::SerializeStruct;
         s.serialize_field("submitted_file_names", &self.submitted_file_names)?;
         s.serialize_field("file_request_id", &self.file_request_id)?;
-        s.serialize_field("request_title", &self.request_title)
+        s.serialize_field("file_request_details", &self.file_request_details)?;
+        s.serialize_field("submitter_name", &self.submitter_name)?;
+        s.serialize_field("submitter_email", &self.submitter_email)
     }
 }
 
@@ -18249,7 +18610,7 @@ impl ::serde::ser::Serialize for FileRequestReceiveFileDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileRequestReceiveFileDetails", 3)?;
+        let mut s = serializer.serialize_struct("FileRequestReceiveFileDetails", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -18324,330 +18685,6 @@ impl ::serde::ser::Serialize for FileRequestReceiveFileType {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("FileRequestReceiveFileType", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Removed the file request deadline.
-#[derive(Debug)]
-pub struct FileRequestRemoveDeadlineDetails {
-    /// File request id. Might be missing due to historical data gap.
-    pub file_request_id: Option<super::file_requests::FileRequestId>,
-    /// File request title.
-    pub request_title: Option<String>,
-}
-
-impl Default for FileRequestRemoveDeadlineDetails {
-    fn default() -> Self {
-        FileRequestRemoveDeadlineDetails {
-            file_request_id: None,
-            request_title: None,
-        }
-    }
-}
-
-const FILE_REQUEST_REMOVE_DEADLINE_DETAILS_FIELDS: &'static [&'static str] = &["file_request_id",
-                                                                               "request_title"];
-impl FileRequestRemoveDeadlineDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<FileRequestRemoveDeadlineDetails, V::Error> {
-        use serde::de;
-        let mut field_file_request_id = None;
-        let mut field_request_title = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "file_request_id" => {
-                    if field_file_request_id.is_some() {
-                        return Err(de::Error::duplicate_field("file_request_id"));
-                    }
-                    field_file_request_id = Some(map.next_value()?);
-                }
-                "request_title" => {
-                    if field_request_title.is_some() {
-                        return Err(de::Error::duplicate_field("request_title"));
-                    }
-                    field_request_title = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_REMOVE_DEADLINE_DETAILS_FIELDS))
-            }
-        }
-        Ok(FileRequestRemoveDeadlineDetails {
-            file_request_id: field_file_request_id,
-            request_title: field_request_title,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("file_request_id", &self.file_request_id)?;
-        s.serialize_field("request_title", &self.request_title)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FileRequestRemoveDeadlineDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FileRequestRemoveDeadlineDetails;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FileRequestRemoveDeadlineDetails struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FileRequestRemoveDeadlineDetails::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("FileRequestRemoveDeadlineDetails", FILE_REQUEST_REMOVE_DEADLINE_DETAILS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FileRequestRemoveDeadlineDetails {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileRequestRemoveDeadlineDetails", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct FileRequestRemoveDeadlineType {
-    pub description: String,
-}
-
-impl FileRequestRemoveDeadlineType {
-    pub fn new(description: String) -> Self {
-        FileRequestRemoveDeadlineType {
-            description,
-        }
-    }
-
-}
-
-const FILE_REQUEST_REMOVE_DEADLINE_TYPE_FIELDS: &'static [&'static str] = &["description"];
-impl FileRequestRemoveDeadlineType {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<FileRequestRemoveDeadlineType, V::Error> {
-        use serde::de;
-        let mut field_description = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "description" => {
-                    if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
-                    }
-                    field_description = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_REMOVE_DEADLINE_TYPE_FIELDS))
-            }
-        }
-        Ok(FileRequestRemoveDeadlineType {
-            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("description", &self.description)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FileRequestRemoveDeadlineType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FileRequestRemoveDeadlineType;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FileRequestRemoveDeadlineType struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FileRequestRemoveDeadlineType::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("FileRequestRemoveDeadlineType", FILE_REQUEST_REMOVE_DEADLINE_TYPE_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FileRequestRemoveDeadlineType {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileRequestRemoveDeadlineType", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-/// Sent file request to users via email.
-#[derive(Debug)]
-pub struct FileRequestSendDetails {
-    /// File request id. Might be missing due to historical data gap.
-    pub file_request_id: Option<super::file_requests::FileRequestId>,
-    /// File request title.
-    pub request_title: Option<String>,
-}
-
-impl Default for FileRequestSendDetails {
-    fn default() -> Self {
-        FileRequestSendDetails {
-            file_request_id: None,
-            request_title: None,
-        }
-    }
-}
-
-const FILE_REQUEST_SEND_DETAILS_FIELDS: &'static [&'static str] = &["file_request_id",
-                                                                    "request_title"];
-impl FileRequestSendDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<FileRequestSendDetails, V::Error> {
-        use serde::de;
-        let mut field_file_request_id = None;
-        let mut field_request_title = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "file_request_id" => {
-                    if field_file_request_id.is_some() {
-                        return Err(de::Error::duplicate_field("file_request_id"));
-                    }
-                    field_file_request_id = Some(map.next_value()?);
-                }
-                "request_title" => {
-                    if field_request_title.is_some() {
-                        return Err(de::Error::duplicate_field("request_title"));
-                    }
-                    field_request_title = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_SEND_DETAILS_FIELDS))
-            }
-        }
-        Ok(FileRequestSendDetails {
-            file_request_id: field_file_request_id,
-            request_title: field_request_title,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("file_request_id", &self.file_request_id)?;
-        s.serialize_field("request_title", &self.request_title)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FileRequestSendDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FileRequestSendDetails;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FileRequestSendDetails struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FileRequestSendDetails::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("FileRequestSendDetails", FILE_REQUEST_SEND_DETAILS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FileRequestSendDetails {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileRequestSendDetails", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct FileRequestSendType {
-    pub description: String,
-}
-
-impl FileRequestSendType {
-    pub fn new(description: String) -> Self {
-        FileRequestSendType {
-            description,
-        }
-    }
-
-}
-
-const FILE_REQUEST_SEND_TYPE_FIELDS: &'static [&'static str] = &["description"];
-impl FileRequestSendType {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<FileRequestSendType, V::Error> {
-        use serde::de;
-        let mut field_description = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "description" => {
-                    if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
-                    }
-                    field_description = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_SEND_TYPE_FIELDS))
-            }
-        }
-        Ok(FileRequestSendType {
-            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("description", &self.description)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for FileRequestSendType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = FileRequestSendType;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a FileRequestSendType struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                FileRequestSendType::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("FileRequestSendType", FILE_REQUEST_SEND_TYPE_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for FileRequestSendType {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileRequestSendType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -23077,7 +23114,7 @@ pub struct JoinTeamDetails {
     /// Linked applications.
     pub linked_apps: Vec<AppLogInfo>,
     /// Linked devices.
-    pub linked_devices: Vec<DeviceLogInfo>,
+    pub linked_devices: Vec<LinkedDeviceLogInfo>,
     /// Linked shared folders.
     pub linked_shared_folders: Vec<FolderLogInfo>,
 }
@@ -23085,7 +23122,7 @@ pub struct JoinTeamDetails {
 impl JoinTeamDetails {
     pub fn new(
         linked_apps: Vec<AppLogInfo>,
-        linked_devices: Vec<DeviceLogInfo>,
+        linked_devices: Vec<LinkedDeviceLogInfo>,
         linked_shared_folders: Vec<FolderLogInfo>,
     ) -> Self {
         JoinTeamDetails {
@@ -23177,70 +23214,373 @@ impl ::serde::ser::Serialize for JoinTeamDetails {
     }
 }
 
+/// Information on sessions, in legacy format
 #[derive(Debug)]
-pub enum LinkAudience {
-    Public,
-    Team,
-    Members,
-    Other,
+pub struct LegacyDeviceSessionLogInfo {
+    /// Session unique id. Might be missing due to historical data gap.
+    pub session_id: Option<DeviceSessionId>,
+    /// The IP address of the last activity from this session. Might be missing due to historical
+    /// data gap.
+    pub ip_address: Option<IpAddress>,
+    /// The time this session was created. Might be missing due to historical data gap.
+    pub created: Option<super::common::DropboxTimestamp>,
+    /// The time of the last activity from this session. Might be missing due to historical data
+    /// gap.
+    pub updated: Option<super::common::DropboxTimestamp>,
+    /// The device name. Might be missing due to historical data gap.
+    pub display_name: Option<String>,
+    /// Is device managed by emm. Might be missing due to historical data gap.
+    pub is_emm_managed: Option<bool>,
+    /// Information on the hosting platform. Might be missing due to historical data gap.
+    pub platform: Option<String>,
+    /// The mac address of the last activity from this session. Might be missing due to historical
+    /// data gap.
+    pub mac_address: Option<IpAddress>,
+    /// The hosting OS version. Might be missing due to historical data gap.
+    pub os_version: Option<String>,
+    /// Information on the hosting device type. Might be missing due to historical data gap.
+    pub device_type: Option<String>,
+    /// The Dropbox client version. Might be missing due to historical data gap.
+    pub client_version: Option<String>,
+    /// Alternative unique device session id, instead of session id field. Might be missing due to
+    /// historical data gap.
+    pub legacy_uniq_id: Option<String>,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = LinkAudience;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a LinkAudience structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "public" => Ok(LinkAudience::Public),
-                    "team" => Ok(LinkAudience::Team),
-                    "members" => Ok(LinkAudience::Members),
-                    _ => Ok(LinkAudience::Other)
-                }
-            }
+impl Default for LegacyDeviceSessionLogInfo {
+    fn default() -> Self {
+        LegacyDeviceSessionLogInfo {
+            session_id: None,
+            ip_address: None,
+            created: None,
+            updated: None,
+            display_name: None,
+            is_emm_managed: None,
+            platform: None,
+            mac_address: None,
+            os_version: None,
+            device_type: None,
+            client_version: None,
+            legacy_uniq_id: None,
         }
-        const VARIANTS: &'static [&'static str] = &["public",
-                                                    "team",
-                                                    "members",
-                                                    "other"];
-        deserializer.deserialize_struct("LinkAudience", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for LinkAudience {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            LinkAudience::Public => {
-                // unit
-                let mut s = serializer.serialize_struct("LinkAudience", 1)?;
-                s.serialize_field(".tag", "public")?;
-                s.end()
+const LEGACY_DEVICE_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["session_id",
+                                                                         "ip_address",
+                                                                         "created",
+                                                                         "updated",
+                                                                         "display_name",
+                                                                         "is_emm_managed",
+                                                                         "platform",
+                                                                         "mac_address",
+                                                                         "os_version",
+                                                                         "device_type",
+                                                                         "client_version",
+                                                                         "legacy_uniq_id"];
+impl LegacyDeviceSessionLogInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<LegacyDeviceSessionLogInfo, V::Error> {
+        use serde::de;
+        let mut field_session_id = None;
+        let mut field_ip_address = None;
+        let mut field_created = None;
+        let mut field_updated = None;
+        let mut field_display_name = None;
+        let mut field_is_emm_managed = None;
+        let mut field_platform = None;
+        let mut field_mac_address = None;
+        let mut field_os_version = None;
+        let mut field_device_type = None;
+        let mut field_client_version = None;
+        let mut field_legacy_uniq_id = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "session_id" => {
+                    if field_session_id.is_some() {
+                        return Err(de::Error::duplicate_field("session_id"));
+                    }
+                    field_session_id = Some(map.next_value()?);
+                }
+                "ip_address" => {
+                    if field_ip_address.is_some() {
+                        return Err(de::Error::duplicate_field("ip_address"));
+                    }
+                    field_ip_address = Some(map.next_value()?);
+                }
+                "created" => {
+                    if field_created.is_some() {
+                        return Err(de::Error::duplicate_field("created"));
+                    }
+                    field_created = Some(map.next_value()?);
+                }
+                "updated" => {
+                    if field_updated.is_some() {
+                        return Err(de::Error::duplicate_field("updated"));
+                    }
+                    field_updated = Some(map.next_value()?);
+                }
+                "display_name" => {
+                    if field_display_name.is_some() {
+                        return Err(de::Error::duplicate_field("display_name"));
+                    }
+                    field_display_name = Some(map.next_value()?);
+                }
+                "is_emm_managed" => {
+                    if field_is_emm_managed.is_some() {
+                        return Err(de::Error::duplicate_field("is_emm_managed"));
+                    }
+                    field_is_emm_managed = Some(map.next_value()?);
+                }
+                "platform" => {
+                    if field_platform.is_some() {
+                        return Err(de::Error::duplicate_field("platform"));
+                    }
+                    field_platform = Some(map.next_value()?);
+                }
+                "mac_address" => {
+                    if field_mac_address.is_some() {
+                        return Err(de::Error::duplicate_field("mac_address"));
+                    }
+                    field_mac_address = Some(map.next_value()?);
+                }
+                "os_version" => {
+                    if field_os_version.is_some() {
+                        return Err(de::Error::duplicate_field("os_version"));
+                    }
+                    field_os_version = Some(map.next_value()?);
+                }
+                "device_type" => {
+                    if field_device_type.is_some() {
+                        return Err(de::Error::duplicate_field("device_type"));
+                    }
+                    field_device_type = Some(map.next_value()?);
+                }
+                "client_version" => {
+                    if field_client_version.is_some() {
+                        return Err(de::Error::duplicate_field("client_version"));
+                    }
+                    field_client_version = Some(map.next_value()?);
+                }
+                "legacy_uniq_id" => {
+                    if field_legacy_uniq_id.is_some() {
+                        return Err(de::Error::duplicate_field("legacy_uniq_id"));
+                    }
+                    field_legacy_uniq_id = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LEGACY_DEVICE_SESSION_LOG_INFO_FIELDS))
             }
-            LinkAudience::Team => {
-                // unit
-                let mut s = serializer.serialize_struct("LinkAudience", 1)?;
-                s.serialize_field(".tag", "team")?;
-                s.end()
-            }
-            LinkAudience::Members => {
-                // unit
-                let mut s = serializer.serialize_struct("LinkAudience", 1)?;
-                s.serialize_field(".tag", "members")?;
-                s.end()
-            }
-            LinkAudience::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
+        Ok(LegacyDeviceSessionLogInfo {
+            session_id: field_session_id,
+            ip_address: field_ip_address,
+            created: field_created,
+            updated: field_updated,
+            display_name: field_display_name,
+            is_emm_managed: field_is_emm_managed,
+            platform: field_platform,
+            mac_address: field_mac_address,
+            os_version: field_os_version,
+            device_type: field_device_type,
+            client_version: field_client_version,
+            legacy_uniq_id: field_legacy_uniq_id,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("session_id", &self.session_id)?;
+        s.serialize_field("ip_address", &self.ip_address)?;
+        s.serialize_field("created", &self.created)?;
+        s.serialize_field("updated", &self.updated)?;
+        s.serialize_field("display_name", &self.display_name)?;
+        s.serialize_field("is_emm_managed", &self.is_emm_managed)?;
+        s.serialize_field("platform", &self.platform)?;
+        s.serialize_field("mac_address", &self.mac_address)?;
+        s.serialize_field("os_version", &self.os_version)?;
+        s.serialize_field("device_type", &self.device_type)?;
+        s.serialize_field("client_version", &self.client_version)?;
+        s.serialize_field("legacy_uniq_id", &self.legacy_uniq_id)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LegacyDeviceSessionLogInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LegacyDeviceSessionLogInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a LegacyDeviceSessionLogInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LegacyDeviceSessionLogInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LegacyDeviceSessionLogInfo", LEGACY_DEVICE_SESSION_LOG_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LegacyDeviceSessionLogInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LegacyDeviceSessionLogInfo", 12)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Linked Device's logged information.
+#[derive(Debug)]
+pub struct LinkedDeviceLogInfo {
+    /// Device type.
+    pub device_type: String,
+    /// Device display name.
+    pub display_name: Option<String>,
+    /// The IP address of the last activity from this device.
+    pub ip_address: Option<IpAddress>,
+    /// Last activity.
+    pub last_activity: Option<String>,
+    /// Device platform name.
+    pub platform: Option<String>,
+}
+
+impl LinkedDeviceLogInfo {
+    pub fn new(device_type: String) -> Self {
+        LinkedDeviceLogInfo {
+            device_type,
+            display_name: None,
+            ip_address: None,
+            last_activity: None,
+            platform: None,
+        }
+    }
+
+    pub fn with_display_name(mut self, value: Option<String>) -> Self {
+        self.display_name = value;
+        self
+    }
+
+    pub fn with_ip_address(mut self, value: Option<IpAddress>) -> Self {
+        self.ip_address = value;
+        self
+    }
+
+    pub fn with_last_activity(mut self, value: Option<String>) -> Self {
+        self.last_activity = value;
+        self
+    }
+
+    pub fn with_platform(mut self, value: Option<String>) -> Self {
+        self.platform = value;
+        self
+    }
+
+}
+
+const LINKED_DEVICE_LOG_INFO_FIELDS: &'static [&'static str] = &["device_type",
+                                                                 "display_name",
+                                                                 "ip_address",
+                                                                 "last_activity",
+                                                                 "platform"];
+impl LinkedDeviceLogInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<LinkedDeviceLogInfo, V::Error> {
+        use serde::de;
+        let mut field_device_type = None;
+        let mut field_display_name = None;
+        let mut field_ip_address = None;
+        let mut field_last_activity = None;
+        let mut field_platform = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "device_type" => {
+                    if field_device_type.is_some() {
+                        return Err(de::Error::duplicate_field("device_type"));
+                    }
+                    field_device_type = Some(map.next_value()?);
+                }
+                "display_name" => {
+                    if field_display_name.is_some() {
+                        return Err(de::Error::duplicate_field("display_name"));
+                    }
+                    field_display_name = Some(map.next_value()?);
+                }
+                "ip_address" => {
+                    if field_ip_address.is_some() {
+                        return Err(de::Error::duplicate_field("ip_address"));
+                    }
+                    field_ip_address = Some(map.next_value()?);
+                }
+                "last_activity" => {
+                    if field_last_activity.is_some() {
+                        return Err(de::Error::duplicate_field("last_activity"));
+                    }
+                    field_last_activity = Some(map.next_value()?);
+                }
+                "platform" => {
+                    if field_platform.is_some() {
+                        return Err(de::Error::duplicate_field("platform"));
+                    }
+                    field_platform = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, LINKED_DEVICE_LOG_INFO_FIELDS))
+            }
+        }
+        Ok(LinkedDeviceLogInfo {
+            device_type: field_device_type.ok_or_else(|| de::Error::missing_field("device_type"))?,
+            display_name: field_display_name,
+            ip_address: field_ip_address,
+            last_activity: field_last_activity,
+            platform: field_platform,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("device_type", &self.device_type)?;
+        s.serialize_field("display_name", &self.display_name)?;
+        s.serialize_field("ip_address", &self.ip_address)?;
+        s.serialize_field("last_activity", &self.last_activity)?;
+        s.serialize_field("platform", &self.platform)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LinkedDeviceLogInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LinkedDeviceLogInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a LinkedDeviceLogInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LinkedDeviceLogInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LinkedDeviceLogInfo", LINKED_DEVICE_LOG_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LinkedDeviceLogInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LinkedDeviceLogInfo", 5)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -23786,6 +24126,156 @@ impl ::serde::ser::Serialize for LogoutType {
     }
 }
 
+/// Specify team member name.
+#[derive(Debug)]
+pub struct MemberAddNameDetails {
+    /// New user's name.
+    pub new_value: UserNameLogInfo,
+}
+
+impl MemberAddNameDetails {
+    pub fn new(new_value: UserNameLogInfo) -> Self {
+        MemberAddNameDetails {
+            new_value,
+        }
+    }
+
+}
+
+const MEMBER_ADD_NAME_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
+impl MemberAddNameDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberAddNameDetails, V::Error> {
+        use serde::de;
+        let mut field_new_value = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MEMBER_ADD_NAME_DETAILS_FIELDS))
+            }
+        }
+        Ok(MemberAddNameDetails {
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_value", &self.new_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberAddNameDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberAddNameDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MemberAddNameDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberAddNameDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberAddNameDetails", MEMBER_ADD_NAME_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberAddNameDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberAddNameDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct MemberAddNameType {
+    pub description: String,
+}
+
+impl MemberAddNameType {
+    pub fn new(description: String) -> Self {
+        MemberAddNameType {
+            description,
+        }
+    }
+
+}
+
+const MEMBER_ADD_NAME_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl MemberAddNameType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberAddNameType, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MEMBER_ADD_NAME_TYPE_FIELDS))
+            }
+        }
+        Ok(MemberAddNameType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberAddNameType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberAddNameType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MemberAddNameType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberAddNameType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberAddNameType", MEMBER_ADD_NAME_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberAddNameType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberAddNameType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Change the admin role belonging to team member.
 #[derive(Debug)]
 pub struct MemberChangeAdminRoleDetails {
@@ -24286,7 +24776,7 @@ impl ::serde::ser::Serialize for MemberChangeMembershipTypeType {
 pub struct MemberChangeNameDetails {
     /// New user's name.
     pub new_value: UserNameLogInfo,
-    /// Previous user's name.
+    /// Previous user's name. Might be missing due to historical data gap.
     pub previous_value: Option<UserNameLogInfo>,
 }
 
@@ -24456,8 +24946,8 @@ pub struct MemberChangeStatusDetails {
     pub new_value: MemberStatus,
     /// Previous member status. Might be missing due to historical data gap.
     pub previous_value: Option<MemberStatus>,
-    /// Additional information relevant when a new member joins the team.
-    pub team_join_details: Option<JoinTeamDetails>,
+    /// Additional information indicating the action taken that caused status change.
+    pub action: Option<ActionDetails>,
 }
 
 impl MemberChangeStatusDetails {
@@ -24465,7 +24955,7 @@ impl MemberChangeStatusDetails {
         MemberChangeStatusDetails {
             new_value,
             previous_value: None,
-            team_join_details: None,
+            action: None,
         }
     }
 
@@ -24474,8 +24964,8 @@ impl MemberChangeStatusDetails {
         self
     }
 
-    pub fn with_team_join_details(mut self, value: Option<JoinTeamDetails>) -> Self {
-        self.team_join_details = value;
+    pub fn with_action(mut self, value: Option<ActionDetails>) -> Self {
+        self.action = value;
         self
     }
 
@@ -24483,7 +24973,7 @@ impl MemberChangeStatusDetails {
 
 const MEMBER_CHANGE_STATUS_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                        "previous_value",
-                                                                       "team_join_details"];
+                                                                       "action"];
 impl MemberChangeStatusDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
@@ -24491,7 +24981,7 @@ impl MemberChangeStatusDetails {
         use serde::de;
         let mut field_new_value = None;
         let mut field_previous_value = None;
-        let mut field_team_join_details = None;
+        let mut field_action = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "new_value" => {
@@ -24506,11 +24996,11 @@ impl MemberChangeStatusDetails {
                     }
                     field_previous_value = Some(map.next_value()?);
                 }
-                "team_join_details" => {
-                    if field_team_join_details.is_some() {
-                        return Err(de::Error::duplicate_field("team_join_details"));
+                "action" => {
+                    if field_action.is_some() {
+                        return Err(de::Error::duplicate_field("action"));
                     }
-                    field_team_join_details = Some(map.next_value()?);
+                    field_action = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, MEMBER_CHANGE_STATUS_DETAILS_FIELDS))
             }
@@ -24518,7 +25008,7 @@ impl MemberChangeStatusDetails {
         Ok(MemberChangeStatusDetails {
             new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
             previous_value: field_previous_value,
-            team_join_details: field_team_join_details,
+            action: field_action,
         })
     }
 
@@ -24529,7 +25019,7 @@ impl MemberChangeStatusDetails {
         use serde::ser::SerializeStruct;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)?;
-        s.serialize_field("team_join_details", &self.team_join_details)
+        s.serialize_field("action", &self.action)
     }
 }
 
@@ -24758,6 +25248,73 @@ impl ::serde::ser::Serialize for MemberPermanentlyDeleteAccountContentsType {
         let mut s = serializer.serialize_struct("MemberPermanentlyDeleteAccountContentsType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum MemberRemoveActionType {
+    Delete,
+    Offboard,
+    Leave,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberRemoveActionType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MemberRemoveActionType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MemberRemoveActionType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "delete" => Ok(MemberRemoveActionType::Delete),
+                    "offboard" => Ok(MemberRemoveActionType::Offboard),
+                    "leave" => Ok(MemberRemoveActionType::Leave),
+                    _ => Ok(MemberRemoveActionType::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["delete",
+                                                    "offboard",
+                                                    "leave",
+                                                    "other"];
+        deserializer.deserialize_struct("MemberRemoveActionType", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberRemoveActionType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MemberRemoveActionType::Delete => {
+                // unit
+                let mut s = serializer.serialize_struct("MemberRemoveActionType", 1)?;
+                s.serialize_field(".tag", "delete")?;
+                s.end()
+            }
+            MemberRemoveActionType::Offboard => {
+                // unit
+                let mut s = serializer.serialize_struct("MemberRemoveActionType", 1)?;
+                s.serialize_field(".tag", "offboard")?;
+                s.end()
+            }
+            MemberRemoveActionType::Leave => {
+                // unit
+                let mut s = serializer.serialize_struct("MemberRemoveActionType", 1)?;
+                s.serialize_field(".tag", "leave")?;
+                s.end()
+            }
+            MemberRemoveActionType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 
@@ -24996,6 +25553,156 @@ impl ::serde::ser::Serialize for MemberRequestsPolicy {
     }
 }
 
+/// Set custom member space limit.
+#[derive(Debug)]
+pub struct MemberSpaceLimitsAddCustomQuotaDetails {
+    /// New custom quota value in bytes.
+    pub new_value: u64,
+}
+
+impl MemberSpaceLimitsAddCustomQuotaDetails {
+    pub fn new(new_value: u64) -> Self {
+        MemberSpaceLimitsAddCustomQuotaDetails {
+            new_value,
+        }
+    }
+
+}
+
+const MEMBER_SPACE_LIMITS_ADD_CUSTOM_QUOTA_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
+impl MemberSpaceLimitsAddCustomQuotaDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSpaceLimitsAddCustomQuotaDetails, V::Error> {
+        use serde::de;
+        let mut field_new_value = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_ADD_CUSTOM_QUOTA_DETAILS_FIELDS))
+            }
+        }
+        Ok(MemberSpaceLimitsAddCustomQuotaDetails {
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_value", &self.new_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsAddCustomQuotaDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberSpaceLimitsAddCustomQuotaDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MemberSpaceLimitsAddCustomQuotaDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberSpaceLimitsAddCustomQuotaDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberSpaceLimitsAddCustomQuotaDetails", MEMBER_SPACE_LIMITS_ADD_CUSTOM_QUOTA_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberSpaceLimitsAddCustomQuotaDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberSpaceLimitsAddCustomQuotaDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct MemberSpaceLimitsAddCustomQuotaType {
+    pub description: String,
+}
+
+impl MemberSpaceLimitsAddCustomQuotaType {
+    pub fn new(description: String) -> Self {
+        MemberSpaceLimitsAddCustomQuotaType {
+            description,
+        }
+    }
+
+}
+
+const MEMBER_SPACE_LIMITS_ADD_CUSTOM_QUOTA_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl MemberSpaceLimitsAddCustomQuotaType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSpaceLimitsAddCustomQuotaType, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_ADD_CUSTOM_QUOTA_TYPE_FIELDS))
+            }
+        }
+        Ok(MemberSpaceLimitsAddCustomQuotaType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsAddCustomQuotaType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberSpaceLimitsAddCustomQuotaType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MemberSpaceLimitsAddCustomQuotaType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberSpaceLimitsAddCustomQuotaType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberSpaceLimitsAddCustomQuotaType", MEMBER_SPACE_LIMITS_ADD_CUSTOM_QUOTA_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberSpaceLimitsAddCustomQuotaType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberSpaceLimitsAddCustomQuotaType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Added an exception for one or more team members to bypass space limits imposed by policy.
 #[derive(Debug)]
 pub struct MemberSpaceLimitsAddExceptionDetails {
@@ -25117,6 +25824,332 @@ impl ::serde::ser::Serialize for MemberSpaceLimitsAddExceptionType {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("MemberSpaceLimitsAddExceptionType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Change the member space limit type for the team.
+#[derive(Debug)]
+pub struct MemberSpaceLimitsChangeCapsTypePolicyDetails {
+    /// Previous space limit type.
+    pub previous_value: SpaceCapsType,
+    /// New space limit type.
+    pub new_value: SpaceCapsType,
+}
+
+impl MemberSpaceLimitsChangeCapsTypePolicyDetails {
+    pub fn new(previous_value: SpaceCapsType, new_value: SpaceCapsType) -> Self {
+        MemberSpaceLimitsChangeCapsTypePolicyDetails {
+            previous_value,
+            new_value,
+        }
+    }
+
+}
+
+const MEMBER_SPACE_LIMITS_CHANGE_CAPS_TYPE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
+                                                                                              "new_value"];
+impl MemberSpaceLimitsChangeCapsTypePolicyDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSpaceLimitsChangeCapsTypePolicyDetails, V::Error> {
+        use serde::de;
+        let mut field_previous_value = None;
+        let mut field_new_value = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_CHANGE_CAPS_TYPE_POLICY_DETAILS_FIELDS))
+            }
+        }
+        Ok(MemberSpaceLimitsChangeCapsTypePolicyDetails {
+            previous_value: field_previous_value.ok_or_else(|| de::Error::missing_field("previous_value"))?,
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("previous_value", &self.previous_value)?;
+        s.serialize_field("new_value", &self.new_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsChangeCapsTypePolicyDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberSpaceLimitsChangeCapsTypePolicyDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MemberSpaceLimitsChangeCapsTypePolicyDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberSpaceLimitsChangeCapsTypePolicyDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberSpaceLimitsChangeCapsTypePolicyDetails", MEMBER_SPACE_LIMITS_CHANGE_CAPS_TYPE_POLICY_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberSpaceLimitsChangeCapsTypePolicyDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberSpaceLimitsChangeCapsTypePolicyDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct MemberSpaceLimitsChangeCapsTypePolicyType {
+    pub description: String,
+}
+
+impl MemberSpaceLimitsChangeCapsTypePolicyType {
+    pub fn new(description: String) -> Self {
+        MemberSpaceLimitsChangeCapsTypePolicyType {
+            description,
+        }
+    }
+
+}
+
+const MEMBER_SPACE_LIMITS_CHANGE_CAPS_TYPE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl MemberSpaceLimitsChangeCapsTypePolicyType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSpaceLimitsChangeCapsTypePolicyType, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_CHANGE_CAPS_TYPE_POLICY_TYPE_FIELDS))
+            }
+        }
+        Ok(MemberSpaceLimitsChangeCapsTypePolicyType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsChangeCapsTypePolicyType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberSpaceLimitsChangeCapsTypePolicyType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MemberSpaceLimitsChangeCapsTypePolicyType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberSpaceLimitsChangeCapsTypePolicyType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberSpaceLimitsChangeCapsTypePolicyType", MEMBER_SPACE_LIMITS_CHANGE_CAPS_TYPE_POLICY_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberSpaceLimitsChangeCapsTypePolicyType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberSpaceLimitsChangeCapsTypePolicyType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Changed custom member space limit.
+#[derive(Debug)]
+pub struct MemberSpaceLimitsChangeCustomQuotaDetails {
+    /// Previous custom quota value in bytes.
+    pub previous_value: u64,
+    /// New custom quota value in bytes.
+    pub new_value: u64,
+}
+
+impl MemberSpaceLimitsChangeCustomQuotaDetails {
+    pub fn new(previous_value: u64, new_value: u64) -> Self {
+        MemberSpaceLimitsChangeCustomQuotaDetails {
+            previous_value,
+            new_value,
+        }
+    }
+
+}
+
+const MEMBER_SPACE_LIMITS_CHANGE_CUSTOM_QUOTA_DETAILS_FIELDS: &'static [&'static str] = &["previous_value",
+                                                                                          "new_value"];
+impl MemberSpaceLimitsChangeCustomQuotaDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSpaceLimitsChangeCustomQuotaDetails, V::Error> {
+        use serde::de;
+        let mut field_previous_value = None;
+        let mut field_new_value = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_CHANGE_CUSTOM_QUOTA_DETAILS_FIELDS))
+            }
+        }
+        Ok(MemberSpaceLimitsChangeCustomQuotaDetails {
+            previous_value: field_previous_value.ok_or_else(|| de::Error::missing_field("previous_value"))?,
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("previous_value", &self.previous_value)?;
+        s.serialize_field("new_value", &self.new_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsChangeCustomQuotaDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberSpaceLimitsChangeCustomQuotaDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MemberSpaceLimitsChangeCustomQuotaDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberSpaceLimitsChangeCustomQuotaDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberSpaceLimitsChangeCustomQuotaDetails", MEMBER_SPACE_LIMITS_CHANGE_CUSTOM_QUOTA_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberSpaceLimitsChangeCustomQuotaDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberSpaceLimitsChangeCustomQuotaDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct MemberSpaceLimitsChangeCustomQuotaType {
+    pub description: String,
+}
+
+impl MemberSpaceLimitsChangeCustomQuotaType {
+    pub fn new(description: String) -> Self {
+        MemberSpaceLimitsChangeCustomQuotaType {
+            description,
+        }
+    }
+
+}
+
+const MEMBER_SPACE_LIMITS_CHANGE_CUSTOM_QUOTA_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl MemberSpaceLimitsChangeCustomQuotaType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSpaceLimitsChangeCustomQuotaType, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_CHANGE_CUSTOM_QUOTA_TYPE_FIELDS))
+            }
+        }
+        Ok(MemberSpaceLimitsChangeCustomQuotaType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsChangeCustomQuotaType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberSpaceLimitsChangeCustomQuotaType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MemberSpaceLimitsChangeCustomQuotaType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberSpaceLimitsChangeCustomQuotaType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberSpaceLimitsChangeCustomQuotaType", MEMBER_SPACE_LIMITS_CHANGE_CUSTOM_QUOTA_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberSpaceLimitsChangeCustomQuotaType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberSpaceLimitsChangeCustomQuotaType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -25443,6 +26476,132 @@ impl ::serde::ser::Serialize for MemberSpaceLimitsChangeStatusType {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("MemberSpaceLimitsChangeStatusType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Removed custom member space limit.
+#[derive(Debug)]
+pub struct MemberSpaceLimitsRemoveCustomQuotaDetails {
+}
+
+impl Default for MemberSpaceLimitsRemoveCustomQuotaDetails {
+    fn default() -> Self {
+        MemberSpaceLimitsRemoveCustomQuotaDetails {
+        }
+    }
+}
+
+const MEMBER_SPACE_LIMITS_REMOVE_CUSTOM_QUOTA_DETAILS_FIELDS: &'static [&'static str] = &[];
+impl MemberSpaceLimitsRemoveCustomQuotaDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSpaceLimitsRemoveCustomQuotaDetails, V::Error> {
+        use serde::de;
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_REMOVE_CUSTOM_QUOTA_DETAILS_FIELDS));
+        }
+        Ok(MemberSpaceLimitsRemoveCustomQuotaDetails {
+        })
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsRemoveCustomQuotaDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberSpaceLimitsRemoveCustomQuotaDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MemberSpaceLimitsRemoveCustomQuotaDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberSpaceLimitsRemoveCustomQuotaDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberSpaceLimitsRemoveCustomQuotaDetails", MEMBER_SPACE_LIMITS_REMOVE_CUSTOM_QUOTA_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberSpaceLimitsRemoveCustomQuotaDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("MemberSpaceLimitsRemoveCustomQuotaDetails", 0)?.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct MemberSpaceLimitsRemoveCustomQuotaType {
+    pub description: String,
+}
+
+impl MemberSpaceLimitsRemoveCustomQuotaType {
+    pub fn new(description: String) -> Self {
+        MemberSpaceLimitsRemoveCustomQuotaType {
+            description,
+        }
+    }
+
+}
+
+const MEMBER_SPACE_LIMITS_REMOVE_CUSTOM_QUOTA_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl MemberSpaceLimitsRemoveCustomQuotaType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MemberSpaceLimitsRemoveCustomQuotaType, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MEMBER_SPACE_LIMITS_REMOVE_CUSTOM_QUOTA_TYPE_FIELDS))
+            }
+        }
+        Ok(MemberSpaceLimitsRemoveCustomQuotaType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitsRemoveCustomQuotaType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberSpaceLimitsRemoveCustomQuotaType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MemberSpaceLimitsRemoveCustomQuotaType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberSpaceLimitsRemoveCustomQuotaType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberSpaceLimitsRemoveCustomQuotaType", MEMBER_SPACE_LIMITS_REMOVE_CUSTOM_QUOTA_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberSpaceLimitsRemoveCustomQuotaType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberSpaceLimitsRemoveCustomQuotaType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -26039,61 +27198,26 @@ impl ::serde::ser::Serialize for MemberSuggestionsPolicy {
 /// Transferred contents of a removed team member account to another member.
 #[derive(Debug)]
 pub struct MemberTransferAccountContentsDetails {
-    /// Source participant position in the Participants list.
-    pub src_participant_index: u64,
-    /// Destination participant position in the Participants list.
-    pub dest_participant_index: u64,
 }
 
-impl MemberTransferAccountContentsDetails {
-    pub fn new(src_participant_index: u64, dest_participant_index: u64) -> Self {
+impl Default for MemberTransferAccountContentsDetails {
+    fn default() -> Self {
         MemberTransferAccountContentsDetails {
-            src_participant_index,
-            dest_participant_index,
         }
     }
-
 }
 
-const MEMBER_TRANSFER_ACCOUNT_CONTENTS_DETAILS_FIELDS: &'static [&'static str] = &["src_participant_index",
-                                                                                   "dest_participant_index"];
+const MEMBER_TRANSFER_ACCOUNT_CONTENTS_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl MemberTransferAccountContentsDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MemberTransferAccountContentsDetails, V::Error> {
         use serde::de;
-        let mut field_src_participant_index = None;
-        let mut field_dest_participant_index = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "src_participant_index" => {
-                    if field_src_participant_index.is_some() {
-                        return Err(de::Error::duplicate_field("src_participant_index"));
-                    }
-                    field_src_participant_index = Some(map.next_value()?);
-                }
-                "dest_participant_index" => {
-                    if field_dest_participant_index.is_some() {
-                        return Err(de::Error::duplicate_field("dest_participant_index"));
-                    }
-                    field_dest_participant_index = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, MEMBER_TRANSFER_ACCOUNT_CONTENTS_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, MEMBER_TRANSFER_ACCOUNT_CONTENTS_DETAILS_FIELDS));
         }
         Ok(MemberTransferAccountContentsDetails {
-            src_participant_index: field_src_participant_index.ok_or_else(|| de::Error::missing_field("src_participant_index"))?,
-            dest_participant_index: field_dest_participant_index.ok_or_else(|| de::Error::missing_field("dest_participant_index"))?,
         })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("src_participant_index", &self.src_participant_index)?;
-        s.serialize_field("dest_participant_index", &self.dest_participant_index)
     }
 }
 
@@ -26119,9 +27243,7 @@ impl ::serde::ser::Serialize for MemberTransferAccountContentsDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("MemberTransferAccountContentsDetails", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
+        serializer.serialize_struct("MemberTransferAccountContentsDetails", 0)?.end()
     }
 }
 
@@ -26427,29 +27549,51 @@ impl ::serde::ser::Serialize for MicrosoftOfficeAddinPolicy {
     }
 }
 
-/// An indication that an event was returned with missing details
+/// An indication that an error occurred while retrieving the event. Some attributes of the event
+/// may be omitted as a result.
 #[derive(Debug)]
 pub struct MissingDetails {
+    /// All the data that could be retrieved and converted from the source event.
+    pub source_event_fields: Option<String>,
 }
 
 impl Default for MissingDetails {
     fn default() -> Self {
         MissingDetails {
+            source_event_fields: None,
         }
     }
 }
 
-const MISSING_DETAILS_FIELDS: &'static [&'static str] = &[];
+const MISSING_DETAILS_FIELDS: &'static [&'static str] = &["source_event_fields"];
 impl MissingDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MissingDetails, V::Error> {
         use serde::de;
-        if let Some(key) = map.next_key()? {
-            return Err(de::Error::unknown_field(key, MISSING_DETAILS_FIELDS));
+        let mut field_source_event_fields = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "source_event_fields" => {
+                    if field_source_event_fields.is_some() {
+                        return Err(de::Error::duplicate_field("source_event_fields"));
+                    }
+                    field_source_event_fields = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MISSING_DETAILS_FIELDS))
+            }
         }
         Ok(MissingDetails {
+            source_event_fields: field_source_event_fields,
         })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("source_event_fields", &self.source_event_fields)
     }
 }
 
@@ -26475,7 +27619,221 @@ impl ::serde::ser::Serialize for MissingDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        serializer.serialize_struct("MissingDetails", 0)?.end()
+        let mut s = serializer.serialize_struct("MissingDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Information about linked Dropbox mobile client sessions
+#[derive(Debug)]
+pub struct MobileDeviceSessionLogInfo {
+    /// The device name.
+    pub device_name: String,
+    /// The mobile application type.
+    pub client_type: super::team::MobileClientPlatform,
+    /// The Dropbox client version.
+    pub client_version: String,
+    /// last carrier used by the device.
+    pub last_carrier: String,
+    /// Session unique id. Might be missing due to historical data gap.
+    pub session_id: Option<DeviceSessionId>,
+    /// The IP address of the last activity from this session. Might be missing due to historical
+    /// data gap.
+    pub ip_address: Option<IpAddress>,
+    /// The time this session was created. Might be missing due to historical data gap.
+    pub created: Option<super::common::DropboxTimestamp>,
+    /// The time of the last activity from this session. Might be missing due to historical data
+    /// gap.
+    pub updated: Option<super::common::DropboxTimestamp>,
+    /// The hosting OS version.
+    pub os_version: Option<String>,
+}
+
+impl MobileDeviceSessionLogInfo {
+    pub fn new(
+        device_name: String,
+        client_type: super::team::MobileClientPlatform,
+        client_version: String,
+        last_carrier: String,
+    ) -> Self {
+        MobileDeviceSessionLogInfo {
+            device_name,
+            client_type,
+            client_version,
+            last_carrier,
+            session_id: None,
+            ip_address: None,
+            created: None,
+            updated: None,
+            os_version: None,
+        }
+    }
+
+    pub fn with_session_id(mut self, value: Option<DeviceSessionId>) -> Self {
+        self.session_id = value;
+        self
+    }
+
+    pub fn with_ip_address(mut self, value: Option<IpAddress>) -> Self {
+        self.ip_address = value;
+        self
+    }
+
+    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.created = value;
+        self
+    }
+
+    pub fn with_updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.updated = value;
+        self
+    }
+
+    pub fn with_os_version(mut self, value: Option<String>) -> Self {
+        self.os_version = value;
+        self
+    }
+
+}
+
+const MOBILE_DEVICE_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["device_name",
+                                                                         "client_type",
+                                                                         "client_version",
+                                                                         "last_carrier",
+                                                                         "session_id",
+                                                                         "ip_address",
+                                                                         "created",
+                                                                         "updated",
+                                                                         "os_version"];
+impl MobileDeviceSessionLogInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MobileDeviceSessionLogInfo, V::Error> {
+        use serde::de;
+        let mut field_device_name = None;
+        let mut field_client_type = None;
+        let mut field_client_version = None;
+        let mut field_last_carrier = None;
+        let mut field_session_id = None;
+        let mut field_ip_address = None;
+        let mut field_created = None;
+        let mut field_updated = None;
+        let mut field_os_version = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "device_name" => {
+                    if field_device_name.is_some() {
+                        return Err(de::Error::duplicate_field("device_name"));
+                    }
+                    field_device_name = Some(map.next_value()?);
+                }
+                "client_type" => {
+                    if field_client_type.is_some() {
+                        return Err(de::Error::duplicate_field("client_type"));
+                    }
+                    field_client_type = Some(map.next_value()?);
+                }
+                "client_version" => {
+                    if field_client_version.is_some() {
+                        return Err(de::Error::duplicate_field("client_version"));
+                    }
+                    field_client_version = Some(map.next_value()?);
+                }
+                "last_carrier" => {
+                    if field_last_carrier.is_some() {
+                        return Err(de::Error::duplicate_field("last_carrier"));
+                    }
+                    field_last_carrier = Some(map.next_value()?);
+                }
+                "session_id" => {
+                    if field_session_id.is_some() {
+                        return Err(de::Error::duplicate_field("session_id"));
+                    }
+                    field_session_id = Some(map.next_value()?);
+                }
+                "ip_address" => {
+                    if field_ip_address.is_some() {
+                        return Err(de::Error::duplicate_field("ip_address"));
+                    }
+                    field_ip_address = Some(map.next_value()?);
+                }
+                "created" => {
+                    if field_created.is_some() {
+                        return Err(de::Error::duplicate_field("created"));
+                    }
+                    field_created = Some(map.next_value()?);
+                }
+                "updated" => {
+                    if field_updated.is_some() {
+                        return Err(de::Error::duplicate_field("updated"));
+                    }
+                    field_updated = Some(map.next_value()?);
+                }
+                "os_version" => {
+                    if field_os_version.is_some() {
+                        return Err(de::Error::duplicate_field("os_version"));
+                    }
+                    field_os_version = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MOBILE_DEVICE_SESSION_LOG_INFO_FIELDS))
+            }
+        }
+        Ok(MobileDeviceSessionLogInfo {
+            device_name: field_device_name.ok_or_else(|| de::Error::missing_field("device_name"))?,
+            client_type: field_client_type.ok_or_else(|| de::Error::missing_field("client_type"))?,
+            client_version: field_client_version.ok_or_else(|| de::Error::missing_field("client_version"))?,
+            last_carrier: field_last_carrier.ok_or_else(|| de::Error::missing_field("last_carrier"))?,
+            session_id: field_session_id,
+            ip_address: field_ip_address,
+            created: field_created,
+            updated: field_updated,
+            os_version: field_os_version,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("device_name", &self.device_name)?;
+        s.serialize_field("client_type", &self.client_type)?;
+        s.serialize_field("client_version", &self.client_version)?;
+        s.serialize_field("last_carrier", &self.last_carrier)?;
+        s.serialize_field("session_id", &self.session_id)?;
+        s.serialize_field("ip_address", &self.ip_address)?;
+        s.serialize_field("created", &self.created)?;
+        s.serialize_field("updated", &self.updated)?;
+        s.serialize_field("os_version", &self.os_version)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MobileDeviceSessionLogInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MobileDeviceSessionLogInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MobileDeviceSessionLogInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MobileDeviceSessionLogInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MobileDeviceSessionLogInfo", MOBILE_DEVICE_SESSION_LOG_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MobileDeviceSessionLogInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MobileDeviceSessionLogInfo", 9)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -36720,6 +38078,549 @@ impl ::serde::ser::Serialize for SfExternalInviteWarnType {
     }
 }
 
+/// Changed a Facebook user's role in a shared folder.
+#[derive(Debug)]
+pub struct SfFbInviteChangeRoleDetails {
+    /// Target asset position in the Assets list.
+    pub target_asset_index: u64,
+    /// Original shared folder name.
+    pub original_folder_name: String,
+    /// Previous sharing permission. Might be missing due to historical data gap.
+    pub previous_sharing_permission: Option<String>,
+    /// New sharing permission. Might be missing due to historical data gap.
+    pub new_sharing_permission: Option<String>,
+}
+
+impl SfFbInviteChangeRoleDetails {
+    pub fn new(target_asset_index: u64, original_folder_name: String) -> Self {
+        SfFbInviteChangeRoleDetails {
+            target_asset_index,
+            original_folder_name,
+            previous_sharing_permission: None,
+            new_sharing_permission: None,
+        }
+    }
+
+    pub fn with_previous_sharing_permission(mut self, value: Option<String>) -> Self {
+        self.previous_sharing_permission = value;
+        self
+    }
+
+    pub fn with_new_sharing_permission(mut self, value: Option<String>) -> Self {
+        self.new_sharing_permission = value;
+        self
+    }
+
+}
+
+const SF_FB_INVITE_CHANGE_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
+                                                                           "original_folder_name",
+                                                                           "previous_sharing_permission",
+                                                                           "new_sharing_permission"];
+impl SfFbInviteChangeRoleDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfFbInviteChangeRoleDetails, V::Error> {
+        use serde::de;
+        let mut field_target_asset_index = None;
+        let mut field_original_folder_name = None;
+        let mut field_previous_sharing_permission = None;
+        let mut field_new_sharing_permission = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "target_asset_index" => {
+                    if field_target_asset_index.is_some() {
+                        return Err(de::Error::duplicate_field("target_asset_index"));
+                    }
+                    field_target_asset_index = Some(map.next_value()?);
+                }
+                "original_folder_name" => {
+                    if field_original_folder_name.is_some() {
+                        return Err(de::Error::duplicate_field("original_folder_name"));
+                    }
+                    field_original_folder_name = Some(map.next_value()?);
+                }
+                "previous_sharing_permission" => {
+                    if field_previous_sharing_permission.is_some() {
+                        return Err(de::Error::duplicate_field("previous_sharing_permission"));
+                    }
+                    field_previous_sharing_permission = Some(map.next_value()?);
+                }
+                "new_sharing_permission" => {
+                    if field_new_sharing_permission.is_some() {
+                        return Err(de::Error::duplicate_field("new_sharing_permission"));
+                    }
+                    field_new_sharing_permission = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SF_FB_INVITE_CHANGE_ROLE_DETAILS_FIELDS))
+            }
+        }
+        Ok(SfFbInviteChangeRoleDetails {
+            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
+            original_folder_name: field_original_folder_name.ok_or_else(|| de::Error::missing_field("original_folder_name"))?,
+            previous_sharing_permission: field_previous_sharing_permission,
+            new_sharing_permission: field_new_sharing_permission,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("target_asset_index", &self.target_asset_index)?;
+        s.serialize_field("original_folder_name", &self.original_folder_name)?;
+        s.serialize_field("previous_sharing_permission", &self.previous_sharing_permission)?;
+        s.serialize_field("new_sharing_permission", &self.new_sharing_permission)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SfFbInviteChangeRoleDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SfFbInviteChangeRoleDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SfFbInviteChangeRoleDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SfFbInviteChangeRoleDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SfFbInviteChangeRoleDetails", SF_FB_INVITE_CHANGE_ROLE_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SfFbInviteChangeRoleDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SfFbInviteChangeRoleDetails", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct SfFbInviteChangeRoleType {
+    pub description: String,
+}
+
+impl SfFbInviteChangeRoleType {
+    pub fn new(description: String) -> Self {
+        SfFbInviteChangeRoleType {
+            description,
+        }
+    }
+
+}
+
+const SF_FB_INVITE_CHANGE_ROLE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl SfFbInviteChangeRoleType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfFbInviteChangeRoleType, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SF_FB_INVITE_CHANGE_ROLE_TYPE_FIELDS))
+            }
+        }
+        Ok(SfFbInviteChangeRoleType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SfFbInviteChangeRoleType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SfFbInviteChangeRoleType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SfFbInviteChangeRoleType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SfFbInviteChangeRoleType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SfFbInviteChangeRoleType", SF_FB_INVITE_CHANGE_ROLE_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SfFbInviteChangeRoleType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SfFbInviteChangeRoleType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Invited Facebook users to a shared folder.
+#[derive(Debug)]
+pub struct SfFbInviteDetails {
+    /// Target asset position in the Assets list.
+    pub target_asset_index: u64,
+    /// Original shared folder name.
+    pub original_folder_name: String,
+    /// Sharing permission. Might be missing due to historical data gap.
+    pub sharing_permission: Option<String>,
+}
+
+impl SfFbInviteDetails {
+    pub fn new(target_asset_index: u64, original_folder_name: String) -> Self {
+        SfFbInviteDetails {
+            target_asset_index,
+            original_folder_name,
+            sharing_permission: None,
+        }
+    }
+
+    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
+        self.sharing_permission = value;
+        self
+    }
+
+}
+
+const SF_FB_INVITE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
+                                                               "original_folder_name",
+                                                               "sharing_permission"];
+impl SfFbInviteDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfFbInviteDetails, V::Error> {
+        use serde::de;
+        let mut field_target_asset_index = None;
+        let mut field_original_folder_name = None;
+        let mut field_sharing_permission = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "target_asset_index" => {
+                    if field_target_asset_index.is_some() {
+                        return Err(de::Error::duplicate_field("target_asset_index"));
+                    }
+                    field_target_asset_index = Some(map.next_value()?);
+                }
+                "original_folder_name" => {
+                    if field_original_folder_name.is_some() {
+                        return Err(de::Error::duplicate_field("original_folder_name"));
+                    }
+                    field_original_folder_name = Some(map.next_value()?);
+                }
+                "sharing_permission" => {
+                    if field_sharing_permission.is_some() {
+                        return Err(de::Error::duplicate_field("sharing_permission"));
+                    }
+                    field_sharing_permission = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SF_FB_INVITE_DETAILS_FIELDS))
+            }
+        }
+        Ok(SfFbInviteDetails {
+            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
+            original_folder_name: field_original_folder_name.ok_or_else(|| de::Error::missing_field("original_folder_name"))?,
+            sharing_permission: field_sharing_permission,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("target_asset_index", &self.target_asset_index)?;
+        s.serialize_field("original_folder_name", &self.original_folder_name)?;
+        s.serialize_field("sharing_permission", &self.sharing_permission)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SfFbInviteDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SfFbInviteDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SfFbInviteDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SfFbInviteDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SfFbInviteDetails", SF_FB_INVITE_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SfFbInviteDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SfFbInviteDetails", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct SfFbInviteType {
+    pub description: String,
+}
+
+impl SfFbInviteType {
+    pub fn new(description: String) -> Self {
+        SfFbInviteType {
+            description,
+        }
+    }
+
+}
+
+const SF_FB_INVITE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl SfFbInviteType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfFbInviteType, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SF_FB_INVITE_TYPE_FIELDS))
+            }
+        }
+        Ok(SfFbInviteType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SfFbInviteType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SfFbInviteType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SfFbInviteType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SfFbInviteType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SfFbInviteType", SF_FB_INVITE_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SfFbInviteType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SfFbInviteType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Uninvited a Facebook user from a shared folder.
+#[derive(Debug)]
+pub struct SfFbUninviteDetails {
+    /// Target asset position in the Assets list.
+    pub target_asset_index: u64,
+    /// Original shared folder name.
+    pub original_folder_name: String,
+}
+
+impl SfFbUninviteDetails {
+    pub fn new(target_asset_index: u64, original_folder_name: String) -> Self {
+        SfFbUninviteDetails {
+            target_asset_index,
+            original_folder_name,
+        }
+    }
+
+}
+
+const SF_FB_UNINVITE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
+                                                                 "original_folder_name"];
+impl SfFbUninviteDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfFbUninviteDetails, V::Error> {
+        use serde::de;
+        let mut field_target_asset_index = None;
+        let mut field_original_folder_name = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "target_asset_index" => {
+                    if field_target_asset_index.is_some() {
+                        return Err(de::Error::duplicate_field("target_asset_index"));
+                    }
+                    field_target_asset_index = Some(map.next_value()?);
+                }
+                "original_folder_name" => {
+                    if field_original_folder_name.is_some() {
+                        return Err(de::Error::duplicate_field("original_folder_name"));
+                    }
+                    field_original_folder_name = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SF_FB_UNINVITE_DETAILS_FIELDS))
+            }
+        }
+        Ok(SfFbUninviteDetails {
+            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
+            original_folder_name: field_original_folder_name.ok_or_else(|| de::Error::missing_field("original_folder_name"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("target_asset_index", &self.target_asset_index)?;
+        s.serialize_field("original_folder_name", &self.original_folder_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SfFbUninviteDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SfFbUninviteDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SfFbUninviteDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SfFbUninviteDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SfFbUninviteDetails", SF_FB_UNINVITE_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SfFbUninviteDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SfFbUninviteDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct SfFbUninviteType {
+    pub description: String,
+}
+
+impl SfFbUninviteType {
+    pub fn new(description: String) -> Self {
+        SfFbUninviteType {
+            description,
+        }
+    }
+
+}
+
+const SF_FB_UNINVITE_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl SfFbUninviteType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SfFbUninviteType, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SF_FB_UNINVITE_TYPE_FIELDS))
+            }
+        }
+        Ok(SfFbUninviteType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SfFbUninviteType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SfFbUninviteType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SfFbUninviteType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SfFbUninviteType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SfFbUninviteType", SF_FB_UNINVITE_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SfFbUninviteType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SfFbUninviteType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Invited a group to a shared folder.
 #[derive(Debug)]
 pub struct SfInviteGroupDetails {
@@ -37941,73 +39842,54 @@ impl ::serde::ser::Serialize for SfTeamUninviteType {
 /// Sent an email invitation to the membership of a shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentAddInviteesDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// Sharing permission. Might be missing due to historical data gap.
-    pub sharing_permission: Option<String>,
+    /// Shared content access level.
+    pub shared_content_access_level: super::sharing::AccessLevel,
+    /// A list of invitees.
+    pub invitees: Vec<EmailAddress>,
 }
 
 impl SharedContentAddInviteesDetails {
-    pub fn new(target_asset_index: u64) -> Self {
+    pub fn new(
+        shared_content_access_level: super::sharing::AccessLevel,
+        invitees: Vec<EmailAddress>,
+    ) -> Self {
         SharedContentAddInviteesDetails {
-            target_asset_index,
-            original_folder_name: None,
-            sharing_permission: None,
+            shared_content_access_level,
+            invitees,
         }
-    }
-
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
-        self.sharing_permission = value;
-        self
     }
 
 }
 
-const SHARED_CONTENT_ADD_INVITEES_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                              "original_folder_name",
-                                                                              "sharing_permission"];
+const SHARED_CONTENT_ADD_INVITEES_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_access_level",
+                                                                              "invitees"];
 impl SharedContentAddInviteesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentAddInviteesDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        let mut field_sharing_permission = None;
+        let mut field_shared_content_access_level = None;
+        let mut field_invitees = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
+                "shared_content_access_level" => {
+                    if field_shared_content_access_level.is_some() {
+                        return Err(de::Error::duplicate_field("shared_content_access_level"));
                     }
-                    field_target_asset_index = Some(map.next_value()?);
+                    field_shared_content_access_level = Some(map.next_value()?);
                 }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
+                "invitees" => {
+                    if field_invitees.is_some() {
+                        return Err(de::Error::duplicate_field("invitees"));
                     }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "sharing_permission" => {
-                    if field_sharing_permission.is_some() {
-                        return Err(de::Error::duplicate_field("sharing_permission"));
-                    }
-                    field_sharing_permission = Some(map.next_value()?);
+                    field_invitees = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_ADD_INVITEES_DETAILS_FIELDS))
             }
         }
         Ok(SharedContentAddInviteesDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name,
-            sharing_permission: field_sharing_permission,
+            shared_content_access_level: field_shared_content_access_level.ok_or_else(|| de::Error::missing_field("shared_content_access_level"))?,
+            invitees: field_invitees.ok_or_else(|| de::Error::missing_field("invitees"))?,
         })
     }
 
@@ -38016,9 +39898,8 @@ impl SharedContentAddInviteesDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("sharing_permission", &self.sharing_permission)
+        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("invitees", &self.invitees)
     }
 }
 
@@ -38044,7 +39925,7 @@ impl ::serde::ser::Serialize for SharedContentAddInviteesDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentAddInviteesDetails", 3)?;
+        let mut s = serializer.serialize_struct("SharedContentAddInviteesDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -38127,101 +40008,38 @@ impl ::serde::ser::Serialize for SharedContentAddInviteesType {
 /// Added an expiry to the link for the shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentAddLinkExpiryDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Expiration starting date.
-    pub expiration_start_date: String,
-    /// The number of days from the starting expiration date after which the link will expire.
-    pub expiration_days: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
+    /// New shared content link expiration date. Might be missing due to historical data gap.
+    pub new_value: Option<super::common::DropboxTimestamp>,
 }
 
-impl SharedContentAddLinkExpiryDetails {
-    pub fn new(
-        target_asset_index: u64,
-        expiration_start_date: String,
-        expiration_days: u64,
-    ) -> Self {
+impl Default for SharedContentAddLinkExpiryDetails {
+    fn default() -> Self {
         SharedContentAddLinkExpiryDetails {
-            target_asset_index,
-            expiration_start_date,
-            expiration_days,
-            original_folder_name: None,
-            shared_folder_type: None,
+            new_value: None,
         }
     }
-
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
 }
 
-const SHARED_CONTENT_ADD_LINK_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                 "expiration_start_date",
-                                                                                 "expiration_days",
-                                                                                 "original_folder_name",
-                                                                                 "shared_folder_type"];
+const SHARED_CONTENT_ADD_LINK_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &["new_value"];
 impl SharedContentAddLinkExpiryDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentAddLinkExpiryDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_expiration_start_date = None;
-        let mut field_expiration_days = None;
-        let mut field_original_folder_name = None;
-        let mut field_shared_folder_type = None;
+        let mut field_new_value = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
                     }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "expiration_start_date" => {
-                    if field_expiration_start_date.is_some() {
-                        return Err(de::Error::duplicate_field("expiration_start_date"));
-                    }
-                    field_expiration_start_date = Some(map.next_value()?);
-                }
-                "expiration_days" => {
-                    if field_expiration_days.is_some() {
-                        return Err(de::Error::duplicate_field("expiration_days"));
-                    }
-                    field_expiration_days = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
+                    field_new_value = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_ADD_LINK_EXPIRY_DETAILS_FIELDS))
             }
         }
         Ok(SharedContentAddLinkExpiryDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            expiration_start_date: field_expiration_start_date.ok_or_else(|| de::Error::missing_field("expiration_start_date"))?,
-            expiration_days: field_expiration_days.ok_or_else(|| de::Error::missing_field("expiration_days"))?,
-            original_folder_name: field_original_folder_name,
-            shared_folder_type: field_shared_folder_type,
+            new_value: field_new_value,
         })
     }
 
@@ -38230,11 +40048,7 @@ impl SharedContentAddLinkExpiryDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("expiration_start_date", &self.expiration_start_date)?;
-        s.serialize_field("expiration_days", &self.expiration_days)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)
+        s.serialize_field("new_value", &self.new_value)
     }
 }
 
@@ -38260,7 +40074,7 @@ impl ::serde::ser::Serialize for SharedContentAddLinkExpiryDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentAddLinkExpiryDetails", 5)?;
+        let mut s = serializer.serialize_struct("SharedContentAddLinkExpiryDetails", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -38343,84 +40157,26 @@ impl ::serde::ser::Serialize for SharedContentAddLinkExpiryType {
 /// Added a password to the link for the shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentAddLinkPasswordDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
 }
 
-impl SharedContentAddLinkPasswordDetails {
-    pub fn new(target_asset_index: u64) -> Self {
+impl Default for SharedContentAddLinkPasswordDetails {
+    fn default() -> Self {
         SharedContentAddLinkPasswordDetails {
-            target_asset_index,
-            original_folder_name: None,
-            shared_folder_type: None,
         }
     }
-
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
 }
 
-const SHARED_CONTENT_ADD_LINK_PASSWORD_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                   "original_folder_name",
-                                                                                   "shared_folder_type"];
+const SHARED_CONTENT_ADD_LINK_PASSWORD_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SharedContentAddLinkPasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentAddLinkPasswordDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        let mut field_shared_folder_type = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_ADD_LINK_PASSWORD_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHARED_CONTENT_ADD_LINK_PASSWORD_DETAILS_FIELDS));
         }
         Ok(SharedContentAddLinkPasswordDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name,
-            shared_folder_type: field_shared_folder_type,
         })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)
     }
 }
 
@@ -38446,9 +40202,7 @@ impl ::serde::ser::Serialize for SharedContentAddLinkPasswordDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentAddLinkPasswordDetails", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
+        serializer.serialize_struct("SharedContentAddLinkPasswordDetails", 0)?.end()
     }
 }
 
@@ -38529,90 +40283,39 @@ impl ::serde::ser::Serialize for SharedContentAddLinkPasswordType {
 /// Added users and/or groups to the membership of a shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentAddMemberDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// Sharing permission. Might be missing due to historical data gap.
-    pub sharing_permission: Option<String>,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
+    /// Shared content access level.
+    pub shared_content_access_level: super::sharing::AccessLevel,
 }
 
 impl SharedContentAddMemberDetails {
-    pub fn new(target_asset_index: u64) -> Self {
+    pub fn new(shared_content_access_level: super::sharing::AccessLevel) -> Self {
         SharedContentAddMemberDetails {
-            target_asset_index,
-            original_folder_name: None,
-            sharing_permission: None,
-            shared_folder_type: None,
+            shared_content_access_level,
         }
-    }
-
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
-        self.sharing_permission = value;
-        self
-    }
-
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
     }
 
 }
 
-const SHARED_CONTENT_ADD_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                            "original_folder_name",
-                                                                            "sharing_permission",
-                                                                            "shared_folder_type"];
+const SHARED_CONTENT_ADD_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_access_level"];
 impl SharedContentAddMemberDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentAddMemberDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        let mut field_sharing_permission = None;
-        let mut field_shared_folder_type = None;
+        let mut field_shared_content_access_level = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
+                "shared_content_access_level" => {
+                    if field_shared_content_access_level.is_some() {
+                        return Err(de::Error::duplicate_field("shared_content_access_level"));
                     }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "sharing_permission" => {
-                    if field_sharing_permission.is_some() {
-                        return Err(de::Error::duplicate_field("sharing_permission"));
-                    }
-                    field_sharing_permission = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
+                    field_shared_content_access_level = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_ADD_MEMBER_DETAILS_FIELDS))
             }
         }
         Ok(SharedContentAddMemberDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name,
-            sharing_permission: field_sharing_permission,
-            shared_folder_type: field_shared_folder_type,
+            shared_content_access_level: field_shared_content_access_level.ok_or_else(|| de::Error::missing_field("shared_content_access_level"))?,
         })
     }
 
@@ -38621,10 +40324,7 @@ impl SharedContentAddMemberDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("sharing_permission", &self.sharing_permission)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)
+        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)
     }
 }
 
@@ -38650,7 +40350,7 @@ impl ::serde::ser::Serialize for SharedContentAddMemberDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentAddMemberDetails", 4)?;
+        let mut s = serializer.serialize_struct("SharedContentAddMemberDetails", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -38733,86 +40433,43 @@ impl ::serde::ser::Serialize for SharedContentAddMemberType {
 /// Changed whether members can download the shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentChangeDownloadsPolicyDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// New downlaod policy.
-    pub new_value: SharedContentDownloadsPolicy,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
-    /// Previous downlaod policy. Might be missing due to historical data gap.
-    pub previous_value: Option<SharedContentDownloadsPolicy>,
+    /// New downloads policy.
+    pub new_value: DownloadPolicyType,
+    /// Previous downloads policy. Might be missing due to historical data gap.
+    pub previous_value: Option<DownloadPolicyType>,
 }
 
 impl SharedContentChangeDownloadsPolicyDetails {
-    pub fn new(target_asset_index: u64, new_value: SharedContentDownloadsPolicy) -> Self {
+    pub fn new(new_value: DownloadPolicyType) -> Self {
         SharedContentChangeDownloadsPolicyDetails {
-            target_asset_index,
             new_value,
-            original_folder_name: None,
-            shared_folder_type: None,
             previous_value: None,
         }
     }
 
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
-    pub fn with_previous_value(mut self, value: Option<SharedContentDownloadsPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<DownloadPolicyType>) -> Self {
         self.previous_value = value;
         self
     }
 
 }
 
-const SHARED_CONTENT_CHANGE_DOWNLOADS_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                         "new_value",
-                                                                                         "original_folder_name",
-                                                                                         "shared_folder_type",
+const SHARED_CONTENT_CHANGE_DOWNLOADS_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                          "previous_value"];
 impl SharedContentChangeDownloadsPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentChangeDownloadsPolicyDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
         let mut field_new_value = None;
-        let mut field_original_folder_name = None;
-        let mut field_shared_folder_type = None;
         let mut field_previous_value = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
                 "new_value" => {
                     if field_new_value.is_some() {
                         return Err(de::Error::duplicate_field("new_value"));
                     }
                     field_new_value = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
                 }
                 "previous_value" => {
                     if field_previous_value.is_some() {
@@ -38824,10 +40481,7 @@ impl SharedContentChangeDownloadsPolicyDetails {
             }
         }
         Ok(SharedContentChangeDownloadsPolicyDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
             new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
-            original_folder_name: field_original_folder_name,
-            shared_folder_type: field_shared_folder_type,
             previous_value: field_previous_value,
         })
     }
@@ -38837,10 +40491,7 @@ impl SharedContentChangeDownloadsPolicyDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("new_value", &self.new_value)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)?;
         s.serialize_field("previous_value", &self.previous_value)
     }
 }
@@ -38867,7 +40518,7 @@ impl ::serde::ser::Serialize for SharedContentChangeDownloadsPolicyDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentChangeDownloadsPolicyDetails", 5)?;
+        let mut s = serializer.serialize_struct("SharedContentChangeDownloadsPolicyDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -38951,85 +40602,71 @@ impl ::serde::ser::Serialize for SharedContentChangeDownloadsPolicyType {
 /// claimed.
 #[derive(Debug)]
 pub struct SharedContentChangeInviteeRoleDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: String,
-    /// New sharing permission. Might be missing due to historical data gap.
-    pub new_sharing_permission: Option<String>,
-    /// Previous sharing permission. Might be missing due to historical data gap.
-    pub previous_sharing_permission: Option<String>,
+    /// New access level.
+    pub new_access_level: super::sharing::AccessLevel,
+    /// The invitee whose role was changed.
+    pub invitee: EmailAddress,
+    /// Previous access level. Might be missing due to historical data gap.
+    pub previous_access_level: Option<super::sharing::AccessLevel>,
 }
 
 impl SharedContentChangeInviteeRoleDetails {
-    pub fn new(target_asset_index: u64, original_folder_name: String) -> Self {
+    pub fn new(new_access_level: super::sharing::AccessLevel, invitee: EmailAddress) -> Self {
         SharedContentChangeInviteeRoleDetails {
-            target_asset_index,
-            original_folder_name,
-            new_sharing_permission: None,
-            previous_sharing_permission: None,
+            new_access_level,
+            invitee,
+            previous_access_level: None,
         }
     }
 
-    pub fn with_new_sharing_permission(mut self, value: Option<String>) -> Self {
-        self.new_sharing_permission = value;
-        self
-    }
-
-    pub fn with_previous_sharing_permission(mut self, value: Option<String>) -> Self {
-        self.previous_sharing_permission = value;
+    pub fn with_previous_access_level(
+        mut self,
+        value: Option<super::sharing::AccessLevel>,
+    ) -> Self {
+        self.previous_access_level = value;
         self
     }
 
 }
 
-const SHARED_CONTENT_CHANGE_INVITEE_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                     "original_folder_name",
-                                                                                     "new_sharing_permission",
-                                                                                     "previous_sharing_permission"];
+const SHARED_CONTENT_CHANGE_INVITEE_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["new_access_level",
+                                                                                     "invitee",
+                                                                                     "previous_access_level"];
 impl SharedContentChangeInviteeRoleDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentChangeInviteeRoleDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        let mut field_new_sharing_permission = None;
-        let mut field_previous_sharing_permission = None;
+        let mut field_new_access_level = None;
+        let mut field_invitee = None;
+        let mut field_previous_access_level = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
+                "new_access_level" => {
+                    if field_new_access_level.is_some() {
+                        return Err(de::Error::duplicate_field("new_access_level"));
                     }
-                    field_target_asset_index = Some(map.next_value()?);
+                    field_new_access_level = Some(map.next_value()?);
                 }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
+                "invitee" => {
+                    if field_invitee.is_some() {
+                        return Err(de::Error::duplicate_field("invitee"));
                     }
-                    field_original_folder_name = Some(map.next_value()?);
+                    field_invitee = Some(map.next_value()?);
                 }
-                "new_sharing_permission" => {
-                    if field_new_sharing_permission.is_some() {
-                        return Err(de::Error::duplicate_field("new_sharing_permission"));
+                "previous_access_level" => {
+                    if field_previous_access_level.is_some() {
+                        return Err(de::Error::duplicate_field("previous_access_level"));
                     }
-                    field_new_sharing_permission = Some(map.next_value()?);
-                }
-                "previous_sharing_permission" => {
-                    if field_previous_sharing_permission.is_some() {
-                        return Err(de::Error::duplicate_field("previous_sharing_permission"));
-                    }
-                    field_previous_sharing_permission = Some(map.next_value()?);
+                    field_previous_access_level = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_CHANGE_INVITEE_ROLE_DETAILS_FIELDS))
             }
         }
         Ok(SharedContentChangeInviteeRoleDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name.ok_or_else(|| de::Error::missing_field("original_folder_name"))?,
-            new_sharing_permission: field_new_sharing_permission,
-            previous_sharing_permission: field_previous_sharing_permission,
+            new_access_level: field_new_access_level.ok_or_else(|| de::Error::missing_field("new_access_level"))?,
+            invitee: field_invitee.ok_or_else(|| de::Error::missing_field("invitee"))?,
+            previous_access_level: field_previous_access_level,
         })
     }
 
@@ -39038,10 +40675,9 @@ impl SharedContentChangeInviteeRoleDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("new_sharing_permission", &self.new_sharing_permission)?;
-        s.serialize_field("previous_sharing_permission", &self.previous_sharing_permission)
+        s.serialize_field("new_access_level", &self.new_access_level)?;
+        s.serialize_field("invitee", &self.invitee)?;
+        s.serialize_field("previous_access_level", &self.previous_access_level)
     }
 }
 
@@ -39067,7 +40703,7 @@ impl ::serde::ser::Serialize for SharedContentChangeInviteeRoleDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentChangeInviteeRoleDetails", 4)?;
+        let mut s = serializer.serialize_struct("SharedContentChangeInviteeRoleDetails", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -39150,86 +40786,43 @@ impl ::serde::ser::Serialize for SharedContentChangeInviteeRoleType {
 /// Changed the audience of the link for a shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentChangeLinkAudienceDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
     /// New link audience value.
-    pub new_value: LinkAudience,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
-    /// Previous link audience value. Might be missing due to historical data gap.
-    pub previous_value: Option<LinkAudience>,
+    pub new_value: super::sharing::LinkAudience,
+    /// Previous link audience value.
+    pub previous_value: Option<super::sharing::LinkAudience>,
 }
 
 impl SharedContentChangeLinkAudienceDetails {
-    pub fn new(target_asset_index: u64, new_value: LinkAudience) -> Self {
+    pub fn new(new_value: super::sharing::LinkAudience) -> Self {
         SharedContentChangeLinkAudienceDetails {
-            target_asset_index,
             new_value,
-            original_folder_name: None,
-            shared_folder_type: None,
             previous_value: None,
         }
     }
 
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
-    pub fn with_previous_value(mut self, value: Option<LinkAudience>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<super::sharing::LinkAudience>) -> Self {
         self.previous_value = value;
         self
     }
 
 }
 
-const SHARED_CONTENT_CHANGE_LINK_AUDIENCE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                      "new_value",
-                                                                                      "original_folder_name",
-                                                                                      "shared_folder_type",
+const SHARED_CONTENT_CHANGE_LINK_AUDIENCE_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                       "previous_value"];
 impl SharedContentChangeLinkAudienceDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentChangeLinkAudienceDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
         let mut field_new_value = None;
-        let mut field_original_folder_name = None;
-        let mut field_shared_folder_type = None;
         let mut field_previous_value = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
                 "new_value" => {
                     if field_new_value.is_some() {
                         return Err(de::Error::duplicate_field("new_value"));
                     }
                     field_new_value = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
                 }
                 "previous_value" => {
                     if field_previous_value.is_some() {
@@ -39241,10 +40834,7 @@ impl SharedContentChangeLinkAudienceDetails {
             }
         }
         Ok(SharedContentChangeLinkAudienceDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
             new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
-            original_folder_name: field_original_folder_name,
-            shared_folder_type: field_shared_folder_type,
             previous_value: field_previous_value,
         })
     }
@@ -39254,10 +40844,7 @@ impl SharedContentChangeLinkAudienceDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("new_value", &self.new_value)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)?;
         s.serialize_field("previous_value", &self.previous_value)
     }
 }
@@ -39284,7 +40871,7 @@ impl ::serde::ser::Serialize for SharedContentChangeLinkAudienceDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentChangeLinkAudienceDetails", 5)?;
+        let mut s = serializer.serialize_struct("SharedContentChangeLinkAudienceDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -39367,101 +40954,50 @@ impl ::serde::ser::Serialize for SharedContentChangeLinkAudienceType {
 /// Changed the expiry of the link for the shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentChangeLinkExpiryDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Expiration starting date.
-    pub expiration_start_date: String,
-    /// The number of days from the starting expiration date after which the link will expire.
-    pub expiration_days: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
+    /// New shared content link expiration date. Might be missing due to historical data gap.
+    pub new_value: Option<super::common::DropboxTimestamp>,
+    /// Previous shared content link expiration date. Might be missing due to historical data gap.
+    pub previous_value: Option<super::common::DropboxTimestamp>,
 }
 
-impl SharedContentChangeLinkExpiryDetails {
-    pub fn new(
-        target_asset_index: u64,
-        expiration_start_date: String,
-        expiration_days: u64,
-    ) -> Self {
+impl Default for SharedContentChangeLinkExpiryDetails {
+    fn default() -> Self {
         SharedContentChangeLinkExpiryDetails {
-            target_asset_index,
-            expiration_start_date,
-            expiration_days,
-            original_folder_name: None,
-            shared_folder_type: None,
+            new_value: None,
+            previous_value: None,
         }
     }
-
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
 }
 
-const SHARED_CONTENT_CHANGE_LINK_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                    "expiration_start_date",
-                                                                                    "expiration_days",
-                                                                                    "original_folder_name",
-                                                                                    "shared_folder_type"];
+const SHARED_CONTENT_CHANGE_LINK_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
+                                                                                    "previous_value"];
 impl SharedContentChangeLinkExpiryDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentChangeLinkExpiryDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_expiration_start_date = None;
-        let mut field_expiration_days = None;
-        let mut field_original_folder_name = None;
-        let mut field_shared_folder_type = None;
+        let mut field_new_value = None;
+        let mut field_previous_value = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
                     }
-                    field_target_asset_index = Some(map.next_value()?);
+                    field_new_value = Some(map.next_value()?);
                 }
-                "expiration_start_date" => {
-                    if field_expiration_start_date.is_some() {
-                        return Err(de::Error::duplicate_field("expiration_start_date"));
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(de::Error::duplicate_field("previous_value"));
                     }
-                    field_expiration_start_date = Some(map.next_value()?);
-                }
-                "expiration_days" => {
-                    if field_expiration_days.is_some() {
-                        return Err(de::Error::duplicate_field("expiration_days"));
-                    }
-                    field_expiration_days = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
+                    field_previous_value = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_CHANGE_LINK_EXPIRY_DETAILS_FIELDS))
             }
         }
         Ok(SharedContentChangeLinkExpiryDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            expiration_start_date: field_expiration_start_date.ok_or_else(|| de::Error::missing_field("expiration_start_date"))?,
-            expiration_days: field_expiration_days.ok_or_else(|| de::Error::missing_field("expiration_days"))?,
-            original_folder_name: field_original_folder_name,
-            shared_folder_type: field_shared_folder_type,
+            new_value: field_new_value,
+            previous_value: field_previous_value,
         })
     }
 
@@ -39470,11 +41006,8 @@ impl SharedContentChangeLinkExpiryDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("expiration_start_date", &self.expiration_start_date)?;
-        s.serialize_field("expiration_days", &self.expiration_days)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)
+        s.serialize_field("new_value", &self.new_value)?;
+        s.serialize_field("previous_value", &self.previous_value)
     }
 }
 
@@ -39500,7 +41033,7 @@ impl ::serde::ser::Serialize for SharedContentChangeLinkExpiryDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentChangeLinkExpiryDetails", 5)?;
+        let mut s = serializer.serialize_struct("SharedContentChangeLinkExpiryDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -39583,84 +41116,26 @@ impl ::serde::ser::Serialize for SharedContentChangeLinkExpiryType {
 /// Changed the password on the link for the shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentChangeLinkPasswordDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
 }
 
-impl SharedContentChangeLinkPasswordDetails {
-    pub fn new(target_asset_index: u64) -> Self {
+impl Default for SharedContentChangeLinkPasswordDetails {
+    fn default() -> Self {
         SharedContentChangeLinkPasswordDetails {
-            target_asset_index,
-            original_folder_name: None,
-            shared_folder_type: None,
         }
     }
-
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
 }
 
-const SHARED_CONTENT_CHANGE_LINK_PASSWORD_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                      "original_folder_name",
-                                                                                      "shared_folder_type"];
+const SHARED_CONTENT_CHANGE_LINK_PASSWORD_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SharedContentChangeLinkPasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentChangeLinkPasswordDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        let mut field_shared_folder_type = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_CHANGE_LINK_PASSWORD_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHARED_CONTENT_CHANGE_LINK_PASSWORD_DETAILS_FIELDS));
         }
         Ok(SharedContentChangeLinkPasswordDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name,
-            shared_folder_type: field_shared_folder_type,
         })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)
     }
 }
 
@@ -39686,9 +41161,7 @@ impl ::serde::ser::Serialize for SharedContentChangeLinkPasswordDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentChangeLinkPasswordDetails", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
+        serializer.serialize_struct("SharedContentChangeLinkPasswordDetails", 0)?.end()
     }
 }
 
@@ -39769,107 +41242,59 @@ impl ::serde::ser::Serialize for SharedContentChangeLinkPasswordType {
 /// Changed the access type of a shared file or folder member.
 #[derive(Debug)]
 pub struct SharedContentChangeMemberRoleDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// New sharing permission. Might be missing due to historical data gap.
-    pub new_sharing_permission: Option<String>,
-    /// Previous sharing permission. Might be missing due to historical data gap.
-    pub previous_sharing_permission: Option<String>,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
+    /// New access level.
+    pub new_access_level: super::sharing::AccessLevel,
+    /// Previous access level. Might be missing due to historical data gap.
+    pub previous_access_level: Option<super::sharing::AccessLevel>,
 }
 
 impl SharedContentChangeMemberRoleDetails {
-    pub fn new(target_asset_index: u64) -> Self {
+    pub fn new(new_access_level: super::sharing::AccessLevel) -> Self {
         SharedContentChangeMemberRoleDetails {
-            target_asset_index,
-            original_folder_name: None,
-            new_sharing_permission: None,
-            previous_sharing_permission: None,
-            shared_folder_type: None,
+            new_access_level,
+            previous_access_level: None,
         }
     }
 
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_new_sharing_permission(mut self, value: Option<String>) -> Self {
-        self.new_sharing_permission = value;
-        self
-    }
-
-    pub fn with_previous_sharing_permission(mut self, value: Option<String>) -> Self {
-        self.previous_sharing_permission = value;
-        self
-    }
-
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
+    pub fn with_previous_access_level(
+        mut self,
+        value: Option<super::sharing::AccessLevel>,
+    ) -> Self {
+        self.previous_access_level = value;
         self
     }
 
 }
 
-const SHARED_CONTENT_CHANGE_MEMBER_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                    "original_folder_name",
-                                                                                    "new_sharing_permission",
-                                                                                    "previous_sharing_permission",
-                                                                                    "shared_folder_type"];
+const SHARED_CONTENT_CHANGE_MEMBER_ROLE_DETAILS_FIELDS: &'static [&'static str] = &["new_access_level",
+                                                                                    "previous_access_level"];
 impl SharedContentChangeMemberRoleDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentChangeMemberRoleDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        let mut field_new_sharing_permission = None;
-        let mut field_previous_sharing_permission = None;
-        let mut field_shared_folder_type = None;
+        let mut field_new_access_level = None;
+        let mut field_previous_access_level = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
+                "new_access_level" => {
+                    if field_new_access_level.is_some() {
+                        return Err(de::Error::duplicate_field("new_access_level"));
                     }
-                    field_target_asset_index = Some(map.next_value()?);
+                    field_new_access_level = Some(map.next_value()?);
                 }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
+                "previous_access_level" => {
+                    if field_previous_access_level.is_some() {
+                        return Err(de::Error::duplicate_field("previous_access_level"));
                     }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "new_sharing_permission" => {
-                    if field_new_sharing_permission.is_some() {
-                        return Err(de::Error::duplicate_field("new_sharing_permission"));
-                    }
-                    field_new_sharing_permission = Some(map.next_value()?);
-                }
-                "previous_sharing_permission" => {
-                    if field_previous_sharing_permission.is_some() {
-                        return Err(de::Error::duplicate_field("previous_sharing_permission"));
-                    }
-                    field_previous_sharing_permission = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
+                    field_previous_access_level = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_CHANGE_MEMBER_ROLE_DETAILS_FIELDS))
             }
         }
         Ok(SharedContentChangeMemberRoleDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name,
-            new_sharing_permission: field_new_sharing_permission,
-            previous_sharing_permission: field_previous_sharing_permission,
-            shared_folder_type: field_shared_folder_type,
+            new_access_level: field_new_access_level.ok_or_else(|| de::Error::missing_field("new_access_level"))?,
+            previous_access_level: field_previous_access_level,
         })
     }
 
@@ -39878,11 +41303,8 @@ impl SharedContentChangeMemberRoleDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("new_sharing_permission", &self.new_sharing_permission)?;
-        s.serialize_field("previous_sharing_permission", &self.previous_sharing_permission)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)
+        s.serialize_field("new_access_level", &self.new_access_level)?;
+        s.serialize_field("previous_access_level", &self.previous_access_level)
     }
 }
 
@@ -39908,7 +41330,7 @@ impl ::serde::ser::Serialize for SharedContentChangeMemberRoleDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentChangeMemberRoleDetails", 5)?;
+        let mut s = serializer.serialize_struct("SharedContentChangeMemberRoleDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -39991,86 +41413,43 @@ impl ::serde::ser::Serialize for SharedContentChangeMemberRoleType {
 /// Changed whether members can see who viewed the shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentChangeViewerInfoPolicyDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
     /// New viewer info policy.
-    pub new_value: SharedContentViewerInfoPolicy,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
+    pub new_value: super::sharing::ViewerInfoPolicy,
     /// Previous view info policy. Might be missing due to historical data gap.
-    pub previous_value: Option<SharedContentViewerInfoPolicy>,
+    pub previous_value: Option<super::sharing::ViewerInfoPolicy>,
 }
 
 impl SharedContentChangeViewerInfoPolicyDetails {
-    pub fn new(target_asset_index: u64, new_value: SharedContentViewerInfoPolicy) -> Self {
+    pub fn new(new_value: super::sharing::ViewerInfoPolicy) -> Self {
         SharedContentChangeViewerInfoPolicyDetails {
-            target_asset_index,
             new_value,
-            original_folder_name: None,
-            shared_folder_type: None,
             previous_value: None,
         }
     }
 
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
-    pub fn with_previous_value(mut self, value: Option<SharedContentViewerInfoPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<super::sharing::ViewerInfoPolicy>) -> Self {
         self.previous_value = value;
         self
     }
 
 }
 
-const SHARED_CONTENT_CHANGE_VIEWER_INFO_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                           "new_value",
-                                                                                           "original_folder_name",
-                                                                                           "shared_folder_type",
+const SHARED_CONTENT_CHANGE_VIEWER_INFO_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                            "previous_value"];
 impl SharedContentChangeViewerInfoPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentChangeViewerInfoPolicyDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
         let mut field_new_value = None;
-        let mut field_original_folder_name = None;
-        let mut field_shared_folder_type = None;
         let mut field_previous_value = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
                 "new_value" => {
                     if field_new_value.is_some() {
                         return Err(de::Error::duplicate_field("new_value"));
                     }
                     field_new_value = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
                 }
                 "previous_value" => {
                     if field_previous_value.is_some() {
@@ -40082,10 +41461,7 @@ impl SharedContentChangeViewerInfoPolicyDetails {
             }
         }
         Ok(SharedContentChangeViewerInfoPolicyDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
             new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
-            original_folder_name: field_original_folder_name,
-            shared_folder_type: field_shared_folder_type,
             previous_value: field_previous_value,
         })
     }
@@ -40095,10 +41471,7 @@ impl SharedContentChangeViewerInfoPolicyDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
         s.serialize_field("new_value", &self.new_value)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)?;
         s.serialize_field("previous_value", &self.previous_value)
     }
 }
@@ -40125,7 +41498,7 @@ impl ::serde::ser::Serialize for SharedContentChangeViewerInfoPolicyDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentChangeViewerInfoPolicyDetails", 5)?;
+        let mut s = serializer.serialize_struct("SharedContentChangeViewerInfoPolicyDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -40205,63 +41578,30 @@ impl ::serde::ser::Serialize for SharedContentChangeViewerInfoPolicyType {
     }
 }
 
-/// Claimed membership to a team member's shared folder.
+/// Acquired membership on a shared file or folder by claiming an invitation.
 #[derive(Debug)]
 pub struct SharedContentClaimInvitationDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
     /// Shared content link.
     pub shared_content_link: Option<String>,
 }
 
-impl SharedContentClaimInvitationDetails {
-    pub fn new(target_asset_index: u64) -> Self {
+impl Default for SharedContentClaimInvitationDetails {
+    fn default() -> Self {
         SharedContentClaimInvitationDetails {
-            target_asset_index,
-            original_folder_name: None,
             shared_content_link: None,
         }
     }
-
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
-        self.shared_content_link = value;
-        self
-    }
-
 }
 
-const SHARED_CONTENT_CLAIM_INVITATION_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                  "original_folder_name",
-                                                                                  "shared_content_link"];
+const SHARED_CONTENT_CLAIM_INVITATION_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_link"];
 impl SharedContentClaimInvitationDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentClaimInvitationDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
         let mut field_shared_content_link = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
                 "shared_content_link" => {
                     if field_shared_content_link.is_some() {
                         return Err(de::Error::duplicate_field("shared_content_link"));
@@ -40272,8 +41612,6 @@ impl SharedContentClaimInvitationDetails {
             }
         }
         Ok(SharedContentClaimInvitationDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name,
             shared_content_link: field_shared_content_link,
         })
     }
@@ -40283,8 +41621,6 @@ impl SharedContentClaimInvitationDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
         s.serialize_field("shared_content_link", &self.shared_content_link)
     }
 }
@@ -40311,7 +41647,7 @@ impl ::serde::ser::Serialize for SharedContentClaimInvitationDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentClaimInvitationDetails", 3)?;
+        let mut s = serializer.serialize_struct("SharedContentClaimInvitationDetails", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -40396,48 +41732,48 @@ impl ::serde::ser::Serialize for SharedContentClaimInvitationType {
 pub struct SharedContentCopyDetails {
     /// Shared content link.
     pub shared_content_link: String,
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Specifies the source and destination indices in the assets list.
-    pub relocate_action_details: RelocateAssetReferencesLogInfo,
-    /// Sharing permission. Might be missing due to historical data gap.
-    pub sharing_permission: Option<String>,
+    /// Shared content access level.
+    pub shared_content_access_level: super::sharing::AccessLevel,
+    /// The path where the member saved the content.
+    pub destination_path: FilePath,
+    /// The shared content owner.
+    pub shared_content_owner: Option<UserLogInfo>,
 }
 
 impl SharedContentCopyDetails {
     pub fn new(
         shared_content_link: String,
-        target_asset_index: u64,
-        relocate_action_details: RelocateAssetReferencesLogInfo,
+        shared_content_access_level: super::sharing::AccessLevel,
+        destination_path: FilePath,
     ) -> Self {
         SharedContentCopyDetails {
             shared_content_link,
-            target_asset_index,
-            relocate_action_details,
-            sharing_permission: None,
+            shared_content_access_level,
+            destination_path,
+            shared_content_owner: None,
         }
     }
 
-    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
-        self.sharing_permission = value;
+    pub fn with_shared_content_owner(mut self, value: Option<UserLogInfo>) -> Self {
+        self.shared_content_owner = value;
         self
     }
 
 }
 
 const SHARED_CONTENT_COPY_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_link",
-                                                                      "target_asset_index",
-                                                                      "relocate_action_details",
-                                                                      "sharing_permission"];
+                                                                      "shared_content_access_level",
+                                                                      "destination_path",
+                                                                      "shared_content_owner"];
 impl SharedContentCopyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentCopyDetails, V::Error> {
         use serde::de;
         let mut field_shared_content_link = None;
-        let mut field_target_asset_index = None;
-        let mut field_relocate_action_details = None;
-        let mut field_sharing_permission = None;
+        let mut field_shared_content_access_level = None;
+        let mut field_destination_path = None;
+        let mut field_shared_content_owner = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "shared_content_link" => {
@@ -40446,32 +41782,32 @@ impl SharedContentCopyDetails {
                     }
                     field_shared_content_link = Some(map.next_value()?);
                 }
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
+                "shared_content_access_level" => {
+                    if field_shared_content_access_level.is_some() {
+                        return Err(de::Error::duplicate_field("shared_content_access_level"));
                     }
-                    field_target_asset_index = Some(map.next_value()?);
+                    field_shared_content_access_level = Some(map.next_value()?);
                 }
-                "relocate_action_details" => {
-                    if field_relocate_action_details.is_some() {
-                        return Err(de::Error::duplicate_field("relocate_action_details"));
+                "destination_path" => {
+                    if field_destination_path.is_some() {
+                        return Err(de::Error::duplicate_field("destination_path"));
                     }
-                    field_relocate_action_details = Some(map.next_value()?);
+                    field_destination_path = Some(map.next_value()?);
                 }
-                "sharing_permission" => {
-                    if field_sharing_permission.is_some() {
-                        return Err(de::Error::duplicate_field("sharing_permission"));
+                "shared_content_owner" => {
+                    if field_shared_content_owner.is_some() {
+                        return Err(de::Error::duplicate_field("shared_content_owner"));
                     }
-                    field_sharing_permission = Some(map.next_value()?);
+                    field_shared_content_owner = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_COPY_DETAILS_FIELDS))
             }
         }
         Ok(SharedContentCopyDetails {
             shared_content_link: field_shared_content_link.ok_or_else(|| de::Error::missing_field("shared_content_link"))?,
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            relocate_action_details: field_relocate_action_details.ok_or_else(|| de::Error::missing_field("relocate_action_details"))?,
-            sharing_permission: field_sharing_permission,
+            shared_content_access_level: field_shared_content_access_level.ok_or_else(|| de::Error::missing_field("shared_content_access_level"))?,
+            destination_path: field_destination_path.ok_or_else(|| de::Error::missing_field("destination_path"))?,
+            shared_content_owner: field_shared_content_owner,
         })
     }
 
@@ -40481,9 +41817,9 @@ impl SharedContentCopyDetails {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_content_link", &self.shared_content_link)?;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("relocate_action_details", &self.relocate_action_details)?;
-        s.serialize_field("sharing_permission", &self.sharing_permission)
+        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("destination_path", &self.destination_path)?;
+        s.serialize_field("shared_content_owner", &self.shared_content_owner)
     }
 }
 
@@ -40594,39 +41930,42 @@ impl ::serde::ser::Serialize for SharedContentCopyType {
 pub struct SharedContentDownloadDetails {
     /// Shared content link.
     pub shared_content_link: String,
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Sharing permission. Might be missing due to historical data gap.
-    pub sharing_permission: Option<String>,
+    /// Shared content access level.
+    pub shared_content_access_level: super::sharing::AccessLevel,
+    /// The shared content owner.
+    pub shared_content_owner: Option<UserLogInfo>,
 }
 
 impl SharedContentDownloadDetails {
-    pub fn new(shared_content_link: String, target_asset_index: u64) -> Self {
+    pub fn new(
+        shared_content_link: String,
+        shared_content_access_level: super::sharing::AccessLevel,
+    ) -> Self {
         SharedContentDownloadDetails {
             shared_content_link,
-            target_asset_index,
-            sharing_permission: None,
+            shared_content_access_level,
+            shared_content_owner: None,
         }
     }
 
-    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
-        self.sharing_permission = value;
+    pub fn with_shared_content_owner(mut self, value: Option<UserLogInfo>) -> Self {
+        self.shared_content_owner = value;
         self
     }
 
 }
 
 const SHARED_CONTENT_DOWNLOAD_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_link",
-                                                                          "target_asset_index",
-                                                                          "sharing_permission"];
+                                                                          "shared_content_access_level",
+                                                                          "shared_content_owner"];
 impl SharedContentDownloadDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentDownloadDetails, V::Error> {
         use serde::de;
         let mut field_shared_content_link = None;
-        let mut field_target_asset_index = None;
-        let mut field_sharing_permission = None;
+        let mut field_shared_content_access_level = None;
+        let mut field_shared_content_owner = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "shared_content_link" => {
@@ -40635,25 +41974,25 @@ impl SharedContentDownloadDetails {
                     }
                     field_shared_content_link = Some(map.next_value()?);
                 }
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
+                "shared_content_access_level" => {
+                    if field_shared_content_access_level.is_some() {
+                        return Err(de::Error::duplicate_field("shared_content_access_level"));
                     }
-                    field_target_asset_index = Some(map.next_value()?);
+                    field_shared_content_access_level = Some(map.next_value()?);
                 }
-                "sharing_permission" => {
-                    if field_sharing_permission.is_some() {
-                        return Err(de::Error::duplicate_field("sharing_permission"));
+                "shared_content_owner" => {
+                    if field_shared_content_owner.is_some() {
+                        return Err(de::Error::duplicate_field("shared_content_owner"));
                     }
-                    field_sharing_permission = Some(map.next_value()?);
+                    field_shared_content_owner = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_DOWNLOAD_DETAILS_FIELDS))
             }
         }
         Ok(SharedContentDownloadDetails {
             shared_content_link: field_shared_content_link.ok_or_else(|| de::Error::missing_field("shared_content_link"))?,
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            sharing_permission: field_sharing_permission,
+            shared_content_access_level: field_shared_content_access_level.ok_or_else(|| de::Error::missing_field("shared_content_access_level"))?,
+            shared_content_owner: field_shared_content_owner,
         })
     }
 
@@ -40663,8 +42002,8 @@ impl SharedContentDownloadDetails {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_content_link", &self.shared_content_link)?;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("sharing_permission", &self.sharing_permission)
+        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("shared_content_owner", &self.shared_content_owner)
     }
 }
 
@@ -40770,123 +42109,29 @@ impl ::serde::ser::Serialize for SharedContentDownloadType {
     }
 }
 
-/// Shared content downloads policy
-#[derive(Debug)]
-pub enum SharedContentDownloadsPolicy {
-    Disabled,
-    Enabled,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SharedContentDownloadsPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SharedContentDownloadsPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedContentDownloadsPolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "disabled" => Ok(SharedContentDownloadsPolicy::Disabled),
-                    "enabled" => Ok(SharedContentDownloadsPolicy::Enabled),
-                    _ => Ok(SharedContentDownloadsPolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
-        deserializer.deserialize_struct("SharedContentDownloadsPolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SharedContentDownloadsPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SharedContentDownloadsPolicy::Disabled => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedContentDownloadsPolicy", 1)?;
-                s.serialize_field(".tag", "disabled")?;
-                s.end()
-            }
-            SharedContentDownloadsPolicy::Enabled => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedContentDownloadsPolicy", 1)?;
-                s.serialize_field(".tag", "enabled")?;
-                s.end()
-            }
-            SharedContentDownloadsPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
 /// Left the membership of a shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentRelinquishMembershipDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: String,
 }
 
-impl SharedContentRelinquishMembershipDetails {
-    pub fn new(target_asset_index: u64, original_folder_name: String) -> Self {
+impl Default for SharedContentRelinquishMembershipDetails {
+    fn default() -> Self {
         SharedContentRelinquishMembershipDetails {
-            target_asset_index,
-            original_folder_name,
         }
     }
-
 }
 
-const SHARED_CONTENT_RELINQUISH_MEMBERSHIP_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                       "original_folder_name"];
+const SHARED_CONTENT_RELINQUISH_MEMBERSHIP_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SharedContentRelinquishMembershipDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentRelinquishMembershipDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_RELINQUISH_MEMBERSHIP_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHARED_CONTENT_RELINQUISH_MEMBERSHIP_DETAILS_FIELDS));
         }
         Ok(SharedContentRelinquishMembershipDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name.ok_or_else(|| de::Error::missing_field("original_folder_name"))?,
         })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)
     }
 }
 
@@ -40912,9 +42157,7 @@ impl ::serde::ser::Serialize for SharedContentRelinquishMembershipDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentRelinquishMembershipDetails", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
+        serializer.serialize_struct("SharedContentRelinquishMembershipDetails", 0)?.end()
     }
 }
 
@@ -40994,52 +42237,40 @@ impl ::serde::ser::Serialize for SharedContentRelinquishMembershipType {
 
 /// Removed an invitee from the membership of a shared file or folder before it was claimed.
 #[derive(Debug)]
-pub struct SharedContentRemoveInviteeDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: String,
+pub struct SharedContentRemoveInviteesDetails {
+    /// A list of invitees.
+    pub invitees: Vec<EmailAddress>,
 }
 
-impl SharedContentRemoveInviteeDetails {
-    pub fn new(target_asset_index: u64, original_folder_name: String) -> Self {
-        SharedContentRemoveInviteeDetails {
-            target_asset_index,
-            original_folder_name,
+impl SharedContentRemoveInviteesDetails {
+    pub fn new(invitees: Vec<EmailAddress>) -> Self {
+        SharedContentRemoveInviteesDetails {
+            invitees,
         }
     }
 
 }
 
-const SHARED_CONTENT_REMOVE_INVITEE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                "original_folder_name"];
-impl SharedContentRemoveInviteeDetails {
+const SHARED_CONTENT_REMOVE_INVITEES_DETAILS_FIELDS: &'static [&'static str] = &["invitees"];
+impl SharedContentRemoveInviteesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
-    ) -> Result<SharedContentRemoveInviteeDetails, V::Error> {
+    ) -> Result<SharedContentRemoveInviteesDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
+        let mut field_invitees = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
+                "invitees" => {
+                    if field_invitees.is_some() {
+                        return Err(de::Error::duplicate_field("invitees"));
                     }
-                    field_target_asset_index = Some(map.next_value()?);
+                    field_invitees = Some(map.next_value()?);
                 }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_REMOVE_INVITEE_DETAILS_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_REMOVE_INVITEES_DETAILS_FIELDS))
             }
         }
-        Ok(SharedContentRemoveInviteeDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name.ok_or_else(|| de::Error::missing_field("original_folder_name"))?,
+        Ok(SharedContentRemoveInviteesDetails {
+            invitees: field_invitees.ok_or_else(|| de::Error::missing_field("invitees"))?,
         })
     }
 
@@ -41048,58 +42279,57 @@ impl SharedContentRemoveInviteeDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)
+        s.serialize_field("invitees", &self.invitees)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for SharedContentRemoveInviteeDetails {
+impl<'de> ::serde::de::Deserialize<'de> for SharedContentRemoveInviteesDetails {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SharedContentRemoveInviteeDetails;
+            type Value = SharedContentRemoveInviteesDetails;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedContentRemoveInviteeDetails struct")
+                f.write_str("a SharedContentRemoveInviteesDetails struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SharedContentRemoveInviteeDetails::internal_deserialize(map)
+                SharedContentRemoveInviteesDetails::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("SharedContentRemoveInviteeDetails", SHARED_CONTENT_REMOVE_INVITEE_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentRemoveInviteesDetails", SHARED_CONTENT_REMOVE_INVITEES_DETAILS_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for SharedContentRemoveInviteeDetails {
+impl ::serde::ser::Serialize for SharedContentRemoveInviteesDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentRemoveInviteeDetails", 2)?;
+        let mut s = serializer.serialize_struct("SharedContentRemoveInviteesDetails", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
 }
 
 #[derive(Debug)]
-pub struct SharedContentRemoveInviteeType {
+pub struct SharedContentRemoveInviteesType {
     pub description: String,
 }
 
-impl SharedContentRemoveInviteeType {
+impl SharedContentRemoveInviteesType {
     pub fn new(description: String) -> Self {
-        SharedContentRemoveInviteeType {
+        SharedContentRemoveInviteesType {
             description,
         }
     }
 
 }
 
-const SHARED_CONTENT_REMOVE_INVITEE_TYPE_FIELDS: &'static [&'static str] = &["description"];
-impl SharedContentRemoveInviteeType {
+const SHARED_CONTENT_REMOVE_INVITEES_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl SharedContentRemoveInviteesType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
-    ) -> Result<SharedContentRemoveInviteeType, V::Error> {
+    ) -> Result<SharedContentRemoveInviteesType, V::Error> {
         use serde::de;
         let mut field_description = None;
         while let Some(key) = map.next_key()? {
@@ -41110,10 +42340,10 @@ impl SharedContentRemoveInviteeType {
                     }
                     field_description = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_REMOVE_INVITEE_TYPE_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_REMOVE_INVITEES_TYPE_FIELDS))
             }
         }
-        Ok(SharedContentRemoveInviteeType {
+        Ok(SharedContentRemoveInviteesType {
             description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
         })
     }
@@ -41127,29 +42357,29 @@ impl SharedContentRemoveInviteeType {
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for SharedContentRemoveInviteeType {
+impl<'de> ::serde::de::Deserialize<'de> for SharedContentRemoveInviteesType {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SharedContentRemoveInviteeType;
+            type Value = SharedContentRemoveInviteesType;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedContentRemoveInviteeType struct")
+                f.write_str("a SharedContentRemoveInviteesType struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SharedContentRemoveInviteeType::internal_deserialize(map)
+                SharedContentRemoveInviteesType::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("SharedContentRemoveInviteeType", SHARED_CONTENT_REMOVE_INVITEE_TYPE_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedContentRemoveInviteesType", SHARED_CONTENT_REMOVE_INVITEES_TYPE_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for SharedContentRemoveInviteeType {
+impl ::serde::ser::Serialize for SharedContentRemoveInviteesType {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentRemoveInviteeType", 1)?;
+        let mut s = serializer.serialize_struct("SharedContentRemoveInviteesType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -41158,73 +42388,38 @@ impl ::serde::ser::Serialize for SharedContentRemoveInviteeType {
 /// Removed the expiry of the link for the shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentRemoveLinkExpiryDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
+    /// Previous shared content link expiration date. Might be missing due to historical data gap.
+    pub previous_value: Option<super::common::DropboxTimestamp>,
 }
 
-impl SharedContentRemoveLinkExpiryDetails {
-    pub fn new(target_asset_index: u64) -> Self {
+impl Default for SharedContentRemoveLinkExpiryDetails {
+    fn default() -> Self {
         SharedContentRemoveLinkExpiryDetails {
-            target_asset_index,
-            original_folder_name: None,
-            shared_folder_type: None,
+            previous_value: None,
         }
     }
-
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
 }
 
-const SHARED_CONTENT_REMOVE_LINK_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                    "original_folder_name",
-                                                                                    "shared_folder_type"];
+const SHARED_CONTENT_REMOVE_LINK_EXPIRY_DETAILS_FIELDS: &'static [&'static str] = &["previous_value"];
 impl SharedContentRemoveLinkExpiryDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentRemoveLinkExpiryDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        let mut field_shared_folder_type = None;
+        let mut field_previous_value = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(de::Error::duplicate_field("previous_value"));
                     }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
+                    field_previous_value = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_REMOVE_LINK_EXPIRY_DETAILS_FIELDS))
             }
         }
         Ok(SharedContentRemoveLinkExpiryDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name,
-            shared_folder_type: field_shared_folder_type,
+            previous_value: field_previous_value,
         })
     }
 
@@ -41233,9 +42428,7 @@ impl SharedContentRemoveLinkExpiryDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)
+        s.serialize_field("previous_value", &self.previous_value)
     }
 }
 
@@ -41261,7 +42454,7 @@ impl ::serde::ser::Serialize for SharedContentRemoveLinkExpiryDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentRemoveLinkExpiryDetails", 3)?;
+        let mut s = serializer.serialize_struct("SharedContentRemoveLinkExpiryDetails", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -41344,84 +42537,26 @@ impl ::serde::ser::Serialize for SharedContentRemoveLinkExpiryType {
 /// Removed the password on the link for the shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentRemoveLinkPasswordDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
 }
 
-impl SharedContentRemoveLinkPasswordDetails {
-    pub fn new(target_asset_index: u64) -> Self {
+impl Default for SharedContentRemoveLinkPasswordDetails {
+    fn default() -> Self {
         SharedContentRemoveLinkPasswordDetails {
-            target_asset_index,
-            original_folder_name: None,
-            shared_folder_type: None,
         }
     }
-
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
 }
 
-const SHARED_CONTENT_REMOVE_LINK_PASSWORD_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                      "original_folder_name",
-                                                                                      "shared_folder_type"];
+const SHARED_CONTENT_REMOVE_LINK_PASSWORD_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SharedContentRemoveLinkPasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentRemoveLinkPasswordDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        let mut field_shared_folder_type = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_REMOVE_LINK_PASSWORD_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHARED_CONTENT_REMOVE_LINK_PASSWORD_DETAILS_FIELDS));
         }
         Ok(SharedContentRemoveLinkPasswordDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name,
-            shared_folder_type: field_shared_folder_type,
         })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)
     }
 }
 
@@ -41447,9 +42582,7 @@ impl ::serde::ser::Serialize for SharedContentRemoveLinkPasswordDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentRemoveLinkPasswordDetails", 3)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
+        serializer.serialize_struct("SharedContentRemoveLinkPasswordDetails", 0)?.end()
     }
 }
 
@@ -41530,90 +42663,38 @@ impl ::serde::ser::Serialize for SharedContentRemoveLinkPasswordType {
 /// Removed a user or a group from the membership of a shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentRemoveMemberDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
-    /// Sharing permission. Might be missing due to historical data gap.
-    pub sharing_permission: Option<String>,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
+    /// Shared content access level.
+    pub shared_content_access_level: Option<super::sharing::AccessLevel>,
 }
 
-impl SharedContentRemoveMemberDetails {
-    pub fn new(target_asset_index: u64) -> Self {
+impl Default for SharedContentRemoveMemberDetails {
+    fn default() -> Self {
         SharedContentRemoveMemberDetails {
-            target_asset_index,
-            original_folder_name: None,
-            sharing_permission: None,
-            shared_folder_type: None,
+            shared_content_access_level: None,
         }
     }
-
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
-        self.sharing_permission = value;
-        self
-    }
-
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
 }
 
-const SHARED_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                               "original_folder_name",
-                                                                               "sharing_permission",
-                                                                               "shared_folder_type"];
+const SHARED_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_access_level"];
 impl SharedContentRemoveMemberDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentRemoveMemberDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        let mut field_sharing_permission = None;
-        let mut field_shared_folder_type = None;
+        let mut field_shared_content_access_level = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
+                "shared_content_access_level" => {
+                    if field_shared_content_access_level.is_some() {
+                        return Err(de::Error::duplicate_field("shared_content_access_level"));
                     }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                "sharing_permission" => {
-                    if field_sharing_permission.is_some() {
-                        return Err(de::Error::duplicate_field("sharing_permission"));
-                    }
-                    field_sharing_permission = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
+                    field_shared_content_access_level = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_REMOVE_MEMBER_DETAILS_FIELDS))
             }
         }
         Ok(SharedContentRemoveMemberDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name,
-            sharing_permission: field_sharing_permission,
-            shared_folder_type: field_shared_folder_type,
+            shared_content_access_level: field_shared_content_access_level,
         })
     }
 
@@ -41622,10 +42703,7 @@ impl SharedContentRemoveMemberDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
-        s.serialize_field("sharing_permission", &self.sharing_permission)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)
+        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)
     }
 }
 
@@ -41651,7 +42729,7 @@ impl ::serde::ser::Serialize for SharedContentRemoveMemberDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentRemoveMemberDetails", 4)?;
+        let mut s = serializer.serialize_struct("SharedContentRemoveMemberDetails", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -41734,60 +42812,27 @@ impl ::serde::ser::Serialize for SharedContentRemoveMemberType {
 /// Requested to be on the membership of a shared file or folder.
 #[derive(Debug)]
 pub struct SharedContentRequestAccessDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
     /// Shared content link.
     pub shared_content_link: Option<String>,
 }
 
-impl SharedContentRequestAccessDetails {
-    pub fn new(target_asset_index: u64) -> Self {
+impl Default for SharedContentRequestAccessDetails {
+    fn default() -> Self {
         SharedContentRequestAccessDetails {
-            target_asset_index,
-            original_folder_name: None,
             shared_content_link: None,
         }
     }
-
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
-    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
-        self.shared_content_link = value;
-        self
-    }
-
 }
 
-const SHARED_CONTENT_REQUEST_ACCESS_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                "original_folder_name",
-                                                                                "shared_content_link"];
+const SHARED_CONTENT_REQUEST_ACCESS_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_link"];
 impl SharedContentRequestAccessDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentRequestAccessDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
         let mut field_shared_content_link = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
                 "shared_content_link" => {
                     if field_shared_content_link.is_some() {
                         return Err(de::Error::duplicate_field("shared_content_link"));
@@ -41798,8 +42843,6 @@ impl SharedContentRequestAccessDetails {
             }
         }
         Ok(SharedContentRequestAccessDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name,
             shared_content_link: field_shared_content_link,
         })
     }
@@ -41809,8 +42852,6 @@ impl SharedContentRequestAccessDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
         s.serialize_field("shared_content_link", &self.shared_content_link)
     }
 }
@@ -41837,7 +42878,7 @@ impl ::serde::ser::Serialize for SharedContentRequestAccessDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentRequestAccessDetails", 3)?;
+        let mut s = serializer.serialize_struct("SharedContentRequestAccessDetails", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -41920,66 +42961,26 @@ impl ::serde::ser::Serialize for SharedContentRequestAccessType {
 /// Unshared a shared file or folder by clearing its membership and turning off its link.
 #[derive(Debug)]
 pub struct SharedContentUnshareDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: Option<String>,
 }
 
-impl SharedContentUnshareDetails {
-    pub fn new(target_asset_index: u64) -> Self {
+impl Default for SharedContentUnshareDetails {
+    fn default() -> Self {
         SharedContentUnshareDetails {
-            target_asset_index,
-            original_folder_name: None,
         }
     }
-
-    pub fn with_original_folder_name(mut self, value: Option<String>) -> Self {
-        self.original_folder_name = value;
-        self
-    }
-
 }
 
-const SHARED_CONTENT_UNSHARE_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                         "original_folder_name"];
+const SHARED_CONTENT_UNSHARE_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SharedContentUnshareDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentUnshareDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_UNSHARE_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHARED_CONTENT_UNSHARE_DETAILS_FIELDS));
         }
         Ok(SharedContentUnshareDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name,
         })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)
     }
 }
 
@@ -42005,9 +43006,7 @@ impl ::serde::ser::Serialize for SharedContentUnshareDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedContentUnshareDetails", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
+        serializer.serialize_struct("SharedContentUnshareDetails", 0)?.end()
     }
 }
 
@@ -42090,39 +43089,42 @@ impl ::serde::ser::Serialize for SharedContentUnshareType {
 pub struct SharedContentViewDetails {
     /// Shared content link.
     pub shared_content_link: String,
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Sharing permission. Might be missing due to historical data gap.
-    pub sharing_permission: Option<String>,
+    /// Shared content access level.
+    pub shared_content_access_level: super::sharing::AccessLevel,
+    /// The shared content owner.
+    pub shared_content_owner: Option<UserLogInfo>,
 }
 
 impl SharedContentViewDetails {
-    pub fn new(shared_content_link: String, target_asset_index: u64) -> Self {
+    pub fn new(
+        shared_content_link: String,
+        shared_content_access_level: super::sharing::AccessLevel,
+    ) -> Self {
         SharedContentViewDetails {
             shared_content_link,
-            target_asset_index,
-            sharing_permission: None,
+            shared_content_access_level,
+            shared_content_owner: None,
         }
     }
 
-    pub fn with_sharing_permission(mut self, value: Option<String>) -> Self {
-        self.sharing_permission = value;
+    pub fn with_shared_content_owner(mut self, value: Option<UserLogInfo>) -> Self {
+        self.shared_content_owner = value;
         self
     }
 
 }
 
 const SHARED_CONTENT_VIEW_DETAILS_FIELDS: &'static [&'static str] = &["shared_content_link",
-                                                                      "target_asset_index",
-                                                                      "sharing_permission"];
+                                                                      "shared_content_access_level",
+                                                                      "shared_content_owner"];
 impl SharedContentViewDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentViewDetails, V::Error> {
         use serde::de;
         let mut field_shared_content_link = None;
-        let mut field_target_asset_index = None;
-        let mut field_sharing_permission = None;
+        let mut field_shared_content_access_level = None;
+        let mut field_shared_content_owner = None;
         while let Some(key) = map.next_key()? {
             match key {
                 "shared_content_link" => {
@@ -42131,25 +43133,25 @@ impl SharedContentViewDetails {
                     }
                     field_shared_content_link = Some(map.next_value()?);
                 }
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
+                "shared_content_access_level" => {
+                    if field_shared_content_access_level.is_some() {
+                        return Err(de::Error::duplicate_field("shared_content_access_level"));
                     }
-                    field_target_asset_index = Some(map.next_value()?);
+                    field_shared_content_access_level = Some(map.next_value()?);
                 }
-                "sharing_permission" => {
-                    if field_sharing_permission.is_some() {
-                        return Err(de::Error::duplicate_field("sharing_permission"));
+                "shared_content_owner" => {
+                    if field_shared_content_owner.is_some() {
+                        return Err(de::Error::duplicate_field("shared_content_owner"));
                     }
-                    field_sharing_permission = Some(map.next_value()?);
+                    field_shared_content_owner = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_VIEW_DETAILS_FIELDS))
             }
         }
         Ok(SharedContentViewDetails {
             shared_content_link: field_shared_content_link.ok_or_else(|| de::Error::missing_field("shared_content_link"))?,
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            sharing_permission: field_sharing_permission,
+            shared_content_access_level: field_shared_content_access_level.ok_or_else(|| de::Error::missing_field("shared_content_access_level"))?,
+            shared_content_owner: field_shared_content_owner,
         })
     }
 
@@ -42159,8 +43161,8 @@ impl SharedContentViewDetails {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_content_link", &self.shared_content_link)?;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("sharing_permission", &self.sharing_permission)
+        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("shared_content_owner", &self.shared_content_owner)
     }
 }
 
@@ -42266,315 +43268,46 @@ impl ::serde::ser::Serialize for SharedContentViewType {
     }
 }
 
-/// Shared content viewer info policy
-#[derive(Debug)]
-pub enum SharedContentViewerInfoPolicy {
-    Disabled,
-    Enabled,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SharedContentViewerInfoPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SharedContentViewerInfoPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedContentViewerInfoPolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "disabled" => Ok(SharedContentViewerInfoPolicy::Disabled),
-                    "enabled" => Ok(SharedContentViewerInfoPolicy::Enabled),
-                    _ => Ok(SharedContentViewerInfoPolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["disabled",
-                                                    "enabled",
-                                                    "other"];
-        deserializer.deserialize_struct("SharedContentViewerInfoPolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SharedContentViewerInfoPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SharedContentViewerInfoPolicy::Disabled => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedContentViewerInfoPolicy", 1)?;
-                s.serialize_field(".tag", "disabled")?;
-                s.end()
-            }
-            SharedContentViewerInfoPolicy::Enabled => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedContentViewerInfoPolicy", 1)?;
-                s.serialize_field(".tag", "enabled")?;
-                s.end()
-            }
-            SharedContentViewerInfoPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-/// Set or unset the confidential flag on a shared folder.
-#[derive(Debug)]
-pub struct SharedFolderChangeConfidentialityDetails {
-    /// New confidentiality value.
-    pub new_value: Confidentiality,
-    /// Previous confidentiality value. Might be missing due to historical data gap.
-    pub previous_value: Option<Confidentiality>,
-}
-
-impl SharedFolderChangeConfidentialityDetails {
-    pub fn new(new_value: Confidentiality) -> Self {
-        SharedFolderChangeConfidentialityDetails {
-            new_value,
-            previous_value: None,
-        }
-    }
-
-    pub fn with_previous_value(mut self, value: Option<Confidentiality>) -> Self {
-        self.previous_value = value;
-        self
-    }
-
-}
-
-const SHARED_FOLDER_CHANGE_CONFIDENTIALITY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
-                                                                                       "previous_value"];
-impl SharedFolderChangeConfidentialityDetails {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<SharedFolderChangeConfidentialityDetails, V::Error> {
-        use serde::de;
-        let mut field_new_value = None;
-        let mut field_previous_value = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "new_value" => {
-                    if field_new_value.is_some() {
-                        return Err(de::Error::duplicate_field("new_value"));
-                    }
-                    field_new_value = Some(map.next_value()?);
-                }
-                "previous_value" => {
-                    if field_previous_value.is_some() {
-                        return Err(de::Error::duplicate_field("previous_value"));
-                    }
-                    field_previous_value = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_CHANGE_CONFIDENTIALITY_DETAILS_FIELDS))
-            }
-        }
-        Ok(SharedFolderChangeConfidentialityDetails {
-            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
-            previous_value: field_previous_value,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("new_value", &self.new_value)?;
-        s.serialize_field("previous_value", &self.previous_value)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeConfidentialityDetails {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SharedFolderChangeConfidentialityDetails;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedFolderChangeConfidentialityDetails struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SharedFolderChangeConfidentialityDetails::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("SharedFolderChangeConfidentialityDetails", SHARED_FOLDER_CHANGE_CONFIDENTIALITY_DETAILS_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SharedFolderChangeConfidentialityDetails {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderChangeConfidentialityDetails", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
-#[derive(Debug)]
-pub struct SharedFolderChangeConfidentialityType {
-    pub description: String,
-}
-
-impl SharedFolderChangeConfidentialityType {
-    pub fn new(description: String) -> Self {
-        SharedFolderChangeConfidentialityType {
-            description,
-        }
-    }
-
-}
-
-const SHARED_FOLDER_CHANGE_CONFIDENTIALITY_TYPE_FIELDS: &'static [&'static str] = &["description"];
-impl SharedFolderChangeConfidentialityType {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-    ) -> Result<SharedFolderChangeConfidentialityType, V::Error> {
-        use serde::de;
-        let mut field_description = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "description" => {
-                    if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
-                    }
-                    field_description = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_CHANGE_CONFIDENTIALITY_TYPE_FIELDS))
-            }
-        }
-        Ok(SharedFolderChangeConfidentialityType {
-            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
-        })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("description", &self.description)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeConfidentialityType {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SharedFolderChangeConfidentialityType;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedFolderChangeConfidentialityType struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SharedFolderChangeConfidentialityType::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("SharedFolderChangeConfidentialityType", SHARED_FOLDER_CHANGE_CONFIDENTIALITY_TYPE_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SharedFolderChangeConfidentialityType {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderChangeConfidentialityType", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
 /// Changed who can access the shared folder via a link.
 #[derive(Debug)]
 pub struct SharedFolderChangeLinkPolicyDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: String,
     /// New shared folder link policy.
-    pub new_value: SharedFolderLinkPolicy,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
+    pub new_value: super::sharing::SharedLinkPolicy,
     /// Previous shared folder link policy. Might be missing due to historical data gap.
-    pub previous_value: Option<SharedFolderLinkPolicy>,
+    pub previous_value: Option<super::sharing::SharedLinkPolicy>,
 }
 
 impl SharedFolderChangeLinkPolicyDetails {
-    pub fn new(
-        target_asset_index: u64,
-        original_folder_name: String,
-        new_value: SharedFolderLinkPolicy,
-    ) -> Self {
+    pub fn new(new_value: super::sharing::SharedLinkPolicy) -> Self {
         SharedFolderChangeLinkPolicyDetails {
-            target_asset_index,
-            original_folder_name,
             new_value,
-            shared_folder_type: None,
             previous_value: None,
         }
     }
 
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
-    pub fn with_previous_value(mut self, value: Option<SharedFolderLinkPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<super::sharing::SharedLinkPolicy>) -> Self {
         self.previous_value = value;
         self
     }
 
 }
 
-const SHARED_FOLDER_CHANGE_LINK_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                   "original_folder_name",
-                                                                                   "new_value",
-                                                                                   "shared_folder_type",
+const SHARED_FOLDER_CHANGE_LINK_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
                                                                                    "previous_value"];
 impl SharedFolderChangeLinkPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedFolderChangeLinkPolicyDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
         let mut field_new_value = None;
-        let mut field_shared_folder_type = None;
         let mut field_previous_value = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
                 "new_value" => {
                     if field_new_value.is_some() {
                         return Err(de::Error::duplicate_field("new_value"));
                     }
                     field_new_value = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
                 }
                 "previous_value" => {
                     if field_previous_value.is_some() {
@@ -42586,10 +43319,7 @@ impl SharedFolderChangeLinkPolicyDetails {
             }
         }
         Ok(SharedFolderChangeLinkPolicyDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name.ok_or_else(|| de::Error::missing_field("original_folder_name"))?,
             new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
-            shared_folder_type: field_shared_folder_type,
             previous_value: field_previous_value,
         })
     }
@@ -42599,10 +43329,7 @@ impl SharedFolderChangeLinkPolicyDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
         s.serialize_field("new_value", &self.new_value)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)?;
         s.serialize_field("previous_value", &self.previous_value)
     }
 }
@@ -42629,7 +43356,7 @@ impl ::serde::ser::Serialize for SharedFolderChangeLinkPolicyDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderChangeLinkPolicyDetails", 5)?;
+        let mut s = serializer.serialize_struct("SharedFolderChangeLinkPolicyDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -42709,44 +43436,26 @@ impl ::serde::ser::Serialize for SharedFolderChangeLinkPolicyType {
     }
 }
 
-/// Changed who can manage the membership of a shared folder.
+/// Specify if the shared folder inherits its members from the parent folder.
 #[derive(Debug)]
-pub struct SharedFolderChangeMemberManagementPolicyDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: String,
-    /// New membership management policy.
-    pub new_value: SharedFolderMembershipManagementPolicy,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
-    /// Previous membership management policy. Might be missing due to historical data gap.
-    pub previous_value: Option<SharedFolderMembershipManagementPolicy>,
+pub struct SharedFolderChangeMembersInheritancePolicyDetails {
+    /// New member inheritance policy.
+    pub new_value: SharedFolderMembersInheritancePolicy,
+    /// Previous member inheritance policy. Might be missing due to historical data gap.
+    pub previous_value: Option<SharedFolderMembersInheritancePolicy>,
 }
 
-impl SharedFolderChangeMemberManagementPolicyDetails {
-    pub fn new(
-        target_asset_index: u64,
-        original_folder_name: String,
-        new_value: SharedFolderMembershipManagementPolicy,
-    ) -> Self {
-        SharedFolderChangeMemberManagementPolicyDetails {
-            target_asset_index,
-            original_folder_name,
+impl SharedFolderChangeMembersInheritancePolicyDetails {
+    pub fn new(new_value: SharedFolderMembersInheritancePolicy) -> Self {
+        SharedFolderChangeMembersInheritancePolicyDetails {
             new_value,
-            shared_folder_type: None,
             previous_value: None,
         }
     }
 
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
     pub fn with_previous_value(
         mut self,
-        value: Option<SharedFolderMembershipManagementPolicy>,
+        value: Option<SharedFolderMembersInheritancePolicy>,
     ) -> Self {
         self.previous_value = value;
         self
@@ -42754,46 +43463,22 @@ impl SharedFolderChangeMemberManagementPolicyDetails {
 
 }
 
-const SHARED_FOLDER_CHANGE_MEMBER_MANAGEMENT_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                                "original_folder_name",
-                                                                                                "new_value",
-                                                                                                "shared_folder_type",
-                                                                                                "previous_value"];
-impl SharedFolderChangeMemberManagementPolicyDetails {
+const SHARED_FOLDER_CHANGE_MEMBERS_INHERITANCE_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
+                                                                                                  "previous_value"];
+impl SharedFolderChangeMembersInheritancePolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
-    ) -> Result<SharedFolderChangeMemberManagementPolicyDetails, V::Error> {
+    ) -> Result<SharedFolderChangeMembersInheritancePolicyDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
         let mut field_new_value = None;
-        let mut field_shared_folder_type = None;
         let mut field_previous_value = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
                 "new_value" => {
                     if field_new_value.is_some() {
                         return Err(de::Error::duplicate_field("new_value"));
                     }
                     field_new_value = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
                 }
                 "previous_value" => {
                     if field_previous_value.is_some() {
@@ -42801,14 +43486,11 @@ impl SharedFolderChangeMemberManagementPolicyDetails {
                     }
                     field_previous_value = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_CHANGE_MEMBER_MANAGEMENT_POLICY_DETAILS_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_CHANGE_MEMBERS_INHERITANCE_POLICY_DETAILS_FIELDS))
             }
         }
-        Ok(SharedFolderChangeMemberManagementPolicyDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name.ok_or_else(|| de::Error::missing_field("original_folder_name"))?,
+        Ok(SharedFolderChangeMembersInheritancePolicyDetails {
             new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
-            shared_folder_type: field_shared_folder_type,
             previous_value: field_previous_value,
         })
     }
@@ -42818,61 +43500,58 @@ impl SharedFolderChangeMemberManagementPolicyDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
         s.serialize_field("new_value", &self.new_value)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)?;
         s.serialize_field("previous_value", &self.previous_value)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMemberManagementPolicyDetails {
+impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMembersInheritancePolicyDetails {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SharedFolderChangeMemberManagementPolicyDetails;
+            type Value = SharedFolderChangeMembersInheritancePolicyDetails;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedFolderChangeMemberManagementPolicyDetails struct")
+                f.write_str("a SharedFolderChangeMembersInheritancePolicyDetails struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SharedFolderChangeMemberManagementPolicyDetails::internal_deserialize(map)
+                SharedFolderChangeMembersInheritancePolicyDetails::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("SharedFolderChangeMemberManagementPolicyDetails", SHARED_FOLDER_CHANGE_MEMBER_MANAGEMENT_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedFolderChangeMembersInheritancePolicyDetails", SHARED_FOLDER_CHANGE_MEMBERS_INHERITANCE_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for SharedFolderChangeMemberManagementPolicyDetails {
+impl ::serde::ser::Serialize for SharedFolderChangeMembersInheritancePolicyDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderChangeMemberManagementPolicyDetails", 5)?;
+        let mut s = serializer.serialize_struct("SharedFolderChangeMembersInheritancePolicyDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
 }
 
 #[derive(Debug)]
-pub struct SharedFolderChangeMemberManagementPolicyType {
+pub struct SharedFolderChangeMembersInheritancePolicyType {
     pub description: String,
 }
 
-impl SharedFolderChangeMemberManagementPolicyType {
+impl SharedFolderChangeMembersInheritancePolicyType {
     pub fn new(description: String) -> Self {
-        SharedFolderChangeMemberManagementPolicyType {
+        SharedFolderChangeMembersInheritancePolicyType {
             description,
         }
     }
 
 }
 
-const SHARED_FOLDER_CHANGE_MEMBER_MANAGEMENT_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
-impl SharedFolderChangeMemberManagementPolicyType {
+const SHARED_FOLDER_CHANGE_MEMBERS_INHERITANCE_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl SharedFolderChangeMembersInheritancePolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
-    ) -> Result<SharedFolderChangeMemberManagementPolicyType, V::Error> {
+    ) -> Result<SharedFolderChangeMembersInheritancePolicyType, V::Error> {
         use serde::de;
         let mut field_description = None;
         while let Some(key) = map.next_key()? {
@@ -42883,10 +43562,10 @@ impl SharedFolderChangeMemberManagementPolicyType {
                     }
                     field_description = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_CHANGE_MEMBER_MANAGEMENT_POLICY_TYPE_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_CHANGE_MEMBERS_INHERITANCE_POLICY_TYPE_FIELDS))
             }
         }
-        Ok(SharedFolderChangeMemberManagementPolicyType {
+        Ok(SharedFolderChangeMembersInheritancePolicyType {
             description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
         })
     }
@@ -42900,29 +43579,197 @@ impl SharedFolderChangeMemberManagementPolicyType {
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMemberManagementPolicyType {
+impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMembersInheritancePolicyType {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SharedFolderChangeMemberManagementPolicyType;
+            type Value = SharedFolderChangeMembersInheritancePolicyType;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedFolderChangeMemberManagementPolicyType struct")
+                f.write_str("a SharedFolderChangeMembersInheritancePolicyType struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SharedFolderChangeMemberManagementPolicyType::internal_deserialize(map)
+                SharedFolderChangeMembersInheritancePolicyType::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("SharedFolderChangeMemberManagementPolicyType", SHARED_FOLDER_CHANGE_MEMBER_MANAGEMENT_POLICY_TYPE_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedFolderChangeMembersInheritancePolicyType", SHARED_FOLDER_CHANGE_MEMBERS_INHERITANCE_POLICY_TYPE_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for SharedFolderChangeMemberManagementPolicyType {
+impl ::serde::ser::Serialize for SharedFolderChangeMembersInheritancePolicyType {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderChangeMemberManagementPolicyType", 1)?;
+        let mut s = serializer.serialize_struct("SharedFolderChangeMembersInheritancePolicyType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Changed who can add or remove members of a shared folder.
+#[derive(Debug)]
+pub struct SharedFolderChangeMembersManagementPolicyDetails {
+    /// New members management policy.
+    pub new_value: super::sharing::AclUpdatePolicy,
+    /// Previous members management policy. Might be missing due to historical data gap.
+    pub previous_value: Option<super::sharing::AclUpdatePolicy>,
+}
+
+impl SharedFolderChangeMembersManagementPolicyDetails {
+    pub fn new(new_value: super::sharing::AclUpdatePolicy) -> Self {
+        SharedFolderChangeMembersManagementPolicyDetails {
+            new_value,
+            previous_value: None,
+        }
+    }
+
+    pub fn with_previous_value(mut self, value: Option<super::sharing::AclUpdatePolicy>) -> Self {
+        self.previous_value = value;
+        self
+    }
+
+}
+
+const SHARED_FOLDER_CHANGE_MEMBERS_MANAGEMENT_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
+                                                                                                 "previous_value"];
+impl SharedFolderChangeMembersManagementPolicyDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderChangeMembersManagementPolicyDetails, V::Error> {
+        use serde::de;
+        let mut field_new_value = None;
+        let mut field_previous_value = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_CHANGE_MEMBERS_MANAGEMENT_POLICY_DETAILS_FIELDS))
+            }
+        }
+        Ok(SharedFolderChangeMembersManagementPolicyDetails {
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
+            previous_value: field_previous_value,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_value", &self.new_value)?;
+        s.serialize_field("previous_value", &self.previous_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMembersManagementPolicyDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharedFolderChangeMembersManagementPolicyDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SharedFolderChangeMembersManagementPolicyDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharedFolderChangeMembersManagementPolicyDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharedFolderChangeMembersManagementPolicyDetails", SHARED_FOLDER_CHANGE_MEMBERS_MANAGEMENT_POLICY_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharedFolderChangeMembersManagementPolicyDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SharedFolderChangeMembersManagementPolicyDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct SharedFolderChangeMembersManagementPolicyType {
+    pub description: String,
+}
+
+impl SharedFolderChangeMembersManagementPolicyType {
+    pub fn new(description: String) -> Self {
+        SharedFolderChangeMembersManagementPolicyType {
+            description,
+        }
+    }
+
+}
+
+const SHARED_FOLDER_CHANGE_MEMBERS_MANAGEMENT_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl SharedFolderChangeMembersManagementPolicyType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SharedFolderChangeMembersManagementPolicyType, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_CHANGE_MEMBERS_MANAGEMENT_POLICY_TYPE_FIELDS))
+            }
+        }
+        Ok(SharedFolderChangeMembersManagementPolicyType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMembersManagementPolicyType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharedFolderChangeMembersManagementPolicyType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SharedFolderChangeMembersManagementPolicyType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharedFolderChangeMembersManagementPolicyType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharedFolderChangeMembersManagementPolicyType", SHARED_FOLDER_CHANGE_MEMBERS_MANAGEMENT_POLICY_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharedFolderChangeMembersManagementPolicyType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SharedFolderChangeMembersManagementPolicyType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -42930,86 +43777,44 @@ impl ::serde::ser::Serialize for SharedFolderChangeMemberManagementPolicyType {
 
 /// Changed who can become a member of the shared folder.
 #[derive(Debug)]
-pub struct SharedFolderChangeMemberPolicyDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: String,
+pub struct SharedFolderChangeMembersPolicyDetails {
     /// New external invite policy.
-    pub new_value: SharedFolderMemberPolicy,
-    /// Shared folder type. Might be missing due to historical data gap.
-    pub shared_folder_type: Option<String>,
+    pub new_value: super::sharing::MemberPolicy,
     /// Previous external invite policy. Might be missing due to historical data gap.
-    pub previous_value: Option<SharedFolderMemberPolicy>,
+    pub previous_value: Option<super::sharing::MemberPolicy>,
 }
 
-impl SharedFolderChangeMemberPolicyDetails {
-    pub fn new(
-        target_asset_index: u64,
-        original_folder_name: String,
-        new_value: SharedFolderMemberPolicy,
-    ) -> Self {
-        SharedFolderChangeMemberPolicyDetails {
-            target_asset_index,
-            original_folder_name,
+impl SharedFolderChangeMembersPolicyDetails {
+    pub fn new(new_value: super::sharing::MemberPolicy) -> Self {
+        SharedFolderChangeMembersPolicyDetails {
             new_value,
-            shared_folder_type: None,
             previous_value: None,
         }
     }
 
-    pub fn with_shared_folder_type(mut self, value: Option<String>) -> Self {
-        self.shared_folder_type = value;
-        self
-    }
-
-    pub fn with_previous_value(mut self, value: Option<SharedFolderMemberPolicy>) -> Self {
+    pub fn with_previous_value(mut self, value: Option<super::sharing::MemberPolicy>) -> Self {
         self.previous_value = value;
         self
     }
 
 }
 
-const SHARED_FOLDER_CHANGE_MEMBER_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                                     "original_folder_name",
-                                                                                     "new_value",
-                                                                                     "shared_folder_type",
-                                                                                     "previous_value"];
-impl SharedFolderChangeMemberPolicyDetails {
+const SHARED_FOLDER_CHANGE_MEMBERS_POLICY_DETAILS_FIELDS: &'static [&'static str] = &["new_value",
+                                                                                      "previous_value"];
+impl SharedFolderChangeMembersPolicyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
-    ) -> Result<SharedFolderChangeMemberPolicyDetails, V::Error> {
+    ) -> Result<SharedFolderChangeMembersPolicyDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
         let mut field_new_value = None;
-        let mut field_shared_folder_type = None;
         let mut field_previous_value = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
                 "new_value" => {
                     if field_new_value.is_some() {
                         return Err(de::Error::duplicate_field("new_value"));
                     }
                     field_new_value = Some(map.next_value()?);
-                }
-                "shared_folder_type" => {
-                    if field_shared_folder_type.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_type"));
-                    }
-                    field_shared_folder_type = Some(map.next_value()?);
                 }
                 "previous_value" => {
                     if field_previous_value.is_some() {
@@ -43017,14 +43822,11 @@ impl SharedFolderChangeMemberPolicyDetails {
                     }
                     field_previous_value = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_CHANGE_MEMBER_POLICY_DETAILS_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_CHANGE_MEMBERS_POLICY_DETAILS_FIELDS))
             }
         }
-        Ok(SharedFolderChangeMemberPolicyDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name.ok_or_else(|| de::Error::missing_field("original_folder_name"))?,
+        Ok(SharedFolderChangeMembersPolicyDetails {
             new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
-            shared_folder_type: field_shared_folder_type,
             previous_value: field_previous_value,
         })
     }
@@ -43034,61 +43836,58 @@ impl SharedFolderChangeMemberPolicyDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)?;
         s.serialize_field("new_value", &self.new_value)?;
-        s.serialize_field("shared_folder_type", &self.shared_folder_type)?;
         s.serialize_field("previous_value", &self.previous_value)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMemberPolicyDetails {
+impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMembersPolicyDetails {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SharedFolderChangeMemberPolicyDetails;
+            type Value = SharedFolderChangeMembersPolicyDetails;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedFolderChangeMemberPolicyDetails struct")
+                f.write_str("a SharedFolderChangeMembersPolicyDetails struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SharedFolderChangeMemberPolicyDetails::internal_deserialize(map)
+                SharedFolderChangeMembersPolicyDetails::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("SharedFolderChangeMemberPolicyDetails", SHARED_FOLDER_CHANGE_MEMBER_POLICY_DETAILS_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedFolderChangeMembersPolicyDetails", SHARED_FOLDER_CHANGE_MEMBERS_POLICY_DETAILS_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for SharedFolderChangeMemberPolicyDetails {
+impl ::serde::ser::Serialize for SharedFolderChangeMembersPolicyDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderChangeMemberPolicyDetails", 5)?;
+        let mut s = serializer.serialize_struct("SharedFolderChangeMembersPolicyDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
 }
 
 #[derive(Debug)]
-pub struct SharedFolderChangeMemberPolicyType {
+pub struct SharedFolderChangeMembersPolicyType {
     pub description: String,
 }
 
-impl SharedFolderChangeMemberPolicyType {
+impl SharedFolderChangeMembersPolicyType {
     pub fn new(description: String) -> Self {
-        SharedFolderChangeMemberPolicyType {
+        SharedFolderChangeMembersPolicyType {
             description,
         }
     }
 
 }
 
-const SHARED_FOLDER_CHANGE_MEMBER_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
-impl SharedFolderChangeMemberPolicyType {
+const SHARED_FOLDER_CHANGE_MEMBERS_POLICY_TYPE_FIELDS: &'static [&'static str] = &["description"];
+impl SharedFolderChangeMembersPolicyType {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
-    ) -> Result<SharedFolderChangeMemberPolicyType, V::Error> {
+    ) -> Result<SharedFolderChangeMembersPolicyType, V::Error> {
         use serde::de;
         let mut field_description = None;
         while let Some(key) = map.next_key()? {
@@ -43099,10 +43898,10 @@ impl SharedFolderChangeMemberPolicyType {
                     }
                     field_description = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_CHANGE_MEMBER_POLICY_TYPE_FIELDS))
+                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_CHANGE_MEMBERS_POLICY_TYPE_FIELDS))
             }
         }
-        Ok(SharedFolderChangeMemberPolicyType {
+        Ok(SharedFolderChangeMembersPolicyType {
             description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
         })
     }
@@ -43116,29 +43915,29 @@ impl SharedFolderChangeMemberPolicyType {
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMemberPolicyType {
+impl<'de> ::serde::de::Deserialize<'de> for SharedFolderChangeMembersPolicyType {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = SharedFolderChangeMemberPolicyType;
+            type Value = SharedFolderChangeMembersPolicyType;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedFolderChangeMemberPolicyType struct")
+                f.write_str("a SharedFolderChangeMembersPolicyType struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                SharedFolderChangeMemberPolicyType::internal_deserialize(map)
+                SharedFolderChangeMembersPolicyType::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("SharedFolderChangeMemberPolicyType", SHARED_FOLDER_CHANGE_MEMBER_POLICY_TYPE_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("SharedFolderChangeMembersPolicyType", SHARED_FOLDER_CHANGE_MEMBERS_POLICY_TYPE_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for SharedFolderChangeMemberPolicyType {
+impl ::serde::ser::Serialize for SharedFolderChangeMembersPolicyType {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderChangeMemberPolicyType", 1)?;
+        let mut s = serializer.serialize_struct("SharedFolderChangeMembersPolicyType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -43419,23 +44218,23 @@ impl ::serde::ser::Serialize for SharedFolderDeclineInvitationType {
     }
 }
 
+/// Specifies if a shared folder inherits its members from the parent folder.
 #[derive(Debug)]
-pub enum SharedFolderLinkPolicy {
-    MembersOnly,
-    MembersAndTeam,
-    Anyone,
+pub enum SharedFolderMembersInheritancePolicy {
+    InheritMembers,
+    DontInheritMembers,
     Other,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for SharedFolderLinkPolicy {
+impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMembersInheritancePolicy {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SharedFolderLinkPolicy;
+            type Value = SharedFolderMembersInheritancePolicy;
             fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedFolderLinkPolicy structure")
+                f.write_str("a SharedFolderMembersInheritancePolicy structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -43443,162 +44242,37 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderLinkPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "members_only" => Ok(SharedFolderLinkPolicy::MembersOnly),
-                    "members_and_team" => Ok(SharedFolderLinkPolicy::MembersAndTeam),
-                    "anyone" => Ok(SharedFolderLinkPolicy::Anyone),
-                    _ => Ok(SharedFolderLinkPolicy::Other)
+                    "inherit_members" => Ok(SharedFolderMembersInheritancePolicy::InheritMembers),
+                    "dont_inherit_members" => Ok(SharedFolderMembersInheritancePolicy::DontInheritMembers),
+                    _ => Ok(SharedFolderMembersInheritancePolicy::Other)
                 }
             }
         }
-        const VARIANTS: &'static [&'static str] = &["members_only",
-                                                    "members_and_team",
-                                                    "anyone",
+        const VARIANTS: &'static [&'static str] = &["inherit_members",
+                                                    "dont_inherit_members",
                                                     "other"];
-        deserializer.deserialize_struct("SharedFolderLinkPolicy", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("SharedFolderMembersInheritancePolicy", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for SharedFolderLinkPolicy {
+impl ::serde::ser::Serialize for SharedFolderMembersInheritancePolicy {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            SharedFolderLinkPolicy::MembersOnly => {
+            SharedFolderMembersInheritancePolicy::InheritMembers => {
                 // unit
-                let mut s = serializer.serialize_struct("SharedFolderLinkPolicy", 1)?;
-                s.serialize_field(".tag", "members_only")?;
+                let mut s = serializer.serialize_struct("SharedFolderMembersInheritancePolicy", 1)?;
+                s.serialize_field(".tag", "inherit_members")?;
                 s.end()
             }
-            SharedFolderLinkPolicy::MembersAndTeam => {
+            SharedFolderMembersInheritancePolicy::DontInheritMembers => {
                 // unit
-                let mut s = serializer.serialize_struct("SharedFolderLinkPolicy", 1)?;
-                s.serialize_field(".tag", "members_and_team")?;
+                let mut s = serializer.serialize_struct("SharedFolderMembersInheritancePolicy", 1)?;
+                s.serialize_field(".tag", "dont_inherit_members")?;
                 s.end()
             }
-            SharedFolderLinkPolicy::Anyone => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedFolderLinkPolicy", 1)?;
-                s.serialize_field(".tag", "anyone")?;
-                s.end()
-            }
-            SharedFolderLinkPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-/// Policy for controlling who can become a member of a shared folder
-#[derive(Debug)]
-pub enum SharedFolderMemberPolicy {
-    TeamOnly,
-    Anyone,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SharedFolderMemberPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedFolderMemberPolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "team_only" => Ok(SharedFolderMemberPolicy::TeamOnly),
-                    "anyone" => Ok(SharedFolderMemberPolicy::Anyone),
-                    _ => Ok(SharedFolderMemberPolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["team_only",
-                                                    "anyone",
-                                                    "other"];
-        deserializer.deserialize_struct("SharedFolderMemberPolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SharedFolderMemberPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SharedFolderMemberPolicy::TeamOnly => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedFolderMemberPolicy", 1)?;
-                s.serialize_field(".tag", "team_only")?;
-                s.end()
-            }
-            SharedFolderMemberPolicy::Anyone => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedFolderMemberPolicy", 1)?;
-                s.serialize_field(".tag", "anyone")?;
-                s.end()
-            }
-            SharedFolderMemberPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-#[derive(Debug)]
-pub enum SharedFolderMembershipManagementPolicy {
-    Owner,
-    Editors,
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMembershipManagementPolicy {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = SharedFolderMembershipManagementPolicy;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
-                f.write_str("a SharedFolderMembershipManagementPolicy structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "owner" => Ok(SharedFolderMembershipManagementPolicy::Owner),
-                    "editors" => Ok(SharedFolderMembershipManagementPolicy::Editors),
-                    _ => Ok(SharedFolderMembershipManagementPolicy::Other)
-                }
-            }
-        }
-        const VARIANTS: &'static [&'static str] = &["owner",
-                                                    "editors",
-                                                    "other"];
-        deserializer.deserialize_struct("SharedFolderMembershipManagementPolicy", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for SharedFolderMembershipManagementPolicy {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            SharedFolderMembershipManagementPolicy::Owner => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedFolderMembershipManagementPolicy", 1)?;
-                s.serialize_field(".tag", "owner")?;
-                s.end()
-            }
-            SharedFolderMembershipManagementPolicy::Editors => {
-                // unit
-                let mut s = serializer.serialize_struct("SharedFolderMembershipManagementPolicy", 1)?;
-                s.serialize_field(".tag", "editors")?;
-                s.end()
-            }
-            SharedFolderMembershipManagementPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            SharedFolderMembersInheritancePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -43606,61 +44280,26 @@ impl ::serde::ser::Serialize for SharedFolderMembershipManagementPolicy {
 /// Added a shared folder to own Dropbox.
 #[derive(Debug)]
 pub struct SharedFolderMountDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: String,
 }
 
-impl SharedFolderMountDetails {
-    pub fn new(target_asset_index: u64, original_folder_name: String) -> Self {
+impl Default for SharedFolderMountDetails {
+    fn default() -> Self {
         SharedFolderMountDetails {
-            target_asset_index,
-            original_folder_name,
         }
     }
-
 }
 
-const SHARED_FOLDER_MOUNT_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                      "original_folder_name"];
+const SHARED_FOLDER_MOUNT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SharedFolderMountDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedFolderMountDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_MOUNT_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHARED_FOLDER_MOUNT_DETAILS_FIELDS));
         }
         Ok(SharedFolderMountDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name.ok_or_else(|| de::Error::missing_field("original_folder_name"))?,
         })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)
     }
 }
 
@@ -43686,9 +44325,7 @@ impl ::serde::ser::Serialize for SharedFolderMountDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderMountDetails", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
+        serializer.serialize_struct("SharedFolderMountDetails", 0)?.end()
     }
 }
 
@@ -44099,61 +44736,26 @@ impl ::serde::ser::Serialize for SharedFolderTransferOwnershipType {
 /// Deleted a shared folder from Dropbox.
 #[derive(Debug)]
 pub struct SharedFolderUnmountDetails {
-    /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
-    /// Original shared folder name.
-    pub original_folder_name: String,
 }
 
-impl SharedFolderUnmountDetails {
-    pub fn new(target_asset_index: u64, original_folder_name: String) -> Self {
+impl Default for SharedFolderUnmountDetails {
+    fn default() -> Self {
         SharedFolderUnmountDetails {
-            target_asset_index,
-            original_folder_name,
         }
     }
-
 }
 
-const SHARED_FOLDER_UNMOUNT_DETAILS_FIELDS: &'static [&'static str] = &["target_asset_index",
-                                                                        "original_folder_name"];
+const SHARED_FOLDER_UNMOUNT_DETAILS_FIELDS: &'static [&'static str] = &[];
 impl SharedFolderUnmountDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedFolderUnmountDetails, V::Error> {
         use serde::de;
-        let mut field_target_asset_index = None;
-        let mut field_original_folder_name = None;
-        while let Some(key) = map.next_key()? {
-            match key {
-                "target_asset_index" => {
-                    if field_target_asset_index.is_some() {
-                        return Err(de::Error::duplicate_field("target_asset_index"));
-                    }
-                    field_target_asset_index = Some(map.next_value()?);
-                }
-                "original_folder_name" => {
-                    if field_original_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("original_folder_name"));
-                    }
-                    field_original_folder_name = Some(map.next_value()?);
-                }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_UNMOUNT_DETAILS_FIELDS))
-            }
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, SHARED_FOLDER_UNMOUNT_DETAILS_FIELDS));
         }
         Ok(SharedFolderUnmountDetails {
-            target_asset_index: field_target_asset_index.ok_or_else(|| de::Error::missing_field("target_asset_index"))?,
-            original_folder_name: field_original_folder_name.ok_or_else(|| de::Error::missing_field("original_folder_name"))?,
         })
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("target_asset_index", &self.target_asset_index)?;
-        s.serialize_field("original_folder_name", &self.original_folder_name)
     }
 }
 
@@ -44179,9 +44781,7 @@ impl ::serde::ser::Serialize for SharedFolderUnmountDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderUnmountDetails", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
+        serializer.serialize_struct("SharedFolderUnmountDetails", 0)?.end()
     }
 }
 
@@ -47798,6 +48398,74 @@ impl ::serde::ser::Serialize for SmartSyncOptOutType {
     }
 }
 
+/// Space limit alert policy
+#[derive(Debug)]
+pub enum SpaceCapsType {
+    Hard,
+    Off,
+    Soft,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SpaceCapsType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SpaceCapsType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SpaceCapsType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "hard" => Ok(SpaceCapsType::Hard),
+                    "off" => Ok(SpaceCapsType::Off),
+                    "soft" => Ok(SpaceCapsType::Soft),
+                    _ => Ok(SpaceCapsType::Other)
+                }
+            }
+        }
+        const VARIANTS: &'static [&'static str] = &["hard",
+                                                    "off",
+                                                    "soft",
+                                                    "other"];
+        deserializer.deserialize_struct("SpaceCapsType", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SpaceCapsType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SpaceCapsType::Hard => {
+                // unit
+                let mut s = serializer.serialize_struct("SpaceCapsType", 1)?;
+                s.serialize_field(".tag", "hard")?;
+                s.end()
+            }
+            SpaceCapsType::Off => {
+                // unit
+                let mut s = serializer.serialize_struct("SpaceCapsType", 1)?;
+                s.serialize_field(".tag", "off")?;
+                s.end()
+            }
+            SpaceCapsType::Soft => {
+                // unit
+                let mut s = serializer.serialize_struct("SpaceCapsType", 1)?;
+                s.serialize_field(".tag", "soft")?;
+                s.end()
+            }
+            SpaceCapsType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 #[derive(Debug)]
 pub enum SpaceLimitsStatus {
     WithinQuota,
@@ -49887,22 +50555,23 @@ pub struct TeamEvent {
     pub timestamp: super::common::DropboxTimestamp,
     /// The category that this type of action belongs to.
     pub event_category: EventCategory,
-    /// The entity who actually performed the action.
-    pub actor: ActorLogInfo,
-    /// True if the action involved a non team member either as the actor or as one of the affected
-    /// users.
-    pub involve_non_team_member: bool,
-    /// The user or team on whose behalf the actor performed the action.
-    pub context: ContextLogInfo,
     /// The particular type of action taken.
     pub event_type: EventType,
     /// The variable event schema applicable to this type of action, instantiated with respect to
     /// this particular action.
     pub details: EventDetails,
+    /// The entity who actually performed the action. Might be missing due to historical data gap.
+    pub actor: Option<ActorLogInfo>,
     /// The origin from which the actor performed the action including information about host, ip
     /// address, location, session, etc. If the action was performed programmatically via the API
     /// the origin represents the API client.
     pub origin: Option<OriginLogInfo>,
+    /// True if the action involved a non team member either as the actor or as one of the affected
+    /// users. Might be missing due to historical data gap.
+    pub involve_non_team_member: Option<bool>,
+    /// The user or team on whose behalf the actor performed the action. Might be missing due to
+    /// historical data gap.
+    pub context: Option<ContextLogInfo>,
     /// Zero or more users and/or groups that are affected by the action. Note that this list
     /// doesn't include any actors or users in context.
     pub participants: Option<Vec<ParticipantLogInfo>>,
@@ -49916,28 +50585,40 @@ impl TeamEvent {
     pub fn new(
         timestamp: super::common::DropboxTimestamp,
         event_category: EventCategory,
-        actor: ActorLogInfo,
-        involve_non_team_member: bool,
-        context: ContextLogInfo,
         event_type: EventType,
         details: EventDetails,
     ) -> Self {
         TeamEvent {
             timestamp,
             event_category,
-            actor,
-            involve_non_team_member,
-            context,
             event_type,
             details,
+            actor: None,
             origin: None,
+            involve_non_team_member: None,
+            context: None,
             participants: None,
             assets: None,
         }
     }
 
+    pub fn with_actor(mut self, value: Option<ActorLogInfo>) -> Self {
+        self.actor = value;
+        self
+    }
+
     pub fn with_origin(mut self, value: Option<OriginLogInfo>) -> Self {
         self.origin = value;
+        self
+    }
+
+    pub fn with_involve_non_team_member(mut self, value: Option<bool>) -> Self {
+        self.involve_non_team_member = value;
+        self
+    }
+
+    pub fn with_context(mut self, value: Option<ContextLogInfo>) -> Self {
+        self.context = value;
         self
     }
 
@@ -49955,12 +50636,12 @@ impl TeamEvent {
 
 const TEAM_EVENT_FIELDS: &'static [&'static str] = &["timestamp",
                                                      "event_category",
-                                                     "actor",
-                                                     "involve_non_team_member",
-                                                     "context",
                                                      "event_type",
                                                      "details",
+                                                     "actor",
                                                      "origin",
+                                                     "involve_non_team_member",
+                                                     "context",
                                                      "participants",
                                                      "assets"];
 impl TeamEvent {
@@ -49970,12 +50651,12 @@ impl TeamEvent {
         use serde::de;
         let mut field_timestamp = None;
         let mut field_event_category = None;
-        let mut field_actor = None;
-        let mut field_involve_non_team_member = None;
-        let mut field_context = None;
         let mut field_event_type = None;
         let mut field_details = None;
+        let mut field_actor = None;
         let mut field_origin = None;
+        let mut field_involve_non_team_member = None;
+        let mut field_context = None;
         let mut field_participants = None;
         let mut field_assets = None;
         while let Some(key) = map.next_key()? {
@@ -49992,24 +50673,6 @@ impl TeamEvent {
                     }
                     field_event_category = Some(map.next_value()?);
                 }
-                "actor" => {
-                    if field_actor.is_some() {
-                        return Err(de::Error::duplicate_field("actor"));
-                    }
-                    field_actor = Some(map.next_value()?);
-                }
-                "involve_non_team_member" => {
-                    if field_involve_non_team_member.is_some() {
-                        return Err(de::Error::duplicate_field("involve_non_team_member"));
-                    }
-                    field_involve_non_team_member = Some(map.next_value()?);
-                }
-                "context" => {
-                    if field_context.is_some() {
-                        return Err(de::Error::duplicate_field("context"));
-                    }
-                    field_context = Some(map.next_value()?);
-                }
                 "event_type" => {
                     if field_event_type.is_some() {
                         return Err(de::Error::duplicate_field("event_type"));
@@ -50022,11 +50685,29 @@ impl TeamEvent {
                     }
                     field_details = Some(map.next_value()?);
                 }
+                "actor" => {
+                    if field_actor.is_some() {
+                        return Err(de::Error::duplicate_field("actor"));
+                    }
+                    field_actor = Some(map.next_value()?);
+                }
                 "origin" => {
                     if field_origin.is_some() {
                         return Err(de::Error::duplicate_field("origin"));
                     }
                     field_origin = Some(map.next_value()?);
+                }
+                "involve_non_team_member" => {
+                    if field_involve_non_team_member.is_some() {
+                        return Err(de::Error::duplicate_field("involve_non_team_member"));
+                    }
+                    field_involve_non_team_member = Some(map.next_value()?);
+                }
+                "context" => {
+                    if field_context.is_some() {
+                        return Err(de::Error::duplicate_field("context"));
+                    }
+                    field_context = Some(map.next_value()?);
                 }
                 "participants" => {
                     if field_participants.is_some() {
@@ -50046,12 +50727,12 @@ impl TeamEvent {
         Ok(TeamEvent {
             timestamp: field_timestamp.ok_or_else(|| de::Error::missing_field("timestamp"))?,
             event_category: field_event_category.ok_or_else(|| de::Error::missing_field("event_category"))?,
-            actor: field_actor.ok_or_else(|| de::Error::missing_field("actor"))?,
-            involve_non_team_member: field_involve_non_team_member.ok_or_else(|| de::Error::missing_field("involve_non_team_member"))?,
-            context: field_context.ok_or_else(|| de::Error::missing_field("context"))?,
             event_type: field_event_type.ok_or_else(|| de::Error::missing_field("event_type"))?,
             details: field_details.ok_or_else(|| de::Error::missing_field("details"))?,
+            actor: field_actor,
             origin: field_origin,
+            involve_non_team_member: field_involve_non_team_member,
+            context: field_context,
             participants: field_participants,
             assets: field_assets,
         })
@@ -50064,12 +50745,12 @@ impl TeamEvent {
         use serde::ser::SerializeStruct;
         s.serialize_field("timestamp", &self.timestamp)?;
         s.serialize_field("event_category", &self.event_category)?;
-        s.serialize_field("actor", &self.actor)?;
-        s.serialize_field("involve_non_team_member", &self.involve_non_team_member)?;
-        s.serialize_field("context", &self.context)?;
         s.serialize_field("event_type", &self.event_type)?;
         s.serialize_field("details", &self.details)?;
+        s.serialize_field("actor", &self.actor)?;
         s.serialize_field("origin", &self.origin)?;
+        s.serialize_field("involve_non_team_member", &self.involve_non_team_member)?;
+        s.serialize_field("context", &self.context)?;
         s.serialize_field("participants", &self.participants)?;
         s.serialize_field("assets", &self.assets)
     }
@@ -50676,39 +51357,51 @@ impl ::serde::ser::Serialize for TeamFolderPermanentlyDeleteType {
 /// Renamed an active or archived team folder.
 #[derive(Debug)]
 pub struct TeamFolderRenameDetails {
-    /// Specifies the source and destination indices in the assets list.
-    pub relocate_action_details: RelocateAssetReferencesLogInfo,
+    /// Previous folder name.
+    pub previous_folder_name: String,
+    /// New folder name.
+    pub new_folder_name: String,
 }
 
 impl TeamFolderRenameDetails {
-    pub fn new(relocate_action_details: RelocateAssetReferencesLogInfo) -> Self {
+    pub fn new(previous_folder_name: String, new_folder_name: String) -> Self {
         TeamFolderRenameDetails {
-            relocate_action_details,
+            previous_folder_name,
+            new_folder_name,
         }
     }
 
 }
 
-const TEAM_FOLDER_RENAME_DETAILS_FIELDS: &'static [&'static str] = &["relocate_action_details"];
+const TEAM_FOLDER_RENAME_DETAILS_FIELDS: &'static [&'static str] = &["previous_folder_name",
+                                                                     "new_folder_name"];
 impl TeamFolderRenameDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TeamFolderRenameDetails, V::Error> {
         use serde::de;
-        let mut field_relocate_action_details = None;
+        let mut field_previous_folder_name = None;
+        let mut field_new_folder_name = None;
         while let Some(key) = map.next_key()? {
             match key {
-                "relocate_action_details" => {
-                    if field_relocate_action_details.is_some() {
-                        return Err(de::Error::duplicate_field("relocate_action_details"));
+                "previous_folder_name" => {
+                    if field_previous_folder_name.is_some() {
+                        return Err(de::Error::duplicate_field("previous_folder_name"));
                     }
-                    field_relocate_action_details = Some(map.next_value()?);
+                    field_previous_folder_name = Some(map.next_value()?);
+                }
+                "new_folder_name" => {
+                    if field_new_folder_name.is_some() {
+                        return Err(de::Error::duplicate_field("new_folder_name"));
+                    }
+                    field_new_folder_name = Some(map.next_value()?);
                 }
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_RENAME_DETAILS_FIELDS))
             }
         }
         Ok(TeamFolderRenameDetails {
-            relocate_action_details: field_relocate_action_details.ok_or_else(|| de::Error::missing_field("relocate_action_details"))?,
+            previous_folder_name: field_previous_folder_name.ok_or_else(|| de::Error::missing_field("previous_folder_name"))?,
+            new_folder_name: field_new_folder_name.ok_or_else(|| de::Error::missing_field("new_folder_name"))?,
         })
     }
 
@@ -50717,7 +51410,8 @@ impl TeamFolderRenameDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("relocate_action_details", &self.relocate_action_details)
+        s.serialize_field("previous_folder_name", &self.previous_folder_name)?;
+        s.serialize_field("new_folder_name", &self.new_folder_name)
     }
 }
 
@@ -50743,7 +51437,7 @@ impl ::serde::ser::Serialize for TeamFolderRenameDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamFolderRenameDetails", 1)?;
+        let mut s = serializer.serialize_struct("TeamFolderRenameDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -54071,6 +54765,182 @@ impl ::serde::ser::Serialize for UserOrTeamLinkedAppLogInfo {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("UserOrTeamLinkedAppLogInfo", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Information on active web sessions
+#[derive(Debug)]
+pub struct WebDeviceSessionLogInfo {
+    /// Information on the hosting device.
+    pub user_agent: String,
+    /// Information on the hosting operating system.
+    pub os: String,
+    /// Information on the browser used for this web session.
+    pub browser: String,
+    /// Session unique id. Might be missing due to historical data gap.
+    pub session_id: Option<DeviceSessionId>,
+    /// The IP address of the last activity from this session. Might be missing due to historical
+    /// data gap.
+    pub ip_address: Option<IpAddress>,
+    /// The time this session was created. Might be missing due to historical data gap.
+    pub created: Option<super::common::DropboxTimestamp>,
+    /// The time of the last activity from this session. Might be missing due to historical data
+    /// gap.
+    pub updated: Option<super::common::DropboxTimestamp>,
+}
+
+impl WebDeviceSessionLogInfo {
+    pub fn new(user_agent: String, os: String, browser: String) -> Self {
+        WebDeviceSessionLogInfo {
+            user_agent,
+            os,
+            browser,
+            session_id: None,
+            ip_address: None,
+            created: None,
+            updated: None,
+        }
+    }
+
+    pub fn with_session_id(mut self, value: Option<DeviceSessionId>) -> Self {
+        self.session_id = value;
+        self
+    }
+
+    pub fn with_ip_address(mut self, value: Option<IpAddress>) -> Self {
+        self.ip_address = value;
+        self
+    }
+
+    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.created = value;
+        self
+    }
+
+    pub fn with_updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.updated = value;
+        self
+    }
+
+}
+
+const WEB_DEVICE_SESSION_LOG_INFO_FIELDS: &'static [&'static str] = &["user_agent",
+                                                                      "os",
+                                                                      "browser",
+                                                                      "session_id",
+                                                                      "ip_address",
+                                                                      "created",
+                                                                      "updated"];
+impl WebDeviceSessionLogInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<WebDeviceSessionLogInfo, V::Error> {
+        use serde::de;
+        let mut field_user_agent = None;
+        let mut field_os = None;
+        let mut field_browser = None;
+        let mut field_session_id = None;
+        let mut field_ip_address = None;
+        let mut field_created = None;
+        let mut field_updated = None;
+        while let Some(key) = map.next_key()? {
+            match key {
+                "user_agent" => {
+                    if field_user_agent.is_some() {
+                        return Err(de::Error::duplicate_field("user_agent"));
+                    }
+                    field_user_agent = Some(map.next_value()?);
+                }
+                "os" => {
+                    if field_os.is_some() {
+                        return Err(de::Error::duplicate_field("os"));
+                    }
+                    field_os = Some(map.next_value()?);
+                }
+                "browser" => {
+                    if field_browser.is_some() {
+                        return Err(de::Error::duplicate_field("browser"));
+                    }
+                    field_browser = Some(map.next_value()?);
+                }
+                "session_id" => {
+                    if field_session_id.is_some() {
+                        return Err(de::Error::duplicate_field("session_id"));
+                    }
+                    field_session_id = Some(map.next_value()?);
+                }
+                "ip_address" => {
+                    if field_ip_address.is_some() {
+                        return Err(de::Error::duplicate_field("ip_address"));
+                    }
+                    field_ip_address = Some(map.next_value()?);
+                }
+                "created" => {
+                    if field_created.is_some() {
+                        return Err(de::Error::duplicate_field("created"));
+                    }
+                    field_created = Some(map.next_value()?);
+                }
+                "updated" => {
+                    if field_updated.is_some() {
+                        return Err(de::Error::duplicate_field("updated"));
+                    }
+                    field_updated = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, WEB_DEVICE_SESSION_LOG_INFO_FIELDS))
+            }
+        }
+        Ok(WebDeviceSessionLogInfo {
+            user_agent: field_user_agent.ok_or_else(|| de::Error::missing_field("user_agent"))?,
+            os: field_os.ok_or_else(|| de::Error::missing_field("os"))?,
+            browser: field_browser.ok_or_else(|| de::Error::missing_field("browser"))?,
+            session_id: field_session_id,
+            ip_address: field_ip_address,
+            created: field_created,
+            updated: field_updated,
+        })
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("user_agent", &self.user_agent)?;
+        s.serialize_field("os", &self.os)?;
+        s.serialize_field("browser", &self.browser)?;
+        s.serialize_field("session_id", &self.session_id)?;
+        s.serialize_field("ip_address", &self.ip_address)?;
+        s.serialize_field("created", &self.created)?;
+        s.serialize_field("updated", &self.updated)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for WebDeviceSessionLogInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = WebDeviceSessionLogInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a WebDeviceSessionLogInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                WebDeviceSessionLogInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("WebDeviceSessionLogInfo", WEB_DEVICE_SESSION_LOG_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for WebDeviceSessionLogInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("WebDeviceSessionLogInfo", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
