@@ -6,6 +6,18 @@ import sys
 
 from rust import RustHelperBackend
 from stone import ir
+from stone.backends.python_helpers import fmt_class as fmt_py_class
+
+
+class Permissions(object):
+    @property
+    def permissions(self):
+        # For generating tests, make sure we include any internal
+        # fields/structs if we're using internal specs. If we're not using
+        # internal specs, this is a no-op, so just do it all the time.  Note
+        # that this only needs to be done for json serialization, the struct
+        # definitions will include all fields, all the time.
+        return ['internal']
 
 
 class TestBackend(RustHelperBackend):
@@ -15,6 +27,7 @@ class TestBackend(RustHelperBackend):
         # Don't import other generators until here, otherwise stone.cli will
         # call them with its own arguments, in addition to the TestBackend.
         from stone.backends.python_types import PythonTypesBackend
+        self.target_path = target_folder_path
         self.ref_path = os.path.join(target_folder_path, 'reference')
         self.reference = PythonTypesBackend(self.ref_path, args)
         self.reference_impls = {}
@@ -26,11 +39,11 @@ class TestBackend(RustHelperBackend):
             self.emit(u'# this is the Stone-generated reference Python SDK')
 
         print(u'Loading reference code:')
-        sys.path.append(self.ref_path)
-        from stone_serializers import json_encode
+        sys.path.insert(0, self.target_path)
+        from reference.stone_serializers import json_encode
         for ns in api.namespaces:
             print('\t' + ns)
-            self.reference_impls[ns] = __import__(ns)
+            self.reference_impls[ns] = __import__('reference.'+ns).__dict__[ns]
 
         print(u'Generating test code')
         for ns in api.namespaces.values():
@@ -82,9 +95,12 @@ class TestBackend(RustHelperBackend):
                         raise RuntimeError(u'ERROR: type {} is neither struct nor union'
                                            .format(typ))
 
+                    pyname = fmt_py_class(typ.name)
+
                     json = json_encode(
-                        self.reference_impls[ns.name].__dict__[typ.name + '_validator'],
-                        test_value.value)
+                        self.reference_impls[ns.name].__dict__[pyname + '_validator'],
+                        test_value.value,
+                        Permissions())
                     with self._test_fn(type_name):
                         self.emit(u'let json = r#"{}"#;'.format(json))
                         self.emit(u'let x = ::serde_json::from_str::<::dropbox_sdk::{}::{}>(json).unwrap();'
@@ -163,6 +179,11 @@ class TestField(object):
         elif ir.is_timestamp_type(self.typ):
             codegen.emit(u'assert_eq!({}.as_str(), "{}");'.format(
                 expression, self.value.strftime(self.typ.format)))
+        elif ir.is_map_type(self.typ):
+            codegen.emit(u'/* TODO: MAP ASSERT HERE')
+            codegen.emit(u'expression: {}'.format(expression))
+            codegen.emit(u'value: {}'.format(self.value))
+            codegen.emit(u'*/')
         else:
             raise RuntimeError(u'Error: assetion unhandled for type {} of field {}'
                                .format(self.typ, self.name))
@@ -188,8 +209,9 @@ class TestStruct(TestValue):
         self._stone_type = stone_type
         self._reference_impls = reference_impls
 
+        py_name = fmt_py_class(stone_type.name)
         try:
-            self.value = reference_impls[stone_type.namespace.name].__dict__[stone_type.name]()
+            self.value = reference_impls[stone_type.namespace.name].__dict__[py_name]()
         except Exception as e:
             raise RuntimeError(u'Error instantiating value for {}: {}'.format(stone_type.name, e))
 
@@ -229,9 +251,10 @@ class TestUnion(TestValue):
         self.value = self.get_from_inner_value(variant.name, self._inner_value)
 
     def get_from_inner_value(self, variant_name, generated_field):
+        pyname = fmt_py_class(self._stone_type.name)
         try:
             return self._reference_impls[self._stone_type.namespace.name] \
-                    .__dict__[self._stone_type.name](variant_name, generated_field.value)
+                    .__dict__[pyname](variant_name, generated_field.value)
         except Exception as e:
             raise RuntimeError(u'Error generating value for {}.{}: {}'
                                .format(self._stone_type.name, variant_name, e))
@@ -309,6 +332,10 @@ def make_test_field(field_name, stone_type, rust_generator, reference_impls):
     elif ir.is_list_type(typ):
         inner = TestList(rust_generator, typ.data_type, reference_impls)
         value = [inner.value]
+    elif ir.is_map_type(typ):
+        k = make_test_field('mykey', typ.key_data_type, rust_generator, reference_impls)
+        v = make_test_field('myval', typ.value_data_type, rust_generator, reference_impls)
+        value = {k.value: v.value}
     elif ir.is_string_type(typ):
         if typ.pattern:
             value = Unregex(typ.pattern, typ.min_length).generate()
@@ -378,18 +405,23 @@ class Unregex(object):
             elif opcode == 'min_repeat' or opcode == 'max_repeat':
                 min_repeat, max_repeat, sub_tokens = argument
                 if self._min_len:
-                    n = min(self._min_len, max_repeat)
+                    n = max(min_repeat, min(self._min_len, max_repeat))
                 else:
                     n = min_repeat
                 sub_result = self._generate(sub_tokens) if n != 0 else ''
-                result += sub_result * n
+                result += str(sub_result) * n
             elif opcode == 'category':
                 if argument == 'category_digit':
                     result += '0'
+                elif argument == 'category_not_space':
+                    result += '!'
                 else:
                     raise NotImplementedError('category {}'.format(argument))
-            elif opcode == 'assert' or opcode == 'assert_not' \
-                    or opcode == 'negate':  # note: 'negate' is handled in the 'in' opcode
+            elif opcode == 'assert_not':
+                # let's just hope for the best...
+                pass
+            elif opcode == 'assert' or opcode == 'negate':
+                # note: 'negate' is handled in the 'in' opcode
                 raise NotImplementedError('regex opcode {} not implemented'.format(opcode))
             else:
                 raise NotImplementedError('unknown regex opcode: {}'.format(opcode))

@@ -658,7 +658,7 @@ class RustBackend(RustHelperBackend):
         elif isinstance(typ, ir.List):
             return u'Vec<{}>'.format(self._rust_type(typ.data_type))
         elif isinstance(typ, ir.Map):
-            return u'HashMap<{}, {}>'.format(
+            return u'::std::collections::HashMap<{}, {}>'.format(
                 self._rust_type(typ.key_data_type),
                 self._rust_type(typ.value_data_type))
         elif isinstance(typ, ir.Alias):

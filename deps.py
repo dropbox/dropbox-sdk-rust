@@ -22,7 +22,9 @@ for filepath in stone_files:
                 module = line.strip().split('namespace ')[1]
                 break
     if module is None or module == "":
-        raise RuntimeError('unknown namespace for ' + filepath)
+        # this can happen if the stone file is empty
+        print('unknown namespace for ' + filepath)
+        continue
     print('{} = {}'.format(filepath, module))
     if module == "stone_cfg":
         continue
