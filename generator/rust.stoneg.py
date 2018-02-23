@@ -388,8 +388,9 @@ class RustBackend(RustHelperBackend):
                                               self.field_name(field)))
                         self.emit(u's.end()')
                 if struct.is_catch_all():
-                    self.emit(u'{}::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))'.format(
-                        type_name))
+                    self.emit(u'{}::_Unknown => Err(::serde::ser::Error::custom("cannot serialize '
+                              u'unknown variant"))'.format(
+                                    type_name))
         self.emit()
 
     def _impl_serde_for_union(self, union):
@@ -418,16 +419,45 @@ class RustBackend(RustHelperBackend):
                                 # Handle the 'Other' variant at the end.
                                 continue
                             variant_name = self.enum_variant_name(field)
+                            ultimate_type = ir.unwrap(field.data_type)[0]
                             if isinstance(field.data_type, ir.Void):
                                 self.emit(u'"{}" => Ok({}::{}),'
                                           .format(field.name, type_name, variant_name))
-                            elif isinstance(ir.unwrap_aliases(field.data_type)[0], ir.Struct) \
-                                    and not field.data_type.has_enumerated_subtypes():
-                                self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'
-                                          .format(field.name,
-                                                  type_name,
-                                                  variant_name,
-                                                  self._rust_type(field.data_type)))
+                            elif isinstance(ultimate_type, ir.Struct) \
+                                    and not ultimate_type.has_enumerated_subtypes():
+                                if isinstance(ir.unwrap_aliases(field.data_type)[0], ir.Nullable):
+                                    with self.block(u'"{}" =>'.format(field.name)):
+                                        # HACK ALERT
+                                        # A nullable here means we might have more fields that can
+                                        # be deserialized into the inner type, or we might have
+                                        # nothing, meaning None. Serde maps don't have a peek
+                                        # method, so instead we have this hack. Unfortunately, in
+                                        # the case where size_hint returns None, we have to just try
+                                        # and see what happens, and errors will be silently
+                                        # interpreted as the inner data being None.
+                                        with self.block(u'match map.size_hint()'):
+                                            self.emit(u'Some(0) => Ok({}::{}(None)),'
+                                                      .format(type_name, variant_name))
+                                            self.emit(u'Some(_) => Ok({}::{}(Some('
+                                                      u'{}::internal_deserialize(map)?))),'
+                                                      .format(type_name,
+                                                              variant_name,
+                                                              self._rust_type(ultimate_type)))
+                                            with self.block(u'None => '
+                                                            'match {}::internal_deserialize(map)'
+                                                            .format(self._rust_type(
+                                                                ultimate_type))):
+                                                self.emit(u'Ok(inner) => Ok({}::{}(Some(inner))),'
+                                                          .format(type_name, variant_name))
+                                                # silently ignore error and treat it as None :(
+                                                self.emit(u'Err(_) => Ok({}::{}(None))'
+                                                          .format(type_name, variant_name))
+                                else:
+                                    self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'
+                                              .format(field.name,
+                                                      type_name,
+                                                      variant_name,
+                                                      self._rust_type(field.data_type)))
                             else:
                                 with self.block(u'"{}" =>'.format(field.name)):
                                     with self.block(u'match map.next_key()?'):
@@ -461,7 +491,8 @@ class RustBackend(RustHelperBackend):
             if len(union.all_fields) == 1 and union.all_fields[0].catch_all:
                 # special case: an open union with no variants defined.
                 self.emit(u'#![allow(unused_variables)]')
-                self.emit(u'Err(::serde::ser::Error::custom("cannot serialize an open union with no defined variants"))')
+                self.emit(u'Err(::serde::ser::Error::custom("cannot serialize an open union with '
+                          u'no defined variants"))')
             else:
                 self.emit(u'use serde::ser::SerializeStruct;')
                 with self.block(u'match *self'):
@@ -478,33 +509,58 @@ class RustBackend(RustHelperBackend):
                                 self.emit(u's.serialize_field(".tag", "{}")?;'.format(field.name))
                                 self.emit(u's.end()')
                         else:
+                            ultimate_type = ir.unwrap(field.data_type)[0]
                             needs_x = not (isinstance(field.data_type, ir.Struct)
                                            and not field.data_type.all_fields)
                             ref_x = 'ref x' if needs_x else '_'
                             with self.block(u'{}::{}({}) =>'.format(
                                     type_name, variant_name, ref_x)):
-                                if isinstance(field.data_type, ir.Union) or \
-                                        (isinstance(field.data_type, ir.Struct)
-                                         and field.data_type.has_enumerated_subtypes()):
+                                if isinstance(ultimate_type, ir.Union) or \
+                                        (isinstance(ultimate_type, ir.Struct)
+                                         and ultimate_type.has_enumerated_subtypes()):
+                                    # Inner type is a union or polymorphic struct; need to always
+                                    # emit another nesting level.
                                     self.emit(u'// union or polymporphic struct')
-                                    self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;')
+                                    self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;'
+                                              .format(union.name))
                                     self.emit(u's.serialize_field(".tag", "{}")?;'
                                               .format(field.name))
                                     self.emit(u's.serialize_field("{}", x)?;'.format(field.name))
                                     self.emit(u's.end()')
-                                elif isinstance(field.data_type, ir.Struct):
+                                elif isinstance(ir.unwrap_aliases(field.data_type)[0], ir.Nullable):
+                                    self.emit(u'// nullable (struct or primitive)')
+                                    # If it's nullable and the value is None, just emit the tag and
+                                    # nothing else, otherwise emit the fields directly at the same
+                                    # level.
+                                    num_fields = 1 if ir.is_primitive_type(ultimate_type) \
+                                        else len(ultimate_type.all_fields) + 1
+                                    self.emit(u'let n = if x.is_some() {{ {} }} else {{ 1 }};'
+                                              .format(num_fields + 1))
+                                    self.emit(u'let mut s = serializer.serialize_struct("{}", n)?;'
+                                              .format(union.name))
+                                    self.emit(u's.serialize_field(".tag", "{}")?;'
+                                              .format(field.name))
+                                    with self.block(u'if let &Some(ref x) = x'):
+                                        if ir.is_primitive_type(ultimate_type):
+                                            self.emit(u's.serialize_field("{}", &x)?;'
+                                                      .format(field.name))
+                                        else:
+                                            self.emit(u'x.internal_serialize::<S>(&mut s)?;')
+                                    self.emit(u's.end()')
+                                elif isinstance(ultimate_type, ir.Struct):
                                     self.emit(u'// struct')
                                     self.emit(u'let mut s = serializer.serialize_struct("{}", {})?;'
                                               .format(union.name,
-                                                      len(field.data_type.all_fields) + 1))
-                                    self.emit(u's.serialize_field(".tag", "{}")?;'.format(
-                                        field.name))
-                                    if field.data_type.all_fields:
+                                                      len(ultimate_type.all_fields) + 1))
+                                    self.emit(u's.serialize_field(".tag", "{}")?;'
+                                              .format(field.name))
+                                    if ultimate_type.all_fields:
                                         self.emit(u'x.internal_serialize::<S>(&mut s)?;')
                                     self.emit(u's.end()')
                                 else:
                                     self.emit(u'// primitive')
-                                    self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;')
+                                    self.emit(u'let mut s = serializer.serialize_struct("{}", 2)?;'
+                                              .format(union.name))
                                     self.emit(u's.serialize_field(".tag", "{}")?;'
                                               .format(field.name))
                                     self.emit(u's.serialize_field("{}", x)?;'.format(field.name))

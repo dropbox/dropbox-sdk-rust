@@ -1005,7 +1005,7 @@ impl ::serde::ser::Serialize for GetAccountBatchError {
         match *self {
             GetAccountBatchError::NoAccount(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("GetAccountBatchError", 2)?;
                 s.serialize_field(".tag", "no_account")?;
                 s.serialize_field("no_account", x)?;
                 s.end()

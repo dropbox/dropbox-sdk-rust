@@ -1417,10 +1417,13 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestDeadline {
                 match tag {
                     "no_update" => Ok(UpdateFileRequestDeadline::NoUpdate),
                     "update" => {
-                        match map.next_key()? {
-                            Some("update") => Ok(UpdateFileRequestDeadline::Update(map.next_value()?)),
-                            None => Ok(UpdateFileRequestDeadline::Update(None)),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        match map.size_hint() {
+                            Some(0) => Ok(UpdateFileRequestDeadline::Update(None)),
+                            Some(_) => Ok(UpdateFileRequestDeadline::Update(Some(FileRequestDeadline::internal_deserialize(map)?))),
+                            None => match FileRequestDeadline::internal_deserialize(map) {
+                                Ok(inner) => Ok(UpdateFileRequestDeadline::Update(Some(inner))),
+                                Err(_) => Ok(UpdateFileRequestDeadline::Update(None))
+                            }
                         }
                     }
                     _ => Ok(UpdateFileRequestDeadline::Other)
@@ -1446,10 +1449,13 @@ impl ::serde::ser::Serialize for UpdateFileRequestDeadline {
                 s.end()
             }
             UpdateFileRequestDeadline::Update(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                // nullable (struct or primitive)
+                let n = if x.is_some() { 4 } else { 1 };
+                let mut s = serializer.serialize_struct("UpdateFileRequestDeadline", n)?;
                 s.serialize_field(".tag", "update")?;
-                s.serialize_field("update", x)?;
+                if let &Some(ref x) = x {
+                    x.internal_serialize::<S>(&mut s)?;
+                }
                 s.end()
             }
             UpdateFileRequestDeadline::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

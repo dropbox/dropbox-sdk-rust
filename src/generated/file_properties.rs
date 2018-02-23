@@ -429,7 +429,7 @@ impl ::serde::ser::Serialize for AddPropertiesError {
         match *self {
             AddPropertiesError::TemplateNotFound(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("AddPropertiesError", 2)?;
                 s.serialize_field(".tag", "template_not_found")?;
                 s.serialize_field("template_not_found", x)?;
                 s.end()
@@ -442,7 +442,7 @@ impl ::serde::ser::Serialize for AddPropertiesError {
             }
             AddPropertiesError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("AddPropertiesError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -916,7 +916,7 @@ impl ::serde::ser::Serialize for InvalidPropertyGroupError {
         match *self {
             InvalidPropertyGroupError::TemplateNotFound(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 2)?;
                 s.serialize_field(".tag", "template_not_found")?;
                 s.serialize_field("template_not_found", x)?;
                 s.end()
@@ -929,7 +929,7 @@ impl ::serde::ser::Serialize for InvalidPropertyGroupError {
             }
             InvalidPropertyGroupError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -1221,7 +1221,7 @@ impl ::serde::ser::Serialize for LookupError {
         match *self {
             LookupError::MalformedPath(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("LookupError", 2)?;
                 s.serialize_field(".tag", "malformed_path")?;
                 s.serialize_field("malformed_path", x)?;
                 s.end()
@@ -1335,7 +1335,7 @@ impl ::serde::ser::Serialize for ModifyTemplateError {
         match *self {
             ModifyTemplateError::TemplateNotFound(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("ModifyTemplateError", 2)?;
                 s.serialize_field(".tag", "template_not_found")?;
                 s.serialize_field("template_not_found", x)?;
                 s.end()
@@ -1539,7 +1539,7 @@ impl ::serde::ser::Serialize for PropertiesError {
         match *self {
             PropertiesError::TemplateNotFound(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("PropertiesError", 2)?;
                 s.serialize_field(".tag", "template_not_found")?;
                 s.serialize_field("template_not_found", x)?;
                 s.end()
@@ -1552,7 +1552,7 @@ impl ::serde::ser::Serialize for PropertiesError {
             }
             PropertiesError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("PropertiesError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -1858,7 +1858,7 @@ impl ::serde::ser::Serialize for PropertiesSearchError {
         match *self {
             PropertiesSearchError::PropertyGroupLookup(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("PropertiesSearchError", 2)?;
                 s.serialize_field(".tag", "property_group_lookup")?;
                 s.serialize_field("property_group_lookup", x)?;
                 s.end()
@@ -2046,7 +2046,7 @@ impl ::serde::ser::Serialize for PropertiesSearchMode {
         match *self {
             PropertiesSearchMode::FieldName(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("PropertiesSearchMode", 2)?;
                 s.serialize_field(".tag", "field_name")?;
                 s.serialize_field("field_name", x)?;
                 s.end()
@@ -2971,7 +2971,7 @@ impl ::serde::ser::Serialize for RemovePropertiesError {
         match *self {
             RemovePropertiesError::TemplateNotFound(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RemovePropertiesError", 2)?;
                 s.serialize_field(".tag", "template_not_found")?;
                 s.serialize_field("template_not_found", x)?;
                 s.end()
@@ -2984,7 +2984,7 @@ impl ::serde::ser::Serialize for RemovePropertiesError {
             }
             RemovePropertiesError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RemovePropertiesError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -2997,7 +2997,7 @@ impl ::serde::ser::Serialize for RemovePropertiesError {
             }
             RemovePropertiesError::PropertyGroupLookup(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RemovePropertiesError", 2)?;
                 s.serialize_field(".tag", "property_group_lookup")?;
                 s.serialize_field("property_group_lookup", x)?;
                 s.end()
@@ -3146,7 +3146,7 @@ impl ::serde::ser::Serialize for TemplateError {
         match *self {
             TemplateError::TemplateNotFound(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("TemplateError", 2)?;
                 s.serialize_field(".tag", "template_not_found")?;
                 s.serialize_field("template_not_found", x)?;
                 s.end()
@@ -3226,7 +3226,7 @@ impl ::serde::ser::Serialize for TemplateFilter {
         match *self {
             TemplateFilter::FilterSome(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("TemplateFilter", 2)?;
                 s.serialize_field(".tag", "filter_some")?;
                 s.serialize_field("filter_some", x)?;
                 s.end()
@@ -3290,7 +3290,7 @@ impl ::serde::ser::Serialize for TemplateFilterBase {
         match *self {
             TemplateFilterBase::FilterSome(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("TemplateFilterBase", 2)?;
                 s.serialize_field(".tag", "filter_some")?;
                 s.serialize_field("filter_some", x)?;
                 s.end()
@@ -3529,7 +3529,7 @@ impl ::serde::ser::Serialize for UpdatePropertiesError {
         match *self {
             UpdatePropertiesError::TemplateNotFound(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("UpdatePropertiesError", 2)?;
                 s.serialize_field(".tag", "template_not_found")?;
                 s.serialize_field("template_not_found", x)?;
                 s.end()
@@ -3542,7 +3542,7 @@ impl ::serde::ser::Serialize for UpdatePropertiesError {
             }
             UpdatePropertiesError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("UpdatePropertiesError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -3567,7 +3567,7 @@ impl ::serde::ser::Serialize for UpdatePropertiesError {
             }
             UpdatePropertiesError::PropertyGroupLookup(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("UpdatePropertiesError", 2)?;
                 s.serialize_field(".tag", "property_group_lookup")?;
                 s.serialize_field("property_group_lookup", x)?;
                 s.end()

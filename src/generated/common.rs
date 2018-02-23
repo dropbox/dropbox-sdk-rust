@@ -90,14 +90,14 @@ impl ::serde::ser::Serialize for PathRoot {
             }
             PathRoot::Root(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("PathRoot", 2)?;
                 s.serialize_field(".tag", "root")?;
                 s.serialize_field("root", x)?;
                 s.end()
             }
             PathRoot::NamespaceId(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("PathRoot", 2)?;
                 s.serialize_field(".tag", "namespace_id")?;
                 s.serialize_field("namespace_id", x)?;
                 s.end()
@@ -159,7 +159,7 @@ impl ::serde::ser::Serialize for PathRootError {
         match *self {
             PathRootError::InvalidRoot(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("PathRootError", 2)?;
                 s.serialize_field(".tag", "invalid_root")?;
                 s.serialize_field("invalid_root", x)?;
                 s.end()

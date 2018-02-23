@@ -944,14 +944,14 @@ impl ::serde::ser::Serialize for AlphaGetMetadataError {
         match *self {
             AlphaGetMetadataError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("AlphaGetMetadataError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
             }
             AlphaGetMetadataError::PropertiesError(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("AlphaGetMetadataError", 2)?;
                 s.serialize_field(".tag", "properties_error")?;
                 s.serialize_field("properties_error", x)?;
                 s.end()
@@ -1458,7 +1458,7 @@ impl ::serde::ser::Serialize for CreateFolderError {
         match *self {
             CreateFolderError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("CreateFolderError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -1834,7 +1834,7 @@ impl ::serde::ser::Serialize for DeleteBatchJobStatus {
             }
             DeleteBatchJobStatus::Failed(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("DeleteBatchJobStatus", 2)?;
                 s.serialize_field(".tag", "failed")?;
                 s.serialize_field("failed", x)?;
                 s.end()
@@ -1897,7 +1897,7 @@ impl ::serde::ser::Serialize for DeleteBatchLaunch {
         match *self {
             DeleteBatchLaunch::AsyncJobId(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("DeleteBatchLaunch", 2)?;
                 s.serialize_field(".tag", "async_job_id")?;
                 s.serialize_field("async_job_id", x)?;
                 s.end()
@@ -2117,7 +2117,7 @@ impl ::serde::ser::Serialize for DeleteBatchResultEntry {
             }
             DeleteBatchResultEntry::Failure(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("DeleteBatchResultEntry", 2)?;
                 s.serialize_field(".tag", "failure")?;
                 s.serialize_field("failure", x)?;
                 s.end()
@@ -2189,14 +2189,14 @@ impl ::serde::ser::Serialize for DeleteError {
         match *self {
             DeleteError::PathLookup(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("DeleteError", 2)?;
                 s.serialize_field(".tag", "path_lookup")?;
                 s.serialize_field("path_lookup", x)?;
                 s.end()
             }
             DeleteError::PathWrite(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("DeleteError", 2)?;
                 s.serialize_field(".tag", "path_write")?;
                 s.serialize_field("path_write", x)?;
                 s.end()
@@ -2672,7 +2672,7 @@ impl ::serde::ser::Serialize for DownloadError {
         match *self {
             DownloadError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("DownloadError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -2823,7 +2823,7 @@ impl ::serde::ser::Serialize for DownloadZipError {
         match *self {
             DownloadZipError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("DownloadZipError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -3889,7 +3889,7 @@ impl ::serde::ser::Serialize for GetCopyReferenceError {
         match *self {
             GetCopyReferenceError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("GetCopyReferenceError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -4214,7 +4214,7 @@ impl ::serde::ser::Serialize for GetMetadataError {
         match *self {
             GetMetadataError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("GetMetadataError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -4356,7 +4356,7 @@ impl ::serde::ser::Serialize for GetTemporaryLinkError {
         match *self {
             GetTemporaryLinkError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("GetTemporaryLinkError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -4822,7 +4822,7 @@ impl ::serde::ser::Serialize for GetThumbnailBatchResultEntry {
             }
             GetThumbnailBatchResultEntry::Failure(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("GetThumbnailBatchResultEntry", 2)?;
                 s.serialize_field(".tag", "failure")?;
                 s.serialize_field("failure", x)?;
                 s.end()
@@ -5278,7 +5278,7 @@ impl ::serde::ser::Serialize for ListFolderContinueError {
         match *self {
             ListFolderContinueError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("ListFolderContinueError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -5352,7 +5352,7 @@ impl ::serde::ser::Serialize for ListFolderError {
         match *self {
             ListFolderError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("ListFolderError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -5965,7 +5965,7 @@ impl ::serde::ser::Serialize for ListRevisionsError {
         match *self {
             ListRevisionsError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("ListRevisionsError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -6217,10 +6217,13 @@ impl ::serde::ser::Serialize for LookupError {
         use serde::ser::SerializeStruct;
         match *self {
             LookupError::MalformedPath(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                // nullable (struct or primitive)
+                let n = if x.is_some() { 2 } else { 1 };
+                let mut s = serializer.serialize_struct("LookupError", n)?;
                 s.serialize_field(".tag", "malformed_path")?;
-                s.serialize_field("malformed_path", x)?;
+                if let &Some(ref x) = x {
+                    s.serialize_field("malformed_path", &x)?;
+                }
                 s.end()
             }
             LookupError::NotFound => {
@@ -6319,7 +6322,7 @@ impl ::serde::ser::Serialize for MediaInfo {
             }
             MediaInfo::Metadata(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("MediaInfo", 2)?;
                 s.serialize_field(".tag", "metadata")?;
                 s.serialize_field("metadata", x)?;
                 s.end()
@@ -6728,7 +6731,7 @@ impl ::serde::ser::Serialize for PreviewError {
         match *self {
             PreviewError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("PreviewError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -7145,21 +7148,21 @@ impl ::serde::ser::Serialize for RelocationBatchError {
         match *self {
             RelocationBatchError::FromLookup(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RelocationBatchError", 2)?;
                 s.serialize_field(".tag", "from_lookup")?;
                 s.serialize_field("from_lookup", x)?;
                 s.end()
             }
             RelocationBatchError::FromWrite(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RelocationBatchError", 2)?;
                 s.serialize_field(".tag", "from_write")?;
                 s.serialize_field("from_write", x)?;
                 s.end()
             }
             RelocationBatchError::To(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RelocationBatchError", 2)?;
                 s.serialize_field(".tag", "to")?;
                 s.serialize_field("to", x)?;
                 s.end()
@@ -7295,7 +7298,7 @@ impl ::serde::ser::Serialize for RelocationBatchJobStatus {
             }
             RelocationBatchJobStatus::Failed(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RelocationBatchJobStatus", 2)?;
                 s.serialize_field(".tag", "failed")?;
                 s.serialize_field("failed", x)?;
                 s.end()
@@ -7357,7 +7360,7 @@ impl ::serde::ser::Serialize for RelocationBatchLaunch {
         match *self {
             RelocationBatchLaunch::AsyncJobId(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RelocationBatchLaunch", 2)?;
                 s.serialize_field(".tag", "async_job_id")?;
                 s.serialize_field("async_job_id", x)?;
                 s.end()
@@ -7617,21 +7620,21 @@ impl ::serde::ser::Serialize for RelocationError {
         match *self {
             RelocationError::FromLookup(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RelocationError", 2)?;
                 s.serialize_field(".tag", "from_lookup")?;
                 s.serialize_field("from_lookup", x)?;
                 s.end()
             }
             RelocationError::FromWrite(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RelocationError", 2)?;
                 s.serialize_field(".tag", "from_write")?;
                 s.serialize_field("from_write", x)?;
                 s.end()
             }
             RelocationError::To(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RelocationError", 2)?;
                 s.serialize_field(".tag", "to")?;
                 s.serialize_field("to", x)?;
                 s.end()
@@ -8007,14 +8010,14 @@ impl ::serde::ser::Serialize for RestoreError {
         match *self {
             RestoreError::PathLookup(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RestoreError", 2)?;
                 s.serialize_field(".tag", "path_lookup")?;
                 s.serialize_field("path_lookup", x)?;
                 s.end()
             }
             RestoreError::PathWrite(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("RestoreError", 2)?;
                 s.serialize_field(".tag", "path_write")?;
                 s.serialize_field("path_write", x)?;
                 s.end()
@@ -8193,7 +8196,7 @@ impl ::serde::ser::Serialize for SaveCopyReferenceError {
         match *self {
             SaveCopyReferenceError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("SaveCopyReferenceError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -8460,7 +8463,7 @@ impl ::serde::ser::Serialize for SaveUrlError {
         match *self {
             SaveUrlError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("SaveUrlError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -8565,7 +8568,7 @@ impl ::serde::ser::Serialize for SaveUrlJobStatus {
             }
             SaveUrlJobStatus::Failed(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 2)?;
                 s.serialize_field(".tag", "failed")?;
                 s.serialize_field("failed", x)?;
                 s.end()
@@ -8624,7 +8627,7 @@ impl ::serde::ser::Serialize for SaveUrlResult {
         match *self {
             SaveUrlResult::AsyncJobId(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("SaveUrlResult", 2)?;
                 s.serialize_field(".tag", "async_job_id")?;
                 s.serialize_field("async_job_id", x)?;
                 s.end()
@@ -8831,7 +8834,7 @@ impl ::serde::ser::Serialize for SearchError {
         match *self {
             SearchError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("SearchError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -9517,7 +9520,7 @@ impl ::serde::ser::Serialize for ThumbnailError {
         match *self {
             ThumbnailError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("ThumbnailError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -9756,7 +9759,7 @@ impl ::serde::ser::Serialize for UploadError {
             }
             UploadError::PropertiesError(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("UploadError", 2)?;
                 s.serialize_field(".tag", "properties_error")?;
                 s.serialize_field("properties_error", x)?;
                 s.end()
@@ -9836,7 +9839,7 @@ impl ::serde::ser::Serialize for UploadErrorWithProperties {
             }
             UploadErrorWithProperties::PropertiesError(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("UploadErrorWithProperties", 2)?;
                 s.serialize_field(".tag", "properties_error")?;
                 s.serialize_field("properties_error", x)?;
                 s.end()
@@ -10303,7 +10306,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchLaunch {
         match *self {
             UploadSessionFinishBatchLaunch::AsyncJobId(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("UploadSessionFinishBatchLaunch", 2)?;
                 s.serialize_field(".tag", "async_job_id")?;
                 s.serialize_field("async_job_id", x)?;
                 s.end()
@@ -10449,7 +10452,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchResultEntry {
             }
             UploadSessionFinishBatchResultEntry::Failure(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 2)?;
                 s.serialize_field(".tag", "failure")?;
                 s.serialize_field("failure", x)?;
                 s.end()
@@ -10525,14 +10528,14 @@ impl ::serde::ser::Serialize for UploadSessionFinishError {
         match *self {
             UploadSessionFinishError::LookupFailed(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("UploadSessionFinishError", 2)?;
                 s.serialize_field(".tag", "lookup_failed")?;
                 s.serialize_field("lookup_failed", x)?;
                 s.end()
             }
             UploadSessionFinishError::Path(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("UploadSessionFinishError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
                 s.end()
@@ -11243,15 +11246,18 @@ impl ::serde::ser::Serialize for WriteError {
         use serde::ser::SerializeStruct;
         match *self {
             WriteError::MalformedPath(ref x) => {
-                // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                // nullable (struct or primitive)
+                let n = if x.is_some() { 2 } else { 1 };
+                let mut s = serializer.serialize_struct("WriteError", n)?;
                 s.serialize_field(".tag", "malformed_path")?;
-                s.serialize_field("malformed_path", x)?;
+                if let &Some(ref x) = x {
+                    s.serialize_field("malformed_path", &x)?;
+                }
                 s.end()
             }
             WriteError::Conflict(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("WriteError", 2)?;
                 s.serialize_field(".tag", "conflict")?;
                 s.serialize_field("conflict", x)?;
                 s.end()
@@ -11374,7 +11380,7 @@ impl ::serde::ser::Serialize for WriteMode {
             }
             WriteMode::Update(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("WriteMode", 2)?;
                 s.serialize_field(".tag", "update")?;
                 s.serialize_field("update", x)?;
                 s.end()

@@ -322,6 +322,7 @@ def make_test_field(field_name, stone_type, rust_generator, reference_impls):
         value = inner.value
     elif ir.is_union_type(typ):
         # pick the first tag
+        # TODO(wfraser) generate tests for them ALL!
         if len(typ.fields) == 0:
             # there must be a parent type; go for it
             variant = typ.all_fields[0]

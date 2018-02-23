@@ -1500,7 +1500,7 @@ impl ::serde::ser::Serialize for ListDocsCursorError {
         match *self {
             ListDocsCursorError::CursorError(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("ListDocsCursorError", 2)?;
                 s.serialize_field(".tag", "cursor_error")?;
                 s.serialize_field("cursor_error", x)?;
                 s.end()
@@ -2074,7 +2074,7 @@ impl ::serde::ser::Serialize for ListUsersCursorError {
             }
             ListUsersCursorError::CursorError(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("ListUsersCursorError", 2)?;
                 s.serialize_field(".tag", "cursor_error")?;
                 s.serialize_field("cursor_error", x)?;
                 s.end()

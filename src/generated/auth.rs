@@ -89,14 +89,14 @@ impl ::serde::ser::Serialize for AccessError {
         match *self {
             AccessError::InvalidAccountType(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("AccessError", 2)?;
                 s.serialize_field(".tag", "invalid_account_type")?;
                 s.serialize_field("invalid_account_type", x)?;
                 s.end()
             }
             AccessError::PaperAccessDenied(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("AccessError", 2)?;
                 s.serialize_field(".tag", "paper_access_denied")?;
                 s.serialize_field("paper_access_denied", x)?;
                 s.end()

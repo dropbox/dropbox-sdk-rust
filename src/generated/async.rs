@@ -62,7 +62,7 @@ impl ::serde::ser::Serialize for LaunchEmptyResult {
         match *self {
             LaunchEmptyResult::AsyncJobId(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("LaunchEmptyResult", 2)?;
                 s.serialize_field(".tag", "async_job_id")?;
                 s.serialize_field("async_job_id", x)?;
                 s.end()
@@ -127,7 +127,7 @@ impl ::serde::ser::Serialize for LaunchResultBase {
         match *self {
             LaunchResultBase::AsyncJobId(ref x) => {
                 // primitive
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("LaunchResultBase", 2)?;
                 s.serialize_field(".tag", "async_job_id")?;
                 s.serialize_field("async_job_id", x)?;
                 s.end()

@@ -108,7 +108,7 @@ impl ::serde::ser::Serialize for AccessMethodLogInfo {
         match *self {
             AccessMethodLogInfo::EndUser(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("AccessMethodLogInfo", 2)?;
                 s.serialize_field(".tag", "end_user")?;
                 s.serialize_field("end_user", x)?;
                 s.end()
@@ -1117,7 +1117,7 @@ impl ::serde::ser::Serialize for ActionDetails {
             }
             ActionDetails::RemoveAction(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("ActionDetails", 2)?;
                 s.serialize_field(".tag", "remove_action")?;
                 s.serialize_field("remove_action", x)?;
                 s.end()
@@ -1207,21 +1207,21 @@ impl ::serde::ser::Serialize for ActorLogInfo {
         match *self {
             ActorLogInfo::User(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("ActorLogInfo", 2)?;
                 s.serialize_field(".tag", "user")?;
                 s.serialize_field("user", x)?;
                 s.end()
             }
             ActorLogInfo::Admin(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("ActorLogInfo", 2)?;
                 s.serialize_field(".tag", "admin")?;
                 s.serialize_field("admin", x)?;
                 s.end()
             }
             ActorLogInfo::App(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("ActorLogInfo", 2)?;
                 s.serialize_field(".tag", "app")?;
                 s.serialize_field("app", x)?;
                 s.end()
@@ -36290,7 +36290,7 @@ impl ::serde::ser::Serialize for ParticipantLogInfo {
         match *self {
             ParticipantLogInfo::User(ref x) => {
                 // union or polymporphic struct
-                let mut s = serializer.serialize_struct("{}", 2)?;
+                let mut s = serializer.serialize_struct("ParticipantLogInfo", 2)?;
                 s.serialize_field(".tag", "user")?;
                 s.serialize_field("user", x)?;
                 s.end()
