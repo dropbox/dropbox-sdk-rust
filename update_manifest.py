@@ -36,7 +36,7 @@ for filepath in stone_files:
                 imported = line.strip().split('import ')[1]
                 deps[module].add(imported)
 
-with open('deps.dot', 'w') as dot:
+with open('namespaces.dot', 'w') as dot:
     dot.write('digraph deps {\n')
     for module, imports in deps.items():
         if len(imports) == 0:
@@ -84,3 +84,4 @@ with open("Cargo.toml", "r") as old, open("Cargo.toml.new", "w") as new:
 
         new.write(line)
 
+print('Updated manifest is located at Cargo.toml.new')

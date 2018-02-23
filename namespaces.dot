@@ -1,0 +1,16 @@
+digraph deps {
+    files -> { users_common async common auth file_properties };
+    sharing -> { files users team_common common users_common async };
+    users -> { users_common team_common common team_policies };
+    file_properties;
+    file_requests -> { files common };
+    team_policies;
+    auth -> { common };
+    team_log -> { files sharing file_requests team_policies team_common common team users_common async };
+    team_common -> { common };
+    paper -> { sharing common };
+    common;
+    team -> { users file_properties team_policies team_common common users_common async };
+    users_common -> { common };
+    async;
+}
