@@ -8,27 +8,31 @@ use std::collections::VecDeque;
 use std::env;
 use std::io::{self, Read, Write};
 
-const CLIENT_ID: &str = "this is a fake client id";
-const CLIENT_SECRET: &str = "this is a fake client secret";
+fn prompt(msg: &str) -> String {
+    eprint!("{}: ", msg);
+    io::stderr().flush().unwrap();
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).unwrap();
+    input.trim().to_owned()
+}
 
 fn main() {
     env_logger::init();
 
     // Let the user pass the token in an environment variable, or prompt them if that's not found.
     let token = env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
-        let url = Oauth2AuthorizeUrlBuilder::new(CLIENT_ID, Oauth2Type::AuthorizationCode).build();
+        let client_id = prompt("Give me a Dropbox API app key");
+        let client_secret = prompt("Give me a Dropbox API app secret");
+
+        let url = Oauth2AuthorizeUrlBuilder::new(&client_id, Oauth2Type::AuthorizationCode).build();
         eprintln!("Open this URL in your browser:");
         eprintln!("{}", url);
         eprintln!();
-        eprintln!("Then paste the code here: ");
-
-        let mut auth_code = String::new();
-        io::stdin().read_line(&mut auth_code).unwrap();
-        eprintln!();
+        let auth_code = prompt("Then paste the code here");
 
         eprintln!("requesting OAuth2 token");
         match HyperClient::oauth2_token_from_authorization_code(
-            CLIENT_ID, CLIENT_SECRET, auth_code.trim(), None)
+            &client_id, &client_secret, auth_code.trim(), None)
         {
             Ok(token) => {
                 eprintln!("got token");
