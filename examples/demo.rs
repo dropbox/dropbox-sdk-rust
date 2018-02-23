@@ -12,7 +12,7 @@ const CLIENT_ID: &str = "this is a fake client id";
 const CLIENT_SECRET: &str = "this is a fake client secret";
 
 fn main() {
-    env_logger::init().unwrap();
+    env_logger::init();
 
     // Let the user pass the token in an environment variable, or prompt them if that's not found.
     let token = env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
