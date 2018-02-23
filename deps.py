@@ -11,7 +11,7 @@ stone_files = []
 for root, dirs, files in os.walk(stone_root):
     for filepath in files:
         if filepath.endswith(".stone"):
-            stone_files.append(os.path.join(stone_root, filepath))
+            stone_files.append(os.path.join(root, filepath))
 
 deps = {}
 for filepath in stone_files:
