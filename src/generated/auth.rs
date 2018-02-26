@@ -383,12 +383,21 @@ const RATE_LIMIT_ERROR_FIELDS: &[&str] = &["reason",
                                            "retry_after"];
 impl RateLimitError {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RateLimitError, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RateLimitError>, V::Error> {
         use serde::de;
         let mut field_reason = None;
         let mut field_retry_after = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "reason" => {
                     if field_reason.is_some() {
@@ -405,10 +414,14 @@ impl RateLimitError {
                 _ => return Err(de::Error::unknown_field(key, RATE_LIMIT_ERROR_FIELDS))
             }
         }
-        Ok(RateLimitError {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RateLimitError {
             reason: field_reason.ok_or_else(|| de::Error::missing_field("reason"))?,
             retry_after: field_retry_after.unwrap_or(1),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -531,12 +544,21 @@ const TOKEN_FROM_O_AUTH1_ARG_FIELDS: &[&str] = &["oauth1_token",
                                                  "oauth1_token_secret"];
 impl TokenFromOAuth1Arg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TokenFromOAuth1Arg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TokenFromOAuth1Arg>, V::Error> {
         use serde::de;
         let mut field_oauth1_token = None;
         let mut field_oauth1_token_secret = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "oauth1_token" => {
                     if field_oauth1_token.is_some() {
@@ -553,10 +575,14 @@ impl TokenFromOAuth1Arg {
                 _ => return Err(de::Error::unknown_field(key, TOKEN_FROM_O_AUTH1_ARG_FIELDS))
             }
         }
-        Ok(TokenFromOAuth1Arg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TokenFromOAuth1Arg {
             oauth1_token: field_oauth1_token.ok_or_else(|| de::Error::missing_field("oauth1_token"))?,
             oauth1_token_secret: field_oauth1_token_secret.ok_or_else(|| de::Error::missing_field("oauth1_token_secret"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -687,11 +713,20 @@ impl TokenFromOAuth1Result {
 const TOKEN_FROM_O_AUTH1_RESULT_FIELDS: &[&str] = &["oauth2_token"];
 impl TokenFromOAuth1Result {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TokenFromOAuth1Result, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TokenFromOAuth1Result>, V::Error> {
         use serde::de;
         let mut field_oauth2_token = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "oauth2_token" => {
                     if field_oauth2_token.is_some() {
@@ -702,9 +737,13 @@ impl TokenFromOAuth1Result {
                 _ => return Err(de::Error::unknown_field(key, TOKEN_FROM_O_AUTH1_RESULT_FIELDS))
             }
         }
-        Ok(TokenFromOAuth1Result {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TokenFromOAuth1Result {
             oauth2_token: field_oauth2_token.ok_or_else(|| de::Error::missing_field("oauth2_token"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(

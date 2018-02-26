@@ -273,12 +273,21 @@ const ADD_MEMBER_FIELDS: &[&str] = &["member",
                                      "permission_level"];
 impl AddMember {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<AddMember, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<AddMember>, V::Error> {
         use serde::de;
         let mut field_member = None;
         let mut field_permission_level = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "member" => {
                     if field_member.is_some() {
@@ -295,10 +304,14 @@ impl AddMember {
                 _ => return Err(de::Error::unknown_field(key, ADD_MEMBER_FIELDS))
             }
         }
-        Ok(AddMember {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = AddMember {
             member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
             permission_level: field_permission_level.unwrap_or_else(|| PaperDocPermissionLevel::Edit),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -380,14 +393,23 @@ const ADD_PAPER_DOC_USER_FIELDS: &[&str] = &["doc_id",
                                              "quiet"];
 impl AddPaperDocUser {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<AddPaperDocUser, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<AddPaperDocUser>, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_members = None;
         let mut field_custom_message = None;
         let mut field_quiet = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
@@ -416,12 +438,16 @@ impl AddPaperDocUser {
                 _ => return Err(de::Error::unknown_field(key, ADD_PAPER_DOC_USER_FIELDS))
             }
         }
-        Ok(AddPaperDocUser {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = AddPaperDocUser {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
             members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
             custom_message: field_custom_message,
             quiet: field_quiet.unwrap_or(false),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -487,12 +513,21 @@ const ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS: &[&str] = &["member",
                                                            "result"];
 impl AddPaperDocUserMemberResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<AddPaperDocUserMemberResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<AddPaperDocUserMemberResult>, V::Error> {
         use serde::de;
         let mut field_member = None;
         let mut field_result = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "member" => {
                     if field_member.is_some() {
@@ -509,10 +544,14 @@ impl AddPaperDocUserMemberResult {
                 _ => return Err(de::Error::unknown_field(key, ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS))
             }
         }
-        Ok(AddPaperDocUserMemberResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = AddPaperDocUserMemberResult {
             member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
             result: field_result.ok_or_else(|| de::Error::missing_field("result"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -699,12 +738,21 @@ const CURSOR_FIELDS: &[&str] = &["value",
                                  "expiration"];
 impl Cursor {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<Cursor, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<Cursor>, V::Error> {
         use serde::de;
         let mut field_value = None;
         let mut field_expiration = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "value" => {
                     if field_value.is_some() {
@@ -721,10 +769,14 @@ impl Cursor {
                 _ => return Err(de::Error::unknown_field(key, CURSOR_FIELDS))
             }
         }
-        Ok(Cursor {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = Cursor {
             value: field_value.ok_or_else(|| de::Error::missing_field("value"))?,
             expiration: field_expiration,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -999,12 +1051,21 @@ const FOLDER_FIELDS: &[&str] = &["id",
                                  "name"];
 impl Folder {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<Folder, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<Folder>, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_name = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "id" => {
                     if field_id.is_some() {
@@ -1021,10 +1082,14 @@ impl Folder {
                 _ => return Err(de::Error::unknown_field(key, FOLDER_FIELDS))
             }
         }
-        Ok(Folder {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = Folder {
             id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1223,6 +1288,7 @@ impl Default for FoldersContainingPaperDoc {
 const FOLDERS_CONTAINING_PAPER_DOC_FIELDS: &[&str] = &["folder_sharing_policy_type",
                                                        "folders"];
 impl FoldersContainingPaperDoc {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FoldersContainingPaperDoc, V::Error> {
@@ -1246,10 +1312,11 @@ impl FoldersContainingPaperDoc {
                 _ => return Err(de::Error::unknown_field(key, FOLDERS_CONTAINING_PAPER_DOC_FIELDS))
             }
         }
-        Ok(FoldersContainingPaperDoc {
+        let result = FoldersContainingPaperDoc {
             folder_sharing_policy_type: field_folder_sharing_policy_type,
             folders: field_folders,
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1388,12 +1455,21 @@ const INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS: &[&str] = &["invitee",
                                                              "permission_level"];
 impl InviteeInfoWithPermissionLevel {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<InviteeInfoWithPermissionLevel, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<InviteeInfoWithPermissionLevel>, V::Error> {
         use serde::de;
         let mut field_invitee = None;
         let mut field_permission_level = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "invitee" => {
                     if field_invitee.is_some() {
@@ -1410,10 +1486,14 @@ impl InviteeInfoWithPermissionLevel {
                 _ => return Err(de::Error::unknown_field(key, INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS))
             }
         }
-        Ok(InviteeInfoWithPermissionLevel {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = InviteeInfoWithPermissionLevel {
             invitee: field_invitee.ok_or_else(|| de::Error::missing_field("invitee"))?,
             permission_level: field_permission_level.ok_or_else(|| de::Error::missing_field("permission_level"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1551,6 +1631,7 @@ const LIST_PAPER_DOCS_ARGS_FIELDS: &[&str] = &["filter_by",
                                                "sort_order",
                                                "limit"];
 impl ListPaperDocsArgs {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ListPaperDocsArgs, V::Error> {
@@ -1588,12 +1669,13 @@ impl ListPaperDocsArgs {
                 _ => return Err(de::Error::unknown_field(key, LIST_PAPER_DOCS_ARGS_FIELDS))
             }
         }
-        Ok(ListPaperDocsArgs {
+        let result = ListPaperDocsArgs {
             filter_by: field_filter_by.unwrap_or_else(|| ListPaperDocsFilterBy::DocsAccessed),
             sort_by: field_sort_by.unwrap_or_else(|| ListPaperDocsSortBy::Accessed),
             sort_order: field_sort_order.unwrap_or_else(|| ListPaperDocsSortOrder::Ascending),
             limit: field_limit.unwrap_or(1000),
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1655,11 +1737,20 @@ impl ListPaperDocsContinueArgs {
 const LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS: &[&str] = &["cursor"];
 impl ListPaperDocsContinueArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListPaperDocsContinueArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListPaperDocsContinueArgs>, V::Error> {
         use serde::de;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
@@ -1670,9 +1761,13 @@ impl ListPaperDocsContinueArgs {
                 _ => return Err(de::Error::unknown_field(key, LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS))
             }
         }
-        Ok(ListPaperDocsContinueArgs {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListPaperDocsContinueArgs {
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1803,13 +1898,22 @@ const LIST_PAPER_DOCS_RESPONSE_FIELDS: &[&str] = &["doc_ids",
                                                    "has_more"];
 impl ListPaperDocsResponse {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListPaperDocsResponse, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListPaperDocsResponse>, V::Error> {
         use serde::de;
         let mut field_doc_ids = None;
         let mut field_cursor = None;
         let mut field_has_more = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "doc_ids" => {
                     if field_doc_ids.is_some() {
@@ -1832,11 +1936,15 @@ impl ListPaperDocsResponse {
                 _ => return Err(de::Error::unknown_field(key, LIST_PAPER_DOCS_RESPONSE_FIELDS))
             }
         }
-        Ok(ListPaperDocsResponse {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListPaperDocsResponse {
             doc_ids: field_doc_ids.ok_or_else(|| de::Error::missing_field("doc_ids"))?,
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2124,12 +2232,21 @@ const LIST_USERS_ON_FOLDER_ARGS_FIELDS: &[&str] = &["doc_id",
                                                     "limit"];
 impl ListUsersOnFolderArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListUsersOnFolderArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListUsersOnFolderArgs>, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_limit = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
@@ -2146,10 +2263,14 @@ impl ListUsersOnFolderArgs {
                 _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_FOLDER_ARGS_FIELDS))
             }
         }
-        Ok(ListUsersOnFolderArgs {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListUsersOnFolderArgs {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
             limit: field_limit.unwrap_or(1000),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2213,12 +2334,21 @@ const LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS: &[&str] = &["doc_id",
                                                              "cursor"];
 impl ListUsersOnFolderContinueArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListUsersOnFolderContinueArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListUsersOnFolderContinueArgs>, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
@@ -2235,10 +2365,14 @@ impl ListUsersOnFolderContinueArgs {
                 _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS))
             }
         }
-        Ok(ListUsersOnFolderContinueArgs {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListUsersOnFolderContinueArgs {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2319,14 +2453,23 @@ const LIST_USERS_ON_FOLDER_RESPONSE_FIELDS: &[&str] = &["invitees",
                                                         "has_more"];
 impl ListUsersOnFolderResponse {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListUsersOnFolderResponse, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListUsersOnFolderResponse>, V::Error> {
         use serde::de;
         let mut field_invitees = None;
         let mut field_users = None;
         let mut field_cursor = None;
         let mut field_has_more = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "invitees" => {
                     if field_invitees.is_some() {
@@ -2355,12 +2498,16 @@ impl ListUsersOnFolderResponse {
                 _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_FOLDER_RESPONSE_FIELDS))
             }
         }
-        Ok(ListUsersOnFolderResponse {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListUsersOnFolderResponse {
             invitees: field_invitees.ok_or_else(|| de::Error::missing_field("invitees"))?,
             users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2440,13 +2587,22 @@ const LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS: &[&str] = &["doc_id",
                                                        "filter_by"];
 impl ListUsersOnPaperDocArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListUsersOnPaperDocArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListUsersOnPaperDocArgs>, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_limit = None;
         let mut field_filter_by = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
@@ -2469,11 +2625,15 @@ impl ListUsersOnPaperDocArgs {
                 _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS))
             }
         }
-        Ok(ListUsersOnPaperDocArgs {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListUsersOnPaperDocArgs {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
             limit: field_limit.unwrap_or(1000),
             filter_by: field_filter_by.unwrap_or_else(|| UserOnPaperDocFilter::Shared),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2538,12 +2698,21 @@ const LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS: &[&str] = &["doc_id",
                                                                 "cursor"];
 impl ListUsersOnPaperDocContinueArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListUsersOnPaperDocContinueArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListUsersOnPaperDocContinueArgs>, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
@@ -2560,10 +2729,14 @@ impl ListUsersOnPaperDocContinueArgs {
                 _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS))
             }
         }
-        Ok(ListUsersOnPaperDocContinueArgs {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListUsersOnPaperDocContinueArgs {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2649,15 +2822,24 @@ const LIST_USERS_ON_PAPER_DOC_RESPONSE_FIELDS: &[&str] = &["invitees",
                                                            "has_more"];
 impl ListUsersOnPaperDocResponse {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListUsersOnPaperDocResponse, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListUsersOnPaperDocResponse>, V::Error> {
         use serde::de;
         let mut field_invitees = None;
         let mut field_users = None;
         let mut field_doc_owner = None;
         let mut field_cursor = None;
         let mut field_has_more = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "invitees" => {
                     if field_invitees.is_some() {
@@ -2692,13 +2874,17 @@ impl ListUsersOnPaperDocResponse {
                 _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_PAPER_DOC_RESPONSE_FIELDS))
             }
         }
-        Ok(ListUsersOnPaperDocResponse {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListUsersOnPaperDocResponse {
             invitees: field_invitees.ok_or_else(|| de::Error::missing_field("invitees"))?,
             users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
             doc_owner: field_doc_owner.ok_or_else(|| de::Error::missing_field("doc_owner"))?,
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2925,12 +3111,21 @@ const PAPER_DOC_CREATE_ARGS_FIELDS: &[&str] = &["import_format",
                                                 "parent_folder_id"];
 impl PaperDocCreateArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PaperDocCreateArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PaperDocCreateArgs>, V::Error> {
         use serde::de;
         let mut field_import_format = None;
         let mut field_parent_folder_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "import_format" => {
                     if field_import_format.is_some() {
@@ -2947,10 +3142,14 @@ impl PaperDocCreateArgs {
                 _ => return Err(de::Error::unknown_field(key, PAPER_DOC_CREATE_ARGS_FIELDS))
             }
         }
-        Ok(PaperDocCreateArgs {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PaperDocCreateArgs {
             import_format: field_import_format.ok_or_else(|| de::Error::missing_field("import_format"))?,
             parent_folder_id: field_parent_folder_id,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3120,13 +3319,22 @@ const PAPER_DOC_CREATE_UPDATE_RESULT_FIELDS: &[&str] = &["doc_id",
                                                          "title"];
 impl PaperDocCreateUpdateResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PaperDocCreateUpdateResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PaperDocCreateUpdateResult>, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_revision = None;
         let mut field_title = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
@@ -3149,11 +3357,15 @@ impl PaperDocCreateUpdateResult {
                 _ => return Err(de::Error::unknown_field(key, PAPER_DOC_CREATE_UPDATE_RESULT_FIELDS))
             }
         }
-        Ok(PaperDocCreateUpdateResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PaperDocCreateUpdateResult {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
             revision: field_revision.ok_or_else(|| de::Error::missing_field("revision"))?,
             title: field_title.ok_or_else(|| de::Error::missing_field("title"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3216,12 +3428,21 @@ const PAPER_DOC_EXPORT_FIELDS: &[&str] = &["doc_id",
                                            "export_format"];
 impl PaperDocExport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PaperDocExport, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PaperDocExport>, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_export_format = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
@@ -3238,10 +3459,14 @@ impl PaperDocExport {
                 _ => return Err(de::Error::unknown_field(key, PAPER_DOC_EXPORT_FIELDS))
             }
         }
-        Ok(PaperDocExport {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PaperDocExport {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
             export_format: field_export_format.ok_or_else(|| de::Error::missing_field("export_format"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3312,14 +3537,23 @@ const PAPER_DOC_EXPORT_RESULT_FIELDS: &[&str] = &["owner",
                                                   "mime_type"];
 impl PaperDocExportResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PaperDocExportResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PaperDocExportResult>, V::Error> {
         use serde::de;
         let mut field_owner = None;
         let mut field_title = None;
         let mut field_revision = None;
         let mut field_mime_type = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "owner" => {
                     if field_owner.is_some() {
@@ -3348,12 +3582,16 @@ impl PaperDocExportResult {
                 _ => return Err(de::Error::unknown_field(key, PAPER_DOC_EXPORT_RESULT_FIELDS))
             }
         }
-        Ok(PaperDocExportResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PaperDocExportResult {
             owner: field_owner.ok_or_else(|| de::Error::missing_field("owner"))?,
             title: field_title.ok_or_else(|| de::Error::missing_field("title"))?,
             revision: field_revision.ok_or_else(|| de::Error::missing_field("revision"))?,
             mime_type: field_mime_type.ok_or_else(|| de::Error::missing_field("mime_type"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3478,12 +3716,21 @@ const PAPER_DOC_SHARING_POLICY_FIELDS: &[&str] = &["doc_id",
                                                    "sharing_policy"];
 impl PaperDocSharingPolicy {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PaperDocSharingPolicy, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PaperDocSharingPolicy>, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_sharing_policy = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
@@ -3500,10 +3747,14 @@ impl PaperDocSharingPolicy {
                 _ => return Err(de::Error::unknown_field(key, PAPER_DOC_SHARING_POLICY_FIELDS))
             }
         }
-        Ok(PaperDocSharingPolicy {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PaperDocSharingPolicy {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
             sharing_policy: field_sharing_policy.ok_or_else(|| de::Error::missing_field("sharing_policy"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3580,14 +3831,23 @@ const PAPER_DOC_UPDATE_ARGS_FIELDS: &[&str] = &["doc_id",
                                                 "import_format"];
 impl PaperDocUpdateArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PaperDocUpdateArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PaperDocUpdateArgs>, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_doc_update_policy = None;
         let mut field_revision = None;
         let mut field_import_format = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
@@ -3616,12 +3876,16 @@ impl PaperDocUpdateArgs {
                 _ => return Err(de::Error::unknown_field(key, PAPER_DOC_UPDATE_ARGS_FIELDS))
             }
         }
-        Ok(PaperDocUpdateArgs {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PaperDocUpdateArgs {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
             doc_update_policy: field_doc_update_policy.ok_or_else(|| de::Error::missing_field("doc_update_policy"))?,
             revision: field_revision.ok_or_else(|| de::Error::missing_field("revision"))?,
             import_format: field_import_format.ok_or_else(|| de::Error::missing_field("import_format"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3885,11 +4149,20 @@ impl RefPaperDoc {
 const REF_PAPER_DOC_FIELDS: &[&str] = &["doc_id"];
 impl RefPaperDoc {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RefPaperDoc, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RefPaperDoc>, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
@@ -3900,9 +4173,13 @@ impl RefPaperDoc {
                 _ => return Err(de::Error::unknown_field(key, REF_PAPER_DOC_FIELDS))
             }
         }
-        Ok(RefPaperDoc {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RefPaperDoc {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3965,12 +4242,21 @@ const REMOVE_PAPER_DOC_USER_FIELDS: &[&str] = &["doc_id",
                                                 "member"];
 impl RemovePaperDocUser {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RemovePaperDocUser, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RemovePaperDocUser>, V::Error> {
         use serde::de;
         let mut field_doc_id = None;
         let mut field_member = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
@@ -3987,10 +4273,14 @@ impl RemovePaperDocUser {
                 _ => return Err(de::Error::unknown_field(key, REMOVE_PAPER_DOC_USER_FIELDS))
             }
         }
-        Ok(RemovePaperDocUser {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RemovePaperDocUser {
             doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
             member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -4052,6 +4342,7 @@ impl Default for SharingPolicy {
 const SHARING_POLICY_FIELDS: &[&str] = &["public_sharing_policy",
                                          "team_sharing_policy"];
 impl SharingPolicy {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharingPolicy, V::Error> {
@@ -4075,10 +4366,11 @@ impl SharingPolicy {
                 _ => return Err(de::Error::unknown_field(key, SHARING_POLICY_FIELDS))
             }
         }
-        Ok(SharingPolicy {
+        let result = SharingPolicy {
             public_sharing_policy: field_public_sharing_policy,
             team_sharing_policy: field_team_sharing_policy,
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -4286,12 +4578,21 @@ const USER_INFO_WITH_PERMISSION_LEVEL_FIELDS: &[&str] = &["user",
                                                           "permission_level"];
 impl UserInfoWithPermissionLevel {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<UserInfoWithPermissionLevel, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UserInfoWithPermissionLevel>, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_permission_level = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "user" => {
                     if field_user.is_some() {
@@ -4308,10 +4609,14 @@ impl UserInfoWithPermissionLevel {
                 _ => return Err(de::Error::unknown_field(key, USER_INFO_WITH_PERMISSION_LEVEL_FIELDS))
             }
         }
-        Ok(UserInfoWithPermissionLevel {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UserInfoWithPermissionLevel {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
             permission_level: field_permission_level.ok_or_else(|| de::Error::missing_field("permission_level"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(

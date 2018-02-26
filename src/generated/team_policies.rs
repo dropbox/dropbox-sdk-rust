@@ -825,13 +825,22 @@ const TEAM_MEMBER_POLICIES_FIELDS: &[&str] = &["sharing",
                                                "office_addin"];
 impl TeamMemberPolicies {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamMemberPolicies, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamMemberPolicies>, V::Error> {
         use serde::de;
         let mut field_sharing = None;
         let mut field_emm_state = None;
         let mut field_office_addin = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "sharing" => {
                     if field_sharing.is_some() {
@@ -854,11 +863,15 @@ impl TeamMemberPolicies {
                 _ => return Err(de::Error::unknown_field(key, TEAM_MEMBER_POLICIES_FIELDS))
             }
         }
-        Ok(TeamMemberPolicies {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamMemberPolicies {
             sharing: field_sharing.ok_or_else(|| de::Error::missing_field("sharing"))?,
             emm_state: field_emm_state.ok_or_else(|| de::Error::missing_field("emm_state"))?,
             office_addin: field_office_addin.ok_or_else(|| de::Error::missing_field("office_addin"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -931,13 +944,22 @@ const TEAM_SHARING_POLICIES_FIELDS: &[&str] = &["shared_folder_member_policy",
                                                 "shared_link_create_policy"];
 impl TeamSharingPolicies {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamSharingPolicies, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamSharingPolicies>, V::Error> {
         use serde::de;
         let mut field_shared_folder_member_policy = None;
         let mut field_shared_folder_join_policy = None;
         let mut field_shared_link_create_policy = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "shared_folder_member_policy" => {
                     if field_shared_folder_member_policy.is_some() {
@@ -960,11 +982,15 @@ impl TeamSharingPolicies {
                 _ => return Err(de::Error::unknown_field(key, TEAM_SHARING_POLICIES_FIELDS))
             }
         }
-        Ok(TeamSharingPolicies {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamSharingPolicies {
             shared_folder_member_policy: field_shared_folder_member_policy.ok_or_else(|| de::Error::missing_field("shared_folder_member_policy"))?,
             shared_folder_join_policy: field_shared_folder_join_policy.ok_or_else(|| de::Error::missing_field("shared_folder_join_policy"))?,
             shared_link_create_policy: field_shared_link_create_policy.ok_or_else(|| de::Error::missing_field("shared_link_create_policy"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(

@@ -287,12 +287,21 @@ const ADD_PROPERTIES_ARG_FIELDS: &[&str] = &["path",
                                              "property_groups"];
 impl AddPropertiesArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<AddPropertiesArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<AddPropertiesArg>, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_property_groups = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "path" => {
                     if field_path.is_some() {
@@ -309,10 +318,14 @@ impl AddPropertiesArg {
                 _ => return Err(de::Error::unknown_field(key, ADD_PROPERTIES_ARG_FIELDS))
             }
         }
-        Ok(AddPropertiesArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = AddPropertiesArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
             property_groups: field_property_groups.ok_or_else(|| de::Error::missing_field("property_groups"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -515,13 +528,22 @@ const ADD_TEMPLATE_ARG_FIELDS: &[&str] = &["name",
                                            "fields"];
 impl AddTemplateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<AddTemplateArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<AddTemplateArg>, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_description = None;
         let mut field_fields = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
@@ -544,11 +566,15 @@ impl AddTemplateArg {
                 _ => return Err(de::Error::unknown_field(key, ADD_TEMPLATE_ARG_FIELDS))
             }
         }
-        Ok(AddTemplateArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = AddTemplateArg {
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
             description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
             fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -609,11 +635,20 @@ impl AddTemplateResult {
 const ADD_TEMPLATE_RESULT_FIELDS: &[&str] = &["template_id"];
 impl AddTemplateResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<AddTemplateResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<AddTemplateResult>, V::Error> {
         use serde::de;
         let mut field_template_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
@@ -624,9 +659,13 @@ impl AddTemplateResult {
                 _ => return Err(de::Error::unknown_field(key, ADD_TEMPLATE_RESULT_FIELDS))
             }
         }
-        Ok(AddTemplateResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = AddTemplateResult {
             template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -685,11 +724,20 @@ impl GetTemplateArg {
 const GET_TEMPLATE_ARG_FIELDS: &[&str] = &["template_id"];
 impl GetTemplateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GetTemplateArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GetTemplateArg>, V::Error> {
         use serde::de;
         let mut field_template_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
@@ -700,9 +748,13 @@ impl GetTemplateArg {
                 _ => return Err(de::Error::unknown_field(key, GET_TEMPLATE_ARG_FIELDS))
             }
         }
-        Ok(GetTemplateArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GetTemplateArg {
             template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -769,13 +821,22 @@ const GET_TEMPLATE_RESULT_FIELDS: &[&str] = &["name",
                                               "fields"];
 impl GetTemplateResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GetTemplateResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GetTemplateResult>, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_description = None;
         let mut field_fields = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
@@ -798,11 +859,15 @@ impl GetTemplateResult {
                 _ => return Err(de::Error::unknown_field(key, GET_TEMPLATE_RESULT_FIELDS))
             }
         }
-        Ok(GetTemplateResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GetTemplateResult {
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
             description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
             fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -988,11 +1053,20 @@ impl ListTemplateResult {
 const LIST_TEMPLATE_RESULT_FIELDS: &[&str] = &["template_ids"];
 impl ListTemplateResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListTemplateResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListTemplateResult>, V::Error> {
         use serde::de;
         let mut field_template_ids = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "template_ids" => {
                     if field_template_ids.is_some() {
@@ -1003,9 +1077,13 @@ impl ListTemplateResult {
                 _ => return Err(de::Error::unknown_field(key, LIST_TEMPLATE_RESULT_FIELDS))
             }
         }
-        Ok(ListTemplateResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListTemplateResult {
             template_ids: field_template_ids.ok_or_else(|| de::Error::missing_field("template_ids"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1409,12 +1487,21 @@ const OVERWRITE_PROPERTY_GROUP_ARG_FIELDS: &[&str] = &["path",
                                                        "property_groups"];
 impl OverwritePropertyGroupArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<OverwritePropertyGroupArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<OverwritePropertyGroupArg>, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_property_groups = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "path" => {
                     if field_path.is_some() {
@@ -1431,10 +1518,14 @@ impl OverwritePropertyGroupArg {
                 _ => return Err(de::Error::unknown_field(key, OVERWRITE_PROPERTY_GROUP_ARG_FIELDS))
             }
         }
-        Ok(OverwritePropertyGroupArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = OverwritePropertyGroupArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
             property_groups: field_property_groups.ok_or_else(|| de::Error::missing_field("property_groups"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1607,12 +1698,21 @@ const PROPERTIES_SEARCH_ARG_FIELDS: &[&str] = &["queries",
                                                 "template_filter"];
 impl PropertiesSearchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PropertiesSearchArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PropertiesSearchArg>, V::Error> {
         use serde::de;
         let mut field_queries = None;
         let mut field_template_filter = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "queries" => {
                     if field_queries.is_some() {
@@ -1629,10 +1729,14 @@ impl PropertiesSearchArg {
                 _ => return Err(de::Error::unknown_field(key, PROPERTIES_SEARCH_ARG_FIELDS))
             }
         }
-        Ok(PropertiesSearchArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PropertiesSearchArg {
             queries: field_queries.ok_or_else(|| de::Error::missing_field("queries"))?,
             template_filter: field_template_filter.unwrap_or_else(|| TemplateFilter::FilterNone),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1692,11 +1796,20 @@ impl PropertiesSearchContinueArg {
 const PROPERTIES_SEARCH_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl PropertiesSearchContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PropertiesSearchContinueArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PropertiesSearchContinueArg>, V::Error> {
         use serde::de;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
@@ -1707,9 +1820,13 @@ impl PropertiesSearchContinueArg {
                 _ => return Err(de::Error::unknown_field(key, PROPERTIES_SEARCH_CONTINUE_ARG_FIELDS))
             }
         }
-        Ok(PropertiesSearchContinueArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PropertiesSearchContinueArg {
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1915,14 +2032,23 @@ const PROPERTIES_SEARCH_MATCH_FIELDS: &[&str] = &["id",
                                                   "property_groups"];
 impl PropertiesSearchMatch {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PropertiesSearchMatch, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PropertiesSearchMatch>, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_path = None;
         let mut field_is_deleted = None;
         let mut field_property_groups = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "id" => {
                     if field_id.is_some() {
@@ -1951,12 +2077,16 @@ impl PropertiesSearchMatch {
                 _ => return Err(de::Error::unknown_field(key, PROPERTIES_SEARCH_MATCH_FIELDS))
             }
         }
-        Ok(PropertiesSearchMatch {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PropertiesSearchMatch {
             id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
             is_deleted: field_is_deleted.ok_or_else(|| de::Error::missing_field("is_deleted"))?,
             property_groups: field_property_groups.ok_or_else(|| de::Error::missing_field("property_groups"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2087,13 +2217,22 @@ const PROPERTIES_SEARCH_QUERY_FIELDS: &[&str] = &["query",
                                                   "logical_operator"];
 impl PropertiesSearchQuery {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PropertiesSearchQuery, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PropertiesSearchQuery>, V::Error> {
         use serde::de;
         let mut field_query = None;
         let mut field_mode = None;
         let mut field_logical_operator = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "query" => {
                     if field_query.is_some() {
@@ -2116,11 +2255,15 @@ impl PropertiesSearchQuery {
                 _ => return Err(de::Error::unknown_field(key, PROPERTIES_SEARCH_QUERY_FIELDS))
             }
         }
-        Ok(PropertiesSearchQuery {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PropertiesSearchQuery {
             query: field_query.ok_or_else(|| de::Error::missing_field("query"))?,
             mode: field_mode.ok_or_else(|| de::Error::missing_field("mode"))?,
             logical_operator: field_logical_operator.unwrap_or_else(|| LogicalOperator::OrOperator),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2190,12 +2333,21 @@ const PROPERTIES_SEARCH_RESULT_FIELDS: &[&str] = &["matches",
                                                    "cursor"];
 impl PropertiesSearchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PropertiesSearchResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PropertiesSearchResult>, V::Error> {
         use serde::de;
         let mut field_matches = None;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "matches" => {
                     if field_matches.is_some() {
@@ -2212,10 +2364,14 @@ impl PropertiesSearchResult {
                 _ => return Err(de::Error::unknown_field(key, PROPERTIES_SEARCH_RESULT_FIELDS))
             }
         }
-        Ok(PropertiesSearchResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PropertiesSearchResult {
             matches: field_matches.ok_or_else(|| de::Error::missing_field("matches"))?,
             cursor: field_cursor,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2281,12 +2437,21 @@ const PROPERTY_FIELD_FIELDS: &[&str] = &["name",
                                          "value"];
 impl PropertyField {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PropertyField, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PropertyField>, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_value = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
@@ -2303,10 +2468,14 @@ impl PropertyField {
                 _ => return Err(de::Error::unknown_field(key, PROPERTY_FIELD_FIELDS))
             }
         }
-        Ok(PropertyField {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PropertyField {
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
             value: field_value.ok_or_else(|| de::Error::missing_field("value"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2376,13 +2545,22 @@ const PROPERTY_FIELD_TEMPLATE_FIELDS: &[&str] = &["name",
                                                   "type"];
 impl PropertyFieldTemplate {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PropertyFieldTemplate, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PropertyFieldTemplate>, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_description = None;
         let mut field_type_field = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
@@ -2405,11 +2583,15 @@ impl PropertyFieldTemplate {
                 _ => return Err(de::Error::unknown_field(key, PROPERTY_FIELD_TEMPLATE_FIELDS))
             }
         }
-        Ok(PropertyFieldTemplate {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PropertyFieldTemplate {
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
             description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
             type_field: field_type_field.ok_or_else(|| de::Error::missing_field("type"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2477,12 +2659,21 @@ const PROPERTY_GROUP_FIELDS: &[&str] = &["template_id",
                                          "fields"];
 impl PropertyGroup {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PropertyGroup, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PropertyGroup>, V::Error> {
         use serde::de;
         let mut field_template_id = None;
         let mut field_fields = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
@@ -2499,10 +2690,14 @@ impl PropertyGroup {
                 _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_FIELDS))
             }
         }
-        Ok(PropertyGroup {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PropertyGroup {
             template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
             fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2571,13 +2766,22 @@ const PROPERTY_GROUP_TEMPLATE_FIELDS: &[&str] = &["name",
                                                   "fields"];
 impl PropertyGroupTemplate {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PropertyGroupTemplate, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PropertyGroupTemplate>, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_description = None;
         let mut field_fields = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
@@ -2600,11 +2804,15 @@ impl PropertyGroupTemplate {
                 _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_TEMPLATE_FIELDS))
             }
         }
-        Ok(PropertyGroupTemplate {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PropertyGroupTemplate {
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
             description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
             fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2683,13 +2891,22 @@ const PROPERTY_GROUP_UPDATE_FIELDS: &[&str] = &["template_id",
                                                 "remove_fields"];
 impl PropertyGroupUpdate {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PropertyGroupUpdate, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PropertyGroupUpdate>, V::Error> {
         use serde::de;
         let mut field_template_id = None;
         let mut field_add_or_update_fields = None;
         let mut field_remove_fields = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
@@ -2712,11 +2929,15 @@ impl PropertyGroupUpdate {
                 _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_UPDATE_FIELDS))
             }
         }
-        Ok(PropertyGroupUpdate {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PropertyGroupUpdate {
             template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
             add_or_update_fields: field_add_or_update_fields,
             remove_fields: field_remove_fields,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2832,12 +3053,21 @@ const REMOVE_PROPERTIES_ARG_FIELDS: &[&str] = &["path",
                                                 "property_template_ids"];
 impl RemovePropertiesArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RemovePropertiesArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RemovePropertiesArg>, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_property_template_ids = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "path" => {
                     if field_path.is_some() {
@@ -2854,10 +3084,14 @@ impl RemovePropertiesArg {
                 _ => return Err(de::Error::unknown_field(key, REMOVE_PROPERTIES_ARG_FIELDS))
             }
         }
-        Ok(RemovePropertiesArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RemovePropertiesArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
             property_template_ids: field_property_template_ids.ok_or_else(|| de::Error::missing_field("property_template_ids"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3038,11 +3272,20 @@ impl RemoveTemplateArg {
 const REMOVE_TEMPLATE_ARG_FIELDS: &[&str] = &["template_id"];
 impl RemoveTemplateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RemoveTemplateArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RemoveTemplateArg>, V::Error> {
         use serde::de;
         let mut field_template_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
@@ -3053,9 +3296,13 @@ impl RemoveTemplateArg {
                 _ => return Err(de::Error::unknown_field(key, REMOVE_TEMPLATE_ARG_FIELDS))
             }
         }
-        Ok(RemoveTemplateArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RemoveTemplateArg {
             template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3382,12 +3629,21 @@ const UPDATE_PROPERTIES_ARG_FIELDS: &[&str] = &["path",
                                                 "update_property_groups"];
 impl UpdatePropertiesArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<UpdatePropertiesArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UpdatePropertiesArg>, V::Error> {
         use serde::de;
         let mut field_path = None;
         let mut field_update_property_groups = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "path" => {
                     if field_path.is_some() {
@@ -3404,10 +3660,14 @@ impl UpdatePropertiesArg {
                 _ => return Err(de::Error::unknown_field(key, UPDATE_PROPERTIES_ARG_FIELDS))
             }
         }
-        Ok(UpdatePropertiesArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UpdatePropertiesArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
             update_property_groups: field_update_property_groups.ok_or_else(|| de::Error::missing_field("update_property_groups"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3636,14 +3896,23 @@ const UPDATE_TEMPLATE_ARG_FIELDS: &[&str] = &["template_id",
                                               "add_fields"];
 impl UpdateTemplateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<UpdateTemplateArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UpdateTemplateArg>, V::Error> {
         use serde::de;
         let mut field_template_id = None;
         let mut field_name = None;
         let mut field_description = None;
         let mut field_add_fields = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
@@ -3672,12 +3941,16 @@ impl UpdateTemplateArg {
                 _ => return Err(de::Error::unknown_field(key, UPDATE_TEMPLATE_ARG_FIELDS))
             }
         }
-        Ok(UpdateTemplateArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UpdateTemplateArg {
             template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
             name: field_name,
             description: field_description,
             add_fields: field_add_fields,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3739,11 +4012,20 @@ impl UpdateTemplateResult {
 const UPDATE_TEMPLATE_RESULT_FIELDS: &[&str] = &["template_id"];
 impl UpdateTemplateResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<UpdateTemplateResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UpdateTemplateResult>, V::Error> {
         use serde::de;
         let mut field_template_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
@@ -3754,9 +4036,13 @@ impl UpdateTemplateResult {
                 _ => return Err(de::Error::unknown_field(key, UPDATE_TEMPLATE_RESULT_FIELDS))
             }
         }
-        Ok(UpdateTemplateResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UpdateTemplateResult {
             template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(

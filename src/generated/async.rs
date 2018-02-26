@@ -156,11 +156,20 @@ impl PollArg {
 const POLL_ARG_FIELDS: &[&str] = &["async_job_id"];
 impl PollArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<PollArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PollArg>, V::Error> {
         use serde::de;
         let mut field_async_job_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "async_job_id" => {
                     if field_async_job_id.is_some() {
@@ -171,9 +180,13 @@ impl PollArg {
                 _ => return Err(de::Error::unknown_field(key, POLL_ARG_FIELDS))
             }
         }
-        Ok(PollArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PollArg {
             async_job_id: field_async_job_id.ok_or_else(|| de::Error::missing_field("async_job_id"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(

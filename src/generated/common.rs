@@ -281,13 +281,22 @@ const TEAM_ROOT_INFO_FIELDS: &[&str] = &["root_namespace_id",
                                          "home_path"];
 impl TeamRootInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamRootInfo, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamRootInfo>, V::Error> {
         use serde::de;
         let mut field_root_namespace_id = None;
         let mut field_home_namespace_id = None;
         let mut field_home_path = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "root_namespace_id" => {
                     if field_root_namespace_id.is_some() {
@@ -310,11 +319,15 @@ impl TeamRootInfo {
                 _ => return Err(de::Error::unknown_field(key, TEAM_ROOT_INFO_FIELDS))
             }
         }
-        Ok(TeamRootInfo {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamRootInfo {
             root_namespace_id: field_root_namespace_id.ok_or_else(|| de::Error::missing_field("root_namespace_id"))?,
             home_namespace_id: field_home_namespace_id.ok_or_else(|| de::Error::missing_field("home_namespace_id"))?,
             home_path: field_home_path.ok_or_else(|| de::Error::missing_field("home_path"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -382,12 +395,21 @@ const USER_ROOT_INFO_FIELDS: &[&str] = &["root_namespace_id",
                                          "home_namespace_id"];
 impl UserRootInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<UserRootInfo, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UserRootInfo>, V::Error> {
         use serde::de;
         let mut field_root_namespace_id = None;
         let mut field_home_namespace_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "root_namespace_id" => {
                     if field_root_namespace_id.is_some() {
@@ -404,10 +426,14 @@ impl UserRootInfo {
                 _ => return Err(de::Error::unknown_field(key, USER_ROOT_INFO_FIELDS))
             }
         }
-        Ok(UserRootInfo {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UserRootInfo {
             root_namespace_id: field_root_namespace_id.ok_or_else(|| de::Error::missing_field("root_namespace_id"))?,
             home_namespace_id: field_home_namespace_id.ok_or_else(|| de::Error::missing_field("home_namespace_id"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(

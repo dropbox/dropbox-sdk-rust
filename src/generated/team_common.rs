@@ -132,15 +132,24 @@ const GROUP_SUMMARY_FIELDS: &[&str] = &["group_name",
                                         "member_count"];
 impl GroupSummary {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupSummary, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupSummary>, V::Error> {
         use serde::de;
         let mut field_group_name = None;
         let mut field_group_id = None;
         let mut field_group_management_type = None;
         let mut field_group_external_id = None;
         let mut field_member_count = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "group_name" => {
                     if field_group_name.is_some() {
@@ -175,13 +184,17 @@ impl GroupSummary {
                 _ => return Err(de::Error::unknown_field(key, GROUP_SUMMARY_FIELDS))
             }
         }
-        Ok(GroupSummary {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupSummary {
             group_name: field_group_name.ok_or_else(|| de::Error::missing_field("group_name"))?,
             group_id: field_group_id.ok_or_else(|| de::Error::missing_field("group_id"))?,
             group_management_type: field_group_management_type.ok_or_else(|| de::Error::missing_field("group_management_type"))?,
             group_external_id: field_group_external_id,
             member_count: field_member_count,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -381,6 +394,7 @@ impl Default for TimeRange {
 const TIME_RANGE_FIELDS: &[&str] = &["start_time",
                                      "end_time"];
 impl TimeRange {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TimeRange, V::Error> {
@@ -404,10 +418,11 @@ impl TimeRange {
                 _ => return Err(de::Error::unknown_field(key, TIME_RANGE_FIELDS))
             }
         }
-        Ok(TimeRange {
+        let result = TimeRange {
             start_time: field_start_time,
             end_time: field_end_time,
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(

@@ -109,14 +109,23 @@ const CREATE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["title",
                                                    "open"];
 impl CreateFileRequestArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<CreateFileRequestArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<CreateFileRequestArgs>, V::Error> {
         use serde::de;
         let mut field_title = None;
         let mut field_destination = None;
         let mut field_deadline = None;
         let mut field_open = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "title" => {
                     if field_title.is_some() {
@@ -145,12 +154,16 @@ impl CreateFileRequestArgs {
                 _ => return Err(de::Error::unknown_field(key, CREATE_FILE_REQUEST_ARGS_FIELDS))
             }
         }
-        Ok(CreateFileRequestArgs {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = CreateFileRequestArgs {
             title: field_title.ok_or_else(|| de::Error::missing_field("title"))?,
             destination: field_destination.ok_or_else(|| de::Error::missing_field("destination"))?,
             deadline: field_deadline,
             open: field_open.unwrap_or(true),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -409,8 +422,15 @@ const FILE_REQUEST_FIELDS: &[&str] = &["id",
                                        "deadline"];
 impl FileRequest {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<FileRequest, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<FileRequest>, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_url = None;
@@ -420,7 +440,9 @@ impl FileRequest {
         let mut field_file_count = None;
         let mut field_destination = None;
         let mut field_deadline = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "id" => {
                     if field_id.is_some() {
@@ -473,7 +495,10 @@ impl FileRequest {
                 _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_FIELDS))
             }
         }
-        Ok(FileRequest {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = FileRequest {
             id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
             url: field_url.ok_or_else(|| de::Error::missing_field("url"))?,
             title: field_title.ok_or_else(|| de::Error::missing_field("title"))?,
@@ -482,7 +507,8 @@ impl FileRequest {
             file_count: field_file_count.ok_or_else(|| de::Error::missing_field("file_count"))?,
             destination: field_destination,
             deadline: field_deadline,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -557,12 +583,21 @@ const FILE_REQUEST_DEADLINE_FIELDS: &[&str] = &["deadline",
                                                 "allow_late_uploads"];
 impl FileRequestDeadline {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<FileRequestDeadline, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<FileRequestDeadline>, V::Error> {
         use serde::de;
         let mut field_deadline = None;
         let mut field_allow_late_uploads = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "deadline" => {
                     if field_deadline.is_some() {
@@ -579,10 +614,14 @@ impl FileRequestDeadline {
                 _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_DEADLINE_FIELDS))
             }
         }
-        Ok(FileRequestDeadline {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = FileRequestDeadline {
             deadline: field_deadline.ok_or_else(|| de::Error::missing_field("deadline"))?,
             allow_late_uploads: field_allow_late_uploads,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -832,11 +871,20 @@ impl GetFileRequestArgs {
 const GET_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["id"];
 impl GetFileRequestArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GetFileRequestArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GetFileRequestArgs>, V::Error> {
         use serde::de;
         let mut field_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "id" => {
                     if field_id.is_some() {
@@ -847,9 +895,13 @@ impl GetFileRequestArgs {
                 _ => return Err(de::Error::unknown_field(key, GET_FILE_REQUEST_ARGS_FIELDS))
             }
         }
-        Ok(GetFileRequestArgs {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GetFileRequestArgs {
             id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1184,11 +1236,20 @@ impl ListFileRequestsResult {
 const LIST_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_requests"];
 impl ListFileRequestsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListFileRequestsResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListFileRequestsResult>, V::Error> {
         use serde::de;
         let mut field_file_requests = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "file_requests" => {
                     if field_file_requests.is_some() {
@@ -1199,9 +1260,13 @@ impl ListFileRequestsResult {
                 _ => return Err(de::Error::unknown_field(key, LIST_FILE_REQUESTS_RESULT_FIELDS))
             }
         }
-        Ok(ListFileRequestsResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListFileRequestsResult {
             file_requests: field_file_requests.ok_or_else(|| de::Error::missing_field("file_requests"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1297,15 +1362,24 @@ const UPDATE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["id",
                                                    "open"];
 impl UpdateFileRequestArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<UpdateFileRequestArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UpdateFileRequestArgs>, V::Error> {
         use serde::de;
         let mut field_id = None;
         let mut field_title = None;
         let mut field_destination = None;
         let mut field_deadline = None;
         let mut field_open = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "id" => {
                     if field_id.is_some() {
@@ -1340,13 +1414,17 @@ impl UpdateFileRequestArgs {
                 _ => return Err(de::Error::unknown_field(key, UPDATE_FILE_REQUEST_ARGS_FIELDS))
             }
         }
-        Ok(UpdateFileRequestArgs {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UpdateFileRequestArgs {
             id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
             title: field_title,
             destination: field_destination,
             deadline: field_deadline.unwrap_or_else(|| UpdateFileRequestDeadline::NoUpdate),
             open: field_open,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1416,16 +1494,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestDeadline {
                 };
                 match tag {
                     "no_update" => Ok(UpdateFileRequestDeadline::NoUpdate),
-                    "update" => {
-                        match map.size_hint() {
-                            Some(0) => Ok(UpdateFileRequestDeadline::Update(None)),
-                            Some(_) => Ok(UpdateFileRequestDeadline::Update(Some(FileRequestDeadline::internal_deserialize(map)?))),
-                            None => match FileRequestDeadline::internal_deserialize(map) {
-                                Ok(inner) => Ok(UpdateFileRequestDeadline::Update(Some(inner))),
-                                Err(_) => Ok(UpdateFileRequestDeadline::Update(None))
-                            }
-                        }
-                    }
+                    "update" => Ok(UpdateFileRequestDeadline::Update(FileRequestDeadline::internal_deserialize_opt(map, true)?)),
                     _ => Ok(UpdateFileRequestDeadline::Other)
                 }
             }

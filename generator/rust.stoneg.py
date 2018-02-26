@@ -214,6 +214,19 @@ class RustBackend(RustHelperBackend):
     # Serialization
 
     def _impl_serde_for_struct(self, struct):
+        """
+        Emit internal_deserialize() and possibly internal_deserialize_opt().
+        internal_deserialize[_opt] takes a map and deserializes it into the struct. It reads the
+        fields in whatever order; missing fields will be given their default value, or an error
+        returned if they have no default. Errors will also be raised if a field is present more
+        than once.
+        The _opt deserializer returns a None if it reads exactly zero map keys, and is used for
+        cases where the JSON has a tag, but omits all the fields to signify a null value. It is
+        only emitted for types which have at least one required field, because if all fields are
+        optional, there's no way to differentiate between a null value and one where all fields
+        are default.
+        """
+
         type_name = self.struct_name(struct)
         field_list_name = u'{}_FIELDS'.format(fmt_shouting_snake(struct.name))
         self.generate_multiline_list(
@@ -221,11 +234,29 @@ class RustBackend(RustHelperBackend):
             before='const {}: &[&str] = &'.format(field_list_name),
             after=';',
             delim=(u'[', u']'))
+        # Only emit the _opt deserializer if there are required fields.
+        optional = len(struct.all_required_fields) > 0
         with self._impl_struct(struct):
+            if optional:
+                # Convenience wrapper around _opt for the more common case where the struct is
+                # NOT optional.
+                with self.emit_rust_function_def(
+                        u'internal_deserialize<\'de, V: ::serde::de::MapAccess<\'de>>',
+                        [u'map: V'],
+                        u'Result<{}, V::Error>'.format(type_name),
+                        access=u'pub(crate)'):
+                    self.emit(u'Self::internal_deserialize_opt(map, false)'
+                              u'.map(Option::unwrap)')
+                self.emit()
+            else:
+                self.emit(u'// no _opt deserializer')
             with self.emit_rust_function_def(
-                    u'internal_deserialize<\'de, V: ::serde::de::MapAccess<\'de>>',
-                    [u'mut map: V'],
-                    u'Result<{}, V::Error>'.format(type_name),
+                    (u'internal_deserialize_opt' if optional else u'internal_deserialize')
+                    + u'<\'de, V: ::serde::de::MapAccess<\'de>>',
+                    [u'mut map: V']
+                    + ([u'optional: bool'] if optional else []),
+                    (u'Result<Option<{}>, V::Error>' if optional else u'Result<{}, V::Error>')
+                    .format(type_name),
                     access=u'pub(crate)'):
                 self.emit(u'use serde::de;')
                 if not struct.all_fields:
@@ -235,18 +266,26 @@ class RustBackend(RustHelperBackend):
                 else:
                     for field in struct.all_fields:
                         self.emit(u'let mut field_{} = None;'.format(self.field_name(field)))
-                    with nested(self.block(u'while let Some(key) = map.next_key()?'),
-                                self.block(u'match key')):
-                        for field in struct.all_fields:
-                            field_name = self.field_name(field)
-                            with self.block(u'"{}" =>'.format(field.name)):
-                                with self.block(u'if field_{}.is_some()'.format(field_name)):
-                                    self.emit(u'return Err(de::Error::duplicate_field("{}"));'
-                                              .format(field.name))
-                                self.emit(u'field_{} = Some(map.next_value()?);'.format(field_name))
-                        self.emit(u'_ => return Err(de::Error::unknown_field(key, {}))'
-                                  .format(field_list_name))
-                with self.block(u'Ok({}'.format(type_name), delim=(u'{', u'})')):
+                    if optional:
+                        self.emit(u'let mut nothing = true;')
+                    with self.block(u'while let Some(key) = map.next_key()?'):
+                        if optional:
+                            self.emit(u'nothing = false;')
+                        with self.block(u'match key'):
+                            for field in struct.all_fields:
+                                field_name = self.field_name(field)
+                                with self.block(u'"{}" =>'.format(field.name)):
+                                    with self.block(u'if field_{}.is_some()'.format(field_name)):
+                                        self.emit(u'return Err(de::Error::duplicate_field("{}"));'
+                                                  .format(field.name))
+                                    self.emit(u'field_{} = Some(map.next_value()?);'
+                                              .format(field_name))
+                            self.emit(u'_ => return Err(de::Error::unknown_field(key, {}))'
+                                      .format(field_list_name))
+                    if optional:
+                        with self.block(u'if optional && nothing'):
+                            self.emit(u'return Ok(None);')
+                with self.block(u'let result = {}'.format(type_name), delim=(u'{', u'};')):
                     for field in struct.all_fields:
                         field_name = self.field_name(field)
                         if isinstance(field.data_type, ir.Nullable):
@@ -267,8 +306,13 @@ class RustBackend(RustHelperBackend):
                                                   field_name,
                                                   self._default_value(field)))
                         else:
-                            self.emit(u'{}: field_{}.ok_or_else(|| de::Error::missing_field("{}"))?,'
+                            self.emit(u'{}: field_{}.ok_or_else(|| '
+                                      u'de::Error::missing_field("{}"))?,'
                                       .format(field_name, field_name, field.name))
+                if optional:
+                    self.emit(u'Ok(Some(result))')
+                else:
+                    self.emit(u'Ok(result)')
             if struct.all_fields:
                 self.emit()
                 with self.emit_rust_function_def(
@@ -426,32 +470,19 @@ class RustBackend(RustHelperBackend):
                             elif isinstance(ultimate_type, ir.Struct) \
                                     and not ultimate_type.has_enumerated_subtypes():
                                 if isinstance(ir.unwrap_aliases(field.data_type)[0], ir.Nullable):
-                                    with self.block(u'"{}" =>'.format(field.name)):
-                                        # HACK ALERT
-                                        # A nullable here means we might have more fields that can
-                                        # be deserialized into the inner type, or we might have
-                                        # nothing, meaning None. Serde maps don't have a peek
-                                        # method, so instead we have this hack. Unfortunately, in
-                                        # the case where size_hint returns None, we have to just try
-                                        # and see what happens, and errors will be silently
-                                        # interpreted as the inner data being None.
-                                        with self.block(u'match map.size_hint()'):
-                                            self.emit(u'Some(0) => Ok({}::{}(None)),'
-                                                      .format(type_name, variant_name))
-                                            self.emit(u'Some(_) => Ok({}::{}(Some('
-                                                      u'{}::internal_deserialize(map)?))),'
-                                                      .format(type_name,
-                                                              variant_name,
-                                                              self._rust_type(ultimate_type)))
-                                            with self.block(u'None => '
-                                                            'match {}::internal_deserialize(map)'
-                                                            .format(self._rust_type(
-                                                                ultimate_type))):
-                                                self.emit(u'Ok(inner) => Ok({}::{}(Some(inner))),'
-                                                          .format(type_name, variant_name))
-                                                # silently ignore error and treat it as None :(
-                                                self.emit(u'Err(_) => Ok({}::{}(None))'
-                                                          .format(type_name, variant_name))
+                                    # A nullable here means we might have more fields that can be
+                                    # deserialized into the inner type, or we might have nothing,
+                                    # meaning None.
+                                    if not ultimate_type.all_required_fields:
+                                        raise RuntimeError('{}.{}: an optional struct with no'
+                                                           ' required fields is ambiguous'
+                                                           .format(union.name, field.name))
+                                    self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize_opt('
+                                              u'map, true)?)),'
+                                              .format(field.name,
+                                                      type_name,
+                                                      variant_name,
+                                                      self._rust_type(ultimate_type)))
                                 else:
                                     self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'
                                               .format(field.name,
@@ -471,9 +502,11 @@ class RustBackend(RustHelperBackend):
                                             self.emit(u'None => Ok({}::{}(None)),'
                                                       .format(type_name, variant_name))
                                         else:
-                                            self.emit(u'None => Err(de::Error::missing_field("{}")),'
+                                            self.emit(u'None => Err('
+                                                      u'de::Error::missing_field("{}")),'
                                                       .format(field.name))
-                                        self.emit(u'_ => Err(de::Error::unknown_field(tag, VARIANTS))')
+                                        self.emit(u'_ => Err(de::Error::unknown_field('
+                                                  u'tag, VARIANTS))')
                         if not union.closed:
                             self.emit(u'_ => Ok({}::Other)'.format(type_name))
                         else:

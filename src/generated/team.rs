@@ -957,8 +957,15 @@ const ACTIVE_WEB_SESSION_FIELDS: &[&str] = &["session_id",
                                              "expires"];
 impl ActiveWebSession {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ActiveWebSession, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ActiveWebSession>, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_user_agent = None;
@@ -969,7 +976,9 @@ impl ActiveWebSession {
         let mut field_created = None;
         let mut field_updated = None;
         let mut field_expires = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "session_id" => {
                     if field_session_id.is_some() {
@@ -1028,7 +1037,10 @@ impl ActiveWebSession {
                 _ => return Err(de::Error::unknown_field(key, ACTIVE_WEB_SESSION_FIELDS))
             }
         }
-        Ok(ActiveWebSession {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ActiveWebSession {
             session_id: field_session_id.ok_or_else(|| de::Error::missing_field("session_id"))?,
             user_agent: field_user_agent.ok_or_else(|| de::Error::missing_field("user_agent"))?,
             os: field_os.ok_or_else(|| de::Error::missing_field("os"))?,
@@ -1038,7 +1050,8 @@ impl ActiveWebSession {
             created: field_created,
             updated: field_updated,
             expires: field_expires,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1218,8 +1231,15 @@ const API_APP_FIELDS: &[&str] = &["app_id",
                                   "linked"];
 impl ApiApp {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ApiApp, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ApiApp>, V::Error> {
         use serde::de;
         let mut field_app_id = None;
         let mut field_app_name = None;
@@ -1227,7 +1247,9 @@ impl ApiApp {
         let mut field_publisher = None;
         let mut field_publisher_url = None;
         let mut field_linked = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "app_id" => {
                     if field_app_id.is_some() {
@@ -1268,14 +1290,18 @@ impl ApiApp {
                 _ => return Err(de::Error::unknown_field(key, API_APP_FIELDS))
             }
         }
-        Ok(ApiApp {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ApiApp {
             app_id: field_app_id.ok_or_else(|| de::Error::missing_field("app_id"))?,
             app_name: field_app_name.ok_or_else(|| de::Error::missing_field("app_name"))?,
             is_app_folder: field_is_app_folder.ok_or_else(|| de::Error::missing_field("is_app_folder"))?,
             publisher: field_publisher,
             publisher_url: field_publisher_url,
             linked: field_linked,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1339,11 +1365,20 @@ impl BaseDfbReport {
 const BASE_DFB_REPORT_FIELDS: &[&str] = &["start_date"];
 impl BaseDfbReport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<BaseDfbReport, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BaseDfbReport>, V::Error> {
         use serde::de;
         let mut field_start_date = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "start_date" => {
                     if field_start_date.is_some() {
@@ -1354,9 +1389,13 @@ impl BaseDfbReport {
                 _ => return Err(de::Error::unknown_field(key, BASE_DFB_REPORT_FIELDS))
             }
         }
-        Ok(BaseDfbReport {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BaseDfbReport {
             start_date: field_start_date.ok_or_else(|| de::Error::missing_field("start_date"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1647,11 +1686,20 @@ impl CustomQuotaUsersArg {
 const CUSTOM_QUOTA_USERS_ARG_FIELDS: &[&str] = &["users"];
 impl CustomQuotaUsersArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<CustomQuotaUsersArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<CustomQuotaUsersArg>, V::Error> {
         use serde::de;
         let mut field_users = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "users" => {
                     if field_users.is_some() {
@@ -1662,9 +1710,13 @@ impl CustomQuotaUsersArg {
                 _ => return Err(de::Error::unknown_field(key, CUSTOM_QUOTA_USERS_ARG_FIELDS))
             }
         }
-        Ok(CustomQuotaUsersArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = CustomQuotaUsersArg {
             users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1725,6 +1777,7 @@ impl Default for DateRange {
 const DATE_RANGE_FIELDS: &[&str] = &["start_date",
                                      "end_date"];
 impl DateRange {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DateRange, V::Error> {
@@ -1748,10 +1801,11 @@ impl DateRange {
                 _ => return Err(de::Error::unknown_field(key, DATE_RANGE_FIELDS))
             }
         }
-        Ok(DateRange {
+        let result = DateRange {
             start_date: field_start_date,
             end_date: field_end_date,
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -1925,8 +1979,15 @@ const DESKTOP_CLIENT_SESSION_FIELDS: &[&str] = &["session_id",
                                                  "updated"];
 impl DesktopClientSession {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<DesktopClientSession, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DesktopClientSession>, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_host_name = None;
@@ -1938,7 +1999,9 @@ impl DesktopClientSession {
         let mut field_country = None;
         let mut field_created = None;
         let mut field_updated = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "session_id" => {
                     if field_session_id.is_some() {
@@ -2003,7 +2066,10 @@ impl DesktopClientSession {
                 _ => return Err(de::Error::unknown_field(key, DESKTOP_CLIENT_SESSION_FIELDS))
             }
         }
-        Ok(DesktopClientSession {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DesktopClientSession {
             session_id: field_session_id.ok_or_else(|| de::Error::missing_field("session_id"))?,
             host_name: field_host_name.ok_or_else(|| de::Error::missing_field("host_name"))?,
             client_type: field_client_type.ok_or_else(|| de::Error::missing_field("client_type"))?,
@@ -2014,7 +2080,8 @@ impl DesktopClientSession {
             country: field_country,
             created: field_created,
             updated: field_updated,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2187,15 +2254,24 @@ const DEVICE_SESSION_FIELDS: &[&str] = &["session_id",
                                          "updated"];
 impl DeviceSession {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<DeviceSession, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DeviceSession>, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_ip_address = None;
         let mut field_country = None;
         let mut field_created = None;
         let mut field_updated = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "session_id" => {
                     if field_session_id.is_some() {
@@ -2230,13 +2306,17 @@ impl DeviceSession {
                 _ => return Err(de::Error::unknown_field(key, DEVICE_SESSION_FIELDS))
             }
         }
-        Ok(DeviceSession {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DeviceSession {
             session_id: field_session_id.ok_or_else(|| de::Error::missing_field("session_id"))?,
             ip_address: field_ip_address,
             country: field_country,
             created: field_created,
             updated: field_updated,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2302,12 +2382,21 @@ const DEVICE_SESSION_ARG_FIELDS: &[&str] = &["session_id",
                                              "team_member_id"];
 impl DeviceSessionArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<DeviceSessionArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DeviceSessionArg>, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_team_member_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "session_id" => {
                     if field_session_id.is_some() {
@@ -2324,10 +2413,14 @@ impl DeviceSessionArg {
                 _ => return Err(de::Error::unknown_field(key, DEVICE_SESSION_ARG_FIELDS))
             }
         }
-        Ok(DeviceSessionArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DeviceSessionArg {
             session_id: field_session_id.ok_or_else(|| de::Error::missing_field("session_id"))?,
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2421,8 +2514,15 @@ const DEVICES_ACTIVE_FIELDS: &[&str] = &["windows",
                                          "total"];
 impl DevicesActive {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<DevicesActive, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DevicesActive>, V::Error> {
         use serde::de;
         let mut field_windows = None;
         let mut field_macos = None;
@@ -2431,7 +2531,9 @@ impl DevicesActive {
         let mut field_android = None;
         let mut field_other = None;
         let mut field_total = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "windows" => {
                     if field_windows.is_some() {
@@ -2478,7 +2580,10 @@ impl DevicesActive {
                 _ => return Err(de::Error::unknown_field(key, DEVICES_ACTIVE_FIELDS))
             }
         }
-        Ok(DevicesActive {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DevicesActive {
             windows: field_windows.ok_or_else(|| de::Error::missing_field("windows"))?,
             macos: field_macos.ok_or_else(|| de::Error::missing_field("macos"))?,
             linux: field_linux.ok_or_else(|| de::Error::missing_field("linux"))?,
@@ -2486,7 +2591,8 @@ impl DevicesActive {
             android: field_android.ok_or_else(|| de::Error::missing_field("android"))?,
             other: field_other.ok_or_else(|| de::Error::missing_field("other"))?,
             total: field_total.ok_or_else(|| de::Error::missing_field("total"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2549,6 +2655,7 @@ impl Default for ExcludedUsersListArg {
 
 const EXCLUDED_USERS_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl ExcludedUsersListArg {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ExcludedUsersListArg, V::Error> {
@@ -2565,9 +2672,10 @@ impl ExcludedUsersListArg {
                 _ => return Err(de::Error::unknown_field(key, EXCLUDED_USERS_LIST_ARG_FIELDS))
             }
         }
-        Ok(ExcludedUsersListArg {
+        let result = ExcludedUsersListArg {
             limit: field_limit.unwrap_or(1000),
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2626,11 +2734,20 @@ impl ExcludedUsersListContinueArg {
 const EXCLUDED_USERS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl ExcludedUsersListContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ExcludedUsersListContinueArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ExcludedUsersListContinueArg>, V::Error> {
         use serde::de;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
@@ -2641,9 +2758,13 @@ impl ExcludedUsersListContinueArg {
                 _ => return Err(de::Error::unknown_field(key, EXCLUDED_USERS_LIST_CONTINUE_ARG_FIELDS))
             }
         }
-        Ok(ExcludedUsersListContinueArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ExcludedUsersListContinueArg {
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2843,13 +2964,22 @@ const EXCLUDED_USERS_LIST_RESULT_FIELDS: &[&str] = &["users",
                                                      "cursor"];
 impl ExcludedUsersListResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ExcludedUsersListResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ExcludedUsersListResult>, V::Error> {
         use serde::de;
         let mut field_users = None;
         let mut field_has_more = None;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "users" => {
                     if field_users.is_some() {
@@ -2872,11 +3002,15 @@ impl ExcludedUsersListResult {
                 _ => return Err(de::Error::unknown_field(key, EXCLUDED_USERS_LIST_RESULT_FIELDS))
             }
         }
-        Ok(ExcludedUsersListResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ExcludedUsersListResult {
             users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
             cursor: field_cursor,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -2936,6 +3070,7 @@ impl Default for ExcludedUsersUpdateArg {
 
 const EXCLUDED_USERS_UPDATE_ARG_FIELDS: &[&str] = &["users"];
 impl ExcludedUsersUpdateArg {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ExcludedUsersUpdateArg, V::Error> {
@@ -2952,9 +3087,10 @@ impl ExcludedUsersUpdateArg {
                 _ => return Err(de::Error::unknown_field(key, EXCLUDED_USERS_UPDATE_ARG_FIELDS))
             }
         }
-        Ok(ExcludedUsersUpdateArg {
+        let result = ExcludedUsersUpdateArg {
             users: field_users,
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3086,11 +3222,20 @@ impl ExcludedUsersUpdateResult {
 const EXCLUDED_USERS_UPDATE_RESULT_FIELDS: &[&str] = &["status"];
 impl ExcludedUsersUpdateResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ExcludedUsersUpdateResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ExcludedUsersUpdateResult>, V::Error> {
         use serde::de;
         let mut field_status = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "status" => {
                     if field_status.is_some() {
@@ -3101,9 +3246,13 @@ impl ExcludedUsersUpdateResult {
                 _ => return Err(de::Error::unknown_field(key, EXCLUDED_USERS_UPDATE_RESULT_FIELDS))
             }
         }
-        Ok(ExcludedUsersUpdateResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ExcludedUsersUpdateResult {
             status: field_status.ok_or_else(|| de::Error::missing_field("status"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3374,11 +3523,20 @@ impl FeaturesGetValuesBatchArg {
 const FEATURES_GET_VALUES_BATCH_ARG_FIELDS: &[&str] = &["features"];
 impl FeaturesGetValuesBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<FeaturesGetValuesBatchArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<FeaturesGetValuesBatchArg>, V::Error> {
         use serde::de;
         let mut field_features = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "features" => {
                     if field_features.is_some() {
@@ -3389,9 +3547,13 @@ impl FeaturesGetValuesBatchArg {
                 _ => return Err(de::Error::unknown_field(key, FEATURES_GET_VALUES_BATCH_ARG_FIELDS))
             }
         }
-        Ok(FeaturesGetValuesBatchArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = FeaturesGetValuesBatchArg {
             features: field_features.ok_or_else(|| de::Error::missing_field("features"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3511,11 +3673,20 @@ impl FeaturesGetValuesBatchResult {
 const FEATURES_GET_VALUES_BATCH_RESULT_FIELDS: &[&str] = &["values"];
 impl FeaturesGetValuesBatchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<FeaturesGetValuesBatchResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<FeaturesGetValuesBatchResult>, V::Error> {
         use serde::de;
         let mut field_values = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "values" => {
                     if field_values.is_some() {
@@ -3526,9 +3697,13 @@ impl FeaturesGetValuesBatchResult {
                 _ => return Err(de::Error::unknown_field(key, FEATURES_GET_VALUES_BATCH_RESULT_FIELDS))
             }
         }
-        Ok(FeaturesGetValuesBatchResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = FeaturesGetValuesBatchResult {
             values: field_values.ok_or_else(|| de::Error::missing_field("values"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3662,8 +3837,15 @@ const GET_ACTIVITY_REPORT_FIELDS: &[&str] = &["start_date",
                                               "shared_links_viewed_total"];
 impl GetActivityReport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GetActivityReport, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GetActivityReport>, V::Error> {
         use serde::de;
         let mut field_start_date = None;
         let mut field_adds = None;
@@ -3680,7 +3862,9 @@ impl GetActivityReport {
         let mut field_shared_links_viewed_by_outside_user = None;
         let mut field_shared_links_viewed_by_not_logged_in = None;
         let mut field_shared_links_viewed_total = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "start_date" => {
                     if field_start_date.is_some() {
@@ -3775,7 +3959,10 @@ impl GetActivityReport {
                 _ => return Err(de::Error::unknown_field(key, GET_ACTIVITY_REPORT_FIELDS))
             }
         }
-        Ok(GetActivityReport {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GetActivityReport {
             start_date: field_start_date.ok_or_else(|| de::Error::missing_field("start_date"))?,
             adds: field_adds.ok_or_else(|| de::Error::missing_field("adds"))?,
             edits: field_edits.ok_or_else(|| de::Error::missing_field("edits"))?,
@@ -3791,7 +3978,8 @@ impl GetActivityReport {
             shared_links_viewed_by_outside_user: field_shared_links_viewed_by_outside_user.ok_or_else(|| de::Error::missing_field("shared_links_viewed_by_outside_user"))?,
             shared_links_viewed_by_not_logged_in: field_shared_links_viewed_by_not_logged_in.ok_or_else(|| de::Error::missing_field("shared_links_viewed_by_not_logged_in"))?,
             shared_links_viewed_total: field_shared_links_viewed_total.ok_or_else(|| de::Error::missing_field("shared_links_viewed_total"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -3883,14 +4071,23 @@ const GET_DEVICES_REPORT_FIELDS: &[&str] = &["start_date",
                                              "active_28_day"];
 impl GetDevicesReport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GetDevicesReport, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GetDevicesReport>, V::Error> {
         use serde::de;
         let mut field_start_date = None;
         let mut field_active_1_day = None;
         let mut field_active_7_day = None;
         let mut field_active_28_day = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "start_date" => {
                     if field_start_date.is_some() {
@@ -3919,12 +4116,16 @@ impl GetDevicesReport {
                 _ => return Err(de::Error::unknown_field(key, GET_DEVICES_REPORT_FIELDS))
             }
         }
-        Ok(GetDevicesReport {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GetDevicesReport {
             start_date: field_start_date.ok_or_else(|| de::Error::missing_field("start_date"))?,
             active_1_day: field_active_1_day.ok_or_else(|| de::Error::missing_field("active_1_day"))?,
             active_7_day: field_active_7_day.ok_or_else(|| de::Error::missing_field("active_7_day"))?,
             active_28_day: field_active_28_day.ok_or_else(|| de::Error::missing_field("active_28_day"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -4014,8 +4215,15 @@ const GET_MEMBERSHIP_REPORT_FIELDS: &[&str] = &["start_date",
                                                 "licenses"];
 impl GetMembershipReport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GetMembershipReport, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GetMembershipReport>, V::Error> {
         use serde::de;
         let mut field_start_date = None;
         let mut field_team_size = None;
@@ -4023,7 +4231,9 @@ impl GetMembershipReport {
         let mut field_members_joined = None;
         let mut field_suspended_members = None;
         let mut field_licenses = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "start_date" => {
                     if field_start_date.is_some() {
@@ -4064,14 +4274,18 @@ impl GetMembershipReport {
                 _ => return Err(de::Error::unknown_field(key, GET_MEMBERSHIP_REPORT_FIELDS))
             }
         }
-        Ok(GetMembershipReport {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GetMembershipReport {
             start_date: field_start_date.ok_or_else(|| de::Error::missing_field("start_date"))?,
             team_size: field_team_size.ok_or_else(|| de::Error::missing_field("team_size"))?,
             pending_invites: field_pending_invites.ok_or_else(|| de::Error::missing_field("pending_invites"))?,
             members_joined: field_members_joined.ok_or_else(|| de::Error::missing_field("members_joined"))?,
             suspended_members: field_suspended_members.ok_or_else(|| de::Error::missing_field("suspended_members"))?,
             licenses: field_licenses.ok_or_else(|| de::Error::missing_field("licenses"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -4166,8 +4380,15 @@ const GET_STORAGE_REPORT_FIELDS: &[&str] = &["start_date",
                                              "member_storage_map"];
 impl GetStorageReport {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GetStorageReport, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GetStorageReport>, V::Error> {
         use serde::de;
         let mut field_start_date = None;
         let mut field_total_usage = None;
@@ -4175,7 +4396,9 @@ impl GetStorageReport {
         let mut field_unshared_usage = None;
         let mut field_shared_folders = None;
         let mut field_member_storage_map = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "start_date" => {
                     if field_start_date.is_some() {
@@ -4216,14 +4439,18 @@ impl GetStorageReport {
                 _ => return Err(de::Error::unknown_field(key, GET_STORAGE_REPORT_FIELDS))
             }
         }
-        Ok(GetStorageReport {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GetStorageReport {
             start_date: field_start_date.ok_or_else(|| de::Error::missing_field("start_date"))?,
             total_usage: field_total_usage.ok_or_else(|| de::Error::missing_field("total_usage"))?,
             shared_usage: field_shared_usage.ok_or_else(|| de::Error::missing_field("shared_usage"))?,
             unshared_usage: field_unshared_usage.ok_or_else(|| de::Error::missing_field("unshared_usage"))?,
             shared_folders: field_shared_folders.ok_or_else(|| de::Error::missing_field("shared_folders"))?,
             member_storage_map: field_member_storage_map.ok_or_else(|| de::Error::missing_field("member_storage_map"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -4368,13 +4595,22 @@ const GROUP_CREATE_ARG_FIELDS: &[&str] = &["group_name",
                                            "group_management_type"];
 impl GroupCreateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupCreateArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupCreateArg>, V::Error> {
         use serde::de;
         let mut field_group_name = None;
         let mut field_group_external_id = None;
         let mut field_group_management_type = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "group_name" => {
                     if field_group_name.is_some() {
@@ -4397,11 +4633,15 @@ impl GroupCreateArg {
                 _ => return Err(de::Error::unknown_field(key, GROUP_CREATE_ARG_FIELDS))
             }
         }
-        Ok(GroupCreateArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupCreateArg {
             group_name: field_group_name.ok_or_else(|| de::Error::missing_field("group_name"))?,
             group_external_id: field_group_external_id,
             group_management_type: field_group_management_type,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -4681,8 +4921,15 @@ const GROUP_FULL_INFO_FIELDS: &[&str] = &["group_name",
                                           "members"];
 impl GroupFullInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupFullInfo, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupFullInfo>, V::Error> {
         use serde::de;
         let mut field_group_name = None;
         let mut field_group_id = None;
@@ -4691,7 +4938,9 @@ impl GroupFullInfo {
         let mut field_group_external_id = None;
         let mut field_member_count = None;
         let mut field_members = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "group_name" => {
                     if field_group_name.is_some() {
@@ -4738,7 +4987,10 @@ impl GroupFullInfo {
                 _ => return Err(de::Error::unknown_field(key, GROUP_FULL_INFO_FIELDS))
             }
         }
-        Ok(GroupFullInfo {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupFullInfo {
             group_name: field_group_name.ok_or_else(|| de::Error::missing_field("group_name"))?,
             group_id: field_group_id.ok_or_else(|| de::Error::missing_field("group_id"))?,
             group_management_type: field_group_management_type.ok_or_else(|| de::Error::missing_field("group_management_type"))?,
@@ -4746,7 +4998,8 @@ impl GroupFullInfo {
             group_external_id: field_group_external_id,
             member_count: field_member_count,
             members: field_members,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -4815,12 +5068,21 @@ const GROUP_MEMBER_INFO_FIELDS: &[&str] = &["profile",
                                             "access_type"];
 impl GroupMemberInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupMemberInfo, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupMemberInfo>, V::Error> {
         use serde::de;
         let mut field_profile = None;
         let mut field_access_type = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "profile" => {
                     if field_profile.is_some() {
@@ -4837,10 +5099,14 @@ impl GroupMemberInfo {
                 _ => return Err(de::Error::unknown_field(key, GROUP_MEMBER_INFO_FIELDS))
             }
         }
-        Ok(GroupMemberInfo {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupMemberInfo {
             profile: field_profile.ok_or_else(|| de::Error::missing_field("profile"))?,
             access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -4904,12 +5170,21 @@ const GROUP_MEMBER_SELECTOR_FIELDS: &[&str] = &["group",
                                                 "user"];
 impl GroupMemberSelector {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupMemberSelector, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupMemberSelector>, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_user = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "group" => {
                     if field_group.is_some() {
@@ -4926,10 +5201,14 @@ impl GroupMemberSelector {
                 _ => return Err(de::Error::unknown_field(key, GROUP_MEMBER_SELECTOR_FIELDS))
             }
         }
-        Ok(GroupMemberSelector {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupMemberSelector {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -5179,13 +5458,22 @@ const GROUP_MEMBERS_ADD_ARG_FIELDS: &[&str] = &["group",
                                                 "return_members"];
 impl GroupMembersAddArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupMembersAddArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupMembersAddArg>, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_members = None;
         let mut field_return_members = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "group" => {
                     if field_group.is_some() {
@@ -5208,11 +5496,15 @@ impl GroupMembersAddArg {
                 _ => return Err(de::Error::unknown_field(key, GROUP_MEMBERS_ADD_ARG_FIELDS))
             }
         }
-        Ok(GroupMembersAddArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupMembersAddArg {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
             members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
             return_members: field_return_members.unwrap_or(true),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -5433,12 +5725,21 @@ const GROUP_MEMBERS_CHANGE_RESULT_FIELDS: &[&str] = &["group_info",
                                                       "async_job_id"];
 impl GroupMembersChangeResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupMembersChangeResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupMembersChangeResult>, V::Error> {
         use serde::de;
         let mut field_group_info = None;
         let mut field_async_job_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "group_info" => {
                     if field_group_info.is_some() {
@@ -5455,10 +5756,14 @@ impl GroupMembersChangeResult {
                 _ => return Err(de::Error::unknown_field(key, GROUP_MEMBERS_CHANGE_RESULT_FIELDS))
             }
         }
-        Ok(GroupMembersChangeResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupMembersChangeResult {
             group_info: field_group_info.ok_or_else(|| de::Error::missing_field("group_info"))?,
             async_job_id: field_async_job_id.ok_or_else(|| de::Error::missing_field("async_job_id"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -5532,13 +5837,22 @@ const GROUP_MEMBERS_REMOVE_ARG_FIELDS: &[&str] = &["group",
                                                    "return_members"];
 impl GroupMembersRemoveArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupMembersRemoveArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupMembersRemoveArg>, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_users = None;
         let mut field_return_members = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "group" => {
                     if field_group.is_some() {
@@ -5561,11 +5875,15 @@ impl GroupMembersRemoveArg {
                 _ => return Err(de::Error::unknown_field(key, GROUP_MEMBERS_REMOVE_ARG_FIELDS))
             }
         }
-        Ok(GroupMembersRemoveArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupMembersRemoveArg {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
             users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
             return_members: field_return_members.unwrap_or(true),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -5757,12 +6075,21 @@ const GROUP_MEMBERS_SELECTOR_FIELDS: &[&str] = &["group",
                                                  "users"];
 impl GroupMembersSelector {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupMembersSelector, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupMembersSelector>, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_users = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "group" => {
                     if field_group.is_some() {
@@ -5779,10 +6106,14 @@ impl GroupMembersSelector {
                 _ => return Err(de::Error::unknown_field(key, GROUP_MEMBERS_SELECTOR_FIELDS))
             }
         }
-        Ok(GroupMembersSelector {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupMembersSelector {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
             users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -5944,14 +6275,23 @@ const GROUP_MEMBERS_SET_ACCESS_TYPE_ARG_FIELDS: &[&str] = &["group",
                                                             "return_members"];
 impl GroupMembersSetAccessTypeArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupMembersSetAccessTypeArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupMembersSetAccessTypeArg>, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_user = None;
         let mut field_access_type = None;
         let mut field_return_members = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "group" => {
                     if field_group.is_some() {
@@ -5980,12 +6320,16 @@ impl GroupMembersSetAccessTypeArg {
                 _ => return Err(de::Error::unknown_field(key, GROUP_MEMBERS_SET_ACCESS_TYPE_ARG_FIELDS))
             }
         }
-        Ok(GroupMembersSetAccessTypeArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupMembersSetAccessTypeArg {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
             access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
             return_members: field_return_members.unwrap_or(true),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -6300,15 +6644,24 @@ const GROUP_UPDATE_ARGS_FIELDS: &[&str] = &["group",
                                             "new_group_management_type"];
 impl GroupUpdateArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupUpdateArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupUpdateArgs>, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_return_members = None;
         let mut field_new_group_name = None;
         let mut field_new_group_external_id = None;
         let mut field_new_group_management_type = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "group" => {
                     if field_group.is_some() {
@@ -6343,13 +6696,17 @@ impl GroupUpdateArgs {
                 _ => return Err(de::Error::unknown_field(key, GROUP_UPDATE_ARGS_FIELDS))
             }
         }
-        Ok(GroupUpdateArgs {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupUpdateArgs {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
             return_members: field_return_members.unwrap_or(true),
             new_group_name: field_new_group_name,
             new_group_external_id: field_new_group_external_id,
             new_group_management_type: field_new_group_management_type,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -6640,6 +6997,7 @@ impl Default for GroupsListArg {
 
 const GROUPS_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl GroupsListArg {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<GroupsListArg, V::Error> {
@@ -6656,9 +7014,10 @@ impl GroupsListArg {
                 _ => return Err(de::Error::unknown_field(key, GROUPS_LIST_ARG_FIELDS))
             }
         }
-        Ok(GroupsListArg {
+        let result = GroupsListArg {
             limit: field_limit.unwrap_or(1000),
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -6716,11 +7075,20 @@ impl GroupsListContinueArg {
 const GROUPS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl GroupsListContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupsListContinueArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupsListContinueArg>, V::Error> {
         use serde::de;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
@@ -6731,9 +7099,13 @@ impl GroupsListContinueArg {
                 _ => return Err(de::Error::unknown_field(key, GROUPS_LIST_CONTINUE_ARG_FIELDS))
             }
         }
-        Ok(GroupsListContinueArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupsListContinueArg {
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -6865,13 +7237,22 @@ const GROUPS_LIST_RESULT_FIELDS: &[&str] = &["groups",
                                              "has_more"];
 impl GroupsListResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupsListResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupsListResult>, V::Error> {
         use serde::de;
         let mut field_groups = None;
         let mut field_cursor = None;
         let mut field_has_more = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "groups" => {
                     if field_groups.is_some() {
@@ -6894,11 +7275,15 @@ impl GroupsListResult {
                 _ => return Err(de::Error::unknown_field(key, GROUPS_LIST_RESULT_FIELDS))
             }
         }
-        Ok(GroupsListResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupsListResult {
             groups: field_groups.ok_or_else(|| de::Error::missing_field("groups"))?,
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -6967,12 +7352,21 @@ const GROUPS_MEMBERS_LIST_ARG_FIELDS: &[&str] = &["group",
                                                   "limit"];
 impl GroupsMembersListArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupsMembersListArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupsMembersListArg>, V::Error> {
         use serde::de;
         let mut field_group = None;
         let mut field_limit = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "group" => {
                     if field_group.is_some() {
@@ -6989,10 +7383,14 @@ impl GroupsMembersListArg {
                 _ => return Err(de::Error::unknown_field(key, GROUPS_MEMBERS_LIST_ARG_FIELDS))
             }
         }
-        Ok(GroupsMembersListArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupsMembersListArg {
             group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
             limit: field_limit.unwrap_or(1000),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -7051,11 +7449,20 @@ impl GroupsMembersListContinueArg {
 const GROUPS_MEMBERS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl GroupsMembersListContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupsMembersListContinueArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupsMembersListContinueArg>, V::Error> {
         use serde::de;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
@@ -7066,9 +7473,13 @@ impl GroupsMembersListContinueArg {
                 _ => return Err(de::Error::unknown_field(key, GROUPS_MEMBERS_LIST_CONTINUE_ARG_FIELDS))
             }
         }
-        Ok(GroupsMembersListContinueArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupsMembersListContinueArg {
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -7197,13 +7608,22 @@ const GROUPS_MEMBERS_LIST_RESULT_FIELDS: &[&str] = &["members",
                                                      "has_more"];
 impl GroupsMembersListResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<GroupsMembersListResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GroupsMembersListResult>, V::Error> {
         use serde::de;
         let mut field_members = None;
         let mut field_cursor = None;
         let mut field_has_more = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "members" => {
                     if field_members.is_some() {
@@ -7226,11 +7646,15 @@ impl GroupsMembersListResult {
                 _ => return Err(de::Error::unknown_field(key, GROUPS_MEMBERS_LIST_RESULT_FIELDS))
             }
         }
-        Ok(GroupsMembersListResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GroupsMembersListResult {
             members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -7561,6 +7985,7 @@ impl Default for IncludeMembersArg {
 
 const INCLUDE_MEMBERS_ARG_FIELDS: &[&str] = &["return_members"];
 impl IncludeMembersArg {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<IncludeMembersArg, V::Error> {
@@ -7577,9 +8002,10 @@ impl IncludeMembersArg {
                 _ => return Err(de::Error::unknown_field(key, INCLUDE_MEMBERS_ARG_FIELDS))
             }
         }
-        Ok(IncludeMembersArg {
+        let result = IncludeMembersArg {
             return_members: field_return_members.unwrap_or(true),
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -7637,11 +8063,20 @@ impl ListMemberAppsArg {
 const LIST_MEMBER_APPS_ARG_FIELDS: &[&str] = &["team_member_id"];
 impl ListMemberAppsArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListMemberAppsArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListMemberAppsArg>, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_member_id" => {
                     if field_team_member_id.is_some() {
@@ -7652,9 +8087,13 @@ impl ListMemberAppsArg {
                 _ => return Err(de::Error::unknown_field(key, LIST_MEMBER_APPS_ARG_FIELDS))
             }
         }
-        Ok(ListMemberAppsArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListMemberAppsArg {
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -7775,11 +8214,20 @@ impl ListMemberAppsResult {
 const LIST_MEMBER_APPS_RESULT_FIELDS: &[&str] = &["linked_api_apps"];
 impl ListMemberAppsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListMemberAppsResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListMemberAppsResult>, V::Error> {
         use serde::de;
         let mut field_linked_api_apps = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "linked_api_apps" => {
                     if field_linked_api_apps.is_some() {
@@ -7790,9 +8238,13 @@ impl ListMemberAppsResult {
                 _ => return Err(de::Error::unknown_field(key, LIST_MEMBER_APPS_RESULT_FIELDS))
             }
         }
-        Ok(ListMemberAppsResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListMemberAppsResult {
             linked_api_apps: field_linked_api_apps.ok_or_else(|| de::Error::missing_field("linked_api_apps"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -7877,14 +8329,23 @@ const LIST_MEMBER_DEVICES_ARG_FIELDS: &[&str] = &["team_member_id",
                                                   "include_mobile_clients"];
 impl ListMemberDevicesArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListMemberDevicesArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListMemberDevicesArg>, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         let mut field_include_web_sessions = None;
         let mut field_include_desktop_clients = None;
         let mut field_include_mobile_clients = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_member_id" => {
                     if field_team_member_id.is_some() {
@@ -7913,12 +8374,16 @@ impl ListMemberDevicesArg {
                 _ => return Err(de::Error::unknown_field(key, LIST_MEMBER_DEVICES_ARG_FIELDS))
             }
         }
-        Ok(ListMemberDevicesArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListMemberDevicesArg {
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
             include_web_sessions: field_include_web_sessions.unwrap_or(true),
             include_desktop_clients: field_include_desktop_clients.unwrap_or(true),
             include_mobile_clients: field_include_mobile_clients.unwrap_or(true),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -8047,6 +8512,7 @@ const LIST_MEMBER_DEVICES_RESULT_FIELDS: &[&str] = &["active_web_sessions",
                                                      "desktop_client_sessions",
                                                      "mobile_client_sessions"];
 impl ListMemberDevicesResult {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ListMemberDevicesResult, V::Error> {
@@ -8077,11 +8543,12 @@ impl ListMemberDevicesResult {
                 _ => return Err(de::Error::unknown_field(key, LIST_MEMBER_DEVICES_RESULT_FIELDS))
             }
         }
-        Ok(ListMemberDevicesResult {
+        let result = ListMemberDevicesResult {
             active_web_sessions: field_active_web_sessions,
             desktop_client_sessions: field_desktop_client_sessions,
             mobile_client_sessions: field_mobile_client_sessions,
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -8142,6 +8609,7 @@ impl Default for ListMembersAppsArg {
 
 const LIST_MEMBERS_APPS_ARG_FIELDS: &[&str] = &["cursor"];
 impl ListMembersAppsArg {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ListMembersAppsArg, V::Error> {
@@ -8158,9 +8626,10 @@ impl ListMembersAppsArg {
                 _ => return Err(de::Error::unknown_field(key, LIST_MEMBERS_APPS_ARG_FIELDS))
             }
         }
-        Ok(ListMembersAppsArg {
+        let result = ListMembersAppsArg {
             cursor: field_cursor,
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -8299,13 +8768,22 @@ const LIST_MEMBERS_APPS_RESULT_FIELDS: &[&str] = &["apps",
                                                    "cursor"];
 impl ListMembersAppsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListMembersAppsResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListMembersAppsResult>, V::Error> {
         use serde::de;
         let mut field_apps = None;
         let mut field_has_more = None;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "apps" => {
                     if field_apps.is_some() {
@@ -8328,11 +8806,15 @@ impl ListMembersAppsResult {
                 _ => return Err(de::Error::unknown_field(key, LIST_MEMBERS_APPS_RESULT_FIELDS))
             }
         }
-        Ok(ListMembersAppsResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListMembersAppsResult {
             apps: field_apps.ok_or_else(|| de::Error::missing_field("apps"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
             cursor: field_cursor,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -8404,6 +8886,7 @@ const LIST_MEMBERS_DEVICES_ARG_FIELDS: &[&str] = &["cursor",
                                                    "include_desktop_clients",
                                                    "include_mobile_clients"];
 impl ListMembersDevicesArg {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ListMembersDevicesArg, V::Error> {
@@ -8441,12 +8924,13 @@ impl ListMembersDevicesArg {
                 _ => return Err(de::Error::unknown_field(key, LIST_MEMBERS_DEVICES_ARG_FIELDS))
             }
         }
-        Ok(ListMembersDevicesArg {
+        let result = ListMembersDevicesArg {
             cursor: field_cursor,
             include_web_sessions: field_include_web_sessions.unwrap_or(true),
             include_desktop_clients: field_include_desktop_clients.unwrap_or(true),
             include_mobile_clients: field_include_mobile_clients.unwrap_or(true),
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -8585,13 +9069,22 @@ const LIST_MEMBERS_DEVICES_RESULT_FIELDS: &[&str] = &["devices",
                                                       "cursor"];
 impl ListMembersDevicesResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListMembersDevicesResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListMembersDevicesResult>, V::Error> {
         use serde::de;
         let mut field_devices = None;
         let mut field_has_more = None;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "devices" => {
                     if field_devices.is_some() {
@@ -8614,11 +9107,15 @@ impl ListMembersDevicesResult {
                 _ => return Err(de::Error::unknown_field(key, LIST_MEMBERS_DEVICES_RESULT_FIELDS))
             }
         }
-        Ok(ListMembersDevicesResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListMembersDevicesResult {
             devices: field_devices.ok_or_else(|| de::Error::missing_field("devices"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
             cursor: field_cursor,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -8679,6 +9176,7 @@ impl Default for ListTeamAppsArg {
 
 const LIST_TEAM_APPS_ARG_FIELDS: &[&str] = &["cursor"];
 impl ListTeamAppsArg {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ListTeamAppsArg, V::Error> {
@@ -8695,9 +9193,10 @@ impl ListTeamAppsArg {
                 _ => return Err(de::Error::unknown_field(key, LIST_TEAM_APPS_ARG_FIELDS))
             }
         }
-        Ok(ListTeamAppsArg {
+        let result = ListTeamAppsArg {
             cursor: field_cursor,
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -8836,13 +9335,22 @@ const LIST_TEAM_APPS_RESULT_FIELDS: &[&str] = &["apps",
                                                 "cursor"];
 impl ListTeamAppsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListTeamAppsResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListTeamAppsResult>, V::Error> {
         use serde::de;
         let mut field_apps = None;
         let mut field_has_more = None;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "apps" => {
                     if field_apps.is_some() {
@@ -8865,11 +9373,15 @@ impl ListTeamAppsResult {
                 _ => return Err(de::Error::unknown_field(key, LIST_TEAM_APPS_RESULT_FIELDS))
             }
         }
-        Ok(ListTeamAppsResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListTeamAppsResult {
             apps: field_apps.ok_or_else(|| de::Error::missing_field("apps"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
             cursor: field_cursor,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -8941,6 +9453,7 @@ const LIST_TEAM_DEVICES_ARG_FIELDS: &[&str] = &["cursor",
                                                 "include_desktop_clients",
                                                 "include_mobile_clients"];
 impl ListTeamDevicesArg {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ListTeamDevicesArg, V::Error> {
@@ -8978,12 +9491,13 @@ impl ListTeamDevicesArg {
                 _ => return Err(de::Error::unknown_field(key, LIST_TEAM_DEVICES_ARG_FIELDS))
             }
         }
-        Ok(ListTeamDevicesArg {
+        let result = ListTeamDevicesArg {
             cursor: field_cursor,
             include_web_sessions: field_include_web_sessions.unwrap_or(true),
             include_desktop_clients: field_include_desktop_clients.unwrap_or(true),
             include_mobile_clients: field_include_mobile_clients.unwrap_or(true),
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -9122,13 +9636,22 @@ const LIST_TEAM_DEVICES_RESULT_FIELDS: &[&str] = &["devices",
                                                    "cursor"];
 impl ListTeamDevicesResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<ListTeamDevicesResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListTeamDevicesResult>, V::Error> {
         use serde::de;
         let mut field_devices = None;
         let mut field_has_more = None;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "devices" => {
                     if field_devices.is_some() {
@@ -9151,11 +9674,15 @@ impl ListTeamDevicesResult {
                 _ => return Err(de::Error::unknown_field(key, LIST_TEAM_DEVICES_RESULT_FIELDS))
             }
         }
-        Ok(ListTeamDevicesResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListTeamDevicesResult {
             devices: field_devices.ok_or_else(|| de::Error::missing_field("devices"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
             cursor: field_cursor,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -9220,12 +9747,21 @@ const MEMBER_ACCESS_FIELDS: &[&str] = &["user",
                                         "access_type"];
 impl MemberAccess {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MemberAccess, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MemberAccess>, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_access_type = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "user" => {
                     if field_user.is_some() {
@@ -9242,10 +9778,14 @@ impl MemberAccess {
                 _ => return Err(de::Error::unknown_field(key, MEMBER_ACCESS_FIELDS))
             }
         }
-        Ok(MemberAccess {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MemberAccess {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
             access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -9365,8 +9905,15 @@ const MEMBER_ADD_ARG_FIELDS: &[&str] = &["member_email",
                                          "role"];
 impl MemberAddArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MemberAddArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MemberAddArg>, V::Error> {
         use serde::de;
         let mut field_member_email = None;
         let mut field_member_given_name = None;
@@ -9375,7 +9922,9 @@ impl MemberAddArg {
         let mut field_member_persistent_id = None;
         let mut field_send_welcome_email = None;
         let mut field_role = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "member_email" => {
                     if field_member_email.is_some() {
@@ -9422,7 +9971,10 @@ impl MemberAddArg {
                 _ => return Err(de::Error::unknown_field(key, MEMBER_ADD_ARG_FIELDS))
             }
         }
-        Ok(MemberAddArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MemberAddArg {
             member_email: field_member_email.ok_or_else(|| de::Error::missing_field("member_email"))?,
             member_given_name: field_member_given_name,
             member_surname: field_member_surname,
@@ -9430,7 +9982,8 @@ impl MemberAddArg {
             member_persistent_id: field_member_persistent_id,
             send_welcome_email: field_send_welcome_email.unwrap_or(true),
             role: field_role.unwrap_or_else(|| AdminTier::MemberOnly),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -9748,14 +10301,23 @@ const MEMBER_DEVICES_FIELDS: &[&str] = &["team_member_id",
                                          "mobile_clients"];
 impl MemberDevices {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MemberDevices, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MemberDevices>, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         let mut field_web_sessions = None;
         let mut field_desktop_clients = None;
         let mut field_mobile_clients = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_member_id" => {
                     if field_team_member_id.is_some() {
@@ -9784,12 +10346,16 @@ impl MemberDevices {
                 _ => return Err(de::Error::unknown_field(key, MEMBER_DEVICES_FIELDS))
             }
         }
-        Ok(MemberDevices {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MemberDevices {
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
             web_sessions: field_web_sessions,
             desktop_clients: field_desktop_clients,
             mobile_clients: field_mobile_clients,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -9855,12 +10421,21 @@ const MEMBER_LINKED_APPS_FIELDS: &[&str] = &["team_member_id",
                                              "linked_api_apps"];
 impl MemberLinkedApps {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MemberLinkedApps, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MemberLinkedApps>, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         let mut field_linked_api_apps = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_member_id" => {
                     if field_team_member_id.is_some() {
@@ -9877,10 +10452,14 @@ impl MemberLinkedApps {
                 _ => return Err(de::Error::unknown_field(key, MEMBER_LINKED_APPS_FIELDS))
             }
         }
-        Ok(MemberLinkedApps {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MemberLinkedApps {
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
             linked_api_apps: field_linked_api_apps.ok_or_else(|| de::Error::missing_field("linked_api_apps"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -10006,8 +10585,15 @@ const MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
                                          "persistent_id"];
 impl MemberProfile {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MemberProfile, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MemberProfile>, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         let mut field_email = None;
@@ -10019,7 +10605,9 @@ impl MemberProfile {
         let mut field_account_id = None;
         let mut field_joined_on = None;
         let mut field_persistent_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_member_id" => {
                     if field_team_member_id.is_some() {
@@ -10084,7 +10672,10 @@ impl MemberProfile {
                 _ => return Err(de::Error::unknown_field(key, MEMBER_PROFILE_FIELDS))
             }
         }
-        Ok(MemberProfile {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MemberProfile {
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
             email: field_email.ok_or_else(|| de::Error::missing_field("email"))?,
             email_verified: field_email_verified.ok_or_else(|| de::Error::missing_field("email_verified"))?,
@@ -10095,7 +10686,8 @@ impl MemberProfile {
             account_id: field_account_id,
             joined_on: field_joined_on,
             persistent_id: field_persistent_id,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -10241,12 +10833,21 @@ const MEMBERS_ADD_ARG_FIELDS: &[&str] = &["new_members",
                                           "force_async"];
 impl MembersAddArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MembersAddArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersAddArg>, V::Error> {
         use serde::de;
         let mut field_new_members = None;
         let mut field_force_async = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "new_members" => {
                     if field_new_members.is_some() {
@@ -10263,10 +10864,14 @@ impl MembersAddArg {
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_ADD_ARG_FIELDS))
             }
         }
-        Ok(MembersAddArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersAddArg {
             new_members: field_new_members.ok_or_else(|| de::Error::missing_field("new_members"))?,
             force_async: field_force_async.unwrap_or(false),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -10490,12 +11095,21 @@ const MEMBERS_DEACTIVATE_ARG_FIELDS: &[&str] = &["user",
                                                  "wipe_data"];
 impl MembersDeactivateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MembersDeactivateArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersDeactivateArg>, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_wipe_data = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "user" => {
                     if field_user.is_some() {
@@ -10512,10 +11126,14 @@ impl MembersDeactivateArg {
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_DEACTIVATE_ARG_FIELDS))
             }
         }
-        Ok(MembersDeactivateArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersDeactivateArg {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
             wipe_data: field_wipe_data.unwrap_or(true),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -10647,11 +11265,20 @@ impl MembersGetInfoArgs {
 const MEMBERS_GET_INFO_ARGS_FIELDS: &[&str] = &["members"];
 impl MembersGetInfoArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MembersGetInfoArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersGetInfoArgs>, V::Error> {
         use serde::de;
         let mut field_members = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "members" => {
                     if field_members.is_some() {
@@ -10662,9 +11289,13 @@ impl MembersGetInfoArgs {
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_GET_INFO_ARGS_FIELDS))
             }
         }
-        Ok(MembersGetInfoArgs {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersGetInfoArgs {
             members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -10844,6 +11475,7 @@ impl Default for MembersListArg {
 const MEMBERS_LIST_ARG_FIELDS: &[&str] = &["limit",
                                            "include_removed"];
 impl MembersListArg {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MembersListArg, V::Error> {
@@ -10867,10 +11499,11 @@ impl MembersListArg {
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_LIST_ARG_FIELDS))
             }
         }
-        Ok(MembersListArg {
+        let result = MembersListArg {
             limit: field_limit.unwrap_or(1000),
             include_removed: field_include_removed.unwrap_or(false),
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -10929,11 +11562,20 @@ impl MembersListContinueArg {
 const MEMBERS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl MembersListContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MembersListContinueArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersListContinueArg>, V::Error> {
         use serde::de;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
@@ -10944,9 +11586,13 @@ impl MembersListContinueArg {
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_LIST_CONTINUE_ARG_FIELDS))
             }
         }
-        Ok(MembersListContinueArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersListContinueArg {
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -11126,13 +11772,22 @@ const MEMBERS_LIST_RESULT_FIELDS: &[&str] = &["members",
                                               "has_more"];
 impl MembersListResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MembersListResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersListResult>, V::Error> {
         use serde::de;
         let mut field_members = None;
         let mut field_cursor = None;
         let mut field_has_more = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "members" => {
                     if field_members.is_some() {
@@ -11155,11 +11810,15 @@ impl MembersListResult {
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_LIST_RESULT_FIELDS))
             }
         }
-        Ok(MembersListResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersListResult {
             members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -11221,11 +11880,20 @@ impl MembersRecoverArg {
 const MEMBERS_RECOVER_ARG_FIELDS: &[&str] = &["user"];
 impl MembersRecoverArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MembersRecoverArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersRecoverArg>, V::Error> {
         use serde::de;
         let mut field_user = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "user" => {
                     if field_user.is_some() {
@@ -11236,9 +11904,13 @@ impl MembersRecoverArg {
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_RECOVER_ARG_FIELDS))
             }
         }
-        Ok(MembersRecoverArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersRecoverArg {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -11428,15 +12100,24 @@ const MEMBERS_REMOVE_ARG_FIELDS: &[&str] = &["user",
                                              "keep_account"];
 impl MembersRemoveArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MembersRemoveArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersRemoveArg>, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_wipe_data = None;
         let mut field_transfer_dest_id = None;
         let mut field_transfer_admin_id = None;
         let mut field_keep_account = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "user" => {
                     if field_user.is_some() {
@@ -11471,13 +12152,17 @@ impl MembersRemoveArg {
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_REMOVE_ARG_FIELDS))
             }
         }
-        Ok(MembersRemoveArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersRemoveArg {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
             wipe_data: field_wipe_data.unwrap_or(true),
             transfer_dest_id: field_transfer_dest_id,
             transfer_admin_id: field_transfer_admin_id,
             keep_account: field_keep_account.unwrap_or(false),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -11823,12 +12508,21 @@ const MEMBERS_SET_PERMISSIONS_ARG_FIELDS: &[&str] = &["user",
                                                       "new_role"];
 impl MembersSetPermissionsArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MembersSetPermissionsArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersSetPermissionsArg>, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_new_role = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "user" => {
                     if field_user.is_some() {
@@ -11845,10 +12539,14 @@ impl MembersSetPermissionsArg {
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_SET_PERMISSIONS_ARG_FIELDS))
             }
         }
-        Ok(MembersSetPermissionsArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersSetPermissionsArg {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
             new_role: field_new_role.ok_or_else(|| de::Error::missing_field("new_role"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -12014,12 +12712,21 @@ const MEMBERS_SET_PERMISSIONS_RESULT_FIELDS: &[&str] = &["team_member_id",
                                                          "role"];
 impl MembersSetPermissionsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MembersSetPermissionsResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersSetPermissionsResult>, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         let mut field_role = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_member_id" => {
                     if field_team_member_id.is_some() {
@@ -12036,10 +12743,14 @@ impl MembersSetPermissionsResult {
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_SET_PERMISSIONS_RESULT_FIELDS))
             }
         }
-        Ok(MembersSetPermissionsResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersSetPermissionsResult {
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
             role: field_role.ok_or_else(|| de::Error::missing_field("role"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -12150,8 +12861,15 @@ const MEMBERS_SET_PROFILE_ARG_FIELDS: &[&str] = &["user",
                                                   "new_persistent_id"];
 impl MembersSetProfileArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MembersSetProfileArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersSetProfileArg>, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_new_email = None;
@@ -12159,7 +12877,9 @@ impl MembersSetProfileArg {
         let mut field_new_given_name = None;
         let mut field_new_surname = None;
         let mut field_new_persistent_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "user" => {
                     if field_user.is_some() {
@@ -12200,14 +12920,18 @@ impl MembersSetProfileArg {
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_SET_PROFILE_ARG_FIELDS))
             }
         }
-        Ok(MembersSetProfileArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersSetProfileArg {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
             new_email: field_new_email,
             new_external_id: field_new_external_id,
             new_given_name: field_new_given_name,
             new_surname: field_new_surname,
             new_persistent_id: field_new_persistent_id,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -12529,11 +13253,20 @@ impl MembersUnsuspendArg {
 const MEMBERS_UNSUSPEND_ARG_FIELDS: &[&str] = &["user"];
 impl MembersUnsuspendArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MembersUnsuspendArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersUnsuspendArg>, V::Error> {
         use serde::de;
         let mut field_user = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "user" => {
                     if field_user.is_some() {
@@ -12544,9 +13277,13 @@ impl MembersUnsuspendArg {
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_UNSUSPEND_ARG_FIELDS))
             }
         }
-        Ok(MembersUnsuspendArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersUnsuspendArg {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -12863,8 +13600,15 @@ const MOBILE_CLIENT_SESSION_FIELDS: &[&str] = &["session_id",
                                                 "last_carrier"];
 impl MobileClientSession {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<MobileClientSession, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MobileClientSession>, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_device_name = None;
@@ -12876,7 +13620,9 @@ impl MobileClientSession {
         let mut field_client_version = None;
         let mut field_os_version = None;
         let mut field_last_carrier = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "session_id" => {
                     if field_session_id.is_some() {
@@ -12941,7 +13687,10 @@ impl MobileClientSession {
                 _ => return Err(de::Error::unknown_field(key, MOBILE_CLIENT_SESSION_FIELDS))
             }
         }
-        Ok(MobileClientSession {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MobileClientSession {
             session_id: field_session_id.ok_or_else(|| de::Error::missing_field("session_id"))?,
             device_name: field_device_name.ok_or_else(|| de::Error::missing_field("device_name"))?,
             client_type: field_client_type.ok_or_else(|| de::Error::missing_field("client_type"))?,
@@ -12952,7 +13701,8 @@ impl MobileClientSession {
             client_version: field_client_version,
             os_version: field_os_version,
             last_carrier: field_last_carrier,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -13042,14 +13792,23 @@ const NAMESPACE_METADATA_FIELDS: &[&str] = &["name",
                                              "team_member_id"];
 impl NamespaceMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<NamespaceMetadata, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NamespaceMetadata>, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_namespace_id = None;
         let mut field_namespace_type = None;
         let mut field_team_member_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
@@ -13078,12 +13837,16 @@ impl NamespaceMetadata {
                 _ => return Err(de::Error::unknown_field(key, NAMESPACE_METADATA_FIELDS))
             }
         }
-        Ok(NamespaceMetadata {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NamespaceMetadata {
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
             namespace_id: field_namespace_id.ok_or_else(|| de::Error::missing_field("namespace_id"))?,
             namespace_type: field_namespace_type.ok_or_else(|| de::Error::missing_field("namespace_type"))?,
             team_member_id: field_team_member_id,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -13299,11 +14062,20 @@ impl RemovedStatus {
 const REMOVED_STATUS_FIELDS: &[&str] = &["is_recoverable"];
 impl RemovedStatus {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RemovedStatus, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RemovedStatus>, V::Error> {
         use serde::de;
         let mut field_is_recoverable = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "is_recoverable" => {
                     if field_is_recoverable.is_some() {
@@ -13314,9 +14086,13 @@ impl RemovedStatus {
                 _ => return Err(de::Error::unknown_field(key, REMOVED_STATUS_FIELDS))
             }
         }
-        Ok(RemovedStatus {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RemovedStatus {
             is_recoverable: field_is_recoverable.ok_or_else(|| de::Error::missing_field("is_recoverable"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -13388,13 +14164,22 @@ const REVOKE_DESKTOP_CLIENT_ARG_FIELDS: &[&str] = &["session_id",
                                                     "delete_on_unlink"];
 impl RevokeDesktopClientArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RevokeDesktopClientArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RevokeDesktopClientArg>, V::Error> {
         use serde::de;
         let mut field_session_id = None;
         let mut field_team_member_id = None;
         let mut field_delete_on_unlink = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "session_id" => {
                     if field_session_id.is_some() {
@@ -13417,11 +14202,15 @@ impl RevokeDesktopClientArg {
                 _ => return Err(de::Error::unknown_field(key, REVOKE_DESKTOP_CLIENT_ARG_FIELDS))
             }
         }
-        Ok(RevokeDesktopClientArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RevokeDesktopClientArg {
             session_id: field_session_id.ok_or_else(|| de::Error::missing_field("session_id"))?,
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
             delete_on_unlink: field_delete_on_unlink.unwrap_or(false),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -13550,11 +14339,20 @@ impl RevokeDeviceSessionBatchArg {
 const REVOKE_DEVICE_SESSION_BATCH_ARG_FIELDS: &[&str] = &["revoke_devices"];
 impl RevokeDeviceSessionBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RevokeDeviceSessionBatchArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RevokeDeviceSessionBatchArg>, V::Error> {
         use serde::de;
         let mut field_revoke_devices = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "revoke_devices" => {
                     if field_revoke_devices.is_some() {
@@ -13565,9 +14363,13 @@ impl RevokeDeviceSessionBatchArg {
                 _ => return Err(de::Error::unknown_field(key, REVOKE_DEVICE_SESSION_BATCH_ARG_FIELDS))
             }
         }
-        Ok(RevokeDeviceSessionBatchArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RevokeDeviceSessionBatchArg {
             revoke_devices: field_revoke_devices.ok_or_else(|| de::Error::missing_field("revoke_devices"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -13675,11 +14477,20 @@ impl RevokeDeviceSessionBatchResult {
 const REVOKE_DEVICE_SESSION_BATCH_RESULT_FIELDS: &[&str] = &["revoke_devices_status"];
 impl RevokeDeviceSessionBatchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RevokeDeviceSessionBatchResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RevokeDeviceSessionBatchResult>, V::Error> {
         use serde::de;
         let mut field_revoke_devices_status = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "revoke_devices_status" => {
                     if field_revoke_devices_status.is_some() {
@@ -13690,9 +14501,13 @@ impl RevokeDeviceSessionBatchResult {
                 _ => return Err(de::Error::unknown_field(key, REVOKE_DEVICE_SESSION_BATCH_RESULT_FIELDS))
             }
         }
-        Ok(RevokeDeviceSessionBatchResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RevokeDeviceSessionBatchResult {
             revoke_devices_status: field_revoke_devices_status.ok_or_else(|| de::Error::missing_field("revoke_devices_status"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -13831,12 +14646,21 @@ const REVOKE_DEVICE_SESSION_STATUS_FIELDS: &[&str] = &["success",
                                                        "error_type"];
 impl RevokeDeviceSessionStatus {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RevokeDeviceSessionStatus, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RevokeDeviceSessionStatus>, V::Error> {
         use serde::de;
         let mut field_success = None;
         let mut field_error_type = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "success" => {
                     if field_success.is_some() {
@@ -13853,10 +14677,14 @@ impl RevokeDeviceSessionStatus {
                 _ => return Err(de::Error::unknown_field(key, REVOKE_DEVICE_SESSION_STATUS_FIELDS))
             }
         }
-        Ok(RevokeDeviceSessionStatus {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RevokeDeviceSessionStatus {
             success: field_success.ok_or_else(|| de::Error::missing_field("success"))?,
             error_type: field_error_type,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -13928,13 +14756,22 @@ const REVOKE_LINKED_API_APP_ARG_FIELDS: &[&str] = &["app_id",
                                                     "keep_app_folder"];
 impl RevokeLinkedApiAppArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RevokeLinkedApiAppArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RevokeLinkedApiAppArg>, V::Error> {
         use serde::de;
         let mut field_app_id = None;
         let mut field_team_member_id = None;
         let mut field_keep_app_folder = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "app_id" => {
                     if field_app_id.is_some() {
@@ -13957,11 +14794,15 @@ impl RevokeLinkedApiAppArg {
                 _ => return Err(de::Error::unknown_field(key, REVOKE_LINKED_API_APP_ARG_FIELDS))
             }
         }
-        Ok(RevokeLinkedApiAppArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RevokeLinkedApiAppArg {
             app_id: field_app_id.ok_or_else(|| de::Error::missing_field("app_id"))?,
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
             keep_app_folder: field_keep_app_folder.unwrap_or(true),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -14020,11 +14861,20 @@ impl RevokeLinkedApiAppBatchArg {
 const REVOKE_LINKED_API_APP_BATCH_ARG_FIELDS: &[&str] = &["revoke_linked_app"];
 impl RevokeLinkedApiAppBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RevokeLinkedApiAppBatchArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RevokeLinkedApiAppBatchArg>, V::Error> {
         use serde::de;
         let mut field_revoke_linked_app = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "revoke_linked_app" => {
                     if field_revoke_linked_app.is_some() {
@@ -14035,9 +14885,13 @@ impl RevokeLinkedApiAppBatchArg {
                 _ => return Err(de::Error::unknown_field(key, REVOKE_LINKED_API_APP_BATCH_ARG_FIELDS))
             }
         }
-        Ok(RevokeLinkedApiAppBatchArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RevokeLinkedApiAppBatchArg {
             revoke_linked_app: field_revoke_linked_app.ok_or_else(|| de::Error::missing_field("revoke_linked_app"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -14145,11 +14999,20 @@ impl RevokeLinkedAppBatchResult {
 const REVOKE_LINKED_APP_BATCH_RESULT_FIELDS: &[&str] = &["revoke_linked_app_status"];
 impl RevokeLinkedAppBatchResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RevokeLinkedAppBatchResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RevokeLinkedAppBatchResult>, V::Error> {
         use serde::de;
         let mut field_revoke_linked_app_status = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "revoke_linked_app_status" => {
                     if field_revoke_linked_app_status.is_some() {
@@ -14160,9 +15023,13 @@ impl RevokeLinkedAppBatchResult {
                 _ => return Err(de::Error::unknown_field(key, REVOKE_LINKED_APP_BATCH_RESULT_FIELDS))
             }
         }
-        Ok(RevokeLinkedAppBatchResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RevokeLinkedAppBatchResult {
             revoke_linked_app_status: field_revoke_linked_app_status.ok_or_else(|| de::Error::missing_field("revoke_linked_app_status"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -14302,12 +15169,21 @@ const REVOKE_LINKED_APP_STATUS_FIELDS: &[&str] = &["success",
                                                    "error_type"];
 impl RevokeLinkedAppStatus {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<RevokeLinkedAppStatus, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RevokeLinkedAppStatus>, V::Error> {
         use serde::de;
         let mut field_success = None;
         let mut field_error_type = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "success" => {
                     if field_success.is_some() {
@@ -14324,10 +15200,14 @@ impl RevokeLinkedAppStatus {
                 _ => return Err(de::Error::unknown_field(key, REVOKE_LINKED_APP_STATUS_FIELDS))
             }
         }
-        Ok(RevokeLinkedAppStatus {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RevokeLinkedAppStatus {
             success: field_success.ok_or_else(|| de::Error::missing_field("success"))?,
             error_type: field_error_type,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -14386,11 +15266,20 @@ impl SetCustomQuotaArg {
 const SET_CUSTOM_QUOTA_ARG_FIELDS: &[&str] = &["users_and_quotas"];
 impl SetCustomQuotaArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<SetCustomQuotaArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SetCustomQuotaArg>, V::Error> {
         use serde::de;
         let mut field_users_and_quotas = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "users_and_quotas" => {
                     if field_users_and_quotas.is_some() {
@@ -14401,9 +15290,13 @@ impl SetCustomQuotaArg {
                 _ => return Err(de::Error::unknown_field(key, SET_CUSTOM_QUOTA_ARG_FIELDS))
             }
         }
-        Ok(SetCustomQuotaArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SetCustomQuotaArg {
             users_and_quotas: field_users_and_quotas.ok_or_else(|| de::Error::missing_field("users_and_quotas"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -14540,12 +15433,21 @@ const STORAGE_BUCKET_FIELDS: &[&str] = &["bucket",
                                          "users"];
 impl StorageBucket {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<StorageBucket, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<StorageBucket>, V::Error> {
         use serde::de;
         let mut field_bucket = None;
         let mut field_users = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "bucket" => {
                     if field_bucket.is_some() {
@@ -14562,10 +15464,14 @@ impl StorageBucket {
                 _ => return Err(de::Error::unknown_field(key, STORAGE_BUCKET_FIELDS))
             }
         }
-        Ok(StorageBucket {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = StorageBucket {
             bucket: field_bucket.ok_or_else(|| de::Error::missing_field("bucket"))?,
             users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -14806,12 +15712,21 @@ const TEAM_FOLDER_ARCHIVE_ARG_FIELDS: &[&str] = &["team_folder_id",
                                                   "force_async_off"];
 impl TeamFolderArchiveArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamFolderArchiveArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamFolderArchiveArg>, V::Error> {
         use serde::de;
         let mut field_team_folder_id = None;
         let mut field_force_async_off = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_folder_id" => {
                     if field_team_folder_id.is_some() {
@@ -14828,10 +15743,14 @@ impl TeamFolderArchiveArg {
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_ARCHIVE_ARG_FIELDS))
             }
         }
-        Ok(TeamFolderArchiveArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamFolderArchiveArg {
             team_folder_id: field_team_folder_id.ok_or_else(|| de::Error::missing_field("team_folder_id"))?,
             force_async_off: field_force_async_off.unwrap_or(false),
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -15131,11 +16050,20 @@ impl TeamFolderCreateArg {
 const TEAM_FOLDER_CREATE_ARG_FIELDS: &[&str] = &["name"];
 impl TeamFolderCreateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamFolderCreateArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamFolderCreateArg>, V::Error> {
         use serde::de;
         let mut field_name = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
@@ -15146,9 +16074,13 @@ impl TeamFolderCreateArg {
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_CREATE_ARG_FIELDS))
             }
         }
-        Ok(TeamFolderCreateArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamFolderCreateArg {
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -15354,11 +16286,20 @@ impl TeamFolderIdArg {
 const TEAM_FOLDER_ID_ARG_FIELDS: &[&str] = &["team_folder_id"];
 impl TeamFolderIdArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamFolderIdArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamFolderIdArg>, V::Error> {
         use serde::de;
         let mut field_team_folder_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_folder_id" => {
                     if field_team_folder_id.is_some() {
@@ -15369,9 +16310,13 @@ impl TeamFolderIdArg {
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_ID_ARG_FIELDS))
             }
         }
-        Ok(TeamFolderIdArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamFolderIdArg {
             team_folder_id: field_team_folder_id.ok_or_else(|| de::Error::missing_field("team_folder_id"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -15429,11 +16374,20 @@ impl TeamFolderIdListArg {
 const TEAM_FOLDER_ID_LIST_ARG_FIELDS: &[&str] = &["team_folder_ids"];
 impl TeamFolderIdListArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamFolderIdListArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamFolderIdListArg>, V::Error> {
         use serde::de;
         let mut field_team_folder_ids = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_folder_ids" => {
                     if field_team_folder_ids.is_some() {
@@ -15444,9 +16398,13 @@ impl TeamFolderIdListArg {
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_ID_LIST_ARG_FIELDS))
             }
         }
-        Ok(TeamFolderIdListArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamFolderIdListArg {
             team_folder_ids: field_team_folder_ids.ok_or_else(|| de::Error::missing_field("team_folder_ids"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -15584,6 +16542,7 @@ impl Default for TeamFolderListArg {
 
 const TEAM_FOLDER_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl TeamFolderListArg {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TeamFolderListArg, V::Error> {
@@ -15600,9 +16559,10 @@ impl TeamFolderListArg {
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_LIST_ARG_FIELDS))
             }
         }
-        Ok(TeamFolderListArg {
+        let result = TeamFolderListArg {
             limit: field_limit.unwrap_or(1000),
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -15660,11 +16620,20 @@ impl TeamFolderListContinueArg {
 const TEAM_FOLDER_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl TeamFolderListContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamFolderListContinueArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamFolderListContinueArg>, V::Error> {
         use serde::de;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
@@ -15675,9 +16644,13 @@ impl TeamFolderListContinueArg {
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_LIST_CONTINUE_ARG_FIELDS))
             }
         }
-        Ok(TeamFolderListContinueArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamFolderListContinueArg {
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -15796,11 +16769,20 @@ impl TeamFolderListError {
 const TEAM_FOLDER_LIST_ERROR_FIELDS: &[&str] = &["access_error"];
 impl TeamFolderListError {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamFolderListError, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamFolderListError>, V::Error> {
         use serde::de;
         let mut field_access_error = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "access_error" => {
                     if field_access_error.is_some() {
@@ -15811,9 +16793,13 @@ impl TeamFolderListError {
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_LIST_ERROR_FIELDS))
             }
         }
-        Ok(TeamFolderListError {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamFolderListError {
             access_error: field_access_error.ok_or_else(|| de::Error::missing_field("access_error"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -15881,13 +16867,22 @@ const TEAM_FOLDER_LIST_RESULT_FIELDS: &[&str] = &["team_folders",
                                                   "has_more"];
 impl TeamFolderListResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamFolderListResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamFolderListResult>, V::Error> {
         use serde::de;
         let mut field_team_folders = None;
         let mut field_cursor = None;
         let mut field_has_more = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_folders" => {
                     if field_team_folders.is_some() {
@@ -15910,11 +16905,15 @@ impl TeamFolderListResult {
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_LIST_RESULT_FIELDS))
             }
         }
-        Ok(TeamFolderListResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamFolderListResult {
             team_folders: field_team_folders.ok_or_else(|| de::Error::missing_field("team_folders"))?,
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -15992,14 +16991,23 @@ const TEAM_FOLDER_METADATA_FIELDS: &[&str] = &["team_folder_id",
                                                "is_team_shared_dropbox"];
 impl TeamFolderMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamFolderMetadata, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamFolderMetadata>, V::Error> {
         use serde::de;
         let mut field_team_folder_id = None;
         let mut field_name = None;
         let mut field_status = None;
         let mut field_is_team_shared_dropbox = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_folder_id" => {
                     if field_team_folder_id.is_some() {
@@ -16028,12 +17036,16 @@ impl TeamFolderMetadata {
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_METADATA_FIELDS))
             }
         }
-        Ok(TeamFolderMetadata {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamFolderMetadata {
             team_folder_id: field_team_folder_id.ok_or_else(|| de::Error::missing_field("team_folder_id"))?,
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
             status: field_status.ok_or_else(|| de::Error::missing_field("status"))?,
             is_team_shared_dropbox: field_is_team_shared_dropbox.ok_or_else(|| de::Error::missing_field("is_team_shared_dropbox"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -16199,12 +17211,21 @@ const TEAM_FOLDER_RENAME_ARG_FIELDS: &[&str] = &["team_folder_id",
                                                  "name"];
 impl TeamFolderRenameArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamFolderRenameArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamFolderRenameArg>, V::Error> {
         use serde::de;
         let mut field_team_folder_id = None;
         let mut field_name = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_folder_id" => {
                     if field_team_folder_id.is_some() {
@@ -16221,10 +17242,14 @@ impl TeamFolderRenameArg {
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_RENAME_ARG_FIELDS))
             }
         }
-        Ok(TeamFolderRenameArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamFolderRenameArg {
             team_folder_id: field_team_folder_id.ok_or_else(|| de::Error::missing_field("team_folder_id"))?,
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -16566,15 +17591,24 @@ const TEAM_GET_INFO_RESULT_FIELDS: &[&str] = &["name",
                                                "policies"];
 impl TeamGetInfoResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamGetInfoResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamGetInfoResult>, V::Error> {
         use serde::de;
         let mut field_name = None;
         let mut field_team_id = None;
         let mut field_num_licensed_users = None;
         let mut field_num_provisioned_users = None;
         let mut field_policies = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
@@ -16609,13 +17643,17 @@ impl TeamGetInfoResult {
                 _ => return Err(de::Error::unknown_field(key, TEAM_GET_INFO_RESULT_FIELDS))
             }
         }
-        Ok(TeamGetInfoResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamGetInfoResult {
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
             team_id: field_team_id.ok_or_else(|| de::Error::missing_field("team_id"))?,
             num_licensed_users: field_num_licensed_users.ok_or_else(|| de::Error::missing_field("num_licensed_users"))?,
             num_provisioned_users: field_num_provisioned_users.ok_or_else(|| de::Error::missing_field("num_provisioned_users"))?,
             policies: field_policies.ok_or_else(|| de::Error::missing_field("policies"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -16682,12 +17720,21 @@ const TEAM_MEMBER_INFO_FIELDS: &[&str] = &["profile",
                                            "role"];
 impl TeamMemberInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamMemberInfo, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamMemberInfo>, V::Error> {
         use serde::de;
         let mut field_profile = None;
         let mut field_role = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "profile" => {
                     if field_profile.is_some() {
@@ -16704,10 +17751,14 @@ impl TeamMemberInfo {
                 _ => return Err(de::Error::unknown_field(key, TEAM_MEMBER_INFO_FIELDS))
             }
         }
-        Ok(TeamMemberInfo {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamMemberInfo {
             profile: field_profile.ok_or_else(|| de::Error::missing_field("profile"))?,
             role: field_role.ok_or_else(|| de::Error::missing_field("role"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -16843,8 +17894,15 @@ const TEAM_MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
                                               "persistent_id"];
 impl TeamMemberProfile {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamMemberProfile, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamMemberProfile>, V::Error> {
         use serde::de;
         let mut field_team_member_id = None;
         let mut field_email = None;
@@ -16858,7 +17916,9 @@ impl TeamMemberProfile {
         let mut field_account_id = None;
         let mut field_joined_on = None;
         let mut field_persistent_id = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "team_member_id" => {
                     if field_team_member_id.is_some() {
@@ -16935,7 +17995,10 @@ impl TeamMemberProfile {
                 _ => return Err(de::Error::unknown_field(key, TEAM_MEMBER_PROFILE_FIELDS))
             }
         }
-        Ok(TeamMemberProfile {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamMemberProfile {
             team_member_id: field_team_member_id.ok_or_else(|| de::Error::missing_field("team_member_id"))?,
             email: field_email.ok_or_else(|| de::Error::missing_field("email"))?,
             email_verified: field_email_verified.ok_or_else(|| de::Error::missing_field("email_verified"))?,
@@ -16948,7 +18011,8 @@ impl TeamMemberProfile {
             account_id: field_account_id,
             joined_on: field_joined_on,
             persistent_id: field_persistent_id,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -17154,6 +18218,7 @@ impl Default for TeamNamespacesListArg {
 
 const TEAM_NAMESPACES_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl TeamNamespacesListArg {
+    // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TeamNamespacesListArg, V::Error> {
@@ -17170,9 +18235,10 @@ impl TeamNamespacesListArg {
                 _ => return Err(de::Error::unknown_field(key, TEAM_NAMESPACES_LIST_ARG_FIELDS))
             }
         }
-        Ok(TeamNamespacesListArg {
+        let result = TeamNamespacesListArg {
             limit: field_limit.unwrap_or(1000),
-        })
+        };
+        Ok(result)
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -17230,11 +18296,20 @@ impl TeamNamespacesListContinueArg {
 const TEAM_NAMESPACES_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
 impl TeamNamespacesListContinueArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamNamespacesListContinueArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamNamespacesListContinueArg>, V::Error> {
         use serde::de;
         let mut field_cursor = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
@@ -17245,9 +18320,13 @@ impl TeamNamespacesListContinueArg {
                 _ => return Err(de::Error::unknown_field(key, TEAM_NAMESPACES_LIST_CONTINUE_ARG_FIELDS))
             }
         }
-        Ok(TeamNamespacesListContinueArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamNamespacesListContinueArg {
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -17377,13 +18456,22 @@ const TEAM_NAMESPACES_LIST_RESULT_FIELDS: &[&str] = &["namespaces",
                                                       "has_more"];
 impl TeamNamespacesListResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TeamNamespacesListResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamNamespacesListResult>, V::Error> {
         use serde::de;
         let mut field_namespaces = None;
         let mut field_cursor = None;
         let mut field_has_more = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "namespaces" => {
                     if field_namespaces.is_some() {
@@ -17406,11 +18494,15 @@ impl TeamNamespacesListResult {
                 _ => return Err(de::Error::unknown_field(key, TEAM_NAMESPACES_LIST_RESULT_FIELDS))
             }
         }
-        Ok(TeamNamespacesListResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamNamespacesListResult {
             namespaces: field_namespaces.ok_or_else(|| de::Error::missing_field("namespaces"))?,
             cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
             has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -17547,11 +18639,20 @@ impl TokenGetAuthenticatedAdminResult {
 const TOKEN_GET_AUTHENTICATED_ADMIN_RESULT_FIELDS: &[&str] = &["admin_profile"];
 impl TokenGetAuthenticatedAdminResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<TokenGetAuthenticatedAdminResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TokenGetAuthenticatedAdminResult>, V::Error> {
         use serde::de;
         let mut field_admin_profile = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "admin_profile" => {
                     if field_admin_profile.is_some() {
@@ -17562,9 +18663,13 @@ impl TokenGetAuthenticatedAdminResult {
                 _ => return Err(de::Error::unknown_field(key, TOKEN_GET_AUTHENTICATED_ADMIN_RESULT_FIELDS))
             }
         }
-        Ok(TokenGetAuthenticatedAdminResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TokenGetAuthenticatedAdminResult {
             admin_profile: field_admin_profile.ok_or_else(|| de::Error::missing_field("admin_profile"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -17694,12 +18799,21 @@ const USER_CUSTOM_QUOTA_ARG_FIELDS: &[&str] = &["user",
                                                 "quota_gb"];
 impl UserCustomQuotaArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<UserCustomQuotaArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UserCustomQuotaArg>, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_quota_gb = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "user" => {
                     if field_user.is_some() {
@@ -17716,10 +18830,14 @@ impl UserCustomQuotaArg {
                 _ => return Err(de::Error::unknown_field(key, USER_CUSTOM_QUOTA_ARG_FIELDS))
             }
         }
-        Ok(UserCustomQuotaArg {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UserCustomQuotaArg {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
             quota_gb: field_quota_gb.ok_or_else(|| de::Error::missing_field("quota_gb"))?,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
@@ -17787,12 +18905,21 @@ const USER_CUSTOM_QUOTA_RESULT_FIELDS: &[&str] = &["user",
                                                    "quota_gb"];
 impl UserCustomQuotaResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
+        map: V,
     ) -> Result<UserCustomQuotaResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UserCustomQuotaResult>, V::Error> {
         use serde::de;
         let mut field_user = None;
         let mut field_quota_gb = None;
+        let mut nothing = true;
         while let Some(key) = map.next_key()? {
+            nothing = false;
             match key {
                 "user" => {
                     if field_user.is_some() {
@@ -17809,10 +18936,14 @@ impl UserCustomQuotaResult {
                 _ => return Err(de::Error::unknown_field(key, USER_CUSTOM_QUOTA_RESULT_FIELDS))
             }
         }
-        Ok(UserCustomQuotaResult {
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UserCustomQuotaResult {
             user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
             quota_gb: field_quota_gb,
-        })
+        };
+        Ok(Some(result))
     }
 
     pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
