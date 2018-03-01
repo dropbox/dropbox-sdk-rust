@@ -35,7 +35,7 @@ fn main() {
             &client_id, &client_secret, auth_code.trim(), None)
         {
             Ok(token) => {
-                eprintln!("got token");
+                eprintln!("got token: {}", token);
 
                 // This is where you'd save the token somewhere so you don't need to do this dance
                 // again.
