@@ -72,7 +72,7 @@ fn main() {
                 eprintln!("Download error: {}", download_error);
             },
             Err(request_error) => {
-                eprintln!("Failed to make the request: {}", request_error);
+                eprintln!("Error: {}", request_error);
             }
         }
     } else {

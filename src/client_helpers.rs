@@ -98,46 +98,45 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
             };
 
             // Try to turn the error into a more specific one.
-            match innards {
-                Some((code, status, response)) => {
-                    error!("HTTP {} {}: {}", code, status, response);
-                    match code {
-                        400 => {
-                            Err(e).chain_err(|| ErrorKind::BadRequest(response))
-                        },
-                        401 => {
-                            Err(e).chain_err(|| ErrorKind::InvalidToken(response))
-                        },
-                        409 => {
-                            // Response should be JSON-deseraializable into the strongly-typed
-                            // error specified by type parameter E.
-                            match serde_json::from_str::<TopLevelError<E>>(&response) {
-                                Ok(deserialized) => {
-                                    error!("API error: {:?}", deserialized);
-                                    Ok(Err(deserialized.error))
-                                },
-                                Err(de_error) => {
-                                    error!("Failed to deserialize JSON from API error: {}", de_error);
-                                    Err(e).chain_err(|| ErrorKind::Json(de_error))
-                                }
+            if let Some((code, status, response)) = innards {
+                error!("HTTP {} {}: {}", code, status, response);
+                return match code {
+                    400 => {
+                        Err(e).chain_err(|| ErrorKind::BadRequest(response))
+                    },
+                    401 => {
+                        Err(e).chain_err(|| ErrorKind::InvalidToken(response))
+                    },
+                    409 => {
+                        // Response should be JSON-deseraializable into the strongly-typed
+                        // error specified by type parameter E.
+                        match serde_json::from_str::<TopLevelError<E>>(&response) {
+                            Ok(deserialized) => {
+                                error!("API error: {:?}", deserialized);
+                                Ok(Err(deserialized.error))
+                            },
+                            Err(de_error) => {
+                                error!("Failed to deserialize JSON from API error: {}", de_error);
+                                Err(e).chain_err(|| ErrorKind::Json(de_error))
                             }
-                        },
-                        429 => {
-                            Err(e).chain_err(|| ErrorKind::RateLimited(response))
-                        },
-                        500...599 => {
-                            Err(e).chain_err(|| ErrorKind::ServerError(response))
-                        },
-                        _ => {
-                            Err(e)
                         }
+                    },
+                    429 => {
+                        Err(e).chain_err(|| ErrorKind::RateLimited(response))
+                    },
+                    500...599 => {
+                        Err(e).chain_err(|| ErrorKind::ServerError(response))
+                    },
+                    _ => {
+                        Err(e)
                     }
-                },
-                None => {
-                    error!("HTTP request error: {}", e);
-                    Err(e)
                 }
+            } else if let Error(ErrorKind::Json(ref json_err), _) = e {
+                error!("JSON deserialization error: {}", json_err);
+            } else {
+                error!("HTTP request error: {}", e);
             }
+            Err(e)
         }
     }
 }
