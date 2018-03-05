@@ -179,11 +179,6 @@ class TestField(object):
         elif ir.is_timestamp_type(self.typ):
             codegen.emit(u'assert_eq!({}.as_str(), "{}");'.format(
                 expression, self.value.strftime(self.typ.format)))
-        elif ir.is_map_type(self.typ):
-            codegen.emit(u'/* TODO: MAP ASSERT HERE')
-            codegen.emit(u'expression: {}'.format(expression))
-            codegen.emit(u'value: {}'.format(self.value))
-            codegen.emit(u'*/')
         else:
             raise RuntimeError(u'Error: assetion unhandled for type {} of field {}'
                                .format(self.typ, self.name))
@@ -307,6 +302,22 @@ class TestList(TestValue):
         self._inner_value.emit_assert(codegen, expression_path + '[0]')
 
 
+class TestMap(TestValue):
+    def __init__(self, rust_generator, stone_type, reference_impls):
+        super(TestMap, self).__init__(rust_generator)
+        self._stone_type = stone_type
+        self._reference_impls = reference_impls
+        self._key_value = make_test_field(None, stone_type.key_data_type, rust_generator,
+                                          reference_impls)
+        self._val_value = make_test_field(None, stone_type.value_data_type, rust_generator,
+                                          reference_impls)
+        self.value = {self._key_value.value: self._val_value.value}
+
+    def emit_asserts(self, codegen, expression_path):
+        key_str = u'["{}"]'.format(self._key_value.value)
+        self._val_value.emit_assert(codegen, expression_path + key_str)
+
+
 def make_test_field(field_name, stone_type, rust_generator, reference_impls):
     rust_name = rust_generator.field_name_raw(field_name) if field_name is not None else None
     typ, option = ir.unwrap_nullable(stone_type)
@@ -334,9 +345,8 @@ def make_test_field(field_name, stone_type, rust_generator, reference_impls):
         inner = TestList(rust_generator, typ.data_type, reference_impls)
         value = [inner.value]
     elif ir.is_map_type(typ):
-        k = make_test_field('mykey', typ.key_data_type, rust_generator, reference_impls)
-        v = make_test_field('myval', typ.value_data_type, rust_generator, reference_impls)
-        value = {k.value: v.value}
+        inner = TestMap(rust_generator, typ, reference_impls)
+        value = inner.value
     elif ir.is_string_type(typ):
         if typ.pattern:
             value = Unregex(typ.pattern, typ.min_length).generate()
