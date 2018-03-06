@@ -39,6 +39,21 @@ default_features = false
 features = ["dbx_files", "dbx_users"]
 ```
 
+## Tests
+
+The tests are auto-generated from the spec as well, but unlike the main code,
+are not checked in. Run `./generate.sh` to generate the tests, and `cargo test`
+to run them.
+
+The test generator starts by generating a reference Python SDK and loading that
+code. It then generates an instance of every type in the SDK and uses the
+Python code to serialize them to JSON. Then it emits Rust tests that contain
+the JSON as a string, deserialize it, assert that all fields contain the
+expected values, re-serialize it, deserialize it again, and assert the fields
+again. Thus we have reasonably good coverage of the serialization and
+deserialization logic that the Rust generator emits, checked against the Python
+implementation (which is what Dropbox uses server-side).
+
 ## Miscellaneous
 
 Some implementation notes, limitations, and TODOs:
