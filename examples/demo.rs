@@ -8,6 +8,25 @@ use std::collections::VecDeque;
 use std::env;
 use std::io::{self, Read, Write};
 
+enum Operation {
+    Usage,
+    List,
+    Download { path: String },
+}
+
+fn parse_args() -> Operation {
+    match std::env::args().nth(1).as_ref().map(|s| s.as_str()) {
+        None | Some("--help") | Some("-h") => Operation::Usage,
+        Some("--list") => Operation::List,
+        Some(path) if path.starts_with('/') => Operation::Download { path: path.to_owned() },
+        Some(bogus) => {
+            eprintln!("Unrecognized option {:?}", bogus);
+            eprintln!();
+            Operation::Usage
+        }
+    }
+}
+
 fn prompt(msg: &str) -> String {
     eprint!("{}: ", msg);
     io::stderr().flush().unwrap();
@@ -18,6 +37,23 @@ fn prompt(msg: &str) -> String {
 
 fn main() {
     env_logger::init();
+
+    let download_path = match parse_args() {
+        Operation::Usage => {
+            eprintln!("usage: {} [option]", std::env::args().nth(0).unwrap());
+            eprintln!("    options:");
+            eprintln!("        --help | -h      view this text");
+            eprintln!("        --list           list all files in your Dropbox");
+            eprintln!("        <path>           print the file at the given path to stdout");
+            eprintln!();
+            eprintln!("    If a Dropbox OAuth token is given in the environment variable");
+            eprintln!("    DBX_OAUTH_TOKEN, it will be used, otherwise you will be prompted for");
+            eprintln!("    authentication interactively.");
+            std::process::exit(1);
+        },
+        Operation::List => None,
+        Operation::Download { path } => Some(path),
+    };
 
     // Let the user pass the token in an environment variable, or prompt them if that's not found.
     let token = env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
@@ -50,7 +86,7 @@ fn main() {
 
     let client = HyperClient::new(token);
 
-    if let Some(path) = std::env::args().nth(1) {
+    if let Some(path) = download_path {
         eprintln!("downloading file {}", path);
         eprintln!();
         let result = files::download(&client, &files::DownloadArg::new(path), None, None);
