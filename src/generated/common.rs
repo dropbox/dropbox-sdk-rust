@@ -26,10 +26,12 @@ pub enum PathRoot {
     /// belongs to a team.
     Home,
     /// Paths are relative to the authenticating user's root namespace (This results in
-    /// :field:`PathRootError.invalid_root` if the user's root namespace has changed.).
+    /// [`PathRootError::InvalidRoot`](PathRootError::InvalidRoot) if the user's root namespace has
+    /// changed.).
     Root(NamespaceId),
     /// Paths are relative to given namespace id (This results in
-    /// :field:`PathRootError.no_permission` if you don't have access to this namespace.).
+    /// [`PathRootError::NoPermission`](PathRootError::NoPermission) if you don't have access to
+    /// this namespace.).
     NamespaceId(NamespaceId),
     Other,
 }
@@ -253,7 +255,7 @@ impl ::serde::ser::Serialize for RootInfo {
 pub struct TeamRootInfo {
     /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team
     /// root if the user is member of a team with a separate team root. Otherwise it will be same as
-    /// :field:`RootInfo.home_namespace_id`.
+    /// `home_namespace_id`.
     pub root_namespace_id: NamespaceId,
     /// The namespace ID for user's home namespace.
     pub home_namespace_id: NamespaceId,
@@ -375,7 +377,7 @@ impl ::serde::ser::Serialize for TeamRootInfo {
 pub struct UserRootInfo {
     /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team
     /// root if the user is member of a team with a separate team root. Otherwise it will be same as
-    /// :field:`RootInfo.home_namespace_id`.
+    /// `home_namespace_id`.
     pub root_namespace_id: NamespaceId,
     /// The namespace ID for user's home namespace.
     pub home_namespace_id: NamespaceId,

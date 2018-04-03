@@ -115,8 +115,8 @@ pub fn groups_create(
 }
 
 /// Deletes a group. The group is deleted immediately. However the revoking of group-owned resources
-/// may take additional time. Use the :route:`groups/job_status/get` to determine whether this
-/// process has completed. Permission : Team member management.
+/// may take additional time. Use the [`groups_job_status_get()`](groups_job_status_get) to
+/// determine whether this process has completed. Permission : Team member management.
 pub fn groups_delete(
     client: &::client_trait::HttpClient,
     arg: &GroupSelector,
@@ -130,8 +130,8 @@ pub fn groups_delete(
 }
 
 /// Retrieves information about one or more groups. Note that the optional field
-/// :field:`GroupFullInfo.members` is not returned for system-managed groups. Permission : Team
-/// Information.
+/// [`GroupFullInfo::members`](GroupFullInfo) is not returned for system-managed groups. Permission
+/// : Team Information.
 pub fn groups_get_info(
     client: &::client_trait::HttpClient,
     arg: &GroupsSelector,
@@ -144,9 +144,11 @@ pub fn groups_get_info(
         None)
 }
 
-/// Once an async_job_id is returned from :route:`groups/delete`, :route:`groups/members/add` , or
-/// :route:`groups/members/remove` use this method to poll the status of granting/revoking group
-/// members' access to group-owned resources. Permission : Team member management.
+/// Once an async_job_id is returned from [`groups_delete()`](groups_delete),
+/// [`groups_members_add()`](groups_members_add) , or
+/// [`groups_members_remove()`](groups_members_remove) use this method to poll the status of
+/// granting/revoking group members' access to group-owned resources. Permission : Team member
+/// management.
 pub fn groups_job_status_get(
     client: &::client_trait::HttpClient,
     arg: &super::async::PollArg,
@@ -167,8 +169,8 @@ pub fn groups_list(
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/list", arg, None)
 }
 
-/// Once a cursor has been retrieved from :route:`groups/list`, use this to paginate through all
-/// groups. Permission : Team Information.
+/// Once a cursor has been retrieved from [`groups_list()`](groups_list), use this to paginate
+/// through all groups. Permission : Team Information.
 pub fn groups_list_continue(
     client: &::client_trait::HttpClient,
     arg: &GroupsListContinueArg,
@@ -182,8 +184,8 @@ pub fn groups_list_continue(
 }
 
 /// Adds members to a group. The members are added immediately. However the granting of group-owned
-/// resources may take additional time. Use the :route:`groups/job_status/get` to determine whether
-/// this process has completed. Permission : Team member management.
+/// resources may take additional time. Use the [`groups_job_status_get()`](groups_job_status_get)
+/// to determine whether this process has completed. Permission : Team member management.
 pub fn groups_members_add(
     client: &::client_trait::HttpClient,
     arg: &GroupMembersAddArg,
@@ -209,8 +211,8 @@ pub fn groups_members_list(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`groups/members/list`, use this to paginate through
-/// all members of the group. Permission : Team information.
+/// Once a cursor has been retrieved from [`groups_members_list()`](groups_members_list), use this
+/// to paginate through all members of the group. Permission : Team information.
 pub fn groups_members_list_continue(
     client: &::client_trait::HttpClient,
     arg: &GroupsMembersListContinueArg,
@@ -224,10 +226,10 @@ pub fn groups_members_list_continue(
 }
 
 /// Removes members from a group. The members are removed immediately. However the revoking of
-/// group-owned resources may take additional time. Use the :route:`groups/job_status/get` to
-/// determine whether this process has completed. This method permits removing the only owner of a
-/// group, even in cases where this is not possible via the web client. Permission : Team member
-/// management.
+/// group-owned resources may take additional time. Use the
+/// [`groups_job_status_get()`](groups_job_status_get) to determine whether this process has
+/// completed. This method permits removing the only owner of a group, even in cases where this is
+/// not possible via the web client. Permission : Team member management.
 pub fn groups_members_remove(
     client: &::client_trait::HttpClient,
     arg: &GroupMembersRemoveArg,
@@ -443,8 +445,8 @@ pub fn members_add(
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/add", arg, None)
 }
 
-/// Once an async_job_id is returned from :route:`members/add` , use this to poll the status of the
-/// asynchronous request. Permission : Team member management.
+/// Once an async_job_id is returned from [`members_add()`](members_add) , use this to poll the
+/// status of the asynchronous request. Permission : Team member management.
 pub fn members_add_job_status_get(
     client: &::client_trait::HttpClient,
     arg: &super::async::PollArg,
@@ -458,8 +460,8 @@ pub fn members_add_job_status_get(
 }
 
 /// Returns information about multiple team members. Permission : Team information This endpoint
-/// will return :field:`MembersGetInfoItem.id_not_found`, for IDs (or emails) that cannot be matched
-/// to a valid team member.
+/// will return [`MembersGetInfoItem::IdNotFound`](MembersGetInfoItem::IdNotFound), for IDs (or
+/// emails) that cannot be matched to a valid team member.
 pub fn members_get_info(
     client: &::client_trait::HttpClient,
     arg: &MembersGetInfoArgs,
@@ -485,8 +487,8 @@ pub fn members_list(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`members/list`, use this to paginate through all
-/// team members. Permission : Team information.
+/// Once a cursor has been retrieved from [`members_list()`](members_list), use this to paginate
+/// through all team members. Permission : Team information.
 pub fn members_list_continue(
     client: &::client_trait::HttpClient,
     arg: &MembersListContinueArg,
@@ -515,13 +517,14 @@ pub fn members_recover(
 
 /// Removes a member from a team. Permission : Team member management Exactly one of team_member_id,
 /// email, or external_id must be provided to identify the user account. Accounts can be recovered
-/// via :route:`members/recover` for a 7 day period or until the account has been permanently
-/// deleted or transferred to another account (whichever comes first). Calling :route:`members/add`
-/// while a user is still recoverable on your team will return with
-/// :field:`MemberAddResult.user_already_on_team`. Accounts can have their files transferred via the
-/// admin console for a limited time, based on the version history length associated with the team
-/// (120 days for most teams). This endpoint may initiate an asynchronous job. To obtain the final
-/// result of the job, the client should periodically poll :route:`members/remove/job_status/get`.
+/// via [`members_recover()`](members_recover) for a 7 day period or until the account has been
+/// permanently deleted or transferred to another account (whichever comes first). Calling
+/// [`members_add()`](members_add) while a user is still recoverable on your team will return with
+/// [`MemberAddResult::UserAlreadyOnTeam`](MemberAddResult::UserAlreadyOnTeam). Accounts can have
+/// their files transferred via the admin console for a limited time, based on the version history
+/// length associated with the team (120 days for most teams). This endpoint may initiate an
+/// asynchronous job. To obtain the final result of the job, the client should periodically poll
+/// [`members_remove_job_status_get()`](members_remove_job_status_get).
 pub fn members_remove(
     client: &::client_trait::HttpClient,
     arg: &MembersRemoveArg,
@@ -534,8 +537,8 @@ pub fn members_remove(
         None)
 }
 
-/// Once an async_job_id is returned from :route:`members/remove` , use this to poll the status of
-/// the asynchronous request. Permission : Team member management.
+/// Once an async_job_id is returned from [`members_remove()`](members_remove) , use this to poll
+/// the status of the asynchronous request. Permission : Team member management.
 pub fn members_remove_job_status_get(
     client: &::client_trait::HttpClient,
     arg: &super::async::PollArg,
@@ -633,8 +636,8 @@ pub fn namespaces_list(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`namespaces/list`, use this to paginate through all
-/// team-accessible namespaces. Duplicates may occur in the list.
+/// Once a cursor has been retrieved from [`namespaces_list()`](namespaces_list), use this to
+/// paginate through all team-accessible namespaces. Duplicates may occur in the list.
 pub fn namespaces_list_continue(
     client: &::client_trait::HttpClient,
     arg: &TeamNamespacesListContinueArg,
@@ -827,8 +830,8 @@ pub fn team_folder_list(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`team_folder/list`, use this to paginate through
-/// all team folders. Permission : Team member file access.
+/// Once a cursor has been retrieved from [`team_folder_list()`](team_folder_list), use this to
+/// paginate through all team folders. Permission : Team member file access.
 pub fn team_folder_list_continue(
     client: &::client_trait::HttpClient,
     arg: &TeamFolderListContinueArg,
@@ -2935,11 +2938,13 @@ impl ::std::fmt::Display for ExcludedUsersListError {
 pub struct ExcludedUsersListResult {
     pub users: Vec<MemberProfile>,
     /// Is true if there are additional excluded users that have not been returned yet. An
-    /// additional call to :route:`member_space_limits/excluded_users/list/continue` can retrieve
-    /// them.
+    /// additional call to
+    /// [`member_space_limits_excluded_users_list_continue()`](member_space_limits_excluded_users_list_continue)
+    /// can retrieve them.
     pub has_more: bool,
-    /// Pass the cursor into :route:`member_space_limits/excluded_users/list/continue` to obtain
-    /// additional excluded users.
+    /// Pass the cursor into
+    /// [`member_space_limits_excluded_users_list_continue()`](member_space_limits_excluded_users_list_continue)
+    /// to obtain additional excluded users.
     pub cursor: Option<String>,
 }
 
@@ -3414,8 +3419,8 @@ impl ::serde::ser::Serialize for Feature {
     }
 }
 
-/// The values correspond to entries in :type:`Feature`. You may get different value according to
-/// your Dropbox for Business plan.
+/// The values correspond to entries in [`Feature`](Feature). You may get different value according
+/// to your Dropbox for Business plan.
 #[derive(Debug)]
 pub enum FeatureValue {
     UploadApiRateLimit(UploadApiRateLimitValue),
@@ -3506,8 +3511,8 @@ impl ::serde::ser::Serialize for FeatureValue {
 
 #[derive(Debug)]
 pub struct FeaturesGetValuesBatchArg {
-    /// A list of features in :type:`Feature`. If the list is empty, this route will return
-    /// :type:`FeaturesGetValuesBatchError`.
+    /// A list of features in [`Feature`](Feature). If the list is empty, this route will return
+    /// [`FeaturesGetValuesBatchError`](FeaturesGetValuesBatchError).
     pub features: Vec<Feature>,
 }
 
@@ -3595,8 +3600,8 @@ impl ::serde::ser::Serialize for FeaturesGetValuesBatchArg {
 
 #[derive(Debug)]
 pub enum FeaturesGetValuesBatchError {
-    /// At least one :type:`Feature` must be included in the
-    /// :type:`FeaturesGetValuesBatchArg`.features list.
+    /// At least one [`Feature`](Feature) must be included in the
+    /// [`FeaturesGetValuesBatchArg`](FeaturesGetValuesBatchArg).features list.
     EmptyFeaturesList,
     Other,
 }
@@ -5152,7 +5157,7 @@ impl ::serde::ser::Serialize for GroupMemberInfo {
 pub struct GroupMemberSelector {
     /// Specify a group.
     pub group: GroupSelector,
-    /// Identity of a user that is a member of :field:`group`.
+    /// Identity of a user that is a member of `group`.
     pub user: UserSelectorArg,
 }
 
@@ -5249,8 +5254,8 @@ impl ::serde::ser::Serialize for GroupMemberSelector {
     }
 }
 
-/// Error that can be raised when :type:`GroupMemberSelector` is used, and the user is required to
-/// be a member of the specified group.
+/// Error that can be raised when [`GroupMemberSelector`](GroupMemberSelector) is used, and the user
+/// is required to be a member of the specified group.
 #[derive(Debug)]
 pub enum GroupMemberSelectorError {
     /// No matching group found. No groups match the specified group ID.
@@ -5560,11 +5565,12 @@ pub enum GroupMembersAddError {
     GroupNotInTeam,
     /// These members are not part of your team. Currently, you cannot add members to a group if
     /// they are not part of your team, though this may change in a subsequent version. To add new
-    /// members to your Dropbox Business team, use the :route:`members/add` endpoint.
+    /// members to your Dropbox Business team, use the [`members_add()`](members_add) endpoint.
     MembersNotInTeam(Vec<String>),
     /// These users were not found in Dropbox.
     UsersNotFound(Vec<String>),
-    /// A suspended user cannot be added to a group as :field:`GroupAccessType.owner`.
+    /// A suspended user cannot be added to a group as
+    /// [`GroupAccessType::Owner`](GroupAccessType::Owner).
     UserMustBeActiveToBeOwner,
     /// A company-managed group cannot be managed by a user.
     UserCannotBeManagerOfCompanyManagedGroup(Vec<String>),
@@ -5702,7 +5708,8 @@ impl ::std::fmt::Display for GroupMembersAddError {
     }
 }
 
-/// Result returned by :route:`groups/members/add` and :route:`groups/members/remove`.
+/// Result returned by [`groups_members_add()`](groups_members_add) and
+/// [`groups_members_remove()`](groups_members_remove).
 #[derive(Debug)]
 pub struct GroupMembersChangeResult {
     /// The group info after member change operation has been performed.
@@ -6057,7 +6064,7 @@ impl ::std::fmt::Display for GroupMembersRemoveError {
 pub struct GroupMembersSelector {
     /// Specify a group.
     pub group: GroupSelector,
-    /// A list of users that are members of :field:`group`.
+    /// A list of users that are members of `group`.
     pub users: UsersSelectorArg,
 }
 
@@ -6154,8 +6161,8 @@ impl ::serde::ser::Serialize for GroupMembersSelector {
     }
 }
 
-/// Error that can be raised when :type:`GroupMembersSelector` is used, and the users are required
-/// to be members of the specified group.
+/// Error that can be raised when [`GroupMembersSelector`](GroupMembersSelector) is used, and the
+/// users are required to be members of the specified group.
 #[derive(Debug)]
 pub enum GroupMembersSelectorError {
     /// No matching group found. No groups match the specified group ID.
@@ -6242,7 +6249,7 @@ impl ::std::fmt::Display for GroupMembersSelectorError {
 pub struct GroupMembersSetAccessTypeArg {
     /// Specify a group.
     pub group: GroupSelector,
-    /// Identity of a user that is a member of :field:`group`.
+    /// Identity of a user that is a member of `group`.
     pub user: UserSelectorArg,
     /// New group access type the user will have.
     pub access_type: GroupAccessType,
@@ -6444,7 +6451,7 @@ impl ::serde::ser::Serialize for GroupSelector {
     }
 }
 
-/// Error that can be raised when :type:`GroupSelector` is used.
+/// Error that can be raised when [`GroupSelector`](GroupSelector) is used.
 #[derive(Debug)]
 pub enum GroupSelectorError {
     /// No matching group found. No groups match the specified group ID.
@@ -6507,8 +6514,8 @@ impl ::std::fmt::Display for GroupSelectorError {
     }
 }
 
-/// Error that can be raised when :type:`GroupSelector` is used and team groups are disallowed from
-/// being used.
+/// Error that can be raised when [`GroupSelector`](GroupSelector) is used and team groups are
+/// disallowed from being used.
 #[derive(Debug)]
 pub enum GroupSelectorWithTeamGroupError {
     /// No matching group found. No groups match the specified group ID.
@@ -6916,9 +6923,9 @@ impl ::std::fmt::Display for GroupsGetInfoError {
 
 #[derive(Debug)]
 pub enum GroupsGetInfoItem {
-    /// An ID that was provided as a parameter to :route:`groups/get_info`, and did not match a
-    /// corresponding group. The ID can be a group ID, or an external ID, depending on how the
-    /// method was called.
+    /// An ID that was provided as a parameter to [`groups_get_info()`](groups_get_info), and did
+    /// not match a corresponding group. The ID can be a group ID, or an external ID, depending on
+    /// how the method was called.
     IdNotFound(String),
     /// Info about a group.
     GroupInfo(GroupFullInfo),
@@ -7210,10 +7217,11 @@ impl ::std::fmt::Display for GroupsListContinueError {
 #[derive(Debug)]
 pub struct GroupsListResult {
     pub groups: Vec<super::team_common::GroupSummary>,
-    /// Pass the cursor into :route:`groups/list/continue` to obtain the additional groups.
+    /// Pass the cursor into [`groups_list_continue()`](groups_list_continue) to obtain the
+    /// additional groups.
     pub cursor: String,
     /// Is true if there are additional groups that have not been returned yet. An additional call
-    /// to :route:`groups/list/continue` can retrieve them.
+    /// to [`groups_list_continue()`](groups_list_continue) can retrieve them.
     pub has_more: bool,
 }
 
@@ -7584,11 +7592,11 @@ impl ::std::fmt::Display for GroupsMembersListContinueError {
 #[derive(Debug)]
 pub struct GroupsMembersListResult {
     pub members: Vec<GroupMemberInfo>,
-    /// Pass the cursor into :route:`groups/members/list/continue` to obtain additional group
-    /// members.
+    /// Pass the cursor into [`groups_members_list_continue()`](groups_members_list_continue) to
+    /// obtain additional group members.
     pub cursor: String,
     /// Is true if there are additional group members that have not been returned yet. An additional
-    /// call to :route:`groups/members/list/continue` can retrieve them.
+    /// call to [`groups_members_list_continue()`](groups_members_list_continue) can retrieve them.
     pub has_more: bool,
 }
 
@@ -7851,7 +7859,7 @@ impl ::serde::ser::Serialize for GroupsSelector {
     }
 }
 
-/// The value for :field:`Feature.has_team_file_events`.
+/// The value for [`Feature::HasTeamFileEvents`](Feature::HasTeamFileEvents).
 #[derive(Debug)]
 pub enum HasTeamFileEventsValue {
     /// Does this team have file events.
@@ -7909,7 +7917,7 @@ impl ::serde::ser::Serialize for HasTeamFileEventsValue {
     }
 }
 
-/// The value for :field:`Feature.has_team_shared_dropbox`.
+/// The value for [`Feature::HasTeamSharedDropbox`](Feature::HasTeamSharedDropbox).
 #[derive(Debug)]
 pub enum HasTeamSharedDropboxValue {
     /// Does this team have a team shared dropbox.
@@ -8133,7 +8141,8 @@ impl ::serde::ser::Serialize for ListMemberAppsArg {
     }
 }
 
-/// Error returned by :route:`linked_apps/list_member_linked_apps`.
+/// Error returned by
+/// [`linked_apps_list_member_linked_apps()`](linked_apps_list_member_linked_apps).
 #[derive(Debug)]
 pub enum ListMemberAppsError {
     /// Member not found.
@@ -8590,12 +8599,14 @@ impl ::serde::ser::Serialize for ListMemberDevicesResult {
     }
 }
 
-/// Arguments for :route:`linked_apps/list_members_linked_apps`.
+/// Arguments for [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps).
 #[derive(Debug)]
 pub struct ListMembersAppsArg {
-    /// At the first call to the :route:`linked_apps/list_members_linked_apps` the cursor shouldn't
-    /// be passed. Then, if the result of the call includes a cursor, the following requests should
-    /// include the received cursors in order to receive the next sub list of the team applications.
+    /// At the first call to the
+    /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps) the cursor
+    /// shouldn't be passed. Then, if the result of the call includes a cursor, the following
+    /// requests should include the received cursors in order to receive the next sub list of the
+    /// team applications.
     pub cursor: Option<String>,
 }
 
@@ -8669,12 +8680,13 @@ impl ::serde::ser::Serialize for ListMembersAppsArg {
     }
 }
 
-/// Error returned by :route:`linked_apps/list_members_linked_apps`.
+/// Error returned by
+/// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps).
 #[derive(Debug)]
 pub enum ListMembersAppsError {
     /// Indicates that the cursor has been invalidated. Call
-    /// :route:`linked_apps/list_members_linked_apps` again with an empty cursor to obtain a new
-    /// cursor.
+    /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps) again with
+    /// an empty cursor to obtain a new cursor.
     Reset,
     Other,
 }
@@ -8734,16 +8746,19 @@ impl ::std::fmt::Display for ListMembersAppsError {
     }
 }
 
-/// Information returned by :route:`linked_apps/list_members_linked_apps`.
+/// Information returned by
+/// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps).
 #[derive(Debug)]
 pub struct ListMembersAppsResult {
     /// The linked applications of each member of the team.
     pub apps: Vec<MemberLinkedApps>,
     /// If true, then there are more apps available. Pass the cursor to
-    /// :route:`linked_apps/list_members_linked_apps` to retrieve the rest.
+    /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps) to retrieve
+    /// the rest.
     pub has_more: bool,
-    /// Pass the cursor into :route:`linked_apps/list_members_linked_apps` to receive the next sub
-    /// list of team's applications.
+    /// Pass the cursor into
+    /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps) to receive
+    /// the next sub list of team's applications.
     pub cursor: Option<String>,
 }
 
@@ -8858,9 +8873,10 @@ impl ::serde::ser::Serialize for ListMembersAppsResult {
 
 #[derive(Debug)]
 pub struct ListMembersDevicesArg {
-    /// At the first call to the :route:`devices/list_members_devices` the cursor shouldn't be
-    /// passed. Then, if the result of the call includes a cursor, the following requests should
-    /// include the received cursors in order to receive the next sub list of team devices.
+    /// At the first call to the [`devices_list_members_devices()`](devices_list_members_devices)
+    /// the cursor shouldn't be passed. Then, if the result of the call includes a cursor, the
+    /// following requests should include the received cursors in order to receive the next sub list
+    /// of team devices.
     pub cursor: Option<String>,
     /// Whether to list web sessions of the team members.
     pub include_web_sessions: bool,
@@ -8975,8 +8991,9 @@ impl ::serde::ser::Serialize for ListMembersDevicesArg {
 
 #[derive(Debug)]
 pub enum ListMembersDevicesError {
-    /// Indicates that the cursor has been invalidated. Call :route:`devices/list_members_devices`
-    /// again with an empty cursor to obtain a new cursor.
+    /// Indicates that the cursor has been invalidated. Call
+    /// [`devices_list_members_devices()`](devices_list_members_devices) again with an empty cursor
+    /// to obtain a new cursor.
     Reset,
     Other,
 }
@@ -9041,10 +9058,10 @@ pub struct ListMembersDevicesResult {
     /// The devices of each member of the team.
     pub devices: Vec<MemberDevices>,
     /// If true, then there are more devices available. Pass the cursor to
-    /// :route:`devices/list_members_devices` to retrieve the rest.
+    /// [`devices_list_members_devices()`](devices_list_members_devices) to retrieve the rest.
     pub has_more: bool,
-    /// Pass the cursor into :route:`devices/list_members_devices` to receive the next sub list of
-    /// team's devices.
+    /// Pass the cursor into [`devices_list_members_devices()`](devices_list_members_devices) to
+    /// receive the next sub list of team's devices.
     pub cursor: Option<String>,
 }
 
@@ -9157,12 +9174,14 @@ impl ::serde::ser::Serialize for ListMembersDevicesResult {
     }
 }
 
-/// Arguments for :route:`linked_apps/list_team_linked_apps`.
+/// Arguments for [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps).
 #[derive(Debug)]
 pub struct ListTeamAppsArg {
-    /// At the first call to the :route:`linked_apps/list_team_linked_apps` the cursor shouldn't be
-    /// passed. Then, if the result of the call includes a cursor, the following requests should
-    /// include the received cursors in order to receive the next sub list of the team applications.
+    /// At the first call to the
+    /// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps) the cursor
+    /// shouldn't be passed. Then, if the result of the call includes a cursor, the following
+    /// requests should include the received cursors in order to receive the next sub list of the
+    /// team applications.
     pub cursor: Option<String>,
 }
 
@@ -9236,12 +9255,12 @@ impl ::serde::ser::Serialize for ListTeamAppsArg {
     }
 }
 
-/// Error returned by :route:`linked_apps/list_team_linked_apps`.
+/// Error returned by [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps).
 #[derive(Debug)]
 pub enum ListTeamAppsError {
     /// Indicates that the cursor has been invalidated. Call
-    /// :route:`linked_apps/list_team_linked_apps` again with an empty cursor to obtain a new
-    /// cursor.
+    /// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps) again with an
+    /// empty cursor to obtain a new cursor.
     Reset,
     Other,
 }
@@ -9301,16 +9320,19 @@ impl ::std::fmt::Display for ListTeamAppsError {
     }
 }
 
-/// Information returned by :route:`linked_apps/list_team_linked_apps`.
+/// Information returned by
+/// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps).
 #[derive(Debug)]
 pub struct ListTeamAppsResult {
     /// The linked applications of each member of the team.
     pub apps: Vec<MemberLinkedApps>,
     /// If true, then there are more apps available. Pass the cursor to
-    /// :route:`linked_apps/list_team_linked_apps` to retrieve the rest.
+    /// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps) to retrieve the
+    /// rest.
     pub has_more: bool,
-    /// Pass the cursor into :route:`linked_apps/list_team_linked_apps` to receive the next sub list
-    /// of team's applications.
+    /// Pass the cursor into
+    /// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps) to receive the
+    /// next sub list of team's applications.
     pub cursor: Option<String>,
 }
 
@@ -9425,9 +9447,10 @@ impl ::serde::ser::Serialize for ListTeamAppsResult {
 
 #[derive(Debug)]
 pub struct ListTeamDevicesArg {
-    /// At the first call to the :route:`devices/list_team_devices` the cursor shouldn't be passed.
-    /// Then, if the result of the call includes a cursor, the following requests should include the
-    /// received cursors in order to receive the next sub list of team devices.
+    /// At the first call to the [`devices_list_team_devices()`](devices_list_team_devices) the
+    /// cursor shouldn't be passed. Then, if the result of the call includes a cursor, the following
+    /// requests should include the received cursors in order to receive the next sub list of team
+    /// devices.
     pub cursor: Option<String>,
     /// Whether to list web sessions of the team members.
     pub include_web_sessions: bool,
@@ -9542,8 +9565,9 @@ impl ::serde::ser::Serialize for ListTeamDevicesArg {
 
 #[derive(Debug)]
 pub enum ListTeamDevicesError {
-    /// Indicates that the cursor has been invalidated. Call :route:`devices/list_team_devices`
-    /// again with an empty cursor to obtain a new cursor.
+    /// Indicates that the cursor has been invalidated. Call
+    /// [`devices_list_team_devices()`](devices_list_team_devices) again with an empty cursor to
+    /// obtain a new cursor.
     Reset,
     Other,
 }
@@ -9608,10 +9632,10 @@ pub struct ListTeamDevicesResult {
     /// The devices of each member of the team.
     pub devices: Vec<MemberDevices>,
     /// If true, then there are more devices available. Pass the cursor to
-    /// :route:`devices/list_team_devices` to retrieve the rest.
+    /// [`devices_list_team_devices()`](devices_list_team_devices) to retrieve the rest.
     pub has_more: bool,
-    /// Pass the cursor into :route:`devices/list_team_devices` to receive the next sub list of
-    /// team's devices.
+    /// Pass the cursor into [`devices_list_team_devices()`](devices_list_team_devices) to receive
+    /// the next sub list of team's devices.
     pub cursor: Option<String>,
 }
 
@@ -10917,8 +10941,8 @@ pub enum MembersAddJobStatus {
     /// The asynchronous job is still in progress.
     InProgress,
     /// The asynchronous job has finished. For each member that was specified in the parameter
-    /// :type:`MembersAddArg` that was provided to :route:`members/add`, a corresponding item is
-    /// returned in this list.
+    /// [`MembersAddArg`](MembersAddArg) that was provided to [`members_add()`](members_add), a
+    /// corresponding item is returned in this list.
     Complete(Vec<MemberAddResult>),
     /// The asynchronous job returned an error. The string contains an error message.
     Failed(String),
@@ -11387,12 +11411,12 @@ impl ::std::fmt::Display for MembersGetInfoError {
 }
 
 /// Describes a result obtained for a single user whose id was specified in the parameter of
-/// :route:`members/get_info`.
+/// [`members_get_info()`](members_get_info).
 #[derive(Debug)]
 pub enum MembersGetInfoItem {
-    /// An ID that was provided as a parameter to :route:`members/get_info`, and did not match a
-    /// corresponding user. This might be a team_member_id, an email, or an external ID, depending
-    /// on how the method was called.
+    /// An ID that was provided as a parameter to [`members_get_info()`](members_get_info), and did
+    /// not match a corresponding user. This might be a team_member_id, an email, or an external ID,
+    /// depending on how the method was called.
     IdNotFound(String),
     /// Info about a team member.
     MemberInfo(TeamMemberInfo),
@@ -11749,10 +11773,11 @@ impl ::std::fmt::Display for MembersListError {
 pub struct MembersListResult {
     /// List of team members.
     pub members: Vec<TeamMemberInfo>,
-    /// Pass the cursor into :route:`members/list/continue` to obtain the additional members.
+    /// Pass the cursor into [`members_list_continue()`](members_list_continue) to obtain the
+    /// additional members.
     pub cursor: String,
     /// Is true if there are additional team members that have not been returned yet. An additional
-    /// call to :route:`members/list/continue` can retrieve them.
+    /// call to [`members_list_continue()`](members_list_continue) can retrieve them.
     pub has_more: bool,
 }
 
@@ -14931,7 +14956,8 @@ impl ::serde::ser::Serialize for RevokeLinkedApiAppBatchArg {
     }
 }
 
-/// Error returned by :route:`linked_apps/revoke_linked_app_batch`.
+/// Error returned by
+/// [`linked_apps_revoke_linked_app_batch()`](linked_apps_revoke_linked_app_batch).
 #[derive(Debug)]
 pub enum RevokeLinkedAppBatchError {
     Other,
@@ -15069,7 +15095,7 @@ impl ::serde::ser::Serialize for RevokeLinkedAppBatchResult {
     }
 }
 
-/// Error returned by :route:`linked_apps/revoke_linked_app`.
+/// Error returned by [`linked_apps_revoke_linked_app()`](linked_apps_revoke_linked_app).
 #[derive(Debug)]
 pub enum RevokeLinkedAppError {
     /// Application not found.
@@ -15898,7 +15924,8 @@ pub enum TeamFolderArchiveJobStatus {
     InProgress,
     /// The archive job has finished. The value is the metadata for the resulting team folder.
     Complete(TeamFolderMetadata),
-    /// Error occurred while performing an asynchronous job from :route:`team_folder/archive`.
+    /// Error occurred while performing an asynchronous job from
+    /// [`team_folder_archive()`](team_folder_archive).
     Failed(TeamFolderArchiveError),
 }
 
@@ -16204,8 +16231,8 @@ impl ::std::fmt::Display for TeamFolderCreateError {
 
 #[derive(Debug)]
 pub enum TeamFolderGetInfoItem {
-    /// An ID that was provided as a parameter to :route:`team_folder/get_info` did not match any of
-    /// the team's team folders.
+    /// An ID that was provided as a parameter to [`team_folder_get_info()`](team_folder_get_info)
+    /// did not match any of the team's team folders.
     IdNotFound(String),
     /// Properties of a team folder.
     TeamFolderMetadata(TeamFolderMetadata),
@@ -16839,15 +16866,17 @@ impl ::serde::ser::Serialize for TeamFolderListError {
     }
 }
 
-/// Result for :route:`team_folder/list` and :route:`team_folder/list/continue`.
+/// Result for [`team_folder_list()`](team_folder_list) and
+/// [`team_folder_list_continue()`](team_folder_list_continue).
 #[derive(Debug)]
 pub struct TeamFolderListResult {
     /// List of all team folders in the authenticated team.
     pub team_folders: Vec<TeamFolderMetadata>,
-    /// Pass the cursor into :route:`team_folder/list/continue` to obtain additional team folders.
+    /// Pass the cursor into [`team_folder_list_continue()`](team_folder_list_continue) to obtain
+    /// additional team folders.
     pub cursor: String,
     /// Is true if there are additional team folders that have not been returned yet. An additional
-    /// call to :route:`team_folder/list/continue` can retrieve them.
+    /// call to [`team_folder_list_continue()`](team_folder_list_continue) can retrieve them.
     pub has_more: bool,
 }
 
@@ -18428,13 +18457,13 @@ impl ::std::fmt::Display for TeamNamespacesListContinueError {
     }
 }
 
-/// Result for :route:`namespaces/list`.
+/// Result for [`namespaces_list()`](namespaces_list).
 #[derive(Debug)]
 pub struct TeamNamespacesListResult {
     /// List of all namespaces the team can access.
     pub namespaces: Vec<NamespaceMetadata>,
-    /// Pass the cursor into :route:`namespaces/list/continue` to obtain additional namespaces. Note
-    /// that duplicate namespaces may be returned.
+    /// Pass the cursor into [`namespaces_list_continue()`](namespaces_list_continue) to obtain
+    /// additional namespaces. Note that duplicate namespaces may be returned.
     pub cursor: String,
     /// Is true if there are additional namespaces that have not been returned yet.
     pub has_more: bool,
@@ -18544,7 +18573,7 @@ impl ::serde::ser::Serialize for TeamNamespacesListResult {
     }
 }
 
-/// Error returned by :route:`token/get_authenticated_admin`.
+/// Error returned by [`token_get_authenticated_admin()`](token_get_authenticated_admin).
 #[derive(Debug)]
 pub enum TokenGetAuthenticatedAdminError {
     /// The current token is not associated with a team admin, because mappings were not recorded
@@ -18620,7 +18649,7 @@ impl ::std::fmt::Display for TokenGetAuthenticatedAdminError {
     }
 }
 
-/// Results for :route:`token/get_authenticated_admin`.
+/// Results for [`token_get_authenticated_admin()`](token_get_authenticated_admin).
 #[derive(Debug)]
 pub struct TokenGetAuthenticatedAdminResult {
     /// The admin who authorized the token.
@@ -18709,7 +18738,7 @@ impl ::serde::ser::Serialize for TokenGetAuthenticatedAdminResult {
     }
 }
 
-/// The value for :field:`Feature.upload_api_rate_limit`.
+/// The value for [`Feature::UploadApiRateLimit`](Feature::UploadApiRateLimit).
 #[derive(Debug)]
 pub enum UploadApiRateLimitValue {
     /// This team has unlimited upload API quota. So far both server version account and legacy
@@ -19070,7 +19099,8 @@ impl ::serde::ser::Serialize for UserSelectorArg {
     }
 }
 
-/// Error that can be returned whenever a struct derived from :type:`UserSelectorArg` is used.
+/// Error that can be returned whenever a struct derived from [`UserSelectorArg`](UserSelectorArg)
+/// is used.
 #[derive(Debug)]
 pub enum UserSelectorError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on

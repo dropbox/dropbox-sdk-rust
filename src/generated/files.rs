@@ -39,9 +39,9 @@ pub fn alpha_get_metadata(
 }
 
 /// Create a new file with the contents provided in the request. Note that this endpoint is part of
-/// the properties API alpha and is slightly different from :route:`upload`. Do not use this to
+/// the properties API alpha and is slightly different from [`upload()`](upload). Do not use this to
 /// upload a file larger than 150 MB. Instead, create an upload session with
-/// :route:`upload_session/start`.
+/// [`upload_session_start()`](upload_session_start).
 pub fn alpha_upload(
     client: &::client_trait::HttpClient,
     arg: &CommitInfoWithProperties,
@@ -67,11 +67,12 @@ pub fn copy(
 }
 
 /// Copy multiple files or folders to different locations at once in the user's Dropbox. If
-/// :field:`RelocationBatchArg.allow_shared_folder` is false, this route is atomic. If on entry
-/// failes, the whole transaction will abort. If :field:`RelocationBatchArg.allow_shared_folder` is
-/// true, not atomicity is guaranteed, but you will be able to copy the contents of shared folders
-/// to new locations. This route will return job ID immediately and do the async copy job in
-/// background. Please use :route:`copy_batch/check` to check the job status.
+/// [`RelocationBatchArg::allow_shared_folder`](RelocationBatchArg) is false, this route is atomic.
+/// If on entry failes, the whole transaction will abort. If
+/// [`RelocationBatchArg::allow_shared_folder`](RelocationBatchArg) is true, not atomicity is
+/// guaranteed, but you will be able to copy the contents of shared folders to new locations. This
+/// route will return job ID immediately and do the async copy job in background. Please use
+/// [`copy_batch_check()`](copy_batch_check) to check the job status.
 pub fn copy_batch(
     client: &::client_trait::HttpClient,
     arg: &RelocationBatchArg,
@@ -79,8 +80,8 @@ pub fn copy_batch(
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/copy_batch", arg, None)
 }
 
-/// Returns the status of an asynchronous job for :route:`copy_batch`. If success, it returns list
-/// of results for each entry.
+/// Returns the status of an asynchronous job for [`copy_batch()`](copy_batch). If success, it
+/// returns list of results for each entry.
 pub fn copy_batch_check(
     client: &::client_trait::HttpClient,
     arg: &super::async::PollArg,
@@ -94,7 +95,8 @@ pub fn copy_batch_check(
 }
 
 /// Get a copy reference to a file or folder. This reference string can be used to save that file or
-/// folder to another user's Dropbox by passing it to :route:`copy_reference/save`.
+/// folder to another user's Dropbox by passing it to
+/// [`copy_reference_save()`](copy_reference_save).
 pub fn copy_reference_get(
     client: &::client_trait::HttpClient,
     arg: &GetCopyReferenceArg,
@@ -107,7 +109,8 @@ pub fn copy_reference_get(
         None)
 }
 
-/// Save a copy reference returned by :route:`copy_reference/get` to the user's Dropbox.
+/// Save a copy reference returned by [`copy_reference_get()`](copy_reference_get) to the user's
+/// Dropbox.
 pub fn copy_reference_save(
     client: &::client_trait::HttpClient,
     arg: &SaveCopyReferenceArg,
@@ -157,8 +160,9 @@ pub fn create_folder_v2(
 
 /// Delete the file or folder at a given path. If the path is a folder, all its contents will be
 /// deleted too. A successful response indicates that the file or folder was deleted. The returned
-/// metadata will be the corresponding :type:`FileMetadata` or :type:`FolderMetadata` for the item
-/// at time of deletion, and not a :type:`DeletedMetadata` object.
+/// metadata will be the corresponding [`FileMetadata`](FileMetadata) or
+/// [`FolderMetadata`](FolderMetadata) for the item at time of deletion, and not a
+/// [`DeletedMetadata`](DeletedMetadata) object.
 pub fn delete(
     client: &::client_trait::HttpClient,
     arg: &DeleteArg,
@@ -167,8 +171,8 @@ pub fn delete(
 }
 
 /// Delete multiple files/folders at once. This route is asynchronous, which returns a job ID
-/// immediately and runs the delete batch asynchronously. Use :route:`delete_batch/check` to check
-/// the job status.
+/// immediately and runs the delete batch asynchronously. Use
+/// [`delete_batch_check()`](delete_batch_check) to check the job status.
 pub fn delete_batch(
     client: &::client_trait::HttpClient,
     arg: &DeleteBatchArg,
@@ -181,8 +185,8 @@ pub fn delete_batch(
         None)
 }
 
-/// Returns the status of an asynchronous job for :route:`delete_batch`. If success, it returns list
-/// of result for each entry.
+/// Returns the status of an asynchronous job for [`delete_batch()`](delete_batch). If success, it
+/// returns list of result for each entry.
 pub fn delete_batch_check(
     client: &::client_trait::HttpClient,
     arg: &super::async::PollArg,
@@ -197,8 +201,9 @@ pub fn delete_batch_check(
 
 /// Delete the file or folder at a given path. If the path is a folder, all its contents will be
 /// deleted too. A successful response indicates that the file or folder was deleted. The returned
-/// metadata will be the corresponding :type:`FileMetadata` or :type:`FolderMetadata` for the item
-/// at time of deletion, and not a :type:`DeletedMetadata` object.
+/// metadata will be the corresponding [`FileMetadata`](FileMetadata) or
+/// [`FolderMetadata`](FolderMetadata) for the item at time of deletion, and not a
+/// [`DeletedMetadata`](DeletedMetadata) object.
 pub fn delete_v2(
     client: &::client_trait::HttpClient,
     arg: &DeleteArg,
@@ -323,24 +328,26 @@ pub fn get_thumbnail_batch(
         None)
 }
 
-/// Starts returning the contents of a folder. If the result's :field:`ListFolderResult.has_more`
-/// field is :val:`true`, call :route:`list_folder/continue` with the returned
-/// :field:`ListFolderResult.cursor` to retrieve more entries. If you're using
-/// :field:`ListFolderArg.recursive` set to :val:`true` to keep a local cache of the contents of a
-/// Dropbox account, iterate through each entry in order and process them as follows to keep your
-/// local state in sync: For each :type:`FileMetadata`, store the new entry at the given path in
-/// your local state. If the required parent folders don't exist yet, create them. If there's
-/// already something else at the given path, replace it and remove all its children. For each
-/// :type:`FolderMetadata`, store the new entry at the given path in your local state. If the
-/// required parent folders don't exist yet, create them. If there's already something else at the
-/// given path, replace it but leave the children as they are. Check the new entry's
-/// :field:`FolderSharingInfo.read_only` and set all its children's read-only statuses to match. For
-/// each :type:`DeletedMetadata`, if your local state has something at the given path, remove it and
-/// all its children. If there's nothing at the given path, ignore this entry. Note:
-/// :type:`auth.RateLimitError` may be returned if multiple :route:`list_folder` or
-/// :route:`list_folder/continue` calls with same parameters are made simultaneously by same API app
-/// for same user. If your app implements retry logic, please hold off the retry until the previous
-/// request finishes.
+/// Starts returning the contents of a folder. If the result's
+/// [`ListFolderResult::has_more`](ListFolderResult) field is `true`, call
+/// [`list_folder_continue()`](list_folder_continue) with the returned
+/// [`ListFolderResult::cursor`](ListFolderResult) to retrieve more entries. If you're using
+/// [`ListFolderArg::recursive`](ListFolderArg) set to `true` to keep a local cache of the contents
+/// of a Dropbox account, iterate through each entry in order and process them as follows to keep
+/// your local state in sync: For each [`FileMetadata`](FileMetadata), store the new entry at the
+/// given path in your local state. If the required parent folders don't exist yet, create them. If
+/// there's already something else at the given path, replace it and remove all its children. For
+/// each [`FolderMetadata`](FolderMetadata), store the new entry at the given path in your local
+/// state. If the required parent folders don't exist yet, create them. If there's already something
+/// else at the given path, replace it but leave the children as they are. Check the new entry's
+/// [`FolderSharingInfo::read_only`](FolderSharingInfo) and set all its children's read-only
+/// statuses to match. For each [`DeletedMetadata`](DeletedMetadata), if your local state has
+/// something at the given path, remove it and all its children. If there's nothing at the given
+/// path, ignore this entry. Note:
+/// [`auth::super::auth::RateLimitError`](super::auth::super::auth::RateLimitError) may be returned
+/// if multiple [`list_folder()`](list_folder) or [`list_folder_continue()`](list_folder_continue)
+/// calls with same parameters are made simultaneously by same API app for same user. If your app
+/// implements retry logic, please hold off the retry until the previous request finishes.
 pub fn list_folder(
     client: &::client_trait::HttpClient,
     arg: &ListFolderArg,
@@ -353,9 +360,9 @@ pub fn list_folder(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`list_folder`, use this to paginate through all
-/// files and retrieve updates to the folder, following the same rules as documented for
-/// :route:`list_folder`.
+/// Once a cursor has been retrieved from [`list_folder()`](list_folder), use this to paginate
+/// through all files and retrieve updates to the folder, following the same rules as documented for
+/// [`list_folder()`](list_folder).
 pub fn list_folder_continue(
     client: &::client_trait::HttpClient,
     arg: &ListFolderContinueArg,
@@ -368,10 +375,10 @@ pub fn list_folder_continue(
         None)
 }
 
-/// A way to quickly get a cursor for the folder's state. Unlike :route:`list_folder`,
-/// :route:`list_folder/get_latest_cursor` doesn't return any entries. This endpoint is for app
-/// which only needs to know about new files and modifications and doesn't need to know about files
-/// that already exist in Dropbox.
+/// A way to quickly get a cursor for the folder's state. Unlike [`list_folder()`](list_folder),
+/// [`list_folder_get_latest_cursor()`](list_folder_get_latest_cursor) doesn't return any entries.
+/// This endpoint is for app which only needs to know about new files and modifications and doesn't
+/// need to know about files that already exist in Dropbox.
 pub fn list_folder_get_latest_cursor(
     client: &::client_trait::HttpClient,
     arg: &ListFolderArg,
@@ -385,11 +392,11 @@ pub fn list_folder_get_latest_cursor(
 }
 
 /// A longpoll endpoint to wait for changes on an account. In conjunction with
-/// :route:`list_folder/continue`, this call gives you a low-latency way to monitor an account for
-/// file changes. The connection will block until there are changes available or a timeout occurs.
-/// This endpoint is useful mostly for client-side apps. If you're looking for server-side
-/// notifications, check out our :link:`webhooks documentation
-/// https://www.dropbox.com/developers/reference/webhooks`.
+/// [`list_folder_continue()`](list_folder_continue), this call gives you a low-latency way to
+/// monitor an account for file changes. The connection will block until there are changes available
+/// or a timeout occurs. This endpoint is useful mostly for client-side apps. If you're looking for
+/// server-side notifications, check out our [webhooks
+/// documentation](https://www.dropbox.com/developers/reference/webhooks).
 pub fn list_folder_longpoll(
     client: &::client_trait::HttpClient,
     arg: &ListFolderLongpollArg,
@@ -405,10 +412,11 @@ pub fn list_folder_longpoll(
 /// Returns revisions for files based on a file path or a file id. The file path or file id is
 /// identified from the latest file entry at the given file path or id. This end point allows your
 /// app to query either by file path or file id by setting the mode parameter appropriately. In the
-/// :field:`ListRevisionsMode.path` (default) mode, all revisions at the same file path as the
-/// latest file entry are returned. If revisions with the same file id are desired, then mode must
-/// be set to :field:`ListRevisionsMode.id`. The :field:`ListRevisionsMode.id` mode is useful to
-/// retrieve revisions for a given file across moves or renames.
+/// [`ListRevisionsMode::Path`](ListRevisionsMode::Path) (default) mode, all revisions at the same
+/// file path as the latest file entry are returned. If revisions with the same file id are desired,
+/// then mode must be set to [`ListRevisionsMode::Id`](ListRevisionsMode::Id). The
+/// [`ListRevisionsMode::Id`](ListRevisionsMode::Id) mode is useful to retrieve revisions for a
+/// given file across moves or renames.
 pub fn list_revisions(
     client: &::client_trait::HttpClient,
     arg: &ListRevisionsArg,
@@ -433,7 +441,7 @@ pub fn do_move(
 /// Move multiple files or folders to different locations at once in the user's Dropbox. This route
 /// is 'all or nothing', which means if one entry fails, the whole transaction will abort. This
 /// route will return job ID immediately and do the async moving job in background. Please use
-/// :route:`move_batch/check` to check the job status.
+/// [`move_batch_check()`](move_batch_check) to check the job status.
 pub fn move_batch(
     client: &::client_trait::HttpClient,
     arg: &RelocationBatchArg,
@@ -441,8 +449,8 @@ pub fn move_batch(
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/move_batch", arg, None)
 }
 
-/// Returns the status of an asynchronous job for :route:`move_batch`. If success, it returns list
-/// of results for each entry.
+/// Returns the status of an asynchronous job for [`move_batch()`](move_batch). If success, it
+/// returns list of results for each entry.
 pub fn move_batch_check(
     client: &::client_trait::HttpClient,
     arg: &super::async::PollArg,
@@ -567,7 +575,7 @@ pub fn save_url(
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/save_url", arg, None)
 }
 
-/// Check the status of a :route:`save_url` job.
+/// Check the status of a [`save_url()`](save_url) job.
 pub fn save_url_check_job_status(
     client: &::client_trait::HttpClient,
     arg: &super::async::PollArg,
@@ -590,7 +598,8 @@ pub fn search(
 }
 
 /// Create a new file with the contents provided in the request. Do not use this to upload a file
-/// larger than 150 MB. Instead, create an upload session with :route:`upload_session/start`.
+/// larger than 150 MB. Instead, create an upload session with
+/// [`upload_session_start()`](upload_session_start).
 pub fn upload(
     client: &::client_trait::HttpClient,
     arg: &CommitInfo,
@@ -657,16 +666,19 @@ pub fn upload_session_finish(
 }
 
 /// This route helps you commit many files at once into a user's Dropbox. Use
-/// :route:`upload_session/start` and :route:`upload_session/append_v2` to upload file contents. We
-/// recommend uploading many files in parallel to increase throughput. Once the file contents have
-/// been uploaded, rather than calling :route:`upload_session/finish`, use this route to finish all
-/// your upload sessions in a single request. :field:`UploadSessionStartArg.close` or
-/// :field:`UploadSessionAppendArg.close` needs to be true for the last
-/// :route:`upload_session/start` or :route:`upload_session/append_v2` call. This route will return
-/// a job_id immediately and do the async commit job in background. Use
-/// :route:`upload_session/finish_batch/check` to check the job status. For the same account, this
-/// route should be executed serially. That means you should not start the next job before current
-/// job finishes. We allow up to 1000 entries in a single request.
+/// [`upload_session_start()`](upload_session_start) and
+/// [`upload_session_append_v2()`](upload_session_append_v2) to upload file contents. We recommend
+/// uploading many files in parallel to increase throughput. Once the file contents have been
+/// uploaded, rather than calling [`upload_session_finish()`](upload_session_finish), use this route
+/// to finish all your upload sessions in a single request.
+/// [`UploadSessionStartArg::close`](UploadSessionStartArg) or
+/// [`UploadSessionAppendArg::close`](UploadSessionAppendArg) needs to be true for the last
+/// [`upload_session_start()`](upload_session_start) or
+/// [`upload_session_append_v2()`](upload_session_append_v2) call. This route will return a job_id
+/// immediately and do the async commit job in background. Use
+/// [`upload_session_finish_batch_check()`](upload_session_finish_batch_check) to check the job
+/// status. For the same account, this route should be executed serially. That means you should not
+/// start the next job before current job finishes. We allow up to 1000 entries in a single request.
 pub fn upload_session_finish_batch(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionFinishBatchArg,
@@ -679,8 +691,9 @@ pub fn upload_session_finish_batch(
         None)
 }
 
-/// Returns the status of an asynchronous job for :route:`upload_session/finish_batch`. If success,
-/// it returns list of result for each entry.
+/// Returns the status of an asynchronous job for
+/// [`upload_session_finish_batch()`](upload_session_finish_batch). If success, it returns list of
+/// result for each entry.
 pub fn upload_session_finish_batch_check(
     client: &::client_trait::HttpClient,
     arg: &super::async::PollArg,
@@ -695,12 +708,14 @@ pub fn upload_session_finish_batch_check(
 
 /// Upload sessions allow you to upload a single file in one or more requests, for example where the
 /// size of the file is greater than 150 MB.  This call starts a new upload session with the given
-/// data. You can then use :route:`upload_session/append_v2` to add more data and
-/// :route:`upload_session/finish` to save all the data to a file in Dropbox. A single request
-/// should not upload more than 150 MB. An upload session can be used for a maximum of 48 hours.
-/// Attempting to use an :field:`UploadSessionStartResult.session_id` with
-/// :route:`upload_session/append_v2` or :route:`upload_session/finish` more than 48 hours after its
-/// creation will return a :field:`UploadSessionLookupError.not_found`.
+/// data. You can then use [`upload_session_append_v2()`](upload_session_append_v2) to add more data
+/// and [`upload_session_finish()`](upload_session_finish) to save all the data to a file in
+/// Dropbox. A single request should not upload more than 150 MB. An upload session can be used for
+/// a maximum of 48 hours. Attempting to use an
+/// [`UploadSessionStartResult::session_id`](UploadSessionStartResult) with
+/// [`upload_session_append_v2()`](upload_session_append_v2) or
+/// [`upload_session_finish()`](upload_session_finish) more than 48 hours after its creation will
+/// return a [`UploadSessionLookupError::NotFound`](UploadSessionLookupError::NotFound).
 pub fn upload_session_start(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionStartArg,
@@ -720,19 +735,19 @@ pub fn upload_session_start(
 pub struct AlphaGetMetadataArg {
     /// The path of a file or folder on Dropbox.
     pub path: ReadPath,
-    /// If true, :field:`FileMetadata.media_info` is set for photo and video.
+    /// If true, [`FileMetadata::media_info`](FileMetadata) is set for photo and video.
     pub include_media_info: bool,
-    /// If true, :type:`DeletedMetadata` will be returned for deleted file or folder, otherwise
-    /// :field:`LookupError.not_found` will be returned.
+    /// If true, [`DeletedMetadata`](DeletedMetadata) will be returned for deleted file or folder,
+    /// otherwise [`LookupError::NotFound`](LookupError::NotFound) will be returned.
     pub include_deleted: bool,
     /// If true, the results will include a flag for each file indicating whether or not  that file
     /// has any explicit members.
     pub include_has_explicit_shared_members: bool,
-    /// If set to a valid list of template IDs, :field:`FileMetadata.property_groups` is set if
-    /// there exists property data associated with the file and each of the listed templates.
+    /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
+    /// set if there exists property data associated with the file and each of the listed templates.
     pub include_property_groups: Option<super::file_properties::TemplateFilterBase>,
-    /// If set to a valid list of template IDs, :field:`FileMetadata.property_groups` is set for
-    /// files with custom properties.
+    /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
+    /// set for files with custom properties.
     pub include_property_templates: Option<Vec<super::file_properties::TemplateId>>,
 }
 
@@ -991,16 +1006,16 @@ pub struct CommitInfo {
     pub path: WritePathOrId,
     /// Selects what to do if the file already exists.
     pub mode: WriteMode,
-    /// If there's a conflict, as determined by :field:`mode`, have the Dropbox server try to
-    /// autorename the file to avoid conflict.
+    /// If there's a conflict, as determined by `mode`, have the Dropbox server try to autorename
+    /// the file to avoid conflict.
     pub autorename: bool,
-    /// The value to store as the :field:`client_modified` timestamp. Dropbox automatically records
-    /// the time at which the file was written to the Dropbox servers. It can also record an
-    /// additional timestamp, provided by Dropbox desktop clients, mobile clients, and API apps of
-    /// when the file was actually created or modified.
+    /// The value to store as the `client_modified` timestamp. Dropbox automatically records the
+    /// time at which the file was written to the Dropbox servers. It can also record an additional
+    /// timestamp, provided by Dropbox desktop clients, mobile clients, and API apps of when the
+    /// file was actually created or modified.
     pub client_modified: Option<super::common::DropboxTimestamp>,
     /// Normally, users are made aware of any file modifications in their Dropbox account via
-    /// notifications in the client software. If :val:`true`, this tells the clients that this
+    /// notifications in the client software. If `true`, this tells the clients that this
     /// modification shouldn't result in a user notification.
     pub mute: bool,
     /// List of custom properties to add to file.
@@ -1178,16 +1193,16 @@ pub struct CommitInfoWithProperties {
     pub path: WritePathOrId,
     /// Selects what to do if the file already exists.
     pub mode: WriteMode,
-    /// If there's a conflict, as determined by :field:`mode`, have the Dropbox server try to
-    /// autorename the file to avoid conflict.
+    /// If there's a conflict, as determined by `mode`, have the Dropbox server try to autorename
+    /// the file to avoid conflict.
     pub autorename: bool,
-    /// The value to store as the :field:`client_modified` timestamp. Dropbox automatically records
-    /// the time at which the file was written to the Dropbox servers. It can also record an
-    /// additional timestamp, provided by Dropbox desktop clients, mobile clients, and API apps of
-    /// when the file was actually created or modified.
+    /// The value to store as the `client_modified` timestamp. Dropbox automatically records the
+    /// time at which the file was written to the Dropbox servers. It can also record an additional
+    /// timestamp, provided by Dropbox desktop clients, mobile clients, and API apps of when the
+    /// file was actually created or modified.
     pub client_modified: Option<super::common::DropboxTimestamp>,
     /// Normally, users are made aware of any file modifications in their Dropbox account via
-    /// notifications in the client software. If :val:`true`, this tells the clients that this
+    /// notifications in the client software. If `true`, this tells the clients that this
     /// modification shouldn't result in a user notification.
     pub mute: bool,
     /// List of custom properties to add to file.
@@ -1796,8 +1811,9 @@ impl ::serde::ser::Serialize for DeleteBatchArg {
 
 #[derive(Debug)]
 pub enum DeleteBatchError {
-    /// Use :field:`DeleteError.too_many_write_operations`. :route:`delete_batch` now provides
-    /// smaller granularity about which entry has failed because of this.
+    /// Use [`DeleteError::TooManyWriteOperations`](DeleteError::TooManyWriteOperations).
+    /// [`delete_batch()`](delete_batch) now provides smaller granularity about which entry has
+    /// failed because of this.
     TooManyWriteOperations,
     Other,
 }
@@ -1935,8 +1951,8 @@ impl ::serde::ser::Serialize for DeleteBatchJobStatus {
     }
 }
 
-/// Result returned by :route:`delete_batch` that may either launch an asynchronous job or complete
-/// synchronously.
+/// Result returned by [`delete_batch()`](delete_batch) that may either launch an asynchronous job
+/// or complete synchronously.
 #[derive(Debug)]
 pub enum DeleteBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -2446,11 +2462,12 @@ pub struct DeletedMetadata {
     /// The cased path to be used for display purposes only. In rare instances the casing will not
     /// correctly match the user's filesystem, but this behavior will match the path provided in the
     /// Core API v1, and at least the last path component will have the correct casing. Changes to
-    /// only the casing of paths won't be returned by :route:`list_folder/continue`. This field will
-    /// be null if the file or folder is not mounted.
+    /// only the casing of paths won't be returned by
+    /// [`list_folder_continue()`](list_folder_continue). This field will be null if the file or
+    /// folder is not mounted.
     pub path_display: Option<String>,
-    /// Please use :field:`FileSharingInfo.parent_shared_folder_id` or
-    /// :field:`FolderSharingInfo.parent_shared_folder_id` instead.
+    /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
+    /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
 }
 
@@ -2693,7 +2710,7 @@ impl ::serde::ser::Serialize for Dimensions {
 pub struct DownloadArg {
     /// The path of the file to download.
     pub path: ReadPath,
-    /// Please specify revision in :field:`path` instead.
+    /// Please specify revision in `path` instead.
     pub rev: Option<Rev>,
 }
 
@@ -3150,11 +3167,12 @@ pub struct FileMetadata {
     /// The cased path to be used for display purposes only. In rare instances the casing will not
     /// correctly match the user's filesystem, but this behavior will match the path provided in the
     /// Core API v1, and at least the last path component will have the correct casing. Changes to
-    /// only the casing of paths won't be returned by :route:`list_folder/continue`. This field will
-    /// be null if the file or folder is not mounted.
+    /// only the casing of paths won't be returned by
+    /// [`list_folder_continue()`](list_folder_continue). This field will be null if the file or
+    /// folder is not mounted.
     pub path_display: Option<String>,
-    /// Please use :field:`FileSharingInfo.parent_shared_folder_id` or
-    /// :field:`FolderSharingInfo.parent_shared_folder_id` instead.
+    /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
+    /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
     /// Additional information if the file is a photo or video.
     pub media_info: Option<MediaInfo>,
@@ -3164,13 +3182,13 @@ pub struct FileMetadata {
     /// specified.
     pub property_groups: Option<Vec<super::file_properties::PropertyGroup>>,
     /// This flag will only be present if include_has_explicit_shared_members  is true in
-    /// :route:`list_folder` or :route:`get_metadata`. If this  flag is present, it will be true if
-    /// this file has any explicit shared  members. This is different from sharing_info in that this
-    /// could be true  in the case where a file has explicit members but is not contained within  a
-    /// shared folder.
+    /// [`list_folder()`](list_folder) or [`get_metadata()`](get_metadata). If this  flag is
+    /// present, it will be true if this file has any explicit shared  members. This is different
+    /// from sharing_info in that this could be true  in the case where a file has explicit members
+    /// but is not contained within  a shared folder.
     pub has_explicit_shared_members: Option<bool>,
     /// A hash of the file content. This field can be used to verify data integrity. For more
-    /// information see our :link:`Content hash /developers/reference/content-hash` page.
+    /// information see our [Content hash](/developers/reference/content-hash) page.
     pub content_hash: Option<Sha256HexHash>,
 }
 
@@ -3638,13 +3656,14 @@ pub struct FolderMetadata {
     /// The cased path to be used for display purposes only. In rare instances the casing will not
     /// correctly match the user's filesystem, but this behavior will match the path provided in the
     /// Core API v1, and at least the last path component will have the correct casing. Changes to
-    /// only the casing of paths won't be returned by :route:`list_folder/continue`. This field will
-    /// be null if the file or folder is not mounted.
+    /// only the casing of paths won't be returned by
+    /// [`list_folder_continue()`](list_folder_continue). This field will be null if the file or
+    /// folder is not mounted.
     pub path_display: Option<String>,
-    /// Please use :field:`FileSharingInfo.parent_shared_folder_id` or
-    /// :field:`FolderSharingInfo.parent_shared_folder_id` instead.
+    /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
+    /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
-    /// Please use :field:`sharing_info` instead.
+    /// Please use `sharing_info` instead.
     pub shared_folder_id: Option<super::common::SharedFolderId>,
     /// Set if the folder is contained in a shared folder or is a shared folder mount point.
     pub sharing_info: Option<FolderSharingInfo>,
@@ -4296,16 +4315,16 @@ impl ::serde::ser::Serialize for GetCopyReferenceResult {
 pub struct GetMetadataArg {
     /// The path of a file or folder on Dropbox.
     pub path: ReadPath,
-    /// If true, :field:`FileMetadata.media_info` is set for photo and video.
+    /// If true, [`FileMetadata::media_info`](FileMetadata) is set for photo and video.
     pub include_media_info: bool,
-    /// If true, :type:`DeletedMetadata` will be returned for deleted file or folder, otherwise
-    /// :field:`LookupError.not_found` will be returned.
+    /// If true, [`DeletedMetadata`](DeletedMetadata) will be returned for deleted file or folder,
+    /// otherwise [`LookupError::NotFound`](LookupError::NotFound) will be returned.
     pub include_deleted: bool,
     /// If true, the results will include a flag for each file indicating whether or not  that file
     /// has any explicit members.
     pub include_has_explicit_shared_members: bool,
-    /// If set to a valid list of template IDs, :field:`FileMetadata.property_groups` is set if
-    /// there exists property data associated with the file and each of the listed templates.
+    /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
+    /// set if there exists property data associated with the file and each of the listed templates.
     pub include_property_groups: Option<super::file_properties::TemplateFilterBase>,
 }
 
@@ -4780,7 +4799,7 @@ impl ::serde::ser::Serialize for GetTemporaryLinkResult {
     }
 }
 
-/// Arguments for :route:`get_thumbnail_batch`.
+/// Arguments for [`get_thumbnail_batch()`](get_thumbnail_batch).
 #[derive(Debug)]
 pub struct GetThumbnailBatchArg {
     /// List of files to get thumbnails.
@@ -5294,7 +5313,7 @@ pub struct ListFolderArg {
     /// If true, the list folder operation will be applied recursively to all subfolders and the
     /// response will contain contents of all subfolders.
     pub recursive: bool,
-    /// If true, :field:`FileMetadata.media_info` is set for photo and video.
+    /// If true, [`FileMetadata::media_info`](FileMetadata) is set for photo and video.
     pub include_media_info: bool,
     /// If true, the results will include entries for files and folders that used to exist but were
     /// deleted.
@@ -5309,11 +5328,11 @@ pub struct ListFolderArg {
     /// there can be slightly more entries returned in some cases.
     pub limit: Option<u32>,
     /// A shared link to list the contents of. If the link is password-protected, the password must
-    /// be provided. If this field is present, :field:`ListFolderArg.path` will be relative to root
-    /// of the shared link. Only non-recursive mode is supported for shared link.
+    /// be provided. If this field is present, [`ListFolderArg::path`](ListFolderArg) will be
+    /// relative to root of the shared link. Only non-recursive mode is supported for shared link.
     pub shared_link: Option<SharedLink>,
-    /// If set to a valid list of template IDs, :field:`FileMetadata.property_groups` is set if
-    /// there exists property data associated with the file and each of the listed templates.
+    /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
+    /// set if there exists property data associated with the file and each of the listed templates.
     pub include_property_groups: Option<super::file_properties::TemplateFilterBase>,
 }
 
@@ -5532,8 +5551,8 @@ impl ::serde::ser::Serialize for ListFolderArg {
 
 #[derive(Debug)]
 pub struct ListFolderContinueArg {
-    /// The cursor returned by your last call to :route:`list_folder` or
-    /// :route:`list_folder/continue`.
+    /// The cursor returned by your last call to [`list_folder()`](list_folder) or
+    /// [`list_folder_continue()`](list_folder_continue).
     pub cursor: ListFolderCursor,
 }
 
@@ -5622,8 +5641,8 @@ impl ::serde::ser::Serialize for ListFolderContinueArg {
 #[derive(Debug)]
 pub enum ListFolderContinueError {
     Path(LookupError),
-    /// Indicates that the cursor has been invalidated. Call :route:`list_folder` to obtain a new
-    /// cursor.
+    /// Indicates that the cursor has been invalidated. Call [`list_folder()`](list_folder) to
+    /// obtain a new cursor.
     Reset,
     Other,
 }
@@ -5768,8 +5787,8 @@ impl ::std::fmt::Display for ListFolderError {
 
 #[derive(Debug)]
 pub struct ListFolderGetLatestCursorResult {
-    /// Pass the cursor into :route:`list_folder/continue` to see what's changed in the folder since
-    /// your previous query.
+    /// Pass the cursor into [`list_folder_continue()`](list_folder_continue) to see what's changed
+    /// in the folder since your previous query.
     pub cursor: ListFolderCursor,
 }
 
@@ -5857,9 +5876,9 @@ impl ::serde::ser::Serialize for ListFolderGetLatestCursorResult {
 
 #[derive(Debug)]
 pub struct ListFolderLongpollArg {
-    /// A cursor as returned by :route:`list_folder` or :route:`list_folder/continue`. Cursors
-    /// retrieved by setting :field:`ListFolderArg.include_media_info` to :val:`true` are not
-    /// supported.
+    /// A cursor as returned by [`list_folder()`](list_folder) or
+    /// [`list_folder_continue()`](list_folder_continue). Cursors retrieved by setting
+    /// [`ListFolderArg::include_media_info`](ListFolderArg) to `true` are not supported.
     pub cursor: ListFolderCursor,
     /// A timeout in seconds. The request will block for at most this length of time, plus up to 90
     /// seconds of random jitter added to avoid the thundering herd problem. Care should be taken
@@ -5967,8 +5986,8 @@ impl ::serde::ser::Serialize for ListFolderLongpollArg {
 
 #[derive(Debug)]
 pub enum ListFolderLongpollError {
-    /// Indicates that the cursor has been invalidated. Call :route:`list_folder` to obtain a new
-    /// cursor.
+    /// Indicates that the cursor has been invalidated. Call [`list_folder()`](list_folder) to
+    /// obtain a new cursor.
     Reset,
     Other,
 }
@@ -6030,11 +6049,11 @@ impl ::std::fmt::Display for ListFolderLongpollError {
 
 #[derive(Debug)]
 pub struct ListFolderLongpollResult {
-    /// Indicates whether new changes are available. If true, call :route:`list_folder/continue` to
-    /// retrieve the changes.
+    /// Indicates whether new changes are available. If true, call
+    /// [`list_folder_continue()`](list_folder_continue) to retrieve the changes.
     pub changes: bool,
     /// If present, backoff for at least this many seconds before calling
-    /// :route:`list_folder/longpoll` again.
+    /// [`list_folder_longpoll()`](list_folder_longpoll) again.
     pub backoff: Option<u64>,
 }
 
@@ -6140,11 +6159,11 @@ impl ::serde::ser::Serialize for ListFolderLongpollResult {
 pub struct ListFolderResult {
     /// The files and (direct) subfolders in the folder.
     pub entries: Vec<Metadata>,
-    /// Pass the cursor into :route:`list_folder/continue` to see what's changed in the folder since
-    /// your previous query.
+    /// Pass the cursor into [`list_folder_continue()`](list_folder_continue) to see what's changed
+    /// in the folder since your previous query.
     pub cursor: ListFolderCursor,
     /// If true, then there are more entries available. Pass the cursor to
-    /// :route:`list_folder/continue` to retrieve the rest.
+    /// [`list_folder_continue()`](list_folder_continue) to retrieve the rest.
     pub has_more: bool,
 }
 
@@ -7057,7 +7076,7 @@ impl ::serde::ser::Serialize for PhotoMetadata {
 pub struct PreviewArg {
     /// The path of the file to preview.
     pub path: ReadPath,
-    /// Please specify revision in :field:`path` instead.
+    /// Please specify revision in `path` instead.
     pub rev: Option<Rev>,
 }
 
@@ -7261,9 +7280,10 @@ pub struct RelocationArg {
     pub from_path: WritePathOrId,
     /// Path in the user's Dropbox that is the destination.
     pub to_path: WritePathOrId,
-    /// If true, :route:`copy` will copy contents in shared folder, otherwise
-    /// :field:`RelocationError.cant_copy_shared_folder` will be returned if :field:`from_path`
-    /// contains shared folder. This field is always true for :route:`move`.
+    /// If true, [`copy()`](copy) will copy contents in shared folder, otherwise
+    /// [`RelocationError::CantCopySharedFolder`](RelocationError::CantCopySharedFolder) will be
+    /// returned if `from_path` contains shared folder. This field is always true for
+    /// [`do_move()`](do_move).
     pub allow_shared_folder: bool,
     /// If there's a conflict, have the Dropbox server try to autorename the file to avoid the
     /// conflict.
@@ -7416,12 +7436,12 @@ impl ::serde::ser::Serialize for RelocationArg {
 
 #[derive(Debug)]
 pub struct RelocationBatchArg {
-    /// List of entries to be moved or copied. Each entry is :type:`RelocationPath`.
+    /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
     pub entries: Vec<RelocationPath>,
-    /// If true, :route:`copy_batch` will copy contents in shared folder, otherwise
-    /// :field:`RelocationError.cant_copy_shared_folder` will be returned if
-    /// :field:`RelocationPath.from_path` contains shared folder.  This field is always true for
-    /// :route:`move_batch`.
+    /// If true, [`copy_batch()`](copy_batch) will copy contents in shared folder, otherwise
+    /// [`RelocationError::CantCopySharedFolder`](RelocationError::CantCopySharedFolder) will be
+    /// returned if [`RelocationPath::from_path`](RelocationPath) contains shared folder.  This
+    /// field is always true for [`move_batch()`](move_batch).
     pub allow_shared_folder: bool,
     /// If there's a conflict with any file, have the Dropbox server try to autorename that file to
     /// avoid the conflict.
@@ -7574,11 +7594,11 @@ pub enum RelocationBatchError {
     CantMoveFolderIntoItself,
     /// The operation would involve more than 10,000 files and folders.
     TooManyFiles,
-    /// There are duplicated/nested paths among :field:`RelocationArg.from_path` and
-    /// :field:`RelocationArg.to_path`.
+    /// There are duplicated/nested paths among [`RelocationArg::from_path`](RelocationArg) and
+    /// [`RelocationArg::to_path`](RelocationArg).
     DuplicatedOrNestedPaths,
     /// Your move operation would result in an ownership transfer. You may reissue the request with
-    /// the field :field:`RelocationArg.allow_ownership_transfer` to true.
+    /// the field [`RelocationArg::allow_ownership_transfer`](RelocationArg) to true.
     CantTransferOwnership,
     /// The current user does not have enough space to move or copy the files.
     InsufficientQuota,
@@ -7818,8 +7838,8 @@ impl ::serde::ser::Serialize for RelocationBatchJobStatus {
     }
 }
 
-/// Result returned by :route:`copy_batch` or :route:`move_batch` that may either launch an
-/// asynchronous job or complete synchronously.
+/// Result returned by [`copy_batch()`](copy_batch) or [`move_batch()`](move_batch) that may either
+/// launch an asynchronous job or complete synchronously.
 #[derive(Debug)]
 pub enum RelocationBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -8076,11 +8096,11 @@ pub enum RelocationError {
     CantMoveFolderIntoItself,
     /// The operation would involve more than 10,000 files and folders.
     TooManyFiles,
-    /// There are duplicated/nested paths among :field:`RelocationArg.from_path` and
-    /// :field:`RelocationArg.to_path`.
+    /// There are duplicated/nested paths among [`RelocationArg::from_path`](RelocationArg) and
+    /// [`RelocationArg::to_path`](RelocationArg).
     DuplicatedOrNestedPaths,
     /// Your move operation would result in an ownership transfer. You may reissue the request with
-    /// the field :field:`RelocationArg.allow_ownership_transfer` to true.
+    /// the field [`RelocationArg::allow_ownership_transfer`](RelocationArg) to true.
     CantTransferOwnership,
     /// The current user does not have enough space to move or copy the files.
     InsufficientQuota,
@@ -8623,7 +8643,7 @@ impl ::std::fmt::Display for RestoreError {
 
 #[derive(Debug)]
 pub struct SaveCopyReferenceArg {
-    /// A copy reference returned by :route:`copy_reference/get`.
+    /// A copy reference returned by [`copy_reference_get()`](copy_reference_get).
     pub copy_reference: String,
     /// Path in the user's Dropbox that is the destination.
     pub path: Path,
@@ -9725,10 +9745,10 @@ pub struct SearchResult {
     /// A list (possibly empty) of matches for the query.
     pub matches: Vec<SearchMatch>,
     /// Used for paging. If true, indicates there is another page of results available that can be
-    /// fetched by calling :route:`search` again.
+    /// fetched by calling [`search()`](search) again.
     pub more: bool,
-    /// Used for paging. Value to set the start argument to when calling :route:`search` to fetch
-    /// the next page of results.
+    /// Used for paging. Value to set the start argument to when calling [`search()`](search) to
+    /// fetch the next page of results.
     pub start: u64,
 }
 
@@ -10547,7 +10567,7 @@ pub struct UploadSessionAppendArg {
     /// Contains the upload session ID and the offset.
     pub cursor: UploadSessionCursor,
     /// If true, the current session will be closed, at which point you won't be able to call
-    /// :route:`upload_session/append_v2` anymore with the current session.
+    /// [`upload_session_append_v2()`](upload_session_append_v2) anymore with the current session.
     pub close: bool,
 }
 
@@ -10651,7 +10671,7 @@ impl ::serde::ser::Serialize for UploadSessionAppendArg {
 
 #[derive(Debug)]
 pub struct UploadSessionCursor {
-    /// The upload session ID (returned by :route:`upload_session/start`).
+    /// The upload session ID (returned by [`upload_session_start()`](upload_session_start)).
     pub session_id: String,
     /// The amount of data that has been uploaded so far. We use this to make sure upload data isn't
     /// lost or duplicated in the event of a network error.
@@ -10944,7 +10964,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchArg {
 pub enum UploadSessionFinishBatchJobStatus {
     /// The asynchronous job is still in progress.
     InProgress,
-    /// The :route:`upload_session/finish_batch` has finished.
+    /// The [`upload_session_finish_batch()`](upload_session_finish_batch) has finished.
     Complete(UploadSessionFinishBatchResult),
 }
 
@@ -10998,8 +11018,8 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchJobStatus {
     }
 }
 
-/// Result returned by :route:`upload_session/finish_batch` that may either launch an asynchronous
-/// job or complete synchronously.
+/// Result returned by [`upload_session_finish_batch()`](upload_session_finish_batch) that may
+/// either launch an asynchronous job or complete synchronously.
 #[derive(Debug)]
 pub enum UploadSessionFinishBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -11514,7 +11534,7 @@ impl ::serde::ser::Serialize for UploadSessionOffsetError {
 #[derive(Debug)]
 pub struct UploadSessionStartArg {
     /// If true, the current session will be closed, at which point you won't be able to call
-    /// :route:`upload_session/append_v2` anymore with the current session.
+    /// [`upload_session_append_v2()`](upload_session_append_v2) anymore with the current session.
     pub close: bool,
 }
 
@@ -11590,8 +11610,9 @@ impl ::serde::ser::Serialize for UploadSessionStartArg {
 
 #[derive(Debug)]
 pub struct UploadSessionStartResult {
-    /// A unique identifier for the upload session. Pass this to :route:`upload_session/append_v2`
-    /// and :route:`upload_session/finish`.
+    /// A unique identifier for the upload session. Pass this to
+    /// [`upload_session_append_v2()`](upload_session_append_v2) and
+    /// [`upload_session_finish()`](upload_session_finish).
     pub session_id: String,
 }
 
@@ -12118,7 +12139,7 @@ pub enum WriteMode {
     /// (2).txt".
     Add,
     /// Always overwrite the existing file. The autorename strategy is the same as it is for
-    /// :field:`add`.
+    /// [`Add`](WriteMode::Add).
     Overwrite,
     /// Overwrite if the given "rev" matches the existing file's "rev". The autorename strategy is
     /// to append the string "conflicted copy" to the file name. For example, "document.txt" might

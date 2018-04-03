@@ -66,7 +66,7 @@ pub fn update(
         None)
 }
 
-/// Arguments for :route:`create`.
+/// Arguments for [`create()`](create).
 #[derive(Debug)]
 pub struct CreateFileRequestArgs {
     /// The title of the file request. Must not be empty.
@@ -222,8 +222,8 @@ pub enum CreateFileRequestError {
     /// This user doesn't have permission to access or modify this file request.
     NoPermission,
     /// This user's email address is not verified. File requests are only available on accounts with
-    /// a verified email address. Users can verify their email address :link:`here
-    /// https://www.dropbox.com/help/317`.
+    /// a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     EmailUnverified,
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.
@@ -354,8 +354,8 @@ impl ::std::fmt::Display for CreateFileRequestError {
     }
 }
 
-/// A :link:`file request https://www.dropbox.com/help/9090` for receiving files into the user's
-/// Dropbox account.
+/// A [file request](https://www.dropbox.com/help/9090) for receiving files into the user's Dropbox
+/// account.
 #[derive(Debug)]
 pub struct FileRequest {
     /// The ID of the file request.
@@ -371,9 +371,9 @@ pub struct FileRequest {
     pub is_open: bool,
     /// The number of files this file request has received.
     pub file_count: i64,
-    /// The path of the folder in the Dropbox where uploaded files will be sent. This can be
-    /// :val:`null` if the destination was removed. For apps with the app folder permission, this
-    /// will be relative to the app folder.
+    /// The path of the folder in the Dropbox where uploaded files will be sent. This can be `None`
+    /// if the destination was removed. For apps with the app folder permission, this will be
+    /// relative to the app folder.
     pub destination: Option<super::files::Path>,
     /// The deadline for this file request. Only set if the request has a deadline.
     pub deadline: Option<FileRequestDeadline>,
@@ -678,8 +678,8 @@ pub enum FileRequestError {
     /// This user doesn't have permission to access or modify this file request.
     NoPermission,
     /// This user's email address is not verified. File requests are only available on accounts with
-    /// a verified email address. Users can verify their email address :link:`here
-    /// https://www.dropbox.com/help/317`.
+    /// a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     EmailUnverified,
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.
@@ -852,7 +852,7 @@ impl ::std::fmt::Display for GeneralFileRequestsError {
     }
 }
 
-/// Arguments for :route:`get`.
+/// Arguments for [`get()`](get).
 #[derive(Debug)]
 pub struct GetFileRequestArgs {
     /// The ID of the file request to retrieve.
@@ -957,8 +957,8 @@ pub enum GetFileRequestError {
     /// This user doesn't have permission to access or modify this file request.
     NoPermission,
     /// This user's email address is not verified. File requests are only available on accounts with
-    /// a verified email address. Users can verify their email address :link:`here
-    /// https://www.dropbox.com/help/317`.
+    /// a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     EmailUnverified,
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.
@@ -1216,7 +1216,7 @@ impl ::std::fmt::Display for ListFileRequestsError {
     }
 }
 
-/// Result for :route:`list`.
+/// Result for [`list()`](list).
 #[derive(Debug)]
 pub struct ListFileRequestsResult {
     /// The file requests owned by this user. Apps with the app folder permission will only see file
@@ -1306,7 +1306,7 @@ impl ::serde::ser::Serialize for ListFileRequestsResult {
     }
 }
 
-/// Arguments for :route:`update`.
+/// Arguments for [`update()`](update).
 #[derive(Debug)]
 pub struct UpdateFileRequestArgs {
     /// The ID of the file request to update.
@@ -1472,7 +1472,7 @@ impl ::serde::ser::Serialize for UpdateFileRequestArgs {
 pub enum UpdateFileRequestDeadline {
     /// Do not change the file request's deadline.
     NoUpdate,
-    /// If :val:`null`, the file request's deadline is cleared.
+    /// If `None`, the file request's deadline is cleared.
     Update(Option<FileRequestDeadline>),
     Other,
 }
@@ -1548,8 +1548,8 @@ pub enum UpdateFileRequestError {
     /// This user doesn't have permission to access or modify this file request.
     NoPermission,
     /// This user's email address is not verified. File requests are only available on accounts with
-    /// a verified email address. Users can verify their email address :link:`here
-    /// https://www.dropbox.com/help/317`.
+    /// a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     EmailUnverified,
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.

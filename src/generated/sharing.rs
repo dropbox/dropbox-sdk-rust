@@ -36,8 +36,8 @@ pub fn add_file_member(
 
 /// Allows an owner or editor (if the ACL update policy allows) of a shared folder to add another
 /// member. For the new member to get access to all the functionality for this folder, you will need
-/// to call :route:`mount_folder` on their behalf. Apps must have full Dropbox access to use this
-/// endpoint.
+/// to call [`mount_folder()`](mount_folder) on their behalf. Apps must have full Dropbox access to
+/// use this endpoint.
 pub fn add_folder_member(
     client: &::client_trait::HttpClient,
     arg: &AddFolderMemberArg,
@@ -106,12 +106,13 @@ pub fn check_share_job_status(
 }
 
 /// Create a shared link. If a shared link already exists for the given path, that link is returned.
-/// Note that in the returned :type:`PathLinkMetadata`, the :field:`PathLinkMetadata.url` field is
-/// the shortened URL if :field:`CreateSharedLinkArg.short_url` argument is set to :val:`true`.
-/// Previously, it was technically possible to break a shared link by moving or renaming the
-/// corresponding file or folder. In the future, this will no longer be the case, so your app
-/// shouldn't rely on this behavior. Instead, if your app needs to revoke a shared link, use
-/// :route:`revoke_shared_link`.
+/// Note that in the returned [`PathLinkMetadata`](PathLinkMetadata), the
+/// [`PathLinkMetadata::url`](PathLinkMetadata) field is the shortened URL if
+/// [`CreateSharedLinkArg::short_url`](CreateSharedLinkArg) argument is set to `true`. Previously,
+/// it was technically possible to break a shared link by moving or renaming the corresponding file
+/// or folder. In the future, this will no longer be the case, so your app shouldn't rely on this
+/// behavior. Instead, if your app needs to revoke a shared link, use
+/// [`revoke_shared_link()`](revoke_shared_link).
 pub fn create_shared_link(
     client: &::client_trait::HttpClient,
     arg: &CreateSharedLinkArg,
@@ -125,8 +126,8 @@ pub fn create_shared_link(
 }
 
 /// Create a shared link with custom settings. If no settings are given then the default visibility
-/// is :field:`RequestedVisibility.public` (The resolved visibility, though, may depend on other
-/// aspects such as team and shared folder settings).
+/// is [`RequestedVisibility::Public`](RequestedVisibility::Public) (The resolved visibility,
+/// though, may depend on other aspects such as team and shared folder settings).
 pub fn create_shared_link_with_settings(
     client: &::client_trait::HttpClient,
     arg: &CreateSharedLinkWithSettingsArg,
@@ -209,11 +210,11 @@ pub fn get_shared_link_metadata(
         None)
 }
 
-/// Returns a list of :type:`LinkMetadata` objects for this user, including collection links. If no
-/// path is given, returns a list of all shared links for the current user, including collection
-/// links, up to a maximum of 1000 links. If a non-empty path is given, returns a list of all shared
-/// links that allow access to the given path.  Collection links are never returned in this case.
-/// Note that the url field in the response is never the shortened URL.
+/// Returns a list of [`LinkMetadata`](LinkMetadata) objects for this user, including collection
+/// links. If no path is given, returns a list of all shared links for the current user, including
+/// collection links, up to a maximum of 1000 links. If a non-empty path is given, returns a list of
+/// all shared links that allow access to the given path.  Collection links are never returned in
+/// this case. Note that the url field in the response is never the shortened URL.
 pub fn get_shared_links(
     client: &::client_trait::HttpClient,
     arg: &GetSharedLinksArg,
@@ -256,8 +257,9 @@ pub fn list_file_members_batch(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`list_file_members` or
-/// :route:`list_file_members/batch`, use this to paginate through all shared file members.
+/// Once a cursor has been retrieved from [`list_file_members()`](list_file_members) or
+/// [`list_file_members_batch()`](list_file_members_batch), use this to paginate through all shared
+/// file members.
 pub fn list_file_members_continue(
     client: &::client_trait::HttpClient,
     arg: &ListFileMembersContinueArg,
@@ -284,8 +286,9 @@ pub fn list_folder_members(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`list_folder_members`, use this to paginate through
-/// all shared folder members. Apps must have full Dropbox access to use this endpoint.
+/// Once a cursor has been retrieved from [`list_folder_members()`](list_folder_members), use this
+/// to paginate through all shared folder members. Apps must have full Dropbox access to use this
+/// endpoint.
 pub fn list_folder_members_continue(
     client: &::client_trait::HttpClient,
     arg: &ListFolderMembersContinueArg,
@@ -312,9 +315,10 @@ pub fn list_folders(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`list_folders`, use this to paginate through all
-/// shared folders. The cursor must come from a previous call to :route:`list_folders` or
-/// :route:`list_folders/continue`. Apps must have full Dropbox access to use this endpoint.
+/// Once a cursor has been retrieved from [`list_folders()`](list_folders), use this to paginate
+/// through all shared folders. The cursor must come from a previous call to
+/// [`list_folders()`](list_folders) or [`list_folders_continue()`](list_folders_continue). Apps
+/// must have full Dropbox access to use this endpoint.
 pub fn list_folders_continue(
     client: &::client_trait::HttpClient,
     arg: &ListFoldersContinueArg,
@@ -341,9 +345,10 @@ pub fn list_mountable_folders(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`list_mountable_folders`, use this to paginate
-/// through all mountable shared folders. The cursor must come from a previous call to
-/// :route:`list_mountable_folders` or :route:`list_mountable_folders/continue`. Apps must have full
+/// Once a cursor has been retrieved from [`list_mountable_folders()`](list_mountable_folders), use
+/// this to paginate through all mountable shared folders. The cursor must come from a previous call
+/// to [`list_mountable_folders()`](list_mountable_folders) or
+/// [`list_mountable_folders_continue()`](list_mountable_folders_continue). Apps must have full
 /// Dropbox access to use this endpoint.
 pub fn list_mountable_folders_continue(
     client: &::client_trait::HttpClient,
@@ -371,7 +376,7 @@ pub fn list_received_files(
         None)
 }
 
-/// Get more results with a cursor from :route:`list_received_files`.
+/// Get more results with a cursor from [`list_received_files()`](list_received_files).
 pub fn list_received_files_continue(
     client: &::client_trait::HttpClient,
     arg: &ListFilesContinueArg,
@@ -402,9 +407,10 @@ pub fn list_shared_links(
 
 /// Modify the shared link's settings. If the requested visibility conflict with the shared links
 /// policy of the team or the shared folder (in case the linked file is part of a shared folder)
-/// then the :field:`LinkPermissions.resolved_visibility` of the returned :type:`SharedLinkMetadata`
-/// will reflect the actual visibility of the shared link and the
-/// :field:`LinkPermissions.requested_visibility` will reflect the requested visibility.
+/// then the [`LinkPermissions::resolved_visibility`](LinkPermissions) of the returned
+/// [`SharedLinkMetadata`](SharedLinkMetadata) will reflect the actual visibility of the shared link
+/// and the [`LinkPermissions::requested_visibility`](LinkPermissions) will reflect the requested
+/// visibility.
 pub fn modify_shared_link_settings(
     client: &::client_trait::HttpClient,
     arg: &ModifySharedLinkSettingsArgs,
@@ -505,8 +511,9 @@ pub fn remove_folder_member(
 
 /// Revoke a shared link. Note that even after revoking a shared link to a file, the file may be
 /// accessible if there are shared links leading to any of the file parent folders. To list all
-/// shared links that enable access to a specific file, you can use the :route:`list_shared_links`
-/// with the file as the :field:`ListSharedLinksArg.path` argument.
+/// shared links that enable access to a specific file, you can use the
+/// [`list_shared_links()`](list_shared_links) with the file as the
+/// [`ListSharedLinksArg::path`](ListSharedLinksArg) argument.
 pub fn revoke_shared_link(
     client: &::client_trait::HttpClient,
     arg: &RevokeSharedLinkArg,
@@ -521,9 +528,10 @@ pub fn revoke_shared_link(
 
 /// Share a folder with collaborators. Most sharing will be completed synchronously. Large folders
 /// will be completed asynchronously. To make testing the async case repeatable, set
-/// `ShareFolderArg.force_async`. If a :field:`ShareFolderLaunch.async_job_id` is returned, you'll
-/// need to call :route:`check_share_job_status` until the action completes to get the metadata for
-/// the folder. Apps must have full Dropbox access to use this endpoint.
+/// `ShareFolderArg.force_async`. If a
+/// [`ShareFolderLaunch::AsyncJobId`](ShareFolderLaunch::AsyncJobId) is returned, you'll need to
+/// call [`check_share_job_status()`](check_share_job_status) until the action completes to get the
+/// metadata for the folder. Apps must have full Dropbox access to use this endpoint.
 pub fn share_folder(
     client: &::client_trait::HttpClient,
     arg: &ShareFolderArg,
@@ -537,8 +545,8 @@ pub fn share_folder(
 }
 
 /// Transfer ownership of a shared folder to a member of the shared folder. User must have
-/// :field:`AccessLevel.owner` access to the shared folder to perform a transfer. Apps must have
-/// full Dropbox access to use this endpoint.
+/// [`AccessLevel::Owner`](AccessLevel::Owner) access to the shared folder to perform a transfer.
+/// Apps must have full Dropbox access to use this endpoint.
 pub fn transfer_folder(
     client: &::client_trait::HttpClient,
     arg: &TransferFolderArg,
@@ -552,7 +560,7 @@ pub fn transfer_folder(
 }
 
 /// The current user unmounts the designated folder. They can re-mount the folder at a later time
-/// using :route:`mount_folder`. Apps must have full Dropbox access to use this endpoint.
+/// using [`mount_folder()`](mount_folder). Apps must have full Dropbox access to use this endpoint.
 pub fn unmount_folder(
     client: &::client_trait::HttpClient,
     arg: &UnmountFolderArg,
@@ -579,8 +587,8 @@ pub fn unshare_file(
 }
 
 /// Allows a shared folder owner to unshare the folder. You'll need to call
-/// :route:`check_job_status` to determine if the action has completed successfully. Apps must have
-/// full Dropbox access to use this endpoint.
+/// [`check_job_status()`](check_job_status) to determine if the action has completed successfully.
+/// Apps must have full Dropbox access to use this endpoint.
 pub fn unshare_folder(
     client: &::client_trait::HttpClient,
     arg: &UnshareFolderArg,
@@ -620,9 +628,9 @@ pub fn update_folder_member(
         None)
 }
 
-/// Update the sharing policies for a shared folder. User must have :field:`AccessLevel.owner`
-/// access to the shared folder to update its policies. Apps must have full Dropbox access to use
-/// this endpoint.
+/// Update the sharing policies for a shared folder. User must have
+/// [`AccessLevel::Owner`](AccessLevel::Owner) access to the shared folder to update its policies.
+/// Apps must have full Dropbox access to use this endpoint.
 pub fn update_folder_policy(
     client: &::client_trait::HttpClient,
     arg: &UpdateFolderPolicyArg,
@@ -639,7 +647,8 @@ pub fn update_folder_policy(
 #[derive(Debug)]
 pub enum AccessLevel {
     /// The collaborator is the owner of the shared folder. Owners can view and edit the shared
-    /// folder as well as set the folder's policies using :route:`update_folder_policy`.
+    /// folder as well as set the folder's policies using
+    /// [`update_folder_policy()`](update_folder_policy).
     Owner,
     /// The collaborator can both view and edit the shared folder.
     Editor,
@@ -779,7 +788,7 @@ impl ::serde::ser::Serialize for AclUpdatePolicy {
     }
 }
 
-/// Arguments for :route:`add_file_member`.
+/// Arguments for [`add_file_member()`](add_file_member).
 #[derive(Debug)]
 pub struct AddFileMemberArgs {
     /// File to which to add members.
@@ -954,7 +963,7 @@ impl ::serde::ser::Serialize for AddFileMemberArgs {
     }
 }
 
-/// Errors for :route:`add_file_member`.
+/// Errors for [`add_file_member()`](add_file_member).
 #[derive(Debug)]
 pub enum AddFileMemberError {
     UserError(SharingUserError),
@@ -1203,7 +1212,7 @@ pub enum AddFolderMemberError {
     AccessError(SharedFolderAccessError),
     /// The current user's e-mail address is unverified.
     EmailUnverified,
-    /// :field:`AddFolderMemberArg.members` contains a bad invitation recipient.
+    /// [`AddFolderMemberArg::members`](AddFolderMemberArg) contains a bad invitation recipient.
     BadMember(AddMemberSelectorError),
     /// Your team policy does not allow sharing outside of the team.
     CantShareOutsideTeam,
@@ -1394,8 +1403,8 @@ impl ::std::fmt::Display for AddFolderMemberError {
 pub struct AddMember {
     /// The member to add to the shared folder.
     pub member: MemberSelector,
-    /// The access level to grant :field:`member` to the shared folder.  :field:`AccessLevel.owner`
-    /// is disallowed.
+    /// The access level to grant `member` to the shared folder.
+    /// [`AccessLevel::Owner`](AccessLevel::Owner) is disallowed.
     pub access_level: AccessLevel,
 }
 
@@ -1508,7 +1517,8 @@ pub enum AddMemberSelectorError {
     /// The value is the ID of the Dropbox user with an unverified e-mail address.  Invite
     /// unverified users by e-mail address instead of by their Dropbox ID.
     UnverifiedDropboxId(DropboxId),
-    /// At least one of the specified groups in :field:`AddFolderMemberArg.members` is deleted.
+    /// At least one of the specified groups in [`AddFolderMemberArg::members`](AddFolderMemberArg)
+    /// is deleted.
     GroupDeleted,
     /// Sharing to a group that is not on the current user's team.
     GroupNotOnTeam,
@@ -1944,7 +1954,7 @@ impl ::serde::ser::Serialize for AudienceRestrictingSharedFolder {
     }
 }
 
-/// Arguments for :route:`change_file_member_access`.
+/// Arguments for [`change_file_member_access()`](change_file_member_access).
 #[derive(Debug)]
 pub struct ChangeFileMemberAccessArgs {
     /// File for which we are changing a member's access.
@@ -2186,8 +2196,9 @@ pub struct CreateSharedLinkArg {
     /// Whether to return a shortened URL.
     pub short_url: bool,
     /// If it's okay to share a path that does not yet exist, set this to either
-    /// :field:`PendingUploadMode.file` or :field:`PendingUploadMode.folder` to indicate whether to
-    /// assume it's a file or folder.
+    /// [`PendingUploadMode::File`](PendingUploadMode::File) or
+    /// [`PendingUploadMode::Folder`](PendingUploadMode::Folder) to indicate whether to assume it's
+    /// a file or folder.
     pub pending_upload: Option<PendingUploadMode>,
 }
 
@@ -2484,8 +2495,8 @@ pub enum CreateSharedLinkWithSettingsError {
     Path(super::files::LookupError),
     /// User's email should be verified.
     EmailNotVerified,
-    /// The shared link already exists. You can call :route:`list_shared_links` to get the existing
-    /// link.
+    /// The shared link already exists. You can call [`list_shared_links()`](list_shared_links) to
+    /// get the existing link.
     SharedLinkAlreadyExists,
     /// There is an error with the given settings.
     SettingsError(SharedLinkSettingsError),
@@ -3456,7 +3467,8 @@ impl ::serde::ser::Serialize for FileMemberActionIndividualResult {
     }
 }
 
-/// Per-member result for :route:`add_file_member` or :route:`change_file_member_access`.
+/// Per-member result for [`add_file_member()`](add_file_member) or
+/// [`change_file_member_access()`](change_file_member_access).
 #[derive(Debug)]
 pub struct FileMemberActionResult {
     /// One of specified input members.
@@ -4407,14 +4419,14 @@ impl ::serde::ser::Serialize for FolderPolicy {
     }
 }
 
-/// Arguments of :route:`get_file_metadata`.
+/// Arguments of [`get_file_metadata()`](get_file_metadata).
 #[derive(Debug)]
 pub struct GetFileMetadataArg {
     /// The file to query.
     pub file: PathOrId,
     /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
-    /// response's :field:`SharedFileMetadata.permissions` field describing the actions the
-    /// authenticated user can perform on the file.
+    /// response's [`SharedFileMetadata::permissions`](SharedFileMetadata) field describing the
+    /// actions the  authenticated user can perform on the file.
     pub actions: Option<Vec<FileAction>>,
 }
 
@@ -4516,14 +4528,14 @@ impl ::serde::ser::Serialize for GetFileMetadataArg {
     }
 }
 
-/// Arguments of :route:`get_file_metadata/batch`.
+/// Arguments of [`get_file_metadata_batch()`](get_file_metadata_batch).
 #[derive(Debug)]
 pub struct GetFileMetadataBatchArg {
     /// The files to query.
     pub files: Vec<PathOrId>,
     /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
-    /// response's :field:`SharedFileMetadata.permissions` field describing the actions the
-    /// authenticated user can perform on the file.
+    /// response's [`SharedFileMetadata::permissions`](SharedFileMetadata) field describing the
+    /// actions the  authenticated user can perform on the file.
     pub actions: Option<Vec<FileAction>>,
 }
 
@@ -4625,11 +4637,11 @@ impl ::serde::ser::Serialize for GetFileMetadataBatchArg {
     }
 }
 
-/// Per file results of :route:`get_file_metadata/batch`.
+/// Per file results of [`get_file_metadata_batch()`](get_file_metadata_batch).
 #[derive(Debug)]
 pub struct GetFileMetadataBatchResult {
     /// This is the input file identifier corresponding to one of
-    /// :field:`GetFileMetadataBatchArg.files`.
+    /// [`GetFileMetadataBatchArg::files`](GetFileMetadataBatchArg).
     pub file: PathOrId,
     /// The result for this particular file.
     pub result: GetFileMetadataIndividualResult,
@@ -4728,7 +4740,7 @@ impl ::serde::ser::Serialize for GetFileMetadataBatchResult {
     }
 }
 
-/// Error result for :route:`get_file_metadata`.
+/// Error result for [`get_file_metadata()`](get_file_metadata).
 #[derive(Debug)]
 pub enum GetFileMetadataError {
     UserError(SharingUserError),
@@ -4886,8 +4898,8 @@ pub struct GetMetadataArgs {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
     /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's :field:`SharedFolderMetadata.permissions` field describing the actions the
-    /// authenticated user can perform on the folder.
+    /// response's [`SharedFolderMetadata::permissions`](SharedFolderMetadata) field describing the
+    /// actions the  authenticated user can perform on the folder.
     pub actions: Option<Vec<FolderAction>>,
 }
 
@@ -5208,7 +5220,7 @@ impl ::serde::ser::Serialize for GetSharedLinkMetadataArg {
 
 #[derive(Debug)]
 pub struct GetSharedLinksArg {
-    /// See :route:`get_shared_links` description.
+    /// See [`get_shared_links()`](get_shared_links) description.
     pub path: Option<String>,
 }
 
@@ -6265,15 +6277,16 @@ impl ::serde::ser::Serialize for InviteeMembershipInfo {
     }
 }
 
-/// Error occurred while performing an asynchronous job from :route:`unshare_folder` or
-/// :route:`remove_folder_member`.
+/// Error occurred while performing an asynchronous job from [`unshare_folder()`](unshare_folder) or
+/// [`remove_folder_member()`](remove_folder_member).
 #[derive(Debug)]
 pub enum JobError {
-    /// Error occurred while performing :route:`unshare_folder` action.
+    /// Error occurred while performing [`unshare_folder()`](unshare_folder) action.
     UnshareFolderError(UnshareFolderError),
-    /// Error occurred while performing :route:`remove_folder_member` action.
+    /// Error occurred while performing [`remove_folder_member()`](remove_folder_member) action.
     RemoveFolderMemberError(RemoveFolderMemberError),
-    /// Error occurred while performing :route:`relinquish_folder_membership` action.
+    /// Error occurred while performing
+    /// [`relinquish_folder_membership()`](relinquish_folder_membership) action.
     RelinquishFolderMembershipError(RelinquishFolderMembershipError),
     Other,
 }
@@ -6682,8 +6695,8 @@ impl ::serde::ser::Serialize for LinkExpiry {
     }
 }
 
-/// Metadata for a shared link. This can be either a :type:`PathLinkMetadata` or
-/// :type:`CollectionLinkMetadata`.
+/// Metadata for a shared link. This can be either a [`PathLinkMetadata`](PathLinkMetadata) or
+/// [`CollectionLinkMetadata`](CollectionLinkMetadata).
 #[derive(Debug)]
 pub enum LinkMetadata {
     Path(PathLinkMetadata),
@@ -6941,10 +6954,10 @@ pub struct LinkPermissions {
     pub resolved_visibility: Option<ResolvedVisibility>,
     /// The shared link's requested visibility. This can be overridden by the team and shared folder
     /// policies. The final visibility, after considering these policies, can be found in
-    /// :field:`resolved_visibility`. This is shown only if the caller is the link's owner.
+    /// `resolved_visibility`. This is shown only if the caller is the link's owner.
     pub requested_visibility: Option<RequestedVisibility>,
     /// The failure reason for revoking the link. This field will only be present if the
-    /// :field:`can_revoke` is :val:`false`.
+    /// `can_revoke` is `false`.
     pub revoke_failure_reason: Option<SharedLinkAccessFailureReason>,
 }
 
@@ -7198,7 +7211,7 @@ impl ::serde::ser::Serialize for LinkSettings {
     }
 }
 
-/// Arguments for :route:`list_file_members`.
+/// Arguments for [`list_file_members()`](list_file_members).
 #[derive(Debug)]
 pub struct ListFileMembersArg {
     /// The file for which you want to see members.
@@ -7341,7 +7354,7 @@ impl ::serde::ser::Serialize for ListFileMembersArg {
     }
 }
 
-/// Arguments for :route:`list_file_members/batch`.
+/// Arguments for [`list_file_members_batch()`](list_file_members_batch).
 #[derive(Debug)]
 pub struct ListFileMembersBatchArg {
     /// Files for which to return members.
@@ -7448,7 +7461,7 @@ impl ::serde::ser::Serialize for ListFileMembersBatchArg {
     }
 }
 
-/// Per-file result for :route:`list_file_members/batch`.
+/// Per-file result for [`list_file_members_batch()`](list_file_members_batch).
 #[derive(Debug)]
 pub struct ListFileMembersBatchResult {
     /// This is the input file identifier, whether an ID or a path.
@@ -7550,11 +7563,12 @@ impl ::serde::ser::Serialize for ListFileMembersBatchResult {
     }
 }
 
-/// Arguments for :route:`list_file_members/continue`.
+/// Arguments for [`list_file_members_continue()`](list_file_members_continue).
 #[derive(Debug)]
 pub struct ListFileMembersContinueArg {
-    /// The cursor returned by your last call to :route:`list_file_members`,
-    /// :route:`list_file_members/continue`, or :route:`list_file_members/batch`.
+    /// The cursor returned by your last call to [`list_file_members()`](list_file_members),
+    /// [`list_file_members_continue()`](list_file_members_continue), or
+    /// [`list_file_members_batch()`](list_file_members_batch).
     pub cursor: String,
 }
 
@@ -7640,12 +7654,12 @@ impl ::serde::ser::Serialize for ListFileMembersContinueArg {
     }
 }
 
-/// Error for :route:`list_file_members/continue`.
+/// Error for [`list_file_members_continue()`](list_file_members_continue).
 #[derive(Debug)]
 pub enum ListFileMembersContinueError {
     UserError(SharingUserError),
     AccessError(SharingFileAccessError),
-    /// :field:`ListFileMembersContinueArg.cursor` is invalid.
+    /// [`ListFileMembersContinueArg::cursor`](ListFileMembersContinueArg) is invalid.
     InvalidCursor,
     Other,
 }
@@ -7836,7 +7850,7 @@ impl ::serde::ser::Serialize for ListFileMembersCountResult {
     }
 }
 
-/// Error for :route:`list_file_members`.
+/// Error for [`list_file_members()`](list_file_members).
 #[derive(Debug)]
 pub enum ListFileMembersError {
     UserError(SharingUserError),
@@ -7989,14 +8003,14 @@ impl ::serde::ser::Serialize for ListFileMembersIndividualResult {
     }
 }
 
-/// Arguments for :route:`list_received_files`.
+/// Arguments for [`list_received_files()`](list_received_files).
 #[derive(Debug)]
 pub struct ListFilesArg {
     /// Number of files to return max per query. Defaults to 100 if no limit is specified.
     pub limit: u32,
     /// A list of `FileAction`s corresponding to `FilePermission`s that should appear in the
-    /// response's :field:`SharedFileMetadata.permissions` field describing the actions the
-    /// authenticated user can perform on the file.
+    /// response's [`SharedFileMetadata::permissions`](SharedFileMetadata) field describing the
+    /// actions the  authenticated user can perform on the file.
     pub actions: Option<Vec<FileAction>>,
 }
 
@@ -8081,10 +8095,10 @@ impl ::serde::ser::Serialize for ListFilesArg {
     }
 }
 
-/// Arguments for :route:`list_received_files/continue`.
+/// Arguments for [`list_received_files_continue()`](list_received_files_continue).
 #[derive(Debug)]
 pub struct ListFilesContinueArg {
-    /// Cursor in :field:`ListFilesResult.cursor`.
+    /// Cursor in [`ListFilesResult::cursor`](ListFilesResult).
     pub cursor: String,
 }
 
@@ -8170,12 +8184,12 @@ impl ::serde::ser::Serialize for ListFilesContinueArg {
     }
 }
 
-/// Error results for :route:`list_received_files/continue`.
+/// Error results for [`list_received_files_continue()`](list_received_files_continue).
 #[derive(Debug)]
 pub enum ListFilesContinueError {
     /// User account had a problem.
     UserError(SharingUserError),
-    /// :field:`ListFilesContinueArg.cursor` is invalid.
+    /// [`ListFilesContinueArg::cursor`](ListFilesContinueArg) is invalid.
     InvalidCursor,
     Other,
 }
@@ -8250,7 +8264,7 @@ impl ::std::fmt::Display for ListFilesContinueError {
     }
 }
 
-/// Success results for :route:`list_received_files`.
+/// Success results for [`list_received_files()`](list_received_files).
 #[derive(Debug)]
 pub struct ListFilesResult {
     /// Information about the files shared with current user.
@@ -8362,8 +8376,8 @@ pub struct ListFolderMembersArgs {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
     /// This is a list indicating whether each returned member will include a boolean value
-    /// :field:`MemberPermission.allow` that describes whether the current user can perform the
-    /// MemberAction on the member.
+    /// [`MemberPermission::allow`](MemberPermission) that describes whether the current user can
+    /// perform the MemberAction on the member.
     pub actions: Option<Vec<MemberAction>>,
     /// The maximum number of results that include members, groups and invitees to return per
     /// request.
@@ -8486,8 +8500,8 @@ impl ::serde::ser::Serialize for ListFolderMembersArgs {
 
 #[derive(Debug)]
 pub struct ListFolderMembersContinueArg {
-    /// The cursor returned by your last call to :route:`list_folder_members` or
-    /// :route:`list_folder_members/continue`.
+    /// The cursor returned by your last call to [`list_folder_members()`](list_folder_members) or
+    /// [`list_folder_members_continue()`](list_folder_members_continue).
     pub cursor: String,
 }
 
@@ -8576,7 +8590,7 @@ impl ::serde::ser::Serialize for ListFolderMembersContinueArg {
 #[derive(Debug)]
 pub enum ListFolderMembersContinueError {
     AccessError(SharedFolderAccessError),
-    /// :field:`ListFolderMembersContinueArg.cursor` is invalid.
+    /// [`ListFolderMembersContinueArg::cursor`](ListFolderMembersContinueArg) is invalid.
     InvalidCursor,
     Other,
 }
@@ -8654,8 +8668,8 @@ impl ::std::fmt::Display for ListFolderMembersContinueError {
 #[derive(Debug)]
 pub struct ListFolderMembersCursorArg {
     /// This is a list indicating whether each returned member will include a boolean value
-    /// :field:`MemberPermission.allow` that describes whether the current user can perform the
-    /// MemberAction on the member.
+    /// [`MemberPermission::allow`](MemberPermission) that describes whether the current user can
+    /// perform the MemberAction on the member.
     pub actions: Option<Vec<MemberAction>>,
     /// The maximum number of results that include members, groups and invitees to return per
     /// request.
@@ -8748,8 +8762,8 @@ pub struct ListFoldersArgs {
     /// The maximum number of results to return per request.
     pub limit: u32,
     /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's :field:`SharedFolderMetadata.permissions` field describing the actions the
-    /// authenticated user can perform on the folder.
+    /// response's [`SharedFolderMetadata::permissions`](SharedFolderMetadata) field describing the
+    /// actions the  authenticated user can perform on the folder.
     pub actions: Option<Vec<FolderAction>>,
 }
 
@@ -8924,7 +8938,7 @@ impl ::serde::ser::Serialize for ListFoldersContinueArg {
 
 #[derive(Debug)]
 pub enum ListFoldersContinueError {
-    /// :field:`ListFoldersContinueArg.cursor` is invalid.
+    /// [`ListFoldersContinueArg::cursor`](ListFoldersContinueArg) is invalid.
     InvalidCursor,
     Other,
 }
@@ -8984,16 +8998,19 @@ impl ::std::fmt::Display for ListFoldersContinueError {
     }
 }
 
-/// Result for :route:`list_folders` or :route:`list_mountable_folders`, depending on which endpoint
-/// was requested. Unmounted shared folders can be identified by the absence of
-/// :field:`SharedFolderMetadata.path_lower`.
+/// Result for [`list_folders()`](list_folders) or
+/// [`list_mountable_folders()`](list_mountable_folders), depending on which endpoint was requested.
+/// Unmounted shared folders can be identified by the absence of
+/// [`SharedFolderMetadata::path_lower`](SharedFolderMetadata).
 #[derive(Debug)]
 pub struct ListFoldersResult {
     /// List of all shared folders the authenticated user has access to.
     pub entries: Vec<SharedFolderMetadata>,
     /// Present if there are additional shared folders that have not been returned yet. Pass the
-    /// cursor into the corresponding continue endpoint (either :route:`list_folders/continue` or
-    /// :route:`list_mountable_folders/continue`) to list additional folders.
+    /// cursor into the corresponding continue endpoint (either
+    /// [`list_folders_continue()`](list_folders_continue) or
+    /// [`list_mountable_folders_continue()`](list_mountable_folders_continue)) to list additional
+    /// folders.
     pub cursor: Option<String>,
 }
 
@@ -9097,11 +9114,11 @@ impl ::serde::ser::Serialize for ListFoldersResult {
 
 #[derive(Debug)]
 pub struct ListSharedLinksArg {
-    /// See :route:`list_shared_links` description.
+    /// See [`list_shared_links()`](list_shared_links) description.
     pub path: Option<ReadPath>,
-    /// The cursor returned by your last call to :route:`list_shared_links`.
+    /// The cursor returned by your last call to [`list_shared_links()`](list_shared_links).
     pub cursor: Option<String>,
-    /// See :route:`list_shared_links` description.
+    /// See [`list_shared_links()`](list_shared_links) description.
     pub direct_only: Option<bool>,
 }
 
@@ -9200,8 +9217,8 @@ impl ::serde::ser::Serialize for ListSharedLinksArg {
 #[derive(Debug)]
 pub enum ListSharedLinksError {
     Path(super::files::LookupError),
-    /// Indicates that the cursor has been invalidated. Call :route:`list_shared_links` to obtain a
-    /// new cursor.
+    /// Indicates that the cursor has been invalidated. Call
+    /// [`list_shared_links()`](list_shared_links) to obtain a new cursor.
     Reset,
     Other,
 }
@@ -9281,10 +9298,10 @@ pub struct ListSharedLinksResult {
     /// Shared links applicable to the path argument.
     pub links: Vec<SharedLinkMetadata>,
     /// Is true if there are additional shared links that have not been returned yet. Pass the
-    /// cursor into :route:`list_shared_links` to retrieve them.
+    /// cursor into [`list_shared_links()`](list_shared_links) to retrieve them.
     pub has_more: bool,
-    /// Pass the cursor into :route:`list_shared_links` to obtain the additional links. Cursor is
-    /// returned only if no path is given.
+    /// Pass the cursor into [`list_shared_links()`](list_shared_links) to obtain the additional
+    /// links. Cursor is returned only if no path is given.
     pub cursor: Option<String>,
 }
 
@@ -11370,7 +11387,7 @@ impl ::std::fmt::Display for RelinquishFolderMembershipError {
     }
 }
 
-/// Arguments for :route:`remove_file_member_2`.
+/// Arguments for [`remove_file_member_2()`](remove_file_member_2).
 #[derive(Debug)]
 pub struct RemoveFileMemberArg {
     /// File from which to remove members.
@@ -11474,7 +11491,7 @@ impl ::serde::ser::Serialize for RemoveFileMemberArg {
     }
 }
 
-/// Errors for :route:`remove_file_member_2`.
+/// Errors for [`remove_file_member_2()`](remove_file_member_2).
 #[derive(Debug)]
 pub enum RemoveFileMemberError {
     UserError(SharingUserError),
@@ -11904,8 +11921,8 @@ impl ::serde::ser::Serialize for RemoveMemberJobStatus {
 
 /// The access permission that can be requested by the caller for the shared link. Note that the
 /// final resolved visibility of the shared link takes into account other aspects, such as team and
-/// shared folder settings. Check the :type:`ResolvedVisibility` for more info on the possible
-/// resolved visibility values of shared links.
+/// shared folder settings. Check the [`ResolvedVisibility`](ResolvedVisibility) for more info on
+/// the possible resolved visibility values of shared links.
 #[derive(Debug)]
 pub enum RequestedVisibility {
     /// Anyone who has received the link can access it. No login required.
@@ -11974,8 +11991,8 @@ impl ::serde::ser::Serialize for RequestedVisibility {
 }
 
 /// The actual access permissions values of shared links after taking into account user preferences
-/// and the team and shared folder settings. Check the :type:`RequestedVisibility` for more info on
-/// the possible visibility values that can be set by the shared link's owner.
+/// and the team and shared folder settings. Check the [`RequestedVisibility`](RequestedVisibility)
+/// for more info on the possible visibility values that can be set by the shared link's owner.
 #[derive(Debug)]
 pub enum ResolvedVisibility {
     /// Anyone who has received the link can access it. No login required.
@@ -12259,13 +12276,14 @@ pub struct ShareFolderArg {
     /// Who can be a member of this shared folder. Only applicable if the current user is on a team.
     pub member_policy: Option<MemberPolicy>,
     /// The policy to apply to shared links created for content inside this shared folder.  The
-    /// current user must be on a team to set this policy to :field:`SharedLinkPolicy.members`.
+    /// current user must be on a team to set this policy to
+    /// [`SharedLinkPolicy::Members`](SharedLinkPolicy::Members).
     pub shared_link_policy: Option<SharedLinkPolicy>,
     /// Who can enable/disable viewer info for this shared folder.
     pub viewer_info_policy: Option<ViewerInfoPolicy>,
     /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's :field:`SharedFolderMetadata.permissions` field describing the actions the
-    /// authenticated user can perform on the folder.
+    /// response's [`SharedFolderMetadata::permissions`](SharedFolderMetadata) field describing the
+    /// actions the  authenticated user can perform on the folder.
     pub actions: Option<Vec<FolderAction>>,
     /// Settings on the link for this folder.
     pub link_settings: Option<LinkSettings>,
@@ -12476,7 +12494,8 @@ pub struct ShareFolderArgBase {
     /// Who can be a member of this shared folder. Only applicable if the current user is on a team.
     pub member_policy: Option<MemberPolicy>,
     /// The policy to apply to shared links created for content inside this shared folder.  The
-    /// current user must be on a team to set this policy to :field:`SharedLinkPolicy.members`.
+    /// current user must be on a team to set this policy to
+    /// [`SharedLinkPolicy::Members`](SharedLinkPolicy::Members).
     pub shared_link_policy: Option<SharedLinkPolicy>,
     /// Who can enable/disable viewer info for this shared folder.
     pub viewer_info_policy: Option<ViewerInfoPolicy>,
@@ -12648,12 +12667,12 @@ impl ::serde::ser::Serialize for ShareFolderArgBase {
 pub enum ShareFolderError {
     /// The current user's e-mail address is unverified.
     EmailUnverified,
-    /// :field:`ShareFolderArg.path` is invalid.
+    /// [`ShareFolderArg::path`](ShareFolderArg) is invalid.
     BadPath(SharePathError),
-    /// Team policy is more restrictive than :field:`ShareFolderArg.member_policy`.
+    /// Team policy is more restrictive than [`ShareFolderArg::member_policy`](ShareFolderArg).
     TeamPolicyDisallowsMemberPolicy,
     /// The current user's account is not allowed to select the specified
-    /// :field:`ShareFolderArg.shared_link_policy`.
+    /// [`ShareFolderArg::shared_link_policy`](ShareFolderArg).
     DisallowedSharedLinkPolicy,
     Other,
     /// The current user does not have permission to perform this action.
@@ -12758,12 +12777,12 @@ impl ::std::fmt::Display for ShareFolderError {
 pub enum ShareFolderErrorBase {
     /// The current user's e-mail address is unverified.
     EmailUnverified,
-    /// :field:`ShareFolderArg.path` is invalid.
+    /// [`ShareFolderArg::path`](ShareFolderArg) is invalid.
     BadPath(SharePathError),
-    /// Team policy is more restrictive than :field:`ShareFolderArg.member_policy`.
+    /// Team policy is more restrictive than [`ShareFolderArg::member_policy`](ShareFolderArg).
     TeamPolicyDisallowsMemberPolicy,
     /// The current user's account is not allowed to select the specified
-    /// :field:`ShareFolderArg.shared_link_policy`.
+    /// [`ShareFolderArg::shared_link_policy`](ShareFolderArg).
     DisallowedSharedLinkPolicy,
     Other,
 }
@@ -13586,8 +13605,9 @@ impl ::serde::ser::Serialize for SharedContentLinkMetadataBase {
 }
 
 /// Shared file user, group, and invitee membership. Used for the results of
-/// :route:`list_file_members` and :route:`list_file_members/continue`, and used as part of the
-/// results for :route:`list_file_members/batch`.
+/// [`list_file_members()`](list_file_members) and
+/// [`list_file_members_continue()`](list_file_members_continue), and used as part of the results
+/// for [`list_file_members_batch()`](list_file_members_batch).
 #[derive(Debug)]
 pub struct SharedFileMembers {
     /// The list of user members of the shared file.
@@ -13597,7 +13617,8 @@ pub struct SharedFileMembers {
     /// The list of invited members of a file, but have not logged in and claimed this.
     pub invitees: Vec<InviteeMembershipInfo>,
     /// Present if there are additional shared file members that have not been returned yet. Pass
-    /// the cursor into :route:`list_file_members/continue` to list additional members.
+    /// the cursor into [`list_file_members_continue()`](list_file_members_continue) to list
+    /// additional members.
     pub cursor: Option<String>,
 }
 
@@ -13760,8 +13781,8 @@ pub struct SharedFileMetadata {
     /// The lower-case full path of this file. Absent for unmounted files.
     pub path_lower: Option<String>,
     /// The sharing permissions that requesting user has on this file. This corresponds to the
-    /// entries given in :field:`GetFileMetadataBatchArg.actions` or
-    /// :field:`GetFileMetadataArg.actions`.
+    /// entries given in [`GetFileMetadataBatchArg::actions`](GetFileMetadataBatchArg) or
+    /// [`GetFileMetadataArg::actions`](GetFileMetadataArg).
     pub permissions: Option<Vec<FilePermission>>,
     /// Timestamp indicating when the current user was invited to this shared file. If the user was
     /// not invited to the shared file, the timestamp will indicate when the user was invited to the
@@ -14236,7 +14257,8 @@ pub struct SharedFolderMembers {
     /// The list of invitees to the shared folder.
     pub invitees: Vec<InviteeMembershipInfo>,
     /// Present if there are additional shared folder members that have not been returned yet. Pass
-    /// the cursor into :route:`list_folder_members/continue` to list additional members.
+    /// the cursor into [`list_folder_members_continue()`](list_folder_members_continue) to list
+    /// additional members.
     pub cursor: Option<String>,
 }
 
@@ -14371,7 +14393,7 @@ pub struct SharedFolderMetadata {
     pub access_type: AccessLevel,
     /// Whether this folder is inside of a team folder.
     pub is_inside_team_folder: bool,
-    /// Whether this folder is a :link:`team folder https://www.dropbox.com/en/help/986`.
+    /// Whether this folder is a [team folder](https://www.dropbox.com/en/help/986).
     pub is_team_folder: bool,
     /// The name of the this shared folder.
     pub name: String,
@@ -14677,7 +14699,7 @@ pub struct SharedFolderMetadataBase {
     pub access_type: AccessLevel,
     /// Whether this folder is inside of a team folder.
     pub is_inside_team_folder: bool,
-    /// Whether this folder is a :link:`team folder https://www.dropbox.com/en/help/986`.
+    /// Whether this folder is a [team folder](https://www.dropbox.com/en/help/986).
     pub is_team_folder: bool,
     /// The display names of the users that own the folder. If the folder is part of a team folder,
     /// the display names of the team admins are also included. Absent if the owner display names
@@ -15191,8 +15213,9 @@ impl ::serde::ser::Serialize for SharedLinkPolicy {
 pub struct SharedLinkSettings {
     /// The requested access for this shared link.
     pub requested_visibility: Option<RequestedVisibility>,
-    /// If :field:`requested_visibility` is :field:`RequestedVisibility.password` this is needed to
-    /// specify the password to access the link.
+    /// If `requested_visibility` is
+    /// [`RequestedVisibility::Password`](RequestedVisibility::Password) this is needed to specify
+    /// the password to access the link.
     pub link_password: Option<String>,
     /// Expiration time of the shared link. By default the link won't expire.
     pub expires: Option<super::common::DropboxTimestamp>,
@@ -15293,13 +15316,15 @@ impl ::serde::ser::Serialize for SharedLinkSettings {
 #[derive(Debug)]
 pub enum SharedLinkSettingsError {
     /// The given settings are invalid (for example, all attributes of the
-    /// :type:`SharedLinkSettings` are empty, the requested visibility is
-    /// :field:`RequestedVisibility.password` but the :field:`SharedLinkSettings.link_password` is
-    /// missing, :field:`SharedLinkSettings.expires` is set to the past, etc.).
+    /// [`SharedLinkSettings`](SharedLinkSettings) are empty, the requested visibility is
+    /// [`RequestedVisibility::Password`](RequestedVisibility::Password) but the
+    /// [`SharedLinkSettings::link_password`](SharedLinkSettings) is missing,
+    /// [`SharedLinkSettings::expires`](SharedLinkSettings) is set to the past, etc.).
     InvalidSettings,
     /// User is not allowed to modify the settings of this link. Note that basic users can only set
-    /// :field:`RequestedVisibility.public` as the :field:`SharedLinkSettings.requested_visibility`
-    /// and cannot set :field:`SharedLinkSettings.expires`.
+    /// [`RequestedVisibility::Public`](RequestedVisibility::Public) as the
+    /// [`SharedLinkSettings::requested_visibility`](SharedLinkSettings) and cannot set
+    /// [`SharedLinkSettings::expires`](SharedLinkSettings).
     NotAuthorized,
 }
 
@@ -15755,7 +15780,7 @@ impl ::serde::ser::Serialize for TransferFolderArg {
 #[derive(Debug)]
 pub enum TransferFolderError {
     AccessError(SharedFolderAccessError),
-    /// :field:`TransferFolderArg.to_dropbox_id` is invalid.
+    /// [`TransferFolderArg::to_dropbox_id`](TransferFolderArg) is invalid.
     InvalidDropboxId,
     /// The new designated owner is not currently a member of the shared folder.
     NewOwnerNotAMember,
@@ -16057,7 +16082,7 @@ impl ::std::fmt::Display for UnmountFolderError {
     }
 }
 
-/// Arguments for :route:`unshare_file`.
+/// Arguments for [`unshare_file()`](unshare_file).
 #[derive(Debug)]
 pub struct UnshareFileArg {
     /// The file to unshare.
@@ -16146,7 +16171,7 @@ impl ::serde::ser::Serialize for UnshareFileArg {
     }
 }
 
-/// Error result for :route:`unshare_file`.
+/// Error result for [`unshare_file()`](unshare_file).
 #[derive(Debug)]
 pub enum UnshareFileError {
     UserError(SharingUserError),
@@ -16437,7 +16462,7 @@ impl ::std::fmt::Display for UnshareFolderError {
     }
 }
 
-/// Arguments for :route:`update_file_member`.
+/// Arguments for [`update_file_member()`](update_file_member).
 #[derive(Debug)]
 pub struct UpdateFileMemberArgs {
     /// File for which we are changing a member's access.
@@ -16556,10 +16581,10 @@ impl ::serde::ser::Serialize for UpdateFileMemberArgs {
 pub struct UpdateFolderMemberArg {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
-    /// The member of the shared folder to update.  Only the :field:`MemberSelector.dropbox_id` may
-    /// be set at this time.
+    /// The member of the shared folder to update.  Only the
+    /// [`MemberSelector::DropboxId`](MemberSelector::DropboxId) may be set at this time.
     pub member: MemberSelector,
-    /// The new access level for :field:`member`. :field:`AccessLevel.owner` is disallowed.
+    /// The new access level for `member`. [`AccessLevel::Owner`](AccessLevel::Owner) is disallowed.
     pub access_level: AccessLevel,
 }
 
@@ -16807,13 +16832,14 @@ pub struct UpdateFolderPolicyArg {
     /// Who can enable/disable viewer info for this shared folder.
     pub viewer_info_policy: Option<ViewerInfoPolicy>,
     /// The policy to apply to shared links created for content inside this shared folder. The
-    /// current user must be on a team to set this policy to :field:`SharedLinkPolicy.members`.
+    /// current user must be on a team to set this policy to
+    /// [`SharedLinkPolicy::Members`](SharedLinkPolicy::Members).
     pub shared_link_policy: Option<SharedLinkPolicy>,
     /// Settings on the link for this folder.
     pub link_settings: Option<LinkSettings>,
     /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
-    /// response's :field:`SharedFolderMetadata.permissions` field describing the actions the
-    /// authenticated user can perform on the folder.
+    /// response's [`SharedFolderMetadata::permissions`](SharedFolderMetadata) field describing the
+    /// actions the  authenticated user can perform on the folder.
     pub actions: Option<Vec<FolderAction>>,
 }
 
@@ -16998,12 +17024,13 @@ impl ::serde::ser::Serialize for UpdateFolderPolicyArg {
 #[derive(Debug)]
 pub enum UpdateFolderPolicyError {
     AccessError(SharedFolderAccessError),
-    /// :field:`UpdateFolderPolicyArg.member_policy` was set even though user is not on a team.
+    /// [`UpdateFolderPolicyArg::member_policy`](UpdateFolderPolicyArg) was set even though user is
+    /// not on a team.
     NotOnTeam,
-    /// Team policy is more restrictive than :field:`ShareFolderArg.member_policy`.
+    /// Team policy is more restrictive than [`ShareFolderArg::member_policy`](ShareFolderArg).
     TeamPolicyDisallowsMemberPolicy,
     /// The current account is not allowed to select the specified
-    /// :field:`ShareFolderArg.shared_link_policy`.
+    /// [`ShareFolderArg::shared_link_policy`](ShareFolderArg).
     DisallowedSharedLinkPolicy,
     /// The current user does not have permission to perform this action.
     NoPermission,
@@ -17289,15 +17316,16 @@ impl ::serde::ser::Serialize for UserFileMembershipInfo {
     }
 }
 
-/// Basic information about a user. Use :route:`users.get_account` and
-/// :route:`users.get_account_batch` to obtain more detailed information.
+/// Basic information about a user. Use [`users::get_account()`](super::users::get_account) and
+/// [`users::get_account_batch()`](super::users::get_account_batch) to obtain more detailed
+/// information.
 #[derive(Debug)]
 pub struct UserInfo {
     /// The account ID of the user.
     pub account_id: super::users_common::AccountId,
     /// If the user is in the same team as current user.
     pub same_team: bool,
-    /// The team member ID of the shared folder member. Only present if :field:`same_team` is true.
+    /// The team member ID of the shared folder member. Only present if `same_team` is true.
     pub team_member_id: Option<String>,
 }
 
@@ -17627,8 +17655,8 @@ impl ::serde::ser::Serialize for ViewerInfoPolicy {
     }
 }
 
-/// Who can access a shared link. The most open visibility is :field:`public`. The default depends
-/// on many aspects, such as team and user preferences and shared folder settings.
+/// Who can access a shared link. The most open visibility is [`Public`](Visibility::Public). The
+/// default depends on many aspects, such as team and user preferences and shared folder settings.
 #[derive(Debug)]
 pub enum Visibility {
     /// Anyone who has received the link can access it. No login required.

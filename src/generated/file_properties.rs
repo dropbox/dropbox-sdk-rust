@@ -10,22 +10,23 @@
 
 //! This namespace contains helpers for property and template metadata endpoints.  These endpoints
 //! enable you to tag arbitrary key/value data to Dropbox files.  The most basic unit in this
-//! namespace is the :type:`PropertyField`. These fields encapsulate the actual key/value data.
-//! Fields are added to a Dropbox file using a :type:`PropertyGroup`. Property groups contain a
-//! reference to a Dropbox file and a :type:`PropertyGroupTemplate`. Property groups are uniquely
-//! identified by the combination of their associated Dropbox file and template.  The
-//! :type:`PropertyGroupTemplate` is a way of restricting the possible key names and value types of
-//! the data within a property group. The possible key names and value types are explicitly
-//! enumerated using :type:`PropertyFieldTemplate` objects.  You can think of a property group
-//! template as a class definition for a particular key/value metadata object, and the property
-//! groups themselves as the instantiations of these objects.  Templates are owned either by a
-//! user/app pair or team/app pair. Templates and their associated properties can't be accessed by
-//! any app other than the app that created them, and even then, only when the app is linked with
-//! the owner of the template (either a user or team).  User-owned templates are accessed via the
-//! user-auth template/*_for_user endpoints, while team-owned templates are accessed via the
-//! team-auth template/*_for_team endpoints. Properties associated with either type of template can
-//! be accessed via the user-auth properties/* endpoints.  Finally, properties can be accessed from
-//! a number of endpoints that return metadata, including `files/get_metadata`, and
+//! namespace is the [`PropertyField`](PropertyField). These fields encapsulate the actual key/value
+//! data.  Fields are added to a Dropbox file using a [`PropertyGroup`](PropertyGroup). Property
+//! groups contain a reference to a Dropbox file and a
+//! [`PropertyGroupTemplate`](PropertyGroupTemplate). Property groups are uniquely identified by the
+//! combination of their associated Dropbox file and template.  The
+//! [`PropertyGroupTemplate`](PropertyGroupTemplate) is a way of restricting the possible key names
+//! and value types of the data within a property group. The possible key names and value types are
+//! explicitly enumerated using [`PropertyFieldTemplate`](PropertyFieldTemplate) objects.  You can
+//! think of a property group template as a class definition for a particular key/value metadata
+//! object, and the property groups themselves as the instantiations of these objects.  Templates
+//! are owned either by a user/app pair or team/app pair. Templates and their associated properties
+//! can't be accessed by any app other than the app that created them, and even then, only when the
+//! app is linked with the owner of the template (either a user or team).  User-owned templates are
+//! accessed via the user-auth template/*_for_user endpoints, while team-owned templates are
+//! accessed via the team-auth template/*_for_team endpoints. Properties associated with either type
+//! of template can be accessed via the user-auth properties/* endpoints.  Finally, properties can
+//! be accessed from a number of endpoints that return metadata, including `files/get_metadata`, and
 //! `files/list_folder`. Properties can also be added during upload, using `files/upload`.
 
 pub type Id = String;
@@ -33,8 +34,8 @@ pub type PathOrId = String;
 pub type PropertiesSearchCursor = String;
 pub type TemplateId = String;
 
-/// Add property groups to a Dropbox file. See :route:`templates/add_for_user` or
-/// :route:`templates/add_for_team` to create new templates.
+/// Add property groups to a Dropbox file. See [`templates_add_for_user()`](templates_add_for_user)
+/// or [`templates_add_for_team()`](templates_add_for_team) to create new templates.
 pub fn properties_add(
     client: &::client_trait::HttpClient,
     arg: &AddPropertiesArg,
@@ -48,10 +49,10 @@ pub fn properties_add(
 }
 
 /// Overwrite property groups associated with a file. This endpoint should be used instead of
-/// :route:`properties/update` when property groups are being updated via a "snapshot" instead of
-/// via a "delta". In other words, this endpoint will delete all omitted fields from a property
-/// group, whereas :route:`properties/update` will only delete fields that are explicitly marked for
-/// deletion.
+/// [`properties_update()`](properties_update) when property groups are being updated via a
+/// "snapshot" instead of via a "delta". In other words, this endpoint will delete all omitted
+/// fields from a property group, whereas [`properties_update()`](properties_update) will only
+/// delete fields that are explicitly marked for deletion.
 pub fn properties_overwrite(
     client: &::client_trait::HttpClient,
     arg: &OverwritePropertyGroupArg,
@@ -65,9 +66,10 @@ pub fn properties_overwrite(
 }
 
 /// Permanently removes the specified property group from the file. To remove specific property
-/// field key value pairs, see :route:`properties/update`. To update a template, see
-/// :route:`templates/update_for_user` or :route:`templates/update_for_team`. Templates can't be
-/// removed once created.
+/// field key value pairs, see [`properties_update()`](properties_update). To update a template, see
+/// [`templates_update_for_user()`](templates_update_for_user) or
+/// [`templates_update_for_team()`](templates_update_for_team). Templates can't be removed once
+/// created.
 pub fn properties_remove(
     client: &::client_trait::HttpClient,
     arg: &RemovePropertiesArg,
@@ -93,8 +95,8 @@ pub fn properties_search(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`properties/search`, use this to paginate through
-/// all search results.
+/// Once a cursor has been retrieved from [`properties_search()`](properties_search), use this to
+/// paginate through all search results.
 pub fn properties_search_continue(
     client: &::client_trait::HttpClient,
     arg: &PropertiesSearchContinueArg,
@@ -108,10 +110,11 @@ pub fn properties_search_continue(
 }
 
 /// Add, update or remove properties associated with the supplied file and templates. This endpoint
-/// should be used instead of :route:`properties/overwrite` when property groups are being updated
-/// via a "delta" instead of via a "snapshot" . In other words, this endpoint will not delete any
-/// omitted fields from a property group, whereas :route:`properties/overwrite` will delete any
-/// fields that are omitted from a property group.
+/// should be used instead of [`properties_overwrite()`](properties_overwrite) when property groups
+/// are being updated via a "delta" instead of via a "snapshot" . In other words, this endpoint will
+/// not delete any omitted fields from a property group, whereas
+/// [`properties_overwrite()`](properties_overwrite) will delete any fields that are omitted from a
+/// property group.
 pub fn properties_update(
     client: &::client_trait::HttpClient,
     arg: &UpdatePropertiesArg,
@@ -124,8 +127,8 @@ pub fn properties_update(
         None)
 }
 
-/// Add a template associated with a team. See :route:`properties/add` to add properties to a file
-/// or folder. Note: this endpoint will create team-owned templates.
+/// Add a template associated with a team. See [`properties_add()`](properties_add) to add
+/// properties to a file or folder. Note: this endpoint will create team-owned templates.
 pub fn templates_add_for_team(
     client: &::client_trait::HttpClient,
     arg: &AddTemplateArg,
@@ -138,8 +141,8 @@ pub fn templates_add_for_team(
         None)
 }
 
-/// Add a template associated with a user. See :route:`properties/add` to add properties to a file.
-/// This endpoint can't be called on a team member or admin's behalf.
+/// Add a template associated with a user. See [`properties_add()`](properties_add) to add
+/// properties to a file. This endpoint can't be called on a team member or admin's behalf.
 pub fn templates_add_for_user(
     client: &::client_trait::HttpClient,
     arg: &AddTemplateArg,
@@ -180,7 +183,7 @@ pub fn templates_get_for_user(
 }
 
 /// Get the template identifiers for a team. To get the schema of each template use
-/// :route:`templates/get_for_team`.
+/// [`templates_get_for_team()`](templates_get_for_team).
 pub fn templates_list_for_team(
     client: &::client_trait::HttpClient,
     arg: &(),
@@ -194,8 +197,8 @@ pub fn templates_list_for_team(
 }
 
 /// Get the template identifiers for a team. To get the schema of each template use
-/// :route:`templates/get_for_user`. This endpoint can't be called on a team member or admin's
-/// behalf.
+/// [`templates_get_for_user()`](templates_get_for_user). This endpoint can't be called on a team
+/// member or admin's behalf.
 pub fn templates_list_for_user(
     client: &::client_trait::HttpClient,
     arg: &(),
@@ -208,8 +211,9 @@ pub fn templates_list_for_user(
         None)
 }
 
-/// Permanently removes the specified template created from :route:`templates/add_for_user`. All
-/// properties associated with the template will also be removed. This action cannot be undone.
+/// Permanently removes the specified template created from
+/// [`templates_add_for_user()`](templates_add_for_user). All properties associated with the
+/// template will also be removed. This action cannot be undone.
 pub fn templates_remove_for_team(
     client: &::client_trait::HttpClient,
     arg: &RemoveTemplateArg,
@@ -222,8 +226,9 @@ pub fn templates_remove_for_team(
         None)
 }
 
-/// Permanently removes the specified template created from :route:`templates/add_for_user`. All
-/// properties associated with the template will also be removed. This action cannot be undone.
+/// Permanently removes the specified template created from
+/// [`templates_add_for_user()`](templates_add_for_user). All properties associated with the
+/// template will also be removed. This action cannot be undone.
 pub fn templates_remove_for_user(
     client: &::client_trait::HttpClient,
     arg: &RemoveTemplateArg,
@@ -618,8 +623,9 @@ impl ::serde::ser::Serialize for AddTemplateArg {
 
 #[derive(Debug)]
 pub struct AddTemplateResult {
-    /// An identifier for template added by  See :route:`templates/add_for_user` or
-    /// :route:`templates/add_for_team`.
+    /// An identifier for template added by  See
+    /// [`templates_add_for_user()`](templates_add_for_user) or
+    /// [`templates_add_for_team()`](templates_add_for_team).
     pub template_id: TemplateId,
 }
 
@@ -707,8 +713,9 @@ impl ::serde::ser::Serialize for AddTemplateResult {
 
 #[derive(Debug)]
 pub struct GetTemplateArg {
-    /// An identifier for template added by route  See :route:`templates/add_for_user` or
-    /// :route:`templates/add_for_team`.
+    /// An identifier for template added by route  See
+    /// [`templates_add_for_user()`](templates_add_for_user) or
+    /// [`templates_add_for_team()`](templates_add_for_team).
     pub template_id: TemplateId,
 }
 
@@ -1036,8 +1043,9 @@ impl ::std::fmt::Display for InvalidPropertyGroupError {
 
 #[derive(Debug)]
 pub struct ListTemplateResult {
-    /// List of identifiers for templates added by  See :route:`templates/add_for_user` or
-    /// :route:`templates/add_for_team`.
+    /// List of identifiers for templates added by  See
+    /// [`templates_add_for_user()`](templates_add_for_user) or
+    /// [`templates_add_for_team()`](templates_add_for_team).
     pub template_ids: Vec<TemplateId>,
 }
 
@@ -1779,8 +1787,8 @@ impl ::serde::ser::Serialize for PropertiesSearchArg {
 
 #[derive(Debug)]
 pub struct PropertiesSearchContinueArg {
-    /// The cursor returned by your last call to :route:`properties/search` or
-    /// :route:`properties/search/continue`.
+    /// The cursor returned by your last call to [`properties_search()`](properties_search) or
+    /// [`properties_search_continue()`](properties_search_continue).
     pub cursor: PropertiesSearchCursor,
 }
 
@@ -1868,8 +1876,8 @@ impl ::serde::ser::Serialize for PropertiesSearchContinueArg {
 
 #[derive(Debug)]
 pub enum PropertiesSearchContinueError {
-    /// Indicates that the cursor has been invalidated. Call :route:`properties/search` to obtain a
-    /// new cursor.
+    /// Indicates that the cursor has been invalidated. Call
+    /// [`properties_search()`](properties_search) to obtain a new cursor.
     Reset,
     Other,
 }
@@ -2309,8 +2317,8 @@ impl ::serde::ser::Serialize for PropertiesSearchQuery {
 pub struct PropertiesSearchResult {
     /// A list (possibly empty) of matches for the query.
     pub matches: Vec<PropertiesSearchMatch>,
-    /// Pass the cursor into :route:`properties/search/continue` to continue to receive search
-    /// results. Cursor will be null when there are no more results.
+    /// Pass the cursor into [`properties_search_continue()`](properties_search_continue) to
+    /// continue to receive search results. Cursor will be null when there are no more results.
     pub cursor: Option<PropertiesSearchCursor>,
 }
 
@@ -2413,7 +2421,7 @@ impl ::serde::ser::Serialize for PropertiesSearchResult {
 }
 
 /// Raw key/value data to be associated with a Dropbox file. Property fields are added to Dropbox
-/// files as a :type:`PropertyGroup`.
+/// files as a [`PropertyGroup`](PropertyGroup).
 #[derive(Debug)]
 pub struct PropertyField {
     /// Key of the property field associated with a file and template. Keys can be up to 256 bytes.
@@ -2517,7 +2525,7 @@ impl ::serde::ser::Serialize for PropertyField {
 }
 
 /// Defines how a single property field may be structured. Used exclusively by
-/// :type:`PropertyGroupTemplate`.
+/// [`PropertyGroupTemplate`](PropertyGroupTemplate).
 #[derive(Debug)]
 pub struct PropertyFieldTemplate {
     /// Key of the property field being described. Property field keys can be up to 256 bytes.
@@ -2633,9 +2641,10 @@ impl ::serde::ser::Serialize for PropertyFieldTemplate {
     }
 }
 
-/// A subset of the property fields described by the corresponding :type:`PropertyGroupTemplate`.
-/// Properties are always added to a Dropbox file as a :type:`PropertyGroup`. The possible key names
-/// and value types in this group are defined by the corresponding :type:`PropertyGroupTemplate`.
+/// A subset of the property fields described by the corresponding
+/// [`PropertyGroupTemplate`](PropertyGroupTemplate). Properties are always added to a Dropbox file
+/// as a [`PropertyGroup`](PropertyGroup). The possible key names and value types in this group are
+/// defined by the corresponding [`PropertyGroupTemplate`](PropertyGroupTemplate).
 #[derive(Debug)]
 pub struct PropertyGroup {
     /// A unique identifier for the associated template.
@@ -3034,8 +3043,9 @@ impl ::serde::ser::Serialize for PropertyType {
 pub struct RemovePropertiesArg {
     /// A unique identifier for the file or folder.
     pub path: PathOrId,
-    /// A list of identifiers for a template created by :route:`templates/add_for_user` or
-    /// :route:`templates/add_for_team`.
+    /// A list of identifiers for a template created by
+    /// [`templates_add_for_user()`](templates_add_for_user) or
+    /// [`templates_add_for_team()`](templates_add_for_team).
     pub property_template_ids: Vec<TemplateId>,
 }
 
@@ -3255,8 +3265,8 @@ impl ::std::fmt::Display for RemovePropertiesError {
 
 #[derive(Debug)]
 pub struct RemoveTemplateArg {
-    /// An identifier for a template created by :route:`templates/add_for_user` or
-    /// :route:`templates/add_for_team`.
+    /// An identifier for a template created by [`templates_add_for_user()`](templates_add_for_user)
+    /// or [`templates_add_for_team()`](templates_add_for_team).
     pub template_id: TemplateId,
 }
 
@@ -3851,8 +3861,9 @@ impl ::std::fmt::Display for UpdatePropertiesError {
 
 #[derive(Debug)]
 pub struct UpdateTemplateArg {
-    /// An identifier for template added by  See :route:`templates/add_for_user` or
-    /// :route:`templates/add_for_team`.
+    /// An identifier for template added by  See
+    /// [`templates_add_for_user()`](templates_add_for_user) or
+    /// [`templates_add_for_team()`](templates_add_for_team).
     pub template_id: TemplateId,
     /// A display name for the template. template names can be up to 256 bytes.
     pub name: Option<String>,
@@ -3995,8 +4006,9 @@ impl ::serde::ser::Serialize for UpdateTemplateArg {
 
 #[derive(Debug)]
 pub struct UpdateTemplateResult {
-    /// An identifier for template added by route  See :route:`templates/add_for_user` or
-    /// :route:`templates/add_for_team`.
+    /// An identifier for template added by route  See
+    /// [`templates_add_for_user()`](templates_add_for_user) or
+    /// [`templates_add_for_team()`](templates_add_for_team).
     pub template_id: TemplateId,
 }
 

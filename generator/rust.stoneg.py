@@ -18,6 +18,8 @@ class RustBackend(RustHelperBackend):
     # File Generators
 
     def generate(self, api):
+        self._all_types = {ns.name: {typ.name: typ for typ in ns.data_types}
+                           for ns in api.namespaces.values()}
         for namespace in api.namespaces.values():
             self._emit_namespace(namespace)
         self._generate_mod_file()
@@ -38,7 +40,9 @@ class RustBackend(RustHelperBackend):
             self._emit_header()
 
             if namespace.doc is not None:
-                self.emit_wrapped_text(namespace.doc, prefix=u'//! ', width=100)
+                self.emit_wrapped_text(
+                    self.process_doc(namespace.doc, self._docf),
+                    prefix=u'//! ', width=100)
                 self.emit()
 
             for alias in namespace.aliases:
@@ -50,6 +54,7 @@ class RustBackend(RustHelperBackend):
                 self._emit_route(namespace.name, fn)
 
             for typ in namespace.data_types:
+                self._current_type = typ
                 if isinstance(typ, ir.Struct):
                     if typ.has_enumerated_subtypes():
                         self._emit_polymorphic_struct(typ)
@@ -548,9 +553,7 @@ class RustBackend(RustHelperBackend):
                             ref_x = 'ref x' if needs_x else '_'
                             with self.block(u'{}::{}({}) =>'.format(
                                     type_name, variant_name, ref_x)):
-                                if isinstance(ultimate_type, ir.Union) or \
-                                        (isinstance(ultimate_type, ir.Struct)
-                                         and ultimate_type.has_enumerated_subtypes()):
+                                if self.is_enum_type(ultimate_type):
                                     # Inner type is a union or polymorphic struct; need to always
                                     # emit another nesting level.
                                     self.emit(u'// union or polymporphic struct')
@@ -608,7 +611,79 @@ class RustBackend(RustHelperBackend):
 
     def _emit_doc(self, doc_string):
         if doc_string is not None:
-            self.emit_wrapped_text(doc_string, prefix=u'/// ', width=100)
+            self.emit_wrapped_text(
+                self.process_doc(doc_string, self._docf),
+                prefix=u'/// ', width=100)
+
+    def _docf(self, tag, val):
+        if tag == 'route':
+            if '.' in val:
+                ns, route = val.split('.')
+                rust_fn = self.route_name_raw(route)
+                label = ns + '::' + rust_fn
+                target = 'super::' + label
+            else:
+                target = self.route_name_raw(val)
+                label = target
+            return '[`{}()`]({})'.format(label, target)
+        elif tag == 'field':
+            if '.' in val:
+                cls_name, field = val.rsplit('.', 1)
+                assert('.' not in cls_name)  # dunno if this is even allowed, but we don't handle it
+                typ = self._all_types[self._current_namespace][cls_name]
+                type_name = self._rust_type(typ)
+                if self.is_enum_type(typ):
+                    if isinstance(typ, ir.Struct) and typ.has_enumerated_subtypes() \
+                            and field in (field.name for field in typ.fields):
+                        # This is actually a link to a field in a polymorphic struct, not a enum
+                        # variant. Because Rust doesn't have polymorphism, we make the fields be
+                        # present on all enum variants, so this is a link to a field in the current
+                        # type. Rustdoc doesn't let you link to a field, just the type, but we're
+                        # already at that page, so don't bother with emitting an actual link.
+                        # Hopefully we're documenting one of the variants right now, or else this
+                        # is going to look weird.
+                        field = self.field_name_raw(field)
+                        return '`{}`'.format(field)
+                    field = self.enum_variant_name_raw(field)
+                    return '[`{}::{}`]({}::{})'.format(type_name, field, type_name, field)
+                else:
+                    field = self.field_name_raw(field)
+                    # we can't link to the field itself, so just link to the struct
+                    return '[`{}::{}`]({})'.format(type_name, field, type_name)
+            else:
+                # link is relative to the current type
+                type_name = self._rust_type(self._current_type)
+                if self.is_enum_type(self._current_type):
+                    variant_name = self.enum_variant_name_raw(val)
+                    return '[`{}`]({}::{})'.format(
+                        variant_name, type_name, variant_name)
+                else:
+                    field_name = self.field_name_raw(val)
+                    # we could, but don't bother linking to the struct because we're already there.
+                    # return '[`{}`]({})'.format(field_name, current_rust_type)
+                    return '`{}`'.format(field_name)
+        elif tag == 'type':
+            if '.' in val:
+                ns, typ_name = val.split('.')
+                typ = self._all_types[ns][typ_name]
+                rust_name = self._rust_type(typ)
+                return '[`{}::{}`](super::{}::{})'.format(
+                    ns, rust_name, ns, rust_name)
+            else:
+                typ = self._all_types[self._current_namespace][val]
+                rust_name = self._rust_type(typ)
+                return '[`{}`]({})'.format(rust_name, rust_name)
+        elif tag == 'link':
+            title, url = val.rsplit(' ', 1)
+            return '[{}]({})'.format(title, url)
+        elif tag == 'val':
+            if val == 'null':
+                return '`None`'
+            else:
+                return '`{}`'.format(val)
+        else:
+            print("WARNING: unrecognized link tag '{}'".format(tag))
+            return '`{}`'.format(val)
 
     def _impl_deserialize(self, type_name):
         return nested(self.block(u'impl<\'de> ::serde::de::Deserialize<\'de> for {}'.format(

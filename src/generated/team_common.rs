@@ -241,8 +241,8 @@ impl ::serde::ser::Serialize for GroupSummary {
 /// The group type determines how a group is created and managed.
 #[derive(Debug)]
 pub enum GroupType {
-    /// A group to which team members are automatically added. Applicable to :link:`team folders
-    /// https://www.dropbox.com/help/986` only.
+    /// A group to which team members are automatically added. Applicable to [team
+    /// folders](https://www.dropbox.com/help/986) only.
     Team,
     /// A group is created and managed by a user.
     UserManaged,

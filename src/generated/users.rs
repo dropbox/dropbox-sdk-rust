@@ -72,8 +72,8 @@ pub struct Account {
     pub account_id: super::users_common::AccountId,
     /// Details of a user's name.
     pub name: Name,
-    /// The user's e-mail address. Do not rely on this without checking the :field:`email_verified`
-    /// field. Even then, it's possible that the user has since lost access to their e-mail.
+    /// The user's e-mail address. Do not rely on this without checking the `email_verified` field.
+    /// Even then, it's possible that the user has since lost access to their e-mail.
     pub email: String,
     /// Whether the user has verified their e-mail address.
     pub email_verified: bool,
@@ -238,20 +238,20 @@ pub struct BasicAccount {
     pub account_id: super::users_common::AccountId,
     /// Details of a user's name.
     pub name: Name,
-    /// The user's e-mail address. Do not rely on this without checking the :field:`email_verified`
-    /// field. Even then, it's possible that the user has since lost access to their e-mail.
+    /// The user's e-mail address. Do not rely on this without checking the `email_verified` field.
+    /// Even then, it's possible that the user has since lost access to their e-mail.
     pub email: String,
     /// Whether the user has verified their e-mail address.
     pub email_verified: bool,
     /// Whether the user has been disabled.
     pub disabled: bool,
     /// Whether this user is a teammate of the current user. If this account is the current user's
-    /// account, then this will be :val:`true`.
+    /// account, then this will be `true`.
     pub is_teammate: bool,
     /// URL for the photo representing the user, if one is set.
     pub profile_photo_url: Option<String>,
     /// The user's unique team member id. This field will only be present if the user is part of a
-    /// team and :field:`is_teammate` is :val:`true`.
+    /// team and `is_teammate` is `true`.
     pub team_member_id: Option<String>,
 }
 
@@ -438,21 +438,20 @@ pub struct FullAccount {
     pub account_id: super::users_common::AccountId,
     /// Details of a user's name.
     pub name: Name,
-    /// The user's e-mail address. Do not rely on this without checking the :field:`email_verified`
-    /// field. Even then, it's possible that the user has since lost access to their e-mail.
+    /// The user's e-mail address. Do not rely on this without checking the `email_verified` field.
+    /// Even then, it's possible that the user has since lost access to their e-mail.
     pub email: String,
     /// Whether the user has verified their e-mail address.
     pub email_verified: bool,
     /// Whether the user has been disabled.
     pub disabled: bool,
-    /// The language that the user specified. Locale tags will be :link:`IETF language tags
-    /// http://en.wikipedia.org/wiki/IETF_language_tag`.
+    /// The language that the user specified. Locale tags will be [IETF language
+    /// tags](http://en.wikipedia.org/wiki/IETF_language_tag).
     pub locale: String,
-    /// The user's :link:`referral link https://www.dropbox.com/referrals`.
+    /// The user's [referral link](https://www.dropbox.com/referrals).
     pub referral_link: String,
     /// Whether the user has a personal and work account. If the current account is personal, then
-    /// :field:`team` will always be :val:`null`, but :field:`is_paired` will indicate if a work
-    /// account is linked.
+    /// `team` will always be `None`, but `is_paired` will indicate if a work account is linked.
     pub is_paired: bool,
     /// What type of account this user has.
     pub account_type: super::users_common::AccountType,
@@ -460,13 +459,12 @@ pub struct FullAccount {
     pub root_info: super::common::RootInfo,
     /// URL for the photo representing the user, if one is set.
     pub profile_photo_url: Option<String>,
-    /// The user's two-letter country code, if available. Country codes are based on :link:`ISO
-    /// 3166-1 http://en.wikipedia.org/wiki/ISO_3166-1`.
+    /// The user's two-letter country code, if available. Country codes are based on [ISO
+    /// 3166-1](http://en.wikipedia.org/wiki/ISO_3166-1).
     pub country: Option<String>,
     /// If this account is a member of a team, information about that team.
     pub team: Option<FullTeam>,
-    /// This account's unique team member id. This field will only be present if :field:`team` is
-    /// present.
+    /// This account's unique team member id. This field will only be present if `team` is present.
     pub team_member_id: Option<String>,
 }
 
@@ -1037,8 +1035,8 @@ impl ::serde::ser::Serialize for GetAccountBatchArg {
 
 #[derive(Debug)]
 pub enum GetAccountBatchError {
-    /// The value is an account ID specified in :field:`GetAccountBatchArg.account_ids` that does
-    /// not exist.
+    /// The value is an account ID specified in
+    /// [`GetAccountBatchArg::account_ids`](GetAccountBatchArg) that does not exist.
     NoAccount(super::users_common::AccountId),
     Other,
 }
@@ -1107,7 +1105,7 @@ impl ::std::fmt::Display for GetAccountBatchError {
 
 #[derive(Debug)]
 pub enum GetAccountError {
-    /// The specified :field:`GetAccountArg.account_id` does not exist.
+    /// The specified [`GetAccountArg::account_id`](GetAccountArg) does not exist.
     NoAccount,
     Other,
 }
@@ -1262,9 +1260,8 @@ pub struct Name {
     pub given_name: String,
     /// Also known as a last name or family name.
     pub surname: String,
-    /// Locale-dependent name. In the US, a person's familiar name is their :field:`given_name`, but
-    /// elsewhere, it could be any combination of a person's :field:`given_name` and
-    /// :field:`surname`.
+    /// Locale-dependent name. In the US, a person's familiar name is their `given_name`, but
+    /// elsewhere, it could be any combination of a person's `given_name` and `surname`.
     pub familiar_name: String,
     /// A name that can be used directly to represent the name of a user's Dropbox account.
     pub display_name: String,

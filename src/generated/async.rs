@@ -80,7 +80,7 @@ impl ::serde::ser::Serialize for LaunchEmptyResult {
 /// Result returned by methods that launch an asynchronous job. A method who may either launch an
 /// asynchronous job, or complete the request synchronously, can use this union by extending it, and
 /// adding a 'complete' field with the type of the synchronous response. See
-/// :type:`LaunchEmptyResult` for an example.
+/// [`LaunchEmptyResult`](LaunchEmptyResult) for an example.
 #[derive(Debug)]
 pub enum LaunchResultBase {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
@@ -361,7 +361,7 @@ impl ::std::fmt::Display for PollError {
 
 /// Result returned by methods that poll for the status of an asynchronous job. Unions that extend
 /// this union should add a 'complete' field with a type of the information returned upon job
-/// completion. See :type:`PollEmptyResult` for an example.
+/// completion. See [`PollEmptyResult`](PollEmptyResult) for an example.
 #[derive(Debug)]
 pub enum PollResultBase {
     /// The asynchronous job is still in progress.

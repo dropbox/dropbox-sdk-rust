@@ -30,8 +30,8 @@ pub fn get_events(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`get_events`, use this to paginate through all
-/// events. Permission : Team Auditing.
+/// Once a cursor has been retrieved from [`get_events()`](get_events), use this to paginate through
+/// all events. Permission : Team Auditing.
 pub fn get_events_continue(
     client: &::client_trait::HttpClient,
     arg: &GetTeamEventsContinueArg,
@@ -22281,7 +22281,7 @@ impl ::serde::ser::Serialize for GetTeamEventsContinueArg {
     }
 }
 
-/// Errors that can be raised when calling :route:`get_events/continue`.
+/// Errors that can be raised when calling [`get_events_continue()`](get_events_continue).
 #[derive(Debug)]
 pub enum GetTeamEventsContinueError {
     /// Bad cursor.
@@ -22344,7 +22344,7 @@ impl ::std::fmt::Display for GetTeamEventsContinueError {
     }
 }
 
-/// Errors that can be raised when calling :route:`get_events`.
+/// Errors that can be raised when calling [`get_events()`](get_events).
 #[derive(Debug)]
 pub enum GetTeamEventsError {
     /// No user found matching the provided account_id.
@@ -22421,10 +22421,11 @@ impl ::std::fmt::Display for GetTeamEventsError {
 pub struct GetTeamEventsResult {
     /// List of events.
     pub events: Vec<TeamEvent>,
-    /// Pass the cursor into :route:`get_events/continue` to obtain additional events.
+    /// Pass the cursor into [`get_events_continue()`](get_events_continue) to obtain additional
+    /// events.
     pub cursor: String,
     /// Is true if there are additional events that have not been returned yet. An additional call
-    /// to :route:`get_events/continue` can retrieve them.
+    /// to [`get_events_continue()`](get_events_continue) can retrieve them.
     pub has_more: bool,
 }
 

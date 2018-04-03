@@ -74,8 +74,8 @@ pub fn docs_folder_users_list(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`docs/folder_users/list`, use this to paginate
-/// through all users on the Paper folder.
+/// Once a cursor has been retrieved from [`docs_folder_users_list()`](docs_folder_users_list), use
+/// this to paginate through all users on the Paper folder.
 pub fn docs_folder_users_list_continue(
     client: &::client_trait::HttpClient,
     arg: &ListUsersOnFolderContinueArgs,
@@ -106,7 +106,7 @@ pub fn docs_get_folder_info(
 }
 
 /// Return the list of all Paper docs according to the argument specifications. To iterate over
-/// through the full pagination, pass the cursor to :route:`docs/list/continue`.
+/// through the full pagination, pass the cursor to [`docs_list_continue()`](docs_list_continue).
 pub fn docs_list(
     client: &::client_trait::HttpClient,
     arg: &ListPaperDocsArgs,
@@ -114,8 +114,8 @@ pub fn docs_list(
     ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/list", arg, None)
 }
 
-/// Once a cursor has been retrieved from :route:`docs/list`, use this to paginate through all Paper
-/// doc.
+/// Once a cursor has been retrieved from [`docs_list()`](docs_list), use this to paginate through
+/// all Paper doc.
 pub fn docs_list_continue(
     client: &::client_trait::HttpClient,
     arg: &ListPaperDocsContinueArgs,
@@ -217,8 +217,8 @@ pub fn docs_users_list(
         None)
 }
 
-/// Once a cursor has been retrieved from :route:`docs/users/list`, use this to paginate through all
-/// users on the Paper doc.
+/// Once a cursor has been retrieved from [`docs_users_list()`](docs_users_list), use this to
+/// paginate through all users on the Paper doc.
 pub fn docs_users_list_continue(
     client: &::client_trait::HttpClient,
     arg: &ListUsersOnPaperDocContinueArgs,
@@ -490,7 +490,7 @@ impl ::serde::ser::Serialize for AddPaperDocUser {
     }
 }
 
-/// Per-member result for :route:`docs/users/add`.
+/// Per-member result for [`docs_users_add()`](docs_users_add).
 #[derive(Debug)]
 pub struct AddPaperDocUserMemberResult {
     /// One of specified input members.
@@ -706,9 +706,9 @@ impl ::serde::ser::Serialize for AddPaperDocUserResult {
 pub struct Cursor {
     /// The actual cursor value.
     pub value: String,
-    /// Expiration time of :field:`value`. Some cursors might have expiration time assigned. This is
-    /// a UTC value after which the cursor is no longer valid and the API starts returning an error.
-    /// If cursor expires a new one needs to be obtained and pagination needs to be restarted. Some
+    /// Expiration time of `value`. Some cursors might have expiration time assigned. This is a UTC
+    /// value after which the cursor is no longer valid and the API starts returning an error. If
+    /// cursor expires a new one needs to be obtained and pagination needs to be restarted. Some
     /// cursors might be short-lived some cursors might be long-lived. This really depends on the
     /// sorting type and order, e.g.: 1. on one hand, listing docs created by the user, sorted by
     /// the created time ascending will have undefinite expiration because the results cannot change
@@ -1720,8 +1720,8 @@ impl ::serde::ser::Serialize for ListPaperDocsArgs {
 
 #[derive(Debug)]
 pub struct ListPaperDocsContinueArgs {
-    /// The cursor obtained from :route:`docs/list` or :route:`docs/list/continue`. Allows for
-    /// pagination.
+    /// The cursor obtained from [`docs_list()`](docs_list) or
+    /// [`docs_list_continue()`](docs_list_continue). Allows for pagination.
     pub cursor: String,
 }
 
@@ -1871,14 +1871,16 @@ impl ::serde::ser::Serialize for ListPaperDocsFilterBy {
 pub struct ListPaperDocsResponse {
     /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to
     /// other API methods. The list is sorted in the order specified by the initial call to
-    /// :route:`docs/list`.
+    /// [`docs_list()`](docs_list).
     pub doc_ids: Vec<String>,
-    /// Pass the cursor into :route:`docs/list/continue` to paginate through all files. The cursor
-    /// preserves all properties as specified in the original call to :route:`docs/list`.
+    /// Pass the cursor into [`docs_list_continue()`](docs_list_continue) to paginate through all
+    /// files. The cursor preserves all properties as specified in the original call to
+    /// [`docs_list()`](docs_list).
     pub cursor: Cursor,
     /// Will be set to True if a subsequent call with the provided cursor to
-    /// :route:`docs/list/continue` returns immediately with some results. If set to False please
-    /// allow some delay before making another call to :route:`docs/list/continue`.
+    /// [`docs_list_continue()`](docs_list_continue) returns immediately with some results. If set
+    /// to False please allow some delay before making another call to
+    /// [`docs_list_continue()`](docs_list_continue).
     pub has_more: bool,
 }
 
@@ -2315,8 +2317,9 @@ impl ::serde::ser::Serialize for ListUsersOnFolderArgs {
 pub struct ListUsersOnFolderContinueArgs {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
-    /// The cursor obtained from :route:`docs/folder_users/list` or
-    /// :route:`docs/folder_users/list/continue`. Allows for pagination.
+    /// The cursor obtained from [`docs_folder_users_list()`](docs_folder_users_list) or
+    /// [`docs_folder_users_list_continue()`](docs_folder_users_list_continue). Allows for
+    /// pagination.
     pub cursor: String,
 }
 
@@ -2419,14 +2422,14 @@ pub struct ListUsersOnFolderResponse {
     pub invitees: Vec<super::sharing::InviteeInfo>,
     /// List of users that are invited on the Paper folder.
     pub users: Vec<super::sharing::UserInfo>,
-    /// Pass the cursor into :route:`docs/folder_users/list/continue` to paginate through all users.
-    /// The cursor preserves all properties as specified in the original call to
-    /// :route:`docs/folder_users/list`.
+    /// Pass the cursor into [`docs_folder_users_list_continue()`](docs_folder_users_list_continue)
+    /// to paginate through all users. The cursor preserves all properties as specified in the
+    /// original call to [`docs_folder_users_list()`](docs_folder_users_list).
     pub cursor: Cursor,
     /// Will be set to True if a subsequent call with the provided cursor to
-    /// :route:`docs/folder_users/list/continue` returns immediately with some results. If set to
-    /// False please allow some delay before making another call to
-    /// :route:`docs/folder_users/list/continue`.
+    /// [`docs_folder_users_list_continue()`](docs_folder_users_list_continue) returns immediately
+    /// with some results. If set to False please allow some delay before making another call to
+    /// [`docs_folder_users_list_continue()`](docs_folder_users_list_continue).
     pub has_more: bool,
 }
 
@@ -2679,8 +2682,8 @@ impl ::serde::ser::Serialize for ListUsersOnPaperDocArgs {
 pub struct ListUsersOnPaperDocContinueArgs {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
-    /// The cursor obtained from :route:`docs/users/list` or :route:`docs/users/list/continue`.
-    /// Allows for pagination.
+    /// The cursor obtained from [`docs_users_list()`](docs_users_list) or
+    /// [`docs_users_list_continue()`](docs_users_list_continue). Allows for pagination.
     pub cursor: String,
 }
 
@@ -2786,13 +2789,14 @@ pub struct ListUsersOnPaperDocResponse {
     pub users: Vec<UserInfoWithPermissionLevel>,
     /// The Paper doc owner. This field is populated on every single response.
     pub doc_owner: super::sharing::UserInfo,
-    /// Pass the cursor into :route:`docs/users/list/continue` to paginate through all users. The
-    /// cursor preserves all properties as specified in the original call to
-    /// :route:`docs/users/list`.
+    /// Pass the cursor into [`docs_users_list_continue()`](docs_users_list_continue) to paginate
+    /// through all users. The cursor preserves all properties as specified in the original call to
+    /// [`docs_users_list()`](docs_users_list).
     pub cursor: Cursor,
     /// Will be set to True if a subsequent call with the provided cursor to
-    /// :route:`docs/users/list/continue` returns immediately with some results. If set to False
-    /// please allow some delay before making another call to :route:`docs/users/list/continue`.
+    /// [`docs_users_list_continue()`](docs_users_list_continue) returns immediately with some
+    /// results. If set to False please allow some delay before making another call to
+    /// [`docs_users_list_continue()`](docs_users_list_continue).
     pub has_more: bool,
 }
 
@@ -3515,7 +3519,8 @@ pub struct PaperDocExportResult {
     pub title: String,
     /// The Paper doc revision. Simply an ever increasing number.
     pub revision: i64,
-    /// MIME type of the export. This corresponds to :type:`ExportFormat` specified in the request.
+    /// MIME type of the export. This corresponds to [`ExportFormat`](ExportFormat) specified in the
+    /// request.
     pub mime_type: String,
 }
 

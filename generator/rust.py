@@ -1,5 +1,6 @@
 from contextlib import contextmanager
 
+from stone import ir
 from stone.backend import CodeBackend
 from stone.backends.helpers import (
     fmt_pascal,
@@ -89,6 +90,10 @@ class RustHelperBackend(CodeBackend):
                 for i, arg in enumerate(args):
                     self.emit(arg + (',' if i+1 < len(args) else (')' + end)))
 
+    def is_enum_type(self, typ):
+        return isinstance(typ, ir.Union) or \
+            (isinstance(typ, ir.Struct) and typ.has_enumerated_subtypes())
+
     def namespace_name(self, ns):
         name = fmt_underscores(ns.name)
         if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
@@ -126,7 +131,10 @@ class RustHelperBackend(CodeBackend):
         return name
 
     def route_name(self, route):
-        name = fmt_underscores(route.name)
+        return self.route_name_raw(route.name)
+
+    def route_name_raw(self, name):
+        name = fmt_underscores(name)
         if name in RUST_RESERVED_WORDS:
             name = 'do_' + name
         return name
