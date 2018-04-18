@@ -10,6 +10,7 @@
 
 //! This namespace contains endpoints and data types for basic file operations.
 
+pub type FileId = String;
 pub type Id = String;
 pub type ListFolderCursor = String;
 pub type MalformedPathError = Option<String>;
@@ -141,6 +142,37 @@ pub fn create_folder(
         client,
         ::client_trait::Endpoint::Api,
         "files/create_folder",
+        arg,
+        None)
+}
+
+/// Create multiple folders at once. This route is asynchronous for large batches, which returns a
+/// job ID immediately and runs the create folder batch asynchronously. Otherwise, creates the
+/// folders and returns the result synchronously for smaller inputs. You can force asynchronous
+/// behaviour by using the [`CreateFolderBatchArg::force_async`](CreateFolderBatchArg) flag.  Use
+/// [`create_folder_batch_check()`](create_folder_batch_check) to check the job status.
+pub fn create_folder_batch(
+    client: &::client_trait::HttpClient,
+    arg: &CreateFolderBatchArg,
+) -> ::Result<Result<CreateFolderBatchLaunch, ()>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/create_folder_batch",
+        arg,
+        None)
+}
+
+/// Returns the status of an asynchronous job for [`create_folder_batch()`](create_folder_batch). If
+/// success, it returns list of result for each entry.
+pub fn create_folder_batch_check(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<CreateFolderBatchJobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/create_folder_batch/check",
         arg,
         None)
 }
@@ -1375,6 +1407,208 @@ impl ::serde::ser::Serialize for CommitInfoWithProperties {
 }
 
 #[derive(Debug)]
+pub struct ContentSyncSetting {
+    /// Id of the item this setting is applied to.
+    pub id: FileId,
+    /// Setting for this item.
+    pub sync_setting: SyncSetting,
+}
+
+impl ContentSyncSetting {
+    pub fn new(id: FileId, sync_setting: SyncSetting) -> Self {
+        ContentSyncSetting {
+            id,
+            sync_setting,
+        }
+    }
+
+}
+
+const CONTENT_SYNC_SETTING_FIELDS: &[&str] = &["id",
+                                               "sync_setting"];
+impl ContentSyncSetting {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ContentSyncSetting, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ContentSyncSetting>, V::Error> {
+        use serde::de;
+        let mut field_id = None;
+        let mut field_sync_setting = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "id" => {
+                    if field_id.is_some() {
+                        return Err(de::Error::duplicate_field("id"));
+                    }
+                    field_id = Some(map.next_value()?);
+                }
+                "sync_setting" => {
+                    if field_sync_setting.is_some() {
+                        return Err(de::Error::duplicate_field("sync_setting"));
+                    }
+                    field_sync_setting = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, CONTENT_SYNC_SETTING_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ContentSyncSetting {
+            id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
+            sync_setting: field_sync_setting.ok_or_else(|| de::Error::missing_field("sync_setting"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("id", &self.id)?;
+        s.serialize_field("sync_setting", &self.sync_setting)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ContentSyncSetting {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ContentSyncSetting;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ContentSyncSetting struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ContentSyncSetting::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ContentSyncSetting", CONTENT_SYNC_SETTING_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ContentSyncSetting {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ContentSyncSetting", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ContentSyncSettingArg {
+    /// Id of the item this setting is applied to.
+    pub id: FileId,
+    /// Setting for this item.
+    pub sync_setting: SyncSettingArg,
+}
+
+impl ContentSyncSettingArg {
+    pub fn new(id: FileId, sync_setting: SyncSettingArg) -> Self {
+        ContentSyncSettingArg {
+            id,
+            sync_setting,
+        }
+    }
+
+}
+
+const CONTENT_SYNC_SETTING_ARG_FIELDS: &[&str] = &["id",
+                                                   "sync_setting"];
+impl ContentSyncSettingArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ContentSyncSettingArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ContentSyncSettingArg>, V::Error> {
+        use serde::de;
+        let mut field_id = None;
+        let mut field_sync_setting = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "id" => {
+                    if field_id.is_some() {
+                        return Err(de::Error::duplicate_field("id"));
+                    }
+                    field_id = Some(map.next_value()?);
+                }
+                "sync_setting" => {
+                    if field_sync_setting.is_some() {
+                        return Err(de::Error::duplicate_field("sync_setting"));
+                    }
+                    field_sync_setting = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, CONTENT_SYNC_SETTING_ARG_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ContentSyncSettingArg {
+            id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
+            sync_setting: field_sync_setting.ok_or_else(|| de::Error::missing_field("sync_setting"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("id", &self.id)?;
+        s.serialize_field("sync_setting", &self.sync_setting)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ContentSyncSettingArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ContentSyncSettingArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ContentSyncSettingArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ContentSyncSettingArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ContentSyncSettingArg", CONTENT_SYNC_SETTING_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ContentSyncSettingArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ContentSyncSettingArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub struct CreateFolderArg {
     /// Path in the user's Dropbox to create.
     pub path: WritePath,
@@ -1476,6 +1710,648 @@ impl ::serde::ser::Serialize for CreateFolderArg {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("CreateFolderArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct CreateFolderBatchArg {
+    /// List of paths to be created in the user's Dropbox. Duplicate path arguments in the batch are
+    /// considered only once.
+    pub paths: Vec<WritePath>,
+    /// If there's a conflict, have the Dropbox server try to autorename the folder to avoid the
+    /// conflict.
+    pub autorename: bool,
+    /// Whether to force the create to happen asynchronously.
+    pub force_async: bool,
+}
+
+impl CreateFolderBatchArg {
+    pub fn new(paths: Vec<WritePath>) -> Self {
+        CreateFolderBatchArg {
+            paths,
+            autorename: false,
+            force_async: false,
+        }
+    }
+
+    pub fn with_autorename(mut self, value: bool) -> Self {
+        self.autorename = value;
+        self
+    }
+
+    pub fn with_force_async(mut self, value: bool) -> Self {
+        self.force_async = value;
+        self
+    }
+
+}
+
+const CREATE_FOLDER_BATCH_ARG_FIELDS: &[&str] = &["paths",
+                                                  "autorename",
+                                                  "force_async"];
+impl CreateFolderBatchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<CreateFolderBatchArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<CreateFolderBatchArg>, V::Error> {
+        use serde::de;
+        let mut field_paths = None;
+        let mut field_autorename = None;
+        let mut field_force_async = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "paths" => {
+                    if field_paths.is_some() {
+                        return Err(de::Error::duplicate_field("paths"));
+                    }
+                    field_paths = Some(map.next_value()?);
+                }
+                "autorename" => {
+                    if field_autorename.is_some() {
+                        return Err(de::Error::duplicate_field("autorename"));
+                    }
+                    field_autorename = Some(map.next_value()?);
+                }
+                "force_async" => {
+                    if field_force_async.is_some() {
+                        return Err(de::Error::duplicate_field("force_async"));
+                    }
+                    field_force_async = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, CREATE_FOLDER_BATCH_ARG_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = CreateFolderBatchArg {
+            paths: field_paths.ok_or_else(|| de::Error::missing_field("paths"))?,
+            autorename: field_autorename.unwrap_or(false),
+            force_async: field_force_async.unwrap_or(false),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("paths", &self.paths)?;
+        s.serialize_field("autorename", &self.autorename)?;
+        s.serialize_field("force_async", &self.force_async)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CreateFolderBatchArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CreateFolderBatchArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CreateFolderBatchArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CreateFolderBatchArg", CREATE_FOLDER_BATCH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateFolderBatchArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CreateFolderBatchArg", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum CreateFolderBatchError {
+    /// The operation would involve too many files or folders.
+    TooManyFiles,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = CreateFolderBatchError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CreateFolderBatchError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "too_many_files" => Ok(CreateFolderBatchError::TooManyFiles),
+                    _ => Ok(CreateFolderBatchError::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["too_many_files",
+                                    "other"];
+        deserializer.deserialize_struct("CreateFolderBatchError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateFolderBatchError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            CreateFolderBatchError::TooManyFiles => {
+                // unit
+                let mut s = serializer.serialize_struct("CreateFolderBatchError", 1)?;
+                s.serialize_field(".tag", "too_many_files")?;
+                s.end()
+            }
+            CreateFolderBatchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for CreateFolderBatchError {
+    fn description(&self) -> &str {
+        "CreateFolderBatchError"
+    }
+}
+
+impl ::std::fmt::Display for CreateFolderBatchError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum CreateFolderBatchJobStatus {
+    /// The asynchronous job is still in progress.
+    InProgress,
+    /// The batch create folder has finished.
+    Complete(CreateFolderBatchResult),
+    /// The batch create folder has failed.
+    Failed(CreateFolderBatchError),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchJobStatus {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = CreateFolderBatchJobStatus;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CreateFolderBatchJobStatus structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "in_progress" => Ok(CreateFolderBatchJobStatus::InProgress),
+                    "complete" => Ok(CreateFolderBatchJobStatus::Complete(CreateFolderBatchResult::internal_deserialize(map)?)),
+                    "failed" => {
+                        match map.next_key()? {
+                            Some("failed") => Ok(CreateFolderBatchJobStatus::Failed(map.next_value()?)),
+                            None => Err(de::Error::missing_field("failed")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => Ok(CreateFolderBatchJobStatus::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed",
+                                    "other"];
+        deserializer.deserialize_struct("CreateFolderBatchJobStatus", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateFolderBatchJobStatus {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            CreateFolderBatchJobStatus::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("CreateFolderBatchJobStatus", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            CreateFolderBatchJobStatus::Complete(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("CreateFolderBatchJobStatus", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            CreateFolderBatchJobStatus::Failed(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("CreateFolderBatchJobStatus", 2)?;
+                s.serialize_field(".tag", "failed")?;
+                s.serialize_field("failed", x)?;
+                s.end()
+            }
+            CreateFolderBatchJobStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Result returned by [`create_folder_batch()`](create_folder_batch) that may either launch an
+/// asynchronous job or complete synchronously.
+#[derive(Debug)]
+pub enum CreateFolderBatchLaunch {
+    /// This response indicates that the processing is asynchronous. The string is an id that can be
+    /// used to obtain the status of the asynchronous job.
+    AsyncJobId(super::async::AsyncJobId),
+    Complete(CreateFolderBatchResult),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchLaunch {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = CreateFolderBatchLaunch;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CreateFolderBatchLaunch structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "async_job_id" => {
+                        match map.next_key()? {
+                            Some("async_job_id") => Ok(CreateFolderBatchLaunch::AsyncJobId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("async_job_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "complete" => Ok(CreateFolderBatchLaunch::Complete(CreateFolderBatchResult::internal_deserialize(map)?)),
+                    _ => Ok(CreateFolderBatchLaunch::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["async_job_id",
+                                    "complete",
+                                    "other"];
+        deserializer.deserialize_struct("CreateFolderBatchLaunch", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateFolderBatchLaunch {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            CreateFolderBatchLaunch::AsyncJobId(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("CreateFolderBatchLaunch", 2)?;
+                s.serialize_field(".tag", "async_job_id")?;
+                s.serialize_field("async_job_id", x)?;
+                s.end()
+            }
+            CreateFolderBatchLaunch::Complete(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("CreateFolderBatchLaunch", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            CreateFolderBatchLaunch::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct CreateFolderBatchResult {
+    pub entries: Vec<CreateFolderBatchResultEntry>,
+}
+
+impl CreateFolderBatchResult {
+    pub fn new(entries: Vec<CreateFolderBatchResultEntry>) -> Self {
+        CreateFolderBatchResult {
+            entries,
+        }
+    }
+
+}
+
+const CREATE_FOLDER_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
+impl CreateFolderBatchResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<CreateFolderBatchResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<CreateFolderBatchResult>, V::Error> {
+        use serde::de;
+        let mut field_entries = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, CREATE_FOLDER_BATCH_RESULT_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = CreateFolderBatchResult {
+            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CreateFolderBatchResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CreateFolderBatchResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CreateFolderBatchResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CreateFolderBatchResult", CREATE_FOLDER_BATCH_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateFolderBatchResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CreateFolderBatchResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum CreateFolderBatchResultEntry {
+    Success(CreateFolderEntryResult),
+    Failure(CreateFolderEntryError),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchResultEntry {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = CreateFolderBatchResultEntry;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CreateFolderBatchResultEntry structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "success" => Ok(CreateFolderBatchResultEntry::Success(CreateFolderEntryResult::internal_deserialize(map)?)),
+                    "failure" => {
+                        match map.next_key()? {
+                            Some("failure") => Ok(CreateFolderBatchResultEntry::Failure(map.next_value()?)),
+                            None => Err(de::Error::missing_field("failure")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["success",
+                                    "failure"];
+        deserializer.deserialize_struct("CreateFolderBatchResultEntry", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateFolderBatchResultEntry {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            CreateFolderBatchResultEntry::Success(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("CreateFolderBatchResultEntry", 2)?;
+                s.serialize_field(".tag", "success")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            CreateFolderBatchResultEntry::Failure(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("CreateFolderBatchResultEntry", 2)?;
+                s.serialize_field(".tag", "failure")?;
+                s.serialize_field("failure", x)?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum CreateFolderEntryError {
+    Path(WriteError),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateFolderEntryError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = CreateFolderEntryError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CreateFolderEntryError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        match map.next_key()? {
+                            Some("path") => Ok(CreateFolderEntryError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => Ok(CreateFolderEntryError::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["path",
+                                    "other"];
+        deserializer.deserialize_struct("CreateFolderEntryError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateFolderEntryError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            CreateFolderEntryError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("CreateFolderEntryError", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            CreateFolderEntryError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for CreateFolderEntryError {
+    fn description(&self) -> &str {
+        "CreateFolderEntryError"
+    }
+}
+
+impl ::std::fmt::Display for CreateFolderEntryError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct CreateFolderEntryResult {
+    /// Metadata of the created folder.
+    pub metadata: FolderMetadata,
+}
+
+impl CreateFolderEntryResult {
+    pub fn new(metadata: FolderMetadata) -> Self {
+        CreateFolderEntryResult {
+            metadata,
+        }
+    }
+
+}
+
+const CREATE_FOLDER_ENTRY_RESULT_FIELDS: &[&str] = &["metadata"];
+impl CreateFolderEntryResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<CreateFolderEntryResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<CreateFolderEntryResult>, V::Error> {
+        use serde::de;
+        let mut field_metadata = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, CREATE_FOLDER_ENTRY_RESULT_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = CreateFolderEntryResult {
+            metadata: field_metadata.ok_or_else(|| de::Error::missing_field("metadata"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("metadata", &self.metadata)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateFolderEntryResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CreateFolderEntryResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CreateFolderEntryResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CreateFolderEntryResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CreateFolderEntryResult", CREATE_FOLDER_ENTRY_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateFolderEntryResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CreateFolderEntryResult", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -1638,18 +2514,28 @@ impl ::serde::ser::Serialize for CreateFolderResult {
 pub struct DeleteArg {
     /// Path in the user's Dropbox to delete.
     pub path: WritePathOrId,
+    /// Perform delete if given "rev" matches the existing file's latest "rev". This field does not
+    /// support deleting a folder.
+    pub parent_rev: Option<Rev>,
 }
 
 impl DeleteArg {
     pub fn new(path: WritePathOrId) -> Self {
         DeleteArg {
             path,
+            parent_rev: None,
         }
+    }
+
+    pub fn with_parent_rev(mut self, value: Option<Rev>) -> Self {
+        self.parent_rev = value;
+        self
     }
 
 }
 
-const DELETE_ARG_FIELDS: &[&str] = &["path"];
+const DELETE_ARG_FIELDS: &[&str] = &["path",
+                                     "parent_rev"];
 impl DeleteArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -1663,6 +2549,7 @@ impl DeleteArg {
     ) -> Result<Option<DeleteArg>, V::Error> {
         use serde::de;
         let mut field_path = None;
+        let mut field_parent_rev = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -1673,6 +2560,12 @@ impl DeleteArg {
                     }
                     field_path = Some(map.next_value()?);
                 }
+                "parent_rev" => {
+                    if field_parent_rev.is_some() {
+                        return Err(de::Error::duplicate_field("parent_rev"));
+                    }
+                    field_parent_rev = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, DELETE_ARG_FIELDS))
             }
         }
@@ -1681,6 +2574,7 @@ impl DeleteArg {
         }
         let result = DeleteArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            parent_rev: field_parent_rev,
         };
         Ok(Some(result))
     }
@@ -1690,7 +2584,8 @@ impl DeleteArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("parent_rev", &self.parent_rev)
     }
 }
 
@@ -1716,7 +2611,7 @@ impl ::serde::ser::Serialize for DeleteArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("DeleteArg", 1)?;
+        let mut s = serializer.serialize_struct("DeleteArg", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -3176,6 +4071,8 @@ pub struct FileMetadata {
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
     /// Additional information if the file is a photo or video.
     pub media_info: Option<MediaInfo>,
+    /// Set if this file is a symlink.
+    pub symlink_info: Option<SymlinkInfo>,
     /// Set if this file is contained in a shared folder.
     pub sharing_info: Option<FileSharingInfo>,
     /// Additional information if the file has custom properties with the property template
@@ -3212,6 +4109,7 @@ impl FileMetadata {
             path_display: None,
             parent_shared_folder_id: None,
             media_info: None,
+            symlink_info: None,
             sharing_info: None,
             property_groups: None,
             has_explicit_shared_members: None,
@@ -3239,6 +4137,11 @@ impl FileMetadata {
 
     pub fn with_media_info(mut self, value: Option<MediaInfo>) -> Self {
         self.media_info = value;
+        self
+    }
+
+    pub fn with_symlink_info(mut self, value: Option<SymlinkInfo>) -> Self {
+        self.symlink_info = value;
         self
     }
 
@@ -3277,6 +4180,7 @@ const FILE_METADATA_FIELDS: &[&str] = &["name",
                                         "path_display",
                                         "parent_shared_folder_id",
                                         "media_info",
+                                        "symlink_info",
                                         "sharing_info",
                                         "property_groups",
                                         "has_explicit_shared_members",
@@ -3303,6 +4207,7 @@ impl FileMetadata {
         let mut field_path_display = None;
         let mut field_parent_shared_folder_id = None;
         let mut field_media_info = None;
+        let mut field_symlink_info = None;
         let mut field_sharing_info = None;
         let mut field_property_groups = None;
         let mut field_has_explicit_shared_members = None;
@@ -3371,6 +4276,12 @@ impl FileMetadata {
                     }
                     field_media_info = Some(map.next_value()?);
                 }
+                "symlink_info" => {
+                    if field_symlink_info.is_some() {
+                        return Err(de::Error::duplicate_field("symlink_info"));
+                    }
+                    field_symlink_info = Some(map.next_value()?);
+                }
                 "sharing_info" => {
                     if field_sharing_info.is_some() {
                         return Err(de::Error::duplicate_field("sharing_info"));
@@ -3412,6 +4323,7 @@ impl FileMetadata {
             path_display: field_path_display,
             parent_shared_folder_id: field_parent_shared_folder_id,
             media_info: field_media_info,
+            symlink_info: field_symlink_info,
             sharing_info: field_sharing_info,
             property_groups: field_property_groups,
             has_explicit_shared_members: field_has_explicit_shared_members,
@@ -3435,6 +4347,7 @@ impl FileMetadata {
         s.serialize_field("path_display", &self.path_display)?;
         s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
         s.serialize_field("media_info", &self.media_info)?;
+        s.serialize_field("symlink_info", &self.symlink_info)?;
         s.serialize_field("sharing_info", &self.sharing_info)?;
         s.serialize_field("property_groups", &self.property_groups)?;
         s.serialize_field("has_explicit_shared_members", &self.has_explicit_shared_members)?;
@@ -3464,7 +4377,7 @@ impl ::serde::ser::Serialize for FileMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileMetadata", 14)?;
+        let mut s = serializer.serialize_struct("FileMetadata", 15)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -6925,7 +7838,7 @@ impl ::serde::ser::Serialize for Metadata {
         use serde::ser::SerializeStruct;
         match *self {
             Metadata::File(ref x) => {
-                let mut s = serializer.serialize_struct("Metadata", 15)?;
+                let mut s = serializer.serialize_struct("Metadata", 16)?;
                 s.serialize_field(".tag", "file")?;
                 s.serialize_field("name", &x.name)?;
                 s.serialize_field("id", &x.id)?;
@@ -6937,6 +7850,7 @@ impl ::serde::ser::Serialize for Metadata {
                 s.serialize_field("path_display", &x.path_display)?;
                 s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
                 s.serialize_field("media_info", &x.media_info)?;
+                s.serialize_field("symlink_info", &x.symlink_info)?;
                 s.serialize_field("sharing_info", &x.sharing_info)?;
                 s.serialize_field("property_groups", &x.property_groups)?;
                 s.serialize_field("has_explicit_shared_members", &x.has_explicit_shared_members)?;
@@ -9196,7 +10110,7 @@ impl ::serde::ser::Serialize for SaveUrlJobStatus {
             }
             SaveUrlJobStatus::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 15)?;
+                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 16)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -9269,7 +10183,7 @@ impl ::serde::ser::Serialize for SaveUrlResult {
             }
             SaveUrlResult::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SaveUrlResult", 15)?;
+                let mut s = serializer.serialize_struct("SaveUrlResult", 16)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -10052,6 +10966,317 @@ impl ::serde::ser::Serialize for SharingInfo {
 }
 
 #[derive(Debug)]
+pub struct SymlinkInfo {
+    /// The target this symlink points to.
+    pub target: String,
+}
+
+impl SymlinkInfo {
+    pub fn new(target: String) -> Self {
+        SymlinkInfo {
+            target,
+        }
+    }
+
+}
+
+const SYMLINK_INFO_FIELDS: &[&str] = &["target"];
+impl SymlinkInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<SymlinkInfo, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SymlinkInfo>, V::Error> {
+        use serde::de;
+        let mut field_target = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "target" => {
+                    if field_target.is_some() {
+                        return Err(de::Error::duplicate_field("target"));
+                    }
+                    field_target = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SYMLINK_INFO_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SymlinkInfo {
+            target: field_target.ok_or_else(|| de::Error::missing_field("target"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("target", &self.target)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SymlinkInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SymlinkInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SymlinkInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SymlinkInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SymlinkInfo", SYMLINK_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SymlinkInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SymlinkInfo", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum SyncSetting {
+    /// On first sync to members' computers, the specified folder will follow its parent folder's
+    /// setting or otherwise follow default sync behavior.
+    Default,
+    /// On first sync to members' computers, the specified folder will be set to not sync with
+    /// selective sync.
+    NotSynced,
+    /// The specified folder's not_synced setting is inactive due to its location or other
+    /// configuration changes. It will follow its parent folder's setting.
+    NotSyncedInactive,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SyncSetting {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SyncSetting;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SyncSetting structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "default" => Ok(SyncSetting::Default),
+                    "not_synced" => Ok(SyncSetting::NotSynced),
+                    "not_synced_inactive" => Ok(SyncSetting::NotSyncedInactive),
+                    _ => Ok(SyncSetting::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["default",
+                                    "not_synced",
+                                    "not_synced_inactive",
+                                    "other"];
+        deserializer.deserialize_struct("SyncSetting", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SyncSetting {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SyncSetting::Default => {
+                // unit
+                let mut s = serializer.serialize_struct("SyncSetting", 1)?;
+                s.serialize_field(".tag", "default")?;
+                s.end()
+            }
+            SyncSetting::NotSynced => {
+                // unit
+                let mut s = serializer.serialize_struct("SyncSetting", 1)?;
+                s.serialize_field(".tag", "not_synced")?;
+                s.end()
+            }
+            SyncSetting::NotSyncedInactive => {
+                // unit
+                let mut s = serializer.serialize_struct("SyncSetting", 1)?;
+                s.serialize_field(".tag", "not_synced_inactive")?;
+                s.end()
+            }
+            SyncSetting::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum SyncSettingArg {
+    /// On first sync to members' computers, the specified folder will follow its parent folder's
+    /// setting or otherwise follow default sync behavior.
+    Default,
+    /// On first sync to members' computers, the specified folder will be set to not sync with
+    /// selective sync.
+    NotSynced,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SyncSettingArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SyncSettingArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SyncSettingArg structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "default" => Ok(SyncSettingArg::Default),
+                    "not_synced" => Ok(SyncSettingArg::NotSynced),
+                    _ => Ok(SyncSettingArg::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["default",
+                                    "not_synced",
+                                    "other"];
+        deserializer.deserialize_struct("SyncSettingArg", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SyncSettingArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SyncSettingArg::Default => {
+                // unit
+                let mut s = serializer.serialize_struct("SyncSettingArg", 1)?;
+                s.serialize_field(".tag", "default")?;
+                s.end()
+            }
+            SyncSettingArg::NotSynced => {
+                // unit
+                let mut s = serializer.serialize_struct("SyncSettingArg", 1)?;
+                s.serialize_field(".tag", "not_synced")?;
+                s.end()
+            }
+            SyncSettingArg::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum SyncSettingsError {
+    Path(LookupError),
+    /// Setting this combination of sync settings simultaneously is not supported.
+    UnsupportedCombination,
+    /// The specified configuration is not supported.
+    UnsupportedConfiguration,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SyncSettingsError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SyncSettingsError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SyncSettingsError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        match map.next_key()? {
+                            Some("path") => Ok(SyncSettingsError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "unsupported_combination" => Ok(SyncSettingsError::UnsupportedCombination),
+                    "unsupported_configuration" => Ok(SyncSettingsError::UnsupportedConfiguration),
+                    _ => Ok(SyncSettingsError::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["path",
+                                    "unsupported_combination",
+                                    "unsupported_configuration",
+                                    "other"];
+        deserializer.deserialize_struct("SyncSettingsError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SyncSettingsError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SyncSettingsError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("SyncSettingsError", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            SyncSettingsError::UnsupportedCombination => {
+                // unit
+                let mut s = serializer.serialize_struct("SyncSettingsError", 1)?;
+                s.serialize_field(".tag", "unsupported_combination")?;
+                s.end()
+            }
+            SyncSettingsError::UnsupportedConfiguration => {
+                // unit
+                let mut s = serializer.serialize_struct("SyncSettingsError", 1)?;
+                s.serialize_field(".tag", "unsupported_configuration")?;
+                s.end()
+            }
+            SyncSettingsError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for SyncSettingsError {
+    fn description(&self) -> &str {
+        "SyncSettingsError"
+    }
+}
+
+impl ::std::fmt::Display for SyncSettingsError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
 pub struct ThumbnailArg {
     /// The path to the image file you want to thumbnail.
     pub path: ReadPath,
@@ -10060,6 +11285,8 @@ pub struct ThumbnailArg {
     pub format: ThumbnailFormat,
     /// The size for the thumbnail image.
     pub size: ThumbnailSize,
+    /// How to resize and crop the image to achieve the desired size.
+    pub mode: ThumbnailMode,
 }
 
 impl ThumbnailArg {
@@ -10068,6 +11295,7 @@ impl ThumbnailArg {
             path,
             format: ThumbnailFormat::Jpeg,
             size: ThumbnailSize::W64h64,
+            mode: ThumbnailMode::Strict,
         }
     }
 
@@ -10081,11 +11309,17 @@ impl ThumbnailArg {
         self
     }
 
+    pub fn with_mode(mut self, value: ThumbnailMode) -> Self {
+        self.mode = value;
+        self
+    }
+
 }
 
 const THUMBNAIL_ARG_FIELDS: &[&str] = &["path",
                                         "format",
-                                        "size"];
+                                        "size",
+                                        "mode"];
 impl ThumbnailArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -10101,6 +11335,7 @@ impl ThumbnailArg {
         let mut field_path = None;
         let mut field_format = None;
         let mut field_size = None;
+        let mut field_mode = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -10123,6 +11358,12 @@ impl ThumbnailArg {
                     }
                     field_size = Some(map.next_value()?);
                 }
+                "mode" => {
+                    if field_mode.is_some() {
+                        return Err(de::Error::duplicate_field("mode"));
+                    }
+                    field_mode = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, THUMBNAIL_ARG_FIELDS))
             }
         }
@@ -10133,6 +11374,7 @@ impl ThumbnailArg {
             path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
             format: field_format.unwrap_or_else(|| ThumbnailFormat::Jpeg),
             size: field_size.unwrap_or_else(|| ThumbnailSize::W64h64),
+            mode: field_mode.unwrap_or_else(|| ThumbnailMode::Strict),
         };
         Ok(Some(result))
     }
@@ -10144,7 +11386,8 @@ impl ThumbnailArg {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("format", &self.format)?;
-        s.serialize_field("size", &self.size)
+        s.serialize_field("size", &self.size)?;
+        s.serialize_field("mode", &self.mode)
     }
 }
 
@@ -10170,7 +11413,7 @@ impl ::serde::ser::Serialize for ThumbnailArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ThumbnailArg", 3)?;
+        let mut s = serializer.serialize_struct("ThumbnailArg", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -10328,6 +11571,73 @@ impl ::serde::ser::Serialize for ThumbnailFormat {
 }
 
 #[derive(Debug)]
+pub enum ThumbnailMode {
+    /// Scale down the image to fit within the given size.
+    Strict,
+    /// Scale down the image to fit within the given size or its transpose.
+    Bestfit,
+    /// Scale down the image to completely cover the given size or its transpose.
+    FitoneBestfit,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ThumbnailMode {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ThumbnailMode;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ThumbnailMode structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "strict" => Ok(ThumbnailMode::Strict),
+                    "bestfit" => Ok(ThumbnailMode::Bestfit),
+                    "fitone_bestfit" => Ok(ThumbnailMode::FitoneBestfit),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["strict",
+                                    "bestfit",
+                                    "fitone_bestfit"];
+        deserializer.deserialize_struct("ThumbnailMode", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ThumbnailMode {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ThumbnailMode::Strict => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailMode", 1)?;
+                s.serialize_field(".tag", "strict")?;
+                s.end()
+            }
+            ThumbnailMode::Bestfit => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailMode", 1)?;
+                s.serialize_field(".tag", "bestfit")?;
+                s.end()
+            }
+            ThumbnailMode::FitoneBestfit => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailMode", 1)?;
+                s.serialize_field(".tag", "fitone_bestfit")?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug)]
 pub enum ThumbnailSize {
     /// 32 by 32 px.
     W32h32,
@@ -10335,10 +11645,18 @@ pub enum ThumbnailSize {
     W64h64,
     /// 128 by 128 px.
     W128h128,
+    /// 256 by 256 px.
+    W256h256,
+    /// 480 by 320 px.
+    W480h320,
     /// 640 by 480 px.
     W640h480,
-    /// 1024 by 768.
+    /// 960 by 640 px.
+    W960h640,
+    /// 1024 by 768 px.
     W1024h768,
+    /// 2048 by 1536 px.
+    W2048h1536,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
@@ -10360,8 +11678,12 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
                     "w32h32" => Ok(ThumbnailSize::W32h32),
                     "w64h64" => Ok(ThumbnailSize::W64h64),
                     "w128h128" => Ok(ThumbnailSize::W128h128),
+                    "w256h256" => Ok(ThumbnailSize::W256h256),
+                    "w480h320" => Ok(ThumbnailSize::W480h320),
                     "w640h480" => Ok(ThumbnailSize::W640h480),
+                    "w960h640" => Ok(ThumbnailSize::W960h640),
                     "w1024h768" => Ok(ThumbnailSize::W1024h768),
+                    "w2048h1536" => Ok(ThumbnailSize::W2048h1536),
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -10369,8 +11691,12 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
         const VARIANTS: &[&str] = &["w32h32",
                                     "w64h64",
                                     "w128h128",
+                                    "w256h256",
+                                    "w480h320",
                                     "w640h480",
-                                    "w1024h768"];
+                                    "w960h640",
+                                    "w1024h768",
+                                    "w2048h1536"];
         deserializer.deserialize_struct("ThumbnailSize", VARIANTS, EnumVisitor)
     }
 }
@@ -10398,16 +11724,40 @@ impl ::serde::ser::Serialize for ThumbnailSize {
                 s.serialize_field(".tag", "w128h128")?;
                 s.end()
             }
+            ThumbnailSize::W256h256 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w256h256")?;
+                s.end()
+            }
+            ThumbnailSize::W480h320 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w480h320")?;
+                s.end()
+            }
             ThumbnailSize::W640h480 => {
                 // unit
                 let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
                 s.serialize_field(".tag", "w640h480")?;
                 s.end()
             }
+            ThumbnailSize::W960h640 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w960h640")?;
+                s.end()
+            }
             ThumbnailSize::W1024h768 => {
                 // unit
                 let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
                 s.serialize_field(".tag", "w1024h768")?;
+                s.end()
+            }
+            ThumbnailSize::W2048h1536 => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailSize", 1)?;
+                s.serialize_field(".tag", "w2048h1536")?;
                 s.end()
             }
         }
@@ -11223,7 +12573,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchResultEntry {
         match *self {
             UploadSessionFinishBatchResultEntry::Success(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 15)?;
+                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 16)?;
                 s.serialize_field(".tag", "success")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -12010,6 +13360,8 @@ pub enum WriteError {
     DisallowedName,
     /// This endpoint cannot move or delete team folders.
     TeamFolder,
+    /// There are too many write operations in user's Dropbox. Please retry this request.
+    TooManyWriteOperations,
     Other,
 }
 
@@ -12047,6 +13399,7 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteError {
                     "insufficient_space" => Ok(WriteError::InsufficientSpace),
                     "disallowed_name" => Ok(WriteError::DisallowedName),
                     "team_folder" => Ok(WriteError::TeamFolder),
+                    "too_many_write_operations" => Ok(WriteError::TooManyWriteOperations),
                     _ => Ok(WriteError::Other)
                 }
             }
@@ -12057,6 +13410,7 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteError {
                                     "insufficient_space",
                                     "disallowed_name",
                                     "team_folder",
+                                    "too_many_write_operations",
                                     "other"];
         deserializer.deserialize_struct("WriteError", VARIANTS, EnumVisitor)
     }
@@ -12106,6 +13460,12 @@ impl ::serde::ser::Serialize for WriteError {
                 // unit
                 let mut s = serializer.serialize_struct("WriteError", 1)?;
                 s.serialize_field(".tag", "team_folder")?;
+                s.end()
+            }
+            WriteError::TooManyWriteOperations => {
+                // unit
+                let mut s = serializer.serialize_struct("WriteError", 1)?;
+                s.serialize_field(".tag", "too_many_write_operations")?;
                 s.end()
             }
             WriteError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

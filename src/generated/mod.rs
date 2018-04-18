@@ -29,6 +29,9 @@ pub mod files;
 #[cfg(feature = "dbx_paper")]
 pub mod paper;
 
+#[cfg(feature = "dbx_seen_state")]
+pub mod seen_state;
+
 #[cfg(feature = "dbx_sharing")]
 pub mod sharing;
 

@@ -870,6 +870,20 @@ pub fn team_folder_rename(
         None)
 }
 
+/// Updates the sync settings on a team folder or its contents.  Use of this endpoint requires that
+/// the team has team selective sync enabled.
+pub fn team_folder_update_sync_settings(
+    client: &::client_trait::HttpClient,
+    arg: &TeamFolderUpdateSyncSettingsArg,
+) -> ::Result<Result<TeamFolderMetadata, TeamFolderUpdateSyncSettingsError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/team_folder/update_sync_settings",
+        arg,
+        None)
+}
+
 /// Returns the member profile of the admin who generated the team access token used to make the
 /// call.
 pub fn token_get_authenticated_admin(
@@ -3348,15 +3362,17 @@ impl ::serde::ser::Serialize for ExcludedUsersUpdateStatus {
     }
 }
 
-/// A set of features that Dropbox for Business account support.
+/// A set of features that a Dropbox Business account may support.
 #[derive(Debug)]
 pub enum Feature {
     /// The number of upload API calls allowed per month.
     UploadApiRateLimit,
-    /// Does this team have a have a company shared dropbox.
+    /// Does this team have a shared team root.
     HasTeamSharedDropbox,
     /// Does this team have file events.
     HasTeamFileEvents,
+    /// Does this team have team selective sync enabled.
+    HasTeamSelectiveSync,
     Other,
 }
 
@@ -3379,6 +3395,7 @@ impl<'de> ::serde::de::Deserialize<'de> for Feature {
                     "upload_api_rate_limit" => Ok(Feature::UploadApiRateLimit),
                     "has_team_shared_dropbox" => Ok(Feature::HasTeamSharedDropbox),
                     "has_team_file_events" => Ok(Feature::HasTeamFileEvents),
+                    "has_team_selective_sync" => Ok(Feature::HasTeamSelectiveSync),
                     _ => Ok(Feature::Other)
                 }
             }
@@ -3386,6 +3403,7 @@ impl<'de> ::serde::de::Deserialize<'de> for Feature {
         const VARIANTS: &[&str] = &["upload_api_rate_limit",
                                     "has_team_shared_dropbox",
                                     "has_team_file_events",
+                                    "has_team_selective_sync",
                                     "other"];
         deserializer.deserialize_struct("Feature", VARIANTS, EnumVisitor)
     }
@@ -3414,18 +3432,25 @@ impl ::serde::ser::Serialize for Feature {
                 s.serialize_field(".tag", "has_team_file_events")?;
                 s.end()
             }
+            Feature::HasTeamSelectiveSync => {
+                // unit
+                let mut s = serializer.serialize_struct("Feature", 1)?;
+                s.serialize_field(".tag", "has_team_selective_sync")?;
+                s.end()
+            }
             Feature::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
 
 /// The values correspond to entries in [`Feature`](Feature). You may get different value according
-/// to your Dropbox for Business plan.
+/// to your Dropbox Business plan.
 #[derive(Debug)]
 pub enum FeatureValue {
     UploadApiRateLimit(UploadApiRateLimitValue),
     HasTeamSharedDropbox(HasTeamSharedDropboxValue),
     HasTeamFileEvents(HasTeamFileEventsValue),
+    HasTeamSelectiveSync(HasTeamSelectiveSyncValue),
     Other,
 }
 
@@ -3466,6 +3491,13 @@ impl<'de> ::serde::de::Deserialize<'de> for FeatureValue {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "has_team_selective_sync" => {
+                        match map.next_key()? {
+                            Some("has_team_selective_sync") => Ok(FeatureValue::HasTeamSelectiveSync(map.next_value()?)),
+                            None => Err(de::Error::missing_field("has_team_selective_sync")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => Ok(FeatureValue::Other)
                 }
             }
@@ -3473,6 +3505,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FeatureValue {
         const VARIANTS: &[&str] = &["upload_api_rate_limit",
                                     "has_team_shared_dropbox",
                                     "has_team_file_events",
+                                    "has_team_selective_sync",
                                     "other"];
         deserializer.deserialize_struct("FeatureValue", VARIANTS, EnumVisitor)
     }
@@ -3502,6 +3535,13 @@ impl ::serde::ser::Serialize for FeatureValue {
                 let mut s = serializer.serialize_struct("FeatureValue", 2)?;
                 s.serialize_field(".tag", "has_team_file_events")?;
                 s.serialize_field("has_team_file_events", x)?;
+                s.end()
+            }
+            FeatureValue::HasTeamSelectiveSync(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("FeatureValue", 2)?;
+                s.serialize_field(".tag", "has_team_selective_sync")?;
+                s.serialize_field("has_team_selective_sync", x)?;
                 s.end()
             }
             FeatureValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -7917,10 +7957,68 @@ impl ::serde::ser::Serialize for HasTeamFileEventsValue {
     }
 }
 
+/// The value for [`Feature::HasTeamSelectiveSync`](Feature::HasTeamSelectiveSync).
+#[derive(Debug)]
+pub enum HasTeamSelectiveSyncValue {
+    /// Does this team have team selective sync enabled.
+    HasTeamSelectiveSync(bool),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for HasTeamSelectiveSyncValue {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = HasTeamSelectiveSyncValue;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a HasTeamSelectiveSyncValue structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "has_team_selective_sync" => {
+                        match map.next_key()? {
+                            Some("has_team_selective_sync") => Ok(HasTeamSelectiveSyncValue::HasTeamSelectiveSync(map.next_value()?)),
+                            None => Err(de::Error::missing_field("has_team_selective_sync")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => Ok(HasTeamSelectiveSyncValue::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["has_team_selective_sync",
+                                    "other"];
+        deserializer.deserialize_struct("HasTeamSelectiveSyncValue", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for HasTeamSelectiveSyncValue {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            HasTeamSelectiveSyncValue::HasTeamSelectiveSync(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("HasTeamSelectiveSyncValue", 2)?;
+                s.serialize_field(".tag", "has_team_selective_sync")?;
+                s.serialize_field("has_team_selective_sync", x)?;
+                s.end()
+            }
+            HasTeamSelectiveSyncValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// The value for [`Feature::HasTeamSharedDropbox`](Feature::HasTeamSharedDropbox).
 #[derive(Debug)]
 pub enum HasTeamSharedDropboxValue {
-    /// Does this team have a team shared dropbox.
+    /// Does this team have a shared team root.
     HasTeamSharedDropbox(bool),
     Other,
 }
@@ -15978,7 +16076,7 @@ impl ::serde::ser::Serialize for TeamFolderArchiveJobStatus {
             }
             TeamFolderArchiveJobStatus::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("TeamFolderArchiveJobStatus", 5)?;
+                let mut s = serializer.serialize_struct("TeamFolderArchiveJobStatus", 7)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -16050,7 +16148,7 @@ impl ::serde::ser::Serialize for TeamFolderArchiveLaunch {
             }
             TeamFolderArchiveLaunch::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("TeamFolderArchiveLaunch", 5)?;
+                let mut s = serializer.serialize_struct("TeamFolderArchiveLaunch", 7)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -16063,18 +16161,28 @@ impl ::serde::ser::Serialize for TeamFolderArchiveLaunch {
 pub struct TeamFolderCreateArg {
     /// Name for the new team folder.
     pub name: String,
+    /// The sync setting to apply to this team folder. Only permitted if the team has team selective
+    /// sync enabled.
+    pub sync_setting: Option<super::files::SyncSettingArg>,
 }
 
 impl TeamFolderCreateArg {
     pub fn new(name: String) -> Self {
         TeamFolderCreateArg {
             name,
+            sync_setting: None,
         }
+    }
+
+    pub fn with_sync_setting(mut self, value: Option<super::files::SyncSettingArg>) -> Self {
+        self.sync_setting = value;
+        self
     }
 
 }
 
-const TEAM_FOLDER_CREATE_ARG_FIELDS: &[&str] = &["name"];
+const TEAM_FOLDER_CREATE_ARG_FIELDS: &[&str] = &["name",
+                                                 "sync_setting"];
 impl TeamFolderCreateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -16088,6 +16196,7 @@ impl TeamFolderCreateArg {
     ) -> Result<Option<TeamFolderCreateArg>, V::Error> {
         use serde::de;
         let mut field_name = None;
+        let mut field_sync_setting = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -16098,6 +16207,12 @@ impl TeamFolderCreateArg {
                     }
                     field_name = Some(map.next_value()?);
                 }
+                "sync_setting" => {
+                    if field_sync_setting.is_some() {
+                        return Err(de::Error::duplicate_field("sync_setting"));
+                    }
+                    field_sync_setting = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_CREATE_ARG_FIELDS))
             }
         }
@@ -16106,6 +16221,7 @@ impl TeamFolderCreateArg {
         }
         let result = TeamFolderCreateArg {
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
+            sync_setting: field_sync_setting,
         };
         Ok(Some(result))
     }
@@ -16115,7 +16231,8 @@ impl TeamFolderCreateArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("name", &self.name)
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("sync_setting", &self.sync_setting)
     }
 }
 
@@ -16141,7 +16258,7 @@ impl ::serde::ser::Serialize for TeamFolderCreateArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamFolderCreateArg", 1)?;
+        let mut s = serializer.serialize_struct("TeamFolderCreateArg", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -16155,6 +16272,8 @@ pub enum TeamFolderCreateError {
     FolderNameAlreadyUsed,
     /// The provided name cannot be used because it is reserved.
     FolderNameReserved,
+    /// An error occurred setting the sync settings.
+    SyncSettingsError(super::files::SyncSettingsError),
     Other,
 }
 
@@ -16177,6 +16296,13 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderCreateError {
                     "invalid_folder_name" => Ok(TeamFolderCreateError::InvalidFolderName),
                     "folder_name_already_used" => Ok(TeamFolderCreateError::FolderNameAlreadyUsed),
                     "folder_name_reserved" => Ok(TeamFolderCreateError::FolderNameReserved),
+                    "sync_settings_error" => {
+                        match map.next_key()? {
+                            Some("sync_settings_error") => Ok(TeamFolderCreateError::SyncSettingsError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("sync_settings_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => Ok(TeamFolderCreateError::Other)
                 }
             }
@@ -16184,6 +16310,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderCreateError {
         const VARIANTS: &[&str] = &["invalid_folder_name",
                                     "folder_name_already_used",
                                     "folder_name_reserved",
+                                    "sync_settings_error",
                                     "other"];
         deserializer.deserialize_struct("TeamFolderCreateError", VARIANTS, EnumVisitor)
     }
@@ -16210,6 +16337,13 @@ impl ::serde::ser::Serialize for TeamFolderCreateError {
                 // unit
                 let mut s = serializer.serialize_struct("TeamFolderCreateError", 1)?;
                 s.serialize_field(".tag", "folder_name_reserved")?;
+                s.end()
+            }
+            TeamFolderCreateError::SyncSettingsError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("TeamFolderCreateError", 2)?;
+                s.serialize_field(".tag", "sync_settings_error")?;
+                s.serialize_field("sync_settings_error", x)?;
                 s.end()
             }
             TeamFolderCreateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -16286,7 +16420,7 @@ impl ::serde::ser::Serialize for TeamFolderGetInfoItem {
             }
             TeamFolderGetInfoItem::TeamFolderMetadata(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("TeamFolderGetInfoItem", 5)?;
+                let mut s = serializer.serialize_struct("TeamFolderGetInfoItem", 7)?;
                 s.serialize_field(".tag", "team_folder_metadata")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -16993,8 +17127,12 @@ pub struct TeamFolderMetadata {
     pub name: String,
     /// The status of the team folder.
     pub status: TeamFolderStatus,
-    /// True if this team folder is the team shared dropbox.
+    /// True if this team folder is a shared team root.
     pub is_team_shared_dropbox: bool,
+    /// The sync setting applied to this team folder.
+    pub sync_setting: super::files::SyncSetting,
+    /// Sync settings applied to contents of this team folder.
+    pub content_sync_settings: Vec<super::files::ContentSyncSetting>,
 }
 
 impl TeamFolderMetadata {
@@ -17003,12 +17141,16 @@ impl TeamFolderMetadata {
         name: String,
         status: TeamFolderStatus,
         is_team_shared_dropbox: bool,
+        sync_setting: super::files::SyncSetting,
+        content_sync_settings: Vec<super::files::ContentSyncSetting>,
     ) -> Self {
         TeamFolderMetadata {
             team_folder_id,
             name,
             status,
             is_team_shared_dropbox,
+            sync_setting,
+            content_sync_settings,
         }
     }
 
@@ -17017,7 +17159,9 @@ impl TeamFolderMetadata {
 const TEAM_FOLDER_METADATA_FIELDS: &[&str] = &["team_folder_id",
                                                "name",
                                                "status",
-                                               "is_team_shared_dropbox"];
+                                               "is_team_shared_dropbox",
+                                               "sync_setting",
+                                               "content_sync_settings"];
 impl TeamFolderMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -17034,6 +17178,8 @@ impl TeamFolderMetadata {
         let mut field_name = None;
         let mut field_status = None;
         let mut field_is_team_shared_dropbox = None;
+        let mut field_sync_setting = None;
+        let mut field_content_sync_settings = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -17062,6 +17208,18 @@ impl TeamFolderMetadata {
                     }
                     field_is_team_shared_dropbox = Some(map.next_value()?);
                 }
+                "sync_setting" => {
+                    if field_sync_setting.is_some() {
+                        return Err(de::Error::duplicate_field("sync_setting"));
+                    }
+                    field_sync_setting = Some(map.next_value()?);
+                }
+                "content_sync_settings" => {
+                    if field_content_sync_settings.is_some() {
+                        return Err(de::Error::duplicate_field("content_sync_settings"));
+                    }
+                    field_content_sync_settings = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_METADATA_FIELDS))
             }
         }
@@ -17073,6 +17231,8 @@ impl TeamFolderMetadata {
             name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
             status: field_status.ok_or_else(|| de::Error::missing_field("status"))?,
             is_team_shared_dropbox: field_is_team_shared_dropbox.ok_or_else(|| de::Error::missing_field("is_team_shared_dropbox"))?,
+            sync_setting: field_sync_setting.ok_or_else(|| de::Error::missing_field("sync_setting"))?,
+            content_sync_settings: field_content_sync_settings.ok_or_else(|| de::Error::missing_field("content_sync_settings"))?,
         };
         Ok(Some(result))
     }
@@ -17085,7 +17245,9 @@ impl TeamFolderMetadata {
         s.serialize_field("team_folder_id", &self.team_folder_id)?;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("status", &self.status)?;
-        s.serialize_field("is_team_shared_dropbox", &self.is_team_shared_dropbox)
+        s.serialize_field("is_team_shared_dropbox", &self.is_team_shared_dropbox)?;
+        s.serialize_field("sync_setting", &self.sync_setting)?;
+        s.serialize_field("content_sync_settings", &self.content_sync_settings)
     }
 }
 
@@ -17111,7 +17273,7 @@ impl ::serde::ser::Serialize for TeamFolderMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamFolderMetadata", 4)?;
+        let mut s = serializer.serialize_struct("TeamFolderMetadata", 6)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -17521,7 +17683,7 @@ impl ::serde::ser::Serialize for TeamFolderStatus {
 
 #[derive(Debug)]
 pub enum TeamFolderTeamSharedDropboxError {
-    /// This action is not allowed for a team shared dropbox.
+    /// This action is not allowed for a shared team root.
     Disallowed,
     Other,
 }
@@ -17576,6 +17738,251 @@ impl ::std::error::Error for TeamFolderTeamSharedDropboxError {
 }
 
 impl ::std::fmt::Display for TeamFolderTeamSharedDropboxError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct TeamFolderUpdateSyncSettingsArg {
+    /// The ID of the team folder.
+    pub team_folder_id: super::common::SharedFolderId,
+    /// Sync setting to apply to the team folder itself. Only meaningful if the team folder is not a
+    /// shared team root.
+    pub sync_setting: Option<super::files::SyncSettingArg>,
+    /// Sync settings to apply to contents of this team folder.
+    pub content_sync_settings: Option<Vec<super::files::ContentSyncSettingArg>>,
+}
+
+impl TeamFolderUpdateSyncSettingsArg {
+    pub fn new(team_folder_id: super::common::SharedFolderId) -> Self {
+        TeamFolderUpdateSyncSettingsArg {
+            team_folder_id,
+            sync_setting: None,
+            content_sync_settings: None,
+        }
+    }
+
+    pub fn with_sync_setting(mut self, value: Option<super::files::SyncSettingArg>) -> Self {
+        self.sync_setting = value;
+        self
+    }
+
+    pub fn with_content_sync_settings(
+        mut self,
+        value: Option<Vec<super::files::ContentSyncSettingArg>>,
+    ) -> Self {
+        self.content_sync_settings = value;
+        self
+    }
+
+}
+
+const TEAM_FOLDER_UPDATE_SYNC_SETTINGS_ARG_FIELDS: &[&str] = &["team_folder_id",
+                                                               "sync_setting",
+                                                               "content_sync_settings"];
+impl TeamFolderUpdateSyncSettingsArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TeamFolderUpdateSyncSettingsArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamFolderUpdateSyncSettingsArg>, V::Error> {
+        use serde::de;
+        let mut field_team_folder_id = None;
+        let mut field_sync_setting = None;
+        let mut field_content_sync_settings = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "team_folder_id" => {
+                    if field_team_folder_id.is_some() {
+                        return Err(de::Error::duplicate_field("team_folder_id"));
+                    }
+                    field_team_folder_id = Some(map.next_value()?);
+                }
+                "sync_setting" => {
+                    if field_sync_setting.is_some() {
+                        return Err(de::Error::duplicate_field("sync_setting"));
+                    }
+                    field_sync_setting = Some(map.next_value()?);
+                }
+                "content_sync_settings" => {
+                    if field_content_sync_settings.is_some() {
+                        return Err(de::Error::duplicate_field("content_sync_settings"));
+                    }
+                    field_content_sync_settings = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, TEAM_FOLDER_UPDATE_SYNC_SETTINGS_ARG_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamFolderUpdateSyncSettingsArg {
+            team_folder_id: field_team_folder_id.ok_or_else(|| de::Error::missing_field("team_folder_id"))?,
+            sync_setting: field_sync_setting,
+            content_sync_settings: field_content_sync_settings,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("team_folder_id", &self.team_folder_id)?;
+        s.serialize_field("sync_setting", &self.sync_setting)?;
+        s.serialize_field("content_sync_settings", &self.content_sync_settings)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamFolderUpdateSyncSettingsArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TeamFolderUpdateSyncSettingsArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a TeamFolderUpdateSyncSettingsArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TeamFolderUpdateSyncSettingsArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TeamFolderUpdateSyncSettingsArg", TEAM_FOLDER_UPDATE_SYNC_SETTINGS_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamFolderUpdateSyncSettingsArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TeamFolderUpdateSyncSettingsArg", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum TeamFolderUpdateSyncSettingsError {
+    AccessError(TeamFolderAccessError),
+    StatusError(TeamFolderInvalidStatusError),
+    TeamSharedDropboxError(TeamFolderTeamSharedDropboxError),
+    Other,
+    /// An error occurred setting the sync settings.
+    SyncSettingsError(super::files::SyncSettingsError),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamFolderUpdateSyncSettingsError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TeamFolderUpdateSyncSettingsError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a TeamFolderUpdateSyncSettingsError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "access_error" => {
+                        match map.next_key()? {
+                            Some("access_error") => Ok(TeamFolderUpdateSyncSettingsError::AccessError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("access_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "status_error" => {
+                        match map.next_key()? {
+                            Some("status_error") => Ok(TeamFolderUpdateSyncSettingsError::StatusError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("status_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "team_shared_dropbox_error" => {
+                        match map.next_key()? {
+                            Some("team_shared_dropbox_error") => Ok(TeamFolderUpdateSyncSettingsError::TeamSharedDropboxError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("team_shared_dropbox_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "sync_settings_error" => {
+                        match map.next_key()? {
+                            Some("sync_settings_error") => Ok(TeamFolderUpdateSyncSettingsError::SyncSettingsError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("sync_settings_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => Ok(TeamFolderUpdateSyncSettingsError::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["access_error",
+                                    "status_error",
+                                    "team_shared_dropbox_error",
+                                    "other",
+                                    "sync_settings_error"];
+        deserializer.deserialize_struct("TeamFolderUpdateSyncSettingsError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamFolderUpdateSyncSettingsError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            TeamFolderUpdateSyncSettingsError::AccessError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("TeamFolderUpdateSyncSettingsError", 2)?;
+                s.serialize_field(".tag", "access_error")?;
+                s.serialize_field("access_error", x)?;
+                s.end()
+            }
+            TeamFolderUpdateSyncSettingsError::StatusError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("TeamFolderUpdateSyncSettingsError", 2)?;
+                s.serialize_field(".tag", "status_error")?;
+                s.serialize_field("status_error", x)?;
+                s.end()
+            }
+            TeamFolderUpdateSyncSettingsError::TeamSharedDropboxError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("TeamFolderUpdateSyncSettingsError", 2)?;
+                s.serialize_field(".tag", "team_shared_dropbox_error")?;
+                s.serialize_field("team_shared_dropbox_error", x)?;
+                s.end()
+            }
+            TeamFolderUpdateSyncSettingsError::SyncSettingsError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("TeamFolderUpdateSyncSettingsError", 2)?;
+                s.serialize_field(".tag", "sync_settings_error")?;
+                s.serialize_field("sync_settings_error", x)?;
+                s.end()
+            }
+            TeamFolderUpdateSyncSettingsError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for TeamFolderUpdateSyncSettingsError {
+    fn description(&self) -> &str {
+        "TeamFolderUpdateSyncSettingsError"
+    }
+}
+
+impl ::std::fmt::Display for TeamFolderUpdateSyncSettingsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
     }

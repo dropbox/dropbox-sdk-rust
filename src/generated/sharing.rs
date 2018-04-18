@@ -12,7 +12,6 @@
 //! shared folders.
 
 pub type DropboxId = String;
-pub type FileId = String;
 pub type GetSharedLinkFileArg = GetSharedLinkMetadataArg;
 pub type Id = super::files::Id;
 pub type Path = super::files::Path;
@@ -526,6 +525,22 @@ pub fn revoke_shared_link(
         None)
 }
 
+/// Change the inheritance policy of an existing Shared Folder. Only permitted for shared folders in
+/// a shared team root. If a [`ShareFolderLaunch::AsyncJobId`](ShareFolderLaunch::AsyncJobId) is
+/// returned, you'll need to call [`check_share_job_status()`](check_share_job_status) until the
+/// action completes to get the metadata for the folder.
+pub fn set_access_inheritance(
+    client: &::client_trait::HttpClient,
+    arg: &SetAccessInheritanceArg,
+) -> ::Result<Result<ShareFolderLaunch, SetAccessInheritanceError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "sharing/set_access_inheritance",
+        arg,
+        None)
+}
+
 /// Share a folder with collaborators. Most sharing will be completed synchronously. Large folders
 /// will be completed asynchronously. To make testing the async case repeatable, set
 /// `ShareFolderArg.force_async`. If a
@@ -641,6 +656,67 @@ pub fn update_folder_policy(
         "sharing/update_folder_policy",
         arg,
         None)
+}
+
+/// Information about the inheritance policy of a shared folder.
+#[derive(Debug)]
+pub enum AccessInheritance {
+    /// The shared folder inherits its members from the parent folder.
+    Inherit,
+    /// The shared folder does not inherit its members from the parent folder.
+    NoInherit,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AccessInheritance {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = AccessInheritance;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a AccessInheritance structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "inherit" => Ok(AccessInheritance::Inherit),
+                    "no_inherit" => Ok(AccessInheritance::NoInherit),
+                    _ => Ok(AccessInheritance::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["inherit",
+                                    "no_inherit",
+                                    "other"];
+        deserializer.deserialize_struct("AccessInheritance", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AccessInheritance {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            AccessInheritance::Inherit => {
+                // unit
+                let mut s = serializer.serialize_struct("AccessInheritance", 1)?;
+                s.serialize_field(".tag", "inherit")?;
+                s.end()
+            }
+            AccessInheritance::NoInherit => {
+                // unit
+                let mut s = serializer.serialize_struct("AccessInheritance", 1)?;
+                s.serialize_field(".tag", "no_inherit")?;
+                s.end()
+            }
+            AccessInheritance::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
 }
 
 /// Defines the access levels for collaborators.
@@ -3787,6 +3863,8 @@ pub enum FolderAction {
     ShareLink,
     /// Create a shared link for folder.
     CreateLink,
+    /// Set whether the folder inherits permissions from its parent.
+    SetAccessInheritance,
     Other,
 }
 
@@ -3819,6 +3897,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderAction {
                     "leave_a_copy" => Ok(FolderAction::LeaveACopy),
                     "share_link" => Ok(FolderAction::ShareLink),
                     "create_link" => Ok(FolderAction::CreateLink),
+                    "set_access_inheritance" => Ok(FolderAction::SetAccessInheritance),
                     _ => Ok(FolderAction::Other)
                 }
             }
@@ -3836,6 +3915,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderAction {
                                     "leave_a_copy",
                                     "share_link",
                                     "create_link",
+                                    "set_access_inheritance",
                                     "other"];
         deserializer.deserialize_struct("FolderAction", VARIANTS, EnumVisitor)
     }
@@ -3922,6 +4002,12 @@ impl ::serde::ser::Serialize for FolderAction {
                 // unit
                 let mut s = serializer.serialize_struct("FolderAction", 1)?;
                 s.serialize_field(".tag", "create_link")?;
+                s.end()
+            }
+            FolderAction::SetAccessInheritance => {
+                // unit
+                let mut s = serializer.serialize_struct("FolderAction", 1)?;
+                s.serialize_field(".tag", "set_access_inheritance")?;
                 s.end()
             }
             FolderAction::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -5676,7 +5762,7 @@ pub struct GroupMembershipInfo {
     /// The permissions that requesting user has on this member. The set of permissions corresponds
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
-    /// Suggested name initials for a member.
+    /// Never set.
     pub initials: Option<String>,
     /// True if the member has access from a parent folder.
     pub is_inherited: bool,
@@ -6112,7 +6198,7 @@ pub struct InviteeMembershipInfo {
     /// The permissions that requesting user has on this member. The set of permissions corresponds
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
-    /// Suggested name initials for a member.
+    /// Never set.
     pub initials: Option<String>,
     /// True if the member has access from a parent folder.
     pub is_inherited: bool,
@@ -9885,7 +9971,7 @@ pub struct MembershipInfo {
     /// The permissions that requesting user has on this member. The set of permissions corresponds
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
-    /// Suggested name initials for a member.
+    /// Never set.
     pub initials: Option<String>,
     /// True if the member has access from a parent folder.
     pub is_inherited: bool,
@@ -12266,6 +12352,191 @@ impl ::std::fmt::Display for RevokeSharedLinkError {
 }
 
 #[derive(Debug)]
+pub struct SetAccessInheritanceArg {
+    /// The ID for the shared folder.
+    pub shared_folder_id: super::common::SharedFolderId,
+    /// The access inheritance settings for the folder.
+    pub access_inheritance: AccessInheritance,
+}
+
+impl SetAccessInheritanceArg {
+    pub fn new(shared_folder_id: super::common::SharedFolderId) -> Self {
+        SetAccessInheritanceArg {
+            shared_folder_id,
+            access_inheritance: AccessInheritance::Inherit,
+        }
+    }
+
+    pub fn with_access_inheritance(mut self, value: AccessInheritance) -> Self {
+        self.access_inheritance = value;
+        self
+    }
+
+}
+
+const SET_ACCESS_INHERITANCE_ARG_FIELDS: &[&str] = &["shared_folder_id",
+                                                     "access_inheritance"];
+impl SetAccessInheritanceArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<SetAccessInheritanceArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SetAccessInheritanceArg>, V::Error> {
+        use serde::de;
+        let mut field_shared_folder_id = None;
+        let mut field_access_inheritance = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "shared_folder_id" => {
+                    if field_shared_folder_id.is_some() {
+                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                    }
+                    field_shared_folder_id = Some(map.next_value()?);
+                }
+                "access_inheritance" => {
+                    if field_access_inheritance.is_some() {
+                        return Err(de::Error::duplicate_field("access_inheritance"));
+                    }
+                    field_access_inheritance = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SET_ACCESS_INHERITANCE_ARG_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SetAccessInheritanceArg {
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
+            access_inheritance: field_access_inheritance.unwrap_or_else(|| AccessInheritance::Inherit),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("shared_folder_id", &self.shared_folder_id)?;
+        s.serialize_field("access_inheritance", &self.access_inheritance)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SetAccessInheritanceArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SetAccessInheritanceArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SetAccessInheritanceArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SetAccessInheritanceArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SetAccessInheritanceArg", SET_ACCESS_INHERITANCE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SetAccessInheritanceArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SetAccessInheritanceArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum SetAccessInheritanceError {
+    /// Unable to access shared folder.
+    AccessError(SharedFolderAccessError),
+    /// The current user does not have permission to perform this action.
+    NoPermission,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SetAccessInheritanceError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SetAccessInheritanceError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SetAccessInheritanceError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "access_error" => {
+                        match map.next_key()? {
+                            Some("access_error") => Ok(SetAccessInheritanceError::AccessError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("access_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "no_permission" => Ok(SetAccessInheritanceError::NoPermission),
+                    _ => Ok(SetAccessInheritanceError::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["access_error",
+                                    "no_permission",
+                                    "other"];
+        deserializer.deserialize_struct("SetAccessInheritanceError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SetAccessInheritanceError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SetAccessInheritanceError::AccessError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("SetAccessInheritanceError", 2)?;
+                s.serialize_field(".tag", "access_error")?;
+                s.serialize_field("access_error", x)?;
+                s.end()
+            }
+            SetAccessInheritanceError::NoPermission => {
+                // unit
+                let mut s = serializer.serialize_struct("SetAccessInheritanceError", 1)?;
+                s.serialize_field(".tag", "no_permission")?;
+                s.end()
+            }
+            SetAccessInheritanceError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for SetAccessInheritanceError {
+    fn description(&self) -> &str {
+        "SetAccessInheritanceError"
+    }
+}
+
+impl ::std::fmt::Display for SetAccessInheritanceError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
 pub struct ShareFolderArg {
     /// The path to the folder to share. If it does not exist, then a new one is created.
     pub path: super::files::WritePath,
@@ -12919,7 +13190,7 @@ impl ::serde::ser::Serialize for ShareFolderJobStatus {
             }
             ShareFolderJobStatus::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("ShareFolderJobStatus", 15)?;
+                let mut s = serializer.serialize_struct("ShareFolderJobStatus", 16)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -12991,7 +13262,7 @@ impl ::serde::ser::Serialize for ShareFolderLaunch {
             }
             ShareFolderLaunch::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("ShareFolderLaunch", 15)?;
+                let mut s = serializer.serialize_struct("ShareFolderLaunch", 16)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -13143,7 +13414,7 @@ impl ::serde::ser::Serialize for SharePathError {
             }
             SharePathError::AlreadyShared(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SharePathError", 15)?;
+                let mut s = serializer.serialize_struct("SharePathError", 16)?;
                 s.serialize_field(".tag", "already_shared")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -13750,7 +14021,7 @@ impl ::serde::ser::Serialize for SharedFileMembers {
 #[derive(Debug)]
 pub struct SharedFileMetadata {
     /// The ID of the file.
-    pub id: FileId,
+    pub id: super::files::FileId,
     /// The name of this file.
     pub name: String,
     /// Policies governing this shared file.
@@ -13791,7 +14062,12 @@ pub struct SharedFileMetadata {
 }
 
 impl SharedFileMetadata {
-    pub fn new(id: FileId, name: String, policy: FolderPolicy, preview_url: String) -> Self {
+    pub fn new(
+        id: super::files::FileId,
+        name: String,
+        policy: FolderPolicy,
+        preview_url: String,
+    ) -> Self {
         SharedFileMetadata {
             id,
             name,
@@ -14078,7 +14354,7 @@ pub enum SharedFolderAccessError {
     InvalidId,
     /// The user is not a member of the shared folder thus cannot access it.
     NotAMember,
-    /// The current user's e-mail address is unverified.
+    /// Never set.
     EmailUnverified,
     /// The shared folder is unmounted.
     Unmounted,
@@ -14423,6 +14699,8 @@ pub struct SharedFolderMetadata {
     /// Actions the current user may perform on the folder and its contents. The set of permissions
     /// corresponds to the FolderActions in the request.
     pub permissions: Option<Vec<FolderPermission>>,
+    /// Whether the folder inherits its members from its parent.
+    pub access_inheritance: AccessInheritance,
 }
 
 impl SharedFolderMetadata {
@@ -14451,6 +14729,7 @@ impl SharedFolderMetadata {
             path_lower: None,
             link_metadata: None,
             permissions: None,
+            access_inheritance: AccessInheritance::Inherit,
         }
     }
 
@@ -14487,6 +14766,11 @@ impl SharedFolderMetadata {
         self
     }
 
+    pub fn with_access_inheritance(mut self, value: AccessInheritance) -> Self {
+        self.access_inheritance = value;
+        self
+    }
+
 }
 
 const SHARED_FOLDER_METADATA_FIELDS: &[&str] = &["access_type",
@@ -14502,7 +14786,8 @@ const SHARED_FOLDER_METADATA_FIELDS: &[&str] = &["access_type",
                                                  "parent_shared_folder_id",
                                                  "path_lower",
                                                  "link_metadata",
-                                                 "permissions"];
+                                                 "permissions",
+                                                 "access_inheritance"];
 impl SharedFolderMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -14529,6 +14814,7 @@ impl SharedFolderMetadata {
         let mut field_path_lower = None;
         let mut field_link_metadata = None;
         let mut field_permissions = None;
+        let mut field_access_inheritance = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -14617,6 +14903,12 @@ impl SharedFolderMetadata {
                     }
                     field_permissions = Some(map.next_value()?);
                 }
+                "access_inheritance" => {
+                    if field_access_inheritance.is_some() {
+                        return Err(de::Error::duplicate_field("access_inheritance"));
+                    }
+                    field_access_inheritance = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_METADATA_FIELDS))
             }
         }
@@ -14638,6 +14930,7 @@ impl SharedFolderMetadata {
             path_lower: field_path_lower,
             link_metadata: field_link_metadata,
             permissions: field_permissions,
+            access_inheritance: field_access_inheritance.unwrap_or_else(|| AccessInheritance::Inherit),
         };
         Ok(Some(result))
     }
@@ -14660,7 +14953,8 @@ impl SharedFolderMetadata {
         s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
         s.serialize_field("path_lower", &self.path_lower)?;
         s.serialize_field("link_metadata", &self.link_metadata)?;
-        s.serialize_field("permissions", &self.permissions)
+        s.serialize_field("permissions", &self.permissions)?;
+        s.serialize_field("access_inheritance", &self.access_inheritance)
     }
 }
 
@@ -14686,7 +14980,7 @@ impl ::serde::ser::Serialize for SharedFolderMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderMetadata", 14)?;
+        let mut s = serializer.serialize_struct("SharedFolderMetadata", 15)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -17151,12 +17445,14 @@ pub struct UserFileMembershipInfo {
     /// The permissions that requesting user has on this member. The set of permissions corresponds
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
-    /// Suggested name initials for a member.
+    /// Never set.
     pub initials: Option<String>,
     /// True if the member has access from a parent folder.
     pub is_inherited: bool,
     /// The UTC timestamp of when the user has last seen the content, if they have.
     pub time_last_seen: Option<super::common::DropboxTimestamp>,
+    /// The platform on which the user has last seen the content, or unknown.
+    pub platform_type: Option<super::seen_state::PlatformType>,
 }
 
 impl UserFileMembershipInfo {
@@ -17168,6 +17464,7 @@ impl UserFileMembershipInfo {
             initials: None,
             is_inherited: false,
             time_last_seen: None,
+            platform_type: None,
         }
     }
 
@@ -17191,6 +17488,11 @@ impl UserFileMembershipInfo {
         self
     }
 
+    pub fn with_platform_type(mut self, value: Option<super::seen_state::PlatformType>) -> Self {
+        self.platform_type = value;
+        self
+    }
+
 }
 
 const USER_FILE_MEMBERSHIP_INFO_FIELDS: &[&str] = &["access_type",
@@ -17198,7 +17500,8 @@ const USER_FILE_MEMBERSHIP_INFO_FIELDS: &[&str] = &["access_type",
                                                     "permissions",
                                                     "initials",
                                                     "is_inherited",
-                                                    "time_last_seen"];
+                                                    "time_last_seen",
+                                                    "platform_type"];
 impl UserFileMembershipInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -17217,6 +17520,7 @@ impl UserFileMembershipInfo {
         let mut field_initials = None;
         let mut field_is_inherited = None;
         let mut field_time_last_seen = None;
+        let mut field_platform_type = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -17257,6 +17561,12 @@ impl UserFileMembershipInfo {
                     }
                     field_time_last_seen = Some(map.next_value()?);
                 }
+                "platform_type" => {
+                    if field_platform_type.is_some() {
+                        return Err(de::Error::duplicate_field("platform_type"));
+                    }
+                    field_platform_type = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, USER_FILE_MEMBERSHIP_INFO_FIELDS))
             }
         }
@@ -17270,6 +17580,7 @@ impl UserFileMembershipInfo {
             initials: field_initials,
             is_inherited: field_is_inherited.unwrap_or(false),
             time_last_seen: field_time_last_seen,
+            platform_type: field_platform_type,
         };
         Ok(Some(result))
     }
@@ -17284,7 +17595,8 @@ impl UserFileMembershipInfo {
         s.serialize_field("permissions", &self.permissions)?;
         s.serialize_field("initials", &self.initials)?;
         s.serialize_field("is_inherited", &self.is_inherited)?;
-        s.serialize_field("time_last_seen", &self.time_last_seen)
+        s.serialize_field("time_last_seen", &self.time_last_seen)?;
+        s.serialize_field("platform_type", &self.platform_type)
     }
 }
 
@@ -17310,7 +17622,7 @@ impl ::serde::ser::Serialize for UserFileMembershipInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UserFileMembershipInfo", 6)?;
+        let mut s = serializer.serialize_struct("UserFileMembershipInfo", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -17323,6 +17635,10 @@ impl ::serde::ser::Serialize for UserFileMembershipInfo {
 pub struct UserInfo {
     /// The account ID of the user.
     pub account_id: super::users_common::AccountId,
+    /// Email address of user.
+    pub email: String,
+    /// The display name of the user.
+    pub display_name: String,
     /// If the user is in the same team as current user.
     pub same_team: bool,
     /// The team member ID of the shared folder member. Only present if `same_team` is true.
@@ -17330,9 +17646,16 @@ pub struct UserInfo {
 }
 
 impl UserInfo {
-    pub fn new(account_id: super::users_common::AccountId, same_team: bool) -> Self {
+    pub fn new(
+        account_id: super::users_common::AccountId,
+        email: String,
+        display_name: String,
+        same_team: bool,
+    ) -> Self {
         UserInfo {
             account_id,
+            email,
+            display_name,
             same_team,
             team_member_id: None,
         }
@@ -17346,6 +17669,8 @@ impl UserInfo {
 }
 
 const USER_INFO_FIELDS: &[&str] = &["account_id",
+                                    "email",
+                                    "display_name",
                                     "same_team",
                                     "team_member_id"];
 impl UserInfo {
@@ -17361,6 +17686,8 @@ impl UserInfo {
     ) -> Result<Option<UserInfo>, V::Error> {
         use serde::de;
         let mut field_account_id = None;
+        let mut field_email = None;
+        let mut field_display_name = None;
         let mut field_same_team = None;
         let mut field_team_member_id = None;
         let mut nothing = true;
@@ -17372,6 +17699,18 @@ impl UserInfo {
                         return Err(de::Error::duplicate_field("account_id"));
                     }
                     field_account_id = Some(map.next_value()?);
+                }
+                "email" => {
+                    if field_email.is_some() {
+                        return Err(de::Error::duplicate_field("email"));
+                    }
+                    field_email = Some(map.next_value()?);
+                }
+                "display_name" => {
+                    if field_display_name.is_some() {
+                        return Err(de::Error::duplicate_field("display_name"));
+                    }
+                    field_display_name = Some(map.next_value()?);
                 }
                 "same_team" => {
                     if field_same_team.is_some() {
@@ -17393,6 +17732,8 @@ impl UserInfo {
         }
         let result = UserInfo {
             account_id: field_account_id.ok_or_else(|| de::Error::missing_field("account_id"))?,
+            email: field_email.ok_or_else(|| de::Error::missing_field("email"))?,
+            display_name: field_display_name.ok_or_else(|| de::Error::missing_field("display_name"))?,
             same_team: field_same_team.ok_or_else(|| de::Error::missing_field("same_team"))?,
             team_member_id: field_team_member_id,
         };
@@ -17405,6 +17746,8 @@ impl UserInfo {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("account_id", &self.account_id)?;
+        s.serialize_field("email", &self.email)?;
+        s.serialize_field("display_name", &self.display_name)?;
         s.serialize_field("same_team", &self.same_team)?;
         s.serialize_field("team_member_id", &self.team_member_id)
     }
@@ -17432,7 +17775,7 @@ impl ::serde::ser::Serialize for UserInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UserInfo", 3)?;
+        let mut s = serializer.serialize_struct("UserInfo", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -17448,7 +17791,7 @@ pub struct UserMembershipInfo {
     /// The permissions that requesting user has on this member. The set of permissions corresponds
     /// to the MemberActions in the request.
     pub permissions: Option<Vec<MemberPermission>>,
-    /// Suggested name initials for a member.
+    /// Never set.
     pub initials: Option<String>,
     /// True if the member has access from a parent folder.
     pub is_inherited: bool,

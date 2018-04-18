@@ -661,6 +661,186 @@ impl ::serde::ser::Serialize for SharedLinkCreatePolicy {
 }
 
 #[derive(Debug)]
+pub enum ShowcaseDownloadPolicy {
+    /// Do not allow files to be downloaded from Showcases.
+    Disabled,
+    /// Allow files to be downloaded from Showcases.
+    Enabled,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseDownloadPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ShowcaseDownloadPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseDownloadPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => Ok(ShowcaseDownloadPolicy::Disabled),
+                    "enabled" => Ok(ShowcaseDownloadPolicy::Enabled),
+                    _ => Ok(ShowcaseDownloadPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("ShowcaseDownloadPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseDownloadPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ShowcaseDownloadPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ShowcaseDownloadPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            ShowcaseDownloadPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ShowcaseDownloadPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            ShowcaseDownloadPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum ShowcaseEnabledPolicy {
+    /// Showcase is disabled.
+    Disabled,
+    /// Showcase is enabled.
+    Enabled,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseEnabledPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ShowcaseEnabledPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseEnabledPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => Ok(ShowcaseEnabledPolicy::Disabled),
+                    "enabled" => Ok(ShowcaseEnabledPolicy::Enabled),
+                    _ => Ok(ShowcaseEnabledPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("ShowcaseEnabledPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseEnabledPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ShowcaseEnabledPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ShowcaseEnabledPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            ShowcaseEnabledPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ShowcaseEnabledPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            ShowcaseEnabledPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum ShowcaseExternalSharingPolicy {
+    /// Do not allow showcases to be shared with people not on the team.
+    Disabled,
+    /// Allow showcases to be shared with people not on the team.
+    Enabled,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseExternalSharingPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ShowcaseExternalSharingPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseExternalSharingPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => Ok(ShowcaseExternalSharingPolicy::Disabled),
+                    "enabled" => Ok(ShowcaseExternalSharingPolicy::Enabled),
+                    _ => Ok(ShowcaseExternalSharingPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("ShowcaseExternalSharingPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseExternalSharingPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ShowcaseExternalSharingPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ShowcaseExternalSharingPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            ShowcaseExternalSharingPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ShowcaseExternalSharingPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            ShowcaseExternalSharingPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
 pub enum SmartSyncPolicy {
     /// The specified content will be synced as local files by default.
     Local,
