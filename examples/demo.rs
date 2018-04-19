@@ -79,7 +79,8 @@ fn main() {
                 token
             },
             Err(e) => {
-                panic!("Error getting OAuth2 token: {}", e);
+                eprintln!("Error getting OAuth2 token: {}", e);
+                std::process::exit(1);
             }
         }
     });
