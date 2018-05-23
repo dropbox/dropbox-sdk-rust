@@ -131,10 +131,12 @@ class RustHelperBackend(CodeBackend):
         return name
 
     def route_name(self, route):
-        return self.route_name_raw(route.name)
+        return self.route_name_raw(route.name, route.version)
 
-    def route_name_raw(self, name):
+    def route_name_raw(self, name, version):
         name = fmt_underscores(name)
+        if version > 1:
+            name = '{}_v{}'.format(name, version)
         if name in RUST_RESERVED_WORDS:
             name = 'do_' + name
         return name

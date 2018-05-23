@@ -151,6 +151,10 @@ class RustBackend(RustHelperBackend):
             endpoint = u'::client_trait::Endpoint::Notify'
         else:
             raise RuntimeError(u'ERROR: unsupported endpoint: {}'.format(host))
+        if fn.version > 1:
+            name_with_version = "{}_v{}".format(fn.name, fn.version)
+        else:
+            name_with_version = fn.name
 
         style = fn.attrs.get('style', 'rpc')
         if style == 'rpc':
@@ -166,7 +170,7 @@ class RustBackend(RustHelperBackend):
                     u'::client_helpers::request',
                     [u'client',
                         endpoint,
-                        u'"{}/{}"'.format(ns, fn.name),
+                        u'"{}/{}"'.format(ns, name_with_version),
                         u'arg',
                         u'None'])
         elif style == 'download':
@@ -184,7 +188,7 @@ class RustBackend(RustHelperBackend):
                     u'::client_helpers::request_with_body',
                     [u'client',
                         endpoint,
-                        u'"{}/{}"'.format(ns, fn.name),
+                        u'"{}/{}"'.format(ns, name_with_version),
                         u'arg',
                         u'None',
                         u'range_start',
@@ -203,7 +207,7 @@ class RustBackend(RustHelperBackend):
                     u'::client_helpers::request_with_body',
                     [u'client',
                         endpoint,
-                        u'"{}/{}"'.format(ns, fn.name),
+                        u'"{}/{}"'.format(ns, name_with_version),
                         u'arg',
                         u'Some(body)',
                         u'None',
@@ -617,13 +621,18 @@ class RustBackend(RustHelperBackend):
 
     def _docf(self, tag, val):
         if tag == 'route':
+            if ':' in val:
+                val, version = val.split(':')
+                version = int(version)
+            else:
+                version = 1
             if '.' in val:
                 ns, route = val.split('.')
-                rust_fn = self.route_name_raw(route)
+                rust_fn = self.route_name_raw(route, version)
                 label = ns + '::' + rust_fn
                 target = 'super::' + label
             else:
-                target = self.route_name_raw(val)
+                target = self.route_name_raw(val, version)
                 label = target
             return '[`{}()`]({})'.format(label, target)
         elif tag == 'field':
