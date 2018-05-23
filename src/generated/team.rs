@@ -9965,6 +9965,8 @@ pub struct MemberAddArg {
     /// flows for onboarding that want to handle announcements themselves.
     pub send_welcome_email: bool,
     pub role: AdminTier,
+    /// Whether a user is directory restricted.
+    pub is_directory_restricted: Option<bool>,
 }
 
 impl MemberAddArg {
@@ -9977,6 +9979,7 @@ impl MemberAddArg {
             member_persistent_id: None,
             send_welcome_email: true,
             role: AdminTier::MemberOnly,
+            is_directory_restricted: None,
         }
     }
 
@@ -10016,6 +10019,11 @@ impl MemberAddArg {
         self
     }
 
+    pub fn with_is_directory_restricted(mut self, value: Option<bool>) -> Self {
+        self.is_directory_restricted = value;
+        self
+    }
+
 }
 
 const MEMBER_ADD_ARG_FIELDS: &[&str] = &["member_email",
@@ -10024,7 +10032,8 @@ const MEMBER_ADD_ARG_FIELDS: &[&str] = &["member_email",
                                          "member_external_id",
                                          "member_persistent_id",
                                          "send_welcome_email",
-                                         "role"];
+                                         "role",
+                                         "is_directory_restricted"];
 impl MemberAddArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -10044,6 +10053,7 @@ impl MemberAddArg {
         let mut field_member_persistent_id = None;
         let mut field_send_welcome_email = None;
         let mut field_role = None;
+        let mut field_is_directory_restricted = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -10090,6 +10100,12 @@ impl MemberAddArg {
                     }
                     field_role = Some(map.next_value()?);
                 }
+                "is_directory_restricted" => {
+                    if field_is_directory_restricted.is_some() {
+                        return Err(de::Error::duplicate_field("is_directory_restricted"));
+                    }
+                    field_is_directory_restricted = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, MEMBER_ADD_ARG_FIELDS))
             }
         }
@@ -10104,6 +10120,7 @@ impl MemberAddArg {
             member_persistent_id: field_member_persistent_id,
             send_welcome_email: field_send_welcome_email.unwrap_or(true),
             role: field_role.unwrap_or_else(|| AdminTier::MemberOnly),
+            is_directory_restricted: field_is_directory_restricted,
         };
         Ok(Some(result))
     }
@@ -10119,7 +10136,8 @@ impl MemberAddArg {
         s.serialize_field("member_external_id", &self.member_external_id)?;
         s.serialize_field("member_persistent_id", &self.member_persistent_id)?;
         s.serialize_field("send_welcome_email", &self.send_welcome_email)?;
-        s.serialize_field("role", &self.role)
+        s.serialize_field("role", &self.role)?;
+        s.serialize_field("is_directory_restricted", &self.is_directory_restricted)
     }
 }
 
@@ -10145,7 +10163,7 @@ impl ::serde::ser::Serialize for MemberAddArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("MemberAddArg", 7)?;
+        let mut s = serializer.serialize_struct("MemberAddArg", 8)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -10648,6 +10666,8 @@ pub struct MemberProfile {
     /// Persistent ID that a team can attach to the user. The persistent ID is unique ID to be used
     /// for SAML authentication.
     pub persistent_id: Option<String>,
+    /// Whether the user is a directory restricted user.
+    pub is_directory_restricted: Option<bool>,
 }
 
 impl MemberProfile {
@@ -10670,6 +10690,7 @@ impl MemberProfile {
             account_id: None,
             joined_on: None,
             persistent_id: None,
+            is_directory_restricted: None,
         }
     }
 
@@ -10693,6 +10714,11 @@ impl MemberProfile {
         self
     }
 
+    pub fn with_is_directory_restricted(mut self, value: Option<bool>) -> Self {
+        self.is_directory_restricted = value;
+        self
+    }
+
 }
 
 const MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
@@ -10704,7 +10730,8 @@ const MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
                                          "external_id",
                                          "account_id",
                                          "joined_on",
-                                         "persistent_id"];
+                                         "persistent_id",
+                                         "is_directory_restricted"];
 impl MemberProfile {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -10727,6 +10754,7 @@ impl MemberProfile {
         let mut field_account_id = None;
         let mut field_joined_on = None;
         let mut field_persistent_id = None;
+        let mut field_is_directory_restricted = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -10791,6 +10819,12 @@ impl MemberProfile {
                     }
                     field_persistent_id = Some(map.next_value()?);
                 }
+                "is_directory_restricted" => {
+                    if field_is_directory_restricted.is_some() {
+                        return Err(de::Error::duplicate_field("is_directory_restricted"));
+                    }
+                    field_is_directory_restricted = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, MEMBER_PROFILE_FIELDS))
             }
         }
@@ -10808,6 +10842,7 @@ impl MemberProfile {
             account_id: field_account_id,
             joined_on: field_joined_on,
             persistent_id: field_persistent_id,
+            is_directory_restricted: field_is_directory_restricted,
         };
         Ok(Some(result))
     }
@@ -10826,7 +10861,8 @@ impl MemberProfile {
         s.serialize_field("external_id", &self.external_id)?;
         s.serialize_field("account_id", &self.account_id)?;
         s.serialize_field("joined_on", &self.joined_on)?;
-        s.serialize_field("persistent_id", &self.persistent_id)
+        s.serialize_field("persistent_id", &self.persistent_id)?;
+        s.serialize_field("is_directory_restricted", &self.is_directory_restricted)
     }
 }
 
@@ -10852,7 +10888,7 @@ impl ::serde::ser::Serialize for MemberProfile {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("MemberProfile", 10)?;
+        let mut s = serializer.serialize_struct("MemberProfile", 11)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -12932,6 +12968,8 @@ pub struct MembersSetProfileArg {
     /// New persistent ID. This field only available to teams using persistent ID SAML
     /// configuration.
     pub new_persistent_id: Option<String>,
+    /// New value for whether the user is a directory restricted user.
+    pub new_is_directory_restricted: Option<bool>,
 }
 
 impl MembersSetProfileArg {
@@ -12943,6 +12981,7 @@ impl MembersSetProfileArg {
             new_given_name: None,
             new_surname: None,
             new_persistent_id: None,
+            new_is_directory_restricted: None,
         }
     }
 
@@ -12974,6 +13013,11 @@ impl MembersSetProfileArg {
         self
     }
 
+    pub fn with_new_is_directory_restricted(mut self, value: Option<bool>) -> Self {
+        self.new_is_directory_restricted = value;
+        self
+    }
+
 }
 
 const MEMBERS_SET_PROFILE_ARG_FIELDS: &[&str] = &["user",
@@ -12981,7 +13025,8 @@ const MEMBERS_SET_PROFILE_ARG_FIELDS: &[&str] = &["user",
                                                   "new_external_id",
                                                   "new_given_name",
                                                   "new_surname",
-                                                  "new_persistent_id"];
+                                                  "new_persistent_id",
+                                                  "new_is_directory_restricted"];
 impl MembersSetProfileArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -13000,6 +13045,7 @@ impl MembersSetProfileArg {
         let mut field_new_given_name = None;
         let mut field_new_surname = None;
         let mut field_new_persistent_id = None;
+        let mut field_new_is_directory_restricted = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -13040,6 +13086,12 @@ impl MembersSetProfileArg {
                     }
                     field_new_persistent_id = Some(map.next_value()?);
                 }
+                "new_is_directory_restricted" => {
+                    if field_new_is_directory_restricted.is_some() {
+                        return Err(de::Error::duplicate_field("new_is_directory_restricted"));
+                    }
+                    field_new_is_directory_restricted = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, MEMBERS_SET_PROFILE_ARG_FIELDS))
             }
         }
@@ -13053,6 +13105,7 @@ impl MembersSetProfileArg {
             new_given_name: field_new_given_name,
             new_surname: field_new_surname,
             new_persistent_id: field_new_persistent_id,
+            new_is_directory_restricted: field_new_is_directory_restricted,
         };
         Ok(Some(result))
     }
@@ -13067,7 +13120,8 @@ impl MembersSetProfileArg {
         s.serialize_field("new_external_id", &self.new_external_id)?;
         s.serialize_field("new_given_name", &self.new_given_name)?;
         s.serialize_field("new_surname", &self.new_surname)?;
-        s.serialize_field("new_persistent_id", &self.new_persistent_id)
+        s.serialize_field("new_persistent_id", &self.new_persistent_id)?;
+        s.serialize_field("new_is_directory_restricted", &self.new_is_directory_restricted)
     }
 }
 
@@ -13093,7 +13147,7 @@ impl ::serde::ser::Serialize for MembersSetProfileArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("MembersSetProfileArg", 6)?;
+        let mut s = serializer.serialize_struct("MembersSetProfileArg", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -13123,6 +13177,8 @@ pub enum MembersSetProfileError {
     PersistentIdDisabled,
     /// The persistent ID is already in use by another team member.
     PersistentIdUsedByOtherUser,
+    /// Directory Restrictions option is not available.
+    DirectoryRestrictedOff,
     Other,
 }
 
@@ -13152,6 +13208,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersSetProfileError {
                     "param_cannot_be_empty" => Ok(MembersSetProfileError::ParamCannotBeEmpty),
                     "persistent_id_disabled" => Ok(MembersSetProfileError::PersistentIdDisabled),
                     "persistent_id_used_by_other_user" => Ok(MembersSetProfileError::PersistentIdUsedByOtherUser),
+                    "directory_restricted_off" => Ok(MembersSetProfileError::DirectoryRestrictedOff),
                     _ => Ok(MembersSetProfileError::Other)
                 }
             }
@@ -13166,6 +13223,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersSetProfileError {
                                     "param_cannot_be_empty",
                                     "persistent_id_disabled",
                                     "persistent_id_used_by_other_user",
+                                    "directory_restricted_off",
                                     "other"];
         deserializer.deserialize_struct("MembersSetProfileError", VARIANTS, EnumVisitor)
     }
@@ -13234,6 +13292,12 @@ impl ::serde::ser::Serialize for MembersSetProfileError {
                 // unit
                 let mut s = serializer.serialize_struct("MembersSetProfileError", 1)?;
                 s.serialize_field(".tag", "persistent_id_used_by_other_user")?;
+                s.end()
+            }
+            MembersSetProfileError::DirectoryRestrictedOff => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersSetProfileError", 1)?;
+                s.serialize_field(".tag", "directory_restricted_off")?;
                 s.end()
             }
             MembersSetProfileError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -18265,6 +18329,8 @@ pub struct TeamMemberProfile {
     /// Persistent ID that a team can attach to the user. The persistent ID is unique ID to be used
     /// for SAML authentication.
     pub persistent_id: Option<String>,
+    /// Whether the user is a directory restricted user.
+    pub is_directory_restricted: Option<bool>,
 }
 
 impl TeamMemberProfile {
@@ -18291,6 +18357,7 @@ impl TeamMemberProfile {
             account_id: None,
             joined_on: None,
             persistent_id: None,
+            is_directory_restricted: None,
         }
     }
 
@@ -18314,6 +18381,11 @@ impl TeamMemberProfile {
         self
     }
 
+    pub fn with_is_directory_restricted(mut self, value: Option<bool>) -> Self {
+        self.is_directory_restricted = value;
+        self
+    }
+
 }
 
 const TEAM_MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
@@ -18327,7 +18399,8 @@ const TEAM_MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
                                               "external_id",
                                               "account_id",
                                               "joined_on",
-                                              "persistent_id"];
+                                              "persistent_id",
+                                              "is_directory_restricted"];
 impl TeamMemberProfile {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -18352,6 +18425,7 @@ impl TeamMemberProfile {
         let mut field_account_id = None;
         let mut field_joined_on = None;
         let mut field_persistent_id = None;
+        let mut field_is_directory_restricted = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -18428,6 +18502,12 @@ impl TeamMemberProfile {
                     }
                     field_persistent_id = Some(map.next_value()?);
                 }
+                "is_directory_restricted" => {
+                    if field_is_directory_restricted.is_some() {
+                        return Err(de::Error::duplicate_field("is_directory_restricted"));
+                    }
+                    field_is_directory_restricted = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, TEAM_MEMBER_PROFILE_FIELDS))
             }
         }
@@ -18447,6 +18527,7 @@ impl TeamMemberProfile {
             account_id: field_account_id,
             joined_on: field_joined_on,
             persistent_id: field_persistent_id,
+            is_directory_restricted: field_is_directory_restricted,
         };
         Ok(Some(result))
     }
@@ -18467,7 +18548,8 @@ impl TeamMemberProfile {
         s.serialize_field("external_id", &self.external_id)?;
         s.serialize_field("account_id", &self.account_id)?;
         s.serialize_field("joined_on", &self.joined_on)?;
-        s.serialize_field("persistent_id", &self.persistent_id)
+        s.serialize_field("persistent_id", &self.persistent_id)?;
+        s.serialize_field("is_directory_restricted", &self.is_directory_restricted)
     }
 }
 
@@ -18493,7 +18575,7 @@ impl ::serde::ser::Serialize for TeamMemberProfile {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamMemberProfile", 12)?;
+        let mut s = serializer.serialize_struct("TeamMemberProfile", 13)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

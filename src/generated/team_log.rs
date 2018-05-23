@@ -17,8 +17,11 @@ pub type RequestId = String;
 pub type TeamEventList = Vec<TeamEvent>;
 
 /// Retrieves team events. Events have a lifespan of two years. Events older than two years will not
-/// be returned. Many attributes note 'may be missing due to historical data gap'. Permission : Team
-/// Auditing.
+/// be returned. Many attributes note 'may be missing due to historical data gap'. Note that the
+/// file_operations category and & analogous paper events are not available on all Dropbox Business
+/// [plans](/business/plans-comparison). Use
+/// [features/get_values](/developers/documentation/http/teams#team-features-get_values) to check
+/// for this feature. Permission : Team Auditing.
 pub fn get_events(
     client: &::client_trait::HttpClient,
     arg: &GetTeamEventsArg,
@@ -6759,6 +6762,288 @@ impl ::serde::ser::Serialize for DeviceUnlinkType {
     }
 }
 
+/// Added members to directory restrictions list.
+#[derive(Debug)]
+pub struct DirectoryRestrictionsAddMembersDetails {
+}
+
+impl Default for DirectoryRestrictionsAddMembersDetails {
+    fn default() -> Self {
+        DirectoryRestrictionsAddMembersDetails {
+        }
+    }
+}
+
+const DIRECTORY_RESTRICTIONS_ADD_MEMBERS_DETAILS_FIELDS: &[&str] = &[];
+impl DirectoryRestrictionsAddMembersDetails {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DirectoryRestrictionsAddMembersDetails, V::Error> {
+        use serde::de;
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, DIRECTORY_RESTRICTIONS_ADD_MEMBERS_DETAILS_FIELDS));
+        }
+        let result = DirectoryRestrictionsAddMembersDetails {
+        };
+        Ok(result)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DirectoryRestrictionsAddMembersDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DirectoryRestrictionsAddMembersDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DirectoryRestrictionsAddMembersDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DirectoryRestrictionsAddMembersDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DirectoryRestrictionsAddMembersDetails", DIRECTORY_RESTRICTIONS_ADD_MEMBERS_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DirectoryRestrictionsAddMembersDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("DirectoryRestrictionsAddMembersDetails", 0)?.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct DirectoryRestrictionsAddMembersType {
+    pub description: String,
+}
+
+impl DirectoryRestrictionsAddMembersType {
+    pub fn new(description: String) -> Self {
+        DirectoryRestrictionsAddMembersType {
+            description,
+        }
+    }
+
+}
+
+const DIRECTORY_RESTRICTIONS_ADD_MEMBERS_TYPE_FIELDS: &[&str] = &["description"];
+impl DirectoryRestrictionsAddMembersType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<DirectoryRestrictionsAddMembersType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DirectoryRestrictionsAddMembersType>, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, DIRECTORY_RESTRICTIONS_ADD_MEMBERS_TYPE_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DirectoryRestrictionsAddMembersType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DirectoryRestrictionsAddMembersType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DirectoryRestrictionsAddMembersType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DirectoryRestrictionsAddMembersType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DirectoryRestrictionsAddMembersType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DirectoryRestrictionsAddMembersType", DIRECTORY_RESTRICTIONS_ADD_MEMBERS_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DirectoryRestrictionsAddMembersType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DirectoryRestrictionsAddMembersType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Removed members from directory restrictions list.
+#[derive(Debug)]
+pub struct DirectoryRestrictionsRemoveMembersDetails {
+}
+
+impl Default for DirectoryRestrictionsRemoveMembersDetails {
+    fn default() -> Self {
+        DirectoryRestrictionsRemoveMembersDetails {
+        }
+    }
+}
+
+const DIRECTORY_RESTRICTIONS_REMOVE_MEMBERS_DETAILS_FIELDS: &[&str] = &[];
+impl DirectoryRestrictionsRemoveMembersDetails {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<DirectoryRestrictionsRemoveMembersDetails, V::Error> {
+        use serde::de;
+        if let Some(key) = map.next_key()? {
+            return Err(de::Error::unknown_field(key, DIRECTORY_RESTRICTIONS_REMOVE_MEMBERS_DETAILS_FIELDS));
+        }
+        let result = DirectoryRestrictionsRemoveMembersDetails {
+        };
+        Ok(result)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DirectoryRestrictionsRemoveMembersDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DirectoryRestrictionsRemoveMembersDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DirectoryRestrictionsRemoveMembersDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DirectoryRestrictionsRemoveMembersDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DirectoryRestrictionsRemoveMembersDetails", DIRECTORY_RESTRICTIONS_REMOVE_MEMBERS_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DirectoryRestrictionsRemoveMembersDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        serializer.serialize_struct("DirectoryRestrictionsRemoveMembersDetails", 0)?.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct DirectoryRestrictionsRemoveMembersType {
+    pub description: String,
+}
+
+impl DirectoryRestrictionsRemoveMembersType {
+    pub fn new(description: String) -> Self {
+        DirectoryRestrictionsRemoveMembersType {
+            description,
+        }
+    }
+
+}
+
+const DIRECTORY_RESTRICTIONS_REMOVE_MEMBERS_TYPE_FIELDS: &[&str] = &["description"];
+impl DirectoryRestrictionsRemoveMembersType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<DirectoryRestrictionsRemoveMembersType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DirectoryRestrictionsRemoveMembersType>, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, DIRECTORY_RESTRICTIONS_REMOVE_MEMBERS_TYPE_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DirectoryRestrictionsRemoveMembersType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DirectoryRestrictionsRemoveMembersType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DirectoryRestrictionsRemoveMembersType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a DirectoryRestrictionsRemoveMembersType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DirectoryRestrictionsRemoveMembersType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DirectoryRestrictionsRemoveMembersType", DIRECTORY_RESTRICTIONS_REMOVE_MEMBERS_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DirectoryRestrictionsRemoveMembersType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DirectoryRestrictionsRemoveMembersType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Disabled domain invites.
 #[derive(Debug)]
 pub struct DisabledDomainInvitesDetails {
@@ -10064,6 +10349,7 @@ pub enum EventDetails {
     MemberSpaceLimitsRemoveCustomQuotaDetails(MemberSpaceLimitsRemoveCustomQuotaDetails),
     MemberSuggestDetails(MemberSuggestDetails),
     MemberTransferAccountContentsDetails(MemberTransferAccountContentsDetails),
+    SecondaryMailsPolicyChangedDetails(SecondaryMailsPolicyChangedDetails),
     PaperContentAddMemberDetails(PaperContentAddMemberDetails),
     PaperContentAddToFolderDetails(PaperContentAddToFolderDetails),
     PaperContentArchiveDetails(PaperContentArchiveDetails),
@@ -10192,8 +10478,10 @@ pub enum EventDetails {
     ShowcaseResolveCommentDetails(ShowcaseResolveCommentDetails),
     ShowcaseRestoredDetails(ShowcaseRestoredDetails),
     ShowcaseTrashedDetails(ShowcaseTrashedDetails),
+    ShowcaseTrashedDeprecatedDetails(ShowcaseTrashedDeprecatedDetails),
     ShowcaseUnresolveCommentDetails(ShowcaseUnresolveCommentDetails),
     ShowcaseUntrashedDetails(ShowcaseUntrashedDetails),
+    ShowcaseUntrashedDeprecatedDetails(ShowcaseUntrashedDeprecatedDetails),
     ShowcaseViewDetails(ShowcaseViewDetails),
     SsoAddCertDetails(SsoAddCertDetails),
     SsoAddLoginUrlDetails(SsoAddLoginUrlDetails),
@@ -10220,6 +10508,8 @@ pub enum EventDetails {
     DeviceApprovalsChangeMobilePolicyDetails(DeviceApprovalsChangeMobilePolicyDetails),
     DeviceApprovalsChangeOverageActionDetails(DeviceApprovalsChangeOverageActionDetails),
     DeviceApprovalsChangeUnlinkActionDetails(DeviceApprovalsChangeUnlinkActionDetails),
+    DirectoryRestrictionsAddMembersDetails(DirectoryRestrictionsAddMembersDetails),
+    DirectoryRestrictionsRemoveMembersDetails(DirectoryRestrictionsRemoveMembersDetails),
     EmmAddExceptionDetails(EmmAddExceptionDetails),
     EmmChangePolicyDetails(EmmChangePolicyDetails),
     EmmRemoveExceptionDetails(EmmRemoveExceptionDetails),
@@ -10248,6 +10538,9 @@ pub enum EventDetails {
     SharingChangeFolderJoinPolicyDetails(SharingChangeFolderJoinPolicyDetails),
     SharingChangeLinkPolicyDetails(SharingChangeLinkPolicyDetails),
     SharingChangeMemberPolicyDetails(SharingChangeMemberPolicyDetails),
+    ShowcaseChangeDownloadPolicyDetails(ShowcaseChangeDownloadPolicyDetails),
+    ShowcaseChangeEnabledPolicyDetails(ShowcaseChangeEnabledPolicyDetails),
+    ShowcaseChangeExternalSharingPolicyDetails(ShowcaseChangeExternalSharingPolicyDetails),
     SmartSyncChangePolicyDetails(SmartSyncChangePolicyDetails),
     SmartSyncNotOptOutDetails(SmartSyncNotOptOutDetails),
     SmartSyncOptOutDetails(SmartSyncOptOutDetails),
@@ -10382,6 +10675,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "member_space_limits_remove_custom_quota_details" => Ok(EventDetails::MemberSpaceLimitsRemoveCustomQuotaDetails(MemberSpaceLimitsRemoveCustomQuotaDetails::internal_deserialize(map)?)),
                     "member_suggest_details" => Ok(EventDetails::MemberSuggestDetails(MemberSuggestDetails::internal_deserialize(map)?)),
                     "member_transfer_account_contents_details" => Ok(EventDetails::MemberTransferAccountContentsDetails(MemberTransferAccountContentsDetails::internal_deserialize(map)?)),
+                    "secondary_mails_policy_changed_details" => Ok(EventDetails::SecondaryMailsPolicyChangedDetails(SecondaryMailsPolicyChangedDetails::internal_deserialize(map)?)),
                     "paper_content_add_member_details" => Ok(EventDetails::PaperContentAddMemberDetails(PaperContentAddMemberDetails::internal_deserialize(map)?)),
                     "paper_content_add_to_folder_details" => Ok(EventDetails::PaperContentAddToFolderDetails(PaperContentAddToFolderDetails::internal_deserialize(map)?)),
                     "paper_content_archive_details" => Ok(EventDetails::PaperContentArchiveDetails(PaperContentArchiveDetails::internal_deserialize(map)?)),
@@ -10510,8 +10804,10 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "showcase_resolve_comment_details" => Ok(EventDetails::ShowcaseResolveCommentDetails(ShowcaseResolveCommentDetails::internal_deserialize(map)?)),
                     "showcase_restored_details" => Ok(EventDetails::ShowcaseRestoredDetails(ShowcaseRestoredDetails::internal_deserialize(map)?)),
                     "showcase_trashed_details" => Ok(EventDetails::ShowcaseTrashedDetails(ShowcaseTrashedDetails::internal_deserialize(map)?)),
+                    "showcase_trashed_deprecated_details" => Ok(EventDetails::ShowcaseTrashedDeprecatedDetails(ShowcaseTrashedDeprecatedDetails::internal_deserialize(map)?)),
                     "showcase_unresolve_comment_details" => Ok(EventDetails::ShowcaseUnresolveCommentDetails(ShowcaseUnresolveCommentDetails::internal_deserialize(map)?)),
                     "showcase_untrashed_details" => Ok(EventDetails::ShowcaseUntrashedDetails(ShowcaseUntrashedDetails::internal_deserialize(map)?)),
+                    "showcase_untrashed_deprecated_details" => Ok(EventDetails::ShowcaseUntrashedDeprecatedDetails(ShowcaseUntrashedDeprecatedDetails::internal_deserialize(map)?)),
                     "showcase_view_details" => Ok(EventDetails::ShowcaseViewDetails(ShowcaseViewDetails::internal_deserialize(map)?)),
                     "sso_add_cert_details" => Ok(EventDetails::SsoAddCertDetails(SsoAddCertDetails::internal_deserialize(map)?)),
                     "sso_add_login_url_details" => Ok(EventDetails::SsoAddLoginUrlDetails(SsoAddLoginUrlDetails::internal_deserialize(map)?)),
@@ -10538,6 +10834,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "device_approvals_change_mobile_policy_details" => Ok(EventDetails::DeviceApprovalsChangeMobilePolicyDetails(DeviceApprovalsChangeMobilePolicyDetails::internal_deserialize(map)?)),
                     "device_approvals_change_overage_action_details" => Ok(EventDetails::DeviceApprovalsChangeOverageActionDetails(DeviceApprovalsChangeOverageActionDetails::internal_deserialize(map)?)),
                     "device_approvals_change_unlink_action_details" => Ok(EventDetails::DeviceApprovalsChangeUnlinkActionDetails(DeviceApprovalsChangeUnlinkActionDetails::internal_deserialize(map)?)),
+                    "directory_restrictions_add_members_details" => Ok(EventDetails::DirectoryRestrictionsAddMembersDetails(DirectoryRestrictionsAddMembersDetails::internal_deserialize(map)?)),
+                    "directory_restrictions_remove_members_details" => Ok(EventDetails::DirectoryRestrictionsRemoveMembersDetails(DirectoryRestrictionsRemoveMembersDetails::internal_deserialize(map)?)),
                     "emm_add_exception_details" => Ok(EventDetails::EmmAddExceptionDetails(EmmAddExceptionDetails::internal_deserialize(map)?)),
                     "emm_change_policy_details" => Ok(EventDetails::EmmChangePolicyDetails(EmmChangePolicyDetails::internal_deserialize(map)?)),
                     "emm_remove_exception_details" => Ok(EventDetails::EmmRemoveExceptionDetails(EmmRemoveExceptionDetails::internal_deserialize(map)?)),
@@ -10566,6 +10864,9 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "sharing_change_folder_join_policy_details" => Ok(EventDetails::SharingChangeFolderJoinPolicyDetails(SharingChangeFolderJoinPolicyDetails::internal_deserialize(map)?)),
                     "sharing_change_link_policy_details" => Ok(EventDetails::SharingChangeLinkPolicyDetails(SharingChangeLinkPolicyDetails::internal_deserialize(map)?)),
                     "sharing_change_member_policy_details" => Ok(EventDetails::SharingChangeMemberPolicyDetails(SharingChangeMemberPolicyDetails::internal_deserialize(map)?)),
+                    "showcase_change_download_policy_details" => Ok(EventDetails::ShowcaseChangeDownloadPolicyDetails(ShowcaseChangeDownloadPolicyDetails::internal_deserialize(map)?)),
+                    "showcase_change_enabled_policy_details" => Ok(EventDetails::ShowcaseChangeEnabledPolicyDetails(ShowcaseChangeEnabledPolicyDetails::internal_deserialize(map)?)),
+                    "showcase_change_external_sharing_policy_details" => Ok(EventDetails::ShowcaseChangeExternalSharingPolicyDetails(ShowcaseChangeExternalSharingPolicyDetails::internal_deserialize(map)?)),
                     "smart_sync_change_policy_details" => Ok(EventDetails::SmartSyncChangePolicyDetails(SmartSyncChangePolicyDetails::internal_deserialize(map)?)),
                     "smart_sync_not_opt_out_details" => Ok(EventDetails::SmartSyncNotOptOutDetails(SmartSyncNotOptOutDetails::internal_deserialize(map)?)),
                     "smart_sync_opt_out_details" => Ok(EventDetails::SmartSyncOptOutDetails(SmartSyncOptOutDetails::internal_deserialize(map)?)),
@@ -10684,6 +10985,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "member_space_limits_remove_custom_quota_details",
                                     "member_suggest_details",
                                     "member_transfer_account_contents_details",
+                                    "secondary_mails_policy_changed_details",
                                     "paper_content_add_member_details",
                                     "paper_content_add_to_folder_details",
                                     "paper_content_archive_details",
@@ -10812,8 +11114,10 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "showcase_resolve_comment_details",
                                     "showcase_restored_details",
                                     "showcase_trashed_details",
+                                    "showcase_trashed_deprecated_details",
                                     "showcase_unresolve_comment_details",
                                     "showcase_untrashed_details",
+                                    "showcase_untrashed_deprecated_details",
                                     "showcase_view_details",
                                     "sso_add_cert_details",
                                     "sso_add_login_url_details",
@@ -10840,6 +11144,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "device_approvals_change_mobile_policy_details",
                                     "device_approvals_change_overage_action_details",
                                     "device_approvals_change_unlink_action_details",
+                                    "directory_restrictions_add_members_details",
+                                    "directory_restrictions_remove_members_details",
                                     "emm_add_exception_details",
                                     "emm_change_policy_details",
                                     "emm_remove_exception_details",
@@ -10868,6 +11174,9 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "sharing_change_folder_join_policy_details",
                                     "sharing_change_link_policy_details",
                                     "sharing_change_member_policy_details",
+                                    "showcase_change_download_policy_details",
+                                    "showcase_change_enabled_policy_details",
+                                    "showcase_change_external_sharing_policy_details",
                                     "smart_sync_change_policy_details",
                                     "smart_sync_not_opt_out_details",
                                     "smart_sync_opt_out_details",
@@ -11504,6 +11813,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 1)?;
                 s.serialize_field(".tag", "member_transfer_account_contents_details")?;
+                s.end()
+            }
+            EventDetails::SecondaryMailsPolicyChangedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "secondary_mails_policy_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::PaperContentAddMemberDetails(ref x) => {
@@ -12378,6 +12694,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventDetails::ShowcaseTrashedDeprecatedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "showcase_trashed_deprecated_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::ShowcaseUnresolveCommentDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
@@ -12389,6 +12712,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "showcase_untrashed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::ShowcaseUntrashedDeprecatedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "showcase_untrashed_deprecated_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -12567,6 +12897,18 @@ impl ::serde::ser::Serialize for EventDetails {
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "device_approvals_change_unlink_action_details")?;
                 x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::DirectoryRestrictionsAddMembersDetails(_) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
+                s.serialize_field(".tag", "directory_restrictions_add_members_details")?;
+                s.end()
+            }
+            EventDetails::DirectoryRestrictionsRemoveMembersDetails(_) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 1)?;
+                s.serialize_field(".tag", "directory_restrictions_remove_members_details")?;
                 s.end()
             }
             EventDetails::EmmAddExceptionDetails(_) => {
@@ -12754,6 +13096,27 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "sharing_change_member_policy_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::ShowcaseChangeDownloadPolicyDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "showcase_change_download_policy_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::ShowcaseChangeEnabledPolicyDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "showcase_change_enabled_policy_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::ShowcaseChangeExternalSharingPolicyDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "showcase_change_external_sharing_policy_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -12975,7 +13338,7 @@ pub enum EventType {
     DomainInvitesApproveRequestToJoinTeam(DomainInvitesApproveRequestToJoinTeamType),
     /// (domains) Declined user's request to join team
     DomainInvitesDeclineRequestToJoinTeam(DomainInvitesDeclineRequestToJoinTeamType),
-    /// (domains) Sent domain invites to existing domain accounts
+    /// (domains) Sent domain invites to existing domain accounts (deprecated, no longer logged)
     DomainInvitesEmailExistingUsers(DomainInvitesEmailExistingUsersType),
     /// (domains) Requested to join team
     DomainInvitesRequestToJoinTeam(DomainInvitesRequestToJoinTeamType),
@@ -13083,7 +13446,7 @@ pub enum EventType {
     MemberChangeMembershipType(MemberChangeMembershipTypeType),
     /// (members) Changed team member name
     MemberChangeName(MemberChangeNameType),
-    /// (members) Changed membership status of team member
+    /// (members) Changed member status (invited, joined, suspended, etc.)
     MemberChangeStatus(MemberChangeStatusType),
     /// (members) Permanently deleted contents of deleted team member account
     MemberPermanentlyDeleteAccountContents(MemberPermanentlyDeleteAccountContentsType),
@@ -13099,6 +13462,8 @@ pub enum EventType {
     MemberSuggest(MemberSuggestType),
     /// (members) Transferred contents of deleted member account to another member
     MemberTransferAccountContents(MemberTransferAccountContentsType),
+    /// (members) Secondary mails policy changed
+    SecondaryMailsPolicyChanged(SecondaryMailsPolicyChangedType),
     /// (paper) Added team member to Paper doc/folder
     PaperContentAddMember(PaperContentAddMemberType),
     /// (paper) Added Paper doc/folder to folder
@@ -13232,7 +13597,7 @@ pub enum EventType {
     /// (sharing) Joined team member's shared folder from link (deprecated, no longer logged)
     SfTeamJoinFromOobLink(SfTeamJoinFromOobLinkType),
     /// (sharing) Unshared folder with team member (deprecated, replaced by 'Removed invitee from
-    /// shared file/folder before invite accepted')
+    /// shared file/folder before invite was accepted')
     SfTeamUninvite(SfTeamUninviteType),
     /// (sharing) Invited user to Dropbox and added them to shared file/folder
     SharedContentAddInvitees(SharedContentAddInviteesType),
@@ -13244,7 +13609,7 @@ pub enum EventType {
     SharedContentAddMember(SharedContentAddMemberType),
     /// (sharing) Changed whether members can download shared file/folder
     SharedContentChangeDownloadsPolicy(SharedContentChangeDownloadsPolicyType),
-    /// (sharing) Changed access type of invitee to shared file/folder before invite accepted
+    /// (sharing) Changed access type of invitee to shared file/folder before invite was accepted
     SharedContentChangeInviteeRole(SharedContentChangeInviteeRoleType),
     /// (sharing) Changed link audience of shared file/folder
     SharedContentChangeLinkAudience(SharedContentChangeLinkAudienceType),
@@ -13264,7 +13629,7 @@ pub enum EventType {
     SharedContentDownload(SharedContentDownloadType),
     /// (sharing) Left shared file/folder
     SharedContentRelinquishMembership(SharedContentRelinquishMembershipType),
-    /// (sharing) Removed invitee from shared file/folder before invite accepted
+    /// (sharing) Removed invitee from shared file/folder before invite was accepted
     SharedContentRemoveInvitees(SharedContentRemoveInviteesType),
     /// (sharing) Removed link expiration date of shared file/folder
     SharedContentRemoveLinkExpiry(SharedContentRemoveLinkExpiryType),
@@ -13360,10 +13725,14 @@ pub enum EventType {
     ShowcaseRestored(ShowcaseRestoredType),
     /// (showcase) Deleted showcase
     ShowcaseTrashed(ShowcaseTrashedType),
+    /// (showcase) Deleted showcase (old version) (deprecated, replaced by 'Deleted showcase')
+    ShowcaseTrashedDeprecated(ShowcaseTrashedDeprecatedType),
     /// (showcase) Unresolved showcase comment
     ShowcaseUnresolveComment(ShowcaseUnresolveCommentType),
     /// (showcase) Restored showcase
     ShowcaseUntrashed(ShowcaseUntrashedType),
+    /// (showcase) Restored showcase (old version) (deprecated, replaced by 'Restored showcase')
+    ShowcaseUntrashedDeprecated(ShowcaseUntrashedDeprecatedType),
     /// (showcase) Viewed showcase
     ShowcaseView(ShowcaseViewType),
     /// (sso) Added X.509 certificate for SSO
@@ -13418,6 +13787,10 @@ pub enum EventType {
     DeviceApprovalsChangeOverageAction(DeviceApprovalsChangeOverageActionType),
     /// (team_policies) Changed device approvals setting when member unlinks approved device
     DeviceApprovalsChangeUnlinkAction(DeviceApprovalsChangeUnlinkActionType),
+    /// (team_policies) Added members to directory restrictions list
+    DirectoryRestrictionsAddMembers(DirectoryRestrictionsAddMembersType),
+    /// (team_policies) Removed members from directory restrictions list
+    DirectoryRestrictionsRemoveMembers(DirectoryRestrictionsRemoveMembersType),
     /// (team_policies) Added members to EMM exception list
     EmmAddException(EmmAddExceptionType),
     /// (team_policies) Enabled/disabled enterprise mobility management for members
@@ -13478,6 +13851,12 @@ pub enum EventType {
     SharingChangeLinkPolicy(SharingChangeLinkPolicyType),
     /// (team_policies) Changed whether members can share files/folders outside team
     SharingChangeMemberPolicy(SharingChangeMemberPolicyType),
+    /// (team_policies) Enabled/disabled downloading files from Dropbox Showcase for team
+    ShowcaseChangeDownloadPolicy(ShowcaseChangeDownloadPolicyType),
+    /// (team_policies) Enabled/disabled Dropbox Showcase for team
+    ShowcaseChangeEnabledPolicy(ShowcaseChangeEnabledPolicyType),
+    /// (team_policies) Enabled/disabled sharing Dropbox Showcase externally for team
+    ShowcaseChangeExternalSharingPolicy(ShowcaseChangeExternalSharingPolicyType),
     /// (team_policies) Changed default Smart Sync setting for team members
     SmartSyncChangePolicy(SmartSyncChangePolicyType),
     /// (team_policies) Opted team into Smart Sync
@@ -13633,6 +14012,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "member_space_limits_remove_custom_quota" => Ok(EventType::MemberSpaceLimitsRemoveCustomQuota(MemberSpaceLimitsRemoveCustomQuotaType::internal_deserialize(map)?)),
                     "member_suggest" => Ok(EventType::MemberSuggest(MemberSuggestType::internal_deserialize(map)?)),
                     "member_transfer_account_contents" => Ok(EventType::MemberTransferAccountContents(MemberTransferAccountContentsType::internal_deserialize(map)?)),
+                    "secondary_mails_policy_changed" => Ok(EventType::SecondaryMailsPolicyChanged(SecondaryMailsPolicyChangedType::internal_deserialize(map)?)),
                     "paper_content_add_member" => Ok(EventType::PaperContentAddMember(PaperContentAddMemberType::internal_deserialize(map)?)),
                     "paper_content_add_to_folder" => Ok(EventType::PaperContentAddToFolder(PaperContentAddToFolderType::internal_deserialize(map)?)),
                     "paper_content_archive" => Ok(EventType::PaperContentArchive(PaperContentArchiveType::internal_deserialize(map)?)),
@@ -13761,8 +14141,10 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "showcase_resolve_comment" => Ok(EventType::ShowcaseResolveComment(ShowcaseResolveCommentType::internal_deserialize(map)?)),
                     "showcase_restored" => Ok(EventType::ShowcaseRestored(ShowcaseRestoredType::internal_deserialize(map)?)),
                     "showcase_trashed" => Ok(EventType::ShowcaseTrashed(ShowcaseTrashedType::internal_deserialize(map)?)),
+                    "showcase_trashed_deprecated" => Ok(EventType::ShowcaseTrashedDeprecated(ShowcaseTrashedDeprecatedType::internal_deserialize(map)?)),
                     "showcase_unresolve_comment" => Ok(EventType::ShowcaseUnresolveComment(ShowcaseUnresolveCommentType::internal_deserialize(map)?)),
                     "showcase_untrashed" => Ok(EventType::ShowcaseUntrashed(ShowcaseUntrashedType::internal_deserialize(map)?)),
+                    "showcase_untrashed_deprecated" => Ok(EventType::ShowcaseUntrashedDeprecated(ShowcaseUntrashedDeprecatedType::internal_deserialize(map)?)),
                     "showcase_view" => Ok(EventType::ShowcaseView(ShowcaseViewType::internal_deserialize(map)?)),
                     "sso_add_cert" => Ok(EventType::SsoAddCert(SsoAddCertType::internal_deserialize(map)?)),
                     "sso_add_login_url" => Ok(EventType::SsoAddLoginUrl(SsoAddLoginUrlType::internal_deserialize(map)?)),
@@ -13789,6 +14171,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "device_approvals_change_mobile_policy" => Ok(EventType::DeviceApprovalsChangeMobilePolicy(DeviceApprovalsChangeMobilePolicyType::internal_deserialize(map)?)),
                     "device_approvals_change_overage_action" => Ok(EventType::DeviceApprovalsChangeOverageAction(DeviceApprovalsChangeOverageActionType::internal_deserialize(map)?)),
                     "device_approvals_change_unlink_action" => Ok(EventType::DeviceApprovalsChangeUnlinkAction(DeviceApprovalsChangeUnlinkActionType::internal_deserialize(map)?)),
+                    "directory_restrictions_add_members" => Ok(EventType::DirectoryRestrictionsAddMembers(DirectoryRestrictionsAddMembersType::internal_deserialize(map)?)),
+                    "directory_restrictions_remove_members" => Ok(EventType::DirectoryRestrictionsRemoveMembers(DirectoryRestrictionsRemoveMembersType::internal_deserialize(map)?)),
                     "emm_add_exception" => Ok(EventType::EmmAddException(EmmAddExceptionType::internal_deserialize(map)?)),
                     "emm_change_policy" => Ok(EventType::EmmChangePolicy(EmmChangePolicyType::internal_deserialize(map)?)),
                     "emm_remove_exception" => Ok(EventType::EmmRemoveException(EmmRemoveExceptionType::internal_deserialize(map)?)),
@@ -13817,6 +14201,9 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "sharing_change_folder_join_policy" => Ok(EventType::SharingChangeFolderJoinPolicy(SharingChangeFolderJoinPolicyType::internal_deserialize(map)?)),
                     "sharing_change_link_policy" => Ok(EventType::SharingChangeLinkPolicy(SharingChangeLinkPolicyType::internal_deserialize(map)?)),
                     "sharing_change_member_policy" => Ok(EventType::SharingChangeMemberPolicy(SharingChangeMemberPolicyType::internal_deserialize(map)?)),
+                    "showcase_change_download_policy" => Ok(EventType::ShowcaseChangeDownloadPolicy(ShowcaseChangeDownloadPolicyType::internal_deserialize(map)?)),
+                    "showcase_change_enabled_policy" => Ok(EventType::ShowcaseChangeEnabledPolicy(ShowcaseChangeEnabledPolicyType::internal_deserialize(map)?)),
+                    "showcase_change_external_sharing_policy" => Ok(EventType::ShowcaseChangeExternalSharingPolicy(ShowcaseChangeExternalSharingPolicyType::internal_deserialize(map)?)),
                     "smart_sync_change_policy" => Ok(EventType::SmartSyncChangePolicy(SmartSyncChangePolicyType::internal_deserialize(map)?)),
                     "smart_sync_not_opt_out" => Ok(EventType::SmartSyncNotOptOut(SmartSyncNotOptOutType::internal_deserialize(map)?)),
                     "smart_sync_opt_out" => Ok(EventType::SmartSyncOptOut(SmartSyncOptOutType::internal_deserialize(map)?)),
@@ -13934,6 +14321,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "member_space_limits_remove_custom_quota",
                                     "member_suggest",
                                     "member_transfer_account_contents",
+                                    "secondary_mails_policy_changed",
                                     "paper_content_add_member",
                                     "paper_content_add_to_folder",
                                     "paper_content_archive",
@@ -14062,8 +14450,10 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "showcase_resolve_comment",
                                     "showcase_restored",
                                     "showcase_trashed",
+                                    "showcase_trashed_deprecated",
                                     "showcase_unresolve_comment",
                                     "showcase_untrashed",
+                                    "showcase_untrashed_deprecated",
                                     "showcase_view",
                                     "sso_add_cert",
                                     "sso_add_login_url",
@@ -14090,6 +14480,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "device_approvals_change_mobile_policy",
                                     "device_approvals_change_overage_action",
                                     "device_approvals_change_unlink_action",
+                                    "directory_restrictions_add_members",
+                                    "directory_restrictions_remove_members",
                                     "emm_add_exception",
                                     "emm_change_policy",
                                     "emm_remove_exception",
@@ -14118,6 +14510,9 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "sharing_change_folder_join_policy",
                                     "sharing_change_link_policy",
                                     "sharing_change_member_policy",
+                                    "showcase_change_download_policy",
+                                    "showcase_change_enabled_policy",
+                                    "showcase_change_external_sharing_policy",
                                     "smart_sync_change_policy",
                                     "smart_sync_not_opt_out",
                                     "smart_sync_opt_out",
@@ -14784,6 +15179,13 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "member_transfer_account_contents")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::SecondaryMailsPolicyChanged(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "secondary_mails_policy_changed")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -15683,6 +16085,13 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::ShowcaseTrashedDeprecated(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "showcase_trashed_deprecated")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::ShowcaseUnresolveComment(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -15694,6 +16103,13 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "showcase_untrashed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::ShowcaseUntrashedDeprecated(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "showcase_untrashed_deprecated")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -15876,6 +16292,20 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "device_approvals_change_unlink_action")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::DirectoryRestrictionsAddMembers(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "directory_restrictions_add_members")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::DirectoryRestrictionsRemoveMembers(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "directory_restrictions_remove_members")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -16072,6 +16502,27 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "sharing_change_member_policy")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::ShowcaseChangeDownloadPolicy(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "showcase_change_download_policy")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::ShowcaseChangeEnabledPolicy(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "showcase_change_enabled_policy")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::ShowcaseChangeExternalSharingPolicy(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "showcase_change_external_sharing_policy")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -27851,7 +28302,7 @@ impl ::serde::ser::Serialize for MemberChangeNameType {
     }
 }
 
-/// Changed membership status of team member.
+/// Changed member status (invited, joined, suspended, etc.).
 #[derive(Debug)]
 pub struct MemberChangeStatusDetails {
     /// New member status.
@@ -42101,6 +42552,253 @@ impl ::serde::ser::Serialize for ResellerSupportSessionStartType {
     }
 }
 
+#[derive(Debug)]
+pub enum SecondaryMailsPolicy {
+    Disabled,
+    Enabled,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SecondaryMailsPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SecondaryMailsPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SecondaryMailsPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => Ok(SecondaryMailsPolicy::Disabled),
+                    "enabled" => Ok(SecondaryMailsPolicy::Enabled),
+                    _ => Ok(SecondaryMailsPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("SecondaryMailsPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SecondaryMailsPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SecondaryMailsPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("SecondaryMailsPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            SecondaryMailsPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("SecondaryMailsPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            SecondaryMailsPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Secondary mails policy changed.
+#[derive(Debug)]
+pub struct SecondaryMailsPolicyChangedDetails {
+    /// Previous secondary mails policy.
+    pub previous_value: SecondaryMailsPolicy,
+    /// New secondary mails policy.
+    pub new_value: SecondaryMailsPolicy,
+}
+
+impl SecondaryMailsPolicyChangedDetails {
+    pub fn new(previous_value: SecondaryMailsPolicy, new_value: SecondaryMailsPolicy) -> Self {
+        SecondaryMailsPolicyChangedDetails {
+            previous_value,
+            new_value,
+        }
+    }
+
+}
+
+const SECONDARY_MAILS_POLICY_CHANGED_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                                 "new_value"];
+impl SecondaryMailsPolicyChangedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<SecondaryMailsPolicyChangedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SecondaryMailsPolicyChangedDetails>, V::Error> {
+        use serde::de;
+        let mut field_previous_value = None;
+        let mut field_new_value = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SECONDARY_MAILS_POLICY_CHANGED_DETAILS_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SecondaryMailsPolicyChangedDetails {
+            previous_value: field_previous_value.ok_or_else(|| de::Error::missing_field("previous_value"))?,
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("previous_value", &self.previous_value)?;
+        s.serialize_field("new_value", &self.new_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SecondaryMailsPolicyChangedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SecondaryMailsPolicyChangedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SecondaryMailsPolicyChangedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SecondaryMailsPolicyChangedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SecondaryMailsPolicyChangedDetails", SECONDARY_MAILS_POLICY_CHANGED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SecondaryMailsPolicyChangedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SecondaryMailsPolicyChangedDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct SecondaryMailsPolicyChangedType {
+    pub description: String,
+}
+
+impl SecondaryMailsPolicyChangedType {
+    pub fn new(description: String) -> Self {
+        SecondaryMailsPolicyChangedType {
+            description,
+        }
+    }
+
+}
+
+const SECONDARY_MAILS_POLICY_CHANGED_TYPE_FIELDS: &[&str] = &["description"];
+impl SecondaryMailsPolicyChangedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<SecondaryMailsPolicyChangedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SecondaryMailsPolicyChangedType>, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SECONDARY_MAILS_POLICY_CHANGED_TYPE_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SecondaryMailsPolicyChangedType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SecondaryMailsPolicyChangedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SecondaryMailsPolicyChangedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a SecondaryMailsPolicyChangedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SecondaryMailsPolicyChangedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SecondaryMailsPolicyChangedType", SECONDARY_MAILS_POLICY_CHANGED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SecondaryMailsPolicyChangedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SecondaryMailsPolicyChangedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Session's logged information.
 #[derive(Debug)]
 pub enum SessionLogInfo {
@@ -45708,7 +46406,7 @@ impl ::serde::ser::Serialize for SharedContentChangeDownloadsPolicyType {
     }
 }
 
-/// Changed access type of invitee to shared file/folder before invite accepted.
+/// Changed access type of invitee to shared file/folder before invite was accepted.
 #[derive(Debug)]
 pub struct SharedContentChangeInviteeRoleDetails {
     /// New access level.
@@ -47560,7 +48258,7 @@ impl ::serde::ser::Serialize for SharedContentRelinquishMembershipType {
     }
 }
 
-/// Removed invitee from shared file/folder before invite accepted.
+/// Removed invitee from shared file/folder before invite was accepted.
 #[derive(Debug)]
 pub struct SharedContentRemoveInviteesDetails {
     /// A list of invitees.
@@ -53939,6 +54637,576 @@ impl ::serde::ser::Serialize for ShowcaseArchivedType {
     }
 }
 
+/// Enabled/disabled downloading files from Dropbox Showcase for team.
+#[derive(Debug)]
+pub struct ShowcaseChangeDownloadPolicyDetails {
+    /// New Dropbox Showcase download policy.
+    pub new_value: ShowcaseDownloadPolicy,
+    /// Previous Dropbox Showcase download policy.
+    pub previous_value: ShowcaseDownloadPolicy,
+}
+
+impl ShowcaseChangeDownloadPolicyDetails {
+    pub fn new(new_value: ShowcaseDownloadPolicy, previous_value: ShowcaseDownloadPolicy) -> Self {
+        ShowcaseChangeDownloadPolicyDetails {
+            new_value,
+            previous_value,
+        }
+    }
+
+}
+
+const SHOWCASE_CHANGE_DOWNLOAD_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                  "previous_value"];
+impl ShowcaseChangeDownloadPolicyDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ShowcaseChangeDownloadPolicyDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ShowcaseChangeDownloadPolicyDetails>, V::Error> {
+        use serde::de;
+        let mut field_new_value = None;
+        let mut field_previous_value = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHOWCASE_CHANGE_DOWNLOAD_POLICY_DETAILS_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ShowcaseChangeDownloadPolicyDetails {
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
+            previous_value: field_previous_value.ok_or_else(|| de::Error::missing_field("previous_value"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_value", &self.new_value)?;
+        s.serialize_field("previous_value", &self.previous_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseChangeDownloadPolicyDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ShowcaseChangeDownloadPolicyDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseChangeDownloadPolicyDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ShowcaseChangeDownloadPolicyDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ShowcaseChangeDownloadPolicyDetails", SHOWCASE_CHANGE_DOWNLOAD_POLICY_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseChangeDownloadPolicyDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ShowcaseChangeDownloadPolicyDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ShowcaseChangeDownloadPolicyType {
+    pub description: String,
+}
+
+impl ShowcaseChangeDownloadPolicyType {
+    pub fn new(description: String) -> Self {
+        ShowcaseChangeDownloadPolicyType {
+            description,
+        }
+    }
+
+}
+
+const SHOWCASE_CHANGE_DOWNLOAD_POLICY_TYPE_FIELDS: &[&str] = &["description"];
+impl ShowcaseChangeDownloadPolicyType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ShowcaseChangeDownloadPolicyType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ShowcaseChangeDownloadPolicyType>, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHOWCASE_CHANGE_DOWNLOAD_POLICY_TYPE_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ShowcaseChangeDownloadPolicyType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseChangeDownloadPolicyType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ShowcaseChangeDownloadPolicyType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseChangeDownloadPolicyType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ShowcaseChangeDownloadPolicyType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ShowcaseChangeDownloadPolicyType", SHOWCASE_CHANGE_DOWNLOAD_POLICY_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseChangeDownloadPolicyType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ShowcaseChangeDownloadPolicyType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Enabled/disabled Dropbox Showcase for team.
+#[derive(Debug)]
+pub struct ShowcaseChangeEnabledPolicyDetails {
+    /// New Dropbox Showcase policy.
+    pub new_value: ShowcaseEnabledPolicy,
+    /// Previous Dropbox Showcase policy.
+    pub previous_value: ShowcaseEnabledPolicy,
+}
+
+impl ShowcaseChangeEnabledPolicyDetails {
+    pub fn new(new_value: ShowcaseEnabledPolicy, previous_value: ShowcaseEnabledPolicy) -> Self {
+        ShowcaseChangeEnabledPolicyDetails {
+            new_value,
+            previous_value,
+        }
+    }
+
+}
+
+const SHOWCASE_CHANGE_ENABLED_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                 "previous_value"];
+impl ShowcaseChangeEnabledPolicyDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ShowcaseChangeEnabledPolicyDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ShowcaseChangeEnabledPolicyDetails>, V::Error> {
+        use serde::de;
+        let mut field_new_value = None;
+        let mut field_previous_value = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHOWCASE_CHANGE_ENABLED_POLICY_DETAILS_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ShowcaseChangeEnabledPolicyDetails {
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
+            previous_value: field_previous_value.ok_or_else(|| de::Error::missing_field("previous_value"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_value", &self.new_value)?;
+        s.serialize_field("previous_value", &self.previous_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseChangeEnabledPolicyDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ShowcaseChangeEnabledPolicyDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseChangeEnabledPolicyDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ShowcaseChangeEnabledPolicyDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ShowcaseChangeEnabledPolicyDetails", SHOWCASE_CHANGE_ENABLED_POLICY_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseChangeEnabledPolicyDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ShowcaseChangeEnabledPolicyDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ShowcaseChangeEnabledPolicyType {
+    pub description: String,
+}
+
+impl ShowcaseChangeEnabledPolicyType {
+    pub fn new(description: String) -> Self {
+        ShowcaseChangeEnabledPolicyType {
+            description,
+        }
+    }
+
+}
+
+const SHOWCASE_CHANGE_ENABLED_POLICY_TYPE_FIELDS: &[&str] = &["description"];
+impl ShowcaseChangeEnabledPolicyType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ShowcaseChangeEnabledPolicyType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ShowcaseChangeEnabledPolicyType>, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHOWCASE_CHANGE_ENABLED_POLICY_TYPE_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ShowcaseChangeEnabledPolicyType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseChangeEnabledPolicyType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ShowcaseChangeEnabledPolicyType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseChangeEnabledPolicyType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ShowcaseChangeEnabledPolicyType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ShowcaseChangeEnabledPolicyType", SHOWCASE_CHANGE_ENABLED_POLICY_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseChangeEnabledPolicyType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ShowcaseChangeEnabledPolicyType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Enabled/disabled sharing Dropbox Showcase externally for team.
+#[derive(Debug)]
+pub struct ShowcaseChangeExternalSharingPolicyDetails {
+    /// New Dropbox Showcase external sharing policy.
+    pub new_value: ShowcaseExternalSharingPolicy,
+    /// Previous Dropbox Showcase external sharing policy.
+    pub previous_value: ShowcaseExternalSharingPolicy,
+}
+
+impl ShowcaseChangeExternalSharingPolicyDetails {
+    pub fn new(
+        new_value: ShowcaseExternalSharingPolicy,
+        previous_value: ShowcaseExternalSharingPolicy,
+    ) -> Self {
+        ShowcaseChangeExternalSharingPolicyDetails {
+            new_value,
+            previous_value,
+        }
+    }
+
+}
+
+const SHOWCASE_CHANGE_EXTERNAL_SHARING_POLICY_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                          "previous_value"];
+impl ShowcaseChangeExternalSharingPolicyDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ShowcaseChangeExternalSharingPolicyDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ShowcaseChangeExternalSharingPolicyDetails>, V::Error> {
+        use serde::de;
+        let mut field_new_value = None;
+        let mut field_previous_value = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHOWCASE_CHANGE_EXTERNAL_SHARING_POLICY_DETAILS_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ShowcaseChangeExternalSharingPolicyDetails {
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
+            previous_value: field_previous_value.ok_or_else(|| de::Error::missing_field("previous_value"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_value", &self.new_value)?;
+        s.serialize_field("previous_value", &self.previous_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseChangeExternalSharingPolicyDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ShowcaseChangeExternalSharingPolicyDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseChangeExternalSharingPolicyDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ShowcaseChangeExternalSharingPolicyDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ShowcaseChangeExternalSharingPolicyDetails", SHOWCASE_CHANGE_EXTERNAL_SHARING_POLICY_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseChangeExternalSharingPolicyDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ShowcaseChangeExternalSharingPolicyDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ShowcaseChangeExternalSharingPolicyType {
+    pub description: String,
+}
+
+impl ShowcaseChangeExternalSharingPolicyType {
+    pub fn new(description: String) -> Self {
+        ShowcaseChangeExternalSharingPolicyType {
+            description,
+        }
+    }
+
+}
+
+const SHOWCASE_CHANGE_EXTERNAL_SHARING_POLICY_TYPE_FIELDS: &[&str] = &["description"];
+impl ShowcaseChangeExternalSharingPolicyType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ShowcaseChangeExternalSharingPolicyType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ShowcaseChangeExternalSharingPolicyType>, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHOWCASE_CHANGE_EXTERNAL_SHARING_POLICY_TYPE_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ShowcaseChangeExternalSharingPolicyType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseChangeExternalSharingPolicyType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ShowcaseChangeExternalSharingPolicyType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseChangeExternalSharingPolicyType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ShowcaseChangeExternalSharingPolicyType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ShowcaseChangeExternalSharingPolicyType", SHOWCASE_CHANGE_EXTERNAL_SHARING_POLICY_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseChangeExternalSharingPolicyType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ShowcaseChangeExternalSharingPolicyType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Created showcase.
 #[derive(Debug)]
 pub struct ShowcaseCreatedDetails {
@@ -54411,6 +55679,65 @@ impl ::serde::ser::Serialize for ShowcaseDocumentLogInfo {
     }
 }
 
+/// Policy for controlling if files can be downloaded from Showcases by team members
+#[derive(Debug)]
+pub enum ShowcaseDownloadPolicy {
+    Disabled,
+    Enabled,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseDownloadPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ShowcaseDownloadPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseDownloadPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => Ok(ShowcaseDownloadPolicy::Disabled),
+                    "enabled" => Ok(ShowcaseDownloadPolicy::Enabled),
+                    _ => Ok(ShowcaseDownloadPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("ShowcaseDownloadPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseDownloadPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ShowcaseDownloadPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ShowcaseDownloadPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            ShowcaseDownloadPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ShowcaseDownloadPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            ShowcaseDownloadPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Edited showcase comment.
 #[derive(Debug)]
 pub struct ShowcaseEditCommentDetails {
@@ -54778,6 +56105,124 @@ impl ::serde::ser::Serialize for ShowcaseEditedType {
         let mut s = serializer.serialize_struct("ShowcaseEditedType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+/// Policy for controlling whether Showcase is enabled.
+#[derive(Debug)]
+pub enum ShowcaseEnabledPolicy {
+    Disabled,
+    Enabled,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseEnabledPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ShowcaseEnabledPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseEnabledPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => Ok(ShowcaseEnabledPolicy::Disabled),
+                    "enabled" => Ok(ShowcaseEnabledPolicy::Enabled),
+                    _ => Ok(ShowcaseEnabledPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("ShowcaseEnabledPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseEnabledPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ShowcaseEnabledPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ShowcaseEnabledPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            ShowcaseEnabledPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ShowcaseEnabledPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            ShowcaseEnabledPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Policy for controlling if team members can share Showcases externally.
+#[derive(Debug)]
+pub enum ShowcaseExternalSharingPolicy {
+    Disabled,
+    Enabled,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseExternalSharingPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ShowcaseExternalSharingPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseExternalSharingPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => Ok(ShowcaseExternalSharingPolicy::Disabled),
+                    "enabled" => Ok(ShowcaseExternalSharingPolicy::Enabled),
+                    _ => Ok(ShowcaseExternalSharingPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("ShowcaseExternalSharingPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseExternalSharingPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ShowcaseExternalSharingPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ShowcaseExternalSharingPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            ShowcaseExternalSharingPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ShowcaseExternalSharingPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            ShowcaseExternalSharingPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 
@@ -56766,6 +58211,182 @@ impl ::serde::ser::Serialize for ShowcaseRestoredType {
     }
 }
 
+/// Deleted showcase (old version).
+#[derive(Debug)]
+pub struct ShowcaseTrashedDeprecatedDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+}
+
+impl ShowcaseTrashedDeprecatedDetails {
+    pub fn new(event_uuid: String) -> Self {
+        ShowcaseTrashedDeprecatedDetails {
+            event_uuid,
+        }
+    }
+
+}
+
+const SHOWCASE_TRASHED_DEPRECATED_DETAILS_FIELDS: &[&str] = &["event_uuid"];
+impl ShowcaseTrashedDeprecatedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ShowcaseTrashedDeprecatedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ShowcaseTrashedDeprecatedDetails>, V::Error> {
+        use serde::de;
+        let mut field_event_uuid = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHOWCASE_TRASHED_DEPRECATED_DETAILS_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ShowcaseTrashedDeprecatedDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| de::Error::missing_field("event_uuid"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseTrashedDeprecatedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ShowcaseTrashedDeprecatedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseTrashedDeprecatedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ShowcaseTrashedDeprecatedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ShowcaseTrashedDeprecatedDetails", SHOWCASE_TRASHED_DEPRECATED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseTrashedDeprecatedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ShowcaseTrashedDeprecatedDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ShowcaseTrashedDeprecatedType {
+    pub description: String,
+}
+
+impl ShowcaseTrashedDeprecatedType {
+    pub fn new(description: String) -> Self {
+        ShowcaseTrashedDeprecatedType {
+            description,
+        }
+    }
+
+}
+
+const SHOWCASE_TRASHED_DEPRECATED_TYPE_FIELDS: &[&str] = &["description"];
+impl ShowcaseTrashedDeprecatedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ShowcaseTrashedDeprecatedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ShowcaseTrashedDeprecatedType>, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHOWCASE_TRASHED_DEPRECATED_TYPE_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ShowcaseTrashedDeprecatedType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseTrashedDeprecatedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ShowcaseTrashedDeprecatedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseTrashedDeprecatedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ShowcaseTrashedDeprecatedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ShowcaseTrashedDeprecatedType", SHOWCASE_TRASHED_DEPRECATED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseTrashedDeprecatedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ShowcaseTrashedDeprecatedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Deleted showcase.
 #[derive(Debug)]
 pub struct ShowcaseTrashedDetails {
@@ -57131,6 +58752,182 @@ impl ::serde::ser::Serialize for ShowcaseUnresolveCommentType {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("ShowcaseUnresolveCommentType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Restored showcase (old version).
+#[derive(Debug)]
+pub struct ShowcaseUntrashedDeprecatedDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+}
+
+impl ShowcaseUntrashedDeprecatedDetails {
+    pub fn new(event_uuid: String) -> Self {
+        ShowcaseUntrashedDeprecatedDetails {
+            event_uuid,
+        }
+    }
+
+}
+
+const SHOWCASE_UNTRASHED_DEPRECATED_DETAILS_FIELDS: &[&str] = &["event_uuid"];
+impl ShowcaseUntrashedDeprecatedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ShowcaseUntrashedDeprecatedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ShowcaseUntrashedDeprecatedDetails>, V::Error> {
+        use serde::de;
+        let mut field_event_uuid = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHOWCASE_UNTRASHED_DEPRECATED_DETAILS_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ShowcaseUntrashedDeprecatedDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| de::Error::missing_field("event_uuid"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseUntrashedDeprecatedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ShowcaseUntrashedDeprecatedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseUntrashedDeprecatedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ShowcaseUntrashedDeprecatedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ShowcaseUntrashedDeprecatedDetails", SHOWCASE_UNTRASHED_DEPRECATED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseUntrashedDeprecatedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ShowcaseUntrashedDeprecatedDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ShowcaseUntrashedDeprecatedType {
+    pub description: String,
+}
+
+impl ShowcaseUntrashedDeprecatedType {
+    pub fn new(description: String) -> Self {
+        ShowcaseUntrashedDeprecatedType {
+            description,
+        }
+    }
+
+}
+
+const SHOWCASE_UNTRASHED_DEPRECATED_TYPE_FIELDS: &[&str] = &["description"];
+impl ShowcaseUntrashedDeprecatedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ShowcaseUntrashedDeprecatedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ShowcaseUntrashedDeprecatedType>, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, SHOWCASE_UNTRASHED_DEPRECATED_TYPE_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ShowcaseUntrashedDeprecatedType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ShowcaseUntrashedDeprecatedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ShowcaseUntrashedDeprecatedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ShowcaseUntrashedDeprecatedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ShowcaseUntrashedDeprecatedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ShowcaseUntrashedDeprecatedType", SHOWCASE_UNTRASHED_DEPRECATED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ShowcaseUntrashedDeprecatedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ShowcaseUntrashedDeprecatedType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

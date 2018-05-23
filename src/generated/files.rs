@@ -647,7 +647,8 @@ pub fn upload(
         None)
 }
 
-/// Append more data to an upload session. A single request should not upload more than 150 MB.
+/// Append more data to an upload session. A single request should not upload more than 150 MB. The
+/// maximum size of a file one can upload to an upload session is 350 GB.
 pub fn upload_session_append(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionCursor,
@@ -664,7 +665,8 @@ pub fn upload_session_append(
 }
 
 /// Append more data to an upload session. When the parameter close is set, this call will close the
-/// session. A single request should not upload more than 150 MB.
+/// session. A single request should not upload more than 150 MB. The maximum size of a file one can
+/// upload to an upload session is 350 GB.
 pub fn upload_session_append_v2(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionAppendArg,
@@ -681,7 +683,8 @@ pub fn upload_session_append_v2(
 }
 
 /// Finish an upload session and save the uploaded data to the given file path. A single request
-/// should not upload more than 150 MB.
+/// should not upload more than 150 MB. The maximum size of a file one can upload to an upload
+/// session is 350 GB.
 pub fn upload_session_finish(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionFinishArg,
@@ -706,8 +709,9 @@ pub fn upload_session_finish(
 /// [`UploadSessionStartArg::close`](UploadSessionStartArg) or
 /// [`UploadSessionAppendArg::close`](UploadSessionAppendArg) needs to be true for the last
 /// [`upload_session_start()`](upload_session_start) or
-/// [`upload_session_append_v2()`](upload_session_append_v2) call. This route will return a job_id
-/// immediately and do the async commit job in background. Use
+/// [`upload_session_append_v2()`](upload_session_append_v2) call. The maximum size of a file one
+/// can upload to an upload session is 350 GB. This route will return a job_id immediately and do
+/// the async commit job in background. Use
 /// [`upload_session_finish_batch_check()`](upload_session_finish_batch_check) to check the job
 /// status. For the same account, this route should be executed serially. That means you should not
 /// start the next job before current job finishes. We allow up to 1000 entries in a single request.
@@ -742,9 +746,9 @@ pub fn upload_session_finish_batch_check(
 /// size of the file is greater than 150 MB.  This call starts a new upload session with the given
 /// data. You can then use [`upload_session_append_v2()`](upload_session_append_v2) to add more data
 /// and [`upload_session_finish()`](upload_session_finish) to save all the data to a file in
-/// Dropbox. A single request should not upload more than 150 MB. An upload session can be used for
-/// a maximum of 48 hours. Attempting to use an
-/// [`UploadSessionStartResult::session_id`](UploadSessionStartResult) with
+/// Dropbox. A single request should not upload more than 150 MB. The maximum size of a file one can
+/// upload to an upload session is 350 GB. An upload session can be used for a maximum of 48 hours.
+/// Attempting to use an [`UploadSessionStartResult::session_id`](UploadSessionStartResult) with
 /// [`upload_session_append_v2()`](upload_session_append_v2) or
 /// [`upload_session_finish()`](upload_session_finish) more than 48 hours after its creation will
 /// return a [`UploadSessionLookupError::NotFound`](UploadSessionLookupError::NotFound).
@@ -11768,7 +11772,7 @@ impl ::serde::ser::Serialize for ThumbnailSize {
 pub enum UploadError {
     /// Unable to save the uploaded contents to a file.
     Path(UploadWriteFailed),
-    /// The supplied property group is invalid.
+    /// The supplied property group is invalid. The file has uploaded without property groups.
     PropertiesError(super::file_properties::InvalidPropertyGroupError),
     Other,
 }
@@ -11848,7 +11852,7 @@ impl ::std::fmt::Display for UploadError {
 pub enum UploadErrorWithProperties {
     /// Unable to save the uploaded contents to a file.
     Path(UploadWriteFailed),
-    /// The supplied property group is invalid.
+    /// The supplied property group is invalid. The file has uploaded without property groups.
     PropertiesError(super::file_properties::InvalidPropertyGroupError),
     Other,
 }
@@ -12593,8 +12597,11 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchResultEntry {
 pub enum UploadSessionFinishError {
     /// The session arguments are incorrect; the value explains the reason.
     LookupFailed(UploadSessionLookupError),
-    /// Unable to save the uploaded contents to a file.
+    /// Unable to save the uploaded contents to a file. Data has already been appended to the upload
+    /// session. Please retry with empty data body and updated offset.
     Path(WriteError),
+    /// The supplied property group is invalid. The file has uploaded without property groups.
+    PropertiesError(super::file_properties::InvalidPropertyGroupError),
     /// The batch request commits files into too many different shared folders. Please limit your
     /// batch request to files contained in a single shared folder.
     TooManySharedFolderTargets,
@@ -12634,6 +12641,13 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "properties_error" => {
+                        match map.next_key()? {
+                            Some("properties_error") => Ok(UploadSessionFinishError::PropertiesError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("properties_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     "too_many_shared_folder_targets" => Ok(UploadSessionFinishError::TooManySharedFolderTargets),
                     "too_many_write_operations" => Ok(UploadSessionFinishError::TooManyWriteOperations),
                     _ => Ok(UploadSessionFinishError::Other)
@@ -12642,6 +12656,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
         }
         const VARIANTS: &[&str] = &["lookup_failed",
                                     "path",
+                                    "properties_error",
                                     "too_many_shared_folder_targets",
                                     "too_many_write_operations",
                                     "other"];
@@ -12666,6 +12681,13 @@ impl ::serde::ser::Serialize for UploadSessionFinishError {
                 let mut s = serializer.serialize_struct("UploadSessionFinishError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
+                s.end()
+            }
+            UploadSessionFinishError::PropertiesError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("UploadSessionFinishError", 2)?;
+                s.serialize_field(".tag", "properties_error")?;
+                s.serialize_field("properties_error", x)?;
                 s.end()
             }
             UploadSessionFinishError::TooManySharedFolderTargets => {
@@ -12710,6 +12732,9 @@ pub enum UploadSessionLookupError {
     Closed,
     /// The session must be closed before calling upload_session/finish_batch.
     NotClosed,
+    /// You can not append to the upload session because the size of a file should not reach the max
+    /// file size limit (i.e. 350GB).
+    TooLarge,
     Other,
 }
 
@@ -12733,6 +12758,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionLookupError {
                     "incorrect_offset" => Ok(UploadSessionLookupError::IncorrectOffset(UploadSessionOffsetError::internal_deserialize(map)?)),
                     "closed" => Ok(UploadSessionLookupError::Closed),
                     "not_closed" => Ok(UploadSessionLookupError::NotClosed),
+                    "too_large" => Ok(UploadSessionLookupError::TooLarge),
                     _ => Ok(UploadSessionLookupError::Other)
                 }
             }
@@ -12741,6 +12767,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionLookupError {
                                     "incorrect_offset",
                                     "closed",
                                     "not_closed",
+                                    "too_large",
                                     "other"];
         deserializer.deserialize_struct("UploadSessionLookupError", VARIANTS, EnumVisitor)
     }
@@ -12774,6 +12801,12 @@ impl ::serde::ser::Serialize for UploadSessionLookupError {
                 // unit
                 let mut s = serializer.serialize_struct("UploadSessionLookupError", 1)?;
                 s.serialize_field(".tag", "not_closed")?;
+                s.end()
+            }
+            UploadSessionLookupError::TooLarge => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionLookupError", 1)?;
+                s.serialize_field(".tag", "too_large")?;
                 s.end()
             }
             UploadSessionLookupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -13052,7 +13085,9 @@ impl ::serde::ser::Serialize for UploadSessionStartResult {
 pub struct UploadWriteFailed {
     /// The reason why the file couldn't be saved.
     pub reason: WriteError,
-    /// The upload session ID; this may be used to retry the commit.
+    /// The upload session ID; data has already been uploaded to the corresponding upload session
+    /// and this ID may be used to retry the commit with
+    /// [`upload_session_finish()`](upload_session_finish).
     pub upload_session_id: String,
 }
 
