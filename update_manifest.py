@@ -38,7 +38,7 @@ for filepath in stone_files:
 
 with open('namespaces.dot', 'w') as dot:
     dot.write('digraph deps {\n')
-    for module, imports in deps.items():
+    for module, imports in sorted(deps.items()):
         if len(imports) == 0:
             dot.write('    {};\n'.format(module))
         else:
