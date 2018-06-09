@@ -8,27 +8,37 @@
     doc_markdown,
 )]
 
-//! This namespace contains helpers for property and template metadata endpoints.  These endpoints
-//! enable you to tag arbitrary key/value data to Dropbox files.  The most basic unit in this
-//! namespace is the [`PropertyField`](PropertyField). These fields encapsulate the actual key/value
-//! data.  Fields are added to a Dropbox file using a [`PropertyGroup`](PropertyGroup). Property
-//! groups contain a reference to a Dropbox file and a
-//! [`PropertyGroupTemplate`](PropertyGroupTemplate). Property groups are uniquely identified by the
-//! combination of their associated Dropbox file and template.  The
-//! [`PropertyGroupTemplate`](PropertyGroupTemplate) is a way of restricting the possible key names
-//! and value types of the data within a property group. The possible key names and value types are
-//! explicitly enumerated using [`PropertyFieldTemplate`](PropertyFieldTemplate) objects.  You can
-//! think of a property group template as a class definition for a particular key/value metadata
-//! object, and the property groups themselves as the instantiations of these objects.  Templates
-//! are owned either by a user/app pair or team/app pair. Templates and their associated properties
-//! can't be accessed by any app other than the app that created them, and even then, only when the
-//! app is linked with the owner of the template (either a user or team).  User-owned templates are
-//! accessed via the user-auth file_properties/templates/*_for_user endpoints, while team-owned
-//! templates are accessed via the team-auth file_properties/templates/*_for_team endpoints.
-//! Properties associated with either type of template can be accessed via the user-auth
-//! properties/* endpoints.  Finally, properties can be accessed from a number of endpoints that
-//! return metadata, including `files/get_metadata`, and `files/list_folder`. Properties can also be
-//! added during upload, using `files/upload`.
+//! This namespace contains helpers for property and template metadata endpoints.
+//!
+//! These endpoints enable you to tag arbitrary key/value data to Dropbox files.
+//!
+//! The most basic unit in this namespace is the [`PropertyField`](PropertyField). These fields
+//! encapsulate the actual key/value data.
+//!
+//! Fields are added to a Dropbox file using a [`PropertyGroup`](PropertyGroup). Property groups
+//! contain a reference to a Dropbox file and a [`PropertyGroupTemplate`](PropertyGroupTemplate).
+//! Property groups are uniquely identified by the combination of their associated Dropbox file and
+//! template.
+//!
+//! The [`PropertyGroupTemplate`](PropertyGroupTemplate) is a way of restricting the possible key
+//! names and value types of the data within a property group. The possible key names and value
+//! types are explicitly enumerated using [`PropertyFieldTemplate`](PropertyFieldTemplate) objects.
+//!
+//! You can think of a property group template as a class definition for a particular key/value
+//! metadata object, and the property groups themselves as the instantiations of these objects.
+//!
+//! Templates are owned either by a user/app pair or team/app pair. Templates and their associated
+//! properties can't be accessed by any app other than the app that created them, and even then,
+//! only when the app is linked with the owner of the template (either a user or team).
+//!
+//! User-owned templates are accessed via the user-auth file_properties/templates/*_for_user
+//! endpoints, while team-owned templates are accessed via the team-auth
+//! file_properties/templates/*_for_team endpoints. Properties associated with either type of
+//! template can be accessed via the user-auth properties/* endpoints.
+//!
+//! Finally, properties can be accessed from a number of endpoints that return metadata, including
+//! `files/get_metadata`, and `files/list_folder`. Properties can also be added during upload, using
+//! `files/upload`.
 
 pub type Id = String;
 pub type PathOrId = String;

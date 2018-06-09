@@ -91,8 +91,9 @@ pub fn docs_folder_users_list_continue(
 /// Retrieves folder information for the given Paper doc. This includes:   - folder sharing policy;
 /// permissions for subfolders are set by the top-level folder.   - full 'filepath', i.e. the list
 /// of folders (both folderId and folderName) from     the root folder to the folder directly
-/// containing the Paper doc.  Note: If the Paper doc is not in any folder (aka unfiled) the
-/// response will be empty.
+/// containing the Paper doc.
+///
+/// Note: If the Paper doc is not in any folder (aka unfiled) the response will be empty.
 pub fn docs_get_folder_info(
     client: &::client_trait::HttpClient,
     arg: &RefPaperDoc,
@@ -129,6 +130,7 @@ pub fn docs_list_continue(
 }
 
 /// Permanently deletes the given Paper doc. This operation is final as the doc cannot be recovered.
+///
 /// Note: This action can be performed only by the doc owner.
 pub fn docs_permanently_delete(
     client: &::client_trait::HttpClient,
@@ -156,9 +158,10 @@ pub fn docs_sharing_policy_get(
 }
 
 /// Sets the default sharing policy for the given Paper doc. The default 'team_sharing_policy' can
-/// be changed only by teams, omit this field for personal accounts.  Note: 'public_sharing_policy'
-/// cannot be set to the value 'disabled' because this setting can be changed only via the team
-/// admin console.
+/// be changed only by teams, omit this field for personal accounts.
+///
+/// Note: 'public_sharing_policy' cannot be set to the value 'disabled' because this setting can be
+/// changed only via the team admin console.
 pub fn docs_sharing_policy_set(
     client: &::client_trait::HttpClient,
     arg: &PaperDocSharingPolicy,
@@ -188,7 +191,9 @@ pub fn docs_update(
 }
 
 /// Allows an owner or editor to add users to a Paper doc or change their permissions using their
-/// email address or Dropbox account ID.  Note: The Doc owner's permissions cannot be changed.
+/// email address or Dropbox account ID.
+///
+/// Note: The Doc owner's permissions cannot be changed.
 pub fn docs_users_add(
     client: &::client_trait::HttpClient,
     arg: &AddPaperDocUser,
@@ -232,7 +237,9 @@ pub fn docs_users_list_continue(
 }
 
 /// Allows an owner or editor to remove users from a Paper doc using their email address or Dropbox
-/// account ID.  Note: Doc owner cannot be removed.
+/// account ID.
+///
+/// Note: Doc owner cannot be removed.
 pub fn docs_users_remove(
     client: &::client_trait::HttpClient,
     arg: &RemovePaperDocUser,
@@ -1130,8 +1137,9 @@ impl ::serde::ser::Serialize for Folder {
     }
 }
 
-/// The sharing policy of a Paper folder.  Note: The sharing policy of subfolders is inherited from
-/// the root folder.
+/// The sharing policy of a Paper folder.
+///
+/// Note: The sharing policy of subfolders is inherited from the root folder.
 #[derive(Debug)]
 pub enum FolderSharingPolicyType {
     /// Everyone in your team and anyone directly invited can access this folder.

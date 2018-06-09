@@ -40,9 +40,7 @@ class RustBackend(RustHelperBackend):
             self._emit_header()
 
             if namespace.doc is not None:
-                self.emit_wrapped_text(
-                    self.process_doc(namespace.doc, self._docf),
-                    prefix=u'//! ', width=100)
+                self._emit_doc(namespace.doc, prefix=u'//!')
                 self.emit()
 
             for alias in namespace.aliases:
@@ -613,11 +611,13 @@ class RustBackend(RustHelperBackend):
 
     # Helpers
 
-    def _emit_doc(self, doc_string):
+    def _emit_doc(self, doc_string, prefix=u'///'):
         if doc_string is not None:
-            self.emit_wrapped_text(
-                self.process_doc(doc_string, self._docf),
-                prefix=u'/// ', width=100)
+            for idx, chunk in enumerate(doc_string.split(u'\n\n')):
+                if idx != 0: self.emit(prefix)
+                self.emit_wrapped_text(
+                        self.process_doc(chunk, self._docf),
+                        prefix=prefix + u' ', width=100)
 
     def _docf(self, tag, val):
         if tag == 'route':
