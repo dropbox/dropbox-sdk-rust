@@ -4,7 +4,7 @@ version = "0.1.0"
 authors = ["Bill Fraser <wfraser@dropbox.com>"]
 
 [dependencies]
-error-chain = "0.11"
+error-chain = "0.12"
 hyper = { version = "0.10", optional = true }
 hyper-native-tls = { version = "0.2", optional = true }
 log = "0.4"
