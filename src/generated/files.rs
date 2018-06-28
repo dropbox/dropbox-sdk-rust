@@ -568,13 +568,12 @@ pub fn properties_template_get(
 
 pub fn properties_template_list(
     client: &::client_trait::HttpClient,
-    arg: &(),
 ) -> ::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
         "files/properties/template/list",
-        arg,
+        &(),
         None)
 }
 

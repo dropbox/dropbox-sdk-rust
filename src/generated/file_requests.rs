@@ -43,13 +43,12 @@ pub fn get(
 /// this will only return file requests with destinations in the app folder.
 pub fn list(
     client: &::client_trait::HttpClient,
-    arg: &(),
 ) -> ::Result<Result<ListFileRequestsResult, ListFileRequestsError>> {
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
         "file_requests/list",
-        arg,
+        &(),
         None)
 }
 

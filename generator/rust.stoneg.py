@@ -154,12 +154,14 @@ class RustBackend(RustHelperBackend):
         else:
             name_with_version = fn.name
 
+        arg_void = isinstance(fn.arg_data_type, ir.Void)
         style = fn.attrs.get('style', 'rpc')
         if style == 'rpc':
             with self.emit_rust_function_def(
                     route_name,
-                    [u'client: &::client_trait::HttpClient',
-                        u'arg: &{}'.format(self._rust_type(fn.arg_data_type))],
+                    [u'client: &::client_trait::HttpClient']
+                        + ([] if arg_void else
+                            [u'arg: &{}'.format(self._rust_type(fn.arg_data_type))]),
                     u'::Result<Result<{}, {}>>'.format(
                         self._rust_type(fn.result_data_type),
                         self._rust_type(fn.error_data_type)),
@@ -169,15 +171,16 @@ class RustBackend(RustHelperBackend):
                     [u'client',
                         endpoint,
                         u'"{}/{}"'.format(ns, name_with_version),
-                        u'arg',
+                        u'&()' if arg_void else u'arg',
                         u'None'])
         elif style == 'download':
             with self.emit_rust_function_def(
                     route_name,
-                    [u'client: &::client_trait::HttpClient',
-                        u'arg: &{}'.format(self._rust_type(fn.arg_data_type)),
-                        u'range_start: Option<u64>',
-                        u'range_end: Option<u64>'],
+                    [u'client: &::client_trait::HttpClient']
+                        + ([] if arg_void else
+                            [u'arg: &{}'.format(self._rust_type(fn.arg_data_type))])
+                        + [u'range_start: Option<u64>',
+                            u'range_end: Option<u64>'],
                     u'::Result<Result<::client_trait::HttpRequestResult<{}>, {}>>'.format(
                         self._rust_type(fn.result_data_type),
                         self._rust_type(fn.error_data_type)),
@@ -187,16 +190,17 @@ class RustBackend(RustHelperBackend):
                     [u'client',
                         endpoint,
                         u'"{}/{}"'.format(ns, name_with_version),
-                        u'arg',
+                        u'&()' if arg_void else u'arg',
                         u'None',
                         u'range_start',
                         u'range_end'])
         elif style == 'upload':
             with self.emit_rust_function_def(
                     route_name,
-                    [u'client: &::client_trait::HttpClient',
-                        u'arg: &{}'.format(self._rust_type(fn.arg_data_type)),
-                        u'body: Vec<u8>'],
+                    [u'client: &::client_trait::HttpClient']
+                        + ([] if arg_void else
+                            [u'arg: &{}'.format(self._rust_type(fn.arg_data_type))])
+                        + [u'body: Vec<u8>'],
                     u'::Result<Result<::client_trait::HttpRequestResult<{}>, {}>>'.format(
                         self._rust_type(fn.result_data_type),
                         self._rust_type(fn.error_data_type)),
@@ -206,7 +210,7 @@ class RustBackend(RustHelperBackend):
                     [u'client',
                         endpoint,
                         u'"{}/{}"'.format(ns, name_with_version),
-                        u'arg',
+                        u'&()' if arg_void else u'arg',
                         u'Some(body)',
                         u'None',
                         u'None'])

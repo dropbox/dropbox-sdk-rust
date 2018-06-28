@@ -237,8 +237,8 @@ pub enum Oauth2Type {
 }
 
 impl Oauth2Type {
-    pub fn as_str(&self) -> &'static str {
-        match *self {
+    pub fn as_str(self) -> &'static str {
+        match self {
             Oauth2Type::AuthorizationCode => "code",
             Oauth2Type::ImplicitGrant => "token",
         }

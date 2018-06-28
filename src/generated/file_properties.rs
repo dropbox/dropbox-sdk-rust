@@ -198,13 +198,12 @@ pub fn templates_get_for_user(
 /// [`templates_get_for_team()`](templates_get_for_team).
 pub fn templates_list_for_team(
     client: &::client_trait::HttpClient,
-    arg: &(),
 ) -> ::Result<Result<ListTemplateResult, TemplateError>> {
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
         "file_properties/templates/list_for_team",
-        arg,
+        &(),
         None)
 }
 
@@ -213,13 +212,12 @@ pub fn templates_list_for_team(
 /// member or admin's behalf.
 pub fn templates_list_for_user(
     client: &::client_trait::HttpClient,
-    arg: &(),
 ) -> ::Result<Result<ListTemplateResult, TemplateError>> {
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
         "file_properties/templates/list_for_user",
-        arg,
+        &(),
         None)
 }
 

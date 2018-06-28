@@ -22,12 +22,12 @@ pub fn token_from_oauth1(
 }
 
 /// Disables the access token used to authenticate the call.
-pub fn token_revoke(client: &::client_trait::HttpClient, arg: &()) -> ::Result<Result<(), ()>> {
+pub fn token_revoke(client: &::client_trait::HttpClient) -> ::Result<Result<(), ()>> {
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
         "auth/token/revoke",
-        arg,
+        &(),
         None)
 }
 

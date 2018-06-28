@@ -41,26 +41,22 @@ pub fn get_account_batch(
 /// Get information about the current user's account.
 pub fn get_current_account(
     client: &::client_trait::HttpClient,
-    arg: &(),
 ) -> ::Result<Result<FullAccount, ()>> {
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
         "users/get_current_account",
-        arg,
+        &(),
         None)
 }
 
 /// Get the space usage information for the current user's account.
-pub fn get_space_usage(
-    client: &::client_trait::HttpClient,
-    arg: &(),
-) -> ::Result<Result<SpaceUsage, ()>> {
+pub fn get_space_usage(client: &::client_trait::HttpClient) -> ::Result<Result<SpaceUsage, ()>> {
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
         "users/get_space_usage",
-        arg,
+        &(),
         None)
 }
 

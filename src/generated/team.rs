@@ -94,11 +94,8 @@ pub fn features_get_values(
 }
 
 /// Retrieves information about a team.
-pub fn get_info(
-    client: &::client_trait::HttpClient,
-    arg: &(),
-) -> ::Result<Result<TeamGetInfoResult, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/get_info", arg, None)
+pub fn get_info(client: &::client_trait::HttpClient) -> ::Result<Result<TeamGetInfoResult, ()>> {
+    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/get_info", &(), None)
 }
 
 /// Creates a new, empty group, with a requested name. Permission : Team member management.
@@ -676,13 +673,12 @@ pub fn properties_template_get(
 
 pub fn properties_template_list(
     client: &::client_trait::HttpClient,
-    arg: &(),
 ) -> ::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
         "team/properties/template/list",
-        arg,
+        &(),
         None)
 }
 
@@ -888,13 +884,12 @@ pub fn team_folder_update_sync_settings(
 /// call.
 pub fn token_get_authenticated_admin(
     client: &::client_trait::HttpClient,
-    arg: &(),
 ) -> ::Result<Result<TokenGetAuthenticatedAdminResult, TokenGetAuthenticatedAdminError>> {
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
         "team/token/get_authenticated_admin",
-        arg,
+        &(),
         None)
 }
 
