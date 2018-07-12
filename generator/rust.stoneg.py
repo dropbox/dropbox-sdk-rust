@@ -582,7 +582,7 @@ class RustBackend(RustHelperBackend):
                                               .format(union.name))
                                     self.emit(u's.serialize_field(".tag", "{}")?;'
                                               .format(field.name))
-                                    with self.block(u'if let &Some(ref x) = x'):
+                                    with self.block(u'if let Some(ref x) = x'):
                                         if ir.is_primitive_type(ultimate_type):
                                             self.emit(u's.serialize_field("{}", &x)?;'
                                                       .format(field.name))

@@ -5429,7 +5429,7 @@ impl ::serde::ser::Serialize for GetSharedLinksError {
                 let n = if x.is_some() { 2 } else { 1 };
                 let mut s = serializer.serialize_struct("GetSharedLinksError", n)?;
                 s.serialize_field(".tag", "path")?;
-                if let &Some(ref x) = x {
+                if let Some(ref x) = x {
                     s.serialize_field("path", &x)?;
                 }
                 s.end()

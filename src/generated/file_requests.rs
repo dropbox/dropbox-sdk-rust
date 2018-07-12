@@ -1521,7 +1521,7 @@ impl ::serde::ser::Serialize for UpdateFileRequestDeadline {
                 let n = if x.is_some() { 4 } else { 1 };
                 let mut s = serializer.serialize_struct("UpdateFileRequestDeadline", n)?;
                 s.serialize_field(".tag", "update")?;
-                if let &Some(ref x) = x {
+                if let Some(ref x) = x {
                     x.internal_serialize::<S>(&mut s)?;
                 }
                 s.end()
