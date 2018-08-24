@@ -498,6 +498,37 @@ pub fn members_list_continue(
         None)
 }
 
+/// Moves removed member's files to a different member. This endpoint initiates an asynchronous job.
+/// To obtain the final result of the job, the client should periodically poll
+/// [`members_move_former_member_files_job_status_check()`](members_move_former_member_files_job_status_check).
+/// Permission : Team member management.
+pub fn members_move_former_member_files(
+    client: &::client_trait::HttpClient,
+    arg: &MembersDataTransferArg,
+) -> ::Result<Result<super::async::LaunchEmptyResult, MembersTransferFormerMembersFilesError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/move_former_member_files",
+        arg,
+        None)
+}
+
+/// Once an async_job_id is returned from
+/// [`members_move_former_member_files()`](members_move_former_member_files) , use this to poll the
+/// status of the asynchronous request. Permission : Team member management.
+pub fn members_move_former_member_files_job_status_check(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<super::async::PollEmptyResult, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "team/members/move_former_member_files/job_status/check",
+        arg,
+        None)
+}
+
 /// Recover a deleted member. Permission : Team member management Exactly one of team_member_id,
 /// email, or external_id must be provided to identify the user account.
 pub fn members_recover(
@@ -11219,11 +11250,127 @@ impl ::serde::ser::Serialize for MembersAddLaunch {
     }
 }
 
-/// Exactly one of team_member_id, email, or external_id must be provided to identify the user
-/// account.
+#[derive(Debug)]
+pub struct MembersDataTransferArg {
+    /// Identity of user to remove/suspend/have their files moved.
+    pub user: UserSelectorArg,
+    /// Files from the deleted member account will be transferred to this user.
+    pub transfer_dest_id: UserSelectorArg,
+    /// Errors during the transfer process will be sent via email to this user.
+    pub transfer_admin_id: UserSelectorArg,
+}
+
+impl MembersDataTransferArg {
+    pub fn new(
+        user: UserSelectorArg,
+        transfer_dest_id: UserSelectorArg,
+        transfer_admin_id: UserSelectorArg,
+    ) -> Self {
+        MembersDataTransferArg {
+            user,
+            transfer_dest_id,
+            transfer_admin_id,
+        }
+    }
+
+}
+
+const MEMBERS_DATA_TRANSFER_ARG_FIELDS: &[&str] = &["user",
+                                                    "transfer_dest_id",
+                                                    "transfer_admin_id"];
+impl MembersDataTransferArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MembersDataTransferArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersDataTransferArg>, V::Error> {
+        use serde::de;
+        let mut field_user = None;
+        let mut field_transfer_dest_id = None;
+        let mut field_transfer_admin_id = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "user" => {
+                    if field_user.is_some() {
+                        return Err(de::Error::duplicate_field("user"));
+                    }
+                    field_user = Some(map.next_value()?);
+                }
+                "transfer_dest_id" => {
+                    if field_transfer_dest_id.is_some() {
+                        return Err(de::Error::duplicate_field("transfer_dest_id"));
+                    }
+                    field_transfer_dest_id = Some(map.next_value()?);
+                }
+                "transfer_admin_id" => {
+                    if field_transfer_admin_id.is_some() {
+                        return Err(de::Error::duplicate_field("transfer_admin_id"));
+                    }
+                    field_transfer_admin_id = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MEMBERS_DATA_TRANSFER_ARG_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersDataTransferArg {
+            user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
+            transfer_dest_id: field_transfer_dest_id.ok_or_else(|| de::Error::missing_field("transfer_dest_id"))?,
+            transfer_admin_id: field_transfer_admin_id.ok_or_else(|| de::Error::missing_field("transfer_admin_id"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("user", &self.user)?;
+        s.serialize_field("transfer_dest_id", &self.transfer_dest_id)?;
+        s.serialize_field("transfer_admin_id", &self.transfer_admin_id)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersDataTransferArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MembersDataTransferArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MembersDataTransferArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MembersDataTransferArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MembersDataTransferArg", MEMBERS_DATA_TRANSFER_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersDataTransferArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MembersDataTransferArg", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 #[derive(Debug)]
 pub struct MembersDeactivateArg {
-    /// Identity of user to remove/suspend.
+    /// Identity of user to remove/suspend/have their files moved.
     pub user: UserSelectorArg,
     /// If provided, controls if the user's data will be deleted on their linked devices.
     pub wipe_data: bool,
@@ -11322,6 +11469,96 @@ impl ::serde::ser::Serialize for MembersDeactivateArg {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("MembersDeactivateArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Exactly one of team_member_id, email, or external_id must be provided to identify the user
+/// account.
+#[derive(Debug)]
+pub struct MembersDeactivateBaseArg {
+    /// Identity of user to remove/suspend/have their files moved.
+    pub user: UserSelectorArg,
+}
+
+impl MembersDeactivateBaseArg {
+    pub fn new(user: UserSelectorArg) -> Self {
+        MembersDeactivateBaseArg {
+            user,
+        }
+    }
+
+}
+
+const MEMBERS_DEACTIVATE_BASE_ARG_FIELDS: &[&str] = &["user"];
+impl MembersDeactivateBaseArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MembersDeactivateBaseArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersDeactivateBaseArg>, V::Error> {
+        use serde::de;
+        let mut field_user = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "user" => {
+                    if field_user.is_some() {
+                        return Err(de::Error::duplicate_field("user"));
+                    }
+                    field_user = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, MEMBERS_DEACTIVATE_BASE_ARG_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersDeactivateBaseArg {
+            user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("user", &self.user)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersDeactivateBaseArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MembersDeactivateBaseArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MembersDeactivateBaseArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MembersDeactivateBaseArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MembersDeactivateBaseArg", MEMBERS_DEACTIVATE_BASE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersDeactivateBaseArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MembersDeactivateBaseArg", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -12199,7 +12436,7 @@ impl ::std::fmt::Display for MembersRecoverError {
 
 #[derive(Debug)]
 pub struct MembersRemoveArg {
-    /// Identity of user to remove/suspend.
+    /// Identity of user to remove/suspend/have their files moved.
     pub user: UserSelectorArg,
     /// If provided, controls if the user's data will be deleted on their linked devices.
     pub wipe_data: bool,
@@ -12368,8 +12605,6 @@ pub enum MembersRemoveError {
     /// The user is not a member of the team.
     UserNotInTeam,
     Other,
-    /// The user is the last admin of the team, so it cannot be removed from it.
-    RemoveLastAdmin,
     /// Expected removed user and transfer_dest user to be different.
     RemovedAndTransferDestShouldDiffer,
     /// Expected removed user and transfer_admin user to be different.
@@ -12378,14 +12613,18 @@ pub enum MembersRemoveError {
     TransferDestUserNotFound,
     /// The provided transfer_dest_id does not exist on this team.
     TransferDestUserNotInTeam,
-    /// No matching user found for the argument transfer_admin_id.
-    TransferAdminUserNotFound,
     /// The provided transfer_admin_id does not exist on this team.
     TransferAdminUserNotInTeam,
+    /// No matching user found for the argument transfer_admin_id.
+    TransferAdminUserNotFound,
     /// The transfer_admin_id argument must be provided when file transfer is requested.
     UnspecifiedTransferAdminId,
     /// Specified transfer_admin user is not a team admin.
     TransferAdminIsNotAdmin,
+    /// The recipient user's email is not verified.
+    RecipientNotVerified,
+    /// The user is the last admin of the team, so it cannot be removed from it.
+    RemoveLastAdmin,
     /// Cannot keep account and transfer the data to another user at the same time.
     CannotKeepAccountAndTransfer,
     /// Cannot keep account and delete the data at the same time. To keep the account the argument
@@ -12415,15 +12654,16 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
                 match tag {
                     "user_not_found" => Ok(MembersRemoveError::UserNotFound),
                     "user_not_in_team" => Ok(MembersRemoveError::UserNotInTeam),
-                    "remove_last_admin" => Ok(MembersRemoveError::RemoveLastAdmin),
                     "removed_and_transfer_dest_should_differ" => Ok(MembersRemoveError::RemovedAndTransferDestShouldDiffer),
                     "removed_and_transfer_admin_should_differ" => Ok(MembersRemoveError::RemovedAndTransferAdminShouldDiffer),
                     "transfer_dest_user_not_found" => Ok(MembersRemoveError::TransferDestUserNotFound),
                     "transfer_dest_user_not_in_team" => Ok(MembersRemoveError::TransferDestUserNotInTeam),
-                    "transfer_admin_user_not_found" => Ok(MembersRemoveError::TransferAdminUserNotFound),
                     "transfer_admin_user_not_in_team" => Ok(MembersRemoveError::TransferAdminUserNotInTeam),
+                    "transfer_admin_user_not_found" => Ok(MembersRemoveError::TransferAdminUserNotFound),
                     "unspecified_transfer_admin_id" => Ok(MembersRemoveError::UnspecifiedTransferAdminId),
                     "transfer_admin_is_not_admin" => Ok(MembersRemoveError::TransferAdminIsNotAdmin),
+                    "recipient_not_verified" => Ok(MembersRemoveError::RecipientNotVerified),
+                    "remove_last_admin" => Ok(MembersRemoveError::RemoveLastAdmin),
                     "cannot_keep_account_and_transfer" => Ok(MembersRemoveError::CannotKeepAccountAndTransfer),
                     "cannot_keep_account_and_delete_data" => Ok(MembersRemoveError::CannotKeepAccountAndDeleteData),
                     "email_address_too_long_to_be_disabled" => Ok(MembersRemoveError::EmailAddressTooLongToBeDisabled),
@@ -12435,15 +12675,16 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
         const VARIANTS: &[&str] = &["user_not_found",
                                     "user_not_in_team",
                                     "other",
-                                    "remove_last_admin",
                                     "removed_and_transfer_dest_should_differ",
                                     "removed_and_transfer_admin_should_differ",
                                     "transfer_dest_user_not_found",
                                     "transfer_dest_user_not_in_team",
-                                    "transfer_admin_user_not_found",
                                     "transfer_admin_user_not_in_team",
+                                    "transfer_admin_user_not_found",
                                     "unspecified_transfer_admin_id",
                                     "transfer_admin_is_not_admin",
+                                    "recipient_not_verified",
+                                    "remove_last_admin",
                                     "cannot_keep_account_and_transfer",
                                     "cannot_keep_account_and_delete_data",
                                     "email_address_too_long_to_be_disabled",
@@ -12467,12 +12708,6 @@ impl ::serde::ser::Serialize for MembersRemoveError {
                 // unit
                 let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
                 s.serialize_field(".tag", "user_not_in_team")?;
-                s.end()
-            }
-            MembersRemoveError::RemoveLastAdmin => {
-                // unit
-                let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
-                s.serialize_field(".tag", "remove_last_admin")?;
                 s.end()
             }
             MembersRemoveError::RemovedAndTransferDestShouldDiffer => {
@@ -12499,16 +12734,16 @@ impl ::serde::ser::Serialize for MembersRemoveError {
                 s.serialize_field(".tag", "transfer_dest_user_not_in_team")?;
                 s.end()
             }
-            MembersRemoveError::TransferAdminUserNotFound => {
-                // unit
-                let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
-                s.serialize_field(".tag", "transfer_admin_user_not_found")?;
-                s.end()
-            }
             MembersRemoveError::TransferAdminUserNotInTeam => {
                 // unit
                 let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
                 s.serialize_field(".tag", "transfer_admin_user_not_in_team")?;
+                s.end()
+            }
+            MembersRemoveError::TransferAdminUserNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
+                s.serialize_field(".tag", "transfer_admin_user_not_found")?;
                 s.end()
             }
             MembersRemoveError::UnspecifiedTransferAdminId => {
@@ -12521,6 +12756,18 @@ impl ::serde::ser::Serialize for MembersRemoveError {
                 // unit
                 let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
                 s.serialize_field(".tag", "transfer_admin_is_not_admin")?;
+                s.end()
+            }
+            MembersRemoveError::RecipientNotVerified => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
+                s.serialize_field(".tag", "recipient_not_verified")?;
+                s.end()
+            }
+            MembersRemoveError::RemoveLastAdmin => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersRemoveError", 1)?;
+                s.serialize_field(".tag", "remove_last_admin")?;
                 s.end()
             }
             MembersRemoveError::CannotKeepAccountAndTransfer => {
@@ -13410,6 +13657,372 @@ impl ::std::error::Error for MembersSuspendError {
 }
 
 impl ::std::fmt::Display for MembersSuspendError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum MembersTransferFilesError {
+    /// No matching user found. The provided team_member_id, email, or external_id does not exist on
+    /// this team.
+    UserNotFound,
+    /// The user is not a member of the team.
+    UserNotInTeam,
+    Other,
+    /// Expected removed user and transfer_dest user to be different.
+    RemovedAndTransferDestShouldDiffer,
+    /// Expected removed user and transfer_admin user to be different.
+    RemovedAndTransferAdminShouldDiffer,
+    /// No matching user found for the argument transfer_dest_id.
+    TransferDestUserNotFound,
+    /// The provided transfer_dest_id does not exist on this team.
+    TransferDestUserNotInTeam,
+    /// The provided transfer_admin_id does not exist on this team.
+    TransferAdminUserNotInTeam,
+    /// No matching user found for the argument transfer_admin_id.
+    TransferAdminUserNotFound,
+    /// The transfer_admin_id argument must be provided when file transfer is requested.
+    UnspecifiedTransferAdminId,
+    /// Specified transfer_admin user is not a team admin.
+    TransferAdminIsNotAdmin,
+    /// The recipient user's email is not verified.
+    RecipientNotVerified,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersTransferFilesError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MembersTransferFilesError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MembersTransferFilesError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "user_not_found" => Ok(MembersTransferFilesError::UserNotFound),
+                    "user_not_in_team" => Ok(MembersTransferFilesError::UserNotInTeam),
+                    "removed_and_transfer_dest_should_differ" => Ok(MembersTransferFilesError::RemovedAndTransferDestShouldDiffer),
+                    "removed_and_transfer_admin_should_differ" => Ok(MembersTransferFilesError::RemovedAndTransferAdminShouldDiffer),
+                    "transfer_dest_user_not_found" => Ok(MembersTransferFilesError::TransferDestUserNotFound),
+                    "transfer_dest_user_not_in_team" => Ok(MembersTransferFilesError::TransferDestUserNotInTeam),
+                    "transfer_admin_user_not_in_team" => Ok(MembersTransferFilesError::TransferAdminUserNotInTeam),
+                    "transfer_admin_user_not_found" => Ok(MembersTransferFilesError::TransferAdminUserNotFound),
+                    "unspecified_transfer_admin_id" => Ok(MembersTransferFilesError::UnspecifiedTransferAdminId),
+                    "transfer_admin_is_not_admin" => Ok(MembersTransferFilesError::TransferAdminIsNotAdmin),
+                    "recipient_not_verified" => Ok(MembersTransferFilesError::RecipientNotVerified),
+                    _ => Ok(MembersTransferFilesError::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_not_in_team",
+                                    "other",
+                                    "removed_and_transfer_dest_should_differ",
+                                    "removed_and_transfer_admin_should_differ",
+                                    "transfer_dest_user_not_found",
+                                    "transfer_dest_user_not_in_team",
+                                    "transfer_admin_user_not_in_team",
+                                    "transfer_admin_user_not_found",
+                                    "unspecified_transfer_admin_id",
+                                    "transfer_admin_is_not_admin",
+                                    "recipient_not_verified"];
+        deserializer.deserialize_struct("MembersTransferFilesError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersTransferFilesError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MembersTransferFilesError::UserNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "user_not_found")?;
+                s.end()
+            }
+            MembersTransferFilesError::UserNotInTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "user_not_in_team")?;
+                s.end()
+            }
+            MembersTransferFilesError::RemovedAndTransferDestShouldDiffer => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "removed_and_transfer_dest_should_differ")?;
+                s.end()
+            }
+            MembersTransferFilesError::RemovedAndTransferAdminShouldDiffer => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "removed_and_transfer_admin_should_differ")?;
+                s.end()
+            }
+            MembersTransferFilesError::TransferDestUserNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_dest_user_not_found")?;
+                s.end()
+            }
+            MembersTransferFilesError::TransferDestUserNotInTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_dest_user_not_in_team")?;
+                s.end()
+            }
+            MembersTransferFilesError::TransferAdminUserNotInTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_admin_user_not_in_team")?;
+                s.end()
+            }
+            MembersTransferFilesError::TransferAdminUserNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_admin_user_not_found")?;
+                s.end()
+            }
+            MembersTransferFilesError::UnspecifiedTransferAdminId => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "unspecified_transfer_admin_id")?;
+                s.end()
+            }
+            MembersTransferFilesError::TransferAdminIsNotAdmin => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_admin_is_not_admin")?;
+                s.end()
+            }
+            MembersTransferFilesError::RecipientNotVerified => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFilesError", 1)?;
+                s.serialize_field(".tag", "recipient_not_verified")?;
+                s.end()
+            }
+            MembersTransferFilesError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for MembersTransferFilesError {
+    fn description(&self) -> &str {
+        "MembersTransferFilesError"
+    }
+}
+
+impl ::std::fmt::Display for MembersTransferFilesError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum MembersTransferFormerMembersFilesError {
+    /// No matching user found. The provided team_member_id, email, or external_id does not exist on
+    /// this team.
+    UserNotFound,
+    /// The user is not a member of the team.
+    UserNotInTeam,
+    Other,
+    /// Expected removed user and transfer_dest user to be different.
+    RemovedAndTransferDestShouldDiffer,
+    /// Expected removed user and transfer_admin user to be different.
+    RemovedAndTransferAdminShouldDiffer,
+    /// No matching user found for the argument transfer_dest_id.
+    TransferDestUserNotFound,
+    /// The provided transfer_dest_id does not exist on this team.
+    TransferDestUserNotInTeam,
+    /// The provided transfer_admin_id does not exist on this team.
+    TransferAdminUserNotInTeam,
+    /// No matching user found for the argument transfer_admin_id.
+    TransferAdminUserNotFound,
+    /// The transfer_admin_id argument must be provided when file transfer is requested.
+    UnspecifiedTransferAdminId,
+    /// Specified transfer_admin user is not a team admin.
+    TransferAdminIsNotAdmin,
+    /// The recipient user's email is not verified.
+    RecipientNotVerified,
+    /// The user's data is being transferred. Please wait some time before retrying.
+    UserDataIsBeingTransferred,
+    /// No matching removed user found for the argument user.
+    UserNotRemoved,
+    /// User files aren't transferable anymore.
+    UserDataCannotBeTransferred,
+    /// User's data has already been transferred to another user.
+    UserDataAlreadyTransferred,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersTransferFormerMembersFilesError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MembersTransferFormerMembersFilesError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MembersTransferFormerMembersFilesError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "user_not_found" => Ok(MembersTransferFormerMembersFilesError::UserNotFound),
+                    "user_not_in_team" => Ok(MembersTransferFormerMembersFilesError::UserNotInTeam),
+                    "removed_and_transfer_dest_should_differ" => Ok(MembersTransferFormerMembersFilesError::RemovedAndTransferDestShouldDiffer),
+                    "removed_and_transfer_admin_should_differ" => Ok(MembersTransferFormerMembersFilesError::RemovedAndTransferAdminShouldDiffer),
+                    "transfer_dest_user_not_found" => Ok(MembersTransferFormerMembersFilesError::TransferDestUserNotFound),
+                    "transfer_dest_user_not_in_team" => Ok(MembersTransferFormerMembersFilesError::TransferDestUserNotInTeam),
+                    "transfer_admin_user_not_in_team" => Ok(MembersTransferFormerMembersFilesError::TransferAdminUserNotInTeam),
+                    "transfer_admin_user_not_found" => Ok(MembersTransferFormerMembersFilesError::TransferAdminUserNotFound),
+                    "unspecified_transfer_admin_id" => Ok(MembersTransferFormerMembersFilesError::UnspecifiedTransferAdminId),
+                    "transfer_admin_is_not_admin" => Ok(MembersTransferFormerMembersFilesError::TransferAdminIsNotAdmin),
+                    "recipient_not_verified" => Ok(MembersTransferFormerMembersFilesError::RecipientNotVerified),
+                    "user_data_is_being_transferred" => Ok(MembersTransferFormerMembersFilesError::UserDataIsBeingTransferred),
+                    "user_not_removed" => Ok(MembersTransferFormerMembersFilesError::UserNotRemoved),
+                    "user_data_cannot_be_transferred" => Ok(MembersTransferFormerMembersFilesError::UserDataCannotBeTransferred),
+                    "user_data_already_transferred" => Ok(MembersTransferFormerMembersFilesError::UserDataAlreadyTransferred),
+                    _ => Ok(MembersTransferFormerMembersFilesError::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "user_not_in_team",
+                                    "other",
+                                    "removed_and_transfer_dest_should_differ",
+                                    "removed_and_transfer_admin_should_differ",
+                                    "transfer_dest_user_not_found",
+                                    "transfer_dest_user_not_in_team",
+                                    "transfer_admin_user_not_in_team",
+                                    "transfer_admin_user_not_found",
+                                    "unspecified_transfer_admin_id",
+                                    "transfer_admin_is_not_admin",
+                                    "recipient_not_verified",
+                                    "user_data_is_being_transferred",
+                                    "user_not_removed",
+                                    "user_data_cannot_be_transferred",
+                                    "user_data_already_transferred"];
+        deserializer.deserialize_struct("MembersTransferFormerMembersFilesError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersTransferFormerMembersFilesError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MembersTransferFormerMembersFilesError::UserNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "user_not_found")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::UserNotInTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "user_not_in_team")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::RemovedAndTransferDestShouldDiffer => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "removed_and_transfer_dest_should_differ")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::RemovedAndTransferAdminShouldDiffer => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "removed_and_transfer_admin_should_differ")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::TransferDestUserNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_dest_user_not_found")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::TransferDestUserNotInTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_dest_user_not_in_team")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::TransferAdminUserNotInTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_admin_user_not_in_team")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::TransferAdminUserNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_admin_user_not_found")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::UnspecifiedTransferAdminId => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "unspecified_transfer_admin_id")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::TransferAdminIsNotAdmin => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "transfer_admin_is_not_admin")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::RecipientNotVerified => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "recipient_not_verified")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::UserDataIsBeingTransferred => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "user_data_is_being_transferred")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::UserNotRemoved => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "user_not_removed")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::UserDataCannotBeTransferred => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "user_data_cannot_be_transferred")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::UserDataAlreadyTransferred => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersTransferFormerMembersFilesError", 1)?;
+                s.serialize_field(".tag", "user_data_already_transferred")?;
+                s.end()
+            }
+            MembersTransferFormerMembersFilesError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for MembersTransferFormerMembersFilesError {
+    fn description(&self) -> &str {
+        "MembersTransferFormerMembersFilesError"
+    }
+}
+
+impl ::std::fmt::Display for MembersTransferFormerMembersFilesError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
     }

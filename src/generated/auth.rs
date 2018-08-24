@@ -129,6 +129,8 @@ pub enum AuthError {
     InvalidSelectAdmin,
     /// The user has been suspended.
     UserSuspended,
+    /// The access token has expired.
+    ExpiredAccessToken,
     Other,
 }
 
@@ -152,6 +154,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                     "invalid_select_user" => Ok(AuthError::InvalidSelectUser),
                     "invalid_select_admin" => Ok(AuthError::InvalidSelectAdmin),
                     "user_suspended" => Ok(AuthError::UserSuspended),
+                    "expired_access_token" => Ok(AuthError::ExpiredAccessToken),
                     _ => Ok(AuthError::Other)
                 }
             }
@@ -160,6 +163,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                                     "invalid_select_user",
                                     "invalid_select_admin",
                                     "user_suspended",
+                                    "expired_access_token",
                                     "other"];
         deserializer.deserialize_struct("AuthError", VARIANTS, EnumVisitor)
     }
@@ -192,6 +196,12 @@ impl ::serde::ser::Serialize for AuthError {
                 // unit
                 let mut s = serializer.serialize_struct("AuthError", 1)?;
                 s.serialize_field(".tag", "user_suspended")?;
+                s.end()
+            }
+            AuthError::ExpiredAccessToken => {
+                // unit
+                let mut s = serializer.serialize_struct("AuthError", 1)?;
+                s.serialize_field(".tag", "expired_access_token")?;
                 s.end()
             }
             AuthError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

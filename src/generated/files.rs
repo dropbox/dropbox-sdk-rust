@@ -60,6 +60,15 @@ pub fn alpha_upload(
 
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be copied.
+pub fn copy_v2(
+    client: &::client_trait::HttpClient,
+    arg: &RelocationArg,
+) -> ::Result<Result<RelocationResult, RelocationError>> {
+    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/copy_v2", arg, None)
+}
+
+/// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
+/// folder all its contents will be copied.
 pub fn copy(
     client: &::client_trait::HttpClient,
     arg: &RelocationArg,
@@ -69,9 +78,9 @@ pub fn copy(
 
 /// Copy multiple files or folders to different locations at once in the user's Dropbox. If
 /// [`RelocationBatchArg::allow_shared_folder`](RelocationBatchArg) is false, this route is atomic.
-/// If on entry failes, the whole transaction will abort. If
-/// [`RelocationBatchArg::allow_shared_folder`](RelocationBatchArg) is true, not atomicity is
-/// guaranteed, but you will be able to copy the contents of shared folders to new locations. This
+/// If one entry fails, the whole transaction will abort. If
+/// [`RelocationBatchArg::allow_shared_folder`](RelocationBatchArg) is true, atomicity is not
+/// guaranteed, but it allows you to copy the contents of shared folders to new locations. This
 /// route will return job ID immediately and do the async copy job in background. Please use
 /// [`copy_batch_check()`](copy_batch_check) to check the job status.
 pub fn copy_batch(
@@ -124,13 +133,17 @@ pub fn copy_reference_save(
         None)
 }
 
-/// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
-/// folder all its contents will be copied.
-pub fn copy_v2(
+/// Create a folder at a given path.
+pub fn create_folder_v2(
     client: &::client_trait::HttpClient,
-    arg: &RelocationArg,
-) -> ::Result<Result<RelocationResult, RelocationError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/copy_v2", arg, None)
+    arg: &CreateFolderArg,
+) -> ::Result<Result<CreateFolderResult, CreateFolderError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/create_folder_v2",
+        arg,
+        None)
 }
 
 /// Create a folder at a given path.
@@ -177,17 +190,16 @@ pub fn create_folder_batch_check(
         None)
 }
 
-/// Create a folder at a given path.
-pub fn create_folder_v2(
+/// Delete the file or folder at a given path. If the path is a folder, all its contents will be
+/// deleted too. A successful response indicates that the file or folder was deleted. The returned
+/// metadata will be the corresponding [`FileMetadata`](FileMetadata) or
+/// [`FolderMetadata`](FolderMetadata) for the item at time of deletion, and not a
+/// [`DeletedMetadata`](DeletedMetadata) object.
+pub fn delete_v2(
     client: &::client_trait::HttpClient,
-    arg: &CreateFolderArg,
-) -> ::Result<Result<CreateFolderResult, CreateFolderError>> {
-    ::client_helpers::request(
-        client,
-        ::client_trait::Endpoint::Api,
-        "files/create_folder_v2",
-        arg,
-        None)
+    arg: &DeleteArg,
+) -> ::Result<Result<DeleteResult, DeleteError>> {
+    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/delete_v2", arg, None)
 }
 
 /// Delete the file or folder at a given path. If the path is a folder, all its contents will be
@@ -231,18 +243,6 @@ pub fn delete_batch_check(
         None)
 }
 
-/// Delete the file or folder at a given path. If the path is a folder, all its contents will be
-/// deleted too. A successful response indicates that the file or folder was deleted. The returned
-/// metadata will be the corresponding [`FileMetadata`](FileMetadata) or
-/// [`FolderMetadata`](FolderMetadata) for the item at time of deletion, and not a
-/// [`DeletedMetadata`](DeletedMetadata) object.
-pub fn delete_v2(
-    client: &::client_trait::HttpClient,
-    arg: &DeleteArg,
-) -> ::Result<Result<DeleteResult, DeleteError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/delete_v2", arg, None)
-}
-
 /// Download a file from a user's Dropbox.
 pub fn download(
     client: &::client_trait::HttpClient,
@@ -260,8 +260,9 @@ pub fn download(
         range_end)
 }
 
-/// Download a folder from the user's Dropbox, as a zip file. The folder must be less than 1 GB in
-/// size and have fewer than 10,000 total files. The input cannot be a single file.
+/// Download a folder from the user's Dropbox, as a zip file. The folder must be less than 20 GB in
+/// size and have fewer than 10,000 total files. The input cannot be a single file. Any single file
+/// must be less than 4GB in size.
 pub fn download_zip(
     client: &::client_trait::HttpClient,
     arg: &DownloadZipArg,
@@ -322,6 +323,54 @@ pub fn get_temporary_link(
         client,
         ::client_trait::Endpoint::Api,
         "files/get_temporary_link",
+        arg,
+        None)
+}
+
+/// Get a one-time use temporary upload link to upload a file to a Dropbox location.
+///
+/// This endpoint acts as a delayed [`upload()`](upload). The returned temporary upload link may be
+/// used to make a POST request with the data to be uploaded. The upload will then be perfomed with
+/// the [`CommitInfo`](CommitInfo) previously provided to
+/// [`get_temporary_upload_link()`](get_temporary_upload_link) but evaluated only upon consumption.
+/// Hence, errors stemming from invalid [`CommitInfo`](CommitInfo) with respect to the state of the
+/// user's Dropbox will only be communicated at consumption time. Additionally, these errors are
+/// surfaced as generic HTTP 409 Conflict responses, potentially hiding issue details. The maximum
+/// temporary upload link duration is 4 hours. Upon consumption or expiration, a new link will have
+/// to be generated. Multiple links may exist for a specific upload path at any given time.
+///
+/// The POST request on the temporary upload link must have its Content-Type set to
+/// "application/octet-stream".
+///
+/// Example temporary upload link consumption request:
+///
+/// curl -X POST https://dl.dropboxusercontent.com/apitul/1/bNi2uIYF51cVBND --header "Content-Type:
+/// application/octet-stream" --data-binary @local_file.txt
+///
+/// A successful temporary upload link consumption request returns the content hash of the uploaded
+/// data in JSON format.
+///
+/// Example succesful temporary upload link consumption response: {"content-hash":
+/// "599d71033d700ac892a0e48fa61b125d2f5994"}
+///
+/// An unsuccessful temporary upload link consumption request returns any of the following status
+/// codes:
+///
+/// HTTP 400 Bad Request: Content-Type is not one of application/octet-stream and text/plain or
+/// request is invalid. HTTP 409 Conflict: The temporary upload link does not exist or is currently
+/// unavailable, the upload failed, or another error happened. HTTP 410 Gone: The temporary upload
+/// link is expired or consumed.
+///
+/// Example unsuccessful temporary upload link consumption response: Temporary upload link has been
+/// recently consumed.
+pub fn get_temporary_upload_link(
+    client: &::client_trait::HttpClient,
+    arg: &GetTemporaryUploadLinkArg,
+) -> ::Result<Result<GetTemporaryUploadLinkResult, ()>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        "files/get_temporary_upload_link",
         arg,
         None)
 }
@@ -463,6 +512,15 @@ pub fn list_revisions(
 
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be moved.
+pub fn move_v2(
+    client: &::client_trait::HttpClient,
+    arg: &RelocationArg,
+) -> ::Result<Result<RelocationResult, RelocationError>> {
+    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/move_v2", arg, None)
+}
+
+/// Move a file or folder to a different location in the user's Dropbox. If the source path is a
+/// folder all its contents will be moved.
 pub fn do_move(
     client: &::client_trait::HttpClient,
     arg: &RelocationArg,
@@ -493,15 +551,6 @@ pub fn move_batch_check(
         "files/move_batch/check",
         arg,
         None)
-}
-
-/// Move a file or folder to a different location in the user's Dropbox. If the source path is a
-/// folder all its contents will be moved.
-pub fn move_v2(
-    client: &::client_trait::HttpClient,
-    arg: &RelocationArg,
-) -> ::Result<Result<RelocationResult, RelocationError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/move_v2", arg, None)
 }
 
 /// Permanently delete the file or folder at a given path (see https://www.dropbox.com/en/help/40).
@@ -630,7 +679,10 @@ pub fn search(
 
 /// Create a new file with the contents provided in the request. Do not use this to upload a file
 /// larger than 150 MB. Instead, create an upload session with
-/// [`upload_session_start()`](upload_session_start).
+/// [`upload_session_start()`](upload_session_start). Calls to this endpoint will count as data
+/// transport calls for any Dropbox Business teams with a limit on the number of data transport
+/// calls allowed per month. For more information, see the [Data transport limit
+/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload(
     client: &::client_trait::HttpClient,
     arg: &CommitInfo,
@@ -646,26 +698,12 @@ pub fn upload(
         None)
 }
 
-/// Append more data to an upload session. A single request should not upload more than 150 MB. The
-/// maximum size of a file one can upload to an upload session is 350 GB.
-pub fn upload_session_append(
-    client: &::client_trait::HttpClient,
-    arg: &UploadSessionCursor,
-    body: Vec<u8>,
-) -> ::Result<Result<::client_trait::HttpRequestResult<()>, UploadSessionLookupError>> {
-    ::client_helpers::request_with_body(
-        client,
-        ::client_trait::Endpoint::Content,
-        "files/upload_session/append",
-        arg,
-        Some(body),
-        None,
-        None)
-}
-
 /// Append more data to an upload session. When the parameter close is set, this call will close the
 /// session. A single request should not upload more than 150 MB. The maximum size of a file one can
-/// upload to an upload session is 350 GB.
+/// upload to an upload session is 350 GB. Calls to this endpoint will count as data transport calls
+/// for any Dropbox Business teams with a limit on the number of data transport calls allowed per
+/// month. For more information, see the [Data transport limit
+/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload_session_append_v2(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionAppendArg,
@@ -681,9 +719,32 @@ pub fn upload_session_append_v2(
         None)
 }
 
+/// Append more data to an upload session. A single request should not upload more than 150 MB. The
+/// maximum size of a file one can upload to an upload session is 350 GB. Calls to this endpoint
+/// will count as data transport calls for any Dropbox Business teams with a limit on the number of
+/// data transport calls allowed per month. For more information, see the [Data transport limit
+/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
+pub fn upload_session_append(
+    client: &::client_trait::HttpClient,
+    arg: &UploadSessionCursor,
+    body: Vec<u8>,
+) -> ::Result<Result<::client_trait::HttpRequestResult<()>, UploadSessionLookupError>> {
+    ::client_helpers::request_with_body(
+        client,
+        ::client_trait::Endpoint::Content,
+        "files/upload_session/append",
+        arg,
+        Some(body),
+        None,
+        None)
+}
+
 /// Finish an upload session and save the uploaded data to the given file path. A single request
 /// should not upload more than 150 MB. The maximum size of a file one can upload to an upload
-/// session is 350 GB.
+/// session is 350 GB. Calls to this endpoint will count as data transport calls for any Dropbox
+/// Business teams with a limit on the number of data transport calls allowed per month. For more
+/// information, see the [Data transport limit
+/// page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload_session_finish(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionFinishArg,
@@ -714,6 +775,9 @@ pub fn upload_session_finish(
 /// [`upload_session_finish_batch_check()`](upload_session_finish_batch_check) to check the job
 /// status. For the same account, this route should be executed serially. That means you should not
 /// start the next job before current job finishes. We allow up to 1000 entries in a single request.
+/// Calls to this endpoint will count as data transport calls for any Dropbox Business teams with a
+/// limit on the number of data transport calls allowed per month. For more information, see the
+/// [Data transport limit page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload_session_finish_batch(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionFinishBatchArg,
@@ -750,7 +814,10 @@ pub fn upload_session_finish_batch_check(
 /// Attempting to use an [`UploadSessionStartResult::session_id`](UploadSessionStartResult) with
 /// [`upload_session_append_v2()`](upload_session_append_v2) or
 /// [`upload_session_finish()`](upload_session_finish) more than 48 hours after its creation will
-/// return a [`UploadSessionLookupError::NotFound`](UploadSessionLookupError::NotFound).
+/// return a [`UploadSessionLookupError::NotFound`](UploadSessionLookupError::NotFound). Calls to
+/// this endpoint will count as data transport calls for any Dropbox Business teams with a limit on
+/// the number of data transport calls allowed per month. For more information, see the [Data
+/// transport limit page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload_session_start(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionStartArg,
@@ -1055,6 +1122,10 @@ pub struct CommitInfo {
     pub mute: bool,
     /// List of custom properties to add to file.
     pub property_groups: Option<Vec<super::file_properties::PropertyGroup>>,
+    /// Be more strict about how each [`WriteMode`](WriteMode) detects conflict. For example, always
+    /// return a conflict error when `mode` = [`WriteMode::Update`](WriteMode::Update) and the given
+    /// "rev" doesn't match the existing file's "rev", even if the existing file has been deleted.
+    pub strict_conflict: bool,
 }
 
 impl CommitInfo {
@@ -1066,6 +1137,7 @@ impl CommitInfo {
             client_modified: None,
             mute: false,
             property_groups: None,
+            strict_conflict: false,
         }
     }
 
@@ -1097,6 +1169,11 @@ impl CommitInfo {
         self
     }
 
+    pub fn with_strict_conflict(mut self, value: bool) -> Self {
+        self.strict_conflict = value;
+        self
+    }
+
 }
 
 const COMMIT_INFO_FIELDS: &[&str] = &["path",
@@ -1104,7 +1181,8 @@ const COMMIT_INFO_FIELDS: &[&str] = &["path",
                                       "autorename",
                                       "client_modified",
                                       "mute",
-                                      "property_groups"];
+                                      "property_groups",
+                                      "strict_conflict"];
 impl CommitInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -1123,6 +1201,7 @@ impl CommitInfo {
         let mut field_client_modified = None;
         let mut field_mute = None;
         let mut field_property_groups = None;
+        let mut field_strict_conflict = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -1163,6 +1242,12 @@ impl CommitInfo {
                     }
                     field_property_groups = Some(map.next_value()?);
                 }
+                "strict_conflict" => {
+                    if field_strict_conflict.is_some() {
+                        return Err(de::Error::duplicate_field("strict_conflict"));
+                    }
+                    field_strict_conflict = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, COMMIT_INFO_FIELDS))
             }
         }
@@ -1176,6 +1261,7 @@ impl CommitInfo {
             client_modified: field_client_modified,
             mute: field_mute.unwrap_or(false),
             property_groups: field_property_groups,
+            strict_conflict: field_strict_conflict.unwrap_or(false),
         };
         Ok(Some(result))
     }
@@ -1190,7 +1276,8 @@ impl CommitInfo {
         s.serialize_field("autorename", &self.autorename)?;
         s.serialize_field("client_modified", &self.client_modified)?;
         s.serialize_field("mute", &self.mute)?;
-        s.serialize_field("property_groups", &self.property_groups)
+        s.serialize_field("property_groups", &self.property_groups)?;
+        s.serialize_field("strict_conflict", &self.strict_conflict)
     }
 }
 
@@ -1216,7 +1303,7 @@ impl ::serde::ser::Serialize for CommitInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("CommitInfo", 6)?;
+        let mut s = serializer.serialize_struct("CommitInfo", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -1242,6 +1329,10 @@ pub struct CommitInfoWithProperties {
     pub mute: bool,
     /// List of custom properties to add to file.
     pub property_groups: Option<Vec<super::file_properties::PropertyGroup>>,
+    /// Be more strict about how each [`WriteMode`](WriteMode) detects conflict. For example, always
+    /// return a conflict error when `mode` = [`WriteMode::Update`](WriteMode::Update) and the given
+    /// "rev" doesn't match the existing file's "rev", even if the existing file has been deleted.
+    pub strict_conflict: bool,
 }
 
 impl CommitInfoWithProperties {
@@ -1253,6 +1344,7 @@ impl CommitInfoWithProperties {
             client_modified: None,
             mute: false,
             property_groups: None,
+            strict_conflict: false,
         }
     }
 
@@ -1284,6 +1376,11 @@ impl CommitInfoWithProperties {
         self
     }
 
+    pub fn with_strict_conflict(mut self, value: bool) -> Self {
+        self.strict_conflict = value;
+        self
+    }
+
 }
 
 const COMMIT_INFO_WITH_PROPERTIES_FIELDS: &[&str] = &["path",
@@ -1291,7 +1388,8 @@ const COMMIT_INFO_WITH_PROPERTIES_FIELDS: &[&str] = &["path",
                                                       "autorename",
                                                       "client_modified",
                                                       "mute",
-                                                      "property_groups"];
+                                                      "property_groups",
+                                                      "strict_conflict"];
 impl CommitInfoWithProperties {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -1310,6 +1408,7 @@ impl CommitInfoWithProperties {
         let mut field_client_modified = None;
         let mut field_mute = None;
         let mut field_property_groups = None;
+        let mut field_strict_conflict = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -1350,6 +1449,12 @@ impl CommitInfoWithProperties {
                     }
                     field_property_groups = Some(map.next_value()?);
                 }
+                "strict_conflict" => {
+                    if field_strict_conflict.is_some() {
+                        return Err(de::Error::duplicate_field("strict_conflict"));
+                    }
+                    field_strict_conflict = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, COMMIT_INFO_WITH_PROPERTIES_FIELDS))
             }
         }
@@ -1363,6 +1468,7 @@ impl CommitInfoWithProperties {
             client_modified: field_client_modified,
             mute: field_mute.unwrap_or(false),
             property_groups: field_property_groups,
+            strict_conflict: field_strict_conflict.unwrap_or(false),
         };
         Ok(Some(result))
     }
@@ -1377,7 +1483,8 @@ impl CommitInfoWithProperties {
         s.serialize_field("autorename", &self.autorename)?;
         s.serialize_field("client_modified", &self.client_modified)?;
         s.serialize_field("mute", &self.mute)?;
-        s.serialize_field("property_groups", &self.property_groups)
+        s.serialize_field("property_groups", &self.property_groups)?;
+        s.serialize_field("strict_conflict", &self.strict_conflict)
     }
 }
 
@@ -1403,7 +1510,7 @@ impl ::serde::ser::Serialize for CommitInfoWithProperties {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("CommitInfoWithProperties", 6)?;
+        let mut s = serializer.serialize_struct("CommitInfoWithProperties", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -3869,7 +3976,7 @@ impl ::serde::ser::Serialize for DownloadZipArg {
 #[derive(Debug)]
 pub enum DownloadZipError {
     Path(LookupError),
-    /// The folder is too large to download.
+    /// The folder or a file is too large to download.
     TooLarge,
     /// The folder has too many files to download.
     TooManyFiles,
@@ -4088,7 +4195,8 @@ pub struct FileMetadata {
     /// but is not contained within  a shared folder.
     pub has_explicit_shared_members: Option<bool>,
     /// A hash of the file content. This field can be used to verify data integrity. For more
-    /// information see our [Content hash](/developers/reference/content-hash) page.
+    /// information see our [Content
+    /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
     pub content_hash: Option<Sha256HexHash>,
 }
 
@@ -5715,6 +5823,202 @@ impl ::serde::ser::Serialize for GetTemporaryLinkResult {
     }
 }
 
+#[derive(Debug)]
+pub struct GetTemporaryUploadLinkArg {
+    /// Contains the path and other optional modifiers for the future upload commit. Equivalent to
+    /// the parameters provided to [`upload()`](upload).
+    pub commit_info: CommitInfo,
+    /// How long before this link expires, in seconds.  Attempting to start an upload with this link
+    /// longer than this period  of time after link creation will result in an error.
+    pub duration: f64,
+}
+
+impl GetTemporaryUploadLinkArg {
+    pub fn new(commit_info: CommitInfo) -> Self {
+        GetTemporaryUploadLinkArg {
+            commit_info,
+            duration: 14400.0,
+        }
+    }
+
+    pub fn with_duration(mut self, value: f64) -> Self {
+        self.duration = value;
+        self
+    }
+
+}
+
+const GET_TEMPORARY_UPLOAD_LINK_ARG_FIELDS: &[&str] = &["commit_info",
+                                                        "duration"];
+impl GetTemporaryUploadLinkArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<GetTemporaryUploadLinkArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GetTemporaryUploadLinkArg>, V::Error> {
+        use serde::de;
+        let mut field_commit_info = None;
+        let mut field_duration = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "commit_info" => {
+                    if field_commit_info.is_some() {
+                        return Err(de::Error::duplicate_field("commit_info"));
+                    }
+                    field_commit_info = Some(map.next_value()?);
+                }
+                "duration" => {
+                    if field_duration.is_some() {
+                        return Err(de::Error::duplicate_field("duration"));
+                    }
+                    field_duration = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GET_TEMPORARY_UPLOAD_LINK_ARG_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GetTemporaryUploadLinkArg {
+            commit_info: field_commit_info.ok_or_else(|| de::Error::missing_field("commit_info"))?,
+            duration: field_duration.unwrap_or(14400.0),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("commit_info", &self.commit_info)?;
+        s.serialize_field("duration", &self.duration)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryUploadLinkArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetTemporaryUploadLinkArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetTemporaryUploadLinkArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetTemporaryUploadLinkArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetTemporaryUploadLinkArg", GET_TEMPORARY_UPLOAD_LINK_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetTemporaryUploadLinkArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetTemporaryUploadLinkArg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct GetTemporaryUploadLinkResult {
+    /// The temporary link which can be used to stream a file to a Dropbox location.
+    pub link: String,
+}
+
+impl GetTemporaryUploadLinkResult {
+    pub fn new(link: String) -> Self {
+        GetTemporaryUploadLinkResult {
+            link,
+        }
+    }
+
+}
+
+const GET_TEMPORARY_UPLOAD_LINK_RESULT_FIELDS: &[&str] = &["link"];
+impl GetTemporaryUploadLinkResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<GetTemporaryUploadLinkResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<GetTemporaryUploadLinkResult>, V::Error> {
+        use serde::de;
+        let mut field_link = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "link" => {
+                    if field_link.is_some() {
+                        return Err(de::Error::duplicate_field("link"));
+                    }
+                    field_link = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, GET_TEMPORARY_UPLOAD_LINK_RESULT_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = GetTemporaryUploadLinkResult {
+            link: field_link.ok_or_else(|| de::Error::missing_field("link"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("link", &self.link)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryUploadLinkResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = GetTemporaryUploadLinkResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a GetTemporaryUploadLinkResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                GetTemporaryUploadLinkResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("GetTemporaryUploadLinkResult", GET_TEMPORARY_UPLOAD_LINK_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for GetTemporaryUploadLinkResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("GetTemporaryUploadLinkResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Arguments for [`get_thumbnail_batch()`](get_thumbnail_batch).
 #[derive(Debug)]
 pub struct GetThumbnailBatchArg {
@@ -5957,6 +6261,7 @@ impl ::serde::ser::Serialize for GetThumbnailBatchResult {
 #[derive(Debug)]
 pub struct GetThumbnailBatchResultData {
     pub metadata: FileMetadata,
+    /// A string containing the base64-encoded thumbnail data for this file.
     pub thumbnail: String,
 }
 
@@ -7562,6 +7867,9 @@ impl ::serde::ser::Serialize for ListRevisionsResult {
 
 #[derive(Debug)]
 pub enum LookupError {
+    /// The given path does not satisfy the required path format. Please refer to the [Path formats
+    /// documentation](https://www.dropbox.com/developers/documentation/http/documentation#path-formats)
+    /// for more information.
     MalformedPath(MalformedPathError),
     /// There is nothing at the given path.
     NotFound,
@@ -13383,6 +13691,9 @@ impl ::std::fmt::Display for WriteConflictError {
 
 #[derive(Debug)]
 pub enum WriteError {
+    /// The given path does not satisfy the required path format. Please refer to the [Path formats
+    /// documentation](https://www.dropbox.com/developers/documentation/http/documentation#path-formats)
+    /// for more information.
     MalformedPath(MalformedPathError),
     /// Couldn't write to the target path because there was something in the way.
     Conflict(WriteConflictError),

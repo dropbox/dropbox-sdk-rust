@@ -1880,7 +1880,7 @@ pub struct ListPaperDocsResponse {
     /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to
     /// other API methods. The list is sorted in the order specified by the initial call to
     /// [`docs_list()`](docs_list).
-    pub doc_ids: Vec<String>,
+    pub doc_ids: Vec<PaperDocId>,
     /// Pass the cursor into [`docs_list_continue()`](docs_list_continue) to paginate through all
     /// files. The cursor preserves all properties as specified in the original call to
     /// [`docs_list()`](docs_list).
@@ -1893,7 +1893,7 @@ pub struct ListPaperDocsResponse {
 }
 
 impl ListPaperDocsResponse {
-    pub fn new(doc_ids: Vec<String>, cursor: Cursor, has_more: bool) -> Self {
+    pub fn new(doc_ids: Vec<PaperDocId>, cursor: Cursor, has_more: bool) -> Self {
         ListPaperDocsResponse {
             doc_ids,
             cursor,

@@ -2887,6 +2887,8 @@ pub enum FileAction {
     InviteViewer,
     /// Add a member with view permissions but no comment permissions.
     InviteViewerNoComment,
+    /// Add a member with edit permissions.
+    InviteEditor,
     /// Stop sharing this file.
     Unshare,
     /// Relinquish one's own membership to the file.
@@ -2919,6 +2921,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileAction {
                     "enable_viewer_info" => Ok(FileAction::EnableViewerInfo),
                     "invite_viewer" => Ok(FileAction::InviteViewer),
                     "invite_viewer_no_comment" => Ok(FileAction::InviteViewerNoComment),
+                    "invite_editor" => Ok(FileAction::InviteEditor),
                     "unshare" => Ok(FileAction::Unshare),
                     "relinquish_membership" => Ok(FileAction::RelinquishMembership),
                     "share_link" => Ok(FileAction::ShareLink),
@@ -2932,6 +2935,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileAction {
                                     "enable_viewer_info",
                                     "invite_viewer",
                                     "invite_viewer_no_comment",
+                                    "invite_editor",
                                     "unshare",
                                     "relinquish_membership",
                                     "share_link",
@@ -2974,6 +2978,12 @@ impl ::serde::ser::Serialize for FileAction {
                 // unit
                 let mut s = serializer.serialize_struct("FileAction", 1)?;
                 s.serialize_field(".tag", "invite_viewer_no_comment")?;
+                s.end()
+            }
+            FileAction::InviteEditor => {
+                // unit
+                let mut s = serializer.serialize_struct("FileAction", 1)?;
+                s.serialize_field(".tag", "invite_editor")?;
                 s.end()
             }
             FileAction::Unshare => {
@@ -5755,7 +5765,8 @@ impl ::serde::ser::Serialize for GroupInfo {
 /// The information about a group member of the shared content.
 #[derive(Debug)]
 pub struct GroupMembershipInfo {
-    /// The access type for this member.
+    /// The access type for this member. It contains inherited access type from parent folder, and
+    /// acquired access type from this folder.
     pub access_type: AccessLevel,
     /// The information about the membership group.
     pub group: GroupInfo,
@@ -6191,7 +6202,8 @@ impl ::serde::ser::Serialize for InviteeInfo {
 /// Information about an invited member of a shared content.
 #[derive(Debug)]
 pub struct InviteeMembershipInfo {
-    /// The access type for this member.
+    /// The access type for this member. It contains inherited access type from parent folder, and
+    /// acquired access type from this folder.
     pub access_type: AccessLevel,
     /// Recipient of the invitation.
     pub invitee: InviteeInfo,
@@ -9966,7 +9978,8 @@ impl ::serde::ser::Serialize for MemberSelector {
 /// The information about a member of the shared content.
 #[derive(Debug)]
 pub struct MembershipInfo {
-    /// The access type for this member.
+    /// The access type for this member. It contains inherited access type from parent folder, and
+    /// acquired access type from this folder.
     pub access_type: AccessLevel,
     /// The permissions that requesting user has on this member. The set of permissions corresponds
     /// to the MemberActions in the request.
@@ -12552,6 +12565,8 @@ pub struct ShareFolderArg {
     pub shared_link_policy: Option<SharedLinkPolicy>,
     /// Who can enable/disable viewer info for this shared folder.
     pub viewer_info_policy: Option<ViewerInfoPolicy>,
+    /// The access inheritance settings for the folder.
+    pub access_inheritance: AccessInheritance,
     /// A list of `FolderAction`s corresponding to `FolderPermission`s that should appear in the
     /// response's [`SharedFolderMetadata::permissions`](SharedFolderMetadata) field describing the
     /// actions the  authenticated user can perform on the folder.
@@ -12569,6 +12584,7 @@ impl ShareFolderArg {
             member_policy: None,
             shared_link_policy: None,
             viewer_info_policy: None,
+            access_inheritance: AccessInheritance::Inherit,
             actions: None,
             link_settings: None,
         }
@@ -12599,6 +12615,11 @@ impl ShareFolderArg {
         self
     }
 
+    pub fn with_access_inheritance(mut self, value: AccessInheritance) -> Self {
+        self.access_inheritance = value;
+        self
+    }
+
     pub fn with_actions(mut self, value: Option<Vec<FolderAction>>) -> Self {
         self.actions = value;
         self
@@ -12617,6 +12638,7 @@ const SHARE_FOLDER_ARG_FIELDS: &[&str] = &["path",
                                            "member_policy",
                                            "shared_link_policy",
                                            "viewer_info_policy",
+                                           "access_inheritance",
                                            "actions",
                                            "link_settings"];
 impl ShareFolderArg {
@@ -12637,6 +12659,7 @@ impl ShareFolderArg {
         let mut field_member_policy = None;
         let mut field_shared_link_policy = None;
         let mut field_viewer_info_policy = None;
+        let mut field_access_inheritance = None;
         let mut field_actions = None;
         let mut field_link_settings = None;
         let mut nothing = true;
@@ -12679,6 +12702,12 @@ impl ShareFolderArg {
                     }
                     field_viewer_info_policy = Some(map.next_value()?);
                 }
+                "access_inheritance" => {
+                    if field_access_inheritance.is_some() {
+                        return Err(de::Error::duplicate_field("access_inheritance"));
+                    }
+                    field_access_inheritance = Some(map.next_value()?);
+                }
                 "actions" => {
                     if field_actions.is_some() {
                         return Err(de::Error::duplicate_field("actions"));
@@ -12704,6 +12733,7 @@ impl ShareFolderArg {
             member_policy: field_member_policy,
             shared_link_policy: field_shared_link_policy,
             viewer_info_policy: field_viewer_info_policy,
+            access_inheritance: field_access_inheritance.unwrap_or_else(|| AccessInheritance::Inherit),
             actions: field_actions,
             link_settings: field_link_settings,
         };
@@ -12721,6 +12751,7 @@ impl ShareFolderArg {
         s.serialize_field("member_policy", &self.member_policy)?;
         s.serialize_field("shared_link_policy", &self.shared_link_policy)?;
         s.serialize_field("viewer_info_policy", &self.viewer_info_policy)?;
+        s.serialize_field("access_inheritance", &self.access_inheritance)?;
         s.serialize_field("actions", &self.actions)?;
         s.serialize_field("link_settings", &self.link_settings)
     }
@@ -12748,7 +12779,7 @@ impl ::serde::ser::Serialize for ShareFolderArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ShareFolderArg", 8)?;
+        let mut s = serializer.serialize_struct("ShareFolderArg", 9)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -12770,6 +12801,8 @@ pub struct ShareFolderArgBase {
     pub shared_link_policy: Option<SharedLinkPolicy>,
     /// Who can enable/disable viewer info for this shared folder.
     pub viewer_info_policy: Option<ViewerInfoPolicy>,
+    /// The access inheritance settings for the folder.
+    pub access_inheritance: AccessInheritance,
 }
 
 impl ShareFolderArgBase {
@@ -12781,6 +12814,7 @@ impl ShareFolderArgBase {
             member_policy: None,
             shared_link_policy: None,
             viewer_info_policy: None,
+            access_inheritance: AccessInheritance::Inherit,
         }
     }
 
@@ -12809,6 +12843,11 @@ impl ShareFolderArgBase {
         self
     }
 
+    pub fn with_access_inheritance(mut self, value: AccessInheritance) -> Self {
+        self.access_inheritance = value;
+        self
+    }
+
 }
 
 const SHARE_FOLDER_ARG_BASE_FIELDS: &[&str] = &["path",
@@ -12816,7 +12855,8 @@ const SHARE_FOLDER_ARG_BASE_FIELDS: &[&str] = &["path",
                                                 "force_async",
                                                 "member_policy",
                                                 "shared_link_policy",
-                                                "viewer_info_policy"];
+                                                "viewer_info_policy",
+                                                "access_inheritance"];
 impl ShareFolderArgBase {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -12835,6 +12875,7 @@ impl ShareFolderArgBase {
         let mut field_member_policy = None;
         let mut field_shared_link_policy = None;
         let mut field_viewer_info_policy = None;
+        let mut field_access_inheritance = None;
         let mut nothing = true;
         while let Some(key) = map.next_key()? {
             nothing = false;
@@ -12875,6 +12916,12 @@ impl ShareFolderArgBase {
                     }
                     field_viewer_info_policy = Some(map.next_value()?);
                 }
+                "access_inheritance" => {
+                    if field_access_inheritance.is_some() {
+                        return Err(de::Error::duplicate_field("access_inheritance"));
+                    }
+                    field_access_inheritance = Some(map.next_value()?);
+                }
                 _ => return Err(de::Error::unknown_field(key, SHARE_FOLDER_ARG_BASE_FIELDS))
             }
         }
@@ -12888,6 +12935,7 @@ impl ShareFolderArgBase {
             member_policy: field_member_policy,
             shared_link_policy: field_shared_link_policy,
             viewer_info_policy: field_viewer_info_policy,
+            access_inheritance: field_access_inheritance.unwrap_or_else(|| AccessInheritance::Inherit),
         };
         Ok(Some(result))
     }
@@ -12902,7 +12950,8 @@ impl ShareFolderArgBase {
         s.serialize_field("force_async", &self.force_async)?;
         s.serialize_field("member_policy", &self.member_policy)?;
         s.serialize_field("shared_link_policy", &self.shared_link_policy)?;
-        s.serialize_field("viewer_info_policy", &self.viewer_info_policy)
+        s.serialize_field("viewer_info_policy", &self.viewer_info_policy)?;
+        s.serialize_field("access_inheritance", &self.access_inheritance)
     }
 }
 
@@ -12928,7 +12977,7 @@ impl ::serde::ser::Serialize for ShareFolderArgBase {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ShareFolderArgBase", 6)?;
+        let mut s = serializer.serialize_struct("ShareFolderArgBase", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -17438,7 +17487,8 @@ impl ::std::fmt::Display for UpdateFolderPolicyError {
 /// The information about a user member of the shared content with an appended last seen timestamp.
 #[derive(Debug)]
 pub struct UserFileMembershipInfo {
-    /// The access type for this member.
+    /// The access type for this member. It contains inherited access type from parent folder, and
+    /// acquired access type from this folder.
     pub access_type: AccessLevel,
     /// The account information for the membership user.
     pub user: UserInfo,
@@ -17784,7 +17834,8 @@ impl ::serde::ser::Serialize for UserInfo {
 /// The information about a user member of the shared content.
 #[derive(Debug)]
 pub struct UserMembershipInfo {
-    /// The access type for this member.
+    /// The access type for this member. It contains inherited access type from parent folder, and
+    /// acquired access type from this folder.
     pub access_type: AccessLevel,
     /// The account information for the membership user.
     pub user: UserInfo,

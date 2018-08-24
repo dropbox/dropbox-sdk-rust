@@ -10547,6 +10547,7 @@ pub enum EventDetails {
     SsoChangePolicyDetails(SsoChangePolicyDetails),
     TfaChangePolicyDetails(TfaChangePolicyDetails),
     TwoAccountChangePolicyDetails(TwoAccountChangePolicyDetails),
+    ViewerInfoPolicyChangedDetails(ViewerInfoPolicyChangedDetails),
     WebSessionsChangeFixedLengthPolicyDetails(WebSessionsChangeFixedLengthPolicyDetails),
     WebSessionsChangeIdleLengthPolicyDetails(WebSessionsChangeIdleLengthPolicyDetails),
     TeamMergeFromDetails(TeamMergeFromDetails),
@@ -10873,6 +10874,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "sso_change_policy_details" => Ok(EventDetails::SsoChangePolicyDetails(SsoChangePolicyDetails::internal_deserialize(map)?)),
                     "tfa_change_policy_details" => Ok(EventDetails::TfaChangePolicyDetails(TfaChangePolicyDetails::internal_deserialize(map)?)),
                     "two_account_change_policy_details" => Ok(EventDetails::TwoAccountChangePolicyDetails(TwoAccountChangePolicyDetails::internal_deserialize(map)?)),
+                    "viewer_info_policy_changed_details" => Ok(EventDetails::ViewerInfoPolicyChangedDetails(ViewerInfoPolicyChangedDetails::internal_deserialize(map)?)),
                     "web_sessions_change_fixed_length_policy_details" => Ok(EventDetails::WebSessionsChangeFixedLengthPolicyDetails(WebSessionsChangeFixedLengthPolicyDetails::internal_deserialize(map)?)),
                     "web_sessions_change_idle_length_policy_details" => Ok(EventDetails::WebSessionsChangeIdleLengthPolicyDetails(WebSessionsChangeIdleLengthPolicyDetails::internal_deserialize(map)?)),
                     "team_merge_from_details" => Ok(EventDetails::TeamMergeFromDetails(TeamMergeFromDetails::internal_deserialize(map)?)),
@@ -11183,6 +11185,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "sso_change_policy_details",
                                     "tfa_change_policy_details",
                                     "two_account_change_policy_details",
+                                    "viewer_info_policy_changed_details",
                                     "web_sessions_change_fixed_length_policy_details",
                                     "web_sessions_change_idle_length_policy_details",
                                     "team_merge_from_details",
@@ -13162,6 +13165,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventDetails::ViewerInfoPolicyChangedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "viewer_info_policy_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::WebSessionsChangeFixedLengthPolicyDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
@@ -13870,6 +13880,8 @@ pub enum EventType {
     /// (team_policies) Enabled/disabled option for members to link personal Dropbox account and
     /// team account to same computer
     TwoAccountChangePolicy(TwoAccountChangePolicyType),
+    /// (team_policies) Changed team policy for viewer info
+    ViewerInfoPolicyChanged(ViewerInfoPolicyChangedType),
     /// (team_policies) Changed how long members can stay signed in to Dropbox.com
     WebSessionsChangeFixedLengthPolicy(WebSessionsChangeFixedLengthPolicyType),
     /// (team_policies) Changed how long team members can be idle while signed in to Dropbox.com
@@ -14210,6 +14222,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "sso_change_policy" => Ok(EventType::SsoChangePolicy(SsoChangePolicyType::internal_deserialize(map)?)),
                     "tfa_change_policy" => Ok(EventType::TfaChangePolicy(TfaChangePolicyType::internal_deserialize(map)?)),
                     "two_account_change_policy" => Ok(EventType::TwoAccountChangePolicy(TwoAccountChangePolicyType::internal_deserialize(map)?)),
+                    "viewer_info_policy_changed" => Ok(EventType::ViewerInfoPolicyChanged(ViewerInfoPolicyChangedType::internal_deserialize(map)?)),
                     "web_sessions_change_fixed_length_policy" => Ok(EventType::WebSessionsChangeFixedLengthPolicy(WebSessionsChangeFixedLengthPolicyType::internal_deserialize(map)?)),
                     "web_sessions_change_idle_length_policy" => Ok(EventType::WebSessionsChangeIdleLengthPolicy(WebSessionsChangeIdleLengthPolicyType::internal_deserialize(map)?)),
                     "team_merge_from" => Ok(EventType::TeamMergeFrom(TeamMergeFromType::internal_deserialize(map)?)),
@@ -14519,6 +14532,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "sso_change_policy",
                                     "tfa_change_policy",
                                     "two_account_change_policy",
+                                    "viewer_info_policy_changed",
                                     "web_sessions_change_fixed_length_policy",
                                     "web_sessions_change_idle_length_policy",
                                     "team_merge_from",
@@ -16565,6 +16579,13 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "two_account_change_policy")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::ViewerInfoPolicyChanged(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "viewer_info_policy_changed")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -41279,6 +41300,73 @@ impl ::serde::ser::Serialize for ParticipantLogInfo {
                 s.end()
             }
             ParticipantLogInfo::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum PassPolicy {
+    Enabled,
+    Allow,
+    Disabled,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PassPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PassPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a PassPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "enabled" => Ok(PassPolicy::Enabled),
+                    "allow" => Ok(PassPolicy::Allow),
+                    "disabled" => Ok(PassPolicy::Disabled),
+                    _ => Ok(PassPolicy::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["enabled",
+                                    "allow",
+                                    "disabled",
+                                    "other"];
+        deserializer.deserialize_struct("PassPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PassPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PassPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("PassPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            PassPolicy::Allow => {
+                // unit
+                let mut s = serializer.serialize_struct("PassPolicy", 1)?;
+                s.serialize_field(".tag", "allow")?;
+                s.end()
+            }
+            PassPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("PassPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            PassPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -67657,6 +67745,195 @@ impl ::serde::ser::Serialize for UserOrTeamLinkedAppLogInfo {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("UserOrTeamLinkedAppLogInfo", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Changed team policy for viewer info.
+#[derive(Debug)]
+pub struct ViewerInfoPolicyChangedDetails {
+    /// Previous Viewer Info policy.
+    pub previous_value: PassPolicy,
+    /// New Viewer Info policy.
+    pub new_value: PassPolicy,
+}
+
+impl ViewerInfoPolicyChangedDetails {
+    pub fn new(previous_value: PassPolicy, new_value: PassPolicy) -> Self {
+        ViewerInfoPolicyChangedDetails {
+            previous_value,
+            new_value,
+        }
+    }
+
+}
+
+const VIEWER_INFO_POLICY_CHANGED_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                             "new_value"];
+impl ViewerInfoPolicyChangedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ViewerInfoPolicyChangedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ViewerInfoPolicyChangedDetails>, V::Error> {
+        use serde::de;
+        let mut field_previous_value = None;
+        let mut field_new_value = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, VIEWER_INFO_POLICY_CHANGED_DETAILS_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ViewerInfoPolicyChangedDetails {
+            previous_value: field_previous_value.ok_or_else(|| de::Error::missing_field("previous_value"))?,
+            new_value: field_new_value.ok_or_else(|| de::Error::missing_field("new_value"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("previous_value", &self.previous_value)?;
+        s.serialize_field("new_value", &self.new_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ViewerInfoPolicyChangedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ViewerInfoPolicyChangedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ViewerInfoPolicyChangedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ViewerInfoPolicyChangedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ViewerInfoPolicyChangedDetails", VIEWER_INFO_POLICY_CHANGED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ViewerInfoPolicyChangedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ViewerInfoPolicyChangedDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ViewerInfoPolicyChangedType {
+    pub description: String,
+}
+
+impl ViewerInfoPolicyChangedType {
+    pub fn new(description: String) -> Self {
+        ViewerInfoPolicyChangedType {
+            description,
+        }
+    }
+
+}
+
+const VIEWER_INFO_POLICY_CHANGED_TYPE_FIELDS: &[&str] = &["description"];
+impl ViewerInfoPolicyChangedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ViewerInfoPolicyChangedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ViewerInfoPolicyChangedType>, V::Error> {
+        use serde::de;
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => return Err(de::Error::unknown_field(key, VIEWER_INFO_POLICY_CHANGED_TYPE_FIELDS))
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ViewerInfoPolicyChangedType {
+            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ViewerInfoPolicyChangedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ViewerInfoPolicyChangedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a ViewerInfoPolicyChangedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ViewerInfoPolicyChangedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ViewerInfoPolicyChangedType", VIEWER_INFO_POLICY_CHANGED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ViewerInfoPolicyChangedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ViewerInfoPolicyChangedType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
