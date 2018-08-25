@@ -2,11 +2,13 @@ extern crate dropbox_sdk;
 use dropbox_sdk::{HyperClient, Oauth2AuthorizeUrlBuilder, Oauth2Type};
 use dropbox_sdk::files;
 
+extern crate chrono;
 extern crate env_logger;
 
 use std::fs::File;
 use std::path::PathBuf;
 use std::io::{self, Read, Write};
+use std::time::{Instant, SystemTime};
 
 fn prompt(msg: &str) -> String {
     eprint!("{}: ", msg);
@@ -32,6 +34,16 @@ fn human_number(n: u64) -> String {
     } else {
         format!("{:.02} {}", f, prefixes[mag - 1])
     }
+}
+
+fn iso8601(t: SystemTime) -> String {
+    let timestamp: i64 = match t.duration_since(SystemTime::UNIX_EPOCH) {
+        Ok(duration) => duration.as_secs() as i64,
+        Err(e) => e.duration().as_secs() as i64 * -1,
+    };
+
+    chrono::NaiveDateTime::from_timestamp(timestamp, 0 /* nsecs */)
+        .format("%Y-%m-%dT%H:%M:%SZ").to_string()
 }
 
 enum Operation {
@@ -83,12 +95,12 @@ fn main() {
                 eprintln!("Source file {:?} not found: {}", args.source_path, e);
                 std::process::exit(2);
             });
-    let source_len = source_file.metadata()
+    let (source_mtime, source_len) = source_file.metadata()
+            .and_then(|meta| meta.modified().map(|mtime| (mtime, meta.len())))
             .unwrap_or_else(|e| {
                 eprintln!("Error getting source file {:?} metadata: {}", args.source_path, e);
                 std::process::exit(2);
-            })
-            .len();
+            });
 
     let token = std::env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
         let client_id = prompt("Give me a Dropbox API app key");
@@ -189,6 +201,8 @@ fn main() {
 
     let mut bytes_out = 0u64;
     let mut consecutive_errors = 0;
+    let mut last_time = Instant::now();
+
     while consecutive_errors < 3 {
         let nread = source_file.read(&mut buf)
             .unwrap_or_else(|e| {
@@ -231,13 +245,20 @@ fn main() {
         bytes_out += nread as u64;
         append_arg.cursor.offset += nread as u64;
 
-        eprintln!("{}Bytes uploaded", human_number(bytes_out));
-        // TODO: calculate and print the upload speed for fun
+        let now = Instant::now();
+        let time = now.duration_since(last_time);
+        let millis = time.as_secs() * 1000 + time.subsec_millis() as u64;
+        last_time = now;
+
+        eprintln!("{}Bytes uploaded, {}Bytes per second",
+                  human_number(bytes_out),
+                  human_number(nread as u64 * 1000 / millis));
     }
 
     let finish = files::UploadSessionFinishArg::new(
         append_arg.cursor,
-        files::CommitInfo::new(dest_path));
+        files::CommitInfo::new(dest_path)
+            .with_client_modified(Some(iso8601(source_mtime))));
 
     // TODO: Maybe should put a retry loop around this as well?
     match files::upload_session_finish(&client, &finish, &[]) {
