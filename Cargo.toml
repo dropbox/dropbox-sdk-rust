@@ -19,6 +19,10 @@ env_logger = "0.5"
 name = "demo"
 required-features = ["dbx_files", "hyper_client"]
 
+[[example]]
+name = "large-file-upload"
+required-features = ["dbx_files", "hyper_client"]
+
 [features]
 # dbx_* features each correspond to one Stone spec file.
 # The lists of dependencies must be kept in sync with the 'import' statements in them.
