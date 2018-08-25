@@ -177,7 +177,7 @@ fn main() {
     let session_id = match files::upload_session_start(
         &client, &files::UploadSessionStartArg::default(), &[])
     {
-        Ok(Ok(result)) => result.result.session_id,
+        Ok(Ok(result)) => result.session_id,
         Ok(Err(())) => panic!(),
         Err(e) => {
             eprintln!("Starting upload session failed: {}", e);
@@ -222,10 +222,7 @@ fn main() {
         }
 
         match files::upload_session_append_v2(&client, &append_arg, &buf[0..nread]) {
-            Ok(Ok(_result)) => {
-                // Result is a HttpRequestResult<()> with a None body.
-                // TODO: make this and other upload endpoints just return ()
-            }
+            Ok(Ok(())) => {}
             Ok(Err(e)) => {
                 eprintln!("Error appending data: {}", e);
                 consecutive_errors += 1;
@@ -262,10 +259,9 @@ fn main() {
 
     // TODO: Maybe should put a retry loop around this as well?
     match files::upload_session_finish(&client, &finish, &[]) {
-        Ok(Ok(result)) => {
-            let meta: files::FileMetadata = result.result;
+        Ok(Ok(filemetadata)) => {
             println!("Upload succeeded!");
-            println!("{:#?}", meta);
+            println!("{:#?}", filemetadata);
         }
         Ok(Err(e)) => {
             eprintln!("Error finishing upload: {}", e);

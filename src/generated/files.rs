@@ -48,16 +48,14 @@ pub fn alpha_upload(
     client: &::client_trait::HttpClient,
     arg: &CommitInfoWithProperties,
     body: &[u8],
-) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, UploadErrorWithProperties>> {
-    ::client_helpers::request_with_body(
+) -> ::Result<Result<FileMetadata, UploadErrorWithProperties>> {
+    ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Content,
         ::client_trait::Style::Upload,
         "files/alpha/upload",
         arg,
-        Some(body),
-        None,
-        None)
+        Some(body))
 }
 
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
@@ -786,16 +784,14 @@ pub fn upload(
     client: &::client_trait::HttpClient,
     arg: &CommitInfo,
     body: &[u8],
-) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, UploadError>> {
-    ::client_helpers::request_with_body(
+) -> ::Result<Result<FileMetadata, UploadError>> {
+    ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Content,
         ::client_trait::Style::Upload,
         "files/upload",
         arg,
-        Some(body),
-        None,
-        None)
+        Some(body))
 }
 
 /// Append more data to an upload session. When the parameter close is set, this call will close the
@@ -808,16 +804,14 @@ pub fn upload_session_append_v2(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionAppendArg,
     body: &[u8],
-) -> ::Result<Result<::client_trait::HttpRequestResult<()>, UploadSessionLookupError>> {
-    ::client_helpers::request_with_body(
+) -> ::Result<Result<(), UploadSessionLookupError>> {
+    ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Content,
         ::client_trait::Style::Upload,
         "files/upload_session/append_v2",
         arg,
-        Some(body),
-        None,
-        None)
+        Some(body))
 }
 
 /// Append more data to an upload session. A single request should not upload more than 150 MB. The
@@ -829,16 +823,14 @@ pub fn upload_session_append(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionCursor,
     body: &[u8],
-) -> ::Result<Result<::client_trait::HttpRequestResult<()>, UploadSessionLookupError>> {
-    ::client_helpers::request_with_body(
+) -> ::Result<Result<(), UploadSessionLookupError>> {
+    ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Content,
         ::client_trait::Style::Upload,
         "files/upload_session/append",
         arg,
-        Some(body),
-        None,
-        None)
+        Some(body))
 }
 
 /// Finish an upload session and save the uploaded data to the given file path. A single request
@@ -851,16 +843,14 @@ pub fn upload_session_finish(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionFinishArg,
     body: &[u8],
-) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, UploadSessionFinishError>> {
-    ::client_helpers::request_with_body(
+) -> ::Result<Result<FileMetadata, UploadSessionFinishError>> {
+    ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Content,
         ::client_trait::Style::Upload,
         "files/upload_session/finish",
         arg,
-        Some(body),
-        None,
-        None)
+        Some(body))
 }
 
 /// This route helps you commit many files at once into a user's Dropbox. Use
@@ -927,16 +917,14 @@ pub fn upload_session_start(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionStartArg,
     body: &[u8],
-) -> ::Result<Result<::client_trait::HttpRequestResult<UploadSessionStartResult>, ()>> {
-    ::client_helpers::request_with_body(
+) -> ::Result<Result<UploadSessionStartResult, ()>> {
+    ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Content,
         ::client_trait::Style::Upload,
         "files/upload_session/start",
         arg,
-        Some(body),
-        None,
-        None)
+        Some(body))
 }
 
 #[derive(Debug)]

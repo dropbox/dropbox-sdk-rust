@@ -204,20 +204,18 @@ class RustBackend(RustHelperBackend):
                         + ([] if arg_void else
                             [u'arg: &{}'.format(self._rust_type(fn.arg_data_type))])
                         + [u'body: &[u8]'],
-                    u'::Result<Result<::client_trait::HttpRequestResult<{}>, {}>>'.format(
+                    u'::Result<Result<{}, {}>>'.format(
                         self._rust_type(fn.result_data_type),
                         self._rust_type(fn.error_data_type)),
                     access=u'pub'):
                 self.emit_rust_fn_call(
-                    u'::client_helpers::request_with_body',
+                    u'::client_helpers::request',
                     [u'client',
                         endpoint,
                         u'::client_trait::Style::Upload',
                         u'"{}/{}"'.format(ns, name_with_version),
                         u'&()' if arg_void else u'arg',
-                        u'Some(body)',
-                        u'None',
-                        u'None'])
+                        u'Some(body)'])
         else:
             raise RuntimeError(u'ERROR: unknown route style: {}'.format(style))
         self.emit()

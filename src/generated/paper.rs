@@ -32,16 +32,14 @@ pub fn docs_create(
     client: &::client_trait::HttpClient,
     arg: &PaperDocCreateArgs,
     body: &[u8],
-) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocCreateUpdateResult>, PaperDocCreateError>> {
-    ::client_helpers::request_with_body(
+) -> ::Result<Result<PaperDocCreateUpdateResult, PaperDocCreateError>> {
+    ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
         ::client_trait::Style::Upload,
         "paper/docs/create",
         arg,
-        Some(body),
-        None,
-        None)
+        Some(body))
 }
 
 /// Exports and downloads Paper doc either as HTML or markdown.
@@ -195,16 +193,14 @@ pub fn docs_update(
     client: &::client_trait::HttpClient,
     arg: &PaperDocUpdateArgs,
     body: &[u8],
-) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocCreateUpdateResult>, PaperDocUpdateError>> {
-    ::client_helpers::request_with_body(
+) -> ::Result<Result<PaperDocCreateUpdateResult, PaperDocUpdateError>> {
+    ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
         ::client_trait::Style::Upload,
         "paper/docs/update",
         arg,
-        Some(body),
-        None,
-        None)
+        Some(body))
 }
 
 /// Allows an owner or editor to add users to a Paper doc or change their permissions using their
