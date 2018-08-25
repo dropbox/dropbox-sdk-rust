@@ -203,7 +203,7 @@ class RustBackend(RustHelperBackend):
                     [u'client: &::client_trait::HttpClient']
                         + ([] if arg_void else
                             [u'arg: &{}'.format(self._rust_type(fn.arg_data_type))])
-                        + [u'body: Vec<u8>'],
+                        + [u'body: &[u8]'],
                     u'::Result<Result<::client_trait::HttpRequestResult<{}>, {}>>'.format(
                         self._rust_type(fn.result_data_type),
                         self._rust_type(fn.error_data_type)),

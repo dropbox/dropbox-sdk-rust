@@ -104,7 +104,7 @@ impl HttpClient for HyperClient {
         style: Style,
         function: &str,
         params_json: String,
-        body: Option<Vec<u8>>,
+        body: Option<&[u8]>,
         range_start: Option<u64>,
         range_end: Option<u64>,
     ) -> super::Result<HttpRequestResultRaw> {

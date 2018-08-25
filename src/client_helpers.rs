@@ -74,7 +74,7 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
     style: Style,
     function: &str,
     params: &P,
-    body: Option<Vec<u8>>,
+    body: Option<&[u8]>,
     range_start: Option<u64>,
     range_end: Option<u64>,
 ) -> super::Result<Result<HttpRequestResult<T>, E>> {
@@ -148,7 +148,7 @@ pub fn request<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
     style: Style,
     function: &str,
     params: &P,
-    body: Option<Vec<u8>>,
+    body: Option<&[u8]>,
 ) -> super::Result<Result<T, E>> {
     request_with_body(client, endpoint, style, function, params, body, None, None)
         .map(|result| result.map(|HttpRequestResult { result, .. }| result))
