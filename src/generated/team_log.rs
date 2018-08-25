@@ -29,6 +29,7 @@ pub fn get_events(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team_log/get_events",
         arg,
         None)
@@ -43,6 +44,7 @@ pub fn get_events_continue(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team_log/get_events/continue",
         arg,
         None)

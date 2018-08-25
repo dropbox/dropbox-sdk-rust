@@ -71,6 +71,7 @@ impl<'de, T: DeserializeOwned> Deserialize<'de> for TopLevelError<T> {
 pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
     client: &HttpClient,
     endpoint: Endpoint,
+    style: Style,
     function: &str,
     params: &P,
     body: Option<Vec<u8>>,
@@ -78,7 +79,7 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
     range_end: Option<u64>,
 ) -> super::Result<Result<HttpRequestResult<T>, E>> {
     let params_json = serde_json::to_string(params)?;
-    let result = client.request(endpoint, function, params_json, body, range_start, range_end);
+    let result = client.request(endpoint, style, function, params_json, body, range_start, range_end);
     match result {
         Ok(HttpRequestResultRaw { result_json, content_length, body }) => {
             debug!("json: {}", result_json);
@@ -144,10 +145,11 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
 pub fn request<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
     client: &HttpClient,
     endpoint: Endpoint,
+    style: Style,
     function: &str,
     params: &P,
     body: Option<Vec<u8>>,
 ) -> super::Result<Result<T, E>> {
-    request_with_body(client, endpoint, function, params, body, None, None)
+    request_with_body(client, endpoint, style, function, params, body, None, None)
         .map(|result| result.map(|HttpRequestResult { result, .. }| result))
 }

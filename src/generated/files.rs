@@ -34,6 +34,7 @@ pub fn alpha_get_metadata(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/alpha/get_metadata",
         arg,
         None)
@@ -46,11 +47,12 @@ pub fn alpha_get_metadata(
 pub fn alpha_upload(
     client: &::client_trait::HttpClient,
     arg: &CommitInfoWithProperties,
-    body: Vec<u8>,
+    body: &[u8],
 ) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, UploadErrorWithProperties>> {
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Content,
+        ::client_trait::Style::Upload,
         "files/alpha/upload",
         arg,
         Some(body),
@@ -64,7 +66,13 @@ pub fn copy_v2(
     client: &::client_trait::HttpClient,
     arg: &RelocationArg,
 ) -> ::Result<Result<RelocationResult, RelocationError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/copy_v2", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/copy_v2",
+        arg,
+        None)
 }
 
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
@@ -73,7 +81,13 @@ pub fn copy(
     client: &::client_trait::HttpClient,
     arg: &RelocationArg,
 ) -> ::Result<Result<Metadata, RelocationError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/copy", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/copy",
+        arg,
+        None)
 }
 
 /// Copy multiple files or folders to different locations at once in the user's Dropbox. If
@@ -87,7 +101,13 @@ pub fn copy_batch(
     client: &::client_trait::HttpClient,
     arg: &RelocationBatchArg,
 ) -> ::Result<Result<RelocationBatchLaunch, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/copy_batch", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/copy_batch",
+        arg,
+        None)
 }
 
 /// Returns the status of an asynchronous job for [`copy_batch()`](copy_batch). If success, it
@@ -99,6 +119,7 @@ pub fn copy_batch_check(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/copy_batch/check",
         arg,
         None)
@@ -114,6 +135,7 @@ pub fn copy_reference_get(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/copy_reference/get",
         arg,
         None)
@@ -128,6 +150,7 @@ pub fn copy_reference_save(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/copy_reference/save",
         arg,
         None)
@@ -141,6 +164,7 @@ pub fn create_folder_v2(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/create_folder_v2",
         arg,
         None)
@@ -154,6 +178,7 @@ pub fn create_folder(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/create_folder",
         arg,
         None)
@@ -171,6 +196,7 @@ pub fn create_folder_batch(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/create_folder_batch",
         arg,
         None)
@@ -185,6 +211,7 @@ pub fn create_folder_batch_check(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/create_folder_batch/check",
         arg,
         None)
@@ -199,7 +226,13 @@ pub fn delete_v2(
     client: &::client_trait::HttpClient,
     arg: &DeleteArg,
 ) -> ::Result<Result<DeleteResult, DeleteError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/delete_v2", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/delete_v2",
+        arg,
+        None)
 }
 
 /// Delete the file or folder at a given path. If the path is a folder, all its contents will be
@@ -211,7 +244,13 @@ pub fn delete(
     client: &::client_trait::HttpClient,
     arg: &DeleteArg,
 ) -> ::Result<Result<Metadata, DeleteError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/delete", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/delete",
+        arg,
+        None)
 }
 
 /// Delete multiple files/folders at once. This route is asynchronous, which returns a job ID
@@ -224,6 +263,7 @@ pub fn delete_batch(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/delete_batch",
         arg,
         None)
@@ -238,6 +278,7 @@ pub fn delete_batch_check(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/delete_batch/check",
         arg,
         None)
@@ -253,6 +294,7 @@ pub fn download(
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Content,
+        ::client_trait::Style::Download,
         "files/download",
         arg,
         None,
@@ -272,6 +314,7 @@ pub fn download_zip(
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Content,
+        ::client_trait::Style::Download,
         "files/download_zip",
         arg,
         None,
@@ -287,6 +330,7 @@ pub fn get_metadata(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/get_metadata",
         arg,
         None)
@@ -305,6 +349,7 @@ pub fn get_preview(
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Content,
+        ::client_trait::Style::Download,
         "files/get_preview",
         arg,
         None,
@@ -322,6 +367,7 @@ pub fn get_temporary_link(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/get_temporary_link",
         arg,
         None)
@@ -370,6 +416,7 @@ pub fn get_temporary_upload_link(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/get_temporary_upload_link",
         arg,
         None)
@@ -387,6 +434,7 @@ pub fn get_thumbnail(
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Content,
+        ::client_trait::Style::Download,
         "files/get_thumbnail",
         arg,
         None,
@@ -404,6 +452,7 @@ pub fn get_thumbnail_batch(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Content,
+        ::client_trait::Style::Rpc,
         "files/get_thumbnail_batch",
         arg,
         None)
@@ -436,6 +485,7 @@ pub fn list_folder(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/list_folder",
         arg,
         None)
@@ -451,6 +501,7 @@ pub fn list_folder_continue(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/list_folder/continue",
         arg,
         None)
@@ -467,6 +518,7 @@ pub fn list_folder_get_latest_cursor(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/list_folder/get_latest_cursor",
         arg,
         None)
@@ -485,6 +537,7 @@ pub fn list_folder_longpoll(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Notify,
+        ::client_trait::Style::Rpc,
         "files/list_folder/longpoll",
         arg,
         None)
@@ -505,6 +558,7 @@ pub fn list_revisions(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/list_revisions",
         arg,
         None)
@@ -516,7 +570,13 @@ pub fn move_v2(
     client: &::client_trait::HttpClient,
     arg: &RelocationArg,
 ) -> ::Result<Result<RelocationResult, RelocationError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/move_v2", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/move_v2",
+        arg,
+        None)
 }
 
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
@@ -525,7 +585,13 @@ pub fn do_move(
     client: &::client_trait::HttpClient,
     arg: &RelocationArg,
 ) -> ::Result<Result<Metadata, RelocationError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/move", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/move",
+        arg,
+        None)
 }
 
 /// Move multiple files or folders to different locations at once in the user's Dropbox. This route
@@ -536,7 +602,13 @@ pub fn move_batch(
     client: &::client_trait::HttpClient,
     arg: &RelocationBatchArg,
 ) -> ::Result<Result<RelocationBatchLaunch, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/move_batch", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/move_batch",
+        arg,
+        None)
 }
 
 /// Returns the status of an asynchronous job for [`move_batch()`](move_batch). If success, it
@@ -548,6 +620,7 @@ pub fn move_batch_check(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/move_batch/check",
         arg,
         None)
@@ -562,6 +635,7 @@ pub fn permanently_delete(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/permanently_delete",
         arg,
         None)
@@ -574,6 +648,7 @@ pub fn properties_add(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/properties/add",
         arg,
         None)
@@ -586,6 +661,7 @@ pub fn properties_overwrite(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/properties/overwrite",
         arg,
         None)
@@ -598,6 +674,7 @@ pub fn properties_remove(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/properties/remove",
         arg,
         None)
@@ -610,6 +687,7 @@ pub fn properties_template_get(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/properties/template/get",
         arg,
         None)
@@ -621,6 +699,7 @@ pub fn properties_template_list(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/properties/template/list",
         &(),
         None)
@@ -633,6 +712,7 @@ pub fn properties_update(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/properties/update",
         arg,
         None)
@@ -643,7 +723,13 @@ pub fn restore(
     client: &::client_trait::HttpClient,
     arg: &RestoreArg,
 ) -> ::Result<Result<FileMetadata, RestoreError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/restore", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/restore",
+        arg,
+        None)
 }
 
 /// Save a specified URL into a file in user's Dropbox. If the given path already exists, the file
@@ -652,7 +738,13 @@ pub fn save_url(
     client: &::client_trait::HttpClient,
     arg: &SaveUrlArg,
 ) -> ::Result<Result<SaveUrlResult, SaveUrlError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/save_url", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/save_url",
+        arg,
+        None)
 }
 
 /// Check the status of a [`save_url()`](save_url) job.
@@ -663,6 +755,7 @@ pub fn save_url_check_job_status(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/save_url/check_job_status",
         arg,
         None)
@@ -674,7 +767,13 @@ pub fn search(
     client: &::client_trait::HttpClient,
     arg: &SearchArg,
 ) -> ::Result<Result<SearchResult, SearchError>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "files/search", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/search",
+        arg,
+        None)
 }
 
 /// Create a new file with the contents provided in the request. Do not use this to upload a file
@@ -686,11 +785,12 @@ pub fn search(
 pub fn upload(
     client: &::client_trait::HttpClient,
     arg: &CommitInfo,
-    body: Vec<u8>,
+    body: &[u8],
 ) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, UploadError>> {
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Content,
+        ::client_trait::Style::Upload,
         "files/upload",
         arg,
         Some(body),
@@ -707,11 +807,12 @@ pub fn upload(
 pub fn upload_session_append_v2(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionAppendArg,
-    body: Vec<u8>,
+    body: &[u8],
 ) -> ::Result<Result<::client_trait::HttpRequestResult<()>, UploadSessionLookupError>> {
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Content,
+        ::client_trait::Style::Upload,
         "files/upload_session/append_v2",
         arg,
         Some(body),
@@ -727,11 +828,12 @@ pub fn upload_session_append_v2(
 pub fn upload_session_append(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionCursor,
-    body: Vec<u8>,
+    body: &[u8],
 ) -> ::Result<Result<::client_trait::HttpRequestResult<()>, UploadSessionLookupError>> {
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Content,
+        ::client_trait::Style::Upload,
         "files/upload_session/append",
         arg,
         Some(body),
@@ -748,11 +850,12 @@ pub fn upload_session_append(
 pub fn upload_session_finish(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionFinishArg,
-    body: Vec<u8>,
+    body: &[u8],
 ) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, UploadSessionFinishError>> {
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Content,
+        ::client_trait::Style::Upload,
         "files/upload_session/finish",
         arg,
         Some(body),
@@ -785,6 +888,7 @@ pub fn upload_session_finish_batch(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/upload_session/finish_batch",
         arg,
         None)
@@ -800,6 +904,7 @@ pub fn upload_session_finish_batch_check(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "files/upload_session/finish_batch/check",
         arg,
         None)
@@ -821,11 +926,12 @@ pub fn upload_session_finish_batch_check(
 pub fn upload_session_start(
     client: &::client_trait::HttpClient,
     arg: &UploadSessionStartArg,
-    body: Vec<u8>,
+    body: &[u8],
 ) -> ::Result<Result<::client_trait::HttpRequestResult<UploadSessionStartResult>, ()>> {
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Content,
+        ::client_trait::Style::Upload,
         "files/upload_session/start",
         arg,
         Some(body),

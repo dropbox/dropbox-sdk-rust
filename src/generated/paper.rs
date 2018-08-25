@@ -21,6 +21,7 @@ pub fn docs_archive(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "paper/docs/archive",
         arg,
         None)
@@ -30,11 +31,12 @@ pub fn docs_archive(
 pub fn docs_create(
     client: &::client_trait::HttpClient,
     arg: &PaperDocCreateArgs,
-    body: Vec<u8>,
+    body: &[u8],
 ) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocCreateUpdateResult>, PaperDocCreateError>> {
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Upload,
         "paper/docs/create",
         arg,
         Some(body),
@@ -52,6 +54,7 @@ pub fn docs_download(
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Download,
         "paper/docs/download",
         arg,
         None,
@@ -69,6 +72,7 @@ pub fn docs_folder_users_list(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "paper/docs/folder_users/list",
         arg,
         None)
@@ -83,6 +87,7 @@ pub fn docs_folder_users_list_continue(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "paper/docs/folder_users/list/continue",
         arg,
         None)
@@ -101,6 +106,7 @@ pub fn docs_get_folder_info(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "paper/docs/get_folder_info",
         arg,
         None)
@@ -112,7 +118,13 @@ pub fn docs_list(
     client: &::client_trait::HttpClient,
     arg: &ListPaperDocsArgs,
 ) -> ::Result<Result<ListPaperDocsResponse, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "paper/docs/list", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "paper/docs/list",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from [`docs_list()`](docs_list), use this to paginate through
@@ -124,6 +136,7 @@ pub fn docs_list_continue(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "paper/docs/list/continue",
         arg,
         None)
@@ -139,6 +152,7 @@ pub fn docs_permanently_delete(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "paper/docs/permanently_delete",
         arg,
         None)
@@ -152,6 +166,7 @@ pub fn docs_sharing_policy_get(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "paper/docs/sharing_policy/get",
         arg,
         None)
@@ -169,6 +184,7 @@ pub fn docs_sharing_policy_set(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "paper/docs/sharing_policy/set",
         arg,
         None)
@@ -178,11 +194,12 @@ pub fn docs_sharing_policy_set(
 pub fn docs_update(
     client: &::client_trait::HttpClient,
     arg: &PaperDocUpdateArgs,
-    body: Vec<u8>,
+    body: &[u8],
 ) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocCreateUpdateResult>, PaperDocUpdateError>> {
     ::client_helpers::request_with_body(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Upload,
         "paper/docs/update",
         arg,
         Some(body),
@@ -201,6 +218,7 @@ pub fn docs_users_add(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "paper/docs/users/add",
         arg,
         None)
@@ -217,6 +235,7 @@ pub fn docs_users_list(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "paper/docs/users/list",
         arg,
         None)
@@ -231,6 +250,7 @@ pub fn docs_users_list_continue(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "paper/docs/users/list/continue",
         arg,
         None)
@@ -247,6 +267,7 @@ pub fn docs_users_remove(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "paper/docs/users/remove",
         arg,
         None)

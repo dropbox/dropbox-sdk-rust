@@ -21,6 +21,7 @@ pub fn create(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_requests/create",
         arg,
         None)
@@ -34,6 +35,7 @@ pub fn get(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_requests/get",
         arg,
         None)
@@ -47,6 +49,7 @@ pub fn list(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_requests/list",
         &(),
         None)
@@ -60,6 +63,7 @@ pub fn update(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_requests/update",
         arg,
         None)

@@ -4,7 +4,7 @@ use std::io::{self, Read};
 use std::str;
 
 use ::ErrorKind;
-use client_trait::{Endpoint, HttpClient, HttpRequestResultRaw};
+use client_trait::{Endpoint, Style, HttpClient, HttpRequestResultRaw};
 use hyper::{self, Url};
 use hyper::header::*;
 use hyper_native_tls;
@@ -101,6 +101,7 @@ impl HttpClient for HyperClient {
     fn request(
         &self,
         endpoint: Endpoint,
+        style: Style,
         function: &str,
         params_json: String,
         body: Option<Vec<u8>>,
@@ -132,18 +133,26 @@ impl HttpClient for HyperClient {
 
             // If the params are totally empt, don't send any arg header or body.
             if !params_json.is_empty() {
-                match endpoint {
-                    Endpoint::Api | Endpoint::Notify => {
+                match style {
+                    Style::Rpc => {
                         // Send params in the body.
                         headers.set(ContentType::json());
                         builder = builder.body(params_json.as_bytes());
                         assert_eq!(None, body);
                     },
-                    Endpoint::Content => {
+                    Style::Upload | Style::Download => {
                         // Send params in a header.
                         headers.set_raw("Dropbox-API-Arg", vec![params_json.clone().into_bytes()]);
-                        if let Some(body) = body.as_ref() {
-                            builder = builder.body(body.as_slice());
+                        if style == Style::Upload {
+                            headers.set(
+                                ContentType(
+                                    hyper::mime::Mime(
+                                        hyper::mime::TopLevel::Application,
+                                        hyper::mime::SubLevel::OctetStream,
+                                        vec![])));
+                        }
+                        if let Some(body) = body {
+                            builder = builder.body(body);
                         }
                     }
                 }
@@ -173,8 +182,8 @@ impl HttpClient for HyperClient {
                 return Err(ErrorKind::GeneralHttpError(code, status, json).into());
             }
 
-            return match endpoint {
-                Endpoint::Api | Endpoint::Notify => {
+            return match style {
+                Style::Rpc | Style::Upload => {
                     // Get the response from the body; return no body stream.
                     let mut s = String::new();
                     resp.read_to_string(&mut s)?;
@@ -184,7 +193,7 @@ impl HttpClient for HyperClient {
                         body: None,
                     })
                 },
-                Endpoint::Content => {
+                Style::Download => {
                     // Get the response from a header; return the body stream.
                     let s = match resp.headers.get_raw("Dropbox-API-Result") {
                         Some(values) => {

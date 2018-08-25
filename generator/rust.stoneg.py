@@ -149,6 +149,7 @@ class RustBackend(RustHelperBackend):
             endpoint = u'::client_trait::Endpoint::Notify'
         else:
             raise RuntimeError(u'ERROR: unsupported endpoint: {}'.format(host))
+
         if fn.version > 1:
             name_with_version = "{}_v{}".format(fn.name, fn.version)
         else:
@@ -170,6 +171,7 @@ class RustBackend(RustHelperBackend):
                     u'::client_helpers::request',
                     [u'client',
                         endpoint,
+                        u'::client_trait::Style::Rpc',
                         u'"{}/{}"'.format(ns, name_with_version),
                         u'&()' if arg_void else u'arg',
                         u'None'])
@@ -189,6 +191,7 @@ class RustBackend(RustHelperBackend):
                     u'::client_helpers::request_with_body',
                     [u'client',
                         endpoint,
+                        u'::client_trait::Style::Download',
                         u'"{}/{}"'.format(ns, name_with_version),
                         u'&()' if arg_void else u'arg',
                         u'None',
@@ -209,6 +212,7 @@ class RustBackend(RustHelperBackend):
                     u'::client_helpers::request_with_body',
                     [u'client',
                         endpoint,
+                        u'::client_trait::Style::Upload',
                         u'"{}/{}"'.format(ns, name_with_version),
                         u'&()' if arg_void else u'arg',
                         u'Some(body)',

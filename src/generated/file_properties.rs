@@ -54,6 +54,7 @@ pub fn properties_add(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/properties/add",
         arg,
         None)
@@ -71,6 +72,7 @@ pub fn properties_overwrite(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/properties/overwrite",
         arg,
         None)
@@ -89,6 +91,7 @@ pub fn properties_remove(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/properties/remove",
         arg,
         None)
@@ -102,6 +105,7 @@ pub fn properties_search(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/properties/search",
         arg,
         None)
@@ -116,6 +120,7 @@ pub fn properties_search_continue(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/properties/search/continue",
         arg,
         None)
@@ -134,6 +139,7 @@ pub fn properties_update(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/properties/update",
         arg,
         None)
@@ -148,6 +154,7 @@ pub fn templates_add_for_team(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/templates/add_for_team",
         arg,
         None)
@@ -162,6 +169,7 @@ pub fn templates_add_for_user(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/templates/add_for_user",
         arg,
         None)
@@ -175,6 +183,7 @@ pub fn templates_get_for_team(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/templates/get_for_team",
         arg,
         None)
@@ -189,6 +198,7 @@ pub fn templates_get_for_user(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/templates/get_for_user",
         arg,
         None)
@@ -202,6 +212,7 @@ pub fn templates_list_for_team(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/templates/list_for_team",
         &(),
         None)
@@ -216,6 +227,7 @@ pub fn templates_list_for_user(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/templates/list_for_user",
         &(),
         None)
@@ -231,6 +243,7 @@ pub fn templates_remove_for_team(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/templates/remove_for_team",
         arg,
         None)
@@ -246,6 +259,7 @@ pub fn templates_remove_for_user(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/templates/remove_for_user",
         arg,
         None)
@@ -260,6 +274,7 @@ pub fn templates_update_for_team(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/templates/update_for_team",
         arg,
         None)
@@ -275,6 +290,7 @@ pub fn templates_update_for_user(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "file_properties/templates/update_for_user",
         arg,
         None)

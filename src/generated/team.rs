@@ -21,6 +21,7 @@ pub fn devices_list_member_devices(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/devices/list_member_devices",
         arg,
         None)
@@ -34,6 +35,7 @@ pub fn devices_list_members_devices(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/devices/list_members_devices",
         arg,
         None)
@@ -47,6 +49,7 @@ pub fn devices_list_team_devices(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/devices/list_team_devices",
         arg,
         None)
@@ -60,6 +63,7 @@ pub fn devices_revoke_device_session(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/devices/revoke_device_session",
         arg,
         None)
@@ -73,6 +77,7 @@ pub fn devices_revoke_device_session_batch(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/devices/revoke_device_session_batch",
         arg,
         None)
@@ -88,6 +93,7 @@ pub fn features_get_values(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/features/get_values",
         arg,
         None)
@@ -95,7 +101,13 @@ pub fn features_get_values(
 
 /// Retrieves information about a team.
 pub fn get_info(client: &::client_trait::HttpClient) -> ::Result<Result<TeamGetInfoResult, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/get_info", &(), None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "team/get_info",
+        &(),
+        None)
 }
 
 /// Creates a new, empty group, with a requested name. Permission : Team member management.
@@ -106,6 +118,7 @@ pub fn groups_create(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/groups/create",
         arg,
         None)
@@ -121,6 +134,7 @@ pub fn groups_delete(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/groups/delete",
         arg,
         None)
@@ -136,6 +150,7 @@ pub fn groups_get_info(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/groups/get_info",
         arg,
         None)
@@ -153,6 +168,7 @@ pub fn groups_job_status_get(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/groups/job_status/get",
         arg,
         None)
@@ -163,7 +179,13 @@ pub fn groups_list(
     client: &::client_trait::HttpClient,
     arg: &GroupsListArg,
 ) -> ::Result<Result<GroupsListResult, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/groups/list", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "team/groups/list",
+        arg,
+        None)
 }
 
 /// Once a cursor has been retrieved from [`groups_list()`](groups_list), use this to paginate
@@ -175,6 +197,7 @@ pub fn groups_list_continue(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/groups/list/continue",
         arg,
         None)
@@ -190,6 +213,7 @@ pub fn groups_members_add(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/groups/members/add",
         arg,
         None)
@@ -203,6 +227,7 @@ pub fn groups_members_list(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/groups/members/list",
         arg,
         None)
@@ -217,6 +242,7 @@ pub fn groups_members_list_continue(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/groups/members/list/continue",
         arg,
         None)
@@ -234,6 +260,7 @@ pub fn groups_members_remove(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/groups/members/remove",
         arg,
         None)
@@ -247,6 +274,7 @@ pub fn groups_members_set_access_type(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/groups/members/set_access_type",
         arg,
         None)
@@ -260,6 +288,7 @@ pub fn groups_update(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/groups/update",
         arg,
         None)
@@ -274,6 +303,7 @@ pub fn linked_apps_list_member_linked_apps(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/linked_apps/list_member_linked_apps",
         arg,
         None)
@@ -288,6 +318,7 @@ pub fn linked_apps_list_members_linked_apps(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/linked_apps/list_members_linked_apps",
         arg,
         None)
@@ -302,6 +333,7 @@ pub fn linked_apps_list_team_linked_apps(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/linked_apps/list_team_linked_apps",
         arg,
         None)
@@ -315,6 +347,7 @@ pub fn linked_apps_revoke_linked_app(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/linked_apps/revoke_linked_app",
         arg,
         None)
@@ -328,6 +361,7 @@ pub fn linked_apps_revoke_linked_app_batch(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/linked_apps/revoke_linked_app_batch",
         arg,
         None)
@@ -341,6 +375,7 @@ pub fn member_space_limits_excluded_users_add(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/member_space_limits/excluded_users/add",
         arg,
         None)
@@ -354,6 +389,7 @@ pub fn member_space_limits_excluded_users_list(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/member_space_limits/excluded_users/list",
         arg,
         None)
@@ -367,6 +403,7 @@ pub fn member_space_limits_excluded_users_list_continue(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/member_space_limits/excluded_users/list/continue",
         arg,
         None)
@@ -380,6 +417,7 @@ pub fn member_space_limits_excluded_users_remove(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/member_space_limits/excluded_users/remove",
         arg,
         None)
@@ -394,6 +432,7 @@ pub fn member_space_limits_get_custom_quota(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/member_space_limits/get_custom_quota",
         arg,
         None)
@@ -407,6 +446,7 @@ pub fn member_space_limits_remove_custom_quota(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/member_space_limits/remove_custom_quota",
         arg,
         None)
@@ -421,6 +461,7 @@ pub fn member_space_limits_set_custom_quota(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/member_space_limits/set_custom_quota",
         arg,
         None)
@@ -439,7 +480,13 @@ pub fn members_add(
     client: &::client_trait::HttpClient,
     arg: &MembersAddArg,
 ) -> ::Result<Result<MembersAddLaunch, ()>> {
-    ::client_helpers::request(client, ::client_trait::Endpoint::Api, "team/members/add", arg, None)
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "team/members/add",
+        arg,
+        None)
 }
 
 /// Once an async_job_id is returned from [`members_add()`](members_add) , use this to poll the
@@ -451,6 +498,7 @@ pub fn members_add_job_status_get(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/add/job_status/get",
         arg,
         None)
@@ -466,6 +514,7 @@ pub fn members_get_info(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/get_info",
         arg,
         None)
@@ -479,6 +528,7 @@ pub fn members_list(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/list",
         arg,
         None)
@@ -493,6 +543,7 @@ pub fn members_list_continue(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/list/continue",
         arg,
         None)
@@ -509,6 +560,7 @@ pub fn members_move_former_member_files(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/move_former_member_files",
         arg,
         None)
@@ -524,6 +576,7 @@ pub fn members_move_former_member_files_job_status_check(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/move_former_member_files/job_status/check",
         arg,
         None)
@@ -538,6 +591,7 @@ pub fn members_recover(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/recover",
         arg,
         None)
@@ -560,6 +614,7 @@ pub fn members_remove(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/remove",
         arg,
         None)
@@ -574,6 +629,7 @@ pub fn members_remove_job_status_get(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/remove/job_status/get",
         arg,
         None)
@@ -589,6 +645,7 @@ pub fn members_send_welcome_email(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/send_welcome_email",
         arg,
         None)
@@ -602,6 +659,7 @@ pub fn members_set_admin_permissions(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/set_admin_permissions",
         arg,
         None)
@@ -615,6 +673,7 @@ pub fn members_set_profile(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/set_profile",
         arg,
         None)
@@ -629,6 +688,7 @@ pub fn members_suspend(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/suspend",
         arg,
         None)
@@ -643,6 +703,7 @@ pub fn members_unsuspend(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/members/unsuspend",
         arg,
         None)
@@ -659,6 +720,7 @@ pub fn namespaces_list(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/namespaces/list",
         arg,
         None)
@@ -673,6 +735,7 @@ pub fn namespaces_list_continue(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/namespaces/list/continue",
         arg,
         None)
@@ -685,6 +748,7 @@ pub fn properties_template_add(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/properties/template/add",
         arg,
         None)
@@ -697,6 +761,7 @@ pub fn properties_template_get(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/properties/template/get",
         arg,
         None)
@@ -708,6 +773,7 @@ pub fn properties_template_list(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/properties/template/list",
         &(),
         None)
@@ -720,6 +786,7 @@ pub fn properties_template_update(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/properties/template/update",
         arg,
         None)
@@ -733,6 +800,7 @@ pub fn reports_get_activity(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/reports/get_activity",
         arg,
         None)
@@ -746,6 +814,7 @@ pub fn reports_get_devices(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/reports/get_devices",
         arg,
         None)
@@ -759,6 +828,7 @@ pub fn reports_get_membership(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/reports/get_membership",
         arg,
         None)
@@ -772,6 +842,7 @@ pub fn reports_get_storage(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/reports/get_storage",
         arg,
         None)
@@ -785,6 +856,7 @@ pub fn team_folder_activate(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/team_folder/activate",
         arg,
         None)
@@ -799,6 +871,7 @@ pub fn team_folder_archive(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/team_folder/archive",
         arg,
         None)
@@ -813,6 +886,7 @@ pub fn team_folder_archive_check(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/team_folder/archive/check",
         arg,
         None)
@@ -826,6 +900,7 @@ pub fn team_folder_create(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/team_folder/create",
         arg,
         None)
@@ -839,6 +914,7 @@ pub fn team_folder_get_info(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/team_folder/get_info",
         arg,
         None)
@@ -852,6 +928,7 @@ pub fn team_folder_list(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/team_folder/list",
         arg,
         None)
@@ -866,6 +943,7 @@ pub fn team_folder_list_continue(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/team_folder/list/continue",
         arg,
         None)
@@ -879,6 +957,7 @@ pub fn team_folder_permanently_delete(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/team_folder/permanently_delete",
         arg,
         None)
@@ -892,6 +971,7 @@ pub fn team_folder_rename(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/team_folder/rename",
         arg,
         None)
@@ -906,6 +986,7 @@ pub fn team_folder_update_sync_settings(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/team_folder/update_sync_settings",
         arg,
         None)
@@ -919,6 +1000,7 @@ pub fn token_get_authenticated_admin(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "team/token/get_authenticated_admin",
         &(),
         None)

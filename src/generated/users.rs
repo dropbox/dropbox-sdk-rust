@@ -20,6 +20,7 @@ pub fn get_account(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "users/get_account",
         arg,
         None)
@@ -33,6 +34,7 @@ pub fn get_account_batch(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "users/get_account_batch",
         arg,
         None)
@@ -45,6 +47,7 @@ pub fn get_current_account(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "users/get_current_account",
         &(),
         None)
@@ -55,6 +58,7 @@ pub fn get_space_usage(client: &::client_trait::HttpClient) -> ::Result<Result<S
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "users/get_space_usage",
         &(),
         None)

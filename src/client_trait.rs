@@ -6,6 +6,7 @@ pub trait HttpClient {
     fn request(
         &self,
         endpoint: Endpoint,
+        style: Style,
         function: &str,
         params_json: String,
         body: Option<Vec<u8>>,
@@ -26,10 +27,18 @@ pub struct HttpRequestResult<T> {
     pub body: Option<Box<Read>>,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Endpoint {
     Api,
     Content,
     Notify,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum Style {
+    Rpc,
+    Upload,
+    Download,
 }
 
 impl Endpoint {

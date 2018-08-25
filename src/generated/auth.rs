@@ -16,6 +16,7 @@ pub fn token_from_oauth1(
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "auth/token/from_oauth1",
         arg,
         None)
@@ -26,6 +27,7 @@ pub fn token_revoke(client: &::client_trait::HttpClient) -> ::Result<Result<(), 
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
         "auth/token/revoke",
         &(),
         None)
