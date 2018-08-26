@@ -185,8 +185,10 @@ fn main() {
         }
     };
 
+    eprintln!("upload session ID is {}", session_id);
+
     let mut append_arg = files::UploadSessionAppendArg::new(
-        files::UploadSessionCursor::new(session_id, 0));
+        files::UploadSessionCursor::new(session_id.clone(), 0));
 
     // Upload this many bytes in each request. The smaller this is, the more HTTP request overhead
     // there will be. But the larger it is, the more bandwidth that is potentially wasted on
@@ -199,11 +201,12 @@ fn main() {
     let mut buf = Vec::with_capacity(BUF_SIZE);
     buf.resize(BUF_SIZE, 0);
 
-    let mut bytes_out = 0u64;
-    let mut consecutive_errors = 0;
+    let start_time = Instant::now();
     let mut last_time = Instant::now();
+    let mut bytes_out = 0u64;
+    let mut succeeded = false;
 
-    while consecutive_errors < 3 {
+    loop {
         let nread = source_file.read(&mut buf)
             .unwrap_or_else(|e| {
                 eprintln!("Read error: {}", e);
@@ -221,55 +224,74 @@ fn main() {
             break;
         }
 
-        match files::upload_session_append_v2(&client, &append_arg, &buf[0..nread]) {
-            Ok(Ok(())) => {}
-            Ok(Err(e)) => {
-                eprintln!("Error appending data: {}", e);
-                consecutive_errors += 1;
-                std::thread::sleep(std::time::Duration::from_secs(1));
-                continue;
+        succeeded = false;
+        let mut consecutive_errors = 0;
+        while consecutive_errors < 3 {
+            match files::upload_session_append_v2(&client, &append_arg, &buf[0..nread]) {
+                Ok(Ok(())) => {}
+                Ok(Err(e)) => {
+                    eprintln!("Error appending data: {}", e);
+                    consecutive_errors += 1;
+                    std::thread::sleep(std::time::Duration::from_secs(1));
+                    continue;
+                }
+                Err(e) => {
+                    eprintln!("Error appending data: {}", e);
+                    consecutive_errors += 1;
+                    std::thread::sleep(std::time::Duration::from_secs(1));
+                    continue;
+                }
             }
-            Err(e) => {
-                eprintln!("Error appending data: {}", e);
-                consecutive_errors += 1;
-                std::thread::sleep(std::time::Duration::from_secs(1));
-                continue;
-            }
+
+            succeeded = true;
+            break;
         }
 
-        consecutive_errors = 0;
+        if !succeeded {
+            break;
+        }
 
         bytes_out += nread as u64;
         append_arg.cursor.offset += nread as u64;
 
         let now = Instant::now();
         let time = now.duration_since(last_time);
+        let total_time = now.duration_since(start_time);
         let millis = time.as_secs() * 1000 + time.subsec_millis() as u64;
+        let total_millis = total_time.as_secs() * 1000 + total_time.subsec_millis() as u64;
         last_time = now;
 
-        eprintln!("{}Bytes uploaded, {}Bytes per second",
+        eprintln!("{:.01}%: {}Bytes uploaded, {}Bytes per second, {}Bytes per second average",
+                  bytes_out as f64 / source_len as f64 * 100.,
                   human_number(bytes_out),
-                  human_number(nread as u64 * 1000 / millis));
+                  human_number(nread as u64 * 1000 / millis),
+                  human_number(bytes_out * 1000 / total_millis));
     }
 
-    let finish = files::UploadSessionFinishArg::new(
-        append_arg.cursor,
-        files::CommitInfo::new(dest_path)
-            .with_client_modified(Some(iso8601(source_mtime))));
+    if !succeeded {
+        println!("Upload failed!");
+        println!("{} bytes uploaded before failure.", bytes_out);
+        println!("Session ID is {} if you wish to attempt to resume.", session_id);
+    } else {
+        let finish = files::UploadSessionFinishArg::new(
+            append_arg.cursor,
+            files::CommitInfo::new(dest_path)
+                .with_client_modified(Some(iso8601(source_mtime))));
 
-    // TODO: Maybe should put a retry loop around this as well?
-    match files::upload_session_finish(&client, &finish, &[]) {
-        Ok(Ok(filemetadata)) => {
-            println!("Upload succeeded!");
-            println!("{:#?}", filemetadata);
-        }
-        Ok(Err(e)) => {
-            eprintln!("Error finishing upload: {}", e);
-            std::process::exit(2);
-        }
-        Err(e) => {
-            eprintln!("Error finishing upload: {}", e);
-            std::process::exit(2);
+        // TODO: Maybe should put a retry loop around this as well?
+        match files::upload_session_finish(&client, &finish, &[]) {
+            Ok(Ok(filemetadata)) => {
+                println!("Upload succeeded!");
+                println!("{:#?}", filemetadata);
+            }
+            Ok(Err(e)) => {
+                eprintln!("Error finishing upload: {}", e);
+                std::process::exit(2);
+            }
+            Err(e) => {
+                eprintln!("Error finishing upload: {}", e);
+                std::process::exit(2);
+            }
         }
     }
 }
