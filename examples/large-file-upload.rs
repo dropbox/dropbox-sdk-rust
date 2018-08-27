@@ -8,7 +8,7 @@ extern crate env_logger;
 use std::fs::File;
 use std::path::PathBuf;
 use std::io::{self, Read, Write};
-use std::time::{Instant, SystemTime};
+use std::time::{Duration, Instant, SystemTime};
 
 fn prompt(msg: &str) -> String {
     eprint!("{}: ", msg);
@@ -232,13 +232,13 @@ fn main() {
                 Ok(Err(e)) => {
                     eprintln!("Error appending data: {}", e);
                     consecutive_errors += 1;
-                    std::thread::sleep(std::time::Duration::from_secs(1));
+                    std::thread::sleep(Duration::from_secs(1));
                     continue;
                 }
                 Err(e) => {
                     eprintln!("Error appending data: {}", e);
                     consecutive_errors += 1;
-                    std::thread::sleep(std::time::Duration::from_secs(1));
+                    std::thread::sleep(Duration::from_secs(1));
                     continue;
                 }
             }
@@ -273,25 +273,39 @@ fn main() {
         println!("{} bytes uploaded before failure.", bytes_out);
         println!("Session ID is {} if you wish to attempt to resume.", session_id);
     } else {
+        eprintln!("committing...");
         let finish = files::UploadSessionFinishArg::new(
             append_arg.cursor,
             files::CommitInfo::new(dest_path)
                 .with_client_modified(Some(iso8601(source_mtime))));
 
-        // TODO: Maybe should put a retry loop around this as well?
-        match files::upload_session_finish(&client, &finish, &[]) {
-            Ok(Ok(filemetadata)) => {
-                println!("Upload succeeded!");
-                println!("{:#?}", filemetadata);
+        let mut retry = 0;
+        succeeded = false;
+        while retry < 3 {
+            match files::upload_session_finish(&client, &finish, &[]) {
+                Ok(Ok(filemetadata)) => {
+                    println!("Upload succeeded!");
+                    println!("{:#?}", filemetadata);
+                }
+                Ok(Err(e)) => {
+                    eprintln!("Error finishing upload: {}", e);
+                    retry += 1;
+                    std::thread::sleep(Duration::from_secs(1));
+                    continue;
+                }
+                Err(e) => {
+                    eprintln!("Error finishing upload: {}", e);
+                    retry += 1;
+                    std::thread::sleep(Duration::from_secs(1));
+                    continue;
+                }
             }
-            Ok(Err(e)) => {
-                eprintln!("Error finishing upload: {}", e);
-                std::process::exit(2);
-            }
-            Err(e) => {
-                eprintln!("Error finishing upload: {}", e);
-                std::process::exit(2);
-            }
+            succeeded = true;
+            break;
         }
+    }
+
+    if !succeeded {
+        std::process::exit(2);
     }
 }
