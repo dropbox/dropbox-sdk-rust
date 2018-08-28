@@ -90,26 +90,43 @@ fn main() {
     if let Some(path) = download_path {
         eprintln!("downloading file {}", path);
         eprintln!();
-        let result = files::download(&client, &files::DownloadArg::new(path), None, None);
-        match result {
-            Ok(Ok(download_result)) => {
-                let mut body = download_result.body.expect("no body received!");
-                let mut buf = [0u8; 4096];
-                loop {
-                    match body.read(&mut buf) {
-                        Ok(0) => { break; }
-                        Ok(len) => {
-                            io::stdout().write_all(&buf[0..len]).unwrap();
+        let mut bytes_out = 0u64;
+        let download_arg = files::DownloadArg::new(path);
+        'download: loop {
+            let result = files::download(&client, &download_arg, Some(bytes_out), None);
+            match result {
+                Ok(Ok(download_result)) => {
+                    let mut body = download_result.body.expect("no body received!");
+                    let mut buf = [0u8; 1 * 1024 * 1024];
+                    loop {
+                        match body.read(&mut buf) {
+                            Ok(0) => {
+                                eprint!("\r");
+                                break 'download;
+                            }
+                            Ok(len) => {
+                                io::stdout().write_all(&buf[0..len]).unwrap();
+                                bytes_out += len as u64;
+                                if let Some(total) = download_result.content_length {
+                                    eprint!("\r{:.01}%",
+                                        bytes_out as f64 / total as f64 * 100.);
+                                } else {
+                                    eprint!("\r{} bytes", bytes_out);
+                                }
+                            }
+                            Err(e) => {
+                                eprintln!("Read error: {}", e);
+                                continue 'download; // do another request and resume
+                            }
                         }
-                        Err(e) => panic!("read error: {}", e)
                     }
+                },
+                Ok(Err(download_error)) => {
+                    eprintln!("Download error: {}", download_error);
+                },
+                Err(request_error) => {
+                    eprintln!("Error: {}", request_error);
                 }
-            },
-            Ok(Err(download_error)) => {
-                eprintln!("Download error: {}", download_error);
-            },
-            Err(request_error) => {
-                eprintln!("Error: {}", request_error);
             }
         }
     } else {
