@@ -1,5 +1,3 @@
-#![allow(unknown_lints)]
-
 use std::io::{self, Read};
 use std::str;
 
@@ -112,7 +110,6 @@ impl HttpClient for HyperClient {
         let url = Url::parse(endpoint.url()).unwrap().join(function).expect("invalid request URL");
         debug!("request for {:?}", url);
 
-        #[allow(never_loop)] // this is a false positive
         loop {
             let mut builder = self.client.post(url.clone());
 

@@ -39,7 +39,7 @@ fn human_number(n: u64) -> String {
 fn iso8601(t: SystemTime) -> String {
     let timestamp: i64 = match t.duration_since(SystemTime::UNIX_EPOCH) {
         Ok(duration) => duration.as_secs() as i64,
-        Err(e) => e.duration().as_secs() as i64 * -1,
+        Err(e) => -(e.duration().as_secs() as i64),
     };
 
     chrono::NaiveDateTime::from_timestamp(timestamp, 0 /* nsecs */)
@@ -257,8 +257,8 @@ fn main() {
         let now = Instant::now();
         let time = now.duration_since(last_time);
         let total_time = now.duration_since(start_time);
-        let millis = time.as_secs() * 1000 + time.subsec_millis() as u64;
-        let total_millis = total_time.as_secs() * 1000 + total_time.subsec_millis() as u64;
+        let millis = time.as_secs() * 1000 + u64::from(time.subsec_millis());
+        let total_millis = total_time.as_secs() * 1000 + u64::from(total_time.subsec_millis());
         last_time = now;
 
         eprintln!("{:.01}%: {}Bytes uploaded, {}Bytes per second, {}Bytes per second average",

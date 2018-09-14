@@ -68,6 +68,7 @@ impl<'de, T: DeserializeOwned> Deserialize<'de> for TopLevelError<T> {
 /// went horribly wrong (I/O errors, parse errors, server 500 errors, etc.). The inner result has
 /// an error if the server returned one for the request, otherwise it has the deserialized JSON
 /// response and the body stream (if any).
+#[cfg_attr(feature="cargo-clippy", allow(too_many_arguments))]
 pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
     client: &HttpClient,
     endpoint: Endpoint,

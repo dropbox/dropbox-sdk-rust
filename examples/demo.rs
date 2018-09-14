@@ -97,7 +97,7 @@ fn main() {
             match result {
                 Ok(Ok(download_result)) => {
                     let mut body = download_result.body.expect("no body received!");
-                    let mut buf = [0u8; 1 * 1024 * 1024];
+                    let mut buf = [0u8; 1024 * 1024];
                     loop {
                         match body.read(&mut buf) {
                             Ok(0) => {

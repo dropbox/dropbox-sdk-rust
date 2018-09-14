@@ -3,6 +3,7 @@
 use std::io::Read;
 
 pub trait HttpClient {
+    #[cfg_attr(feature="cargo-clippy", allow(too_many_arguments))]
     fn request(
         &self,
         endpoint: Endpoint,
@@ -42,8 +43,8 @@ pub enum Style {
 }
 
 impl Endpoint {
-    pub fn url(&self) -> &'static str {
-        match *self {
+    pub fn url(self) -> &'static str {
+        match self {
             Endpoint::Api => "https://api.dropboxapi.com/2/",
             Endpoint::Content => "https://content.dropboxapi.com/2/",
             Endpoint::Notify => "https://notify.dropboxapi.com/2/",
