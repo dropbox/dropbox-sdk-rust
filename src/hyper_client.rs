@@ -4,12 +4,14 @@ use std::str;
 use ::ErrorKind;
 use client_trait::{Endpoint, Style, HttpClient, HttpRequestResultRaw};
 use hyper::{self, Url};
-use hyper::header::*;
+use hyper::header::Headers;
+use hyper::header::{
+    Authorization, Bearer, ByteRangeSpec, Connection, ContentLength, ContentType, Range};
 use hyper_native_tls;
 use serde_json;
 use url::form_urlencoded::Serializer as UrlEncoder;
 
-const USER_AGENT: &str = "Dropbox-APIv2-Rust/0.1";
+const USER_AGENT: &str = concat!("Dropbox-APIv2-Rust/", env!("CARGO_PKG_VERSION"));
 
 pub struct HyperClient {
     client: hyper::client::Client,
@@ -38,7 +40,7 @@ impl HyperClient {
         let url = Url::parse("https://api.dropboxapi.com/oauth2/token").unwrap();
 
         let mut headers = Headers::new();
-        headers.set(UserAgent(USER_AGENT.to_owned()));
+        headers.set(UserAgent(USER_AGENT));
 
         // This endpoint wants parameters using URL-encoding instead of JSON.
         headers.set(ContentType("application/x-www-form-urlencoded".parse().unwrap()));
@@ -114,7 +116,7 @@ impl HttpClient for HyperClient {
             let mut builder = self.client.post(url.clone());
 
             let mut headers = Headers::new();
-            headers.set(UserAgent(USER_AGENT.to_owned()));
+            headers.set(UserAgent(USER_AGENT));
             headers.set(Authorization(Bearer { token: self.token.clone() }));
             headers.set(Connection::keep_alive());
 
@@ -330,5 +332,17 @@ impl<'a> Oauth2AuthorizeUrlBuilder<'a> {
             }
         }
         url
+    }
+}
+
+#[derive(Debug, Copy, Clone)]
+struct UserAgent(&'static str);
+impl hyper::header::Header for UserAgent {
+    fn header_name() -> &'static str { "User-Agent" }
+    fn parse_header(_: &[Vec<u8>]) -> Result<Self, hyper::Error> { unimplemented!() }
+}
+impl hyper::header::HeaderFormat for UserAgent {
+    fn fmt_header(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        f.write_str(self.0)
     }
 }
