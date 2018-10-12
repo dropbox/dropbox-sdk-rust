@@ -6,7 +6,7 @@ authors = ["Bill Fraser <wfraser@dropbox.com>"]
 [dependencies]
 error-chain = "0.12"
 hyper = { version = "0.10", optional = true }
-hyper-native-tls = { version = "0.2", optional = true }
+hyper-native-tls = { version = "0.3", optional = true }
 log = "0.4"
 serde = "1.0"
 serde_json = "1.0"
