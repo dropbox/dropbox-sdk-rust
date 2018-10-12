@@ -8,6 +8,66 @@
 ))]
 
 #[derive(Debug)]
+pub enum CameraUploadsPolicyState {
+    /// Background camera uploads are disabled.
+    Disabled,
+    /// Background camera uploads are allowed.
+    Enabled,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CameraUploadsPolicyState {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = CameraUploadsPolicyState;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CameraUploadsPolicyState structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => Ok(CameraUploadsPolicyState::Disabled),
+                    "enabled" => Ok(CameraUploadsPolicyState::Enabled),
+                    _ => Ok(CameraUploadsPolicyState::Other)
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("CameraUploadsPolicyState", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CameraUploadsPolicyState {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            CameraUploadsPolicyState::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("CameraUploadsPolicyState", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            CameraUploadsPolicyState::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("CameraUploadsPolicyState", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            CameraUploadsPolicyState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
 pub enum EmmState {
     /// Emm token is disabled.
     Disabled,

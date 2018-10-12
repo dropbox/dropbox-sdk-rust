@@ -355,8 +355,8 @@ pub fn get_preview(
 }
 
 /// Get a temporary link to stream content of a file. This link will expire in four hours and
-/// afterwards you will get 410 Gone. Content-Type of the link is determined automatically by the
-/// file's mime type.
+/// afterwards you will get 410 Gone. So this URL should not be used to display content directly in
+/// the browser.  Content-Type of the link is determined automatically by the file's mime type.
 pub fn get_temporary_link(
     client: &::client_trait::HttpClient,
     arg: &GetTemporaryLinkArg,
@@ -715,7 +715,7 @@ pub fn properties_update(
         None)
 }
 
-/// Restore a file to a specific revision.
+/// Restore a specific revision of a file to the given path.
 pub fn restore(
     client: &::client_trait::HttpClient,
     arg: &RestoreArg,
@@ -9764,9 +9764,9 @@ impl ::serde::ser::Serialize for RelocationResult {
 
 #[derive(Debug)]
 pub struct RestoreArg {
-    /// The path to the file you want to restore.
+    /// The path to save the restored file.
     pub path: WritePath,
-    /// The revision to restore for the file.
+    /// The revision to restore.
     pub rev: Rev,
 }
 
@@ -9869,7 +9869,7 @@ pub enum RestoreError {
     PathLookup(LookupError),
     /// An error occurs when trying to restore the file to that path.
     PathWrite(WriteError),
-    /// The revision is invalid. It may point to a different file.
+    /// The revision is invalid. It may not exist.
     InvalidRevision,
     Other,
 }
