@@ -3,15 +3,15 @@ digraph deps {
     auth -> { common };
     common;
     file_properties;
-    file_requests -> { files common };
-    files -> { users_common async common auth file_properties };
-    paper -> { sharing common };
+    file_requests -> { common files };
+    files -> { async auth common file_properties users_common };
+    paper -> { common sharing };
     seen_state;
-    sharing -> { files seen_state team_common common users_common async users };
-    team -> { files users file_properties team_policies team_common common users_common async };
+    sharing -> { async common files seen_state team_common users users_common };
+    team -> { async common file_properties files team_common team_policies users users_common };
     team_common -> { common };
-    team_log -> { files sharing file_requests team_policies team_common common team users_common async };
+    team_log -> { async common file_requests files sharing team team_common team_policies users_common };
     team_policies;
-    users -> { users_common team_common common team_policies };
+    users -> { common team_common team_policies users_common };
     users_common -> { common };
 }

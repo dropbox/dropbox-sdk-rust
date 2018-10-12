@@ -44,7 +44,7 @@ with open('namespaces.dot', 'w') as dot:
         else:
             dot.write('    {} -> {{ {} }};\n'.format(
                 module,
-                ' '.join(imports)))
+                ' '.join(sorted(imports))))
     dot.write('}\n')
 
 # super hacky toml reader and editor
