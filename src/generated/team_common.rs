@@ -41,10 +41,22 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupManagementType {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "user_managed" => Ok(GroupManagementType::UserManaged),
-                    "company_managed" => Ok(GroupManagementType::CompanyManaged),
-                    "system_managed" => Ok(GroupManagementType::SystemManaged),
-                    _ => Ok(GroupManagementType::Other)
+                    "user_managed" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GroupManagementType::UserManaged)
+                    }
+                    "company_managed" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GroupManagementType::CompanyManaged)
+                    }
+                    "system_managed" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GroupManagementType::SystemManaged)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GroupManagementType::Other)
+                    }
                 }
             }
         }
@@ -140,56 +152,58 @@ impl GroupSummary {
         mut map: V,
         optional: bool,
     ) -> Result<Option<GroupSummary>, V::Error> {
-        use serde::de;
         let mut field_group_name = None;
         let mut field_group_id = None;
         let mut field_group_management_type = None;
         let mut field_group_external_id = None;
         let mut field_member_count = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "group_name" => {
                     if field_group_name.is_some() {
-                        return Err(de::Error::duplicate_field("group_name"));
+                        return Err(::serde::de::Error::duplicate_field("group_name"));
                     }
                     field_group_name = Some(map.next_value()?);
                 }
                 "group_id" => {
                     if field_group_id.is_some() {
-                        return Err(de::Error::duplicate_field("group_id"));
+                        return Err(::serde::de::Error::duplicate_field("group_id"));
                     }
                     field_group_id = Some(map.next_value()?);
                 }
                 "group_management_type" => {
                     if field_group_management_type.is_some() {
-                        return Err(de::Error::duplicate_field("group_management_type"));
+                        return Err(::serde::de::Error::duplicate_field("group_management_type"));
                     }
                     field_group_management_type = Some(map.next_value()?);
                 }
                 "group_external_id" => {
                     if field_group_external_id.is_some() {
-                        return Err(de::Error::duplicate_field("group_external_id"));
+                        return Err(::serde::de::Error::duplicate_field("group_external_id"));
                     }
                     field_group_external_id = Some(map.next_value()?);
                 }
                 "member_count" => {
                     if field_member_count.is_some() {
-                        return Err(de::Error::duplicate_field("member_count"));
+                        return Err(::serde::de::Error::duplicate_field("member_count"));
                     }
                     field_member_count = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GROUP_SUMMARY_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = GroupSummary {
-            group_name: field_group_name.ok_or_else(|| de::Error::missing_field("group_name"))?,
-            group_id: field_group_id.ok_or_else(|| de::Error::missing_field("group_id"))?,
-            group_management_type: field_group_management_type.ok_or_else(|| de::Error::missing_field("group_management_type"))?,
+            group_name: field_group_name.ok_or_else(|| ::serde::de::Error::missing_field("group_name"))?,
+            group_id: field_group_id.ok_or_else(|| ::serde::de::Error::missing_field("group_id"))?,
+            group_management_type: field_group_management_type.ok_or_else(|| ::serde::de::Error::missing_field("group_management_type"))?,
             group_external_id: field_group_external_id,
             member_count: field_member_count,
         };
@@ -264,9 +278,18 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupType {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "team" => Ok(GroupType::Team),
-                    "user_managed" => Ok(GroupType::UserManaged),
-                    _ => Ok(GroupType::Other)
+                    "team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GroupType::Team)
+                    }
+                    "user_managed" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GroupType::UserManaged)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GroupType::Other)
+                    }
                 }
             }
         }
@@ -329,10 +352,22 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitType {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "off" => Ok(MemberSpaceLimitType::Off),
-                    "alert_only" => Ok(MemberSpaceLimitType::AlertOnly),
-                    "stop_sync" => Ok(MemberSpaceLimitType::StopSync),
-                    _ => Ok(MemberSpaceLimitType::Other)
+                    "off" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberSpaceLimitType::Off)
+                    }
+                    "alert_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberSpaceLimitType::AlertOnly)
+                    }
+                    "stop_sync" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberSpaceLimitType::StopSync)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberSpaceLimitType::Other)
+                    }
                 }
             }
         }
@@ -397,24 +432,26 @@ impl TimeRange {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TimeRange, V::Error> {
-        use serde::de;
         let mut field_start_time = None;
         let mut field_end_time = None;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "start_time" => {
                     if field_start_time.is_some() {
-                        return Err(de::Error::duplicate_field("start_time"));
+                        return Err(::serde::de::Error::duplicate_field("start_time"));
                     }
                     field_start_time = Some(map.next_value()?);
                 }
                 "end_time" => {
                     if field_end_time.is_some() {
-                        return Err(de::Error::duplicate_field("end_time"));
+                        return Err(::serde::de::Error::duplicate_field("end_time"));
                     }
                     field_end_time = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, TIME_RANGE_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         let result = TimeRange {

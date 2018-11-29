@@ -305,33 +305,35 @@ impl AddMember {
         mut map: V,
         optional: bool,
     ) -> Result<Option<AddMember>, V::Error> {
-        use serde::de;
         let mut field_member = None;
         let mut field_permission_level = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "member" => {
                     if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
+                        return Err(::serde::de::Error::duplicate_field("member"));
                     }
                     field_member = Some(map.next_value()?);
                 }
                 "permission_level" => {
                     if field_permission_level.is_some() {
-                        return Err(de::Error::duplicate_field("permission_level"));
+                        return Err(::serde::de::Error::duplicate_field("permission_level"));
                     }
                     field_permission_level = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, ADD_MEMBER_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = AddMember {
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
+            member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
             permission_level: field_permission_level.unwrap_or_else(|| PaperDocPermissionLevel::Edit),
         };
         Ok(Some(result))
@@ -425,48 +427,50 @@ impl AddPaperDocUser {
         mut map: V,
         optional: bool,
     ) -> Result<Option<AddPaperDocUser>, V::Error> {
-        use serde::de;
         let mut field_doc_id = None;
         let mut field_members = None;
         let mut field_custom_message = None;
         let mut field_quiet = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
                 "members" => {
                     if field_members.is_some() {
-                        return Err(de::Error::duplicate_field("members"));
+                        return Err(::serde::de::Error::duplicate_field("members"));
                     }
                     field_members = Some(map.next_value()?);
                 }
                 "custom_message" => {
                     if field_custom_message.is_some() {
-                        return Err(de::Error::duplicate_field("custom_message"));
+                        return Err(::serde::de::Error::duplicate_field("custom_message"));
                     }
                     field_custom_message = Some(map.next_value()?);
                 }
                 "quiet" => {
                     if field_quiet.is_some() {
-                        return Err(de::Error::duplicate_field("quiet"));
+                        return Err(::serde::de::Error::duplicate_field("quiet"));
                     }
                     field_quiet = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, ADD_PAPER_DOC_USER_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = AddPaperDocUser {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
+            doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
+            members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
             custom_message: field_custom_message,
             quiet: field_quiet.unwrap_or(false),
         };
@@ -545,34 +549,36 @@ impl AddPaperDocUserMemberResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<AddPaperDocUserMemberResult>, V::Error> {
-        use serde::de;
         let mut field_member = None;
         let mut field_result = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "member" => {
                     if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
+                        return Err(::serde::de::Error::duplicate_field("member"));
                     }
                     field_member = Some(map.next_value()?);
                 }
                 "result" => {
                     if field_result.is_some() {
-                        return Err(de::Error::duplicate_field("result"));
+                        return Err(::serde::de::Error::duplicate_field("result"));
                     }
                     field_result = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = AddPaperDocUserMemberResult {
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
-            result: field_result.ok_or_else(|| de::Error::missing_field("result"))?,
+            member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
+            result: field_result.ok_or_else(|| ::serde::de::Error::missing_field("result"))?,
         };
         Ok(Some(result))
     }
@@ -650,14 +656,38 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPaperDocUserResult {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "success" => Ok(AddPaperDocUserResult::Success),
-                    "unknown_error" => Ok(AddPaperDocUserResult::UnknownError),
-                    "sharing_outside_team_disabled" => Ok(AddPaperDocUserResult::SharingOutsideTeamDisabled),
-                    "daily_limit_reached" => Ok(AddPaperDocUserResult::DailyLimitReached),
-                    "user_is_owner" => Ok(AddPaperDocUserResult::UserIsOwner),
-                    "failed_user_data_retrieval" => Ok(AddPaperDocUserResult::FailedUserDataRetrieval),
-                    "permission_already_granted" => Ok(AddPaperDocUserResult::PermissionAlreadyGranted),
-                    _ => Ok(AddPaperDocUserResult::Other)
+                    "success" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPaperDocUserResult::Success)
+                    }
+                    "unknown_error" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPaperDocUserResult::UnknownError)
+                    }
+                    "sharing_outside_team_disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPaperDocUserResult::SharingOutsideTeamDisabled)
+                    }
+                    "daily_limit_reached" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPaperDocUserResult::DailyLimitReached)
+                    }
+                    "user_is_owner" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPaperDocUserResult::UserIsOwner)
+                    }
+                    "failed_user_data_retrieval" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPaperDocUserResult::FailedUserDataRetrieval)
+                    }
+                    "permission_already_granted" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPaperDocUserResult::PermissionAlreadyGranted)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPaperDocUserResult::Other)
+                    }
                 }
             }
         }
@@ -770,33 +800,35 @@ impl Cursor {
         mut map: V,
         optional: bool,
     ) -> Result<Option<Cursor>, V::Error> {
-        use serde::de;
         let mut field_value = None;
         let mut field_expiration = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "value" => {
                     if field_value.is_some() {
-                        return Err(de::Error::duplicate_field("value"));
+                        return Err(::serde::de::Error::duplicate_field("value"));
                     }
                     field_value = Some(map.next_value()?);
                 }
                 "expiration" => {
                     if field_expiration.is_some() {
-                        return Err(de::Error::duplicate_field("expiration"));
+                        return Err(::serde::de::Error::duplicate_field("expiration"));
                     }
                     field_expiration = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, CURSOR_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = Cursor {
-            value: field_value.ok_or_else(|| de::Error::missing_field("value"))?,
+            value: field_value.ok_or_else(|| ::serde::de::Error::missing_field("value"))?,
             expiration: field_expiration,
         };
         Ok(Some(result))
@@ -865,9 +897,18 @@ impl<'de> ::serde::de::Deserialize<'de> for DocLookupError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "insufficient_permissions" => Ok(DocLookupError::InsufficientPermissions),
-                    "doc_not_found" => Ok(DocLookupError::DocNotFound),
-                    _ => Ok(DocLookupError::Other)
+                    "insufficient_permissions" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(DocLookupError::InsufficientPermissions)
+                    }
+                    "doc_not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(DocLookupError::DocNotFound)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(DocLookupError::Other)
+                    }
                 }
             }
         }
@@ -941,10 +982,22 @@ impl<'de> ::serde::de::Deserialize<'de> for DocSubscriptionLevel {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "default" => Ok(DocSubscriptionLevel::Default),
-                    "ignore" => Ok(DocSubscriptionLevel::Ignore),
-                    "every" => Ok(DocSubscriptionLevel::Every),
-                    "no_email" => Ok(DocSubscriptionLevel::NoEmail),
+                    "default" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(DocSubscriptionLevel::Default)
+                    }
+                    "ignore" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(DocSubscriptionLevel::Ignore)
+                    }
+                    "every" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(DocSubscriptionLevel::Every)
+                    }
+                    "no_email" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(DocSubscriptionLevel::NoEmail)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -1016,9 +1069,18 @@ impl<'de> ::serde::de::Deserialize<'de> for ExportFormat {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "html" => Ok(ExportFormat::Html),
-                    "markdown" => Ok(ExportFormat::Markdown),
-                    _ => Ok(ExportFormat::Other)
+                    "html" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ExportFormat::Html)
+                    }
+                    "markdown" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ExportFormat::Markdown)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ExportFormat::Other)
+                    }
                 }
             }
         }
@@ -1083,34 +1145,36 @@ impl Folder {
         mut map: V,
         optional: bool,
     ) -> Result<Option<Folder>, V::Error> {
-        use serde::de;
         let mut field_id = None;
         let mut field_name = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "id" => {
                     if field_id.is_some() {
-                        return Err(de::Error::duplicate_field("id"));
+                        return Err(::serde::de::Error::duplicate_field("id"));
                     }
                     field_id = Some(map.next_value()?);
                 }
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, FOLDER_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = Folder {
-            id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
+            id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
         };
         Ok(Some(result))
     }
@@ -1180,8 +1244,14 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderSharingPolicyType {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "team" => Ok(FolderSharingPolicyType::Team),
-                    "invite_only" => Ok(FolderSharingPolicyType::InviteOnly),
+                    "team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderSharingPolicyType::Team)
+                    }
+                    "invite_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderSharingPolicyType::InviteOnly)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -1242,10 +1312,22 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderSubscriptionLevel {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "none" => Ok(FolderSubscriptionLevel::None),
-                    "activity_only" => Ok(FolderSubscriptionLevel::ActivityOnly),
-                    "daily_emails" => Ok(FolderSubscriptionLevel::DailyEmails),
-                    "weekly_emails" => Ok(FolderSubscriptionLevel::WeeklyEmails),
+                    "none" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderSubscriptionLevel::None)
+                    }
+                    "activity_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderSubscriptionLevel::ActivityOnly)
+                    }
+                    "daily_emails" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderSubscriptionLevel::DailyEmails)
+                    }
+                    "weekly_emails" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderSubscriptionLevel::WeeklyEmails)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -1316,24 +1398,26 @@ impl FoldersContainingPaperDoc {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FoldersContainingPaperDoc, V::Error> {
-        use serde::de;
         let mut field_folder_sharing_policy_type = None;
         let mut field_folders = None;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "folder_sharing_policy_type" => {
                     if field_folder_sharing_policy_type.is_some() {
-                        return Err(de::Error::duplicate_field("folder_sharing_policy_type"));
+                        return Err(::serde::de::Error::duplicate_field("folder_sharing_policy_type"));
                     }
                     field_folder_sharing_policy_type = Some(map.next_value()?);
                 }
                 "folders" => {
                     if field_folders.is_some() {
-                        return Err(de::Error::duplicate_field("folders"));
+                        return Err(::serde::de::Error::duplicate_field("folders"));
                     }
                     field_folders = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, FOLDERS_CONTAINING_PAPER_DOC_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         let result = FoldersContainingPaperDoc {
@@ -1411,10 +1495,22 @@ impl<'de> ::serde::de::Deserialize<'de> for ImportFormat {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "html" => Ok(ImportFormat::Html),
-                    "markdown" => Ok(ImportFormat::Markdown),
-                    "plain_text" => Ok(ImportFormat::PlainText),
-                    _ => Ok(ImportFormat::Other)
+                    "html" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ImportFormat::Html)
+                    }
+                    "markdown" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ImportFormat::Markdown)
+                    }
+                    "plain_text" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ImportFormat::PlainText)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ImportFormat::Other)
+                    }
                 }
             }
         }
@@ -1488,34 +1584,36 @@ impl InviteeInfoWithPermissionLevel {
         mut map: V,
         optional: bool,
     ) -> Result<Option<InviteeInfoWithPermissionLevel>, V::Error> {
-        use serde::de;
         let mut field_invitee = None;
         let mut field_permission_level = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "invitee" => {
                     if field_invitee.is_some() {
-                        return Err(de::Error::duplicate_field("invitee"));
+                        return Err(::serde::de::Error::duplicate_field("invitee"));
                     }
                     field_invitee = Some(map.next_value()?);
                 }
                 "permission_level" => {
                     if field_permission_level.is_some() {
-                        return Err(de::Error::duplicate_field("permission_level"));
+                        return Err(::serde::de::Error::duplicate_field("permission_level"));
                     }
                     field_permission_level = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = InviteeInfoWithPermissionLevel {
-            invitee: field_invitee.ok_or_else(|| de::Error::missing_field("invitee"))?,
-            permission_level: field_permission_level.ok_or_else(|| de::Error::missing_field("permission_level"))?,
+            invitee: field_invitee.ok_or_else(|| ::serde::de::Error::missing_field("invitee"))?,
+            permission_level: field_permission_level.ok_or_else(|| ::serde::de::Error::missing_field("permission_level"))?,
         };
         Ok(Some(result))
     }
@@ -1587,7 +1685,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ListDocsCursorError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(ListDocsCursorError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListDocsCursorError::Other)
+                    }
                 }
             }
         }
@@ -1659,38 +1760,40 @@ impl ListPaperDocsArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ListPaperDocsArgs, V::Error> {
-        use serde::de;
         let mut field_filter_by = None;
         let mut field_sort_by = None;
         let mut field_sort_order = None;
         let mut field_limit = None;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "filter_by" => {
                     if field_filter_by.is_some() {
-                        return Err(de::Error::duplicate_field("filter_by"));
+                        return Err(::serde::de::Error::duplicate_field("filter_by"));
                     }
                     field_filter_by = Some(map.next_value()?);
                 }
                 "sort_by" => {
                     if field_sort_by.is_some() {
-                        return Err(de::Error::duplicate_field("sort_by"));
+                        return Err(::serde::de::Error::duplicate_field("sort_by"));
                     }
                     field_sort_by = Some(map.next_value()?);
                 }
                 "sort_order" => {
                     if field_sort_order.is_some() {
-                        return Err(de::Error::duplicate_field("sort_order"));
+                        return Err(::serde::de::Error::duplicate_field("sort_order"));
                     }
                     field_sort_order = Some(map.next_value()?);
                 }
                 "limit" => {
                     if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
+                        return Err(::serde::de::Error::duplicate_field("limit"));
                     }
                     field_limit = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_PAPER_DOCS_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         let result = ListPaperDocsArgs {
@@ -1770,26 +1873,28 @@ impl ListPaperDocsContinueArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListPaperDocsContinueArgs>, V::Error> {
-        use serde::de;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListPaperDocsContinueArgs {
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
         };
         Ok(Some(result))
     }
@@ -1856,9 +1961,18 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsFilterBy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "docs_accessed" => Ok(ListPaperDocsFilterBy::DocsAccessed),
-                    "docs_created" => Ok(ListPaperDocsFilterBy::DocsCreated),
-                    _ => Ok(ListPaperDocsFilterBy::Other)
+                    "docs_accessed" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListPaperDocsFilterBy::DocsAccessed)
+                    }
+                    "docs_created" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListPaperDocsFilterBy::DocsCreated)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListPaperDocsFilterBy::Other)
+                    }
                 }
             }
         }
@@ -1933,42 +2047,44 @@ impl ListPaperDocsResponse {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListPaperDocsResponse>, V::Error> {
-        use serde::de;
         let mut field_doc_ids = None;
         let mut field_cursor = None;
         let mut field_has_more = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "doc_ids" => {
                     if field_doc_ids.is_some() {
-                        return Err(de::Error::duplicate_field("doc_ids"));
+                        return Err(::serde::de::Error::duplicate_field("doc_ids"));
                     }
                     field_doc_ids = Some(map.next_value()?);
                 }
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
                 "has_more" => {
                     if field_has_more.is_some() {
-                        return Err(de::Error::duplicate_field("has_more"));
+                        return Err(::serde::de::Error::duplicate_field("has_more"));
                     }
                     field_has_more = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_PAPER_DOCS_RESPONSE_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListPaperDocsResponse {
-            doc_ids: field_doc_ids.ok_or_else(|| de::Error::missing_field("doc_ids"))?,
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-            has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
+            doc_ids: field_doc_ids.ok_or_else(|| ::serde::de::Error::missing_field("doc_ids"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
+            has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
         };
         Ok(Some(result))
     }
@@ -2039,10 +2155,22 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsSortBy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "accessed" => Ok(ListPaperDocsSortBy::Accessed),
-                    "modified" => Ok(ListPaperDocsSortBy::Modified),
-                    "created" => Ok(ListPaperDocsSortBy::Created),
-                    _ => Ok(ListPaperDocsSortBy::Other)
+                    "accessed" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListPaperDocsSortBy::Accessed)
+                    }
+                    "modified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListPaperDocsSortBy::Modified)
+                    }
+                    "created" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListPaperDocsSortBy::Created)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListPaperDocsSortBy::Other)
+                    }
                 }
             }
         }
@@ -2107,9 +2235,18 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsSortOrder {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "ascending" => Ok(ListPaperDocsSortOrder::Ascending),
-                    "descending" => Ok(ListPaperDocsSortOrder::Descending),
-                    _ => Ok(ListPaperDocsSortOrder::Other)
+                    "ascending" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListPaperDocsSortOrder::Ascending)
+                    }
+                    "descending" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListPaperDocsSortOrder::Descending)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListPaperDocsSortOrder::Other)
+                    }
                 }
             }
         }
@@ -2168,8 +2305,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ListUsersCursorError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "insufficient_permissions" => Ok(ListUsersCursorError::InsufficientPermissions),
-                    "doc_not_found" => Ok(ListUsersCursorError::DocNotFound),
+                    "insufficient_permissions" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListUsersCursorError::InsufficientPermissions)
+                    }
+                    "doc_not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListUsersCursorError::DocNotFound)
+                    }
                     "cursor_error" => {
                         match map.next_key()? {
                             Some("cursor_error") => Ok(ListUsersCursorError::CursorError(map.next_value()?)),
@@ -2177,7 +2320,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ListUsersCursorError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(ListUsersCursorError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListUsersCursorError::Other)
+                    }
                 }
             }
         }
@@ -2267,33 +2413,35 @@ impl ListUsersOnFolderArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListUsersOnFolderArgs>, V::Error> {
-        use serde::de;
         let mut field_doc_id = None;
         let mut field_limit = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
                 "limit" => {
                     if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
+                        return Err(::serde::de::Error::duplicate_field("limit"));
                     }
                     field_limit = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_FOLDER_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListUsersOnFolderArgs {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
+            doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
             limit: field_limit.unwrap_or(1000),
         };
         Ok(Some(result))
@@ -2370,34 +2518,36 @@ impl ListUsersOnFolderContinueArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListUsersOnFolderContinueArgs>, V::Error> {
-        use serde::de;
         let mut field_doc_id = None;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListUsersOnFolderContinueArgs {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
         };
         Ok(Some(result))
     }
@@ -2489,50 +2639,52 @@ impl ListUsersOnFolderResponse {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListUsersOnFolderResponse>, V::Error> {
-        use serde::de;
         let mut field_invitees = None;
         let mut field_users = None;
         let mut field_cursor = None;
         let mut field_has_more = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "invitees" => {
                     if field_invitees.is_some() {
-                        return Err(de::Error::duplicate_field("invitees"));
+                        return Err(::serde::de::Error::duplicate_field("invitees"));
                     }
                     field_invitees = Some(map.next_value()?);
                 }
                 "users" => {
                     if field_users.is_some() {
-                        return Err(de::Error::duplicate_field("users"));
+                        return Err(::serde::de::Error::duplicate_field("users"));
                     }
                     field_users = Some(map.next_value()?);
                 }
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
                 "has_more" => {
                     if field_has_more.is_some() {
-                        return Err(de::Error::duplicate_field("has_more"));
+                        return Err(::serde::de::Error::duplicate_field("has_more"));
                     }
                     field_has_more = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_FOLDER_RESPONSE_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListUsersOnFolderResponse {
-            invitees: field_invitees.ok_or_else(|| de::Error::missing_field("invitees"))?,
-            users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-            has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
+            invitees: field_invitees.ok_or_else(|| ::serde::de::Error::missing_field("invitees"))?,
+            users: field_users.ok_or_else(|| ::serde::de::Error::missing_field("users"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
+            has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
         };
         Ok(Some(result))
     }
@@ -2623,40 +2775,42 @@ impl ListUsersOnPaperDocArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListUsersOnPaperDocArgs>, V::Error> {
-        use serde::de;
         let mut field_doc_id = None;
         let mut field_limit = None;
         let mut field_filter_by = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
                 "limit" => {
                     if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
+                        return Err(::serde::de::Error::duplicate_field("limit"));
                     }
                     field_limit = Some(map.next_value()?);
                 }
                 "filter_by" => {
                     if field_filter_by.is_some() {
-                        return Err(de::Error::duplicate_field("filter_by"));
+                        return Err(::serde::de::Error::duplicate_field("filter_by"));
                     }
                     field_filter_by = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListUsersOnPaperDocArgs {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
+            doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
             limit: field_limit.unwrap_or(1000),
             filter_by: field_filter_by.unwrap_or_else(|| UserOnPaperDocFilter::Shared),
         };
@@ -2734,34 +2888,36 @@ impl ListUsersOnPaperDocContinueArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListUsersOnPaperDocContinueArgs>, V::Error> {
-        use serde::de;
         let mut field_doc_id = None;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListUsersOnPaperDocContinueArgs {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
         };
         Ok(Some(result))
     }
@@ -2859,58 +3015,60 @@ impl ListUsersOnPaperDocResponse {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListUsersOnPaperDocResponse>, V::Error> {
-        use serde::de;
         let mut field_invitees = None;
         let mut field_users = None;
         let mut field_doc_owner = None;
         let mut field_cursor = None;
         let mut field_has_more = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "invitees" => {
                     if field_invitees.is_some() {
-                        return Err(de::Error::duplicate_field("invitees"));
+                        return Err(::serde::de::Error::duplicate_field("invitees"));
                     }
                     field_invitees = Some(map.next_value()?);
                 }
                 "users" => {
                     if field_users.is_some() {
-                        return Err(de::Error::duplicate_field("users"));
+                        return Err(::serde::de::Error::duplicate_field("users"));
                     }
                     field_users = Some(map.next_value()?);
                 }
                 "doc_owner" => {
                     if field_doc_owner.is_some() {
-                        return Err(de::Error::duplicate_field("doc_owner"));
+                        return Err(::serde::de::Error::duplicate_field("doc_owner"));
                     }
                     field_doc_owner = Some(map.next_value()?);
                 }
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
                 "has_more" => {
                     if field_has_more.is_some() {
-                        return Err(de::Error::duplicate_field("has_more"));
+                        return Err(::serde::de::Error::duplicate_field("has_more"));
                     }
                     field_has_more = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_USERS_ON_PAPER_DOC_RESPONSE_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListUsersOnPaperDocResponse {
-            invitees: field_invitees.ok_or_else(|| de::Error::missing_field("invitees"))?,
-            users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
-            doc_owner: field_doc_owner.ok_or_else(|| de::Error::missing_field("doc_owner"))?,
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
-            has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
+            invitees: field_invitees.ok_or_else(|| ::serde::de::Error::missing_field("invitees"))?,
+            users: field_users.ok_or_else(|| ::serde::de::Error::missing_field("users"))?,
+            doc_owner: field_doc_owner.ok_or_else(|| ::serde::de::Error::missing_field("doc_owner"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
+            has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
         };
         Ok(Some(result))
     }
@@ -2979,8 +3137,14 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperApiBaseError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "insufficient_permissions" => Ok(PaperApiBaseError::InsufficientPermissions),
-                    _ => Ok(PaperApiBaseError::Other)
+                    "insufficient_permissions" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperApiBaseError::InsufficientPermissions)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperApiBaseError::Other)
+                    }
                 }
             }
         }
@@ -3048,11 +3212,26 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperApiCursorError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "expired_cursor" => Ok(PaperApiCursorError::ExpiredCursor),
-                    "invalid_cursor" => Ok(PaperApiCursorError::InvalidCursor),
-                    "wrong_user_in_cursor" => Ok(PaperApiCursorError::WrongUserInCursor),
-                    "reset" => Ok(PaperApiCursorError::Reset),
-                    _ => Ok(PaperApiCursorError::Other)
+                    "expired_cursor" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperApiCursorError::ExpiredCursor)
+                    }
+                    "invalid_cursor" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperApiCursorError::InvalidCursor)
+                    }
+                    "wrong_user_in_cursor" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperApiCursorError::WrongUserInCursor)
+                    }
+                    "reset" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperApiCursorError::Reset)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperApiCursorError::Other)
+                    }
                 }
             }
         }
@@ -3148,33 +3327,35 @@ impl PaperDocCreateArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PaperDocCreateArgs>, V::Error> {
-        use serde::de;
         let mut field_import_format = None;
         let mut field_parent_folder_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "import_format" => {
                     if field_import_format.is_some() {
-                        return Err(de::Error::duplicate_field("import_format"));
+                        return Err(::serde::de::Error::duplicate_field("import_format"));
                     }
                     field_import_format = Some(map.next_value()?);
                 }
                 "parent_folder_id" => {
                     if field_parent_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("parent_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("parent_folder_id"));
                     }
                     field_parent_folder_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_CREATE_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PaperDocCreateArgs {
-            import_format: field_import_format.ok_or_else(|| de::Error::missing_field("import_format"))?,
+            import_format: field_import_format.ok_or_else(|| ::serde::de::Error::missing_field("import_format"))?,
             parent_folder_id: field_parent_folder_id,
         };
         Ok(Some(result))
@@ -3250,12 +3431,30 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocCreateError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "insufficient_permissions" => Ok(PaperDocCreateError::InsufficientPermissions),
-                    "content_malformed" => Ok(PaperDocCreateError::ContentMalformed),
-                    "folder_not_found" => Ok(PaperDocCreateError::FolderNotFound),
-                    "doc_length_exceeded" => Ok(PaperDocCreateError::DocLengthExceeded),
-                    "image_size_exceeded" => Ok(PaperDocCreateError::ImageSizeExceeded),
-                    _ => Ok(PaperDocCreateError::Other)
+                    "insufficient_permissions" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocCreateError::InsufficientPermissions)
+                    }
+                    "content_malformed" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocCreateError::ContentMalformed)
+                    }
+                    "folder_not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocCreateError::FolderNotFound)
+                    }
+                    "doc_length_exceeded" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocCreateError::DocLengthExceeded)
+                    }
+                    "image_size_exceeded" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocCreateError::ImageSizeExceeded)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocCreateError::Other)
+                    }
                 }
             }
         }
@@ -3356,42 +3555,44 @@ impl PaperDocCreateUpdateResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PaperDocCreateUpdateResult>, V::Error> {
-        use serde::de;
         let mut field_doc_id = None;
         let mut field_revision = None;
         let mut field_title = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
                 "revision" => {
                     if field_revision.is_some() {
-                        return Err(de::Error::duplicate_field("revision"));
+                        return Err(::serde::de::Error::duplicate_field("revision"));
                     }
                     field_revision = Some(map.next_value()?);
                 }
                 "title" => {
                     if field_title.is_some() {
-                        return Err(de::Error::duplicate_field("title"));
+                        return Err(::serde::de::Error::duplicate_field("title"));
                     }
                     field_title = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_CREATE_UPDATE_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PaperDocCreateUpdateResult {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            revision: field_revision.ok_or_else(|| de::Error::missing_field("revision"))?,
-            title: field_title.ok_or_else(|| de::Error::missing_field("title"))?,
+            doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
+            revision: field_revision.ok_or_else(|| ::serde::de::Error::missing_field("revision"))?,
+            title: field_title.ok_or_else(|| ::serde::de::Error::missing_field("title"))?,
         };
         Ok(Some(result))
     }
@@ -3465,34 +3666,36 @@ impl PaperDocExport {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PaperDocExport>, V::Error> {
-        use serde::de;
         let mut field_doc_id = None;
         let mut field_export_format = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
                 "export_format" => {
                     if field_export_format.is_some() {
-                        return Err(de::Error::duplicate_field("export_format"));
+                        return Err(::serde::de::Error::duplicate_field("export_format"));
                     }
                     field_export_format = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_EXPORT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PaperDocExport {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            export_format: field_export_format.ok_or_else(|| de::Error::missing_field("export_format"))?,
+            doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
+            export_format: field_export_format.ok_or_else(|| ::serde::de::Error::missing_field("export_format"))?,
         };
         Ok(Some(result))
     }
@@ -3575,50 +3778,52 @@ impl PaperDocExportResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PaperDocExportResult>, V::Error> {
-        use serde::de;
         let mut field_owner = None;
         let mut field_title = None;
         let mut field_revision = None;
         let mut field_mime_type = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "owner" => {
                     if field_owner.is_some() {
-                        return Err(de::Error::duplicate_field("owner"));
+                        return Err(::serde::de::Error::duplicate_field("owner"));
                     }
                     field_owner = Some(map.next_value()?);
                 }
                 "title" => {
                     if field_title.is_some() {
-                        return Err(de::Error::duplicate_field("title"));
+                        return Err(::serde::de::Error::duplicate_field("title"));
                     }
                     field_title = Some(map.next_value()?);
                 }
                 "revision" => {
                     if field_revision.is_some() {
-                        return Err(de::Error::duplicate_field("revision"));
+                        return Err(::serde::de::Error::duplicate_field("revision"));
                     }
                     field_revision = Some(map.next_value()?);
                 }
                 "mime_type" => {
                     if field_mime_type.is_some() {
-                        return Err(de::Error::duplicate_field("mime_type"));
+                        return Err(::serde::de::Error::duplicate_field("mime_type"));
                     }
                     field_mime_type = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_EXPORT_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PaperDocExportResult {
-            owner: field_owner.ok_or_else(|| de::Error::missing_field("owner"))?,
-            title: field_title.ok_or_else(|| de::Error::missing_field("title"))?,
-            revision: field_revision.ok_or_else(|| de::Error::missing_field("revision"))?,
-            mime_type: field_mime_type.ok_or_else(|| de::Error::missing_field("mime_type"))?,
+            owner: field_owner.ok_or_else(|| ::serde::de::Error::missing_field("owner"))?,
+            title: field_title.ok_or_else(|| ::serde::de::Error::missing_field("title"))?,
+            revision: field_revision.ok_or_else(|| ::serde::de::Error::missing_field("revision"))?,
+            mime_type: field_mime_type.ok_or_else(|| ::serde::de::Error::missing_field("mime_type"))?,
         };
         Ok(Some(result))
     }
@@ -3688,9 +3893,18 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocPermissionLevel {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "edit" => Ok(PaperDocPermissionLevel::Edit),
-                    "view_and_comment" => Ok(PaperDocPermissionLevel::ViewAndComment),
-                    _ => Ok(PaperDocPermissionLevel::Other)
+                    "edit" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocPermissionLevel::Edit)
+                    }
+                    "view_and_comment" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocPermissionLevel::ViewAndComment)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocPermissionLevel::Other)
+                    }
                 }
             }
         }
@@ -3754,34 +3968,36 @@ impl PaperDocSharingPolicy {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PaperDocSharingPolicy>, V::Error> {
-        use serde::de;
         let mut field_doc_id = None;
         let mut field_sharing_policy = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
                 "sharing_policy" => {
                     if field_sharing_policy.is_some() {
-                        return Err(de::Error::duplicate_field("sharing_policy"));
+                        return Err(::serde::de::Error::duplicate_field("sharing_policy"));
                     }
                     field_sharing_policy = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_SHARING_POLICY_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PaperDocSharingPolicy {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            sharing_policy: field_sharing_policy.ok_or_else(|| de::Error::missing_field("sharing_policy"))?,
+            doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
+            sharing_policy: field_sharing_policy.ok_or_else(|| ::serde::de::Error::missing_field("sharing_policy"))?,
         };
         Ok(Some(result))
     }
@@ -3869,50 +4085,52 @@ impl PaperDocUpdateArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PaperDocUpdateArgs>, V::Error> {
-        use serde::de;
         let mut field_doc_id = None;
         let mut field_doc_update_policy = None;
         let mut field_revision = None;
         let mut field_import_format = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
                 "doc_update_policy" => {
                     if field_doc_update_policy.is_some() {
-                        return Err(de::Error::duplicate_field("doc_update_policy"));
+                        return Err(::serde::de::Error::duplicate_field("doc_update_policy"));
                     }
                     field_doc_update_policy = Some(map.next_value()?);
                 }
                 "revision" => {
                     if field_revision.is_some() {
-                        return Err(de::Error::duplicate_field("revision"));
+                        return Err(::serde::de::Error::duplicate_field("revision"));
                     }
                     field_revision = Some(map.next_value()?);
                 }
                 "import_format" => {
                     if field_import_format.is_some() {
-                        return Err(de::Error::duplicate_field("import_format"));
+                        return Err(::serde::de::Error::duplicate_field("import_format"));
                     }
                     field_import_format = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PAPER_DOC_UPDATE_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PaperDocUpdateArgs {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            doc_update_policy: field_doc_update_policy.ok_or_else(|| de::Error::missing_field("doc_update_policy"))?,
-            revision: field_revision.ok_or_else(|| de::Error::missing_field("revision"))?,
-            import_format: field_import_format.ok_or_else(|| de::Error::missing_field("import_format"))?,
+            doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
+            doc_update_policy: field_doc_update_policy.ok_or_else(|| ::serde::de::Error::missing_field("doc_update_policy"))?,
+            revision: field_revision.ok_or_else(|| ::serde::de::Error::missing_field("revision"))?,
+            import_format: field_import_format.ok_or_else(|| ::serde::de::Error::missing_field("import_format"))?,
         };
         Ok(Some(result))
     }
@@ -3995,15 +4213,42 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdateError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "insufficient_permissions" => Ok(PaperDocUpdateError::InsufficientPermissions),
-                    "doc_not_found" => Ok(PaperDocUpdateError::DocNotFound),
-                    "content_malformed" => Ok(PaperDocUpdateError::ContentMalformed),
-                    "revision_mismatch" => Ok(PaperDocUpdateError::RevisionMismatch),
-                    "doc_length_exceeded" => Ok(PaperDocUpdateError::DocLengthExceeded),
-                    "image_size_exceeded" => Ok(PaperDocUpdateError::ImageSizeExceeded),
-                    "doc_archived" => Ok(PaperDocUpdateError::DocArchived),
-                    "doc_deleted" => Ok(PaperDocUpdateError::DocDeleted),
-                    _ => Ok(PaperDocUpdateError::Other)
+                    "insufficient_permissions" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdateError::InsufficientPermissions)
+                    }
+                    "doc_not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdateError::DocNotFound)
+                    }
+                    "content_malformed" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdateError::ContentMalformed)
+                    }
+                    "revision_mismatch" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdateError::RevisionMismatch)
+                    }
+                    "doc_length_exceeded" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdateError::DocLengthExceeded)
+                    }
+                    "image_size_exceeded" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdateError::ImageSizeExceeded)
+                    }
+                    "doc_archived" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdateError::DocArchived)
+                    }
+                    "doc_deleted" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdateError::DocDeleted)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdateError::Other)
+                    }
                 }
             }
         }
@@ -4117,10 +4362,22 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdatePolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "append" => Ok(PaperDocUpdatePolicy::Append),
-                    "prepend" => Ok(PaperDocUpdatePolicy::Prepend),
-                    "overwrite_all" => Ok(PaperDocUpdatePolicy::OverwriteAll),
-                    _ => Ok(PaperDocUpdatePolicy::Other)
+                    "append" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdatePolicy::Append)
+                    }
+                    "prepend" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdatePolicy::Prepend)
+                    }
+                    "overwrite_all" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdatePolicy::OverwriteAll)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDocUpdatePolicy::Other)
+                    }
                 }
             }
         }
@@ -4187,26 +4444,28 @@ impl RefPaperDoc {
         mut map: V,
         optional: bool,
     ) -> Result<Option<RefPaperDoc>, V::Error> {
-        use serde::de;
         let mut field_doc_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, REF_PAPER_DOC_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = RefPaperDoc {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
+            doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
         };
         Ok(Some(result))
     }
@@ -4280,34 +4539,36 @@ impl RemovePaperDocUser {
         mut map: V,
         optional: bool,
     ) -> Result<Option<RemovePaperDocUser>, V::Error> {
-        use serde::de;
         let mut field_doc_id = None;
         let mut field_member = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "doc_id" => {
                     if field_doc_id.is_some() {
-                        return Err(de::Error::duplicate_field("doc_id"));
+                        return Err(::serde::de::Error::duplicate_field("doc_id"));
                     }
                     field_doc_id = Some(map.next_value()?);
                 }
                 "member" => {
                     if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
+                        return Err(::serde::de::Error::duplicate_field("member"));
                     }
                     field_member = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, REMOVE_PAPER_DOC_USER_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = RemovePaperDocUser {
-            doc_id: field_doc_id.ok_or_else(|| de::Error::missing_field("doc_id"))?,
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
+            doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
+            member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
         };
         Ok(Some(result))
     }
@@ -4375,24 +4636,26 @@ impl SharingPolicy {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharingPolicy, V::Error> {
-        use serde::de;
         let mut field_public_sharing_policy = None;
         let mut field_team_sharing_policy = None;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "public_sharing_policy" => {
                     if field_public_sharing_policy.is_some() {
-                        return Err(de::Error::duplicate_field("public_sharing_policy"));
+                        return Err(::serde::de::Error::duplicate_field("public_sharing_policy"));
                     }
                     field_public_sharing_policy = Some(map.next_value()?);
                 }
                 "team_sharing_policy" => {
                     if field_team_sharing_policy.is_some() {
-                        return Err(de::Error::duplicate_field("team_sharing_policy"));
+                        return Err(::serde::de::Error::duplicate_field("team_sharing_policy"));
                     }
                     field_team_sharing_policy = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARING_POLICY_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         let result = SharingPolicy {
@@ -4468,10 +4731,22 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingPublicPolicyType {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "people_with_link_can_edit" => Ok(SharingPublicPolicyType::PeopleWithLinkCanEdit),
-                    "people_with_link_can_view_and_comment" => Ok(SharingPublicPolicyType::PeopleWithLinkCanViewAndComment),
-                    "invite_only" => Ok(SharingPublicPolicyType::InviteOnly),
-                    "disabled" => Ok(SharingPublicPolicyType::Disabled),
+                    "people_with_link_can_edit" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingPublicPolicyType::PeopleWithLinkCanEdit)
+                    }
+                    "people_with_link_can_view_and_comment" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingPublicPolicyType::PeopleWithLinkCanViewAndComment)
+                    }
+                    "invite_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingPublicPolicyType::InviteOnly)
+                    }
+                    "disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingPublicPolicyType::Disabled)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -4544,9 +4819,18 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingTeamPolicyType {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "people_with_link_can_edit" => Ok(SharingTeamPolicyType::PeopleWithLinkCanEdit),
-                    "people_with_link_can_view_and_comment" => Ok(SharingTeamPolicyType::PeopleWithLinkCanViewAndComment),
-                    "invite_only" => Ok(SharingTeamPolicyType::InviteOnly),
+                    "people_with_link_can_edit" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingTeamPolicyType::PeopleWithLinkCanEdit)
+                    }
+                    "people_with_link_can_view_and_comment" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingTeamPolicyType::PeopleWithLinkCanViewAndComment)
+                    }
+                    "invite_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingTeamPolicyType::InviteOnly)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -4616,34 +4900,36 @@ impl UserInfoWithPermissionLevel {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UserInfoWithPermissionLevel>, V::Error> {
-        use serde::de;
         let mut field_user = None;
         let mut field_permission_level = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "user" => {
                     if field_user.is_some() {
-                        return Err(de::Error::duplicate_field("user"));
+                        return Err(::serde::de::Error::duplicate_field("user"));
                     }
                     field_user = Some(map.next_value()?);
                 }
                 "permission_level" => {
                     if field_permission_level.is_some() {
-                        return Err(de::Error::duplicate_field("permission_level"));
+                        return Err(::serde::de::Error::duplicate_field("permission_level"));
                     }
                     field_permission_level = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, USER_INFO_WITH_PERMISSION_LEVEL_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UserInfoWithPermissionLevel {
-            user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
-            permission_level: field_permission_level.ok_or_else(|| de::Error::missing_field("permission_level"))?,
+            user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
+            permission_level: field_permission_level.ok_or_else(|| ::serde::de::Error::missing_field("permission_level"))?,
         };
         Ok(Some(result))
     }
@@ -4712,9 +4998,18 @@ impl<'de> ::serde::de::Deserialize<'de> for UserOnPaperDocFilter {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "visited" => Ok(UserOnPaperDocFilter::Visited),
-                    "shared" => Ok(UserOnPaperDocFilter::Shared),
-                    _ => Ok(UserOnPaperDocFilter::Other)
+                    "visited" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UserOnPaperDocFilter::Visited)
+                    }
+                    "shared" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UserOnPaperDocFilter::Shared)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UserOnPaperDocFilter::Other)
+                    }
                 }
             }
         }

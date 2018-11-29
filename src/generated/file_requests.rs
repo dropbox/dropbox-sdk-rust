@@ -120,48 +120,50 @@ impl CreateFileRequestArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<CreateFileRequestArgs>, V::Error> {
-        use serde::de;
         let mut field_title = None;
         let mut field_destination = None;
         let mut field_deadline = None;
         let mut field_open = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "title" => {
                     if field_title.is_some() {
-                        return Err(de::Error::duplicate_field("title"));
+                        return Err(::serde::de::Error::duplicate_field("title"));
                     }
                     field_title = Some(map.next_value()?);
                 }
                 "destination" => {
                     if field_destination.is_some() {
-                        return Err(de::Error::duplicate_field("destination"));
+                        return Err(::serde::de::Error::duplicate_field("destination"));
                     }
                     field_destination = Some(map.next_value()?);
                 }
                 "deadline" => {
                     if field_deadline.is_some() {
-                        return Err(de::Error::duplicate_field("deadline"));
+                        return Err(::serde::de::Error::duplicate_field("deadline"));
                     }
                     field_deadline = Some(map.next_value()?);
                 }
                 "open" => {
                     if field_open.is_some() {
-                        return Err(de::Error::duplicate_field("open"));
+                        return Err(::serde::de::Error::duplicate_field("open"));
                     }
                     field_open = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, CREATE_FILE_REQUEST_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = CreateFileRequestArgs {
-            title: field_title.ok_or_else(|| de::Error::missing_field("title"))?,
-            destination: field_destination.ok_or_else(|| de::Error::missing_field("destination"))?,
+            title: field_title.ok_or_else(|| ::serde::de::Error::missing_field("title"))?,
+            destination: field_destination.ok_or_else(|| ::serde::de::Error::missing_field("destination"))?,
             deadline: field_deadline,
             open: field_open.unwrap_or(true),
         };
@@ -253,16 +255,46 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFileRequestError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled_for_team" => Ok(CreateFileRequestError::DisabledForTeam),
-                    "not_found" => Ok(CreateFileRequestError::NotFound),
-                    "not_a_folder" => Ok(CreateFileRequestError::NotAFolder),
-                    "app_lacks_access" => Ok(CreateFileRequestError::AppLacksAccess),
-                    "no_permission" => Ok(CreateFileRequestError::NoPermission),
-                    "email_unverified" => Ok(CreateFileRequestError::EmailUnverified),
-                    "validation_error" => Ok(CreateFileRequestError::ValidationError),
-                    "invalid_location" => Ok(CreateFileRequestError::InvalidLocation),
-                    "rate_limit" => Ok(CreateFileRequestError::RateLimit),
-                    _ => Ok(CreateFileRequestError::Other)
+                    "disabled_for_team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateFileRequestError::DisabledForTeam)
+                    }
+                    "not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateFileRequestError::NotFound)
+                    }
+                    "not_a_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateFileRequestError::NotAFolder)
+                    }
+                    "app_lacks_access" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateFileRequestError::AppLacksAccess)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateFileRequestError::NoPermission)
+                    }
+                    "email_unverified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateFileRequestError::EmailUnverified)
+                    }
+                    "validation_error" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateFileRequestError::ValidationError)
+                    }
+                    "invalid_location" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateFileRequestError::InvalidLocation)
+                    }
+                    "rate_limit" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateFileRequestError::RateLimit)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateFileRequestError::Other)
+                    }
                 }
             }
         }
@@ -433,7 +465,6 @@ impl FileRequest {
         mut map: V,
         optional: bool,
     ) -> Result<Option<FileRequest>, V::Error> {
-        use serde::de;
         let mut field_id = None;
         let mut field_url = None;
         let mut field_title = None;
@@ -443,70 +474,73 @@ impl FileRequest {
         let mut field_destination = None;
         let mut field_deadline = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "id" => {
                     if field_id.is_some() {
-                        return Err(de::Error::duplicate_field("id"));
+                        return Err(::serde::de::Error::duplicate_field("id"));
                     }
                     field_id = Some(map.next_value()?);
                 }
                 "url" => {
                     if field_url.is_some() {
-                        return Err(de::Error::duplicate_field("url"));
+                        return Err(::serde::de::Error::duplicate_field("url"));
                     }
                     field_url = Some(map.next_value()?);
                 }
                 "title" => {
                     if field_title.is_some() {
-                        return Err(de::Error::duplicate_field("title"));
+                        return Err(::serde::de::Error::duplicate_field("title"));
                     }
                     field_title = Some(map.next_value()?);
                 }
                 "created" => {
                     if field_created.is_some() {
-                        return Err(de::Error::duplicate_field("created"));
+                        return Err(::serde::de::Error::duplicate_field("created"));
                     }
                     field_created = Some(map.next_value()?);
                 }
                 "is_open" => {
                     if field_is_open.is_some() {
-                        return Err(de::Error::duplicate_field("is_open"));
+                        return Err(::serde::de::Error::duplicate_field("is_open"));
                     }
                     field_is_open = Some(map.next_value()?);
                 }
                 "file_count" => {
                     if field_file_count.is_some() {
-                        return Err(de::Error::duplicate_field("file_count"));
+                        return Err(::serde::de::Error::duplicate_field("file_count"));
                     }
                     field_file_count = Some(map.next_value()?);
                 }
                 "destination" => {
                     if field_destination.is_some() {
-                        return Err(de::Error::duplicate_field("destination"));
+                        return Err(::serde::de::Error::duplicate_field("destination"));
                     }
                     field_destination = Some(map.next_value()?);
                 }
                 "deadline" => {
                     if field_deadline.is_some() {
-                        return Err(de::Error::duplicate_field("deadline"));
+                        return Err(::serde::de::Error::duplicate_field("deadline"));
                     }
                     field_deadline = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = FileRequest {
-            id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
-            url: field_url.ok_or_else(|| de::Error::missing_field("url"))?,
-            title: field_title.ok_or_else(|| de::Error::missing_field("title"))?,
-            created: field_created.ok_or_else(|| de::Error::missing_field("created"))?,
-            is_open: field_is_open.ok_or_else(|| de::Error::missing_field("is_open"))?,
-            file_count: field_file_count.ok_or_else(|| de::Error::missing_field("file_count"))?,
+            id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
+            url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
+            title: field_title.ok_or_else(|| ::serde::de::Error::missing_field("title"))?,
+            created: field_created.ok_or_else(|| ::serde::de::Error::missing_field("created"))?,
+            is_open: field_is_open.ok_or_else(|| ::serde::de::Error::missing_field("is_open"))?,
+            file_count: field_file_count.ok_or_else(|| ::serde::de::Error::missing_field("file_count"))?,
             destination: field_destination,
             deadline: field_deadline,
         };
@@ -594,33 +628,35 @@ impl FileRequestDeadline {
         mut map: V,
         optional: bool,
     ) -> Result<Option<FileRequestDeadline>, V::Error> {
-        use serde::de;
         let mut field_deadline = None;
         let mut field_allow_late_uploads = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "deadline" => {
                     if field_deadline.is_some() {
-                        return Err(de::Error::duplicate_field("deadline"));
+                        return Err(::serde::de::Error::duplicate_field("deadline"));
                     }
                     field_deadline = Some(map.next_value()?);
                 }
                 "allow_late_uploads" => {
                     if field_allow_late_uploads.is_some() {
-                        return Err(de::Error::duplicate_field("allow_late_uploads"));
+                        return Err(::serde::de::Error::duplicate_field("allow_late_uploads"));
                     }
                     field_allow_late_uploads = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, FILE_REQUEST_DEADLINE_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = FileRequestDeadline {
-            deadline: field_deadline.ok_or_else(|| de::Error::missing_field("deadline"))?,
+            deadline: field_deadline.ok_or_else(|| ::serde::de::Error::missing_field("deadline"))?,
             allow_late_uploads: field_allow_late_uploads,
         };
         Ok(Some(result))
@@ -704,14 +740,38 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled_for_team" => Ok(FileRequestError::DisabledForTeam),
-                    "not_found" => Ok(FileRequestError::NotFound),
-                    "not_a_folder" => Ok(FileRequestError::NotAFolder),
-                    "app_lacks_access" => Ok(FileRequestError::AppLacksAccess),
-                    "no_permission" => Ok(FileRequestError::NoPermission),
-                    "email_unverified" => Ok(FileRequestError::EmailUnverified),
-                    "validation_error" => Ok(FileRequestError::ValidationError),
-                    _ => Ok(FileRequestError::Other)
+                    "disabled_for_team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileRequestError::DisabledForTeam)
+                    }
+                    "not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileRequestError::NotFound)
+                    }
+                    "not_a_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileRequestError::NotAFolder)
+                    }
+                    "app_lacks_access" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileRequestError::AppLacksAccess)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileRequestError::NoPermission)
+                    }
+                    "email_unverified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileRequestError::EmailUnverified)
+                    }
+                    "validation_error" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileRequestError::ValidationError)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileRequestError::Other)
+                    }
                 }
             }
         }
@@ -815,8 +875,14 @@ impl<'de> ::serde::de::Deserialize<'de> for GeneralFileRequestsError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled_for_team" => Ok(GeneralFileRequestsError::DisabledForTeam),
-                    _ => Ok(GeneralFileRequestsError::Other)
+                    "disabled_for_team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GeneralFileRequestsError::DisabledForTeam)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GeneralFileRequestsError::Other)
+                    }
                 }
             }
         }
@@ -882,26 +948,28 @@ impl GetFileRequestArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<GetFileRequestArgs>, V::Error> {
-        use serde::de;
         let mut field_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "id" => {
                     if field_id.is_some() {
-                        return Err(de::Error::duplicate_field("id"));
+                        return Err(::serde::de::Error::duplicate_field("id"));
                     }
                     field_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GET_FILE_REQUEST_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = GetFileRequestArgs {
-            id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
+            id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
         };
         Ok(Some(result))
     }
@@ -983,14 +1051,38 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileRequestError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled_for_team" => Ok(GetFileRequestError::DisabledForTeam),
-                    "not_found" => Ok(GetFileRequestError::NotFound),
-                    "not_a_folder" => Ok(GetFileRequestError::NotAFolder),
-                    "app_lacks_access" => Ok(GetFileRequestError::AppLacksAccess),
-                    "no_permission" => Ok(GetFileRequestError::NoPermission),
-                    "email_unverified" => Ok(GetFileRequestError::EmailUnverified),
-                    "validation_error" => Ok(GetFileRequestError::ValidationError),
-                    _ => Ok(GetFileRequestError::Other)
+                    "disabled_for_team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetFileRequestError::DisabledForTeam)
+                    }
+                    "not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetFileRequestError::NotFound)
+                    }
+                    "not_a_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetFileRequestError::NotAFolder)
+                    }
+                    "app_lacks_access" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetFileRequestError::AppLacksAccess)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetFileRequestError::NoPermission)
+                    }
+                    "email_unverified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetFileRequestError::EmailUnverified)
+                    }
+                    "validation_error" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetFileRequestError::ValidationError)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetFileRequestError::Other)
+                    }
                 }
             }
         }
@@ -1096,12 +1188,30 @@ impl<'de> ::serde::de::Deserialize<'de> for GracePeriod {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "one_day" => Ok(GracePeriod::OneDay),
-                    "two_days" => Ok(GracePeriod::TwoDays),
-                    "seven_days" => Ok(GracePeriod::SevenDays),
-                    "thirty_days" => Ok(GracePeriod::ThirtyDays),
-                    "always" => Ok(GracePeriod::Always),
-                    _ => Ok(GracePeriod::Other)
+                    "one_day" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GracePeriod::OneDay)
+                    }
+                    "two_days" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GracePeriod::TwoDays)
+                    }
+                    "seven_days" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GracePeriod::SevenDays)
+                    }
+                    "thirty_days" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GracePeriod::ThirtyDays)
+                    }
+                    "always" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GracePeriod::Always)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GracePeriod::Other)
+                    }
                 }
             }
         }
@@ -1179,8 +1289,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileRequestsError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled_for_team" => Ok(ListFileRequestsError::DisabledForTeam),
-                    _ => Ok(ListFileRequestsError::Other)
+                    "disabled_for_team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListFileRequestsError::DisabledForTeam)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListFileRequestsError::Other)
+                    }
                 }
             }
         }
@@ -1247,26 +1363,28 @@ impl ListFileRequestsResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListFileRequestsResult>, V::Error> {
-        use serde::de;
         let mut field_file_requests = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "file_requests" => {
                     if field_file_requests.is_some() {
-                        return Err(de::Error::duplicate_field("file_requests"));
+                        return Err(::serde::de::Error::duplicate_field("file_requests"));
                     }
                     field_file_requests = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FILE_REQUESTS_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListFileRequestsResult {
-            file_requests: field_file_requests.ok_or_else(|| de::Error::missing_field("file_requests"))?,
+            file_requests: field_file_requests.ok_or_else(|| ::serde::de::Error::missing_field("file_requests"))?,
         };
         Ok(Some(result))
     }
@@ -1373,54 +1491,56 @@ impl UpdateFileRequestArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UpdateFileRequestArgs>, V::Error> {
-        use serde::de;
         let mut field_id = None;
         let mut field_title = None;
         let mut field_destination = None;
         let mut field_deadline = None;
         let mut field_open = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "id" => {
                     if field_id.is_some() {
-                        return Err(de::Error::duplicate_field("id"));
+                        return Err(::serde::de::Error::duplicate_field("id"));
                     }
                     field_id = Some(map.next_value()?);
                 }
                 "title" => {
                     if field_title.is_some() {
-                        return Err(de::Error::duplicate_field("title"));
+                        return Err(::serde::de::Error::duplicate_field("title"));
                     }
                     field_title = Some(map.next_value()?);
                 }
                 "destination" => {
                     if field_destination.is_some() {
-                        return Err(de::Error::duplicate_field("destination"));
+                        return Err(::serde::de::Error::duplicate_field("destination"));
                     }
                     field_destination = Some(map.next_value()?);
                 }
                 "deadline" => {
                     if field_deadline.is_some() {
-                        return Err(de::Error::duplicate_field("deadline"));
+                        return Err(::serde::de::Error::duplicate_field("deadline"));
                     }
                     field_deadline = Some(map.next_value()?);
                 }
                 "open" => {
                     if field_open.is_some() {
-                        return Err(de::Error::duplicate_field("open"));
+                        return Err(::serde::de::Error::duplicate_field("open"));
                     }
                     field_open = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, UPDATE_FILE_REQUEST_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UpdateFileRequestArgs {
-            id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
+            id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
             title: field_title,
             destination: field_destination,
             deadline: field_deadline.unwrap_or_else(|| UpdateFileRequestDeadline::NoUpdate),
@@ -1495,9 +1615,15 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestDeadline {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "no_update" => Ok(UpdateFileRequestDeadline::NoUpdate),
+                    "no_update" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFileRequestDeadline::NoUpdate)
+                    }
                     "update" => Ok(UpdateFileRequestDeadline::Update(FileRequestDeadline::internal_deserialize_opt(map, true)?)),
-                    _ => Ok(UpdateFileRequestDeadline::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFileRequestDeadline::Other)
+                    }
                 }
             }
         }
@@ -1574,14 +1700,38 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled_for_team" => Ok(UpdateFileRequestError::DisabledForTeam),
-                    "not_found" => Ok(UpdateFileRequestError::NotFound),
-                    "not_a_folder" => Ok(UpdateFileRequestError::NotAFolder),
-                    "app_lacks_access" => Ok(UpdateFileRequestError::AppLacksAccess),
-                    "no_permission" => Ok(UpdateFileRequestError::NoPermission),
-                    "email_unverified" => Ok(UpdateFileRequestError::EmailUnverified),
-                    "validation_error" => Ok(UpdateFileRequestError::ValidationError),
-                    _ => Ok(UpdateFileRequestError::Other)
+                    "disabled_for_team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFileRequestError::DisabledForTeam)
+                    }
+                    "not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFileRequestError::NotFound)
+                    }
+                    "not_a_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFileRequestError::NotAFolder)
+                    }
+                    "app_lacks_access" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFileRequestError::AppLacksAccess)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFileRequestError::NoPermission)
+                    }
+                    "email_unverified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFileRequestError::EmailUnverified)
+                    }
+                    "validation_error" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFileRequestError::ValidationError)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFileRequestError::Other)
+                    }
                 }
             }
         }

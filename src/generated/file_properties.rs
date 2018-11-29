@@ -326,34 +326,36 @@ impl AddPropertiesArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<AddPropertiesArg>, V::Error> {
-        use serde::de;
         let mut field_path = None;
         let mut field_property_groups = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
                 "property_groups" => {
                     if field_property_groups.is_some() {
-                        return Err(de::Error::duplicate_field("property_groups"));
+                        return Err(::serde::de::Error::duplicate_field("property_groups"));
                     }
                     field_property_groups = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, ADD_PROPERTIES_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = AddPropertiesArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            property_groups: field_property_groups.ok_or_else(|| de::Error::missing_field("property_groups"))?,
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+            property_groups: field_property_groups.ok_or_else(|| ::serde::de::Error::missing_field("property_groups"))?,
         };
         Ok(Some(result))
     }
@@ -437,7 +439,10 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPropertiesError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => Ok(AddPropertiesError::RestrictedContent),
+                    "restricted_content" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPropertiesError::RestrictedContent)
+                    }
                     "path" => {
                         match map.next_key()? {
                             Some("path") => Ok(AddPropertiesError::Path(map.next_value()?)),
@@ -445,11 +450,26 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPropertiesError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_folder" => Ok(AddPropertiesError::UnsupportedFolder),
-                    "property_field_too_large" => Ok(AddPropertiesError::PropertyFieldTooLarge),
-                    "does_not_fit_template" => Ok(AddPropertiesError::DoesNotFitTemplate),
-                    "property_group_already_exists" => Ok(AddPropertiesError::PropertyGroupAlreadyExists),
-                    _ => Ok(AddPropertiesError::Other)
+                    "unsupported_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPropertiesError::UnsupportedFolder)
+                    }
+                    "property_field_too_large" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPropertiesError::PropertyFieldTooLarge)
+                    }
+                    "does_not_fit_template" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPropertiesError::DoesNotFitTemplate)
+                    }
+                    "property_group_already_exists" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPropertiesError::PropertyGroupAlreadyExists)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddPropertiesError::Other)
+                    }
                 }
             }
         }
@@ -567,42 +587,44 @@ impl AddTemplateArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<AddTemplateArg>, V::Error> {
-        use serde::de;
         let mut field_name = None;
         let mut field_description = None;
         let mut field_fields = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
                 "description" => {
                     if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
+                        return Err(::serde::de::Error::duplicate_field("description"));
                     }
                     field_description = Some(map.next_value()?);
                 }
                 "fields" => {
                     if field_fields.is_some() {
-                        return Err(de::Error::duplicate_field("fields"));
+                        return Err(::serde::de::Error::duplicate_field("fields"));
                     }
                     field_fields = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, ADD_TEMPLATE_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = AddTemplateArg {
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
-            fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+            fields: field_fields.ok_or_else(|| ::serde::de::Error::missing_field("fields"))?,
         };
         Ok(Some(result))
     }
@@ -675,26 +697,28 @@ impl AddTemplateResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<AddTemplateResult>, V::Error> {
-        use serde::de;
         let mut field_template_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
+                        return Err(::serde::de::Error::duplicate_field("template_id"));
                     }
                     field_template_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, ADD_TEMPLATE_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = AddTemplateResult {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
+            template_id: field_template_id.ok_or_else(|| ::serde::de::Error::missing_field("template_id"))?,
         };
         Ok(Some(result))
     }
@@ -765,26 +789,28 @@ impl GetTemplateArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<GetTemplateArg>, V::Error> {
-        use serde::de;
         let mut field_template_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
+                        return Err(::serde::de::Error::duplicate_field("template_id"));
                     }
                     field_template_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GET_TEMPLATE_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = GetTemplateArg {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
+            template_id: field_template_id.ok_or_else(|| ::serde::de::Error::missing_field("template_id"))?,
         };
         Ok(Some(result))
     }
@@ -862,42 +888,44 @@ impl GetTemplateResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<GetTemplateResult>, V::Error> {
-        use serde::de;
         let mut field_name = None;
         let mut field_description = None;
         let mut field_fields = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
                 "description" => {
                     if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
+                        return Err(::serde::de::Error::duplicate_field("description"));
                     }
                     field_description = Some(map.next_value()?);
                 }
                 "fields" => {
                     if field_fields.is_some() {
-                        return Err(de::Error::duplicate_field("fields"));
+                        return Err(::serde::de::Error::duplicate_field("fields"));
                     }
                     field_fields = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GET_TEMPLATE_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = GetTemplateResult {
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
-            fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+            fields: field_fields.ok_or_else(|| ::serde::de::Error::missing_field("fields"))?,
         };
         Ok(Some(result))
     }
@@ -980,7 +1008,10 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => Ok(InvalidPropertyGroupError::RestrictedContent),
+                    "restricted_content" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(InvalidPropertyGroupError::RestrictedContent)
+                    }
                     "path" => {
                         match map.next_key()? {
                             Some("path") => Ok(InvalidPropertyGroupError::Path(map.next_value()?)),
@@ -988,10 +1019,22 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_folder" => Ok(InvalidPropertyGroupError::UnsupportedFolder),
-                    "property_field_too_large" => Ok(InvalidPropertyGroupError::PropertyFieldTooLarge),
-                    "does_not_fit_template" => Ok(InvalidPropertyGroupError::DoesNotFitTemplate),
-                    _ => Ok(InvalidPropertyGroupError::Other)
+                    "unsupported_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(InvalidPropertyGroupError::UnsupportedFolder)
+                    }
+                    "property_field_too_large" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(InvalidPropertyGroupError::PropertyFieldTooLarge)
+                    }
+                    "does_not_fit_template" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(InvalidPropertyGroupError::DoesNotFitTemplate)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(InvalidPropertyGroupError::Other)
+                    }
                 }
             }
         }
@@ -1095,26 +1138,28 @@ impl ListTemplateResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListTemplateResult>, V::Error> {
-        use serde::de;
         let mut field_template_ids = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "template_ids" => {
                     if field_template_ids.is_some() {
-                        return Err(de::Error::duplicate_field("template_ids"));
+                        return Err(::serde::de::Error::duplicate_field("template_ids"));
                     }
                     field_template_ids = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_TEMPLATE_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListTemplateResult {
-            template_ids: field_template_ids.ok_or_else(|| de::Error::missing_field("template_ids"))?,
+            template_ids: field_template_ids.ok_or_else(|| ::serde::de::Error::missing_field("template_ids"))?,
         };
         Ok(Some(result))
     }
@@ -1180,8 +1225,14 @@ impl<'de> ::serde::de::Deserialize<'de> for LogicalOperator {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "or_operator" => Ok(LogicalOperator::OrOperator),
-                    _ => Ok(LogicalOperator::Other)
+                    "or_operator" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LogicalOperator::OrOperator)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LogicalOperator::Other)
+                    }
                 }
             }
         }
@@ -1230,8 +1281,14 @@ impl<'de> ::serde::de::Deserialize<'de> for LookUpPropertiesError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "property_group_not_found" => Ok(LookUpPropertiesError::PropertyGroupNotFound),
-                    _ => Ok(LookUpPropertiesError::Other)
+                    "property_group_not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LookUpPropertiesError::PropertyGroupNotFound)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LookUpPropertiesError::Other)
+                    }
                 }
             }
         }
@@ -1307,11 +1364,26 @@ impl<'de> ::serde::de::Deserialize<'de> for LookupError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "not_found" => Ok(LookupError::NotFound),
-                    "not_file" => Ok(LookupError::NotFile),
-                    "not_folder" => Ok(LookupError::NotFolder),
-                    "restricted_content" => Ok(LookupError::RestrictedContent),
-                    _ => Ok(LookupError::Other)
+                    "not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LookupError::NotFound)
+                    }
+                    "not_file" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LookupError::NotFile)
+                    }
+                    "not_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LookupError::NotFolder)
+                    }
+                    "restricted_content" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LookupError::RestrictedContent)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LookupError::Other)
+                    }
                 }
             }
         }
@@ -1419,12 +1491,30 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifyTemplateError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => Ok(ModifyTemplateError::RestrictedContent),
-                    "conflicting_property_names" => Ok(ModifyTemplateError::ConflictingPropertyNames),
-                    "too_many_properties" => Ok(ModifyTemplateError::TooManyProperties),
-                    "too_many_templates" => Ok(ModifyTemplateError::TooManyTemplates),
-                    "template_attribute_too_large" => Ok(ModifyTemplateError::TemplateAttributeTooLarge),
-                    _ => Ok(ModifyTemplateError::Other)
+                    "restricted_content" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ModifyTemplateError::RestrictedContent)
+                    }
+                    "conflicting_property_names" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ModifyTemplateError::ConflictingPropertyNames)
+                    }
+                    "too_many_properties" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ModifyTemplateError::TooManyProperties)
+                    }
+                    "too_many_templates" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ModifyTemplateError::TooManyTemplates)
+                    }
+                    "template_attribute_too_large" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ModifyTemplateError::TemplateAttributeTooLarge)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ModifyTemplateError::Other)
+                    }
                 }
             }
         }
@@ -1529,34 +1619,36 @@ impl OverwritePropertyGroupArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<OverwritePropertyGroupArg>, V::Error> {
-        use serde::de;
         let mut field_path = None;
         let mut field_property_groups = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
                 "property_groups" => {
                     if field_property_groups.is_some() {
-                        return Err(de::Error::duplicate_field("property_groups"));
+                        return Err(::serde::de::Error::duplicate_field("property_groups"));
                     }
                     field_property_groups = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, OVERWRITE_PROPERTY_GROUP_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = OverwritePropertyGroupArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            property_groups: field_property_groups.ok_or_else(|| de::Error::missing_field("property_groups"))?,
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+            property_groups: field_property_groups.ok_or_else(|| ::serde::de::Error::missing_field("property_groups"))?,
         };
         Ok(Some(result))
     }
@@ -1634,7 +1726,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => Ok(PropertiesError::RestrictedContent),
+                    "restricted_content" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PropertiesError::RestrictedContent)
+                    }
                     "path" => {
                         match map.next_key()? {
                             Some("path") => Ok(PropertiesError::Path(map.next_value()?)),
@@ -1642,8 +1737,14 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_folder" => Ok(PropertiesError::UnsupportedFolder),
-                    _ => Ok(PropertiesError::Other)
+                    "unsupported_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PropertiesError::UnsupportedFolder)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PropertiesError::Other)
+                    }
                 }
             }
         }
@@ -1740,33 +1841,35 @@ impl PropertiesSearchArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PropertiesSearchArg>, V::Error> {
-        use serde::de;
         let mut field_queries = None;
         let mut field_template_filter = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "queries" => {
                     if field_queries.is_some() {
-                        return Err(de::Error::duplicate_field("queries"));
+                        return Err(::serde::de::Error::duplicate_field("queries"));
                     }
                     field_queries = Some(map.next_value()?);
                 }
                 "template_filter" => {
                     if field_template_filter.is_some() {
-                        return Err(de::Error::duplicate_field("template_filter"));
+                        return Err(::serde::de::Error::duplicate_field("template_filter"));
                     }
                     field_template_filter = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PROPERTIES_SEARCH_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PropertiesSearchArg {
-            queries: field_queries.ok_or_else(|| de::Error::missing_field("queries"))?,
+            queries: field_queries.ok_or_else(|| ::serde::de::Error::missing_field("queries"))?,
             template_filter: field_template_filter.unwrap_or_else(|| TemplateFilter::FilterNone),
         };
         Ok(Some(result))
@@ -1838,26 +1941,28 @@ impl PropertiesSearchContinueArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PropertiesSearchContinueArg>, V::Error> {
-        use serde::de;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PROPERTIES_SEARCH_CONTINUE_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PropertiesSearchContinueArg {
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
         };
         Ok(Some(result))
     }
@@ -1923,8 +2028,14 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchContinueError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "reset" => Ok(PropertiesSearchContinueError::Reset),
-                    _ => Ok(PropertiesSearchContinueError::Other)
+                    "reset" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PropertiesSearchContinueError::Reset)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PropertiesSearchContinueError::Other)
+                    }
                 }
             }
         }
@@ -1991,7 +2102,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(PropertiesSearchError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PropertiesSearchError::Other)
+                    }
                 }
             }
         }
@@ -2074,50 +2188,52 @@ impl PropertiesSearchMatch {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PropertiesSearchMatch>, V::Error> {
-        use serde::de;
         let mut field_id = None;
         let mut field_path = None;
         let mut field_is_deleted = None;
         let mut field_property_groups = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "id" => {
                     if field_id.is_some() {
-                        return Err(de::Error::duplicate_field("id"));
+                        return Err(::serde::de::Error::duplicate_field("id"));
                     }
                     field_id = Some(map.next_value()?);
                 }
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
                 "is_deleted" => {
                     if field_is_deleted.is_some() {
-                        return Err(de::Error::duplicate_field("is_deleted"));
+                        return Err(::serde::de::Error::duplicate_field("is_deleted"));
                     }
                     field_is_deleted = Some(map.next_value()?);
                 }
                 "property_groups" => {
                     if field_property_groups.is_some() {
-                        return Err(de::Error::duplicate_field("property_groups"));
+                        return Err(::serde::de::Error::duplicate_field("property_groups"));
                     }
                     field_property_groups = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PROPERTIES_SEARCH_MATCH_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PropertiesSearchMatch {
-            id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            is_deleted: field_is_deleted.ok_or_else(|| de::Error::missing_field("is_deleted"))?,
-            property_groups: field_property_groups.ok_or_else(|| de::Error::missing_field("property_groups"))?,
+            id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+            is_deleted: field_is_deleted.ok_or_else(|| ::serde::de::Error::missing_field("is_deleted"))?,
+            property_groups: field_property_groups.ok_or_else(|| ::serde::de::Error::missing_field("property_groups"))?,
         };
         Ok(Some(result))
     }
@@ -2192,7 +2308,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchMode {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(PropertiesSearchMode::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PropertiesSearchMode::Other)
+                    }
                 }
             }
         }
@@ -2259,41 +2378,43 @@ impl PropertiesSearchQuery {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PropertiesSearchQuery>, V::Error> {
-        use serde::de;
         let mut field_query = None;
         let mut field_mode = None;
         let mut field_logical_operator = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "query" => {
                     if field_query.is_some() {
-                        return Err(de::Error::duplicate_field("query"));
+                        return Err(::serde::de::Error::duplicate_field("query"));
                     }
                     field_query = Some(map.next_value()?);
                 }
                 "mode" => {
                     if field_mode.is_some() {
-                        return Err(de::Error::duplicate_field("mode"));
+                        return Err(::serde::de::Error::duplicate_field("mode"));
                     }
                     field_mode = Some(map.next_value()?);
                 }
                 "logical_operator" => {
                     if field_logical_operator.is_some() {
-                        return Err(de::Error::duplicate_field("logical_operator"));
+                        return Err(::serde::de::Error::duplicate_field("logical_operator"));
                     }
                     field_logical_operator = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PROPERTIES_SEARCH_QUERY_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PropertiesSearchQuery {
-            query: field_query.ok_or_else(|| de::Error::missing_field("query"))?,
-            mode: field_mode.ok_or_else(|| de::Error::missing_field("mode"))?,
+            query: field_query.ok_or_else(|| ::serde::de::Error::missing_field("query"))?,
+            mode: field_mode.ok_or_else(|| ::serde::de::Error::missing_field("mode"))?,
             logical_operator: field_logical_operator.unwrap_or_else(|| LogicalOperator::OrOperator),
         };
         Ok(Some(result))
@@ -2375,33 +2496,35 @@ impl PropertiesSearchResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PropertiesSearchResult>, V::Error> {
-        use serde::de;
         let mut field_matches = None;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "matches" => {
                     if field_matches.is_some() {
-                        return Err(de::Error::duplicate_field("matches"));
+                        return Err(::serde::de::Error::duplicate_field("matches"));
                     }
                     field_matches = Some(map.next_value()?);
                 }
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PROPERTIES_SEARCH_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PropertiesSearchResult {
-            matches: field_matches.ok_or_else(|| de::Error::missing_field("matches"))?,
+            matches: field_matches.ok_or_else(|| ::serde::de::Error::missing_field("matches"))?,
             cursor: field_cursor,
         };
         Ok(Some(result))
@@ -2479,34 +2602,36 @@ impl PropertyField {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PropertyField>, V::Error> {
-        use serde::de;
         let mut field_name = None;
         let mut field_value = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
                 "value" => {
                     if field_value.is_some() {
-                        return Err(de::Error::duplicate_field("value"));
+                        return Err(::serde::de::Error::duplicate_field("value"));
                     }
                     field_value = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PROPERTY_FIELD_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PropertyField {
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            value: field_value.ok_or_else(|| de::Error::missing_field("value"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            value: field_value.ok_or_else(|| ::serde::de::Error::missing_field("value"))?,
         };
         Ok(Some(result))
     }
@@ -2587,42 +2712,44 @@ impl PropertyFieldTemplate {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PropertyFieldTemplate>, V::Error> {
-        use serde::de;
         let mut field_name = None;
         let mut field_description = None;
         let mut field_type_field = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
                 "description" => {
                     if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
+                        return Err(::serde::de::Error::duplicate_field("description"));
                     }
                     field_description = Some(map.next_value()?);
                 }
                 "type" => {
                     if field_type_field.is_some() {
-                        return Err(de::Error::duplicate_field("type"));
+                        return Err(::serde::de::Error::duplicate_field("type"));
                     }
                     field_type_field = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PROPERTY_FIELD_TEMPLATE_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PropertyFieldTemplate {
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
-            type_field: field_type_field.ok_or_else(|| de::Error::missing_field("type"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+            type_field: field_type_field.ok_or_else(|| ::serde::de::Error::missing_field("type"))?,
         };
         Ok(Some(result))
     }
@@ -2702,34 +2829,36 @@ impl PropertyGroup {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PropertyGroup>, V::Error> {
-        use serde::de;
         let mut field_template_id = None;
         let mut field_fields = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
+                        return Err(::serde::de::Error::duplicate_field("template_id"));
                     }
                     field_template_id = Some(map.next_value()?);
                 }
                 "fields" => {
                     if field_fields.is_some() {
-                        return Err(de::Error::duplicate_field("fields"));
+                        return Err(::serde::de::Error::duplicate_field("fields"));
                     }
                     field_fields = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PropertyGroup {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
-            fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
+            template_id: field_template_id.ok_or_else(|| ::serde::de::Error::missing_field("template_id"))?,
+            fields: field_fields.ok_or_else(|| ::serde::de::Error::missing_field("fields"))?,
         };
         Ok(Some(result))
     }
@@ -2809,42 +2938,44 @@ impl PropertyGroupTemplate {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PropertyGroupTemplate>, V::Error> {
-        use serde::de;
         let mut field_name = None;
         let mut field_description = None;
         let mut field_fields = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
                 "description" => {
                     if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
+                        return Err(::serde::de::Error::duplicate_field("description"));
                     }
                     field_description = Some(map.next_value()?);
                 }
                 "fields" => {
                     if field_fields.is_some() {
-                        return Err(de::Error::duplicate_field("fields"));
+                        return Err(::serde::de::Error::duplicate_field("fields"));
                     }
                     field_fields = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_TEMPLATE_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PropertyGroupTemplate {
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            description: field_description.ok_or_else(|| de::Error::missing_field("description"))?,
-            fields: field_fields.ok_or_else(|| de::Error::missing_field("fields"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+            fields: field_fields.ok_or_else(|| ::serde::de::Error::missing_field("fields"))?,
         };
         Ok(Some(result))
     }
@@ -2934,40 +3065,42 @@ impl PropertyGroupUpdate {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PropertyGroupUpdate>, V::Error> {
-        use serde::de;
         let mut field_template_id = None;
         let mut field_add_or_update_fields = None;
         let mut field_remove_fields = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
+                        return Err(::serde::de::Error::duplicate_field("template_id"));
                     }
                     field_template_id = Some(map.next_value()?);
                 }
                 "add_or_update_fields" => {
                     if field_add_or_update_fields.is_some() {
-                        return Err(de::Error::duplicate_field("add_or_update_fields"));
+                        return Err(::serde::de::Error::duplicate_field("add_or_update_fields"));
                     }
                     field_add_or_update_fields = Some(map.next_value()?);
                 }
                 "remove_fields" => {
                     if field_remove_fields.is_some() {
-                        return Err(de::Error::duplicate_field("remove_fields"));
+                        return Err(::serde::de::Error::duplicate_field("remove_fields"));
                     }
                     field_remove_fields = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PROPERTY_GROUP_UPDATE_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PropertyGroupUpdate {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
+            template_id: field_template_id.ok_or_else(|| ::serde::de::Error::missing_field("template_id"))?,
             add_or_update_fields: field_add_or_update_fields,
             remove_fields: field_remove_fields,
         };
@@ -3037,8 +3170,14 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyType {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "string" => Ok(PropertyType::String),
-                    _ => Ok(PropertyType::Other)
+                    "string" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PropertyType::String)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PropertyType::Other)
+                    }
                 }
             }
         }
@@ -3097,34 +3236,36 @@ impl RemovePropertiesArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<RemovePropertiesArg>, V::Error> {
-        use serde::de;
         let mut field_path = None;
         let mut field_property_template_ids = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
                 "property_template_ids" => {
                     if field_property_template_ids.is_some() {
-                        return Err(de::Error::duplicate_field("property_template_ids"));
+                        return Err(::serde::de::Error::duplicate_field("property_template_ids"));
                     }
                     field_property_template_ids = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, REMOVE_PROPERTIES_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = RemovePropertiesArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            property_template_ids: field_property_template_ids.ok_or_else(|| de::Error::missing_field("property_template_ids"))?,
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+            property_template_ids: field_property_template_ids.ok_or_else(|| ::serde::de::Error::missing_field("property_template_ids"))?,
         };
         Ok(Some(result))
     }
@@ -3203,7 +3344,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => Ok(RemovePropertiesError::RestrictedContent),
+                    "restricted_content" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RemovePropertiesError::RestrictedContent)
+                    }
                     "path" => {
                         match map.next_key()? {
                             Some("path") => Ok(RemovePropertiesError::Path(map.next_value()?)),
@@ -3211,7 +3355,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_folder" => Ok(RemovePropertiesError::UnsupportedFolder),
+                    "unsupported_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RemovePropertiesError::UnsupportedFolder)
+                    }
                     "property_group_lookup" => {
                         match map.next_key()? {
                             Some("property_group_lookup") => Ok(RemovePropertiesError::PropertyGroupLookup(map.next_value()?)),
@@ -3219,7 +3366,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(RemovePropertiesError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RemovePropertiesError::Other)
+                    }
                 }
             }
         }
@@ -3316,26 +3466,28 @@ impl RemoveTemplateArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<RemoveTemplateArg>, V::Error> {
-        use serde::de;
         let mut field_template_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
+                        return Err(::serde::de::Error::duplicate_field("template_id"));
                     }
                     field_template_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, REMOVE_TEMPLATE_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = RemoveTemplateArg {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
+            template_id: field_template_id.ok_or_else(|| ::serde::de::Error::missing_field("template_id"))?,
         };
         Ok(Some(result))
     }
@@ -3409,8 +3561,14 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => Ok(TemplateError::RestrictedContent),
-                    _ => Ok(TemplateError::Other)
+                    "restricted_content" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TemplateError::RestrictedContent)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TemplateError::Other)
+                    }
                 }
             }
         }
@@ -3489,8 +3647,14 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateFilter {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "filter_none" => Ok(TemplateFilter::FilterNone),
-                    _ => Ok(TemplateFilter::Other)
+                    "filter_none" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TemplateFilter::FilterNone)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TemplateFilter::Other)
+                    }
                 }
             }
         }
@@ -3555,7 +3719,10 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateFilterBase {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(TemplateFilterBase::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TemplateFilterBase::Other)
+                    }
                 }
             }
         }
@@ -3607,9 +3774,18 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateOwnerType {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "user" => Ok(TemplateOwnerType::User),
-                    "team" => Ok(TemplateOwnerType::Team),
-                    _ => Ok(TemplateOwnerType::Other)
+                    "user" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TemplateOwnerType::User)
+                    }
+                    "team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TemplateOwnerType::Team)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TemplateOwnerType::Other)
+                    }
                 }
             }
         }
@@ -3673,34 +3849,36 @@ impl UpdatePropertiesArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UpdatePropertiesArg>, V::Error> {
-        use serde::de;
         let mut field_path = None;
         let mut field_update_property_groups = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
                 "update_property_groups" => {
                     if field_update_property_groups.is_some() {
-                        return Err(de::Error::duplicate_field("update_property_groups"));
+                        return Err(::serde::de::Error::duplicate_field("update_property_groups"));
                     }
                     field_update_property_groups = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, UPDATE_PROPERTIES_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UpdatePropertiesArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
-            update_property_groups: field_update_property_groups.ok_or_else(|| de::Error::missing_field("update_property_groups"))?,
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+            update_property_groups: field_update_property_groups.ok_or_else(|| ::serde::de::Error::missing_field("update_property_groups"))?,
         };
         Ok(Some(result))
     }
@@ -3783,7 +3961,10 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => Ok(UpdatePropertiesError::RestrictedContent),
+                    "restricted_content" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdatePropertiesError::RestrictedContent)
+                    }
                     "path" => {
                         match map.next_key()? {
                             Some("path") => Ok(UpdatePropertiesError::Path(map.next_value()?)),
@@ -3791,9 +3972,18 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_folder" => Ok(UpdatePropertiesError::UnsupportedFolder),
-                    "property_field_too_large" => Ok(UpdatePropertiesError::PropertyFieldTooLarge),
-                    "does_not_fit_template" => Ok(UpdatePropertiesError::DoesNotFitTemplate),
+                    "unsupported_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdatePropertiesError::UnsupportedFolder)
+                    }
+                    "property_field_too_large" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdatePropertiesError::PropertyFieldTooLarge)
+                    }
+                    "does_not_fit_template" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdatePropertiesError::DoesNotFitTemplate)
+                    }
                     "property_group_lookup" => {
                         match map.next_key()? {
                             Some("property_group_lookup") => Ok(UpdatePropertiesError::PropertyGroupLookup(map.next_value()?)),
@@ -3801,7 +3991,10 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(UpdatePropertiesError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdatePropertiesError::Other)
+                    }
                 }
             }
         }
@@ -3941,47 +4134,49 @@ impl UpdateTemplateArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UpdateTemplateArg>, V::Error> {
-        use serde::de;
         let mut field_template_id = None;
         let mut field_name = None;
         let mut field_description = None;
         let mut field_add_fields = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
+                        return Err(::serde::de::Error::duplicate_field("template_id"));
                     }
                     field_template_id = Some(map.next_value()?);
                 }
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
                 "description" => {
                     if field_description.is_some() {
-                        return Err(de::Error::duplicate_field("description"));
+                        return Err(::serde::de::Error::duplicate_field("description"));
                     }
                     field_description = Some(map.next_value()?);
                 }
                 "add_fields" => {
                     if field_add_fields.is_some() {
-                        return Err(de::Error::duplicate_field("add_fields"));
+                        return Err(::serde::de::Error::duplicate_field("add_fields"));
                     }
                     field_add_fields = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, UPDATE_TEMPLATE_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UpdateTemplateArg {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
+            template_id: field_template_id.ok_or_else(|| ::serde::de::Error::missing_field("template_id"))?,
             name: field_name,
             description: field_description,
             add_fields: field_add_fields,
@@ -4058,26 +4253,28 @@ impl UpdateTemplateResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UpdateTemplateResult>, V::Error> {
-        use serde::de;
         let mut field_template_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "template_id" => {
                     if field_template_id.is_some() {
-                        return Err(de::Error::duplicate_field("template_id"));
+                        return Err(::serde::de::Error::duplicate_field("template_id"));
                     }
                     field_template_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, UPDATE_TEMPLATE_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UpdateTemplateResult {
-            template_id: field_template_id.ok_or_else(|| de::Error::missing_field("template_id"))?,
+            template_id: field_template_id.ok_or_else(|| ::serde::de::Error::missing_field("template_id"))?,
         };
         Ok(Some(result))
     }

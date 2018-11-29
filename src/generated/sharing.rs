@@ -726,9 +726,18 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessInheritance {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "inherit" => Ok(AccessInheritance::Inherit),
-                    "no_inherit" => Ok(AccessInheritance::NoInherit),
-                    _ => Ok(AccessInheritance::Other)
+                    "inherit" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AccessInheritance::Inherit)
+                    }
+                    "no_inherit" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AccessInheritance::NoInherit)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AccessInheritance::Other)
+                    }
                 }
             }
         }
@@ -793,11 +802,26 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessLevel {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "owner" => Ok(AccessLevel::Owner),
-                    "editor" => Ok(AccessLevel::Editor),
-                    "viewer" => Ok(AccessLevel::Viewer),
-                    "viewer_no_comment" => Ok(AccessLevel::ViewerNoComment),
-                    _ => Ok(AccessLevel::Other)
+                    "owner" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AccessLevel::Owner)
+                    }
+                    "editor" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AccessLevel::Editor)
+                    }
+                    "viewer" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AccessLevel::Viewer)
+                    }
+                    "viewer_no_comment" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AccessLevel::ViewerNoComment)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AccessLevel::Other)
+                    }
                 }
             }
         }
@@ -871,9 +895,18 @@ impl<'de> ::serde::de::Deserialize<'de> for AclUpdatePolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "owner" => Ok(AclUpdatePolicy::Owner),
-                    "editors" => Ok(AclUpdatePolicy::Editors),
-                    _ => Ok(AclUpdatePolicy::Other)
+                    "owner" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AclUpdatePolicy::Owner)
+                    }
+                    "editors" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AclUpdatePolicy::Editors)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AclUpdatePolicy::Other)
+                    }
                 }
             }
         }
@@ -975,7 +1008,6 @@ impl AddFileMemberArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<AddFileMemberArgs>, V::Error> {
-        use serde::de;
         let mut field_file = None;
         let mut field_members = None;
         let mut field_custom_message = None;
@@ -983,54 +1015,57 @@ impl AddFileMemberArgs {
         let mut field_access_level = None;
         let mut field_add_message_as_comment = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "file" => {
                     if field_file.is_some() {
-                        return Err(de::Error::duplicate_field("file"));
+                        return Err(::serde::de::Error::duplicate_field("file"));
                     }
                     field_file = Some(map.next_value()?);
                 }
                 "members" => {
                     if field_members.is_some() {
-                        return Err(de::Error::duplicate_field("members"));
+                        return Err(::serde::de::Error::duplicate_field("members"));
                     }
                     field_members = Some(map.next_value()?);
                 }
                 "custom_message" => {
                     if field_custom_message.is_some() {
-                        return Err(de::Error::duplicate_field("custom_message"));
+                        return Err(::serde::de::Error::duplicate_field("custom_message"));
                     }
                     field_custom_message = Some(map.next_value()?);
                 }
                 "quiet" => {
                     if field_quiet.is_some() {
-                        return Err(de::Error::duplicate_field("quiet"));
+                        return Err(::serde::de::Error::duplicate_field("quiet"));
                     }
                     field_quiet = Some(map.next_value()?);
                 }
                 "access_level" => {
                     if field_access_level.is_some() {
-                        return Err(de::Error::duplicate_field("access_level"));
+                        return Err(::serde::de::Error::duplicate_field("access_level"));
                     }
                     field_access_level = Some(map.next_value()?);
                 }
                 "add_message_as_comment" => {
                     if field_add_message_as_comment.is_some() {
-                        return Err(de::Error::duplicate_field("add_message_as_comment"));
+                        return Err(::serde::de::Error::duplicate_field("add_message_as_comment"));
                     }
                     field_add_message_as_comment = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, ADD_FILE_MEMBER_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = AddFileMemberArgs {
-            file: field_file.ok_or_else(|| de::Error::missing_field("file"))?,
-            members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
+            file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
+            members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
             custom_message: field_custom_message,
             quiet: field_quiet.unwrap_or(false),
             access_level: field_access_level.unwrap_or_else(|| AccessLevel::Viewer),
@@ -1123,9 +1158,18 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFileMemberError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "rate_limit" => Ok(AddFileMemberError::RateLimit),
-                    "invalid_comment" => Ok(AddFileMemberError::InvalidComment),
-                    _ => Ok(AddFileMemberError::Other)
+                    "rate_limit" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddFileMemberError::RateLimit)
+                    }
+                    "invalid_comment" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddFileMemberError::InvalidComment)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddFileMemberError::Other)
+                    }
                 }
             }
         }
@@ -1236,48 +1280,50 @@ impl AddFolderMemberArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<AddFolderMemberArg>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_members = None;
         let mut field_quiet = None;
         let mut field_custom_message = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "members" => {
                     if field_members.is_some() {
-                        return Err(de::Error::duplicate_field("members"));
+                        return Err(::serde::de::Error::duplicate_field("members"));
                     }
                     field_members = Some(map.next_value()?);
                 }
                 "quiet" => {
                     if field_quiet.is_some() {
-                        return Err(de::Error::duplicate_field("quiet"));
+                        return Err(::serde::de::Error::duplicate_field("quiet"));
                     }
                     field_quiet = Some(map.next_value()?);
                 }
                 "custom_message" => {
                     if field_custom_message.is_some() {
-                        return Err(de::Error::duplicate_field("custom_message"));
+                        return Err(::serde::de::Error::duplicate_field("custom_message"));
                     }
                     field_custom_message = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, ADD_FOLDER_MEMBER_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = AddFolderMemberArg {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
-            members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
+            members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
             quiet: field_quiet.unwrap_or(false),
             custom_message: field_custom_message,
         };
@@ -1376,7 +1422,10 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "email_unverified" => Ok(AddFolderMemberError::EmailUnverified),
+                    "email_unverified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddFolderMemberError::EmailUnverified)
+                    }
                     "bad_member" => {
                         match map.next_key()? {
                             Some("bad_member") => Ok(AddFolderMemberError::BadMember(map.next_value()?)),
@@ -1384,7 +1433,10 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "cant_share_outside_team" => Ok(AddFolderMemberError::CantShareOutsideTeam),
+                    "cant_share_outside_team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddFolderMemberError::CantShareOutsideTeam)
+                    }
                     "too_many_members" => {
                         match map.next_key()? {
                             Some("too_many_members") => Ok(AddFolderMemberError::TooManyMembers(map.next_value()?)),
@@ -1399,12 +1451,30 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "rate_limit" => Ok(AddFolderMemberError::RateLimit),
-                    "too_many_invitees" => Ok(AddFolderMemberError::TooManyInvitees),
-                    "insufficient_plan" => Ok(AddFolderMemberError::InsufficientPlan),
-                    "team_folder" => Ok(AddFolderMemberError::TeamFolder),
-                    "no_permission" => Ok(AddFolderMemberError::NoPermission),
-                    _ => Ok(AddFolderMemberError::Other)
+                    "rate_limit" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddFolderMemberError::RateLimit)
+                    }
+                    "too_many_invitees" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddFolderMemberError::TooManyInvitees)
+                    }
+                    "insufficient_plan" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddFolderMemberError::InsufficientPlan)
+                    }
+                    "team_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddFolderMemberError::TeamFolder)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddFolderMemberError::NoPermission)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddFolderMemberError::Other)
+                    }
                 }
             }
         }
@@ -1554,33 +1624,35 @@ impl AddMember {
         mut map: V,
         optional: bool,
     ) -> Result<Option<AddMember>, V::Error> {
-        use serde::de;
         let mut field_member = None;
         let mut field_access_level = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "member" => {
                     if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
+                        return Err(::serde::de::Error::duplicate_field("member"));
                     }
                     field_member = Some(map.next_value()?);
                 }
                 "access_level" => {
                     if field_access_level.is_some() {
-                        return Err(de::Error::duplicate_field("access_level"));
+                        return Err(::serde::de::Error::duplicate_field("access_level"));
                     }
                     field_access_level = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, ADD_MEMBER_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = AddMember {
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
+            member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
             access_level: field_access_level.unwrap_or_else(|| AccessLevel::Viewer),
         };
         Ok(Some(result))
@@ -1659,7 +1731,10 @@ impl<'de> ::serde::de::Deserialize<'de> for AddMemberSelectorError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "automatic_group" => Ok(AddMemberSelectorError::AutomaticGroup),
+                    "automatic_group" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddMemberSelectorError::AutomaticGroup)
+                    }
                     "invalid_dropbox_id" => {
                         match map.next_key()? {
                             Some("invalid_dropbox_id") => Ok(AddMemberSelectorError::InvalidDropboxId(map.next_value()?)),
@@ -1681,9 +1756,18 @@ impl<'de> ::serde::de::Deserialize<'de> for AddMemberSelectorError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "group_deleted" => Ok(AddMemberSelectorError::GroupDeleted),
-                    "group_not_on_team" => Ok(AddMemberSelectorError::GroupNotOnTeam),
-                    _ => Ok(AddMemberSelectorError::Other)
+                    "group_deleted" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddMemberSelectorError::GroupDeleted)
+                    }
+                    "group_not_on_team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddMemberSelectorError::GroupNotOnTeam)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AddMemberSelectorError::Other)
+                    }
                 }
             }
         }
@@ -1787,26 +1871,28 @@ impl AudienceExceptionContentInfo {
         mut map: V,
         optional: bool,
     ) -> Result<Option<AudienceExceptionContentInfo>, V::Error> {
-        use serde::de;
         let mut field_name = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, AUDIENCE_EXCEPTION_CONTENT_INFO_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = AudienceExceptionContentInfo {
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
         };
         Ok(Some(result))
     }
@@ -1882,34 +1968,36 @@ impl AudienceExceptions {
         mut map: V,
         optional: bool,
     ) -> Result<Option<AudienceExceptions>, V::Error> {
-        use serde::de;
         let mut field_count = None;
         let mut field_exceptions = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "count" => {
                     if field_count.is_some() {
-                        return Err(de::Error::duplicate_field("count"));
+                        return Err(::serde::de::Error::duplicate_field("count"));
                     }
                     field_count = Some(map.next_value()?);
                 }
                 "exceptions" => {
                     if field_exceptions.is_some() {
-                        return Err(de::Error::duplicate_field("exceptions"));
+                        return Err(::serde::de::Error::duplicate_field("exceptions"));
                     }
                     field_exceptions = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, AUDIENCE_EXCEPTIONS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = AudienceExceptions {
-            count: field_count.ok_or_else(|| de::Error::missing_field("count"))?,
-            exceptions: field_exceptions.ok_or_else(|| de::Error::missing_field("exceptions"))?,
+            count: field_count.ok_or_else(|| ::serde::de::Error::missing_field("count"))?,
+            exceptions: field_exceptions.ok_or_else(|| ::serde::de::Error::missing_field("exceptions"))?,
         };
         Ok(Some(result))
     }
@@ -1993,42 +2081,44 @@ impl AudienceRestrictingSharedFolder {
         mut map: V,
         optional: bool,
     ) -> Result<Option<AudienceRestrictingSharedFolder>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_name = None;
         let mut field_audience = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
                 "audience" => {
                     if field_audience.is_some() {
-                        return Err(de::Error::duplicate_field("audience"));
+                        return Err(::serde::de::Error::duplicate_field("audience"));
                     }
                     field_audience = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, AUDIENCE_RESTRICTING_SHARED_FOLDER_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = AudienceRestrictingSharedFolder {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            audience: field_audience.ok_or_else(|| de::Error::missing_field("audience"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            audience: field_audience.ok_or_else(|| ::serde::de::Error::missing_field("audience"))?,
         };
         Ok(Some(result))
     }
@@ -2108,42 +2198,44 @@ impl ChangeFileMemberAccessArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ChangeFileMemberAccessArgs>, V::Error> {
-        use serde::de;
         let mut field_file = None;
         let mut field_member = None;
         let mut field_access_level = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "file" => {
                     if field_file.is_some() {
-                        return Err(de::Error::duplicate_field("file"));
+                        return Err(::serde::de::Error::duplicate_field("file"));
                     }
                     field_file = Some(map.next_value()?);
                 }
                 "member" => {
                     if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
+                        return Err(::serde::de::Error::duplicate_field("member"));
                     }
                     field_member = Some(map.next_value()?);
                 }
                 "access_level" => {
                     if field_access_level.is_some() {
-                        return Err(de::Error::duplicate_field("access_level"));
+                        return Err(::serde::de::Error::duplicate_field("access_level"));
                     }
                     field_access_level = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, CHANGE_FILE_MEMBER_ACCESS_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ChangeFileMemberAccessArgs {
-            file: field_file.ok_or_else(|| de::Error::missing_field("file"))?,
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
-            access_level: field_access_level.ok_or_else(|| de::Error::missing_field("access_level"))?,
+            file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
+            member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
+            access_level: field_access_level.ok_or_else(|| ::serde::de::Error::missing_field("access_level"))?,
         };
         Ok(Some(result))
     }
@@ -2228,41 +2320,43 @@ impl CollectionLinkMetadata {
         mut map: V,
         optional: bool,
     ) -> Result<Option<CollectionLinkMetadata>, V::Error> {
-        use serde::de;
         let mut field_url = None;
         let mut field_visibility = None;
         let mut field_expires = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "url" => {
                     if field_url.is_some() {
-                        return Err(de::Error::duplicate_field("url"));
+                        return Err(::serde::de::Error::duplicate_field("url"));
                     }
                     field_url = Some(map.next_value()?);
                 }
                 "visibility" => {
                     if field_visibility.is_some() {
-                        return Err(de::Error::duplicate_field("visibility"));
+                        return Err(::serde::de::Error::duplicate_field("visibility"));
                     }
                     field_visibility = Some(map.next_value()?);
                 }
                 "expires" => {
                     if field_expires.is_some() {
-                        return Err(de::Error::duplicate_field("expires"));
+                        return Err(::serde::de::Error::duplicate_field("expires"));
                     }
                     field_expires = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, COLLECTION_LINK_METADATA_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = CollectionLinkMetadata {
-            url: field_url.ok_or_else(|| de::Error::missing_field("url"))?,
-            visibility: field_visibility.ok_or_else(|| de::Error::missing_field("visibility"))?,
+            url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
+            visibility: field_visibility.ok_or_else(|| ::serde::de::Error::missing_field("visibility"))?,
             expires: field_expires,
         };
         Ok(Some(result))
@@ -2355,40 +2449,42 @@ impl CreateSharedLinkArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<CreateSharedLinkArg>, V::Error> {
-        use serde::de;
         let mut field_path = None;
         let mut field_short_url = None;
         let mut field_pending_upload = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
                 "short_url" => {
                     if field_short_url.is_some() {
-                        return Err(de::Error::duplicate_field("short_url"));
+                        return Err(::serde::de::Error::duplicate_field("short_url"));
                     }
                     field_short_url = Some(map.next_value()?);
                 }
                 "pending_upload" => {
                     if field_pending_upload.is_some() {
-                        return Err(de::Error::duplicate_field("pending_upload"));
+                        return Err(::serde::de::Error::duplicate_field("pending_upload"));
                     }
                     field_pending_upload = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, CREATE_SHARED_LINK_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = CreateSharedLinkArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             short_url: field_short_url.unwrap_or(false),
             pending_upload: field_pending_upload,
         };
@@ -2463,7 +2559,10 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(CreateSharedLinkError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateSharedLinkError::Other)
+                    }
                 }
             }
         }
@@ -2538,33 +2637,35 @@ impl CreateSharedLinkWithSettingsArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<CreateSharedLinkWithSettingsArg>, V::Error> {
-        use serde::de;
         let mut field_path = None;
         let mut field_settings = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
                 "settings" => {
                     if field_settings.is_some() {
-                        return Err(de::Error::duplicate_field("settings"));
+                        return Err(::serde::de::Error::duplicate_field("settings"));
                     }
                     field_settings = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, CREATE_SHARED_LINK_WITH_SETTINGS_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = CreateSharedLinkWithSettingsArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             settings: field_settings,
         };
         Ok(Some(result))
@@ -2645,8 +2746,14 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkWithSettingsError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "email_not_verified" => Ok(CreateSharedLinkWithSettingsError::EmailNotVerified),
-                    "shared_link_already_exists" => Ok(CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists),
+                    "email_not_verified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateSharedLinkWithSettingsError::EmailNotVerified)
+                    }
+                    "shared_link_already_exists" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists)
+                    }
                     "settings_error" => {
                         match map.next_key()? {
                             Some("settings_error") => Ok(CreateSharedLinkWithSettingsError::SettingsError(map.next_value()?)),
@@ -2654,7 +2761,10 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkWithSettingsError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "access_denied" => Ok(CreateSharedLinkWithSettingsError::AccessDenied),
+                    "access_denied" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CreateSharedLinkWithSettingsError::AccessDenied)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -2801,7 +2911,6 @@ impl ExpectedSharedContentLinkMetadata {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ExpectedSharedContentLinkMetadata>, V::Error> {
-        use serde::de;
         let mut field_audience_options = None;
         let mut field_current_audience = None;
         let mut field_link_permissions = None;
@@ -2810,62 +2919,65 @@ impl ExpectedSharedContentLinkMetadata {
         let mut field_audience_restricting_shared_folder = None;
         let mut field_expiry = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "audience_options" => {
                     if field_audience_options.is_some() {
-                        return Err(de::Error::duplicate_field("audience_options"));
+                        return Err(::serde::de::Error::duplicate_field("audience_options"));
                     }
                     field_audience_options = Some(map.next_value()?);
                 }
                 "current_audience" => {
                     if field_current_audience.is_some() {
-                        return Err(de::Error::duplicate_field("current_audience"));
+                        return Err(::serde::de::Error::duplicate_field("current_audience"));
                     }
                     field_current_audience = Some(map.next_value()?);
                 }
                 "link_permissions" => {
                     if field_link_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("link_permissions"));
+                        return Err(::serde::de::Error::duplicate_field("link_permissions"));
                     }
                     field_link_permissions = Some(map.next_value()?);
                 }
                 "password_protected" => {
                     if field_password_protected.is_some() {
-                        return Err(de::Error::duplicate_field("password_protected"));
+                        return Err(::serde::de::Error::duplicate_field("password_protected"));
                     }
                     field_password_protected = Some(map.next_value()?);
                 }
                 "access_level" => {
                     if field_access_level.is_some() {
-                        return Err(de::Error::duplicate_field("access_level"));
+                        return Err(::serde::de::Error::duplicate_field("access_level"));
                     }
                     field_access_level = Some(map.next_value()?);
                 }
                 "audience_restricting_shared_folder" => {
                     if field_audience_restricting_shared_folder.is_some() {
-                        return Err(de::Error::duplicate_field("audience_restricting_shared_folder"));
+                        return Err(::serde::de::Error::duplicate_field("audience_restricting_shared_folder"));
                     }
                     field_audience_restricting_shared_folder = Some(map.next_value()?);
                 }
                 "expiry" => {
                     if field_expiry.is_some() {
-                        return Err(de::Error::duplicate_field("expiry"));
+                        return Err(::serde::de::Error::duplicate_field("expiry"));
                     }
                     field_expiry = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, EXPECTED_SHARED_CONTENT_LINK_METADATA_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ExpectedSharedContentLinkMetadata {
-            audience_options: field_audience_options.ok_or_else(|| de::Error::missing_field("audience_options"))?,
-            current_audience: field_current_audience.ok_or_else(|| de::Error::missing_field("current_audience"))?,
-            link_permissions: field_link_permissions.ok_or_else(|| de::Error::missing_field("link_permissions"))?,
-            password_protected: field_password_protected.ok_or_else(|| de::Error::missing_field("password_protected"))?,
+            audience_options: field_audience_options.ok_or_else(|| ::serde::de::Error::missing_field("audience_options"))?,
+            current_audience: field_current_audience.ok_or_else(|| ::serde::de::Error::missing_field("current_audience"))?,
+            link_permissions: field_link_permissions.ok_or_else(|| ::serde::de::Error::missing_field("link_permissions"))?,
+            password_protected: field_password_protected.ok_or_else(|| ::serde::de::Error::missing_field("password_protected"))?,
             access_level: field_access_level,
             audience_restricting_shared_folder: field_audience_restricting_shared_folder,
             expiry: field_expiry,
@@ -2958,17 +3070,50 @@ impl<'de> ::serde::de::Deserialize<'de> for FileAction {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disable_viewer_info" => Ok(FileAction::DisableViewerInfo),
-                    "edit_contents" => Ok(FileAction::EditContents),
-                    "enable_viewer_info" => Ok(FileAction::EnableViewerInfo),
-                    "invite_viewer" => Ok(FileAction::InviteViewer),
-                    "invite_viewer_no_comment" => Ok(FileAction::InviteViewerNoComment),
-                    "invite_editor" => Ok(FileAction::InviteEditor),
-                    "unshare" => Ok(FileAction::Unshare),
-                    "relinquish_membership" => Ok(FileAction::RelinquishMembership),
-                    "share_link" => Ok(FileAction::ShareLink),
-                    "create_link" => Ok(FileAction::CreateLink),
-                    _ => Ok(FileAction::Other)
+                    "disable_viewer_info" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileAction::DisableViewerInfo)
+                    }
+                    "edit_contents" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileAction::EditContents)
+                    }
+                    "enable_viewer_info" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileAction::EnableViewerInfo)
+                    }
+                    "invite_viewer" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileAction::InviteViewer)
+                    }
+                    "invite_viewer_no_comment" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileAction::InviteViewerNoComment)
+                    }
+                    "invite_editor" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileAction::InviteEditor)
+                    }
+                    "unshare" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileAction::Unshare)
+                    }
+                    "relinquish_membership" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileAction::RelinquishMembership)
+                    }
+                    "share_link" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileAction::ShareLink)
+                    }
+                    "create_link" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileAction::CreateLink)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileAction::Other)
+                    }
                 }
             }
         }
@@ -3105,7 +3250,10 @@ impl<'de> ::serde::de::Deserialize<'de> for FileErrorResult {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(FileErrorResult::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileErrorResult::Other)
+                    }
                 }
             }
         }
@@ -3261,7 +3409,6 @@ impl FileLinkMetadata {
         mut map: V,
         optional: bool,
     ) -> Result<Option<FileLinkMetadata>, V::Error> {
-        use serde::de;
         let mut field_url = None;
         let mut field_name = None;
         let mut field_link_permissions = None;
@@ -3275,95 +3422,98 @@ impl FileLinkMetadata {
         let mut field_team_member_info = None;
         let mut field_content_owner_team_info = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "url" => {
                     if field_url.is_some() {
-                        return Err(de::Error::duplicate_field("url"));
+                        return Err(::serde::de::Error::duplicate_field("url"));
                     }
                     field_url = Some(map.next_value()?);
                 }
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
                 "link_permissions" => {
                     if field_link_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("link_permissions"));
+                        return Err(::serde::de::Error::duplicate_field("link_permissions"));
                     }
                     field_link_permissions = Some(map.next_value()?);
                 }
                 "client_modified" => {
                     if field_client_modified.is_some() {
-                        return Err(de::Error::duplicate_field("client_modified"));
+                        return Err(::serde::de::Error::duplicate_field("client_modified"));
                     }
                     field_client_modified = Some(map.next_value()?);
                 }
                 "server_modified" => {
                     if field_server_modified.is_some() {
-                        return Err(de::Error::duplicate_field("server_modified"));
+                        return Err(::serde::de::Error::duplicate_field("server_modified"));
                     }
                     field_server_modified = Some(map.next_value()?);
                 }
                 "rev" => {
                     if field_rev.is_some() {
-                        return Err(de::Error::duplicate_field("rev"));
+                        return Err(::serde::de::Error::duplicate_field("rev"));
                     }
                     field_rev = Some(map.next_value()?);
                 }
                 "size" => {
                     if field_size.is_some() {
-                        return Err(de::Error::duplicate_field("size"));
+                        return Err(::serde::de::Error::duplicate_field("size"));
                     }
                     field_size = Some(map.next_value()?);
                 }
                 "id" => {
                     if field_id.is_some() {
-                        return Err(de::Error::duplicate_field("id"));
+                        return Err(::serde::de::Error::duplicate_field("id"));
                     }
                     field_id = Some(map.next_value()?);
                 }
                 "expires" => {
                     if field_expires.is_some() {
-                        return Err(de::Error::duplicate_field("expires"));
+                        return Err(::serde::de::Error::duplicate_field("expires"));
                     }
                     field_expires = Some(map.next_value()?);
                 }
                 "path_lower" => {
                     if field_path_lower.is_some() {
-                        return Err(de::Error::duplicate_field("path_lower"));
+                        return Err(::serde::de::Error::duplicate_field("path_lower"));
                     }
                     field_path_lower = Some(map.next_value()?);
                 }
                 "team_member_info" => {
                     if field_team_member_info.is_some() {
-                        return Err(de::Error::duplicate_field("team_member_info"));
+                        return Err(::serde::de::Error::duplicate_field("team_member_info"));
                     }
                     field_team_member_info = Some(map.next_value()?);
                 }
                 "content_owner_team_info" => {
                     if field_content_owner_team_info.is_some() {
-                        return Err(de::Error::duplicate_field("content_owner_team_info"));
+                        return Err(::serde::de::Error::duplicate_field("content_owner_team_info"));
                     }
                     field_content_owner_team_info = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, FILE_LINK_METADATA_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = FileLinkMetadata {
-            url: field_url.ok_or_else(|| de::Error::missing_field("url"))?,
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            link_permissions: field_link_permissions.ok_or_else(|| de::Error::missing_field("link_permissions"))?,
-            client_modified: field_client_modified.ok_or_else(|| de::Error::missing_field("client_modified"))?,
-            server_modified: field_server_modified.ok_or_else(|| de::Error::missing_field("server_modified"))?,
-            rev: field_rev.ok_or_else(|| de::Error::missing_field("rev"))?,
-            size: field_size.ok_or_else(|| de::Error::missing_field("size"))?,
+            url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            link_permissions: field_link_permissions.ok_or_else(|| ::serde::de::Error::missing_field("link_permissions"))?,
+            client_modified: field_client_modified.ok_or_else(|| ::serde::de::Error::missing_field("client_modified"))?,
+            server_modified: field_server_modified.ok_or_else(|| ::serde::de::Error::missing_field("server_modified"))?,
+            rev: field_rev.ok_or_else(|| ::serde::de::Error::missing_field("rev"))?,
+            size: field_size.ok_or_else(|| ::serde::de::Error::missing_field("size"))?,
             id: field_id,
             expires: field_expires,
             path_lower: field_path_lower,
@@ -3452,8 +3602,14 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMemberActionError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "invalid_member" => Ok(FileMemberActionError::InvalidMember),
-                    "no_permission" => Ok(FileMemberActionError::NoPermission),
+                    "invalid_member" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileMemberActionError::InvalidMember)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileMemberActionError::NoPermission)
+                    }
                     "access_error" => {
                         match map.next_key()? {
                             Some("access_error") => Ok(FileMemberActionError::AccessError(map.next_value()?)),
@@ -3462,7 +3618,10 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMemberActionError {
                         }
                     }
                     "no_explicit_access" => Ok(FileMemberActionError::NoExplicitAccess(MemberAccessLevelResult::internal_deserialize(map)?)),
-                    _ => Ok(FileMemberActionError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileMemberActionError::Other)
+                    }
                 }
             }
         }
@@ -3628,34 +3787,36 @@ impl FileMemberActionResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<FileMemberActionResult>, V::Error> {
-        use serde::de;
         let mut field_member = None;
         let mut field_result = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "member" => {
                     if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
+                        return Err(::serde::de::Error::duplicate_field("member"));
                     }
                     field_member = Some(map.next_value()?);
                 }
                 "result" => {
                     if field_result.is_some() {
-                        return Err(de::Error::duplicate_field("result"));
+                        return Err(::serde::de::Error::duplicate_field("result"));
                     }
                     field_result = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, FILE_MEMBER_ACTION_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = FileMemberActionResult {
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
-            result: field_result.ok_or_else(|| de::Error::missing_field("result"))?,
+            member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
+            result: field_result.ok_or_else(|| ::serde::de::Error::missing_field("result"))?,
         };
         Ok(Some(result))
     }
@@ -3731,7 +3892,10 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMemberRemoveActionResult {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(FileMemberRemoveActionResult::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FileMemberRemoveActionResult::Other)
+                    }
                 }
             }
         }
@@ -3807,41 +3971,43 @@ impl FilePermission {
         mut map: V,
         optional: bool,
     ) -> Result<Option<FilePermission>, V::Error> {
-        use serde::de;
         let mut field_action = None;
         let mut field_allow = None;
         let mut field_reason = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "action" => {
                     if field_action.is_some() {
-                        return Err(de::Error::duplicate_field("action"));
+                        return Err(::serde::de::Error::duplicate_field("action"));
                     }
                     field_action = Some(map.next_value()?);
                 }
                 "allow" => {
                     if field_allow.is_some() {
-                        return Err(de::Error::duplicate_field("allow"));
+                        return Err(::serde::de::Error::duplicate_field("allow"));
                     }
                     field_allow = Some(map.next_value()?);
                 }
                 "reason" => {
                     if field_reason.is_some() {
-                        return Err(de::Error::duplicate_field("reason"));
+                        return Err(::serde::de::Error::duplicate_field("reason"));
                     }
                     field_reason = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, FILE_PERMISSION_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = FilePermission {
-            action: field_action.ok_or_else(|| de::Error::missing_field("action"))?,
-            allow: field_allow.ok_or_else(|| de::Error::missing_field("allow"))?,
+            action: field_action.ok_or_else(|| ::serde::de::Error::missing_field("action"))?,
+            allow: field_allow.ok_or_else(|| ::serde::de::Error::missing_field("allow"))?,
             reason: field_reason,
         };
         Ok(Some(result))
@@ -3936,21 +4102,66 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderAction {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "change_options" => Ok(FolderAction::ChangeOptions),
-                    "disable_viewer_info" => Ok(FolderAction::DisableViewerInfo),
-                    "edit_contents" => Ok(FolderAction::EditContents),
-                    "enable_viewer_info" => Ok(FolderAction::EnableViewerInfo),
-                    "invite_editor" => Ok(FolderAction::InviteEditor),
-                    "invite_viewer" => Ok(FolderAction::InviteViewer),
-                    "invite_viewer_no_comment" => Ok(FolderAction::InviteViewerNoComment),
-                    "relinquish_membership" => Ok(FolderAction::RelinquishMembership),
-                    "unmount" => Ok(FolderAction::Unmount),
-                    "unshare" => Ok(FolderAction::Unshare),
-                    "leave_a_copy" => Ok(FolderAction::LeaveACopy),
-                    "share_link" => Ok(FolderAction::ShareLink),
-                    "create_link" => Ok(FolderAction::CreateLink),
-                    "set_access_inheritance" => Ok(FolderAction::SetAccessInheritance),
-                    _ => Ok(FolderAction::Other)
+                    "change_options" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::ChangeOptions)
+                    }
+                    "disable_viewer_info" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::DisableViewerInfo)
+                    }
+                    "edit_contents" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::EditContents)
+                    }
+                    "enable_viewer_info" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::EnableViewerInfo)
+                    }
+                    "invite_editor" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::InviteEditor)
+                    }
+                    "invite_viewer" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::InviteViewer)
+                    }
+                    "invite_viewer_no_comment" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::InviteViewerNoComment)
+                    }
+                    "relinquish_membership" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::RelinquishMembership)
+                    }
+                    "unmount" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::Unmount)
+                    }
+                    "unshare" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::Unshare)
+                    }
+                    "leave_a_copy" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::LeaveACopy)
+                    }
+                    "share_link" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::ShareLink)
+                    }
+                    "create_link" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::CreateLink)
+                    }
+                    "set_access_inheritance" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::SetAccessInheritance)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(FolderAction::Other)
+                    }
                 }
             }
         }
@@ -4152,7 +4363,6 @@ impl FolderLinkMetadata {
         mut map: V,
         optional: bool,
     ) -> Result<Option<FolderLinkMetadata>, V::Error> {
-        use serde::de;
         let mut field_url = None;
         let mut field_name = None;
         let mut field_link_permissions = None;
@@ -4162,67 +4372,70 @@ impl FolderLinkMetadata {
         let mut field_team_member_info = None;
         let mut field_content_owner_team_info = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "url" => {
                     if field_url.is_some() {
-                        return Err(de::Error::duplicate_field("url"));
+                        return Err(::serde::de::Error::duplicate_field("url"));
                     }
                     field_url = Some(map.next_value()?);
                 }
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
                 "link_permissions" => {
                     if field_link_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("link_permissions"));
+                        return Err(::serde::de::Error::duplicate_field("link_permissions"));
                     }
                     field_link_permissions = Some(map.next_value()?);
                 }
                 "id" => {
                     if field_id.is_some() {
-                        return Err(de::Error::duplicate_field("id"));
+                        return Err(::serde::de::Error::duplicate_field("id"));
                     }
                     field_id = Some(map.next_value()?);
                 }
                 "expires" => {
                     if field_expires.is_some() {
-                        return Err(de::Error::duplicate_field("expires"));
+                        return Err(::serde::de::Error::duplicate_field("expires"));
                     }
                     field_expires = Some(map.next_value()?);
                 }
                 "path_lower" => {
                     if field_path_lower.is_some() {
-                        return Err(de::Error::duplicate_field("path_lower"));
+                        return Err(::serde::de::Error::duplicate_field("path_lower"));
                     }
                     field_path_lower = Some(map.next_value()?);
                 }
                 "team_member_info" => {
                     if field_team_member_info.is_some() {
-                        return Err(de::Error::duplicate_field("team_member_info"));
+                        return Err(::serde::de::Error::duplicate_field("team_member_info"));
                     }
                     field_team_member_info = Some(map.next_value()?);
                 }
                 "content_owner_team_info" => {
                     if field_content_owner_team_info.is_some() {
-                        return Err(de::Error::duplicate_field("content_owner_team_info"));
+                        return Err(::serde::de::Error::duplicate_field("content_owner_team_info"));
                     }
                     field_content_owner_team_info = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, FOLDER_LINK_METADATA_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = FolderLinkMetadata {
-            url: field_url.ok_or_else(|| de::Error::missing_field("url"))?,
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            link_permissions: field_link_permissions.ok_or_else(|| de::Error::missing_field("link_permissions"))?,
+            url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            link_permissions: field_link_permissions.ok_or_else(|| ::serde::de::Error::missing_field("link_permissions"))?,
             id: field_id,
             expires: field_expires,
             path_lower: field_path_lower,
@@ -4318,41 +4531,43 @@ impl FolderPermission {
         mut map: V,
         optional: bool,
     ) -> Result<Option<FolderPermission>, V::Error> {
-        use serde::de;
         let mut field_action = None;
         let mut field_allow = None;
         let mut field_reason = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "action" => {
                     if field_action.is_some() {
-                        return Err(de::Error::duplicate_field("action"));
+                        return Err(::serde::de::Error::duplicate_field("action"));
                     }
                     field_action = Some(map.next_value()?);
                 }
                 "allow" => {
                     if field_allow.is_some() {
-                        return Err(de::Error::duplicate_field("allow"));
+                        return Err(::serde::de::Error::duplicate_field("allow"));
                     }
                     field_allow = Some(map.next_value()?);
                 }
                 "reason" => {
                     if field_reason.is_some() {
-                        return Err(de::Error::duplicate_field("reason"));
+                        return Err(::serde::de::Error::duplicate_field("reason"));
                     }
                     field_reason = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, FOLDER_PERMISSION_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = FolderPermission {
-            action: field_action.ok_or_else(|| de::Error::missing_field("action"))?,
-            allow: field_allow.ok_or_else(|| de::Error::missing_field("allow"))?,
+            action: field_action.ok_or_else(|| ::serde::de::Error::missing_field("action"))?,
+            allow: field_allow.ok_or_else(|| ::serde::de::Error::missing_field("allow"))?,
             reason: field_reason,
         };
         Ok(Some(result))
@@ -4460,55 +4675,57 @@ impl FolderPolicy {
         mut map: V,
         optional: bool,
     ) -> Result<Option<FolderPolicy>, V::Error> {
-        use serde::de;
         let mut field_acl_update_policy = None;
         let mut field_shared_link_policy = None;
         let mut field_member_policy = None;
         let mut field_resolved_member_policy = None;
         let mut field_viewer_info_policy = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "acl_update_policy" => {
                     if field_acl_update_policy.is_some() {
-                        return Err(de::Error::duplicate_field("acl_update_policy"));
+                        return Err(::serde::de::Error::duplicate_field("acl_update_policy"));
                     }
                     field_acl_update_policy = Some(map.next_value()?);
                 }
                 "shared_link_policy" => {
                     if field_shared_link_policy.is_some() {
-                        return Err(de::Error::duplicate_field("shared_link_policy"));
+                        return Err(::serde::de::Error::duplicate_field("shared_link_policy"));
                     }
                     field_shared_link_policy = Some(map.next_value()?);
                 }
                 "member_policy" => {
                     if field_member_policy.is_some() {
-                        return Err(de::Error::duplicate_field("member_policy"));
+                        return Err(::serde::de::Error::duplicate_field("member_policy"));
                     }
                     field_member_policy = Some(map.next_value()?);
                 }
                 "resolved_member_policy" => {
                     if field_resolved_member_policy.is_some() {
-                        return Err(de::Error::duplicate_field("resolved_member_policy"));
+                        return Err(::serde::de::Error::duplicate_field("resolved_member_policy"));
                     }
                     field_resolved_member_policy = Some(map.next_value()?);
                 }
                 "viewer_info_policy" => {
                     if field_viewer_info_policy.is_some() {
-                        return Err(de::Error::duplicate_field("viewer_info_policy"));
+                        return Err(::serde::de::Error::duplicate_field("viewer_info_policy"));
                     }
                     field_viewer_info_policy = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, FOLDER_POLICY_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = FolderPolicy {
-            acl_update_policy: field_acl_update_policy.ok_or_else(|| de::Error::missing_field("acl_update_policy"))?,
-            shared_link_policy: field_shared_link_policy.ok_or_else(|| de::Error::missing_field("shared_link_policy"))?,
+            acl_update_policy: field_acl_update_policy.ok_or_else(|| ::serde::de::Error::missing_field("acl_update_policy"))?,
+            shared_link_policy: field_shared_link_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_link_policy"))?,
             member_policy: field_member_policy,
             resolved_member_policy: field_resolved_member_policy,
             viewer_info_policy: field_viewer_info_policy,
@@ -4596,33 +4813,35 @@ impl GetFileMetadataArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<GetFileMetadataArg>, V::Error> {
-        use serde::de;
         let mut field_file = None;
         let mut field_actions = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "file" => {
                     if field_file.is_some() {
-                        return Err(de::Error::duplicate_field("file"));
+                        return Err(::serde::de::Error::duplicate_field("file"));
                     }
                     field_file = Some(map.next_value()?);
                 }
                 "actions" => {
                     if field_actions.is_some() {
-                        return Err(de::Error::duplicate_field("actions"));
+                        return Err(::serde::de::Error::duplicate_field("actions"));
                     }
                     field_actions = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GET_FILE_METADATA_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = GetFileMetadataArg {
-            file: field_file.ok_or_else(|| de::Error::missing_field("file"))?,
+            file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
             actions: field_actions,
         };
         Ok(Some(result))
@@ -4705,33 +4924,35 @@ impl GetFileMetadataBatchArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<GetFileMetadataBatchArg>, V::Error> {
-        use serde::de;
         let mut field_files = None;
         let mut field_actions = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "files" => {
                     if field_files.is_some() {
-                        return Err(de::Error::duplicate_field("files"));
+                        return Err(::serde::de::Error::duplicate_field("files"));
                     }
                     field_files = Some(map.next_value()?);
                 }
                 "actions" => {
                     if field_actions.is_some() {
-                        return Err(de::Error::duplicate_field("actions"));
+                        return Err(::serde::de::Error::duplicate_field("actions"));
                     }
                     field_actions = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GET_FILE_METADATA_BATCH_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = GetFileMetadataBatchArg {
-            files: field_files.ok_or_else(|| de::Error::missing_field("files"))?,
+            files: field_files.ok_or_else(|| ::serde::de::Error::missing_field("files"))?,
             actions: field_actions,
         };
         Ok(Some(result))
@@ -4808,34 +5029,36 @@ impl GetFileMetadataBatchResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<GetFileMetadataBatchResult>, V::Error> {
-        use serde::de;
         let mut field_file = None;
         let mut field_result = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "file" => {
                     if field_file.is_some() {
-                        return Err(de::Error::duplicate_field("file"));
+                        return Err(::serde::de::Error::duplicate_field("file"));
                     }
                     field_file = Some(map.next_value()?);
                 }
                 "result" => {
                     if field_result.is_some() {
-                        return Err(de::Error::duplicate_field("result"));
+                        return Err(::serde::de::Error::duplicate_field("result"));
                     }
                     field_result = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GET_FILE_METADATA_BATCH_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = GetFileMetadataBatchResult {
-            file: field_file.ok_or_else(|| de::Error::missing_field("file"))?,
-            result: field_result.ok_or_else(|| de::Error::missing_field("result"))?,
+            file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
+            result: field_result.ok_or_else(|| ::serde::de::Error::missing_field("result"))?,
         };
         Ok(Some(result))
     }
@@ -4916,7 +5139,10 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileMetadataError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(GetFileMetadataError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetFileMetadataError::Other)
+                    }
                 }
             }
         }
@@ -4996,7 +5222,10 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileMetadataIndividualResult {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(GetFileMetadataIndividualResult::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetFileMetadataIndividualResult::Other)
+                    }
                 }
             }
         }
@@ -5069,33 +5298,35 @@ impl GetMetadataArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<GetMetadataArgs>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_actions = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "actions" => {
                     if field_actions.is_some() {
-                        return Err(de::Error::duplicate_field("actions"));
+                        return Err(::serde::de::Error::duplicate_field("actions"));
                     }
                     field_actions = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GET_METADATA_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = GetMetadataArgs {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
             actions: field_actions,
         };
         Ok(Some(result))
@@ -5168,11 +5399,26 @@ impl<'de> ::serde::de::Deserialize<'de> for GetSharedLinkFileError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "shared_link_not_found" => Ok(GetSharedLinkFileError::SharedLinkNotFound),
-                    "shared_link_access_denied" => Ok(GetSharedLinkFileError::SharedLinkAccessDenied),
-                    "unsupported_link_type" => Ok(GetSharedLinkFileError::UnsupportedLinkType),
-                    "shared_link_is_directory" => Ok(GetSharedLinkFileError::SharedLinkIsDirectory),
-                    _ => Ok(GetSharedLinkFileError::Other)
+                    "shared_link_not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetSharedLinkFileError::SharedLinkNotFound)
+                    }
+                    "shared_link_access_denied" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetSharedLinkFileError::SharedLinkAccessDenied)
+                    }
+                    "unsupported_link_type" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetSharedLinkFileError::UnsupportedLinkType)
+                    }
+                    "shared_link_is_directory" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetSharedLinkFileError::SharedLinkIsDirectory)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetSharedLinkFileError::Other)
+                    }
                 }
             }
         }
@@ -5277,40 +5523,42 @@ impl GetSharedLinkMetadataArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<GetSharedLinkMetadataArg>, V::Error> {
-        use serde::de;
         let mut field_url = None;
         let mut field_path = None;
         let mut field_link_password = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "url" => {
                     if field_url.is_some() {
-                        return Err(de::Error::duplicate_field("url"));
+                        return Err(::serde::de::Error::duplicate_field("url"));
                     }
                     field_url = Some(map.next_value()?);
                 }
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
                 "link_password" => {
                     if field_link_password.is_some() {
-                        return Err(de::Error::duplicate_field("link_password"));
+                        return Err(::serde::de::Error::duplicate_field("link_password"));
                     }
                     field_link_password = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GET_SHARED_LINK_METADATA_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = GetSharedLinkMetadataArg {
-            url: field_url.ok_or_else(|| de::Error::missing_field("url"))?,
+            url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
             path: field_path,
             link_password: field_link_password,
         };
@@ -5376,17 +5624,19 @@ impl GetSharedLinksArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<GetSharedLinksArg, V::Error> {
-        use serde::de;
         let mut field_path = None;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GET_SHARED_LINKS_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         let result = GetSharedLinksArg {
@@ -5461,7 +5711,10 @@ impl<'de> ::serde::de::Deserialize<'de> for GetSharedLinksError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(GetSharedLinksError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GetSharedLinksError::Other)
+                    }
                 }
             }
         }
@@ -5530,26 +5783,28 @@ impl GetSharedLinksResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<GetSharedLinksResult>, V::Error> {
-        use serde::de;
         let mut field_links = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "links" => {
                     if field_links.is_some() {
-                        return Err(de::Error::duplicate_field("links"));
+                        return Err(::serde::de::Error::duplicate_field("links"));
                     }
                     field_links = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GET_SHARED_LINKS_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = GetSharedLinksResult {
-            links: field_links.ok_or_else(|| de::Error::missing_field("links"))?,
+            links: field_links.ok_or_else(|| ::serde::de::Error::missing_field("links"))?,
         };
         Ok(Some(result))
     }
@@ -5671,7 +5926,6 @@ impl GroupInfo {
         mut map: V,
         optional: bool,
     ) -> Result<Option<GroupInfo>, V::Error> {
-        use serde::de;
         let mut field_group_name = None;
         let mut field_group_id = None;
         let mut field_group_management_type = None;
@@ -5682,77 +5936,80 @@ impl GroupInfo {
         let mut field_group_external_id = None;
         let mut field_member_count = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "group_name" => {
                     if field_group_name.is_some() {
-                        return Err(de::Error::duplicate_field("group_name"));
+                        return Err(::serde::de::Error::duplicate_field("group_name"));
                     }
                     field_group_name = Some(map.next_value()?);
                 }
                 "group_id" => {
                     if field_group_id.is_some() {
-                        return Err(de::Error::duplicate_field("group_id"));
+                        return Err(::serde::de::Error::duplicate_field("group_id"));
                     }
                     field_group_id = Some(map.next_value()?);
                 }
                 "group_management_type" => {
                     if field_group_management_type.is_some() {
-                        return Err(de::Error::duplicate_field("group_management_type"));
+                        return Err(::serde::de::Error::duplicate_field("group_management_type"));
                     }
                     field_group_management_type = Some(map.next_value()?);
                 }
                 "group_type" => {
                     if field_group_type.is_some() {
-                        return Err(de::Error::duplicate_field("group_type"));
+                        return Err(::serde::de::Error::duplicate_field("group_type"));
                     }
                     field_group_type = Some(map.next_value()?);
                 }
                 "is_member" => {
                     if field_is_member.is_some() {
-                        return Err(de::Error::duplicate_field("is_member"));
+                        return Err(::serde::de::Error::duplicate_field("is_member"));
                     }
                     field_is_member = Some(map.next_value()?);
                 }
                 "is_owner" => {
                     if field_is_owner.is_some() {
-                        return Err(de::Error::duplicate_field("is_owner"));
+                        return Err(::serde::de::Error::duplicate_field("is_owner"));
                     }
                     field_is_owner = Some(map.next_value()?);
                 }
                 "same_team" => {
                     if field_same_team.is_some() {
-                        return Err(de::Error::duplicate_field("same_team"));
+                        return Err(::serde::de::Error::duplicate_field("same_team"));
                     }
                     field_same_team = Some(map.next_value()?);
                 }
                 "group_external_id" => {
                     if field_group_external_id.is_some() {
-                        return Err(de::Error::duplicate_field("group_external_id"));
+                        return Err(::serde::de::Error::duplicate_field("group_external_id"));
                     }
                     field_group_external_id = Some(map.next_value()?);
                 }
                 "member_count" => {
                     if field_member_count.is_some() {
-                        return Err(de::Error::duplicate_field("member_count"));
+                        return Err(::serde::de::Error::duplicate_field("member_count"));
                     }
                     field_member_count = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GROUP_INFO_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = GroupInfo {
-            group_name: field_group_name.ok_or_else(|| de::Error::missing_field("group_name"))?,
-            group_id: field_group_id.ok_or_else(|| de::Error::missing_field("group_id"))?,
-            group_management_type: field_group_management_type.ok_or_else(|| de::Error::missing_field("group_management_type"))?,
-            group_type: field_group_type.ok_or_else(|| de::Error::missing_field("group_type"))?,
-            is_member: field_is_member.ok_or_else(|| de::Error::missing_field("is_member"))?,
-            is_owner: field_is_owner.ok_or_else(|| de::Error::missing_field("is_owner"))?,
-            same_team: field_same_team.ok_or_else(|| de::Error::missing_field("same_team"))?,
+            group_name: field_group_name.ok_or_else(|| ::serde::de::Error::missing_field("group_name"))?,
+            group_id: field_group_id.ok_or_else(|| ::serde::de::Error::missing_field("group_id"))?,
+            group_management_type: field_group_management_type.ok_or_else(|| ::serde::de::Error::missing_field("group_management_type"))?,
+            group_type: field_group_type.ok_or_else(|| ::serde::de::Error::missing_field("group_type"))?,
+            is_member: field_is_member.ok_or_else(|| ::serde::de::Error::missing_field("is_member"))?,
+            is_owner: field_is_owner.ok_or_else(|| ::serde::de::Error::missing_field("is_owner"))?,
+            same_team: field_same_team.ok_or_else(|| ::serde::de::Error::missing_field("same_team"))?,
             group_external_id: field_group_external_id,
             member_count: field_member_count,
         };
@@ -5865,55 +6122,57 @@ impl GroupMembershipInfo {
         mut map: V,
         optional: bool,
     ) -> Result<Option<GroupMembershipInfo>, V::Error> {
-        use serde::de;
         let mut field_access_type = None;
         let mut field_group = None;
         let mut field_permissions = None;
         let mut field_initials = None;
         let mut field_is_inherited = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "access_type" => {
                     if field_access_type.is_some() {
-                        return Err(de::Error::duplicate_field("access_type"));
+                        return Err(::serde::de::Error::duplicate_field("access_type"));
                     }
                     field_access_type = Some(map.next_value()?);
                 }
                 "group" => {
                     if field_group.is_some() {
-                        return Err(de::Error::duplicate_field("group"));
+                        return Err(::serde::de::Error::duplicate_field("group"));
                     }
                     field_group = Some(map.next_value()?);
                 }
                 "permissions" => {
                     if field_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("permissions"));
+                        return Err(::serde::de::Error::duplicate_field("permissions"));
                     }
                     field_permissions = Some(map.next_value()?);
                 }
                 "initials" => {
                     if field_initials.is_some() {
-                        return Err(de::Error::duplicate_field("initials"));
+                        return Err(::serde::de::Error::duplicate_field("initials"));
                     }
                     field_initials = Some(map.next_value()?);
                 }
                 "is_inherited" => {
                     if field_is_inherited.is_some() {
-                        return Err(de::Error::duplicate_field("is_inherited"));
+                        return Err(::serde::de::Error::duplicate_field("is_inherited"));
                     }
                     field_is_inherited = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, GROUP_MEMBERSHIP_INFO_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = GroupMembershipInfo {
-            access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
-            group: field_group.ok_or_else(|| de::Error::missing_field("group"))?,
+            access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
+            group: field_group.ok_or_else(|| ::serde::de::Error::missing_field("group"))?,
             permissions: field_permissions,
             initials: field_initials,
             is_inherited: field_is_inherited.unwrap_or(false),
@@ -5999,33 +6258,35 @@ impl InsufficientPlan {
         mut map: V,
         optional: bool,
     ) -> Result<Option<InsufficientPlan>, V::Error> {
-        use serde::de;
         let mut field_message = None;
         let mut field_upsell_url = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "message" => {
                     if field_message.is_some() {
-                        return Err(de::Error::duplicate_field("message"));
+                        return Err(::serde::de::Error::duplicate_field("message"));
                     }
                     field_message = Some(map.next_value()?);
                 }
                 "upsell_url" => {
                     if field_upsell_url.is_some() {
-                        return Err(de::Error::duplicate_field("upsell_url"));
+                        return Err(::serde::de::Error::duplicate_field("upsell_url"));
                     }
                     field_upsell_url = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, INSUFFICIENT_PLAN_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = InsufficientPlan {
-            message: field_message.ok_or_else(|| de::Error::missing_field("message"))?,
+            message: field_message.ok_or_else(|| ::serde::de::Error::missing_field("message"))?,
             upsell_url: field_upsell_url,
         };
         Ok(Some(result))
@@ -6104,42 +6365,44 @@ impl InsufficientQuotaAmounts {
         mut map: V,
         optional: bool,
     ) -> Result<Option<InsufficientQuotaAmounts>, V::Error> {
-        use serde::de;
         let mut field_space_needed = None;
         let mut field_space_shortage = None;
         let mut field_space_left = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "space_needed" => {
                     if field_space_needed.is_some() {
-                        return Err(de::Error::duplicate_field("space_needed"));
+                        return Err(::serde::de::Error::duplicate_field("space_needed"));
                     }
                     field_space_needed = Some(map.next_value()?);
                 }
                 "space_shortage" => {
                     if field_space_shortage.is_some() {
-                        return Err(de::Error::duplicate_field("space_shortage"));
+                        return Err(::serde::de::Error::duplicate_field("space_shortage"));
                     }
                     field_space_shortage = Some(map.next_value()?);
                 }
                 "space_left" => {
                     if field_space_left.is_some() {
-                        return Err(de::Error::duplicate_field("space_left"));
+                        return Err(::serde::de::Error::duplicate_field("space_left"));
                     }
                     field_space_left = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, INSUFFICIENT_QUOTA_AMOUNTS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = InsufficientQuotaAmounts {
-            space_needed: field_space_needed.ok_or_else(|| de::Error::missing_field("space_needed"))?,
-            space_shortage: field_space_shortage.ok_or_else(|| de::Error::missing_field("space_shortage"))?,
-            space_left: field_space_left.ok_or_else(|| de::Error::missing_field("space_left"))?,
+            space_needed: field_space_needed.ok_or_else(|| ::serde::de::Error::missing_field("space_needed"))?,
+            space_shortage: field_space_shortage.ok_or_else(|| ::serde::de::Error::missing_field("space_shortage"))?,
+            space_left: field_space_left.ok_or_else(|| ::serde::de::Error::missing_field("space_left"))?,
         };
         Ok(Some(result))
     }
@@ -6214,7 +6477,10 @@ impl<'de> ::serde::de::Deserialize<'de> for InviteeInfo {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(InviteeInfo::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(InviteeInfo::Other)
+                    }
                 }
             }
         }
@@ -6311,7 +6577,6 @@ impl InviteeMembershipInfo {
         mut map: V,
         optional: bool,
     ) -> Result<Option<InviteeMembershipInfo>, V::Error> {
-        use serde::de;
         let mut field_access_type = None;
         let mut field_invitee = None;
         let mut field_permissions = None;
@@ -6319,54 +6584,57 @@ impl InviteeMembershipInfo {
         let mut field_is_inherited = None;
         let mut field_user = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "access_type" => {
                     if field_access_type.is_some() {
-                        return Err(de::Error::duplicate_field("access_type"));
+                        return Err(::serde::de::Error::duplicate_field("access_type"));
                     }
                     field_access_type = Some(map.next_value()?);
                 }
                 "invitee" => {
                     if field_invitee.is_some() {
-                        return Err(de::Error::duplicate_field("invitee"));
+                        return Err(::serde::de::Error::duplicate_field("invitee"));
                     }
                     field_invitee = Some(map.next_value()?);
                 }
                 "permissions" => {
                     if field_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("permissions"));
+                        return Err(::serde::de::Error::duplicate_field("permissions"));
                     }
                     field_permissions = Some(map.next_value()?);
                 }
                 "initials" => {
                     if field_initials.is_some() {
-                        return Err(de::Error::duplicate_field("initials"));
+                        return Err(::serde::de::Error::duplicate_field("initials"));
                     }
                     field_initials = Some(map.next_value()?);
                 }
                 "is_inherited" => {
                     if field_is_inherited.is_some() {
-                        return Err(de::Error::duplicate_field("is_inherited"));
+                        return Err(::serde::de::Error::duplicate_field("is_inherited"));
                     }
                     field_is_inherited = Some(map.next_value()?);
                 }
                 "user" => {
                     if field_user.is_some() {
-                        return Err(de::Error::duplicate_field("user"));
+                        return Err(::serde::de::Error::duplicate_field("user"));
                     }
                     field_user = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, INVITEE_MEMBERSHIP_INFO_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = InviteeMembershipInfo {
-            access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
-            invitee: field_invitee.ok_or_else(|| de::Error::missing_field("invitee"))?,
+            access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
+            invitee: field_invitee.ok_or_else(|| ::serde::de::Error::missing_field("invitee"))?,
             permissions: field_permissions,
             initials: field_initials,
             is_inherited: field_is_inherited.unwrap_or(false),
@@ -6468,7 +6736,10 @@ impl<'de> ::serde::de::Deserialize<'de> for JobError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(JobError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(JobError::Other)
+                    }
                 }
             }
         }
@@ -6549,8 +6820,14 @@ impl<'de> ::serde::de::Deserialize<'de> for JobStatus {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "in_progress" => Ok(JobStatus::InProgress),
-                    "complete" => Ok(JobStatus::Complete),
+                    "in_progress" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(JobStatus::InProgress)
+                    }
+                    "complete" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(JobStatus::Complete)
+                    }
                     "failed" => {
                         match map.next_key()? {
                             Some("failed") => Ok(JobStatus::Failed(map.next_value()?)),
@@ -6631,13 +6908,34 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAction {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "change_access_level" => Ok(LinkAction::ChangeAccessLevel),
-                    "change_audience" => Ok(LinkAction::ChangeAudience),
-                    "remove_expiry" => Ok(LinkAction::RemoveExpiry),
-                    "remove_password" => Ok(LinkAction::RemovePassword),
-                    "set_expiry" => Ok(LinkAction::SetExpiry),
-                    "set_password" => Ok(LinkAction::SetPassword),
-                    _ => Ok(LinkAction::Other)
+                    "change_access_level" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkAction::ChangeAccessLevel)
+                    }
+                    "change_audience" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkAction::ChangeAudience)
+                    }
+                    "remove_expiry" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkAction::RemoveExpiry)
+                    }
+                    "remove_password" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkAction::RemovePassword)
+                    }
+                    "set_expiry" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkAction::SetExpiry)
+                    }
+                    "set_password" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkAction::SetPassword)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkAction::Other)
+                    }
                 }
             }
         }
@@ -6725,10 +7023,22 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "public" => Ok(LinkAudience::Public),
-                    "team" => Ok(LinkAudience::Team),
-                    "members" => Ok(LinkAudience::Members),
-                    _ => Ok(LinkAudience::Other)
+                    "public" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkAudience::Public)
+                    }
+                    "team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkAudience::Team)
+                    }
+                    "members" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkAudience::Members)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkAudience::Other)
+                    }
                 }
             }
         }
@@ -6793,7 +7103,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkExpiry {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "remove_expiry" => Ok(LinkExpiry::RemoveExpiry),
+                    "remove_expiry" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkExpiry::RemoveExpiry)
+                    }
                     "set_expiry" => {
                         match map.next_key()? {
                             Some("set_expiry") => Ok(LinkExpiry::SetExpiry(map.next_value()?)),
@@ -6801,7 +7114,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkExpiry {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(LinkExpiry::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkExpiry::Other)
+                    }
                 }
             }
         }
@@ -6924,7 +7240,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkPassword {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "remove_password" => Ok(LinkPassword::RemovePassword),
+                    "remove_password" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkPassword::RemovePassword)
+                    }
                     "set_password" => {
                         match map.next_key()? {
                             Some("set_password") => Ok(LinkPassword::SetPassword(map.next_value()?)),
@@ -6932,7 +7251,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkPassword {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(LinkPassword::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkPassword::Other)
+                    }
                 }
             }
         }
@@ -7004,41 +7326,43 @@ impl LinkPermission {
         mut map: V,
         optional: bool,
     ) -> Result<Option<LinkPermission>, V::Error> {
-        use serde::de;
         let mut field_action = None;
         let mut field_allow = None;
         let mut field_reason = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "action" => {
                     if field_action.is_some() {
-                        return Err(de::Error::duplicate_field("action"));
+                        return Err(::serde::de::Error::duplicate_field("action"));
                     }
                     field_action = Some(map.next_value()?);
                 }
                 "allow" => {
                     if field_allow.is_some() {
-                        return Err(de::Error::duplicate_field("allow"));
+                        return Err(::serde::de::Error::duplicate_field("allow"));
                     }
                     field_allow = Some(map.next_value()?);
                 }
                 "reason" => {
                     if field_reason.is_some() {
-                        return Err(de::Error::duplicate_field("reason"));
+                        return Err(::serde::de::Error::duplicate_field("reason"));
                     }
                     field_reason = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LINK_PERMISSION_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = LinkPermission {
-            action: field_action.ok_or_else(|| de::Error::missing_field("action"))?,
-            allow: field_allow.ok_or_else(|| de::Error::missing_field("allow"))?,
+            action: field_action.ok_or_else(|| ::serde::de::Error::missing_field("action"))?,
+            allow: field_allow.ok_or_else(|| ::serde::de::Error::missing_field("allow"))?,
             reason: field_reason,
         };
         Ok(Some(result))
@@ -7146,47 +7470,49 @@ impl LinkPermissions {
         mut map: V,
         optional: bool,
     ) -> Result<Option<LinkPermissions>, V::Error> {
-        use serde::de;
         let mut field_can_revoke = None;
         let mut field_resolved_visibility = None;
         let mut field_requested_visibility = None;
         let mut field_revoke_failure_reason = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "can_revoke" => {
                     if field_can_revoke.is_some() {
-                        return Err(de::Error::duplicate_field("can_revoke"));
+                        return Err(::serde::de::Error::duplicate_field("can_revoke"));
                     }
                     field_can_revoke = Some(map.next_value()?);
                 }
                 "resolved_visibility" => {
                     if field_resolved_visibility.is_some() {
-                        return Err(de::Error::duplicate_field("resolved_visibility"));
+                        return Err(::serde::de::Error::duplicate_field("resolved_visibility"));
                     }
                     field_resolved_visibility = Some(map.next_value()?);
                 }
                 "requested_visibility" => {
                     if field_requested_visibility.is_some() {
-                        return Err(de::Error::duplicate_field("requested_visibility"));
+                        return Err(::serde::de::Error::duplicate_field("requested_visibility"));
                     }
                     field_requested_visibility = Some(map.next_value()?);
                 }
                 "revoke_failure_reason" => {
                     if field_revoke_failure_reason.is_some() {
-                        return Err(de::Error::duplicate_field("revoke_failure_reason"));
+                        return Err(::serde::de::Error::duplicate_field("revoke_failure_reason"));
                     }
                     field_revoke_failure_reason = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LINK_PERMISSIONS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = LinkPermissions {
-            can_revoke: field_can_revoke.ok_or_else(|| de::Error::missing_field("can_revoke"))?,
+            can_revoke: field_can_revoke.ok_or_else(|| ::serde::de::Error::missing_field("can_revoke"))?,
             resolved_visibility: field_resolved_visibility,
             requested_visibility: field_requested_visibility,
             revoke_failure_reason: field_revoke_failure_reason,
@@ -7268,38 +7594,40 @@ impl LinkSettings {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<LinkSettings, V::Error> {
-        use serde::de;
         let mut field_access_level = None;
         let mut field_audience = None;
         let mut field_expiry = None;
         let mut field_password = None;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "access_level" => {
                     if field_access_level.is_some() {
-                        return Err(de::Error::duplicate_field("access_level"));
+                        return Err(::serde::de::Error::duplicate_field("access_level"));
                     }
                     field_access_level = Some(map.next_value()?);
                 }
                 "audience" => {
                     if field_audience.is_some() {
-                        return Err(de::Error::duplicate_field("audience"));
+                        return Err(::serde::de::Error::duplicate_field("audience"));
                     }
                     field_audience = Some(map.next_value()?);
                 }
                 "expiry" => {
                     if field_expiry.is_some() {
-                        return Err(de::Error::duplicate_field("expiry"));
+                        return Err(::serde::de::Error::duplicate_field("expiry"));
                     }
                     field_expiry = Some(map.next_value()?);
                 }
                 "password" => {
                     if field_password.is_some() {
-                        return Err(de::Error::duplicate_field("password"));
+                        return Err(::serde::de::Error::duplicate_field("password"));
                     }
                     field_password = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LINK_SETTINGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         let result = LinkSettings {
@@ -7406,47 +7734,49 @@ impl ListFileMembersArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListFileMembersArg>, V::Error> {
-        use serde::de;
         let mut field_file = None;
         let mut field_actions = None;
         let mut field_include_inherited = None;
         let mut field_limit = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "file" => {
                     if field_file.is_some() {
-                        return Err(de::Error::duplicate_field("file"));
+                        return Err(::serde::de::Error::duplicate_field("file"));
                     }
                     field_file = Some(map.next_value()?);
                 }
                 "actions" => {
                     if field_actions.is_some() {
-                        return Err(de::Error::duplicate_field("actions"));
+                        return Err(::serde::de::Error::duplicate_field("actions"));
                     }
                     field_actions = Some(map.next_value()?);
                 }
                 "include_inherited" => {
                     if field_include_inherited.is_some() {
-                        return Err(de::Error::duplicate_field("include_inherited"));
+                        return Err(::serde::de::Error::duplicate_field("include_inherited"));
                     }
                     field_include_inherited = Some(map.next_value()?);
                 }
                 "limit" => {
                     if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
+                        return Err(::serde::de::Error::duplicate_field("limit"));
                     }
                     field_limit = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FILE_MEMBERS_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListFileMembersArg {
-            file: field_file.ok_or_else(|| de::Error::missing_field("file"))?,
+            file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
             actions: field_actions,
             include_inherited: field_include_inherited.unwrap_or(true),
             limit: field_limit.unwrap_or(100),
@@ -7531,33 +7861,35 @@ impl ListFileMembersBatchArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListFileMembersBatchArg>, V::Error> {
-        use serde::de;
         let mut field_files = None;
         let mut field_limit = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "files" => {
                     if field_files.is_some() {
-                        return Err(de::Error::duplicate_field("files"));
+                        return Err(::serde::de::Error::duplicate_field("files"));
                     }
                     field_files = Some(map.next_value()?);
                 }
                 "limit" => {
                     if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
+                        return Err(::serde::de::Error::duplicate_field("limit"));
                     }
                     field_limit = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FILE_MEMBERS_BATCH_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListFileMembersBatchArg {
-            files: field_files.ok_or_else(|| de::Error::missing_field("files"))?,
+            files: field_files.ok_or_else(|| ::serde::de::Error::missing_field("files"))?,
             limit: field_limit.unwrap_or(10),
         };
         Ok(Some(result))
@@ -7633,34 +7965,36 @@ impl ListFileMembersBatchResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListFileMembersBatchResult>, V::Error> {
-        use serde::de;
         let mut field_file = None;
         let mut field_result = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "file" => {
                     if field_file.is_some() {
-                        return Err(de::Error::duplicate_field("file"));
+                        return Err(::serde::de::Error::duplicate_field("file"));
                     }
                     field_file = Some(map.next_value()?);
                 }
                 "result" => {
                     if field_result.is_some() {
-                        return Err(de::Error::duplicate_field("result"));
+                        return Err(::serde::de::Error::duplicate_field("result"));
                     }
                     field_result = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FILE_MEMBERS_BATCH_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListFileMembersBatchResult {
-            file: field_file.ok_or_else(|| de::Error::missing_field("file"))?,
-            result: field_result.ok_or_else(|| de::Error::missing_field("result"))?,
+            file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
+            result: field_result.ok_or_else(|| ::serde::de::Error::missing_field("result"))?,
         };
         Ok(Some(result))
     }
@@ -7733,26 +8067,28 @@ impl ListFileMembersContinueArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListFileMembersContinueArg>, V::Error> {
-        use serde::de;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FILE_MEMBERS_CONTINUE_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListFileMembersContinueArg {
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
         };
         Ok(Some(result))
     }
@@ -7834,8 +8170,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersContinueError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "invalid_cursor" => Ok(ListFileMembersContinueError::InvalidCursor),
-                    _ => Ok(ListFileMembersContinueError::Other)
+                    "invalid_cursor" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListFileMembersContinueError::InvalidCursor)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListFileMembersContinueError::Other)
+                    }
                 }
             }
         }
@@ -7920,34 +8262,36 @@ impl ListFileMembersCountResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListFileMembersCountResult>, V::Error> {
-        use serde::de;
         let mut field_members = None;
         let mut field_member_count = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "members" => {
                     if field_members.is_some() {
-                        return Err(de::Error::duplicate_field("members"));
+                        return Err(::serde::de::Error::duplicate_field("members"));
                     }
                     field_members = Some(map.next_value()?);
                 }
                 "member_count" => {
                     if field_member_count.is_some() {
-                        return Err(de::Error::duplicate_field("member_count"));
+                        return Err(::serde::de::Error::duplicate_field("member_count"));
                     }
                     field_member_count = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FILE_MEMBERS_COUNT_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListFileMembersCountResult {
-            members: field_members.ok_or_else(|| de::Error::missing_field("members"))?,
-            member_count: field_member_count.ok_or_else(|| de::Error::missing_field("member_count"))?,
+            members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
+            member_count: field_member_count.ok_or_else(|| ::serde::de::Error::missing_field("member_count"))?,
         };
         Ok(Some(result))
     }
@@ -8028,7 +8372,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(ListFileMembersError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListFileMembersError::Other)
+                    }
                 }
             }
         }
@@ -8108,7 +8455,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersIndividualResult {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(ListFileMembersIndividualResult::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListFileMembersIndividualResult::Other)
+                    }
                 }
             }
         }
@@ -8170,24 +8520,26 @@ impl ListFilesArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ListFilesArg, V::Error> {
-        use serde::de;
         let mut field_limit = None;
         let mut field_actions = None;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "limit" => {
                     if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
+                        return Err(::serde::de::Error::duplicate_field("limit"));
                     }
                     field_limit = Some(map.next_value()?);
                 }
                 "actions" => {
                     if field_actions.is_some() {
-                        return Err(de::Error::duplicate_field("actions"));
+                        return Err(::serde::de::Error::duplicate_field("actions"));
                     }
                     field_actions = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FILES_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         let result = ListFilesArg {
@@ -8263,26 +8615,28 @@ impl ListFilesContinueArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListFilesContinueArg>, V::Error> {
-        use serde::de;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FILES_CONTINUE_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListFilesContinueArg {
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
         };
         Ok(Some(result))
     }
@@ -8357,8 +8711,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFilesContinueError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "invalid_cursor" => Ok(ListFilesContinueError::InvalidCursor),
-                    _ => Ok(ListFilesContinueError::Other)
+                    "invalid_cursor" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListFilesContinueError::InvalidCursor)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListFilesContinueError::Other)
+                    }
                 }
             }
         }
@@ -8441,33 +8801,35 @@ impl ListFilesResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListFilesResult>, V::Error> {
-        use serde::de;
         let mut field_entries = None;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "entries" => {
                     if field_entries.is_some() {
-                        return Err(de::Error::duplicate_field("entries"));
+                        return Err(::serde::de::Error::duplicate_field("entries"));
                     }
                     field_entries = Some(map.next_value()?);
                 }
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FILES_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListFilesResult {
-            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
+            entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
             cursor: field_cursor,
         };
         Ok(Some(result))
@@ -8559,40 +8921,42 @@ impl ListFolderMembersArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListFolderMembersArgs>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_actions = None;
         let mut field_limit = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "actions" => {
                     if field_actions.is_some() {
-                        return Err(de::Error::duplicate_field("actions"));
+                        return Err(::serde::de::Error::duplicate_field("actions"));
                     }
                     field_actions = Some(map.next_value()?);
                 }
                 "limit" => {
                     if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
+                        return Err(::serde::de::Error::duplicate_field("limit"));
                     }
                     field_limit = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_MEMBERS_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListFolderMembersArgs {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
             actions: field_actions,
             limit: field_limit.unwrap_or(1000),
         };
@@ -8666,26 +9030,28 @@ impl ListFolderMembersContinueArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListFolderMembersContinueArg>, V::Error> {
-        use serde::de;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_MEMBERS_CONTINUE_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListFolderMembersContinueArg {
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
         };
         Ok(Some(result))
     }
@@ -8758,8 +9124,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderMembersContinueError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "invalid_cursor" => Ok(ListFolderMembersContinueError::InvalidCursor),
-                    _ => Ok(ListFolderMembersContinueError::Other)
+                    "invalid_cursor" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListFolderMembersContinueError::InvalidCursor)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListFolderMembersContinueError::Other)
+                    }
                 }
             }
         }
@@ -8832,24 +9204,26 @@ impl ListFolderMembersCursorArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ListFolderMembersCursorArg, V::Error> {
-        use serde::de;
         let mut field_actions = None;
         let mut field_limit = None;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "actions" => {
                     if field_actions.is_some() {
-                        return Err(de::Error::duplicate_field("actions"));
+                        return Err(::serde::de::Error::duplicate_field("actions"));
                     }
                     field_actions = Some(map.next_value()?);
                 }
                 "limit" => {
                     if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
+                        return Err(::serde::de::Error::duplicate_field("limit"));
                     }
                     field_limit = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FOLDER_MEMBERS_CURSOR_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         let result = ListFolderMembersCursorArg {
@@ -8923,24 +9297,26 @@ impl ListFoldersArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ListFoldersArgs, V::Error> {
-        use serde::de;
         let mut field_limit = None;
         let mut field_actions = None;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "limit" => {
                     if field_limit.is_some() {
-                        return Err(de::Error::duplicate_field("limit"));
+                        return Err(::serde::de::Error::duplicate_field("limit"));
                     }
                     field_limit = Some(map.next_value()?);
                 }
                 "actions" => {
                     if field_actions.is_some() {
-                        return Err(de::Error::duplicate_field("actions"));
+                        return Err(::serde::de::Error::duplicate_field("actions"));
                     }
                     field_actions = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FOLDERS_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         let result = ListFoldersArgs {
@@ -9015,26 +9391,28 @@ impl ListFoldersContinueArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListFoldersContinueArg>, V::Error> {
-        use serde::de;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FOLDERS_CONTINUE_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListFoldersContinueArg {
-            cursor: field_cursor.ok_or_else(|| de::Error::missing_field("cursor"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
         };
         Ok(Some(result))
     }
@@ -9099,8 +9477,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFoldersContinueError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "invalid_cursor" => Ok(ListFoldersContinueError::InvalidCursor),
-                    _ => Ok(ListFoldersContinueError::Other)
+                    "invalid_cursor" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListFoldersContinueError::InvalidCursor)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListFoldersContinueError::Other)
+                    }
                 }
             }
         }
@@ -9182,33 +9566,35 @@ impl ListFoldersResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListFoldersResult>, V::Error> {
-        use serde::de;
         let mut field_entries = None;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "entries" => {
                     if field_entries.is_some() {
-                        return Err(de::Error::duplicate_field("entries"));
+                        return Err(::serde::de::Error::duplicate_field("entries"));
                     }
                     field_entries = Some(map.next_value()?);
                 }
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_FOLDERS_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListFoldersResult {
-            entries: field_entries.ok_or_else(|| de::Error::missing_field("entries"))?,
+            entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
             cursor: field_cursor,
         };
         Ok(Some(result))
@@ -9280,31 +9666,33 @@ impl ListSharedLinksArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ListSharedLinksArg, V::Error> {
-        use serde::de;
         let mut field_path = None;
         let mut field_cursor = None;
         let mut field_direct_only = None;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
                 "direct_only" => {
                     if field_direct_only.is_some() {
-                        return Err(de::Error::duplicate_field("direct_only"));
+                        return Err(::serde::de::Error::duplicate_field("direct_only"));
                     }
                     field_direct_only = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_SHARED_LINKS_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         let result = ListSharedLinksArg {
@@ -9386,8 +9774,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ListSharedLinksError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "reset" => Ok(ListSharedLinksError::Reset),
-                    _ => Ok(ListSharedLinksError::Other)
+                    "reset" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListSharedLinksError::Reset)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ListSharedLinksError::Other)
+                    }
                 }
             }
         }
@@ -9475,41 +9869,43 @@ impl ListSharedLinksResult {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ListSharedLinksResult>, V::Error> {
-        use serde::de;
         let mut field_links = None;
         let mut field_has_more = None;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "links" => {
                     if field_links.is_some() {
-                        return Err(de::Error::duplicate_field("links"));
+                        return Err(::serde::de::Error::duplicate_field("links"));
                     }
                     field_links = Some(map.next_value()?);
                 }
                 "has_more" => {
                     if field_has_more.is_some() {
-                        return Err(de::Error::duplicate_field("has_more"));
+                        return Err(::serde::de::Error::duplicate_field("has_more"));
                     }
                     field_has_more = Some(map.next_value()?);
                 }
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, LIST_SHARED_LINKS_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ListSharedLinksResult {
-            links: field_links.ok_or_else(|| de::Error::missing_field("links"))?,
-            has_more: field_has_more.ok_or_else(|| de::Error::missing_field("has_more"))?,
+            links: field_links.ok_or_else(|| ::serde::de::Error::missing_field("links"))?,
+            has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
             cursor: field_cursor,
         };
         Ok(Some(result))
@@ -9585,31 +9981,33 @@ impl MemberAccessLevelResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MemberAccessLevelResult, V::Error> {
-        use serde::de;
         let mut field_access_level = None;
         let mut field_warning = None;
         let mut field_access_details = None;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "access_level" => {
                     if field_access_level.is_some() {
-                        return Err(de::Error::duplicate_field("access_level"));
+                        return Err(::serde::de::Error::duplicate_field("access_level"));
                     }
                     field_access_level = Some(map.next_value()?);
                 }
                 "warning" => {
                     if field_warning.is_some() {
-                        return Err(de::Error::duplicate_field("warning"));
+                        return Err(::serde::de::Error::duplicate_field("warning"));
                     }
                     field_warning = Some(map.next_value()?);
                 }
                 "access_details" => {
                     if field_access_details.is_some() {
-                        return Err(de::Error::duplicate_field("access_details"));
+                        return Err(::serde::de::Error::duplicate_field("access_details"));
                     }
                     field_access_details = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, MEMBER_ACCESS_LEVEL_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         let result = MemberAccessLevelResult {
@@ -9693,13 +10091,34 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberAction {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "leave_a_copy" => Ok(MemberAction::LeaveACopy),
-                    "make_editor" => Ok(MemberAction::MakeEditor),
-                    "make_owner" => Ok(MemberAction::MakeOwner),
-                    "make_viewer" => Ok(MemberAction::MakeViewer),
-                    "make_viewer_no_comment" => Ok(MemberAction::MakeViewerNoComment),
-                    "remove" => Ok(MemberAction::Remove),
-                    _ => Ok(MemberAction::Other)
+                    "leave_a_copy" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberAction::LeaveACopy)
+                    }
+                    "make_editor" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberAction::MakeEditor)
+                    }
+                    "make_owner" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberAction::MakeOwner)
+                    }
+                    "make_viewer" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberAction::MakeViewer)
+                    }
+                    "make_viewer_no_comment" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberAction::MakeViewerNoComment)
+                    }
+                    "remove" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberAction::Remove)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberAction::Other)
+                    }
                 }
             }
         }
@@ -9801,41 +10220,43 @@ impl MemberPermission {
         mut map: V,
         optional: bool,
     ) -> Result<Option<MemberPermission>, V::Error> {
-        use serde::de;
         let mut field_action = None;
         let mut field_allow = None;
         let mut field_reason = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "action" => {
                     if field_action.is_some() {
-                        return Err(de::Error::duplicate_field("action"));
+                        return Err(::serde::de::Error::duplicate_field("action"));
                     }
                     field_action = Some(map.next_value()?);
                 }
                 "allow" => {
                     if field_allow.is_some() {
-                        return Err(de::Error::duplicate_field("allow"));
+                        return Err(::serde::de::Error::duplicate_field("allow"));
                     }
                     field_allow = Some(map.next_value()?);
                 }
                 "reason" => {
                     if field_reason.is_some() {
-                        return Err(de::Error::duplicate_field("reason"));
+                        return Err(::serde::de::Error::duplicate_field("reason"));
                     }
                     field_reason = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, MEMBER_PERMISSION_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = MemberPermission {
-            action: field_action.ok_or_else(|| de::Error::missing_field("action"))?,
-            allow: field_allow.ok_or_else(|| de::Error::missing_field("allow"))?,
+            action: field_action.ok_or_else(|| ::serde::de::Error::missing_field("action"))?,
+            allow: field_allow.ok_or_else(|| ::serde::de::Error::missing_field("allow"))?,
             reason: field_reason,
         };
         Ok(Some(result))
@@ -9907,9 +10328,18 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "team" => Ok(MemberPolicy::Team),
-                    "anyone" => Ok(MemberPolicy::Anyone),
-                    _ => Ok(MemberPolicy::Other)
+                    "team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberPolicy::Team)
+                    }
+                    "anyone" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberPolicy::Anyone)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberPolicy::Other)
+                    }
                 }
             }
         }
@@ -9982,7 +10412,10 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSelector {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(MemberSelector::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MemberSelector::Other)
+                    }
                 }
             }
         }
@@ -10074,47 +10507,49 @@ impl MembershipInfo {
         mut map: V,
         optional: bool,
     ) -> Result<Option<MembershipInfo>, V::Error> {
-        use serde::de;
         let mut field_access_type = None;
         let mut field_permissions = None;
         let mut field_initials = None;
         let mut field_is_inherited = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "access_type" => {
                     if field_access_type.is_some() {
-                        return Err(de::Error::duplicate_field("access_type"));
+                        return Err(::serde::de::Error::duplicate_field("access_type"));
                     }
                     field_access_type = Some(map.next_value()?);
                 }
                 "permissions" => {
                     if field_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("permissions"));
+                        return Err(::serde::de::Error::duplicate_field("permissions"));
                     }
                     field_permissions = Some(map.next_value()?);
                 }
                 "initials" => {
                     if field_initials.is_some() {
-                        return Err(de::Error::duplicate_field("initials"));
+                        return Err(::serde::de::Error::duplicate_field("initials"));
                     }
                     field_initials = Some(map.next_value()?);
                 }
                 "is_inherited" => {
                     if field_is_inherited.is_some() {
-                        return Err(de::Error::duplicate_field("is_inherited"));
+                        return Err(::serde::de::Error::duplicate_field("is_inherited"));
                     }
                     field_is_inherited = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, MEMBERSHIP_INFO_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = MembershipInfo {
-            access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
+            access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
             permissions: field_permissions,
             initials: field_initials,
             is_inherited: field_is_inherited.unwrap_or(false),
@@ -10202,41 +10637,43 @@ impl ModifySharedLinkSettingsArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ModifySharedLinkSettingsArgs>, V::Error> {
-        use serde::de;
         let mut field_url = None;
         let mut field_settings = None;
         let mut field_remove_expiration = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "url" => {
                     if field_url.is_some() {
-                        return Err(de::Error::duplicate_field("url"));
+                        return Err(::serde::de::Error::duplicate_field("url"));
                     }
                     field_url = Some(map.next_value()?);
                 }
                 "settings" => {
                     if field_settings.is_some() {
-                        return Err(de::Error::duplicate_field("settings"));
+                        return Err(::serde::de::Error::duplicate_field("settings"));
                     }
                     field_settings = Some(map.next_value()?);
                 }
                 "remove_expiration" => {
                     if field_remove_expiration.is_some() {
-                        return Err(de::Error::duplicate_field("remove_expiration"));
+                        return Err(::serde::de::Error::duplicate_field("remove_expiration"));
                     }
                     field_remove_expiration = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, MODIFY_SHARED_LINK_SETTINGS_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ModifySharedLinkSettingsArgs {
-            url: field_url.ok_or_else(|| de::Error::missing_field("url"))?,
-            settings: field_settings.ok_or_else(|| de::Error::missing_field("settings"))?,
+            url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
+            settings: field_settings.ok_or_else(|| ::serde::de::Error::missing_field("settings"))?,
             remove_expiration: field_remove_expiration.unwrap_or(false),
         };
         Ok(Some(result))
@@ -10312,9 +10749,18 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifySharedLinkSettingsError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "shared_link_not_found" => Ok(ModifySharedLinkSettingsError::SharedLinkNotFound),
-                    "shared_link_access_denied" => Ok(ModifySharedLinkSettingsError::SharedLinkAccessDenied),
-                    "unsupported_link_type" => Ok(ModifySharedLinkSettingsError::UnsupportedLinkType),
+                    "shared_link_not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ModifySharedLinkSettingsError::SharedLinkNotFound)
+                    }
+                    "shared_link_access_denied" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ModifySharedLinkSettingsError::SharedLinkAccessDenied)
+                    }
+                    "unsupported_link_type" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ModifySharedLinkSettingsError::UnsupportedLinkType)
+                    }
                     "settings_error" => {
                         match map.next_key()? {
                             Some("settings_error") => Ok(ModifySharedLinkSettingsError::SettingsError(map.next_value()?)),
@@ -10322,8 +10768,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifySharedLinkSettingsError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "email_not_verified" => Ok(ModifySharedLinkSettingsError::EmailNotVerified),
-                    _ => Ok(ModifySharedLinkSettingsError::Other)
+                    "email_not_verified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ModifySharedLinkSettingsError::EmailNotVerified)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ModifySharedLinkSettingsError::Other)
+                    }
                 }
             }
         }
@@ -10417,26 +10869,28 @@ impl MountFolderArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<MountFolderArg>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, MOUNT_FOLDER_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = MountFolderArg {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
         };
         Ok(Some(result))
     }
@@ -10518,12 +10972,27 @@ impl<'de> ::serde::de::Deserialize<'de> for MountFolderError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "inside_shared_folder" => Ok(MountFolderError::InsideSharedFolder),
+                    "inside_shared_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MountFolderError::InsideSharedFolder)
+                    }
                     "insufficient_quota" => Ok(MountFolderError::InsufficientQuota(InsufficientQuotaAmounts::internal_deserialize(map)?)),
-                    "already_mounted" => Ok(MountFolderError::AlreadyMounted),
-                    "no_permission" => Ok(MountFolderError::NoPermission),
-                    "not_mountable" => Ok(MountFolderError::NotMountable),
-                    _ => Ok(MountFolderError::Other)
+                    "already_mounted" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MountFolderError::AlreadyMounted)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MountFolderError::NoPermission)
+                    }
+                    "not_mountable" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MountFolderError::NotMountable)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(MountFolderError::Other)
+                    }
                 }
             }
         }
@@ -10643,50 +11112,52 @@ impl ParentFolderAccessInfo {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ParentFolderAccessInfo>, V::Error> {
-        use serde::de;
         let mut field_folder_name = None;
         let mut field_shared_folder_id = None;
         let mut field_permissions = None;
         let mut field_path = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "folder_name" => {
                     if field_folder_name.is_some() {
-                        return Err(de::Error::duplicate_field("folder_name"));
+                        return Err(::serde::de::Error::duplicate_field("folder_name"));
                     }
                     field_folder_name = Some(map.next_value()?);
                 }
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "permissions" => {
                     if field_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("permissions"));
+                        return Err(::serde::de::Error::duplicate_field("permissions"));
                     }
                     field_permissions = Some(map.next_value()?);
                 }
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PARENT_FOLDER_ACCESS_INFO_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ParentFolderAccessInfo {
-            folder_name: field_folder_name.ok_or_else(|| de::Error::missing_field("folder_name"))?,
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
-            permissions: field_permissions.ok_or_else(|| de::Error::missing_field("permissions"))?,
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            folder_name: field_folder_name.ok_or_else(|| ::serde::de::Error::missing_field("folder_name"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
+            permissions: field_permissions.ok_or_else(|| ::serde::de::Error::missing_field("permissions"))?,
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
         };
         Ok(Some(result))
     }
@@ -10776,49 +11247,51 @@ impl PathLinkMetadata {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PathLinkMetadata>, V::Error> {
-        use serde::de;
         let mut field_url = None;
         let mut field_visibility = None;
         let mut field_path = None;
         let mut field_expires = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "url" => {
                     if field_url.is_some() {
-                        return Err(de::Error::duplicate_field("url"));
+                        return Err(::serde::de::Error::duplicate_field("url"));
                     }
                     field_url = Some(map.next_value()?);
                 }
                 "visibility" => {
                     if field_visibility.is_some() {
-                        return Err(de::Error::duplicate_field("visibility"));
+                        return Err(::serde::de::Error::duplicate_field("visibility"));
                     }
                     field_visibility = Some(map.next_value()?);
                 }
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
                 "expires" => {
                     if field_expires.is_some() {
-                        return Err(de::Error::duplicate_field("expires"));
+                        return Err(::serde::de::Error::duplicate_field("expires"));
                     }
                     field_expires = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, PATH_LINK_METADATA_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PathLinkMetadata {
-            url: field_url.ok_or_else(|| de::Error::missing_field("url"))?,
-            visibility: field_visibility.ok_or_else(|| de::Error::missing_field("visibility"))?,
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
+            visibility: field_visibility.ok_or_else(|| ::serde::de::Error::missing_field("visibility"))?,
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             expires: field_expires,
         };
         Ok(Some(result))
@@ -10889,8 +11362,14 @@ impl<'de> ::serde::de::Deserialize<'de> for PendingUploadMode {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "file" => Ok(PendingUploadMode::File),
-                    "folder" => Ok(PendingUploadMode::Folder),
+                    "file" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PendingUploadMode::File)
+                    }
+                    "folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PendingUploadMode::Folder)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -10973,22 +11452,67 @@ impl<'de> ::serde::de::Deserialize<'de> for PermissionDeniedReason {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "user_not_same_team_as_owner" => Ok(PermissionDeniedReason::UserNotSameTeamAsOwner),
-                    "user_not_allowed_by_owner" => Ok(PermissionDeniedReason::UserNotAllowedByOwner),
-                    "target_is_indirect_member" => Ok(PermissionDeniedReason::TargetIsIndirectMember),
-                    "target_is_owner" => Ok(PermissionDeniedReason::TargetIsOwner),
-                    "target_is_self" => Ok(PermissionDeniedReason::TargetIsSelf),
-                    "target_not_active" => Ok(PermissionDeniedReason::TargetNotActive),
-                    "folder_is_limited_team_folder" => Ok(PermissionDeniedReason::FolderIsLimitedTeamFolder),
-                    "owner_not_on_team" => Ok(PermissionDeniedReason::OwnerNotOnTeam),
-                    "permission_denied" => Ok(PermissionDeniedReason::PermissionDenied),
-                    "restricted_by_team" => Ok(PermissionDeniedReason::RestrictedByTeam),
-                    "user_account_type" => Ok(PermissionDeniedReason::UserAccountType),
-                    "user_not_on_team" => Ok(PermissionDeniedReason::UserNotOnTeam),
-                    "folder_is_inside_shared_folder" => Ok(PermissionDeniedReason::FolderIsInsideSharedFolder),
-                    "restricted_by_parent_folder" => Ok(PermissionDeniedReason::RestrictedByParentFolder),
+                    "user_not_same_team_as_owner" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::UserNotSameTeamAsOwner)
+                    }
+                    "user_not_allowed_by_owner" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::UserNotAllowedByOwner)
+                    }
+                    "target_is_indirect_member" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::TargetIsIndirectMember)
+                    }
+                    "target_is_owner" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::TargetIsOwner)
+                    }
+                    "target_is_self" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::TargetIsSelf)
+                    }
+                    "target_not_active" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::TargetNotActive)
+                    }
+                    "folder_is_limited_team_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::FolderIsLimitedTeamFolder)
+                    }
+                    "owner_not_on_team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::OwnerNotOnTeam)
+                    }
+                    "permission_denied" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::PermissionDenied)
+                    }
+                    "restricted_by_team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::RestrictedByTeam)
+                    }
+                    "user_account_type" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::UserAccountType)
+                    }
+                    "user_not_on_team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::UserNotOnTeam)
+                    }
+                    "folder_is_inside_shared_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::FolderIsInsideSharedFolder)
+                    }
+                    "restricted_by_parent_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::RestrictedByParentFolder)
+                    }
                     "insufficient_plan" => Ok(PermissionDeniedReason::InsufficientPlan(InsufficientPlan::internal_deserialize(map)?)),
-                    _ => Ok(PermissionDeniedReason::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PermissionDeniedReason::Other)
+                    }
                 }
             }
         }
@@ -11140,26 +11664,28 @@ impl RelinquishFileMembershipArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<RelinquishFileMembershipArg>, V::Error> {
-        use serde::de;
         let mut field_file = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "file" => {
                     if field_file.is_some() {
-                        return Err(de::Error::duplicate_field("file"));
+                        return Err(::serde::de::Error::duplicate_field("file"));
                     }
                     field_file = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, RELINQUISH_FILE_MEMBERSHIP_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = RelinquishFileMembershipArg {
-            file: field_file.ok_or_else(|| de::Error::missing_field("file"))?,
+            file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
         };
         Ok(Some(result))
     }
@@ -11235,9 +11761,18 @@ impl<'de> ::serde::de::Deserialize<'de> for RelinquishFileMembershipError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "group_access" => Ok(RelinquishFileMembershipError::GroupAccess),
-                    "no_permission" => Ok(RelinquishFileMembershipError::NoPermission),
-                    _ => Ok(RelinquishFileMembershipError::Other)
+                    "group_access" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelinquishFileMembershipError::GroupAccess)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelinquishFileMembershipError::NoPermission)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelinquishFileMembershipError::Other)
+                    }
                 }
             }
         }
@@ -11326,33 +11861,35 @@ impl RelinquishFolderMembershipArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<RelinquishFolderMembershipArg>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_leave_a_copy = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "leave_a_copy" => {
                     if field_leave_a_copy.is_some() {
-                        return Err(de::Error::duplicate_field("leave_a_copy"));
+                        return Err(::serde::de::Error::duplicate_field("leave_a_copy"));
                     }
                     field_leave_a_copy = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, RELINQUISH_FOLDER_MEMBERSHIP_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = RelinquishFolderMembershipArg {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
             leave_a_copy: field_leave_a_copy.unwrap_or(false),
         };
         Ok(Some(result))
@@ -11441,13 +11978,34 @@ impl<'de> ::serde::de::Deserialize<'de> for RelinquishFolderMembershipError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "folder_owner" => Ok(RelinquishFolderMembershipError::FolderOwner),
-                    "mounted" => Ok(RelinquishFolderMembershipError::Mounted),
-                    "group_access" => Ok(RelinquishFolderMembershipError::GroupAccess),
-                    "team_folder" => Ok(RelinquishFolderMembershipError::TeamFolder),
-                    "no_permission" => Ok(RelinquishFolderMembershipError::NoPermission),
-                    "no_explicit_access" => Ok(RelinquishFolderMembershipError::NoExplicitAccess),
-                    _ => Ok(RelinquishFolderMembershipError::Other)
+                    "folder_owner" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelinquishFolderMembershipError::FolderOwner)
+                    }
+                    "mounted" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelinquishFolderMembershipError::Mounted)
+                    }
+                    "group_access" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelinquishFolderMembershipError::GroupAccess)
+                    }
+                    "team_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelinquishFolderMembershipError::TeamFolder)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelinquishFolderMembershipError::NoPermission)
+                    }
+                    "no_explicit_access" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelinquishFolderMembershipError::NoExplicitAccess)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelinquishFolderMembershipError::Other)
+                    }
                 }
             }
         }
@@ -11562,34 +12120,36 @@ impl RemoveFileMemberArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<RemoveFileMemberArg>, V::Error> {
-        use serde::de;
         let mut field_file = None;
         let mut field_member = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "file" => {
                     if field_file.is_some() {
-                        return Err(de::Error::duplicate_field("file"));
+                        return Err(::serde::de::Error::duplicate_field("file"));
                     }
                     field_file = Some(map.next_value()?);
                 }
                 "member" => {
                     if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
+                        return Err(::serde::de::Error::duplicate_field("member"));
                     }
                     field_member = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, REMOVE_FILE_MEMBER_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = RemoveFileMemberArg {
-            file: field_file.ok_or_else(|| de::Error::missing_field("file"))?,
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
+            file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
+            member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
         };
         Ok(Some(result))
     }
@@ -11674,7 +12234,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveFileMemberError {
                         }
                     }
                     "no_explicit_access" => Ok(RemoveFileMemberError::NoExplicitAccess(MemberAccessLevelResult::internal_deserialize(map)?)),
-                    _ => Ok(RemoveFileMemberError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RemoveFileMemberError::Other)
+                    }
                 }
             }
         }
@@ -11770,42 +12333,44 @@ impl RemoveFolderMemberArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<RemoveFolderMemberArg>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_member = None;
         let mut field_leave_a_copy = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "member" => {
                     if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
+                        return Err(::serde::de::Error::duplicate_field("member"));
                     }
                     field_member = Some(map.next_value()?);
                 }
                 "leave_a_copy" => {
                     if field_leave_a_copy.is_some() {
-                        return Err(de::Error::duplicate_field("leave_a_copy"));
+                        return Err(::serde::de::Error::duplicate_field("leave_a_copy"));
                     }
                     field_leave_a_copy = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, REMOVE_FOLDER_MEMBER_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = RemoveFolderMemberArg {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
-            leave_a_copy: field_leave_a_copy.ok_or_else(|| de::Error::missing_field("leave_a_copy"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
+            member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
+            leave_a_copy: field_leave_a_copy.ok_or_else(|| ::serde::de::Error::missing_field("leave_a_copy"))?,
         };
         Ok(Some(result))
     }
@@ -11898,12 +12463,30 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveFolderMemberError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "folder_owner" => Ok(RemoveFolderMemberError::FolderOwner),
-                    "group_access" => Ok(RemoveFolderMemberError::GroupAccess),
-                    "team_folder" => Ok(RemoveFolderMemberError::TeamFolder),
-                    "no_permission" => Ok(RemoveFolderMemberError::NoPermission),
-                    "too_many_files" => Ok(RemoveFolderMemberError::TooManyFiles),
-                    _ => Ok(RemoveFolderMemberError::Other)
+                    "folder_owner" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RemoveFolderMemberError::FolderOwner)
+                    }
+                    "group_access" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RemoveFolderMemberError::GroupAccess)
+                    }
+                    "team_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RemoveFolderMemberError::TeamFolder)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RemoveFolderMemberError::NoPermission)
+                    }
+                    "too_many_files" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RemoveFolderMemberError::TooManyFiles)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RemoveFolderMemberError::Other)
+                    }
                 }
             }
         }
@@ -12011,7 +12594,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveMemberJobStatus {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "in_progress" => Ok(RemoveMemberJobStatus::InProgress),
+                    "in_progress" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RemoveMemberJobStatus::InProgress)
+                    }
                     "complete" => Ok(RemoveMemberJobStatus::Complete(MemberAccessLevelResult::internal_deserialize(map)?)),
                     "failed" => {
                         match map.next_key()? {
@@ -12090,9 +12676,18 @@ impl<'de> ::serde::de::Deserialize<'de> for RequestedVisibility {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "public" => Ok(RequestedVisibility::Public),
-                    "team_only" => Ok(RequestedVisibility::TeamOnly),
-                    "password" => Ok(RequestedVisibility::Password),
+                    "public" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RequestedVisibility::Public)
+                    }
+                    "team_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RequestedVisibility::TeamOnly)
+                    }
+                    "password" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RequestedVisibility::Password)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -12167,12 +12762,30 @@ impl<'de> ::serde::de::Deserialize<'de> for ResolvedVisibility {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "public" => Ok(ResolvedVisibility::Public),
-                    "team_only" => Ok(ResolvedVisibility::TeamOnly),
-                    "password" => Ok(ResolvedVisibility::Password),
-                    "team_and_password" => Ok(ResolvedVisibility::TeamAndPassword),
-                    "shared_folder_only" => Ok(ResolvedVisibility::SharedFolderOnly),
-                    _ => Ok(ResolvedVisibility::Other)
+                    "public" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ResolvedVisibility::Public)
+                    }
+                    "team_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ResolvedVisibility::TeamOnly)
+                    }
+                    "password" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ResolvedVisibility::Password)
+                    }
+                    "team_and_password" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ResolvedVisibility::TeamAndPassword)
+                    }
+                    "shared_folder_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ResolvedVisibility::SharedFolderOnly)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ResolvedVisibility::Other)
+                    }
                 }
             }
         }
@@ -12253,26 +12866,28 @@ impl RevokeSharedLinkArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<RevokeSharedLinkArg>, V::Error> {
-        use serde::de;
         let mut field_url = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "url" => {
                     if field_url.is_some() {
-                        return Err(de::Error::duplicate_field("url"));
+                        return Err(::serde::de::Error::duplicate_field("url"));
                     }
                     field_url = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, REVOKE_SHARED_LINK_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = RevokeSharedLinkArg {
-            url: field_url.ok_or_else(|| de::Error::missing_field("url"))?,
+            url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
         };
         Ok(Some(result))
     }
@@ -12343,11 +12958,26 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeSharedLinkError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "shared_link_not_found" => Ok(RevokeSharedLinkError::SharedLinkNotFound),
-                    "shared_link_access_denied" => Ok(RevokeSharedLinkError::SharedLinkAccessDenied),
-                    "unsupported_link_type" => Ok(RevokeSharedLinkError::UnsupportedLinkType),
-                    "shared_link_malformed" => Ok(RevokeSharedLinkError::SharedLinkMalformed),
-                    _ => Ok(RevokeSharedLinkError::Other)
+                    "shared_link_not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RevokeSharedLinkError::SharedLinkNotFound)
+                    }
+                    "shared_link_access_denied" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RevokeSharedLinkError::SharedLinkAccessDenied)
+                    }
+                    "unsupported_link_type" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RevokeSharedLinkError::UnsupportedLinkType)
+                    }
+                    "shared_link_malformed" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RevokeSharedLinkError::SharedLinkMalformed)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RevokeSharedLinkError::Other)
+                    }
                 }
             }
         }
@@ -12442,33 +13072,35 @@ impl SetAccessInheritanceArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<SetAccessInheritanceArg>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_access_inheritance = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "access_inheritance" => {
                     if field_access_inheritance.is_some() {
-                        return Err(de::Error::duplicate_field("access_inheritance"));
+                        return Err(::serde::de::Error::duplicate_field("access_inheritance"));
                     }
                     field_access_inheritance = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SET_ACCESS_INHERITANCE_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = SetAccessInheritanceArg {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
             access_inheritance: field_access_inheritance.unwrap_or_else(|| AccessInheritance::Inherit),
         };
         Ok(Some(result))
@@ -12544,8 +13176,14 @@ impl<'de> ::serde::de::Deserialize<'de> for SetAccessInheritanceError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "no_permission" => Ok(SetAccessInheritanceError::NoPermission),
-                    _ => Ok(SetAccessInheritanceError::Other)
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SetAccessInheritanceError::NoPermission)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SetAccessInheritanceError::Other)
+                    }
                 }
             }
         }
@@ -12694,7 +13332,6 @@ impl ShareFolderArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ShareFolderArg>, V::Error> {
-        use serde::de;
         let mut field_path = None;
         let mut field_acl_update_policy = None;
         let mut field_force_async = None;
@@ -12705,71 +13342,74 @@ impl ShareFolderArg {
         let mut field_actions = None;
         let mut field_link_settings = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
                 "acl_update_policy" => {
                     if field_acl_update_policy.is_some() {
-                        return Err(de::Error::duplicate_field("acl_update_policy"));
+                        return Err(::serde::de::Error::duplicate_field("acl_update_policy"));
                     }
                     field_acl_update_policy = Some(map.next_value()?);
                 }
                 "force_async" => {
                     if field_force_async.is_some() {
-                        return Err(de::Error::duplicate_field("force_async"));
+                        return Err(::serde::de::Error::duplicate_field("force_async"));
                     }
                     field_force_async = Some(map.next_value()?);
                 }
                 "member_policy" => {
                     if field_member_policy.is_some() {
-                        return Err(de::Error::duplicate_field("member_policy"));
+                        return Err(::serde::de::Error::duplicate_field("member_policy"));
                     }
                     field_member_policy = Some(map.next_value()?);
                 }
                 "shared_link_policy" => {
                     if field_shared_link_policy.is_some() {
-                        return Err(de::Error::duplicate_field("shared_link_policy"));
+                        return Err(::serde::de::Error::duplicate_field("shared_link_policy"));
                     }
                     field_shared_link_policy = Some(map.next_value()?);
                 }
                 "viewer_info_policy" => {
                     if field_viewer_info_policy.is_some() {
-                        return Err(de::Error::duplicate_field("viewer_info_policy"));
+                        return Err(::serde::de::Error::duplicate_field("viewer_info_policy"));
                     }
                     field_viewer_info_policy = Some(map.next_value()?);
                 }
                 "access_inheritance" => {
                     if field_access_inheritance.is_some() {
-                        return Err(de::Error::duplicate_field("access_inheritance"));
+                        return Err(::serde::de::Error::duplicate_field("access_inheritance"));
                     }
                     field_access_inheritance = Some(map.next_value()?);
                 }
                 "actions" => {
                     if field_actions.is_some() {
-                        return Err(de::Error::duplicate_field("actions"));
+                        return Err(::serde::de::Error::duplicate_field("actions"));
                     }
                     field_actions = Some(map.next_value()?);
                 }
                 "link_settings" => {
                     if field_link_settings.is_some() {
-                        return Err(de::Error::duplicate_field("link_settings"));
+                        return Err(::serde::de::Error::duplicate_field("link_settings"));
                     }
                     field_link_settings = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARE_FOLDER_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ShareFolderArg {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             acl_update_policy: field_acl_update_policy,
             force_async: field_force_async.unwrap_or(false),
             member_policy: field_member_policy,
@@ -12910,7 +13550,6 @@ impl ShareFolderArgBase {
         mut map: V,
         optional: bool,
     ) -> Result<Option<ShareFolderArgBase>, V::Error> {
-        use serde::de;
         let mut field_path = None;
         let mut field_acl_update_policy = None;
         let mut field_force_async = None;
@@ -12919,59 +13558,62 @@ impl ShareFolderArgBase {
         let mut field_viewer_info_policy = None;
         let mut field_access_inheritance = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "path" => {
                     if field_path.is_some() {
-                        return Err(de::Error::duplicate_field("path"));
+                        return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
                 }
                 "acl_update_policy" => {
                     if field_acl_update_policy.is_some() {
-                        return Err(de::Error::duplicate_field("acl_update_policy"));
+                        return Err(::serde::de::Error::duplicate_field("acl_update_policy"));
                     }
                     field_acl_update_policy = Some(map.next_value()?);
                 }
                 "force_async" => {
                     if field_force_async.is_some() {
-                        return Err(de::Error::duplicate_field("force_async"));
+                        return Err(::serde::de::Error::duplicate_field("force_async"));
                     }
                     field_force_async = Some(map.next_value()?);
                 }
                 "member_policy" => {
                     if field_member_policy.is_some() {
-                        return Err(de::Error::duplicate_field("member_policy"));
+                        return Err(::serde::de::Error::duplicate_field("member_policy"));
                     }
                     field_member_policy = Some(map.next_value()?);
                 }
                 "shared_link_policy" => {
                     if field_shared_link_policy.is_some() {
-                        return Err(de::Error::duplicate_field("shared_link_policy"));
+                        return Err(::serde::de::Error::duplicate_field("shared_link_policy"));
                     }
                     field_shared_link_policy = Some(map.next_value()?);
                 }
                 "viewer_info_policy" => {
                     if field_viewer_info_policy.is_some() {
-                        return Err(de::Error::duplicate_field("viewer_info_policy"));
+                        return Err(::serde::de::Error::duplicate_field("viewer_info_policy"));
                     }
                     field_viewer_info_policy = Some(map.next_value()?);
                 }
                 "access_inheritance" => {
                     if field_access_inheritance.is_some() {
-                        return Err(de::Error::duplicate_field("access_inheritance"));
+                        return Err(::serde::de::Error::duplicate_field("access_inheritance"));
                     }
                     field_access_inheritance = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARE_FOLDER_ARG_BASE_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = ShareFolderArgBase {
-            path: field_path.ok_or_else(|| de::Error::missing_field("path"))?,
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             acl_update_policy: field_acl_update_policy,
             force_async: field_force_async.unwrap_or(false),
             member_policy: field_member_policy,
@@ -13057,7 +13699,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "email_unverified" => Ok(ShareFolderError::EmailUnverified),
+                    "email_unverified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShareFolderError::EmailUnverified)
+                    }
                     "bad_path" => {
                         match map.next_key()? {
                             Some("bad_path") => Ok(ShareFolderError::BadPath(map.next_value()?)),
@@ -13065,10 +13710,22 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "team_policy_disallows_member_policy" => Ok(ShareFolderError::TeamPolicyDisallowsMemberPolicy),
-                    "disallowed_shared_link_policy" => Ok(ShareFolderError::DisallowedSharedLinkPolicy),
-                    "no_permission" => Ok(ShareFolderError::NoPermission),
-                    _ => Ok(ShareFolderError::Other)
+                    "team_policy_disallows_member_policy" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShareFolderError::TeamPolicyDisallowsMemberPolicy)
+                    }
+                    "disallowed_shared_link_policy" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShareFolderError::DisallowedSharedLinkPolicy)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShareFolderError::NoPermission)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShareFolderError::Other)
+                    }
                 }
             }
         }
@@ -13165,7 +13822,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderErrorBase {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "email_unverified" => Ok(ShareFolderErrorBase::EmailUnverified),
+                    "email_unverified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShareFolderErrorBase::EmailUnverified)
+                    }
                     "bad_path" => {
                         match map.next_key()? {
                             Some("bad_path") => Ok(ShareFolderErrorBase::BadPath(map.next_value()?)),
@@ -13173,9 +13833,18 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderErrorBase {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "team_policy_disallows_member_policy" => Ok(ShareFolderErrorBase::TeamPolicyDisallowsMemberPolicy),
-                    "disallowed_shared_link_policy" => Ok(ShareFolderErrorBase::DisallowedSharedLinkPolicy),
-                    _ => Ok(ShareFolderErrorBase::Other)
+                    "team_policy_disallows_member_policy" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShareFolderErrorBase::TeamPolicyDisallowsMemberPolicy)
+                    }
+                    "disallowed_shared_link_policy" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShareFolderErrorBase::DisallowedSharedLinkPolicy)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShareFolderErrorBase::Other)
+                    }
                 }
             }
         }
@@ -13248,7 +13917,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderJobStatus {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "in_progress" => Ok(ShareFolderJobStatus::InProgress),
+                    "in_progress" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShareFolderJobStatus::InProgress)
+                    }
                     "complete" => Ok(ShareFolderJobStatus::Complete(SharedFolderMetadata::internal_deserialize(map)?)),
                     "failed" => {
                         match map.next_key()? {
@@ -13409,20 +14081,59 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "is_file" => Ok(SharePathError::IsFile),
-                    "inside_shared_folder" => Ok(SharePathError::InsideSharedFolder),
-                    "contains_shared_folder" => Ok(SharePathError::ContainsSharedFolder),
-                    "contains_app_folder" => Ok(SharePathError::ContainsAppFolder),
-                    "contains_team_folder" => Ok(SharePathError::ContainsTeamFolder),
-                    "is_app_folder" => Ok(SharePathError::IsAppFolder),
-                    "inside_app_folder" => Ok(SharePathError::InsideAppFolder),
-                    "is_public_folder" => Ok(SharePathError::IsPublicFolder),
-                    "inside_public_folder" => Ok(SharePathError::InsidePublicFolder),
+                    "is_file" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::IsFile)
+                    }
+                    "inside_shared_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::InsideSharedFolder)
+                    }
+                    "contains_shared_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::ContainsSharedFolder)
+                    }
+                    "contains_app_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::ContainsAppFolder)
+                    }
+                    "contains_team_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::ContainsTeamFolder)
+                    }
+                    "is_app_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::IsAppFolder)
+                    }
+                    "inside_app_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::InsideAppFolder)
+                    }
+                    "is_public_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::IsPublicFolder)
+                    }
+                    "inside_public_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::InsidePublicFolder)
+                    }
                     "already_shared" => Ok(SharePathError::AlreadyShared(SharedFolderMetadata::internal_deserialize(map)?)),
-                    "invalid_path" => Ok(SharePathError::InvalidPath),
-                    "is_osx_package" => Ok(SharePathError::IsOsxPackage),
-                    "inside_osx_package" => Ok(SharePathError::InsideOsxPackage),
-                    _ => Ok(SharePathError::Other)
+                    "invalid_path" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::InvalidPath)
+                    }
+                    "is_osx_package" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::IsOsxPackage)
+                    }
+                    "inside_osx_package" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::InsideOsxPackage)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::Other)
+                    }
                 }
             }
         }
@@ -13640,7 +14351,6 @@ impl SharedContentLinkMetadata {
         mut map: V,
         optional: bool,
     ) -> Result<Option<SharedContentLinkMetadata>, V::Error> {
-        use serde::de;
         let mut field_audience_options = None;
         let mut field_current_audience = None;
         let mut field_link_permissions = None;
@@ -13651,75 +14361,78 @@ impl SharedContentLinkMetadata {
         let mut field_expiry = None;
         let mut field_audience_exceptions = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "audience_options" => {
                     if field_audience_options.is_some() {
-                        return Err(de::Error::duplicate_field("audience_options"));
+                        return Err(::serde::de::Error::duplicate_field("audience_options"));
                     }
                     field_audience_options = Some(map.next_value()?);
                 }
                 "current_audience" => {
                     if field_current_audience.is_some() {
-                        return Err(de::Error::duplicate_field("current_audience"));
+                        return Err(::serde::de::Error::duplicate_field("current_audience"));
                     }
                     field_current_audience = Some(map.next_value()?);
                 }
                 "link_permissions" => {
                     if field_link_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("link_permissions"));
+                        return Err(::serde::de::Error::duplicate_field("link_permissions"));
                     }
                     field_link_permissions = Some(map.next_value()?);
                 }
                 "password_protected" => {
                     if field_password_protected.is_some() {
-                        return Err(de::Error::duplicate_field("password_protected"));
+                        return Err(::serde::de::Error::duplicate_field("password_protected"));
                     }
                     field_password_protected = Some(map.next_value()?);
                 }
                 "url" => {
                     if field_url.is_some() {
-                        return Err(de::Error::duplicate_field("url"));
+                        return Err(::serde::de::Error::duplicate_field("url"));
                     }
                     field_url = Some(map.next_value()?);
                 }
                 "access_level" => {
                     if field_access_level.is_some() {
-                        return Err(de::Error::duplicate_field("access_level"));
+                        return Err(::serde::de::Error::duplicate_field("access_level"));
                     }
                     field_access_level = Some(map.next_value()?);
                 }
                 "audience_restricting_shared_folder" => {
                     if field_audience_restricting_shared_folder.is_some() {
-                        return Err(de::Error::duplicate_field("audience_restricting_shared_folder"));
+                        return Err(::serde::de::Error::duplicate_field("audience_restricting_shared_folder"));
                     }
                     field_audience_restricting_shared_folder = Some(map.next_value()?);
                 }
                 "expiry" => {
                     if field_expiry.is_some() {
-                        return Err(de::Error::duplicate_field("expiry"));
+                        return Err(::serde::de::Error::duplicate_field("expiry"));
                     }
                     field_expiry = Some(map.next_value()?);
                 }
                 "audience_exceptions" => {
                     if field_audience_exceptions.is_some() {
-                        return Err(de::Error::duplicate_field("audience_exceptions"));
+                        return Err(::serde::de::Error::duplicate_field("audience_exceptions"));
                     }
                     field_audience_exceptions = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_LINK_METADATA_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = SharedContentLinkMetadata {
-            audience_options: field_audience_options.ok_or_else(|| de::Error::missing_field("audience_options"))?,
-            current_audience: field_current_audience.ok_or_else(|| de::Error::missing_field("current_audience"))?,
-            link_permissions: field_link_permissions.ok_or_else(|| de::Error::missing_field("link_permissions"))?,
-            password_protected: field_password_protected.ok_or_else(|| de::Error::missing_field("password_protected"))?,
-            url: field_url.ok_or_else(|| de::Error::missing_field("url"))?,
+            audience_options: field_audience_options.ok_or_else(|| ::serde::de::Error::missing_field("audience_options"))?,
+            current_audience: field_current_audience.ok_or_else(|| ::serde::de::Error::missing_field("current_audience"))?,
+            link_permissions: field_link_permissions.ok_or_else(|| ::serde::de::Error::missing_field("link_permissions"))?,
+            password_protected: field_password_protected.ok_or_else(|| ::serde::de::Error::missing_field("password_protected"))?,
+            url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
             access_level: field_access_level,
             audience_restricting_shared_folder: field_audience_restricting_shared_folder,
             expiry: field_expiry,
@@ -13851,7 +14564,6 @@ impl SharedContentLinkMetadataBase {
         mut map: V,
         optional: bool,
     ) -> Result<Option<SharedContentLinkMetadataBase>, V::Error> {
-        use serde::de;
         let mut field_audience_options = None;
         let mut field_current_audience = None;
         let mut field_link_permissions = None;
@@ -13860,62 +14572,65 @@ impl SharedContentLinkMetadataBase {
         let mut field_audience_restricting_shared_folder = None;
         let mut field_expiry = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "audience_options" => {
                     if field_audience_options.is_some() {
-                        return Err(de::Error::duplicate_field("audience_options"));
+                        return Err(::serde::de::Error::duplicate_field("audience_options"));
                     }
                     field_audience_options = Some(map.next_value()?);
                 }
                 "current_audience" => {
                     if field_current_audience.is_some() {
-                        return Err(de::Error::duplicate_field("current_audience"));
+                        return Err(::serde::de::Error::duplicate_field("current_audience"));
                     }
                     field_current_audience = Some(map.next_value()?);
                 }
                 "link_permissions" => {
                     if field_link_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("link_permissions"));
+                        return Err(::serde::de::Error::duplicate_field("link_permissions"));
                     }
                     field_link_permissions = Some(map.next_value()?);
                 }
                 "password_protected" => {
                     if field_password_protected.is_some() {
-                        return Err(de::Error::duplicate_field("password_protected"));
+                        return Err(::serde::de::Error::duplicate_field("password_protected"));
                     }
                     field_password_protected = Some(map.next_value()?);
                 }
                 "access_level" => {
                     if field_access_level.is_some() {
-                        return Err(de::Error::duplicate_field("access_level"));
+                        return Err(::serde::de::Error::duplicate_field("access_level"));
                     }
                     field_access_level = Some(map.next_value()?);
                 }
                 "audience_restricting_shared_folder" => {
                     if field_audience_restricting_shared_folder.is_some() {
-                        return Err(de::Error::duplicate_field("audience_restricting_shared_folder"));
+                        return Err(::serde::de::Error::duplicate_field("audience_restricting_shared_folder"));
                     }
                     field_audience_restricting_shared_folder = Some(map.next_value()?);
                 }
                 "expiry" => {
                     if field_expiry.is_some() {
-                        return Err(de::Error::duplicate_field("expiry"));
+                        return Err(::serde::de::Error::duplicate_field("expiry"));
                     }
                     field_expiry = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_CONTENT_LINK_METADATA_BASE_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = SharedContentLinkMetadataBase {
-            audience_options: field_audience_options.ok_or_else(|| de::Error::missing_field("audience_options"))?,
-            current_audience: field_current_audience.ok_or_else(|| de::Error::missing_field("current_audience"))?,
-            link_permissions: field_link_permissions.ok_or_else(|| de::Error::missing_field("link_permissions"))?,
-            password_protected: field_password_protected.ok_or_else(|| de::Error::missing_field("password_protected"))?,
+            audience_options: field_audience_options.ok_or_else(|| ::serde::de::Error::missing_field("audience_options"))?,
+            current_audience: field_current_audience.ok_or_else(|| ::serde::de::Error::missing_field("current_audience"))?,
+            link_permissions: field_link_permissions.ok_or_else(|| ::serde::de::Error::missing_field("link_permissions"))?,
+            password_protected: field_password_protected.ok_or_else(|| ::serde::de::Error::missing_field("password_protected"))?,
             access_level: field_access_level,
             audience_restricting_shared_folder: field_audience_restricting_shared_folder,
             expiry: field_expiry,
@@ -14020,49 +14735,51 @@ impl SharedFileMembers {
         mut map: V,
         optional: bool,
     ) -> Result<Option<SharedFileMembers>, V::Error> {
-        use serde::de;
         let mut field_users = None;
         let mut field_groups = None;
         let mut field_invitees = None;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "users" => {
                     if field_users.is_some() {
-                        return Err(de::Error::duplicate_field("users"));
+                        return Err(::serde::de::Error::duplicate_field("users"));
                     }
                     field_users = Some(map.next_value()?);
                 }
                 "groups" => {
                     if field_groups.is_some() {
-                        return Err(de::Error::duplicate_field("groups"));
+                        return Err(::serde::de::Error::duplicate_field("groups"));
                     }
                     field_groups = Some(map.next_value()?);
                 }
                 "invitees" => {
                     if field_invitees.is_some() {
-                        return Err(de::Error::duplicate_field("invitees"));
+                        return Err(::serde::de::Error::duplicate_field("invitees"));
                     }
                     field_invitees = Some(map.next_value()?);
                 }
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FILE_MEMBERS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = SharedFileMembers {
-            users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
-            groups: field_groups.ok_or_else(|| de::Error::missing_field("groups"))?,
-            invitees: field_invitees.ok_or_else(|| de::Error::missing_field("invitees"))?,
+            users: field_users.ok_or_else(|| ::serde::de::Error::missing_field("users"))?,
+            groups: field_groups.ok_or_else(|| ::serde::de::Error::missing_field("groups"))?,
+            invitees: field_invitees.ok_or_else(|| ::serde::de::Error::missing_field("invitees"))?,
             cursor: field_cursor,
         };
         Ok(Some(result))
@@ -14260,7 +14977,6 @@ impl SharedFileMetadata {
         mut map: V,
         optional: bool,
     ) -> Result<Option<SharedFileMetadata>, V::Error> {
-        use serde::de;
         let mut field_id = None;
         let mut field_name = None;
         let mut field_policy = None;
@@ -14276,104 +14992,107 @@ impl SharedFileMetadata {
         let mut field_permissions = None;
         let mut field_time_invited = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "id" => {
                     if field_id.is_some() {
-                        return Err(de::Error::duplicate_field("id"));
+                        return Err(::serde::de::Error::duplicate_field("id"));
                     }
                     field_id = Some(map.next_value()?);
                 }
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
                 "policy" => {
                     if field_policy.is_some() {
-                        return Err(de::Error::duplicate_field("policy"));
+                        return Err(::serde::de::Error::duplicate_field("policy"));
                     }
                     field_policy = Some(map.next_value()?);
                 }
                 "preview_url" => {
                     if field_preview_url.is_some() {
-                        return Err(de::Error::duplicate_field("preview_url"));
+                        return Err(::serde::de::Error::duplicate_field("preview_url"));
                     }
                     field_preview_url = Some(map.next_value()?);
                 }
                 "access_type" => {
                     if field_access_type.is_some() {
-                        return Err(de::Error::duplicate_field("access_type"));
+                        return Err(::serde::de::Error::duplicate_field("access_type"));
                     }
                     field_access_type = Some(map.next_value()?);
                 }
                 "expected_link_metadata" => {
                     if field_expected_link_metadata.is_some() {
-                        return Err(de::Error::duplicate_field("expected_link_metadata"));
+                        return Err(::serde::de::Error::duplicate_field("expected_link_metadata"));
                     }
                     field_expected_link_metadata = Some(map.next_value()?);
                 }
                 "link_metadata" => {
                     if field_link_metadata.is_some() {
-                        return Err(de::Error::duplicate_field("link_metadata"));
+                        return Err(::serde::de::Error::duplicate_field("link_metadata"));
                     }
                     field_link_metadata = Some(map.next_value()?);
                 }
                 "owner_display_names" => {
                     if field_owner_display_names.is_some() {
-                        return Err(de::Error::duplicate_field("owner_display_names"));
+                        return Err(::serde::de::Error::duplicate_field("owner_display_names"));
                     }
                     field_owner_display_names = Some(map.next_value()?);
                 }
                 "owner_team" => {
                     if field_owner_team.is_some() {
-                        return Err(de::Error::duplicate_field("owner_team"));
+                        return Err(::serde::de::Error::duplicate_field("owner_team"));
                     }
                     field_owner_team = Some(map.next_value()?);
                 }
                 "parent_shared_folder_id" => {
                     if field_parent_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("parent_shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("parent_shared_folder_id"));
                     }
                     field_parent_shared_folder_id = Some(map.next_value()?);
                 }
                 "path_display" => {
                     if field_path_display.is_some() {
-                        return Err(de::Error::duplicate_field("path_display"));
+                        return Err(::serde::de::Error::duplicate_field("path_display"));
                     }
                     field_path_display = Some(map.next_value()?);
                 }
                 "path_lower" => {
                     if field_path_lower.is_some() {
-                        return Err(de::Error::duplicate_field("path_lower"));
+                        return Err(::serde::de::Error::duplicate_field("path_lower"));
                     }
                     field_path_lower = Some(map.next_value()?);
                 }
                 "permissions" => {
                     if field_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("permissions"));
+                        return Err(::serde::de::Error::duplicate_field("permissions"));
                     }
                     field_permissions = Some(map.next_value()?);
                 }
                 "time_invited" => {
                     if field_time_invited.is_some() {
-                        return Err(de::Error::duplicate_field("time_invited"));
+                        return Err(::serde::de::Error::duplicate_field("time_invited"));
                     }
                     field_time_invited = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FILE_METADATA_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = SharedFileMetadata {
-            id: field_id.ok_or_else(|| de::Error::missing_field("id"))?,
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            policy: field_policy.ok_or_else(|| de::Error::missing_field("policy"))?,
-            preview_url: field_preview_url.ok_or_else(|| de::Error::missing_field("preview_url"))?,
+            id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            policy: field_policy.ok_or_else(|| ::serde::de::Error::missing_field("policy"))?,
+            preview_url: field_preview_url.ok_or_else(|| ::serde::de::Error::missing_field("preview_url"))?,
             access_type: field_access_type,
             expected_link_metadata: field_expected_link_metadata,
             link_metadata: field_link_metadata,
@@ -14468,11 +15187,26 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderAccessError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "invalid_id" => Ok(SharedFolderAccessError::InvalidId),
-                    "not_a_member" => Ok(SharedFolderAccessError::NotAMember),
-                    "email_unverified" => Ok(SharedFolderAccessError::EmailUnverified),
-                    "unmounted" => Ok(SharedFolderAccessError::Unmounted),
-                    _ => Ok(SharedFolderAccessError::Other)
+                    "invalid_id" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderAccessError::InvalidId)
+                    }
+                    "not_a_member" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderAccessError::NotAMember)
+                    }
+                    "email_unverified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderAccessError::EmailUnverified)
+                    }
+                    "unmounted" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderAccessError::Unmounted)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderAccessError::Other)
+                    }
                 }
             }
         }
@@ -14558,10 +15292,19 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "invalid_dropbox_id" => Ok(SharedFolderMemberError::InvalidDropboxId),
-                    "not_a_member" => Ok(SharedFolderMemberError::NotAMember),
+                    "invalid_dropbox_id" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderMemberError::InvalidDropboxId)
+                    }
+                    "not_a_member" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderMemberError::NotAMember)
+                    }
                     "no_explicit_access" => Ok(SharedFolderMemberError::NoExplicitAccess(MemberAccessLevelResult::internal_deserialize(map)?)),
-                    _ => Ok(SharedFolderMemberError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderMemberError::Other)
+                    }
                 }
             }
         }
@@ -14665,49 +15408,51 @@ impl SharedFolderMembers {
         mut map: V,
         optional: bool,
     ) -> Result<Option<SharedFolderMembers>, V::Error> {
-        use serde::de;
         let mut field_users = None;
         let mut field_groups = None;
         let mut field_invitees = None;
         let mut field_cursor = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "users" => {
                     if field_users.is_some() {
-                        return Err(de::Error::duplicate_field("users"));
+                        return Err(::serde::de::Error::duplicate_field("users"));
                     }
                     field_users = Some(map.next_value()?);
                 }
                 "groups" => {
                     if field_groups.is_some() {
-                        return Err(de::Error::duplicate_field("groups"));
+                        return Err(::serde::de::Error::duplicate_field("groups"));
                     }
                     field_groups = Some(map.next_value()?);
                 }
                 "invitees" => {
                     if field_invitees.is_some() {
-                        return Err(de::Error::duplicate_field("invitees"));
+                        return Err(::serde::de::Error::duplicate_field("invitees"));
                     }
                     field_invitees = Some(map.next_value()?);
                 }
                 "cursor" => {
                     if field_cursor.is_some() {
-                        return Err(de::Error::duplicate_field("cursor"));
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
                     }
                     field_cursor = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_MEMBERS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = SharedFolderMembers {
-            users: field_users.ok_or_else(|| de::Error::missing_field("users"))?,
-            groups: field_groups.ok_or_else(|| de::Error::missing_field("groups"))?,
-            invitees: field_invitees.ok_or_else(|| de::Error::missing_field("invitees"))?,
+            users: field_users.ok_or_else(|| ::serde::de::Error::missing_field("users"))?,
+            groups: field_groups.ok_or_else(|| ::serde::de::Error::missing_field("groups"))?,
+            invitees: field_invitees.ok_or_else(|| ::serde::de::Error::missing_field("invitees"))?,
             cursor: field_cursor,
         };
         Ok(Some(result))
@@ -14890,7 +15635,6 @@ impl SharedFolderMetadata {
         mut map: V,
         optional: bool,
     ) -> Result<Option<SharedFolderMetadata>, V::Error> {
-        use serde::de;
         let mut field_access_type = None;
         let mut field_is_inside_team_folder = None;
         let mut field_is_team_folder = None;
@@ -14907,114 +15651,117 @@ impl SharedFolderMetadata {
         let mut field_permissions = None;
         let mut field_access_inheritance = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "access_type" => {
                     if field_access_type.is_some() {
-                        return Err(de::Error::duplicate_field("access_type"));
+                        return Err(::serde::de::Error::duplicate_field("access_type"));
                     }
                     field_access_type = Some(map.next_value()?);
                 }
                 "is_inside_team_folder" => {
                     if field_is_inside_team_folder.is_some() {
-                        return Err(de::Error::duplicate_field("is_inside_team_folder"));
+                        return Err(::serde::de::Error::duplicate_field("is_inside_team_folder"));
                     }
                     field_is_inside_team_folder = Some(map.next_value()?);
                 }
                 "is_team_folder" => {
                     if field_is_team_folder.is_some() {
-                        return Err(de::Error::duplicate_field("is_team_folder"));
+                        return Err(::serde::de::Error::duplicate_field("is_team_folder"));
                     }
                     field_is_team_folder = Some(map.next_value()?);
                 }
                 "name" => {
                     if field_name.is_some() {
-                        return Err(de::Error::duplicate_field("name"));
+                        return Err(::serde::de::Error::duplicate_field("name"));
                     }
                     field_name = Some(map.next_value()?);
                 }
                 "policy" => {
                     if field_policy.is_some() {
-                        return Err(de::Error::duplicate_field("policy"));
+                        return Err(::serde::de::Error::duplicate_field("policy"));
                     }
                     field_policy = Some(map.next_value()?);
                 }
                 "preview_url" => {
                     if field_preview_url.is_some() {
-                        return Err(de::Error::duplicate_field("preview_url"));
+                        return Err(::serde::de::Error::duplicate_field("preview_url"));
                     }
                     field_preview_url = Some(map.next_value()?);
                 }
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "time_invited" => {
                     if field_time_invited.is_some() {
-                        return Err(de::Error::duplicate_field("time_invited"));
+                        return Err(::serde::de::Error::duplicate_field("time_invited"));
                     }
                     field_time_invited = Some(map.next_value()?);
                 }
                 "owner_display_names" => {
                     if field_owner_display_names.is_some() {
-                        return Err(de::Error::duplicate_field("owner_display_names"));
+                        return Err(::serde::de::Error::duplicate_field("owner_display_names"));
                     }
                     field_owner_display_names = Some(map.next_value()?);
                 }
                 "owner_team" => {
                     if field_owner_team.is_some() {
-                        return Err(de::Error::duplicate_field("owner_team"));
+                        return Err(::serde::de::Error::duplicate_field("owner_team"));
                     }
                     field_owner_team = Some(map.next_value()?);
                 }
                 "parent_shared_folder_id" => {
                     if field_parent_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("parent_shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("parent_shared_folder_id"));
                     }
                     field_parent_shared_folder_id = Some(map.next_value()?);
                 }
                 "path_lower" => {
                     if field_path_lower.is_some() {
-                        return Err(de::Error::duplicate_field("path_lower"));
+                        return Err(::serde::de::Error::duplicate_field("path_lower"));
                     }
                     field_path_lower = Some(map.next_value()?);
                 }
                 "link_metadata" => {
                     if field_link_metadata.is_some() {
-                        return Err(de::Error::duplicate_field("link_metadata"));
+                        return Err(::serde::de::Error::duplicate_field("link_metadata"));
                     }
                     field_link_metadata = Some(map.next_value()?);
                 }
                 "permissions" => {
                     if field_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("permissions"));
+                        return Err(::serde::de::Error::duplicate_field("permissions"));
                     }
                     field_permissions = Some(map.next_value()?);
                 }
                 "access_inheritance" => {
                     if field_access_inheritance.is_some() {
-                        return Err(de::Error::duplicate_field("access_inheritance"));
+                        return Err(::serde::de::Error::duplicate_field("access_inheritance"));
                     }
                     field_access_inheritance = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_METADATA_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = SharedFolderMetadata {
-            access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
-            is_inside_team_folder: field_is_inside_team_folder.ok_or_else(|| de::Error::missing_field("is_inside_team_folder"))?,
-            is_team_folder: field_is_team_folder.ok_or_else(|| de::Error::missing_field("is_team_folder"))?,
-            name: field_name.ok_or_else(|| de::Error::missing_field("name"))?,
-            policy: field_policy.ok_or_else(|| de::Error::missing_field("policy"))?,
-            preview_url: field_preview_url.ok_or_else(|| de::Error::missing_field("preview_url"))?,
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
-            time_invited: field_time_invited.ok_or_else(|| de::Error::missing_field("time_invited"))?,
+            access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
+            is_inside_team_folder: field_is_inside_team_folder.ok_or_else(|| ::serde::de::Error::missing_field("is_inside_team_folder"))?,
+            is_team_folder: field_is_team_folder.ok_or_else(|| ::serde::de::Error::missing_field("is_team_folder"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            policy: field_policy.ok_or_else(|| ::serde::de::Error::missing_field("policy"))?,
+            preview_url: field_preview_url.ok_or_else(|| ::serde::de::Error::missing_field("preview_url"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
+            time_invited: field_time_invited.ok_or_else(|| ::serde::de::Error::missing_field("time_invited"))?,
             owner_display_names: field_owner_display_names,
             owner_team: field_owner_team,
             parent_shared_folder_id: field_parent_shared_folder_id,
@@ -15160,7 +15907,6 @@ impl SharedFolderMetadataBase {
         mut map: V,
         optional: bool,
     ) -> Result<Option<SharedFolderMetadataBase>, V::Error> {
-        use serde::de;
         let mut field_access_type = None;
         let mut field_is_inside_team_folder = None;
         let mut field_is_team_folder = None;
@@ -15169,61 +15915,64 @@ impl SharedFolderMetadataBase {
         let mut field_parent_shared_folder_id = None;
         let mut field_path_lower = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "access_type" => {
                     if field_access_type.is_some() {
-                        return Err(de::Error::duplicate_field("access_type"));
+                        return Err(::serde::de::Error::duplicate_field("access_type"));
                     }
                     field_access_type = Some(map.next_value()?);
                 }
                 "is_inside_team_folder" => {
                     if field_is_inside_team_folder.is_some() {
-                        return Err(de::Error::duplicate_field("is_inside_team_folder"));
+                        return Err(::serde::de::Error::duplicate_field("is_inside_team_folder"));
                     }
                     field_is_inside_team_folder = Some(map.next_value()?);
                 }
                 "is_team_folder" => {
                     if field_is_team_folder.is_some() {
-                        return Err(de::Error::duplicate_field("is_team_folder"));
+                        return Err(::serde::de::Error::duplicate_field("is_team_folder"));
                     }
                     field_is_team_folder = Some(map.next_value()?);
                 }
                 "owner_display_names" => {
                     if field_owner_display_names.is_some() {
-                        return Err(de::Error::duplicate_field("owner_display_names"));
+                        return Err(::serde::de::Error::duplicate_field("owner_display_names"));
                     }
                     field_owner_display_names = Some(map.next_value()?);
                 }
                 "owner_team" => {
                     if field_owner_team.is_some() {
-                        return Err(de::Error::duplicate_field("owner_team"));
+                        return Err(::serde::de::Error::duplicate_field("owner_team"));
                     }
                     field_owner_team = Some(map.next_value()?);
                 }
                 "parent_shared_folder_id" => {
                     if field_parent_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("parent_shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("parent_shared_folder_id"));
                     }
                     field_parent_shared_folder_id = Some(map.next_value()?);
                 }
                 "path_lower" => {
                     if field_path_lower.is_some() {
-                        return Err(de::Error::duplicate_field("path_lower"));
+                        return Err(::serde::de::Error::duplicate_field("path_lower"));
                     }
                     field_path_lower = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_FOLDER_METADATA_BASE_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = SharedFolderMetadataBase {
-            access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
-            is_inside_team_folder: field_is_inside_team_folder.ok_or_else(|| de::Error::missing_field("is_inside_team_folder"))?,
-            is_team_folder: field_is_team_folder.ok_or_else(|| de::Error::missing_field("is_team_folder"))?,
+            access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
+            is_inside_team_folder: field_is_inside_team_folder.ok_or_else(|| ::serde::de::Error::missing_field("is_inside_team_folder"))?,
+            is_team_folder: field_is_team_folder.ok_or_else(|| ::serde::de::Error::missing_field("is_team_folder"))?,
             owner_display_names: field_owner_display_names,
             owner_team: field_owner_team,
             parent_shared_folder_id: field_parent_shared_folder_id,
@@ -15306,12 +16055,30 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkAccessFailureReason {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "login_required" => Ok(SharedLinkAccessFailureReason::LoginRequired),
-                    "email_verify_required" => Ok(SharedLinkAccessFailureReason::EmailVerifyRequired),
-                    "password_required" => Ok(SharedLinkAccessFailureReason::PasswordRequired),
-                    "team_only" => Ok(SharedLinkAccessFailureReason::TeamOnly),
-                    "owner_only" => Ok(SharedLinkAccessFailureReason::OwnerOnly),
-                    _ => Ok(SharedLinkAccessFailureReason::Other)
+                    "login_required" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkAccessFailureReason::LoginRequired)
+                    }
+                    "email_verify_required" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkAccessFailureReason::EmailVerifyRequired)
+                    }
+                    "password_required" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkAccessFailureReason::PasswordRequired)
+                    }
+                    "team_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkAccessFailureReason::TeamOnly)
+                    }
+                    "owner_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkAccessFailureReason::OwnerOnly)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkAccessFailureReason::Other)
+                    }
                 }
             }
         }
@@ -15392,10 +16159,22 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "shared_link_not_found" => Ok(SharedLinkError::SharedLinkNotFound),
-                    "shared_link_access_denied" => Ok(SharedLinkError::SharedLinkAccessDenied),
-                    "unsupported_link_type" => Ok(SharedLinkError::UnsupportedLinkType),
-                    _ => Ok(SharedLinkError::Other)
+                    "shared_link_not_found" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkError::SharedLinkNotFound)
+                    }
+                    "shared_link_access_denied" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkError::SharedLinkAccessDenied)
+                    }
+                    "unsupported_link_type" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkError::UnsupportedLinkType)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkError::Other)
+                    }
                 }
             }
         }
@@ -15551,10 +16330,22 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "anyone" => Ok(SharedLinkPolicy::Anyone),
-                    "team" => Ok(SharedLinkPolicy::Team),
-                    "members" => Ok(SharedLinkPolicy::Members),
-                    _ => Ok(SharedLinkPolicy::Other)
+                    "anyone" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkPolicy::Anyone)
+                    }
+                    "team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkPolicy::Team)
+                    }
+                    "members" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkPolicy::Members)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkPolicy::Other)
+                    }
                 }
             }
         }
@@ -15624,31 +16415,33 @@ impl SharedLinkSettings {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedLinkSettings, V::Error> {
-        use serde::de;
         let mut field_requested_visibility = None;
         let mut field_link_password = None;
         let mut field_expires = None;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "requested_visibility" => {
                     if field_requested_visibility.is_some() {
-                        return Err(de::Error::duplicate_field("requested_visibility"));
+                        return Err(::serde::de::Error::duplicate_field("requested_visibility"));
                     }
                     field_requested_visibility = Some(map.next_value()?);
                 }
                 "link_password" => {
                     if field_link_password.is_some() {
-                        return Err(de::Error::duplicate_field("link_password"));
+                        return Err(::serde::de::Error::duplicate_field("link_password"));
                     }
                     field_link_password = Some(map.next_value()?);
                 }
                 "expires" => {
                     if field_expires.is_some() {
-                        return Err(de::Error::duplicate_field("expires"));
+                        return Err(::serde::de::Error::duplicate_field("expires"));
                     }
                     field_expires = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, SHARED_LINK_SETTINGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         let result = SharedLinkSettings {
@@ -15729,8 +16522,14 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkSettingsError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "invalid_settings" => Ok(SharedLinkSettingsError::InvalidSettings),
-                    "not_authorized" => Ok(SharedLinkSettingsError::NotAuthorized),
+                    "invalid_settings" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkSettingsError::InvalidSettings)
+                    }
+                    "not_authorized" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkSettingsError::NotAuthorized)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -15806,12 +16605,30 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingFileAccessError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "no_permission" => Ok(SharingFileAccessError::NoPermission),
-                    "invalid_file" => Ok(SharingFileAccessError::InvalidFile),
-                    "is_folder" => Ok(SharingFileAccessError::IsFolder),
-                    "inside_public_folder" => Ok(SharingFileAccessError::InsidePublicFolder),
-                    "inside_osx_package" => Ok(SharingFileAccessError::InsideOsxPackage),
-                    _ => Ok(SharingFileAccessError::Other)
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingFileAccessError::NoPermission)
+                    }
+                    "invalid_file" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingFileAccessError::InvalidFile)
+                    }
+                    "is_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingFileAccessError::IsFolder)
+                    }
+                    "inside_public_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingFileAccessError::InsidePublicFolder)
+                    }
+                    "inside_osx_package" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingFileAccessError::InsideOsxPackage)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingFileAccessError::Other)
+                    }
                 }
             }
         }
@@ -15901,8 +16718,14 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingUserError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "email_unverified" => Ok(SharingUserError::EmailUnverified),
-                    _ => Ok(SharingUserError::Other)
+                    "email_unverified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingUserError::EmailUnverified)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharingUserError::Other)
+                    }
                 }
             }
         }
@@ -15982,41 +16805,43 @@ impl TeamMemberInfo {
         mut map: V,
         optional: bool,
     ) -> Result<Option<TeamMemberInfo>, V::Error> {
-        use serde::de;
         let mut field_team_info = None;
         let mut field_display_name = None;
         let mut field_member_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "team_info" => {
                     if field_team_info.is_some() {
-                        return Err(de::Error::duplicate_field("team_info"));
+                        return Err(::serde::de::Error::duplicate_field("team_info"));
                     }
                     field_team_info = Some(map.next_value()?);
                 }
                 "display_name" => {
                     if field_display_name.is_some() {
-                        return Err(de::Error::duplicate_field("display_name"));
+                        return Err(::serde::de::Error::duplicate_field("display_name"));
                     }
                     field_display_name = Some(map.next_value()?);
                 }
                 "member_id" => {
                     if field_member_id.is_some() {
-                        return Err(de::Error::duplicate_field("member_id"));
+                        return Err(::serde::de::Error::duplicate_field("member_id"));
                     }
                     field_member_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, TEAM_MEMBER_INFO_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = TeamMemberInfo {
-            team_info: field_team_info.ok_or_else(|| de::Error::missing_field("team_info"))?,
-            display_name: field_display_name.ok_or_else(|| de::Error::missing_field("display_name"))?,
+            team_info: field_team_info.ok_or_else(|| ::serde::de::Error::missing_field("team_info"))?,
+            display_name: field_display_name.ok_or_else(|| ::serde::de::Error::missing_field("display_name"))?,
             member_id: field_member_id,
         };
         Ok(Some(result))
@@ -16092,34 +16917,36 @@ impl TransferFolderArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<TransferFolderArg>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_to_dropbox_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "to_dropbox_id" => {
                     if field_to_dropbox_id.is_some() {
-                        return Err(de::Error::duplicate_field("to_dropbox_id"));
+                        return Err(::serde::de::Error::duplicate_field("to_dropbox_id"));
                     }
                     field_to_dropbox_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, TRANSFER_FOLDER_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = TransferFolderArg {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
-            to_dropbox_id: field_to_dropbox_id.ok_or_else(|| de::Error::missing_field("to_dropbox_id"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
+            to_dropbox_id: field_to_dropbox_id.ok_or_else(|| ::serde::de::Error::missing_field("to_dropbox_id"))?,
         };
         Ok(Some(result))
     }
@@ -16203,13 +17030,34 @@ impl<'de> ::serde::de::Deserialize<'de> for TransferFolderError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "invalid_dropbox_id" => Ok(TransferFolderError::InvalidDropboxId),
-                    "new_owner_not_a_member" => Ok(TransferFolderError::NewOwnerNotAMember),
-                    "new_owner_unmounted" => Ok(TransferFolderError::NewOwnerUnmounted),
-                    "new_owner_email_unverified" => Ok(TransferFolderError::NewOwnerEmailUnverified),
-                    "team_folder" => Ok(TransferFolderError::TeamFolder),
-                    "no_permission" => Ok(TransferFolderError::NoPermission),
-                    _ => Ok(TransferFolderError::Other)
+                    "invalid_dropbox_id" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TransferFolderError::InvalidDropboxId)
+                    }
+                    "new_owner_not_a_member" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TransferFolderError::NewOwnerNotAMember)
+                    }
+                    "new_owner_unmounted" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TransferFolderError::NewOwnerUnmounted)
+                    }
+                    "new_owner_email_unverified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TransferFolderError::NewOwnerEmailUnverified)
+                    }
+                    "team_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TransferFolderError::TeamFolder)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TransferFolderError::NoPermission)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TransferFolderError::Other)
+                    }
                 }
             }
         }
@@ -16317,26 +17165,28 @@ impl UnmountFolderArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UnmountFolderArg>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, UNMOUNT_FOLDER_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UnmountFolderArg {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
         };
         Ok(Some(result))
     }
@@ -16412,9 +17262,18 @@ impl<'de> ::serde::de::Deserialize<'de> for UnmountFolderError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "no_permission" => Ok(UnmountFolderError::NoPermission),
-                    "not_unmountable" => Ok(UnmountFolderError::NotUnmountable),
-                    _ => Ok(UnmountFolderError::Other)
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UnmountFolderError::NoPermission)
+                    }
+                    "not_unmountable" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UnmountFolderError::NotUnmountable)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UnmountFolderError::Other)
+                    }
                 }
             }
         }
@@ -16495,26 +17354,28 @@ impl UnshareFileArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UnshareFileArg>, V::Error> {
-        use serde::de;
         let mut field_file = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "file" => {
                     if field_file.is_some() {
-                        return Err(de::Error::duplicate_field("file"));
+                        return Err(::serde::de::Error::duplicate_field("file"));
                     }
                     field_file = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, UNSHARE_FILE_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UnshareFileArg {
-            file: field_file.ok_or_else(|| de::Error::missing_field("file"))?,
+            file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
         };
         Ok(Some(result))
     }
@@ -16594,7 +17455,10 @@ impl<'de> ::serde::de::Deserialize<'de> for UnshareFileError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(UnshareFileError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UnshareFileError::Other)
+                    }
                 }
             }
         }
@@ -16679,33 +17543,35 @@ impl UnshareFolderArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UnshareFolderArg>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_leave_a_copy = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "leave_a_copy" => {
                     if field_leave_a_copy.is_some() {
-                        return Err(de::Error::duplicate_field("leave_a_copy"));
+                        return Err(::serde::de::Error::duplicate_field("leave_a_copy"));
                     }
                     field_leave_a_copy = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, UNSHARE_FOLDER_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UnshareFolderArg {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
             leave_a_copy: field_leave_a_copy.unwrap_or(false),
         };
         Ok(Some(result))
@@ -16784,10 +17650,22 @@ impl<'de> ::serde::de::Deserialize<'de> for UnshareFolderError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "team_folder" => Ok(UnshareFolderError::TeamFolder),
-                    "no_permission" => Ok(UnshareFolderError::NoPermission),
-                    "too_many_files" => Ok(UnshareFolderError::TooManyFiles),
-                    _ => Ok(UnshareFolderError::Other)
+                    "team_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UnshareFolderError::TeamFolder)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UnshareFolderError::NoPermission)
+                    }
+                    "too_many_files" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UnshareFolderError::TooManyFiles)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UnshareFolderError::Other)
+                    }
                 }
             }
         }
@@ -16883,42 +17761,44 @@ impl UpdateFileMemberArgs {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UpdateFileMemberArgs>, V::Error> {
-        use serde::de;
         let mut field_file = None;
         let mut field_member = None;
         let mut field_access_level = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "file" => {
                     if field_file.is_some() {
-                        return Err(de::Error::duplicate_field("file"));
+                        return Err(::serde::de::Error::duplicate_field("file"));
                     }
                     field_file = Some(map.next_value()?);
                 }
                 "member" => {
                     if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
+                        return Err(::serde::de::Error::duplicate_field("member"));
                     }
                     field_member = Some(map.next_value()?);
                 }
                 "access_level" => {
                     if field_access_level.is_some() {
-                        return Err(de::Error::duplicate_field("access_level"));
+                        return Err(::serde::de::Error::duplicate_field("access_level"));
                     }
                     field_access_level = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, UPDATE_FILE_MEMBER_ARGS_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UpdateFileMemberArgs {
-            file: field_file.ok_or_else(|| de::Error::missing_field("file"))?,
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
-            access_level: field_access_level.ok_or_else(|| de::Error::missing_field("access_level"))?,
+            file: field_file.ok_or_else(|| ::serde::de::Error::missing_field("file"))?,
+            member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
+            access_level: field_access_level.ok_or_else(|| ::serde::de::Error::missing_field("access_level"))?,
         };
         Ok(Some(result))
     }
@@ -17002,42 +17882,44 @@ impl UpdateFolderMemberArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UpdateFolderMemberArg>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_member = None;
         let mut field_access_level = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "member" => {
                     if field_member.is_some() {
-                        return Err(de::Error::duplicate_field("member"));
+                        return Err(::serde::de::Error::duplicate_field("member"));
                     }
                     field_member = Some(map.next_value()?);
                 }
                 "access_level" => {
                     if field_access_level.is_some() {
-                        return Err(de::Error::duplicate_field("access_level"));
+                        return Err(::serde::de::Error::duplicate_field("access_level"));
                     }
                     field_access_level = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, UPDATE_FOLDER_MEMBER_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UpdateFolderMemberArg {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
-            member: field_member.ok_or_else(|| de::Error::missing_field("member"))?,
-            access_level: field_access_level.ok_or_else(|| de::Error::missing_field("access_level"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
+            member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
+            access_level: field_access_level.ok_or_else(|| ::serde::de::Error::missing_field("access_level"))?,
         };
         Ok(Some(result))
     }
@@ -17134,9 +18016,18 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFolderMemberError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "insufficient_plan" => Ok(UpdateFolderMemberError::InsufficientPlan),
-                    "no_permission" => Ok(UpdateFolderMemberError::NoPermission),
-                    _ => Ok(UpdateFolderMemberError::Other)
+                    "insufficient_plan" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFolderMemberError::InsufficientPlan)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFolderMemberError::NoPermission)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFolderMemberError::Other)
+                    }
                 }
             }
         }
@@ -17291,7 +18182,6 @@ impl UpdateFolderPolicyArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UpdateFolderPolicyArg>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_id = None;
         let mut field_member_policy = None;
         let mut field_acl_update_policy = None;
@@ -17300,59 +18190,62 @@ impl UpdateFolderPolicyArg {
         let mut field_link_settings = None;
         let mut field_actions = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_id" => {
                     if field_shared_folder_id.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_id"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_id"));
                     }
                     field_shared_folder_id = Some(map.next_value()?);
                 }
                 "member_policy" => {
                     if field_member_policy.is_some() {
-                        return Err(de::Error::duplicate_field("member_policy"));
+                        return Err(::serde::de::Error::duplicate_field("member_policy"));
                     }
                     field_member_policy = Some(map.next_value()?);
                 }
                 "acl_update_policy" => {
                     if field_acl_update_policy.is_some() {
-                        return Err(de::Error::duplicate_field("acl_update_policy"));
+                        return Err(::serde::de::Error::duplicate_field("acl_update_policy"));
                     }
                     field_acl_update_policy = Some(map.next_value()?);
                 }
                 "viewer_info_policy" => {
                     if field_viewer_info_policy.is_some() {
-                        return Err(de::Error::duplicate_field("viewer_info_policy"));
+                        return Err(::serde::de::Error::duplicate_field("viewer_info_policy"));
                     }
                     field_viewer_info_policy = Some(map.next_value()?);
                 }
                 "shared_link_policy" => {
                     if field_shared_link_policy.is_some() {
-                        return Err(de::Error::duplicate_field("shared_link_policy"));
+                        return Err(::serde::de::Error::duplicate_field("shared_link_policy"));
                     }
                     field_shared_link_policy = Some(map.next_value()?);
                 }
                 "link_settings" => {
                     if field_link_settings.is_some() {
-                        return Err(de::Error::duplicate_field("link_settings"));
+                        return Err(::serde::de::Error::duplicate_field("link_settings"));
                     }
                     field_link_settings = Some(map.next_value()?);
                 }
                 "actions" => {
                     if field_actions.is_some() {
-                        return Err(de::Error::duplicate_field("actions"));
+                        return Err(::serde::de::Error::duplicate_field("actions"));
                     }
                     field_actions = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, UPDATE_FOLDER_POLICY_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UpdateFolderPolicyArg {
-            shared_folder_id: field_shared_folder_id.ok_or_else(|| de::Error::missing_field("shared_folder_id"))?,
+            shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
             member_policy: field_member_policy,
             acl_update_policy: field_acl_update_policy,
             viewer_info_policy: field_viewer_info_policy,
@@ -17447,12 +18340,30 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFolderPolicyError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "not_on_team" => Ok(UpdateFolderPolicyError::NotOnTeam),
-                    "team_policy_disallows_member_policy" => Ok(UpdateFolderPolicyError::TeamPolicyDisallowsMemberPolicy),
-                    "disallowed_shared_link_policy" => Ok(UpdateFolderPolicyError::DisallowedSharedLinkPolicy),
-                    "no_permission" => Ok(UpdateFolderPolicyError::NoPermission),
-                    "team_folder" => Ok(UpdateFolderPolicyError::TeamFolder),
-                    _ => Ok(UpdateFolderPolicyError::Other)
+                    "not_on_team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFolderPolicyError::NotOnTeam)
+                    }
+                    "team_policy_disallows_member_policy" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFolderPolicyError::TeamPolicyDisallowsMemberPolicy)
+                    }
+                    "disallowed_shared_link_policy" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFolderPolicyError::DisallowedSharedLinkPolicy)
+                    }
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFolderPolicyError::NoPermission)
+                    }
+                    "team_folder" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFolderPolicyError::TeamFolder)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UpdateFolderPolicyError::Other)
+                    }
                 }
             }
         }
@@ -17605,7 +18516,6 @@ impl UserFileMembershipInfo {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UserFileMembershipInfo>, V::Error> {
-        use serde::de;
         let mut field_access_type = None;
         let mut field_user = None;
         let mut field_permissions = None;
@@ -17614,60 +18524,63 @@ impl UserFileMembershipInfo {
         let mut field_time_last_seen = None;
         let mut field_platform_type = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "access_type" => {
                     if field_access_type.is_some() {
-                        return Err(de::Error::duplicate_field("access_type"));
+                        return Err(::serde::de::Error::duplicate_field("access_type"));
                     }
                     field_access_type = Some(map.next_value()?);
                 }
                 "user" => {
                     if field_user.is_some() {
-                        return Err(de::Error::duplicate_field("user"));
+                        return Err(::serde::de::Error::duplicate_field("user"));
                     }
                     field_user = Some(map.next_value()?);
                 }
                 "permissions" => {
                     if field_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("permissions"));
+                        return Err(::serde::de::Error::duplicate_field("permissions"));
                     }
                     field_permissions = Some(map.next_value()?);
                 }
                 "initials" => {
                     if field_initials.is_some() {
-                        return Err(de::Error::duplicate_field("initials"));
+                        return Err(::serde::de::Error::duplicate_field("initials"));
                     }
                     field_initials = Some(map.next_value()?);
                 }
                 "is_inherited" => {
                     if field_is_inherited.is_some() {
-                        return Err(de::Error::duplicate_field("is_inherited"));
+                        return Err(::serde::de::Error::duplicate_field("is_inherited"));
                     }
                     field_is_inherited = Some(map.next_value()?);
                 }
                 "time_last_seen" => {
                     if field_time_last_seen.is_some() {
-                        return Err(de::Error::duplicate_field("time_last_seen"));
+                        return Err(::serde::de::Error::duplicate_field("time_last_seen"));
                     }
                     field_time_last_seen = Some(map.next_value()?);
                 }
                 "platform_type" => {
                     if field_platform_type.is_some() {
-                        return Err(de::Error::duplicate_field("platform_type"));
+                        return Err(::serde::de::Error::duplicate_field("platform_type"));
                     }
                     field_platform_type = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, USER_FILE_MEMBERSHIP_INFO_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UserFileMembershipInfo {
-            access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
-            user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
+            access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
+            user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
             permissions: field_permissions,
             initials: field_initials,
             is_inherited: field_is_inherited.unwrap_or(false),
@@ -17776,57 +18689,59 @@ impl UserInfo {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UserInfo>, V::Error> {
-        use serde::de;
         let mut field_account_id = None;
         let mut field_email = None;
         let mut field_display_name = None;
         let mut field_same_team = None;
         let mut field_team_member_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "account_id" => {
                     if field_account_id.is_some() {
-                        return Err(de::Error::duplicate_field("account_id"));
+                        return Err(::serde::de::Error::duplicate_field("account_id"));
                     }
                     field_account_id = Some(map.next_value()?);
                 }
                 "email" => {
                     if field_email.is_some() {
-                        return Err(de::Error::duplicate_field("email"));
+                        return Err(::serde::de::Error::duplicate_field("email"));
                     }
                     field_email = Some(map.next_value()?);
                 }
                 "display_name" => {
                     if field_display_name.is_some() {
-                        return Err(de::Error::duplicate_field("display_name"));
+                        return Err(::serde::de::Error::duplicate_field("display_name"));
                     }
                     field_display_name = Some(map.next_value()?);
                 }
                 "same_team" => {
                     if field_same_team.is_some() {
-                        return Err(de::Error::duplicate_field("same_team"));
+                        return Err(::serde::de::Error::duplicate_field("same_team"));
                     }
                     field_same_team = Some(map.next_value()?);
                 }
                 "team_member_id" => {
                     if field_team_member_id.is_some() {
-                        return Err(de::Error::duplicate_field("team_member_id"));
+                        return Err(::serde::de::Error::duplicate_field("team_member_id"));
                     }
                     field_team_member_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, USER_INFO_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UserInfo {
-            account_id: field_account_id.ok_or_else(|| de::Error::missing_field("account_id"))?,
-            email: field_email.ok_or_else(|| de::Error::missing_field("email"))?,
-            display_name: field_display_name.ok_or_else(|| de::Error::missing_field("display_name"))?,
-            same_team: field_same_team.ok_or_else(|| de::Error::missing_field("same_team"))?,
+            account_id: field_account_id.ok_or_else(|| ::serde::de::Error::missing_field("account_id"))?,
+            email: field_email.ok_or_else(|| ::serde::de::Error::missing_field("email"))?,
+            display_name: field_display_name.ok_or_else(|| ::serde::de::Error::missing_field("display_name"))?,
+            same_team: field_same_team.ok_or_else(|| ::serde::de::Error::missing_field("same_team"))?,
             team_member_id: field_team_member_id,
         };
         Ok(Some(result))
@@ -17934,55 +18849,57 @@ impl UserMembershipInfo {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UserMembershipInfo>, V::Error> {
-        use serde::de;
         let mut field_access_type = None;
         let mut field_user = None;
         let mut field_permissions = None;
         let mut field_initials = None;
         let mut field_is_inherited = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "access_type" => {
                     if field_access_type.is_some() {
-                        return Err(de::Error::duplicate_field("access_type"));
+                        return Err(::serde::de::Error::duplicate_field("access_type"));
                     }
                     field_access_type = Some(map.next_value()?);
                 }
                 "user" => {
                     if field_user.is_some() {
-                        return Err(de::Error::duplicate_field("user"));
+                        return Err(::serde::de::Error::duplicate_field("user"));
                     }
                     field_user = Some(map.next_value()?);
                 }
                 "permissions" => {
                     if field_permissions.is_some() {
-                        return Err(de::Error::duplicate_field("permissions"));
+                        return Err(::serde::de::Error::duplicate_field("permissions"));
                     }
                     field_permissions = Some(map.next_value()?);
                 }
                 "initials" => {
                     if field_initials.is_some() {
-                        return Err(de::Error::duplicate_field("initials"));
+                        return Err(::serde::de::Error::duplicate_field("initials"));
                     }
                     field_initials = Some(map.next_value()?);
                 }
                 "is_inherited" => {
                     if field_is_inherited.is_some() {
-                        return Err(de::Error::duplicate_field("is_inherited"));
+                        return Err(::serde::de::Error::duplicate_field("is_inherited"));
                     }
                     field_is_inherited = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, USER_MEMBERSHIP_INFO_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UserMembershipInfo {
-            access_type: field_access_type.ok_or_else(|| de::Error::missing_field("access_type"))?,
-            user: field_user.ok_or_else(|| de::Error::missing_field("user"))?,
+            access_type: field_access_type.ok_or_else(|| ::serde::de::Error::missing_field("access_type"))?,
+            user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
             permissions: field_permissions,
             initials: field_initials,
             is_inherited: field_is_inherited.unwrap_or(false),
@@ -18056,9 +18973,18 @@ impl<'de> ::serde::de::Deserialize<'de> for ViewerInfoPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "enabled" => Ok(ViewerInfoPolicy::Enabled),
-                    "disabled" => Ok(ViewerInfoPolicy::Disabled),
-                    _ => Ok(ViewerInfoPolicy::Other)
+                    "enabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ViewerInfoPolicy::Enabled)
+                    }
+                    "disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ViewerInfoPolicy::Disabled)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ViewerInfoPolicy::Other)
+                    }
                 }
             }
         }
@@ -18125,12 +19051,30 @@ impl<'de> ::serde::de::Deserialize<'de> for Visibility {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "public" => Ok(Visibility::Public),
-                    "team_only" => Ok(Visibility::TeamOnly),
-                    "password" => Ok(Visibility::Password),
-                    "team_and_password" => Ok(Visibility::TeamAndPassword),
-                    "shared_folder_only" => Ok(Visibility::SharedFolderOnly),
-                    _ => Ok(Visibility::Other)
+                    "public" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(Visibility::Public)
+                    }
+                    "team_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(Visibility::TeamOnly)
+                    }
+                    "password" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(Visibility::Password)
+                    }
+                    "team_and_password" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(Visibility::TeamAndPassword)
+                    }
+                    "shared_folder_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(Visibility::SharedFolderOnly)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(Visibility::Other)
+                    }
                 }
             }
         }

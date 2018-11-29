@@ -37,11 +37,26 @@ impl<'de> ::serde::de::Deserialize<'de> for PlatformType {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "web" => Ok(PlatformType::Web),
-                    "mobile" => Ok(PlatformType::Mobile),
-                    "desktop" => Ok(PlatformType::Desktop),
-                    "unknown" => Ok(PlatformType::Unknown),
-                    _ => Ok(PlatformType::Other)
+                    "web" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PlatformType::Web)
+                    }
+                    "mobile" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PlatformType::Mobile)
+                    }
+                    "desktop" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PlatformType::Desktop)
+                    }
+                    "unknown" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PlatformType::Unknown)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PlatformType::Other)
+                    }
                 }
             }
         }

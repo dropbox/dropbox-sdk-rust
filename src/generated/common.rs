@@ -51,7 +51,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRoot {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "home" => Ok(PathRoot::Home),
+                    "home" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PathRoot::Home)
+                    }
                     "root" => {
                         match map.next_key()? {
                             Some("root") => Ok(PathRoot::Root(map.next_value()?)),
@@ -66,7 +69,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRoot {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(PathRoot::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PathRoot::Other)
+                    }
                 }
             }
         }
@@ -141,8 +147,14 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRootError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "no_permission" => Ok(PathRootError::NoPermission),
-                    _ => Ok(PathRootError::Other)
+                    "no_permission" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PathRootError::NoPermission)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PathRootError::Other)
+                    }
                 }
             }
         }
@@ -291,42 +303,44 @@ impl TeamRootInfo {
         mut map: V,
         optional: bool,
     ) -> Result<Option<TeamRootInfo>, V::Error> {
-        use serde::de;
         let mut field_root_namespace_id = None;
         let mut field_home_namespace_id = None;
         let mut field_home_path = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "root_namespace_id" => {
                     if field_root_namespace_id.is_some() {
-                        return Err(de::Error::duplicate_field("root_namespace_id"));
+                        return Err(::serde::de::Error::duplicate_field("root_namespace_id"));
                     }
                     field_root_namespace_id = Some(map.next_value()?);
                 }
                 "home_namespace_id" => {
                     if field_home_namespace_id.is_some() {
-                        return Err(de::Error::duplicate_field("home_namespace_id"));
+                        return Err(::serde::de::Error::duplicate_field("home_namespace_id"));
                     }
                     field_home_namespace_id = Some(map.next_value()?);
                 }
                 "home_path" => {
                     if field_home_path.is_some() {
-                        return Err(de::Error::duplicate_field("home_path"));
+                        return Err(::serde::de::Error::duplicate_field("home_path"));
                     }
                     field_home_path = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, TEAM_ROOT_INFO_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = TeamRootInfo {
-            root_namespace_id: field_root_namespace_id.ok_or_else(|| de::Error::missing_field("root_namespace_id"))?,
-            home_namespace_id: field_home_namespace_id.ok_or_else(|| de::Error::missing_field("home_namespace_id"))?,
-            home_path: field_home_path.ok_or_else(|| de::Error::missing_field("home_path"))?,
+            root_namespace_id: field_root_namespace_id.ok_or_else(|| ::serde::de::Error::missing_field("root_namespace_id"))?,
+            home_namespace_id: field_home_namespace_id.ok_or_else(|| ::serde::de::Error::missing_field("home_namespace_id"))?,
+            home_path: field_home_path.ok_or_else(|| ::serde::de::Error::missing_field("home_path"))?,
         };
         Ok(Some(result))
     }
@@ -405,34 +419,36 @@ impl UserRootInfo {
         mut map: V,
         optional: bool,
     ) -> Result<Option<UserRootInfo>, V::Error> {
-        use serde::de;
         let mut field_root_namespace_id = None;
         let mut field_home_namespace_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "root_namespace_id" => {
                     if field_root_namespace_id.is_some() {
-                        return Err(de::Error::duplicate_field("root_namespace_id"));
+                        return Err(::serde::de::Error::duplicate_field("root_namespace_id"));
                     }
                     field_root_namespace_id = Some(map.next_value()?);
                 }
                 "home_namespace_id" => {
                     if field_home_namespace_id.is_some() {
-                        return Err(de::Error::duplicate_field("home_namespace_id"));
+                        return Err(::serde::de::Error::duplicate_field("home_namespace_id"));
                     }
                     field_home_namespace_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, USER_ROOT_INFO_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = UserRootInfo {
-            root_namespace_id: field_root_namespace_id.ok_or_else(|| de::Error::missing_field("root_namespace_id"))?,
-            home_namespace_id: field_home_namespace_id.ok_or_else(|| de::Error::missing_field("home_namespace_id"))?,
+            root_namespace_id: field_root_namespace_id.ok_or_else(|| ::serde::de::Error::missing_field("root_namespace_id"))?,
+            home_namespace_id: field_home_namespace_id.ok_or_else(|| ::serde::de::Error::missing_field("home_namespace_id"))?,
         };
         Ok(Some(result))
     }

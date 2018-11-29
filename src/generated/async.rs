@@ -43,7 +43,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LaunchEmptyResult {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "complete" => Ok(LaunchEmptyResult::Complete),
+                    "complete" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LaunchEmptyResult::Complete)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -164,26 +167,28 @@ impl PollArg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<PollArg>, V::Error> {
-        use serde::de;
         let mut field_async_job_id = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "async_job_id" => {
                     if field_async_job_id.is_some() {
-                        return Err(de::Error::duplicate_field("async_job_id"));
+                        return Err(::serde::de::Error::duplicate_field("async_job_id"));
                     }
                     field_async_job_id = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, POLL_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = PollArg {
-            async_job_id: field_async_job_id.ok_or_else(|| de::Error::missing_field("async_job_id"))?,
+            async_job_id: field_async_job_id.ok_or_else(|| ::serde::de::Error::missing_field("async_job_id"))?,
         };
         Ok(Some(result))
     }
@@ -251,8 +256,14 @@ impl<'de> ::serde::de::Deserialize<'de> for PollEmptyResult {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "in_progress" => Ok(PollEmptyResult::InProgress),
-                    "complete" => Ok(PollEmptyResult::Complete),
+                    "in_progress" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PollEmptyResult::InProgress)
+                    }
+                    "complete" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PollEmptyResult::Complete)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -311,9 +322,18 @@ impl<'de> ::serde::de::Deserialize<'de> for PollError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "invalid_async_job_id" => Ok(PollError::InvalidAsyncJobId),
-                    "internal_error" => Ok(PollError::InternalError),
-                    _ => Ok(PollError::Other)
+                    "invalid_async_job_id" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PollError::InvalidAsyncJobId)
+                    }
+                    "internal_error" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PollError::InternalError)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PollError::Other)
+                    }
                 }
             }
         }
@@ -383,7 +403,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PollResultBase {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "in_progress" => Ok(PollResultBase::InProgress),
+                    "in_progress" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PollResultBase::InProgress)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }

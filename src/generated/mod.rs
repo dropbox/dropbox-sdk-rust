@@ -52,3 +52,9 @@ pub mod users;
 #[cfg(feature = "dbx_users_common")]
 pub mod users_common;
 
+pub(crate) fn eat_json_fields<'de, V>(map: &mut V) -> Result<(), V::Error> where V: ::serde::de::MapAccess<'de> {
+    for _ in map.next_entry::<&str, ::serde_json::Value>()? {
+        /* ignore */
+    }
+    Ok(())
+}

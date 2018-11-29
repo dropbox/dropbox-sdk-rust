@@ -32,9 +32,18 @@ impl<'de> ::serde::de::Deserialize<'de> for CameraUploadsPolicyState {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled" => Ok(CameraUploadsPolicyState::Disabled),
-                    "enabled" => Ok(CameraUploadsPolicyState::Enabled),
-                    _ => Ok(CameraUploadsPolicyState::Other)
+                    "disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CameraUploadsPolicyState::Disabled)
+                    }
+                    "enabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CameraUploadsPolicyState::Enabled)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CameraUploadsPolicyState::Other)
+                    }
                 }
             }
         }
@@ -94,10 +103,22 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmState {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled" => Ok(EmmState::Disabled),
-                    "optional" => Ok(EmmState::Optional),
-                    "required" => Ok(EmmState::Required),
-                    _ => Ok(EmmState::Other)
+                    "disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(EmmState::Disabled)
+                    }
+                    "optional" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(EmmState::Optional)
+                    }
+                    "required" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(EmmState::Required)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(EmmState::Other)
+                    }
                 }
             }
         }
@@ -161,8 +182,14 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupCreation {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "admins_and_members" => Ok(GroupCreation::AdminsAndMembers),
-                    "admins_only" => Ok(GroupCreation::AdminsOnly),
+                    "admins_and_members" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GroupCreation::AdminsAndMembers)
+                    }
+                    "admins_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(GroupCreation::AdminsOnly)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -219,9 +246,18 @@ impl<'de> ::serde::de::Deserialize<'de> for OfficeAddInPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled" => Ok(OfficeAddInPolicy::Disabled),
-                    "enabled" => Ok(OfficeAddInPolicy::Enabled),
-                    _ => Ok(OfficeAddInPolicy::Other)
+                    "disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(OfficeAddInPolicy::Disabled)
+                    }
+                    "enabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(OfficeAddInPolicy::Enabled)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(OfficeAddInPolicy::Other)
+                    }
                 }
             }
         }
@@ -280,9 +316,18 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDeploymentPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "full" => Ok(PaperDeploymentPolicy::Full),
-                    "partial" => Ok(PaperDeploymentPolicy::Partial),
-                    _ => Ok(PaperDeploymentPolicy::Other)
+                    "full" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDeploymentPolicy::Full)
+                    }
+                    "partial" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDeploymentPolicy::Partial)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDeploymentPolicy::Other)
+                    }
                 }
             }
         }
@@ -342,10 +387,22 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperEnabledPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled" => Ok(PaperEnabledPolicy::Disabled),
-                    "enabled" => Ok(PaperEnabledPolicy::Enabled),
-                    "unspecified" => Ok(PaperEnabledPolicy::Unspecified),
-                    _ => Ok(PaperEnabledPolicy::Other)
+                    "disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperEnabledPolicy::Disabled)
+                    }
+                    "enabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperEnabledPolicy::Enabled)
+                    }
+                    "unspecified" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperEnabledPolicy::Unspecified)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperEnabledPolicy::Other)
+                    }
                 }
             }
         }
@@ -412,10 +469,22 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordStrengthPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "minimal_requirements" => Ok(PasswordStrengthPolicy::MinimalRequirements),
-                    "moderate_password" => Ok(PasswordStrengthPolicy::ModeratePassword),
-                    "strong_password" => Ok(PasswordStrengthPolicy::StrongPassword),
-                    _ => Ok(PasswordStrengthPolicy::Other)
+                    "minimal_requirements" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PasswordStrengthPolicy::MinimalRequirements)
+                    }
+                    "moderate_password" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PasswordStrengthPolicy::ModeratePassword)
+                    }
+                    "strong_password" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PasswordStrengthPolicy::StrongPassword)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PasswordStrengthPolicy::Other)
+                    }
                 }
             }
         }
@@ -481,9 +550,18 @@ impl<'de> ::serde::de::Deserialize<'de> for RolloutMethod {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "unlink_all" => Ok(RolloutMethod::UnlinkAll),
-                    "unlink_most_inactive" => Ok(RolloutMethod::UnlinkMostInactive),
-                    "add_member_to_exceptions" => Ok(RolloutMethod::AddMemberToExceptions),
+                    "unlink_all" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RolloutMethod::UnlinkAll)
+                    }
+                    "unlink_most_inactive" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RolloutMethod::UnlinkMostInactive)
+                    }
+                    "add_member_to_exceptions" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RolloutMethod::AddMemberToExceptions)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }
@@ -548,9 +626,18 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderJoinPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "from_team_only" => Ok(SharedFolderJoinPolicy::FromTeamOnly),
-                    "from_anyone" => Ok(SharedFolderJoinPolicy::FromAnyone),
-                    _ => Ok(SharedFolderJoinPolicy::Other)
+                    "from_team_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderJoinPolicy::FromTeamOnly)
+                    }
+                    "from_anyone" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderJoinPolicy::FromAnyone)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderJoinPolicy::Other)
+                    }
                 }
             }
         }
@@ -609,9 +696,18 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "team" => Ok(SharedFolderMemberPolicy::Team),
-                    "anyone" => Ok(SharedFolderMemberPolicy::Anyone),
-                    _ => Ok(SharedFolderMemberPolicy::Other)
+                    "team" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderMemberPolicy::Team)
+                    }
+                    "anyone" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderMemberPolicy::Anyone)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedFolderMemberPolicy::Other)
+                    }
                 }
             }
         }
@@ -676,10 +772,22 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkCreatePolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "default_public" => Ok(SharedLinkCreatePolicy::DefaultPublic),
-                    "default_team_only" => Ok(SharedLinkCreatePolicy::DefaultTeamOnly),
-                    "team_only" => Ok(SharedLinkCreatePolicy::TeamOnly),
-                    _ => Ok(SharedLinkCreatePolicy::Other)
+                    "default_public" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkCreatePolicy::DefaultPublic)
+                    }
+                    "default_team_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkCreatePolicy::DefaultTeamOnly)
+                    }
+                    "team_only" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkCreatePolicy::TeamOnly)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkCreatePolicy::Other)
+                    }
                 }
             }
         }
@@ -744,9 +852,18 @@ impl<'de> ::serde::de::Deserialize<'de> for ShowcaseDownloadPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled" => Ok(ShowcaseDownloadPolicy::Disabled),
-                    "enabled" => Ok(ShowcaseDownloadPolicy::Enabled),
-                    _ => Ok(ShowcaseDownloadPolicy::Other)
+                    "disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShowcaseDownloadPolicy::Disabled)
+                    }
+                    "enabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShowcaseDownloadPolicy::Enabled)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShowcaseDownloadPolicy::Other)
+                    }
                 }
             }
         }
@@ -804,9 +921,18 @@ impl<'de> ::serde::de::Deserialize<'de> for ShowcaseEnabledPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled" => Ok(ShowcaseEnabledPolicy::Disabled),
-                    "enabled" => Ok(ShowcaseEnabledPolicy::Enabled),
-                    _ => Ok(ShowcaseEnabledPolicy::Other)
+                    "disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShowcaseEnabledPolicy::Disabled)
+                    }
+                    "enabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShowcaseEnabledPolicy::Enabled)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShowcaseEnabledPolicy::Other)
+                    }
                 }
             }
         }
@@ -864,9 +990,18 @@ impl<'de> ::serde::de::Deserialize<'de> for ShowcaseExternalSharingPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled" => Ok(ShowcaseExternalSharingPolicy::Disabled),
-                    "enabled" => Ok(ShowcaseExternalSharingPolicy::Enabled),
-                    _ => Ok(ShowcaseExternalSharingPolicy::Other)
+                    "disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShowcaseExternalSharingPolicy::Disabled)
+                    }
+                    "enabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShowcaseExternalSharingPolicy::Enabled)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(ShowcaseExternalSharingPolicy::Other)
+                    }
                 }
             }
         }
@@ -924,9 +1059,18 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "local" => Ok(SmartSyncPolicy::Local),
-                    "on_demand" => Ok(SmartSyncPolicy::OnDemand),
-                    _ => Ok(SmartSyncPolicy::Other)
+                    "local" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SmartSyncPolicy::Local)
+                    }
+                    "on_demand" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SmartSyncPolicy::OnDemand)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SmartSyncPolicy::Other)
+                    }
                 }
             }
         }
@@ -986,10 +1130,22 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "disabled" => Ok(SsoPolicy::Disabled),
-                    "optional" => Ok(SsoPolicy::Optional),
-                    "required" => Ok(SsoPolicy::Required),
-                    _ => Ok(SsoPolicy::Other)
+                    "disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SsoPolicy::Disabled)
+                    }
+                    "optional" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SsoPolicy::Optional)
+                    }
+                    "required" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SsoPolicy::Required)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SsoPolicy::Other)
+                    }
                 }
             }
         }
@@ -1073,42 +1229,44 @@ impl TeamMemberPolicies {
         mut map: V,
         optional: bool,
     ) -> Result<Option<TeamMemberPolicies>, V::Error> {
-        use serde::de;
         let mut field_sharing = None;
         let mut field_emm_state = None;
         let mut field_office_addin = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "sharing" => {
                     if field_sharing.is_some() {
-                        return Err(de::Error::duplicate_field("sharing"));
+                        return Err(::serde::de::Error::duplicate_field("sharing"));
                     }
                     field_sharing = Some(map.next_value()?);
                 }
                 "emm_state" => {
                     if field_emm_state.is_some() {
-                        return Err(de::Error::duplicate_field("emm_state"));
+                        return Err(::serde::de::Error::duplicate_field("emm_state"));
                     }
                     field_emm_state = Some(map.next_value()?);
                 }
                 "office_addin" => {
                     if field_office_addin.is_some() {
-                        return Err(de::Error::duplicate_field("office_addin"));
+                        return Err(::serde::de::Error::duplicate_field("office_addin"));
                     }
                     field_office_addin = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, TEAM_MEMBER_POLICIES_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = TeamMemberPolicies {
-            sharing: field_sharing.ok_or_else(|| de::Error::missing_field("sharing"))?,
-            emm_state: field_emm_state.ok_or_else(|| de::Error::missing_field("emm_state"))?,
-            office_addin: field_office_addin.ok_or_else(|| de::Error::missing_field("office_addin"))?,
+            sharing: field_sharing.ok_or_else(|| ::serde::de::Error::missing_field("sharing"))?,
+            emm_state: field_emm_state.ok_or_else(|| ::serde::de::Error::missing_field("emm_state"))?,
+            office_addin: field_office_addin.ok_or_else(|| ::serde::de::Error::missing_field("office_addin"))?,
         };
         Ok(Some(result))
     }
@@ -1192,42 +1350,44 @@ impl TeamSharingPolicies {
         mut map: V,
         optional: bool,
     ) -> Result<Option<TeamSharingPolicies>, V::Error> {
-        use serde::de;
         let mut field_shared_folder_member_policy = None;
         let mut field_shared_folder_join_policy = None;
         let mut field_shared_link_create_policy = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "shared_folder_member_policy" => {
                     if field_shared_folder_member_policy.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_member_policy"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_member_policy"));
                     }
                     field_shared_folder_member_policy = Some(map.next_value()?);
                 }
                 "shared_folder_join_policy" => {
                     if field_shared_folder_join_policy.is_some() {
-                        return Err(de::Error::duplicate_field("shared_folder_join_policy"));
+                        return Err(::serde::de::Error::duplicate_field("shared_folder_join_policy"));
                     }
                     field_shared_folder_join_policy = Some(map.next_value()?);
                 }
                 "shared_link_create_policy" => {
                     if field_shared_link_create_policy.is_some() {
-                        return Err(de::Error::duplicate_field("shared_link_create_policy"));
+                        return Err(::serde::de::Error::duplicate_field("shared_link_create_policy"));
                     }
                     field_shared_link_create_policy = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, TEAM_SHARING_POLICIES_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = TeamSharingPolicies {
-            shared_folder_member_policy: field_shared_folder_member_policy.ok_or_else(|| de::Error::missing_field("shared_folder_member_policy"))?,
-            shared_folder_join_policy: field_shared_folder_join_policy.ok_or_else(|| de::Error::missing_field("shared_folder_join_policy"))?,
-            shared_link_create_policy: field_shared_link_create_policy.ok_or_else(|| de::Error::missing_field("shared_link_create_policy"))?,
+            shared_folder_member_policy: field_shared_folder_member_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_member_policy"))?,
+            shared_folder_join_policy: field_shared_folder_join_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_join_policy"))?,
+            shared_link_create_policy: field_shared_link_create_policy.ok_or_else(|| ::serde::de::Error::missing_field("shared_link_create_policy"))?,
         };
         Ok(Some(result))
     }
@@ -1296,9 +1456,18 @@ impl<'de> ::serde::de::Deserialize<'de> for TwoStepVerificationPolicy {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "require_tfa_enable" => Ok(TwoStepVerificationPolicy::RequireTfaEnable),
-                    "require_tfa_disable" => Ok(TwoStepVerificationPolicy::RequireTfaDisable),
-                    _ => Ok(TwoStepVerificationPolicy::Other)
+                    "require_tfa_enable" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TwoStepVerificationPolicy::RequireTfaEnable)
+                    }
+                    "require_tfa_disable" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TwoStepVerificationPolicy::RequireTfaDisable)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TwoStepVerificationPolicy::Other)
+                    }
                 }
             }
         }

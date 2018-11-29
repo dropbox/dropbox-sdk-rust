@@ -38,9 +38,18 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountType {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "basic" => Ok(AccountType::Basic),
-                    "pro" => Ok(AccountType::Pro),
-                    "business" => Ok(AccountType::Business),
+                    "basic" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AccountType::Basic)
+                    }
+                    "pro" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AccountType::Pro)
+                    }
+                    "business" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AccountType::Business)
+                    }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
                 }
             }

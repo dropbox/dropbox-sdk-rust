@@ -72,7 +72,10 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Ok(AccessError::Other)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AccessError::Other)
+                    }
                 }
             }
         }
@@ -151,12 +154,30 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "invalid_access_token" => Ok(AuthError::InvalidAccessToken),
-                    "invalid_select_user" => Ok(AuthError::InvalidSelectUser),
-                    "invalid_select_admin" => Ok(AuthError::InvalidSelectAdmin),
-                    "user_suspended" => Ok(AuthError::UserSuspended),
-                    "expired_access_token" => Ok(AuthError::ExpiredAccessToken),
-                    _ => Ok(AuthError::Other)
+                    "invalid_access_token" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AuthError::InvalidAccessToken)
+                    }
+                    "invalid_select_user" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AuthError::InvalidSelectUser)
+                    }
+                    "invalid_select_admin" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AuthError::InvalidSelectAdmin)
+                    }
+                    "user_suspended" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AuthError::UserSuspended)
+                    }
+                    "expired_access_token" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AuthError::ExpiredAccessToken)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AuthError::Other)
+                    }
                 }
             }
         }
@@ -247,9 +268,18 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidAccountTypeError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "endpoint" => Ok(InvalidAccountTypeError::Endpoint),
-                    "feature" => Ok(InvalidAccountTypeError::Feature),
-                    _ => Ok(InvalidAccountTypeError::Other)
+                    "endpoint" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(InvalidAccountTypeError::Endpoint)
+                    }
+                    "feature" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(InvalidAccountTypeError::Feature)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(InvalidAccountTypeError::Other)
+                    }
                 }
             }
         }
@@ -319,9 +349,18 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperAccessError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "paper_disabled" => Ok(PaperAccessError::PaperDisabled),
-                    "not_paper_user" => Ok(PaperAccessError::NotPaperUser),
-                    _ => Ok(PaperAccessError::Other)
+                    "paper_disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperAccessError::PaperDisabled)
+                    }
+                    "not_paper_user" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperAccessError::NotPaperUser)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperAccessError::Other)
+                    }
                 }
             }
         }
@@ -403,33 +442,35 @@ impl RateLimitError {
         mut map: V,
         optional: bool,
     ) -> Result<Option<RateLimitError>, V::Error> {
-        use serde::de;
         let mut field_reason = None;
         let mut field_retry_after = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "reason" => {
                     if field_reason.is_some() {
-                        return Err(de::Error::duplicate_field("reason"));
+                        return Err(::serde::de::Error::duplicate_field("reason"));
                     }
                     field_reason = Some(map.next_value()?);
                 }
                 "retry_after" => {
                     if field_retry_after.is_some() {
-                        return Err(de::Error::duplicate_field("retry_after"));
+                        return Err(::serde::de::Error::duplicate_field("retry_after"));
                     }
                     field_retry_after = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, RATE_LIMIT_ERROR_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = RateLimitError {
-            reason: field_reason.ok_or_else(|| de::Error::missing_field("reason"))?,
+            reason: field_reason.ok_or_else(|| ::serde::de::Error::missing_field("reason"))?,
             retry_after: field_retry_after.unwrap_or(1),
         };
         Ok(Some(result))
@@ -498,9 +539,18 @@ impl<'de> ::serde::de::Deserialize<'de> for RateLimitReason {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "too_many_requests" => Ok(RateLimitReason::TooManyRequests),
-                    "too_many_write_operations" => Ok(RateLimitReason::TooManyWriteOperations),
-                    _ => Ok(RateLimitReason::Other)
+                    "too_many_requests" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RateLimitReason::TooManyRequests)
+                    }
+                    "too_many_write_operations" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RateLimitReason::TooManyWriteOperations)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RateLimitReason::Other)
+                    }
                 }
             }
         }
@@ -564,34 +614,36 @@ impl TokenFromOAuth1Arg {
         mut map: V,
         optional: bool,
     ) -> Result<Option<TokenFromOAuth1Arg>, V::Error> {
-        use serde::de;
         let mut field_oauth1_token = None;
         let mut field_oauth1_token_secret = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "oauth1_token" => {
                     if field_oauth1_token.is_some() {
-                        return Err(de::Error::duplicate_field("oauth1_token"));
+                        return Err(::serde::de::Error::duplicate_field("oauth1_token"));
                     }
                     field_oauth1_token = Some(map.next_value()?);
                 }
                 "oauth1_token_secret" => {
                     if field_oauth1_token_secret.is_some() {
-                        return Err(de::Error::duplicate_field("oauth1_token_secret"));
+                        return Err(::serde::de::Error::duplicate_field("oauth1_token_secret"));
                     }
                     field_oauth1_token_secret = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, TOKEN_FROM_O_AUTH1_ARG_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = TokenFromOAuth1Arg {
-            oauth1_token: field_oauth1_token.ok_or_else(|| de::Error::missing_field("oauth1_token"))?,
-            oauth1_token_secret: field_oauth1_token_secret.ok_or_else(|| de::Error::missing_field("oauth1_token_secret"))?,
+            oauth1_token: field_oauth1_token.ok_or_else(|| ::serde::de::Error::missing_field("oauth1_token"))?,
+            oauth1_token_secret: field_oauth1_token_secret.ok_or_else(|| ::serde::de::Error::missing_field("oauth1_token_secret"))?,
         };
         Ok(Some(result))
     }
@@ -659,9 +711,18 @@ impl<'de> ::serde::de::Deserialize<'de> for TokenFromOAuth1Error {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "invalid_oauth1_token_info" => Ok(TokenFromOAuth1Error::InvalidOauth1TokenInfo),
-                    "app_id_mismatch" => Ok(TokenFromOAuth1Error::AppIdMismatch),
-                    _ => Ok(TokenFromOAuth1Error::Other)
+                    "invalid_oauth1_token_info" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TokenFromOAuth1Error::InvalidOauth1TokenInfo)
+                    }
+                    "app_id_mismatch" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TokenFromOAuth1Error::AppIdMismatch)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TokenFromOAuth1Error::Other)
+                    }
                 }
             }
         }
@@ -733,26 +794,28 @@ impl TokenFromOAuth1Result {
         mut map: V,
         optional: bool,
     ) -> Result<Option<TokenFromOAuth1Result>, V::Error> {
-        use serde::de;
         let mut field_oauth2_token = None;
         let mut nothing = true;
-        while let Some(key) = map.next_key()? {
+        while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
                 "oauth2_token" => {
                     if field_oauth2_token.is_some() {
-                        return Err(de::Error::duplicate_field("oauth2_token"));
+                        return Err(::serde::de::Error::duplicate_field("oauth2_token"));
                     }
                     field_oauth2_token = Some(map.next_value()?);
                 }
-                _ => return Err(de::Error::unknown_field(key, TOKEN_FROM_O_AUTH1_RESULT_FIELDS))
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
             }
         }
         if optional && nothing {
             return Ok(None);
         }
         let result = TokenFromOAuth1Result {
-            oauth2_token: field_oauth2_token.ok_or_else(|| de::Error::missing_field("oauth2_token"))?,
+            oauth2_token: field_oauth2_token.ok_or_else(|| ::serde::de::Error::missing_field("oauth2_token"))?,
         };
         Ok(Some(result))
     }

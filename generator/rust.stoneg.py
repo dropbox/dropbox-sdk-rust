@@ -31,6 +31,12 @@ class RustBackend(RustHelperBackend):
                 self.emit(u'#[cfg(feature = "dbx_{}")]'.format(module))
                 self.emit(u'pub mod {};'.format(module))
                 self.emit()
+            with self.block(u'pub(crate) fn eat_json_fields<\'de, V>(map: &mut V)'
+                            u' -> Result<(), V::Error>'
+                            u' where V: ::serde::de::MapAccess<\'de>'):
+                with self.block(u'for _ in map.next_entry::<&str, ::serde_json::Value>()?'):
+                    self.emit(u'/* ignore */')
+                self.emit(u'Ok(())')
 
     # Type Emitters
 
@@ -270,33 +276,29 @@ class RustBackend(RustHelperBackend):
                     (u'Result<Option<{}>, V::Error>' if optional else u'Result<{}, V::Error>')
                     .format(type_name),
                     access=u'pub(crate)'):
-                self.emit(u'use serde::de;')
-                if not struct.all_fields:
-                    with self.block(u'if let Some(key) = map.next_key()?'):
-                        self.emit(u'return Err(de::Error::unknown_field(key, {}));'
-                                  .format(field_list_name))
-                else:
-                    for field in struct.all_fields:
-                        self.emit(u'let mut field_{} = None;'.format(self.field_name(field)))
+                for field in struct.all_fields:
+                    self.emit(u'let mut field_{} = None;'.format(self.field_name(field)))
+                if optional:
+                    self.emit(u'let mut nothing = true;')
+                with self.block(u'while let Some(key) = map.next_key::<&str>()?'):
                     if optional:
-                        self.emit(u'let mut nothing = true;')
-                    with self.block(u'while let Some(key) = map.next_key()?'):
-                        if optional:
-                            self.emit(u'nothing = false;')
-                        with self.block(u'match key'):
-                            for field in struct.all_fields:
-                                field_name = self.field_name(field)
-                                with self.block(u'"{}" =>'.format(field.name)):
-                                    with self.block(u'if field_{}.is_some()'.format(field_name)):
-                                        self.emit(u'return Err(de::Error::duplicate_field("{}"));'
-                                                  .format(field.name))
-                                    self.emit(u'field_{} = Some(map.next_value()?);'
-                                              .format(field_name))
-                            self.emit(u'_ => return Err(de::Error::unknown_field(key, {}))'
-                                      .format(field_list_name))
-                    if optional:
-                        with self.block(u'if optional && nothing'):
-                            self.emit(u'return Ok(None);')
+                        self.emit(u'nothing = false;')
+                    with self.block(u'match key'):
+                        for field in struct.all_fields:
+                            field_name = self.field_name(field)
+                            with self.block(u'"{}" =>'.format(field.name)):
+                                with self.block(u'if field_{}.is_some()'.format(field_name)):
+                                    self.emit(u'return Err(::serde::de::Error::duplicate_field('
+                                              u'"{}"));'
+                                              .format(field.name))
+                                self.emit(u'field_{} = Some(map.next_value()?);'
+                                          .format(field_name))
+                        with self.block(u'_ =>'):
+                            self.emit(u'// unknown field allowed and ignored')
+                            self.emit(u'map.next_value::<::serde_json::Value>()?;')
+                if optional:
+                    with self.block(u'if optional && nothing'):
+                        self.emit(u'return Ok(None);')
                 with self.block(u'let result = {}'.format(type_name), delim=(u'{', u'};')):
                     for field in struct.all_fields:
                         field_name = self.field_name(field)
@@ -319,7 +321,7 @@ class RustBackend(RustHelperBackend):
                                                   self._default_value(field)))
                         else:
                             self.emit(u'{}: field_{}.ok_or_else(|| '
-                                      u'de::Error::missing_field("{}"))?,'
+                                      u'::serde::de::Error::missing_field("{}"))?,'
                                       .format(field_name, field_name, field.name))
                 if optional:
                     self.emit(u'Ok(Some(result))')
@@ -477,8 +479,9 @@ class RustBackend(RustHelperBackend):
                             variant_name = self.enum_variant_name(field)
                             ultimate_type = ir.unwrap(field.data_type)[0]
                             if isinstance(field.data_type, ir.Void):
-                                self.emit(u'"{}" => Ok({}::{}),'
-                                          .format(field.name, type_name, variant_name))
+                                with self.block(u'"{}" =>'.format(field.name)):
+                                    self.emit(u'::eat_json_fields(&mut map)?;')
+                                    self.emit(u'Ok({}::{})'.format(type_name, variant_name))
                             elif isinstance(ultimate_type, ir.Struct) \
                                     and not ultimate_type.has_enumerated_subtypes():
                                 if isinstance(ir.unwrap_aliases(field.data_type)[0], ir.Nullable):
@@ -520,7 +523,9 @@ class RustBackend(RustHelperBackend):
                                         self.emit(u'_ => Err(de::Error::unknown_field('
                                                   u'tag, VARIANTS))')
                         if not union.closed:
-                            self.emit(u'_ => Ok({}::Other)'.format(type_name))
+                            with self.block(u'_ =>'):
+                                self.emit(u'::eat_json_fields(&mut map)?;')
+                                self.emit(u'Ok({}::Other)'.format(type_name))
                         else:
                             self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(
