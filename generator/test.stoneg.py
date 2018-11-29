@@ -185,9 +185,12 @@ class TestField(object):
         elif ir.is_timestamp_type(self.typ):
             codegen.emit(u'assert_eq!({}.as_str(), "{}");'.format(
                 expression, self.value.strftime(self.typ.format)))
+        elif ir.is_bytes_type(self.typ):
+            codegen.emit(u'assert_eq!(&{}, &[{}]);'.format(
+                expression, ",".join(str(x) for x in self.value)))
         else:
-            raise RuntimeError(u'Error: assetion unhandled for type {} of field {}'
-                               .format(self.typ, self.name))
+            raise RuntimeError(u'Error: assetion unhandled for type {} of field {} with value {}'
+                               .format(self.typ, self.name, self.value))
 
 
 class TestValue(object):
@@ -366,6 +369,8 @@ def make_test_field(field_name, stone_type, rust_generator, reference_impls):
         value = True
     elif ir.is_timestamp_type(typ):
         value = datetime.datetime.utcfromtimestamp(2**33 - 1)
+    elif ir.is_bytes_type(typ):
+        value = bytes([0,1,2,3,4,5])
     elif not ir.is_void_type(typ):
         raise RuntimeError(u'Error: unhandled field type of {}: {}'.format(field_name, typ))
     return TestField(rust_name, value, inner, typ, option)
