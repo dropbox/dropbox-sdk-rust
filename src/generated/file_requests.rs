@@ -216,7 +216,6 @@ impl ::serde::ser::Serialize for CreateFileRequestArgs {
 pub enum CreateFileRequestError {
     /// This user's Dropbox Business team doesn't allow file requests.
     DisabledForTeam,
-    Other,
     /// This file request ID was not found.
     NotFound,
     /// The specified path is not a folder.
@@ -238,6 +237,9 @@ pub enum CreateFileRequestError {
     /// The user has reached the rate limit for creating file requests. The limit is currently 100
     /// file requests per day.
     RateLimit,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for CreateFileRequestError {
@@ -706,7 +708,6 @@ impl ::serde::ser::Serialize for FileRequestDeadline {
 pub enum FileRequestError {
     /// This user's Dropbox Business team doesn't allow file requests.
     DisabledForTeam,
-    Other,
     /// This file request ID was not found.
     NotFound,
     /// The specified path is not a folder.
@@ -723,6 +724,9 @@ pub enum FileRequestError {
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.
     ValidationError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for FileRequestError {
@@ -857,6 +861,8 @@ impl ::std::fmt::Display for FileRequestError {
 pub enum GeneralFileRequestsError {
     /// This user's Dropbox Business team doesn't allow file requests.
     DisabledForTeam,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1017,7 +1023,6 @@ impl ::serde::ser::Serialize for GetFileRequestArgs {
 pub enum GetFileRequestError {
     /// This user's Dropbox Business team doesn't allow file requests.
     DisabledForTeam,
-    Other,
     /// This file request ID was not found.
     NotFound,
     /// The specified path is not a folder.
@@ -1034,6 +1039,9 @@ pub enum GetFileRequestError {
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.
     ValidationError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetFileRequestError {
@@ -1170,6 +1178,8 @@ pub enum GracePeriod {
     SevenDays,
     ThirtyDays,
     Always,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1271,6 +1281,8 @@ impl ::serde::ser::Serialize for GracePeriod {
 pub enum ListFileRequestsError {
     /// This user's Dropbox Business team doesn't allow file requests.
     DisabledForTeam,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1598,6 +1610,8 @@ pub enum UpdateFileRequestDeadline {
     NoUpdate,
     /// If `None`, the file request's deadline is cleared.
     Update(Option<FileRequestDeadline>),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1667,7 +1681,6 @@ impl ::serde::ser::Serialize for UpdateFileRequestDeadline {
 pub enum UpdateFileRequestError {
     /// This user's Dropbox Business team doesn't allow file requests.
     DisabledForTeam,
-    Other,
     /// This file request ID was not found.
     NotFound,
     /// The specified path is not a folder.
@@ -1684,6 +1697,9 @@ pub enum UpdateFileRequestError {
     /// There was an error validating the request. For example, the title was invalid, or there were
     /// disallowed characters in the destination path.
     ValidationError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestError {

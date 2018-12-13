@@ -22,6 +22,8 @@ pub enum GroupManagementType {
     CompanyManaged,
     /// A group which is managed automatically by Dropbox.
     SystemManaged,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -259,6 +261,8 @@ pub enum GroupType {
     Team,
     /// A group is created and managed by a user.
     UserManaged,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -333,6 +337,8 @@ pub enum MemberSpaceLimitType {
     /// The team member has hard imposed space limit - Dropbox file sync will stop after the limit
     /// is reached.
     StopSync,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 

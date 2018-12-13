@@ -404,7 +404,6 @@ pub enum AddPropertiesError {
     TemplateNotFound(TemplateId),
     /// You do not have permission to modify this template.
     RestrictedContent,
-    Other,
     Path(LookupError),
     /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
     UnsupportedFolder,
@@ -414,6 +413,9 @@ pub enum AddPropertiesError {
     DoesNotFitTemplate,
     /// A property group associated with this template and file already exists.
     PropertyGroupAlreadyExists,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for AddPropertiesError {
@@ -975,7 +977,6 @@ pub enum InvalidPropertyGroupError {
     TemplateNotFound(TemplateId),
     /// You do not have permission to modify this template.
     RestrictedContent,
-    Other,
     Path(LookupError),
     /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
     UnsupportedFolder,
@@ -983,6 +984,9 @@ pub enum InvalidPropertyGroupError {
     PropertyFieldTooLarge,
     /// One or more of the supplied property fields does not conform to the template specifications.
     DoesNotFitTemplate,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
@@ -1206,6 +1210,8 @@ impl ::serde::ser::Serialize for ListTemplateResult {
 pub enum LogicalOperator {
     /// Append a query with an "or" operator.
     OrOperator,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1262,6 +1268,8 @@ impl ::serde::ser::Serialize for LogicalOperator {
 pub enum LookUpPropertiesError {
     /// No property group was found.
     PropertyGroupNotFound,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1338,6 +1346,8 @@ pub enum LookupError {
     /// The file cannot be transferred because the content is restricted.  For example, sometimes
     /// there are legal restrictions due to copyright claims.
     RestrictedContent,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1456,7 +1466,6 @@ pub enum ModifyTemplateError {
     TemplateNotFound(TemplateId),
     /// You do not have permission to modify this template.
     RestrictedContent,
-    Other,
     /// A property field key with that name already exists in the template.
     ConflictingPropertyNames,
     /// There are too many properties in the changed template. The maximum number of properties per
@@ -1466,6 +1475,9 @@ pub enum ModifyTemplateError {
     TooManyTemplates,
     /// The template name, description or one or more of the property field keys is too large.
     TemplateAttributeTooLarge,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ModifyTemplateError {
@@ -1697,10 +1709,12 @@ pub enum PropertiesError {
     TemplateNotFound(TemplateId),
     /// You do not have permission to modify this template.
     RestrictedContent,
-    Other,
     Path(LookupError),
     /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
     UnsupportedFolder,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PropertiesError {
@@ -2009,6 +2023,8 @@ pub enum PropertiesSearchContinueError {
     /// Indicates that the cursor has been invalidated. Call
     /// [`properties_search()`](properties_search) to obtain a new cursor.
     Reset,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2076,6 +2092,8 @@ impl ::std::fmt::Display for PropertiesSearchContinueError {
 #[derive(Debug)]
 pub enum PropertiesSearchError {
     PropertyGroupLookup(LookUpPropertiesError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2282,6 +2300,8 @@ impl ::serde::ser::Serialize for PropertiesSearchMatch {
 pub enum PropertiesSearchMode {
     /// Search for a value associated with this field name.
     FieldName(String),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3151,6 +3171,8 @@ impl ::serde::ser::Serialize for PropertyGroupUpdate {
 pub enum PropertyType {
     /// The associated property field will be of type string. Unicode is supported.
     String,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3314,11 +3336,13 @@ pub enum RemovePropertiesError {
     TemplateNotFound(TemplateId),
     /// You do not have permission to modify this template.
     RestrictedContent,
-    Other,
     Path(LookupError),
     /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
     UnsupportedFolder,
     PropertyGroupLookup(LookUpPropertiesError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
@@ -3535,6 +3559,8 @@ pub enum TemplateError {
     TemplateNotFound(TemplateId),
     /// You do not have permission to modify this template.
     RestrictedContent,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3619,9 +3645,11 @@ pub enum TemplateFilter {
     /// Only templates with an ID in the supplied list will be returned (a subset of templates will
     /// be returned).
     FilterSome(Vec<TemplateId>),
-    Other,
     /// No templates will be filtered from the result (all templates will be returned).
     FilterNone,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TemplateFilter {
@@ -3693,6 +3721,8 @@ pub enum TemplateFilterBase {
     /// Only templates with an ID in the supplied list will be returned (a subset of templates will
     /// be returned).
     FilterSome(Vec<TemplateId>),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3755,6 +3785,8 @@ pub enum TemplateOwnerType {
     User,
     /// Template will be associated with a team.
     Team,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3927,7 +3959,6 @@ pub enum UpdatePropertiesError {
     TemplateNotFound(TemplateId),
     /// You do not have permission to modify this template.
     RestrictedContent,
-    Other,
     Path(LookupError),
     /// This folder cannot be tagged. Tagging folders is not supported for team-owned templates.
     UnsupportedFolder,
@@ -3936,6 +3967,9 @@ pub enum UpdatePropertiesError {
     /// One or more of the supplied property fields does not conform to the template specifications.
     DoesNotFitTemplate,
     PropertyGroupLookup(LookUpPropertiesError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {

@@ -129,12 +129,22 @@ class RustBackend(RustHelperBackend):
         self.emit(u'#[derive(Debug)]')
         with self.block(u'pub enum {}'.format(enum_name)):
             for field in union.all_fields:
+                if field.catch_all:
+                    # Handle the 'Other' variant at the end.
+                    continue
                 self._emit_doc(field.doc)
                 variant_name = self.enum_variant_name(field)
                 if isinstance(field.data_type, ir.Void):
                     self.emit(u'{},'.format(variant_name))
                 else:
                     self.emit(u'{}({}),'.format(variant_name, self._rust_type(field.data_type)))
+            if not union.closed:
+                self.emit_wrapped_text(
+                        u'Catch-all used for unrecognized values returned from the server.'
+                        u' Encountering this value typically indicates that this SDK version is'
+                        u' out of date.',
+                        prefix=u'/// ', width=100)
+                self.emit(u'Other,')
         self.emit()
 
         self._impl_serde_for_union(union)

@@ -18,6 +18,8 @@ pub enum PlatformType {
     Desktop,
     /// The content was viewed on an unknown platform.
     Unknown,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 

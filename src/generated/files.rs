@@ -2131,6 +2131,8 @@ impl ::serde::ser::Serialize for CreateFolderBatchArg {
 pub enum CreateFolderBatchError {
     /// The operation would involve too many files or folders.
     TooManyFiles,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2203,6 +2205,8 @@ pub enum CreateFolderBatchJobStatus {
     Complete(CreateFolderBatchResult),
     /// The batch create folder has failed.
     Failed(CreateFolderBatchError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2287,6 +2291,8 @@ pub enum CreateFolderBatchLaunch {
     /// used to obtain the status of the asynchronous job.
     AsyncJobId(super::async::AsyncJobId),
     Complete(CreateFolderBatchResult),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2509,6 +2515,8 @@ impl ::serde::ser::Serialize for CreateFolderBatchResultEntry {
 #[derive(Debug)]
 pub enum CreateFolderEntryError {
     Path(WriteError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3026,6 +3034,8 @@ pub enum DeleteBatchError {
     /// [`delete_batch()`](delete_batch) now provides smaller granularity about which entry has
     /// failed because of this.
     TooManyWriteOperations,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3098,6 +3108,8 @@ pub enum DeleteBatchJobStatus {
     Complete(DeleteBatchResult),
     /// The batch delete has failed.
     Failed(DeleteBatchError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3182,6 +3194,8 @@ pub enum DeleteBatchLaunch {
     /// used to obtain the status of the asynchronous job.
     AsyncJobId(super::async::AsyncJobId),
     Complete(DeleteBatchResult),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3499,6 +3513,8 @@ pub enum DeleteError {
     TooManyWriteOperations,
     /// There are too many files in one request. Please retry with fewer files.
     TooManyFiles,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -4064,6 +4080,8 @@ impl ::serde::ser::Serialize for DownloadArg {
 #[derive(Debug)]
 pub enum DownloadError {
     Path(LookupError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -4229,6 +4247,8 @@ pub enum DownloadZipError {
     TooLarge,
     /// The folder has too many files to download.
     TooManyFiles,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -5425,6 +5445,8 @@ impl ::serde::ser::Serialize for GetCopyReferenceArg {
 #[derive(Debug)]
 pub enum GetCopyReferenceError {
     Path(LookupError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -5940,6 +5962,8 @@ impl ::serde::ser::Serialize for GetTemporaryLinkArg {
 #[derive(Debug)]
 pub enum GetTemporaryLinkError {
     Path(LookupError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -6406,6 +6430,8 @@ impl ::serde::ser::Serialize for GetThumbnailBatchArg {
 pub enum GetThumbnailBatchError {
     /// The operation involves more than 25 files.
     TooManyFiles,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -6667,6 +6693,8 @@ pub enum GetThumbnailBatchResultEntry {
     Success(GetThumbnailBatchResultData),
     /// The result for this file if it was an error.
     Failure(ThumbnailError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -7178,6 +7206,8 @@ pub enum ListFolderContinueError {
     /// Indicates that the cursor has been invalidated. Call [`list_folder()`](list_folder) to
     /// obtain a new cursor.
     Reset,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -7260,6 +7290,8 @@ impl ::std::fmt::Display for ListFolderContinueError {
 #[derive(Debug)]
 pub enum ListFolderError {
     Path(LookupError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -7536,6 +7568,8 @@ pub enum ListFolderLongpollError {
     /// Indicates that the cursor has been invalidated. Call [`list_folder()`](list_folder) to
     /// obtain a new cursor.
     Reset,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -7957,6 +7991,8 @@ impl ::serde::ser::Serialize for ListRevisionsArg {
 #[derive(Debug)]
 pub enum ListRevisionsError {
     Path(LookupError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -8033,6 +8069,8 @@ pub enum ListRevisionsMode {
     /// Returns revisions with the same file id as identified by the latest file entry at the given
     /// file path or id.
     Id,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -8232,6 +8270,8 @@ pub enum LookupError {
     /// The file cannot be transferred because the content is restricted.  For example, sometimes
     /// there are legal restrictions due to copyright claims.
     RestrictedContent,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -9454,9 +9494,11 @@ pub enum RelocationBatchError {
     /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action
     /// you were taking succeeded, and if not, try again. This should happen very rarely.
     InternalError,
-    Other,
     /// There are too many write operations in user's Dropbox. Please retry this request.
     TooManyWriteOperations,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
@@ -9662,6 +9704,8 @@ pub enum RelocationBatchErrorEntry {
     InternalError,
     /// There are too many write operations in user's Dropbox. Please retry this request.
     TooManyWriteOperations,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -9826,6 +9870,8 @@ pub enum RelocationBatchLaunch {
     /// used to obtain the status of the asynchronous job.
     AsyncJobId(super::async::AsyncJobId),
     Complete(RelocationBatchResult),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -10074,6 +10120,8 @@ impl ::serde::ser::Serialize for RelocationBatchResultData {
 pub enum RelocationBatchResultEntry {
     Success(Metadata),
     Failure(RelocationBatchErrorEntry),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -10390,6 +10438,8 @@ pub enum RelocationError {
     /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action
     /// you were taking succeeded, and if not, try again. This should happen very rarely.
     InternalError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -10880,6 +10930,8 @@ pub enum RestoreError {
     PathWrite(WriteError),
     /// The revision is invalid. It may not exist.
     InvalidRevision,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -11089,6 +11141,8 @@ pub enum SaveCopyReferenceError {
     NotFound,
     /// The operation would involve more than 10,000 files and folders.
     TooManyFiles,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -11403,6 +11457,8 @@ pub enum SaveUrlError {
     InvalidUrl,
     /// The file where the URL is saved to no longer exists.
     NotFound,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -11810,6 +11866,8 @@ impl ::serde::ser::Serialize for SearchArg {
 #[derive(Debug)]
 pub enum SearchError {
     Path(LookupError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -12552,6 +12610,8 @@ pub enum SyncSetting {
     /// The specified folder's not_synced setting is inactive due to its location or other
     /// configuration changes. It will follow its parent folder's setting.
     NotSyncedInactive,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -12634,6 +12694,8 @@ pub enum SyncSettingArg {
     /// On first sync to members' computers, the specified folder will be set to not sync with
     /// selective sync.
     NotSynced,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -12704,6 +12766,8 @@ pub enum SyncSettingsError {
     UnsupportedCombination,
     /// The specified configuration is not supported.
     UnsupportedConfiguration,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -13341,6 +13405,8 @@ pub enum UploadError {
     Path(UploadWriteFailed),
     /// The supplied property group is invalid. The file has uploaded without property groups.
     PropertiesError(super::file_properties::InvalidPropertyGroupError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -13424,6 +13490,8 @@ pub enum UploadErrorWithProperties {
     Path(UploadWriteFailed),
     /// The supplied property group is invalid. The file has uploaded without property groups.
     PropertiesError(super::file_properties::InvalidPropertyGroupError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -13964,6 +14032,8 @@ pub enum UploadSessionFinishBatchLaunch {
     /// used to obtain the status of the asynchronous job.
     AsyncJobId(super::async::AsyncJobId),
     Complete(UploadSessionFinishBatchResult),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -14199,6 +14269,8 @@ pub enum UploadSessionFinishError {
     /// There are too many write operations happening in the user's Dropbox. You should retry
     /// uploading this file.
     TooManyWriteOperations,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -14335,6 +14407,8 @@ pub enum UploadSessionLookupError {
     /// You can not append to the upload session because the size of a file should not reach the max
     /// file size limit (i.e. 350GB).
     TooLarge,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -14933,6 +15007,8 @@ pub enum WriteConflictError {
     Folder,
     /// There's a file at an ancestor path, so we couldn't create the required parent folders.
     FileAncestor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -15037,6 +15113,8 @@ pub enum WriteError {
     TeamFolder,
     /// There are too many write operations in user's Dropbox. Please retry this request.
     TooManyWriteOperations,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 

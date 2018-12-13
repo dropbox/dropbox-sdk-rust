@@ -39,6 +39,8 @@ pub enum AccessError {
     InvalidAccountType(InvalidAccountTypeError),
     /// Current account cannot access Paper.
     PaperAccessDenied(PaperAccessError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -135,6 +137,8 @@ pub enum AuthError {
     UserSuspended,
     /// The access token has expired.
     ExpiredAccessToken,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -249,6 +253,8 @@ pub enum InvalidAccountTypeError {
     Endpoint,
     /// Current account type doesn't have permission to access this feature.
     Feature,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -330,6 +336,8 @@ pub enum PaperAccessError {
     PaperDisabled,
     /// The provided user has not used Paper yet.
     NotPaperUser,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -520,6 +528,8 @@ pub enum RateLimitReason {
     TooManyRequests,
     /// There are currently too many write operations happening in the user's Dropbox.
     TooManyWriteOperations,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -692,6 +702,8 @@ pub enum TokenFromOAuth1Error {
     InvalidOauth1TokenInfo,
     /// The authorized app does not match the app associated with the supplied access token.
     AppIdMismatch,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 

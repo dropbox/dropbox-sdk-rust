@@ -128,6 +128,8 @@ pub enum DeleteManualContactsError {
     /// Can't delete contacts from this list. Make sure the list only has manually added contacts.
     /// The deletion was cancelled.
     ContactsNotFound(Vec<super::common::EmailAddress>),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 

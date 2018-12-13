@@ -13,6 +13,8 @@ pub enum CameraUploadsPolicyState {
     Disabled,
     /// Background camera uploads are allowed.
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -84,6 +86,8 @@ pub enum EmmState {
     Optional,
     /// Emm token is required.
     Required,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -227,6 +231,8 @@ pub enum OfficeAddInPolicy {
     Disabled,
     /// Office Add-In is enabled.
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -297,6 +303,8 @@ pub enum PaperDeploymentPolicy {
     /// Only whitelisted team members can access Paper. To see which user is whitelisted, check
     /// 'is_paper_whitelisted' on 'account/info'.
     Partial,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -368,6 +376,8 @@ pub enum PaperEnabledPolicy {
     Enabled,
     /// Unspecified policy.
     Unspecified,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -450,6 +460,8 @@ pub enum PasswordStrengthPolicy {
     ModeratePassword,
     /// User passwords will adhere to the very strong password strength policy.
     StrongPassword,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -607,6 +619,8 @@ pub enum SharedFolderJoinPolicy {
     FromTeamOnly,
     /// Team members can join any shared folder, including those shared by users outside the team.
     FromAnyone,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -677,6 +691,8 @@ pub enum SharedFolderMemberPolicy {
     Team,
     /// Anyone can be a member of a folder shared by a team member.
     Anyone,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -753,6 +769,8 @@ pub enum SharedLinkCreatePolicy {
     /// Only members of the same team can access all shared links. Login will be required to access
     /// all shared links.
     TeamOnly,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -833,6 +851,8 @@ pub enum ShowcaseDownloadPolicy {
     Disabled,
     /// Allow files to be downloaded from Showcases.
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -902,6 +922,8 @@ pub enum ShowcaseEnabledPolicy {
     Disabled,
     /// Showcase is enabled.
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -971,6 +993,8 @@ pub enum ShowcaseExternalSharingPolicy {
     Disabled,
     /// Allow showcases to be shared with people not on the team.
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1040,6 +1064,8 @@ pub enum SmartSyncPolicy {
     Local,
     /// The specified content will be synced as on-demand files by default.
     OnDemand,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1111,6 +1137,8 @@ pub enum SsoPolicy {
     Optional,
     /// Users will be required to sign in with their single sign-on credentials.
     Required,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1437,6 +1465,8 @@ pub enum TwoStepVerificationPolicy {
     RequireTfaEnable,
     /// Disabled require two factor authorization.
     RequireTfaDisable,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 

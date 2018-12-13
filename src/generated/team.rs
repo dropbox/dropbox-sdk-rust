@@ -1587,6 +1587,8 @@ pub enum BaseTeamFolderError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
     TeamSharedDropboxError(TeamFolderTeamSharedDropboxError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1690,6 +1692,8 @@ impl ::std::fmt::Display for BaseTeamFolderError {
 pub enum CustomQuotaError {
     /// A maximum of 1000 users can be set for a single call.
     TooManyUsers,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1761,6 +1765,8 @@ pub enum CustomQuotaResult {
     Success(UserCustomQuotaResult),
     /// Invalid user (not in team).
     InvalidUser(UserSelectorArg),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2011,6 +2017,8 @@ impl ::serde::ser::Serialize for DateRange {
 /// Errors that can originate from problems in input arguments to reports.
 #[derive(Debug)]
 pub enum DateRangeError {
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2305,6 +2313,8 @@ pub enum DesktopPlatform {
     Mac,
     /// Official Linux Dropbox desktop client.
     Linux,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2998,6 +3008,8 @@ impl ::serde::ser::Serialize for ExcludedUsersListContinueArg {
 pub enum ExcludedUsersListContinueError {
     /// The cursor is invalid.
     InvalidCursor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3067,6 +3079,8 @@ impl ::std::fmt::Display for ExcludedUsersListContinueError {
 pub enum ExcludedUsersListError {
     /// An error occurred.
     ListError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3344,6 +3358,8 @@ pub enum ExcludedUsersUpdateError {
     UsersNotInTeam,
     /// A maximum of 1000 users for each of addition/removal can be supplied.
     TooManyUsers,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3515,6 +3531,8 @@ impl ::serde::ser::Serialize for ExcludedUsersUpdateResult {
 pub enum ExcludedUsersUpdateStatus {
     /// Update successful.
     Success,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3578,6 +3596,8 @@ pub enum Feature {
     HasTeamFileEvents,
     /// Does this team have team selective sync enabled.
     HasTeamSelectiveSync,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3671,6 +3691,8 @@ pub enum FeatureValue {
     HasTeamSharedDropbox(HasTeamSharedDropboxValue),
     HasTeamFileEvents(HasTeamFileEventsValue),
     HasTeamSelectiveSync(HasTeamSelectiveSyncValue),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3868,6 +3890,8 @@ pub enum FeaturesGetValuesBatchError {
     /// At least one [`Feature`](Feature) must be included in the
     /// [`FeaturesGetValuesBatchArg`](FeaturesGetValuesBatchArg).features list.
     EmptyFeaturesList,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -4987,6 +5011,8 @@ pub enum GroupCreateError {
     ExternalIdAlreadyInUse,
     /// System-managed group cannot be manually created.
     SystemManagedGroupDisallowed,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -5088,11 +5114,13 @@ impl ::std::fmt::Display for GroupCreateError {
 pub enum GroupDeleteError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
-    Other,
     /// This operation is not supported on system-managed groups.
     SystemManagedGroupDisallowed,
     /// This group has already been deleted.
     GroupAlreadyDeleted,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupDeleteError {
@@ -5582,11 +5610,13 @@ impl ::serde::ser::Serialize for GroupMemberSelector {
 pub enum GroupMemberSelectorError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
-    Other,
     /// This operation is not supported on system-managed groups.
     SystemManagedGroupDisallowed,
     /// The specified user is not a member of this group.
     MemberNotInGroup,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupMemberSelectorError {
@@ -5676,13 +5706,15 @@ impl ::std::fmt::Display for GroupMemberSelectorError {
 pub enum GroupMemberSetAccessTypeError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
-    Other,
     /// This operation is not supported on system-managed groups.
     SystemManagedGroupDisallowed,
     /// The specified user is not a member of this group.
     MemberNotInGroup,
     /// A company managed group cannot be managed by a user.
     UserCannotBeManagerOfCompanyManagedGroup,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupMemberSetAccessTypeError {
@@ -5906,7 +5938,6 @@ impl ::serde::ser::Serialize for GroupMembersAddArg {
 pub enum GroupMembersAddError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
-    Other,
     /// This operation is not supported on system-managed groups.
     SystemManagedGroupDisallowed,
     /// You cannot add duplicate users. One or more of the members you are trying to add is already
@@ -5925,6 +5956,9 @@ pub enum GroupMembersAddError {
     UserMustBeActiveToBeOwner,
     /// A company-managed group cannot be managed by a user.
     UserCannotBeManagerOfCompanyManagedGroup(Vec<String>),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupMembersAddError {
@@ -6309,7 +6343,6 @@ impl ::serde::ser::Serialize for GroupMembersRemoveArg {
 pub enum GroupMembersRemoveError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
-    Other,
     /// This operation is not supported on system-managed groups.
     SystemManagedGroupDisallowed,
     /// At least one of the specified users is not a member of the group.
@@ -6321,6 +6354,9 @@ pub enum GroupMembersRemoveError {
     MembersNotInTeam(Vec<String>),
     /// These users were not found in Dropbox.
     UsersNotFound(Vec<String>),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupMembersRemoveError {
@@ -6557,11 +6593,13 @@ impl ::serde::ser::Serialize for GroupMembersSelector {
 pub enum GroupMembersSelectorError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
-    Other,
     /// This operation is not supported on system-managed groups.
     SystemManagedGroupDisallowed,
     /// At least one of the specified users is not a member of the group.
     MemberNotInGroup,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupMembersSelectorError {
@@ -6860,6 +6898,8 @@ impl ::serde::ser::Serialize for GroupSelector {
 pub enum GroupSelectorError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -6930,9 +6970,11 @@ impl ::std::fmt::Display for GroupSelectorError {
 pub enum GroupSelectorWithTeamGroupError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
-    Other,
     /// This operation is not supported on system-managed groups.
     SystemManagedGroupDisallowed,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupSelectorWithTeamGroupError {
@@ -7182,7 +7224,6 @@ impl ::serde::ser::Serialize for GroupUpdateArgs {
 pub enum GroupUpdateError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
-    Other,
     /// This operation is not supported on system-managed groups.
     SystemManagedGroupDisallowed,
     /// The requested group name is already being used by another group.
@@ -7191,6 +7232,9 @@ pub enum GroupUpdateError {
     GroupNameInvalid,
     /// The requested external ID is already being used by another group.
     ExternalIdAlreadyInUse,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupUpdateError {
@@ -7302,6 +7346,8 @@ impl ::std::fmt::Display for GroupUpdateError {
 pub enum GroupsGetInfoError {
     /// The group is not on your team.
     GroupNotOnTeam,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -7605,6 +7651,8 @@ impl ::serde::ser::Serialize for GroupsListContinueArg {
 pub enum GroupsListContinueError {
     /// The cursor is invalid.
     InvalidCursor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -7992,6 +8040,8 @@ impl ::serde::ser::Serialize for GroupsMembersListContinueArg {
 pub enum GroupsMembersListContinueError {
     /// The cursor is invalid.
     InvalidCursor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -8180,9 +8230,11 @@ pub enum GroupsPollError {
     /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action
     /// you were taking succeeded, and if not, try again. This should happen very rarely.
     InternalError,
-    Other,
     /// You are not allowed to poll this job.
     AccessDenied,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GroupsPollError {
@@ -8345,6 +8397,8 @@ impl ::serde::ser::Serialize for GroupsSelector {
 pub enum HasTeamFileEventsValue {
     /// Does this team have file events.
     Enabled(bool),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -8406,6 +8460,8 @@ impl ::serde::ser::Serialize for HasTeamFileEventsValue {
 pub enum HasTeamSelectiveSyncValue {
     /// Does this team have team selective sync enabled.
     HasTeamSelectiveSync(bool),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -8467,6 +8523,8 @@ impl ::serde::ser::Serialize for HasTeamSelectiveSyncValue {
 pub enum HasTeamSharedDropboxValue {
     /// Does this team have a shared team root.
     HasTeamSharedDropbox(bool),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -8699,6 +8757,8 @@ impl ::serde::ser::Serialize for ListMemberAppsArg {
 pub enum ListMemberAppsError {
     /// Member not found.
     MemberNotFound,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -9001,6 +9061,8 @@ impl ::serde::ser::Serialize for ListMemberDevicesArg {
 pub enum ListMemberDevicesError {
     /// Member not found.
     MemberNotFound,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -9260,6 +9322,8 @@ pub enum ListMembersAppsError {
     /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps) again with
     /// an empty cursor to obtain a new cursor.
     Reset,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -9577,6 +9641,8 @@ pub enum ListMembersDevicesError {
     /// [`devices_list_members_devices()`](devices_list_members_devices) again with an empty cursor
     /// to obtain a new cursor.
     Reset,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -9854,6 +9920,8 @@ pub enum ListTeamAppsError {
     /// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps) again with an
     /// empty cursor to obtain a new cursor.
     Reset,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -10171,6 +10239,8 @@ pub enum ListTeamDevicesError {
     /// [`devices_list_team_devices()`](devices_list_team_devices) again with an empty cursor to
     /// obtain a new cursor.
     Reset,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -12084,6 +12154,8 @@ pub enum MembersDeactivateError {
     UserNotFound,
     /// The user is not a member of the team.
     UserNotInTeam,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -12252,6 +12324,8 @@ impl ::serde::ser::Serialize for MembersGetInfoArgs {
 
 #[derive(Debug)]
 pub enum MembersGetInfoError {
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -12557,6 +12631,8 @@ impl ::serde::ser::Serialize for MembersListContinueArg {
 pub enum MembersListContinueError {
     /// The cursor is invalid.
     InvalidCursor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -12624,6 +12700,8 @@ impl ::std::fmt::Display for MembersListContinueError {
 
 #[derive(Debug)]
 pub enum MembersListError {
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -12896,6 +12974,8 @@ pub enum MembersRecoverError {
     UserNotInTeam,
     /// Team is full. The organization has no available licenses.
     TeamLicenseLimit,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -13165,7 +13245,6 @@ pub enum MembersRemoveError {
     UserNotFound,
     /// The user is not a member of the team.
     UserNotInTeam,
-    Other,
     /// Expected removed user and transfer_dest user to be different.
     RemovedAndTransferDestShouldDiffer,
     /// Expected removed user and transfer_admin user to be different.
@@ -13195,6 +13274,9 @@ pub enum MembersRemoveError {
     EmailAddressTooLongToBeDisabled,
     /// Cannot keep account of an invited user.
     CannotKeepInvitedUserAccount,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
@@ -13431,6 +13513,8 @@ pub enum MembersSendWelcomeError {
     UserNotFound,
     /// The user is not a member of the team.
     UserNotInTeam,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -13624,6 +13708,8 @@ pub enum MembersSetPermissionsError {
     CannotSetPermissions,
     /// Team is full. The organization has no available licenses.
     TeamLicenseLimit,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -14066,6 +14152,8 @@ pub enum MembersSetProfileError {
     PersistentIdUsedByOtherUser,
     /// Directory Restrictions option is not available.
     DirectoryRestrictedOff,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -14247,13 +14335,15 @@ pub enum MembersSuspendError {
     UserNotFound,
     /// The user is not a member of the team.
     UserNotInTeam,
-    Other,
     /// The user is not active, so it cannot be suspended.
     SuspendInactiveUser,
     /// The user is the last admin of the team, so it cannot be suspended.
     SuspendLastAdmin,
     /// Team is full. The organization has no available licenses.
     TeamLicenseLimit,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MembersSuspendError {
@@ -14368,7 +14458,6 @@ pub enum MembersTransferFilesError {
     UserNotFound,
     /// The user is not a member of the team.
     UserNotInTeam,
-    Other,
     /// Expected removed user and transfer_dest user to be different.
     RemovedAndTransferDestShouldDiffer,
     /// Expected removed user and transfer_admin user to be different.
@@ -14387,6 +14476,9 @@ pub enum MembersTransferFilesError {
     TransferAdminIsNotAdmin,
     /// The recipient user's email is not verified.
     RecipientNotVerified,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MembersTransferFilesError {
@@ -14567,7 +14659,6 @@ pub enum MembersTransferFormerMembersFilesError {
     UserNotFound,
     /// The user is not a member of the team.
     UserNotInTeam,
-    Other,
     /// Expected removed user and transfer_dest user to be different.
     RemovedAndTransferDestShouldDiffer,
     /// Expected removed user and transfer_admin user to be different.
@@ -14594,6 +14685,9 @@ pub enum MembersTransferFormerMembersFilesError {
     UserDataCannotBeTransferred,
     /// User's data has already been transferred to another user.
     UserDataAlreadyTransferred,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MembersTransferFormerMembersFilesError {
@@ -14910,11 +15004,13 @@ pub enum MembersUnsuspendError {
     UserNotFound,
     /// The user is not a member of the team.
     UserNotInTeam,
-    Other,
     /// The user is unsuspended, so it cannot be unsuspended again.
     UnsuspendNonSuspendedMember,
     /// Team is full. The organization has no available licenses.
     TeamLicenseLimit,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MembersUnsuspendError {
@@ -15023,6 +15119,8 @@ pub enum MobileClientPlatform {
     WindowsPhone,
     /// Official Dropbox Blackberry client.
     Blackberry,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -15516,6 +15614,8 @@ pub enum NamespaceType {
     TeamFolder,
     /// Team member's home folder.
     TeamMemberFolder,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -15608,6 +15708,8 @@ pub enum RemoveCustomQuotaResult {
     Success(UserSelectorArg),
     /// Invalid user (not in team).
     InvalidUser(UserSelectorArg),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -16066,6 +16168,8 @@ impl ::serde::ser::Serialize for RevokeDeviceSessionBatchArg {
 
 #[derive(Debug)]
 pub enum RevokeDeviceSessionBatchError {
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -16212,6 +16316,8 @@ pub enum RevokeDeviceSessionError {
     DeviceSessionNotFound,
     /// Member not found.
     MemberNotFound,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -16609,6 +16715,8 @@ impl ::serde::ser::Serialize for RevokeLinkedApiAppBatchArg {
 /// [`linked_apps_revoke_linked_app_batch()`](linked_apps_revoke_linked_app_batch).
 #[derive(Debug)]
 pub enum RevokeLinkedAppBatchError {
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -16756,6 +16864,8 @@ pub enum RevokeLinkedAppError {
     AppNotFound,
     /// Member not found.
     MemberNotFound,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -17034,9 +17144,11 @@ impl ::serde::ser::Serialize for SetCustomQuotaArg {
 pub enum SetCustomQuotaError {
     /// A maximum of 1000 users can be set for a single call.
     TooManyUsers,
-    Other,
     /// Some of the users are on the excluded users list and can't have custom quota set.
     SomeUsersAreExcluded,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SetCustomQuotaError {
@@ -17222,6 +17334,8 @@ pub enum TeamFolderAccessError {
     InvalidTeamFolderId,
     /// The authenticated app does not have permission to manage that team folder.
     NoAccess,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -17303,6 +17417,8 @@ pub enum TeamFolderActivateError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
     TeamSharedDropboxError(TeamFolderTeamSharedDropboxError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -17515,6 +17631,8 @@ pub enum TeamFolderArchiveError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
     TeamSharedDropboxError(TeamFolderTeamSharedDropboxError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -17876,6 +17994,8 @@ pub enum TeamFolderCreateError {
     FolderNameReserved,
     /// An error occurred setting the sync settings.
     SyncSettingsError(super::files::SyncSettingsError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -18231,6 +18351,8 @@ pub enum TeamFolderInvalidStatusError {
     Archived,
     /// The folder is being archived and the operation did not succeed.
     ArchiveInProgress,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -18489,6 +18611,8 @@ impl ::serde::ser::Serialize for TeamFolderListContinueArg {
 pub enum TeamFolderListContinueError {
     /// The cursor is invalid.
     InvalidCursor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -18931,6 +19055,8 @@ pub enum TeamFolderPermanentlyDeleteError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
     TeamSharedDropboxError(TeamFolderTeamSharedDropboxError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -19137,13 +19263,15 @@ pub enum TeamFolderRenameError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
     TeamSharedDropboxError(TeamFolderTeamSharedDropboxError),
-    Other,
     /// The provided folder name cannot be used.
     InvalidFolderName,
     /// There is already a team folder with the same name.
     FolderNameAlreadyUsed,
     /// The provided name cannot be used because it is reserved.
     FolderNameReserved,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamFolderRenameError {
@@ -19282,6 +19410,8 @@ pub enum TeamFolderStatus {
     Archived,
     /// The team folder is not accessible outside of the team folder manager.
     ArchiveInProgress,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -19360,6 +19490,8 @@ impl ::serde::ser::Serialize for TeamFolderStatus {
 pub enum TeamFolderTeamSharedDropboxError {
     /// This action is not allowed for a shared team root.
     Disallowed,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -19559,9 +19691,11 @@ pub enum TeamFolderUpdateSyncSettingsError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
     TeamSharedDropboxError(TeamFolderTeamSharedDropboxError),
-    Other,
     /// An error occurred setting the sync settings.
     SyncSettingsError(super::files::SyncSettingsError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamFolderUpdateSyncSettingsError {
@@ -20535,9 +20669,11 @@ impl ::serde::ser::Serialize for TeamNamespacesListContinueArg {
 pub enum TeamNamespacesListContinueError {
     /// Argument passed in is invalid.
     InvalidArg,
-    Other,
     /// The cursor is invalid.
     InvalidCursor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamNamespacesListContinueError {
@@ -20616,6 +20752,8 @@ impl ::std::fmt::Display for TeamNamespacesListContinueError {
 pub enum TeamNamespacesListError {
     /// Argument passed in is invalid.
     InvalidArg,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -20808,6 +20946,8 @@ pub enum TokenGetAuthenticatedAdminError {
     /// Either the team admin that authorized this token is no longer an active member of the team
     /// or no longer a team admin.
     AdminNotActive,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -20982,6 +21122,8 @@ pub enum UploadApiRateLimitValue {
     Unlimited,
     /// The number of upload API calls allowed per month.
     Limit(u32),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 

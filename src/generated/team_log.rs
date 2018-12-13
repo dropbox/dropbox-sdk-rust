@@ -62,6 +62,8 @@ pub enum AccessMethodLogInfo {
     AdminConsole(WebSessionLogInfo),
     /// Api session details.
     Api(ApiSessionLogInfo),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -158,6 +160,8 @@ impl ::serde::ser::Serialize for AccessMethodLogInfo {
 pub enum AccountCaptureAvailability {
     Unavailable,
     Available,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -982,6 +986,8 @@ pub enum AccountCapturePolicy {
     Disabled,
     InvitedUsers,
     AllUsers,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1243,6 +1249,8 @@ pub enum ActionDetails {
     TeamJoinDetails(JoinTeamDetails),
     /// Define how the user was removed from the team.
     RemoveAction(MemberRemoveActionType),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1323,6 +1331,8 @@ pub enum ActorLogInfo {
     Dropbox,
     /// Anonymous actor.
     Anonymous,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1447,6 +1457,8 @@ pub enum AdminRole {
     SupportAdmin,
     LimitedAdmin,
     MemberOnly,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2731,6 +2743,8 @@ pub enum AssetLogInfo {
     PaperFolder(PaperFolderLogInfo),
     /// Showcase document's details.
     ShowcaseDocument(ShowcaseDocumentLogInfo),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2822,6 +2836,8 @@ impl ::serde::ser::Serialize for AssetLogInfo {
 pub enum CameraUploadsPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3444,6 +3460,8 @@ impl ::serde::ser::Serialize for CollectionShareType {
 pub enum ContentPermanentDeletePolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3520,6 +3538,8 @@ pub enum ContextLogInfo {
     Team,
     /// Action was done on behalf of a trusted non team member.
     TrustedNonTeamMember(TrustedNonTeamMemberLogInfo),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -5164,6 +5184,8 @@ impl ::serde::ser::Serialize for DeviceApprovalsChangeUnlinkActionType {
 pub enum DeviceApprovalsPolicy {
     Unlimited,
     Limited,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -6925,6 +6947,8 @@ impl ::serde::ser::Serialize for DeviceSessionLogInfo {
 pub enum DeviceType {
     Desktop,
     Mobile,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -7119,6 +7143,8 @@ impl ::serde::ser::Serialize for DeviceUnlinkDetails {
 pub enum DeviceUnlinkPolicy {
     Remove,
     Keep,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -9221,6 +9247,8 @@ impl ::serde::ser::Serialize for DomainVerificationRemoveDomainType {
 pub enum DownloadPolicyType {
     Allow,
     Disallow,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -10693,6 +10721,8 @@ pub enum EventCategory {
     /// Events that involve using or configuring two factor authentication as well as administrative
     /// policies concerning two factor authentication.
     Tfa,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -11259,6 +11289,8 @@ pub enum EventDetails {
     TfaResetDetails(TfaResetDetails),
     /// Hints that this event was returned with missing details due to an internal error.
     MissingDetails(MissingDetails),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -14664,6 +14696,8 @@ pub enum EventType {
     TfaRemoveSecurityKey(TfaRemoveSecurityKeyType),
     /// (tfa) Reset two-step verification for team member
     TfaReset(TfaResetType),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -17855,6 +17889,8 @@ pub enum ExtendedVersionHistoryPolicy {
     ExplicitlyUnlimited,
     ImplicitlyLimited,
     ImplicitlyUnlimited,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -18654,6 +18690,8 @@ impl ::serde::ser::Serialize for FileChangeCommentSubscriptionType {
 pub enum FileCommentNotificationPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -18920,6 +18958,8 @@ impl ::serde::ser::Serialize for FileCommentsChangePolicyType {
 pub enum FileCommentsPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -22728,6 +22768,8 @@ impl ::serde::ser::Serialize for FileRequestsEmailsRestrictedToTeamOnlyType {
 pub enum FileRequestsPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -24410,6 +24452,8 @@ pub enum GetTeamEventsContinueError {
     /// approximate timestamp of the most recent event returned by the cursor. This should be used
     /// as a resumption point when calling [`get_events()`](get_events) to obtain a new cursor.
     Reset(super::common::DropboxTimestamp),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -24496,6 +24540,8 @@ pub enum GetTeamEventsError {
     AccountIdNotFound,
     /// Invalid time range.
     InvalidTimeRange,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -24897,6 +24943,8 @@ impl ::serde::ser::Serialize for GoogleSsoChangePolicyType {
 pub enum GoogleSsoPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -26397,6 +26445,8 @@ impl ::serde::ser::Serialize for GroupDescriptionUpdatedType {
 pub enum GroupJoinPolicy {
     Open,
     RequestToJoin,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -27640,6 +27690,8 @@ impl ::serde::ser::Serialize for GroupUserManagementChangePolicyType {
 pub enum IdentifierType {
     Email,
     FacebookProfileName,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -28061,6 +28113,8 @@ pub enum LinkedDeviceLogInfo {
     WebDeviceSession(WebDeviceSessionLogInfo),
     /// legacy device session's details.
     LegacyDeviceSession(LegacyDeviceSessionLogInfo),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -28354,6 +28408,8 @@ pub enum LoginMethod {
     Password,
     TwoFactorAuthentication,
     Saml,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -30240,6 +30296,8 @@ pub enum MemberRemoveActionType {
     Delete,
     Offboard,
     Leave,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -30517,6 +30575,8 @@ pub enum MemberRequestsPolicy {
     AutoAccept,
     Disabled,
     RequireApproval,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -31979,6 +32039,8 @@ pub enum MemberStatus {
     Active,
     Suspended,
     Removed,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -32458,6 +32520,8 @@ impl ::serde::ser::Serialize for MemberSuggestionsChangePolicyType {
 pub enum MemberSuggestionsPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -32871,6 +32935,8 @@ impl ::serde::ser::Serialize for MicrosoftOfficeAddinChangePolicyType {
 pub enum MicrosoftOfficeAddinPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -33620,6 +33686,8 @@ impl ::serde::ser::Serialize for NetworkControlChangePolicyType {
 pub enum NetworkControlPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -34784,6 +34852,8 @@ pub enum PaperAccessType {
     Viewer,
     Commenter,
     Editor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -41565,6 +41635,8 @@ pub enum PaperDownloadFormat {
     Html,
     Markdown,
     Pdf,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -43345,6 +43417,8 @@ pub enum PaperMemberPolicy {
     AnyoneWithLink,
     OnlyTeam,
     TeamAndExplicitlyShared,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -43426,6 +43500,8 @@ pub enum ParticipantLogInfo {
     User(UserLogInfo),
     /// Group details.
     Group(GroupLogInfo),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -43496,6 +43572,8 @@ pub enum PassPolicy {
     Enabled,
     Allow,
     Disabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -44323,6 +44401,8 @@ impl ::serde::ser::Serialize for PermanentDeleteChangePolicyType {
 pub enum PlacementRestriction {
     EuropeOnly,
     None,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -44390,6 +44470,8 @@ impl ::serde::ser::Serialize for PlacementRestriction {
 #[derive(Debug)]
 pub enum QuickActionType {
     DeleteSharedLink,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -44948,6 +45030,8 @@ impl ::serde::ser::Serialize for ResellerSupportSessionStartType {
 pub enum SecondaryMailsPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -53088,6 +53172,8 @@ impl ::serde::ser::Serialize for SharedFolderDeclineInvitationType {
 pub enum SharedFolderMembersInheritancePolicy {
     InheritMembers,
     DontInheritMembers,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -53856,6 +53942,8 @@ pub enum SharedLinkAccessLevel {
     None,
     Reader,
     Writer,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -55684,6 +55772,8 @@ pub enum SharedLinkVisibility {
     Password,
     Public,
     TeamOnly,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -56505,6 +56595,8 @@ impl ::serde::ser::Serialize for SharingChangeMemberPolicyType {
 pub enum SharingFolderJoinPolicy {
     FromAnyone,
     FromTeamOnly,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -56574,6 +56666,8 @@ pub enum SharingLinkPolicy {
     DefaultPrivate,
     DefaultPublic,
     OnlyPrivate,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -56653,6 +56747,8 @@ impl ::serde::ser::Serialize for SharingLinkPolicy {
 pub enum SharingMemberPolicy {
     Allow,
     Forbid,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -58472,6 +58568,8 @@ impl ::serde::ser::Serialize for ShowcaseDocumentLogInfo {
 pub enum ShowcaseDownloadPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -58918,6 +59016,8 @@ impl ::serde::ser::Serialize for ShowcaseEditedType {
 pub enum ShowcaseEnabledPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -58986,6 +59086,8 @@ impl ::serde::ser::Serialize for ShowcaseEnabledPolicy {
 pub enum ShowcaseExternalSharingPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -63099,6 +63201,8 @@ impl ::serde::ser::Serialize for SmartSyncOptOutDetails {
 pub enum SmartSyncOptOutPolicy {
     Default,
     OptedOut,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -63257,6 +63361,8 @@ pub enum SpaceCapsType {
     Hard,
     Off,
     Soft,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -63336,6 +63442,8 @@ pub enum SpaceLimitsStatus {
     WithinQuota,
     NearQuota,
     OverQuota,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -67127,6 +67235,8 @@ impl ::serde::ser::Serialize for TeamMemberLogInfo {
 pub enum TeamMembershipType {
     Free,
     Full,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -68494,6 +68604,8 @@ impl ::serde::ser::Serialize for TeamProfileRemoveLogoType {
 pub enum TeamSelectiveSyncPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -69816,6 +69928,8 @@ pub enum TfaConfiguration {
     Enabled,
     Sms,
     Authenticator,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -70352,6 +70466,8 @@ pub enum TimeUnit {
     Weeks,
     Months,
     Years,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -70629,6 +70745,8 @@ impl ::serde::ser::Serialize for TrustedNonTeamMemberLogInfo {
 #[derive(Debug)]
 pub enum TrustedNonTeamMemberType {
     MultiInstanceAdmin,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -70885,6 +71003,8 @@ impl ::serde::ser::Serialize for TwoAccountChangePolicyType {
 pub enum TwoAccountPolicy {
     Disabled,
     Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -72162,6 +72282,8 @@ pub enum WebSessionsFixedLengthPolicy {
     Defined(DurationLogInfo),
     /// Undefined fixed session length.
     Undefined,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -72230,6 +72352,8 @@ pub enum WebSessionsIdleLengthPolicy {
     Defined(DurationLogInfo),
     /// Undefined idle session length.
     Undefined,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 

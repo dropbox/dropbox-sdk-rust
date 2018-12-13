@@ -32,6 +32,8 @@ pub enum PathRoot {
     /// [`PathRootError::NoPermission`](PathRootError::NoPermission) if you don't have access to
     /// this namespace.).
     NamespaceId(NamespaceId),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -121,6 +123,8 @@ pub enum PathRootError {
     InvalidRoot(RootInfo),
     /// You don't have permission to access the namespace id in Dropbox-API-Path-Root  header.
     NoPermission,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 

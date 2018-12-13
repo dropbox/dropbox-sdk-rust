@@ -690,6 +690,8 @@ pub enum AccessInheritance {
     Inherit,
     /// The shared folder does not inherit its members from the parent folder.
     NoInherit,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -766,6 +768,8 @@ pub enum AccessLevel {
     Viewer,
     /// The collaborator can only view the shared folder and does not have any access to comments.
     ViewerNoComment,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -859,6 +863,8 @@ pub enum AclUpdatePolicy {
     Owner,
     /// Any editor can update the ACL. This may be further restricted to editors on the same team.
     Editors,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1108,6 +1114,8 @@ pub enum AddFileMemberError {
     RateLimit,
     /// The custom message did not pass comment permissions checks.
     InvalidComment,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1379,6 +1387,8 @@ pub enum AddFolderMemberError {
     TeamFolder,
     /// The current user does not have permission to perform this action.
     NoPermission,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1695,6 +1705,8 @@ pub enum AddMemberSelectorError {
     GroupDeleted,
     /// Sharing to a group that is not on the current user's team.
     GroupNotOnTeam,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2516,6 +2528,8 @@ impl ::serde::ser::Serialize for CreateSharedLinkArg {
 #[derive(Debug)]
 pub enum CreateSharedLinkError {
     Path(super::files::LookupError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3034,6 +3048,8 @@ pub enum FileAction {
     ShareLink,
     /// Create a shared link to the file.
     CreateLink,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3193,6 +3209,8 @@ pub enum FileErrorResult {
     InvalidFileActionError(super::files::Id),
     /// User does not have permission to access file specified by file.Id.
     PermissionDeniedError(super::files::Id),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3566,6 +3584,8 @@ pub enum FileMemberActionError {
     /// the file. The return value is the access that the member has to the file from a parent
     /// folder.
     NoExplicitAccess(MemberAccessLevelResult),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3848,6 +3868,8 @@ pub enum FileMemberRemoveActionResult {
     Success(MemberAccessLevelResult),
     /// User was not able to remove this member.
     MemberError(FileMemberActionError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -4066,6 +4088,8 @@ pub enum FolderAction {
     CreateLink,
     /// Set whether the folder inherits permissions from its parent.
     SetAccessInheritance,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -5089,6 +5113,8 @@ impl ::serde::ser::Serialize for GetFileMetadataBatchResult {
 pub enum GetFileMetadataError {
     UserError(SharingUserError),
     AccessError(SharingFileAccessError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -5178,6 +5204,8 @@ pub enum GetFileMetadataIndividualResult {
     Metadata(SharedFileMetadata),
     /// The result for this file if it was an error.
     AccessError(SharingFileAccessError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -5361,9 +5389,11 @@ pub enum GetSharedLinkFileError {
     SharedLinkAccessDenied,
     /// This type of link is not supported.
     UnsupportedLinkType,
-    Other,
     /// Directories cannot be retrieved by this endpoint.
     SharedLinkIsDirectory,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for GetSharedLinkFileError {
@@ -5668,6 +5698,8 @@ impl ::serde::ser::Serialize for GetSharedLinksArg {
 #[derive(Debug)]
 pub enum GetSharedLinksError {
     Path(super::files::MalformedPathError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -6434,6 +6466,8 @@ impl ::serde::ser::Serialize for InsufficientQuotaAmounts {
 pub enum InviteeInfo {
     /// E-mail address of invited user.
     Email(super::common::EmailAddress),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -6679,6 +6713,8 @@ pub enum JobError {
     /// Error occurred while performing
     /// [`relinquish_folder_membership()`](relinquish_folder_membership) action.
     RelinquishFolderMembershipError(RelinquishFolderMembershipError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -6872,6 +6908,8 @@ pub enum LinkAction {
     SetExpiry,
     /// Create or modify the password of the link.
     SetPassword,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -6991,6 +7029,8 @@ pub enum LinkAudience {
     NoOne,
     /// Link is accessible only by members of the content.
     Members,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -7082,6 +7122,8 @@ pub enum LinkExpiry {
     RemoveExpiry,
     /// Set a new expiry or change an existing expiry.
     SetExpiry(super::common::DropboxTimestamp),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -7219,6 +7261,8 @@ pub enum LinkPassword {
     RemovePassword,
     /// Set a new password or change an existing password.
     SetPassword(String),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -8135,6 +8179,8 @@ pub enum ListFileMembersContinueError {
     AccessError(SharingFileAccessError),
     /// [`ListFileMembersContinueArg::cursor`](ListFileMembersContinueArg) is invalid.
     InvalidCursor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -8337,6 +8383,8 @@ impl ::serde::ser::Serialize for ListFileMembersCountResult {
 pub enum ListFileMembersError {
     UserError(SharingUserError),
     AccessError(SharingFileAccessError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -8426,6 +8474,8 @@ pub enum ListFileMembersIndividualResult {
     Result(ListFileMembersCountResult),
     /// The result of the query for this file if it was an error.
     AccessError(SharingFileAccessError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -8683,6 +8733,8 @@ pub enum ListFilesContinueError {
     UserError(SharingUserError),
     /// [`ListFilesContinueArg::cursor`](ListFilesContinueArg) is invalid.
     InvalidCursor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -9096,6 +9148,8 @@ pub enum ListFolderMembersContinueError {
     AccessError(SharedFolderAccessError),
     /// [`ListFolderMembersContinueArg::cursor`](ListFolderMembersContinueArg) is invalid.
     InvalidCursor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -9456,6 +9510,8 @@ impl ::serde::ser::Serialize for ListFoldersContinueArg {
 pub enum ListFoldersContinueError {
     /// [`ListFoldersContinueArg::cursor`](ListFoldersContinueArg) is invalid.
     InvalidCursor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -9746,6 +9802,8 @@ pub enum ListSharedLinksError {
     /// Indicates that the cursor has been invalidated. Call
     /// [`list_shared_links()`](list_shared_links) to obtain a new cursor.
     Reset,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -10070,6 +10128,8 @@ pub enum MemberAction {
     MakeViewerNoComment,
     /// Remove the member from the folder.
     Remove,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -10307,6 +10367,8 @@ pub enum MemberPolicy {
     Team,
     /// Anyone can become a member.
     Anyone,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -10377,6 +10439,8 @@ pub enum MemberSelector {
     DropboxId(DropboxId),
     /// E-mail address of member.
     Email(super::common::EmailAddress),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -10724,11 +10788,13 @@ pub enum ModifySharedLinkSettingsError {
     SharedLinkAccessDenied,
     /// This type of link is not supported.
     UnsupportedLinkType,
-    Other,
     /// There is an error with the given settings.
     SettingsError(SharedLinkSettingsError),
     /// The caller's email should be verified.
     EmailNotVerified,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ModifySharedLinkSettingsError {
@@ -10944,6 +11010,8 @@ pub enum MountFolderError {
     /// The shared folder is not mountable. One example where this can occur is when the shared
     /// folder belongs within a team folder in the user's Dropbox.
     NotMountable,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -11431,6 +11499,8 @@ pub enum PermissionDeniedReason {
     /// Policy cannot be changed due to restrictions from parent folder.
     RestrictedByParentFolder,
     InsufficientPlan(InsufficientPlan),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -11733,6 +11803,8 @@ pub enum RelinquishFileMembershipError {
     GroupAccess,
     /// The current user does not have permission to perform this action.
     NoPermission,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -11950,6 +12022,8 @@ pub enum RelinquishFolderMembershipError {
     /// The current user only has inherited access to the shared folder.  You can't relinquish
     /// inherited membership to folders.
     NoExplicitAccess,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -12198,6 +12272,8 @@ pub enum RemoveFileMemberError {
     /// This member does not have explicit access to the file and therefore cannot be removed. The
     /// return value is the access that a user might have to the file from a parent folder.
     NoExplicitAccess(MemberAccessLevelResult),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -12428,6 +12504,8 @@ pub enum RemoveFolderMemberError {
     /// This shared folder has too many files for leaving a copy. You can still remove this user
     /// without leaving a copy.
     TooManyFiles,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -12741,6 +12819,8 @@ pub enum ResolvedVisibility {
     /// Only members of the shared folder containing the linked file can access the link. Login is
     /// required.
     SharedFolderOnly,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -12935,9 +13015,11 @@ pub enum RevokeSharedLinkError {
     SharedLinkAccessDenied,
     /// This type of link is not supported.
     UnsupportedLinkType,
-    Other,
     /// Shared link is malformed.
     SharedLinkMalformed,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for RevokeSharedLinkError {
@@ -13148,6 +13230,8 @@ pub enum SetAccessInheritanceError {
     AccessError(SharedFolderAccessError),
     /// The current user does not have permission to perform this action.
     NoPermission,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -13676,9 +13760,11 @@ pub enum ShareFolderError {
     /// The current user's account is not allowed to select the specified
     /// [`ShareFolderArg::shared_link_policy`](ShareFolderArg).
     DisallowedSharedLinkPolicy,
-    Other,
     /// The current user does not have permission to perform this action.
     NoPermission,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ShareFolderError {
@@ -13801,6 +13887,8 @@ pub enum ShareFolderErrorBase {
     /// The current user's account is not allowed to select the specified
     /// [`ShareFolderArg::shared_link_policy`](ShareFolderArg).
     DisallowedSharedLinkPolicy,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -14060,6 +14148,8 @@ pub enum SharePathError {
     IsOsxPackage,
     /// We do not support sharing a folder inside a Mac OS X package.
     InsideOsxPackage,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -15166,6 +15256,8 @@ pub enum SharedFolderAccessError {
     EmailUnverified,
     /// The shared folder is unmounted.
     Unmounted,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -15271,6 +15363,8 @@ pub enum SharedFolderMemberError {
     NotAMember,
     /// The target member only has inherited access to the shared folder.
     NoExplicitAccess(MemberAccessLevelResult),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -16034,6 +16128,8 @@ pub enum SharedLinkAccessFailureReason {
     TeamOnly,
     /// Access is allowed for the shared link's owner only.
     OwnerOnly,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -16138,6 +16234,8 @@ pub enum SharedLinkError {
     SharedLinkAccessDenied,
     /// This type of link is not supported.
     UnsupportedLinkType,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -16309,6 +16407,8 @@ pub enum SharedLinkPolicy {
     Team,
     /// Links can only be shared among members of the shared folder.
     Members,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -16584,6 +16684,8 @@ pub enum SharingFileAccessError {
     InsidePublicFolder,
     /// A Mac OS X package can't be shared this way. Use a shared link instead.
     InsideOsxPackage,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -16697,6 +16799,8 @@ impl ::std::fmt::Display for SharingFileAccessError {
 pub enum SharingUserError {
     /// The current user must verify the account e-mail address before performing this action.
     EmailUnverified,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -17002,6 +17106,8 @@ pub enum TransferFolderError {
     TeamFolder,
     /// The current user does not have permission to perform this action.
     NoPermission,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -17234,6 +17340,8 @@ pub enum UnmountFolderError {
     /// The shared folder can't be unmounted. One example where this can occur is when the shared
     /// folder's parent folder is also a shared folder that resides in the current user's Dropbox.
     NotUnmountable,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -17420,6 +17528,8 @@ impl ::serde::ser::Serialize for UnshareFileArg {
 pub enum UnshareFileError {
     UserError(SharingUserError),
     AccessError(SharingFileAccessError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -17622,6 +17732,8 @@ pub enum UnshareFolderError {
     NoPermission,
     /// This shared folder has too many files to be unshared.
     TooManyFiles,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -17974,6 +18086,8 @@ pub enum UpdateFolderMemberError {
     InsufficientPlan,
     /// The current user does not have permission to perform this action.
     NoPermission,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -18312,6 +18426,8 @@ pub enum UpdateFolderPolicyError {
     NoPermission,
     /// This action cannot be performed on a team shared folder.
     TeamFolder,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -18952,6 +19068,8 @@ pub enum ViewerInfoPolicy {
     Enabled,
     /// Viewer information is disabled on this file.
     Disabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -19030,6 +19148,8 @@ pub enum Visibility {
     /// Only members of the shared folder containing the linked file can access the link. Login is
     /// required.
     SharedFolderOnly,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 

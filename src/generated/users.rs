@@ -1049,6 +1049,8 @@ pub enum GetAccountBatchError {
     /// The value is an account ID specified in
     /// [`GetAccountBatchArg::account_ids`](GetAccountBatchArg) that does not exist.
     NoAccount(super::users_common::AccountId),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1121,6 +1123,8 @@ impl ::std::fmt::Display for GetAccountBatchError {
 pub enum GetAccountError {
     /// The specified [`GetAccountArg::account_id`](GetAccountArg) does not exist.
     NoAccount,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1432,6 +1436,8 @@ pub enum SpaceAllocation {
     Individual(IndividualSpaceAllocation),
     /// The user shares space with other members of their team.
     Team(TeamSpaceAllocation),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 

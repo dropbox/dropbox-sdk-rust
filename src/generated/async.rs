@@ -303,6 +303,8 @@ pub enum PollError {
     /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action
     /// you were taking succeeded, and if not, try again. This should happen very rarely.
     InternalError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 

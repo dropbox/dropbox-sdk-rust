@@ -637,6 +637,8 @@ pub enum AddPaperDocUserResult {
     FailedUserDataRetrieval,
     /// This user already has the correct permission to the Paper doc.
     PermissionAlreadyGranted,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -876,9 +878,11 @@ impl ::serde::ser::Serialize for Cursor {
 pub enum DocLookupError {
     /// Your account does not have permissions to perform this action.
     InsufficientPermissions,
-    Other,
     /// The required doc was not found.
     DocNotFound,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for DocLookupError {
@@ -1050,6 +1054,8 @@ pub enum ExportFormat {
     Html,
     /// The markdown export format.
     Markdown,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1476,6 +1482,8 @@ pub enum ImportFormat {
     /// The provided data is interpreted as plain text. Note: The first line of the provided
     /// document will be used as the doc title.
     PlainText,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1659,6 +1667,8 @@ impl ::serde::ser::Serialize for InviteeInfoWithPermissionLevel {
 #[derive(Debug)]
 pub enum ListDocsCursorError {
     CursorError(PaperApiCursorError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -1942,6 +1952,8 @@ pub enum ListPaperDocsFilterBy {
     DocsAccessed,
     /// Fetches only the Paper doc IDs that the user has created.
     DocsCreated,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2136,6 +2148,8 @@ pub enum ListPaperDocsSortBy {
     Modified,
     /// Sorts the Paper docs by the creation time.
     Created,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2216,6 +2230,8 @@ pub enum ListPaperDocsSortOrder {
     Ascending,
     /// Sorts the search result in descending order.
     Descending,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -2283,10 +2299,12 @@ impl ::serde::ser::Serialize for ListPaperDocsSortOrder {
 pub enum ListUsersCursorError {
     /// Your account does not have permissions to perform this action.
     InsufficientPermissions,
-    Other,
     /// The required doc was not found.
     DocNotFound,
     CursorError(PaperApiCursorError),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for ListUsersCursorError {
@@ -3118,6 +3136,8 @@ impl ::serde::ser::Serialize for ListUsersOnPaperDocResponse {
 pub enum PaperApiBaseError {
     /// Your account does not have permissions to perform this action.
     InsufficientPermissions,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3193,6 +3213,8 @@ pub enum PaperApiCursorError {
     /// Indicates that the cursor has been invalidated. Call the corresponding non-continue endpoint
     /// to obtain a new cursor.
     Reset,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -3403,7 +3425,6 @@ impl ::serde::ser::Serialize for PaperDocCreateArgs {
 pub enum PaperDocCreateError {
     /// Your account does not have permissions to perform this action.
     InsufficientPermissions,
-    Other,
     /// The provided content was malformed and cannot be imported to Paper.
     ContentMalformed,
     /// The specified Paper folder is cannot be found.
@@ -3413,6 +3434,9 @@ pub enum PaperDocCreateError {
     /// The imported document contains an image that is too large. The current limit is 1MB. Note:
     /// This only applies to HTML with data uri.
     ImageSizeExceeded,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocCreateError {
@@ -3874,6 +3898,8 @@ pub enum PaperDocPermissionLevel {
     Edit,
     /// User will be granted view and comment permissions.
     ViewAndComment,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -4179,7 +4205,6 @@ impl ::serde::ser::Serialize for PaperDocUpdateArgs {
 pub enum PaperDocUpdateError {
     /// Your account does not have permissions to perform this action.
     InsufficientPermissions,
-    Other,
     /// The required doc was not found.
     DocNotFound,
     /// The provided content was malformed and cannot be imported to Paper.
@@ -4195,6 +4220,9 @@ pub enum PaperDocUpdateError {
     DocArchived,
     /// This operation is not allowed on deleted Paper docs.
     DocDeleted,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdateError {
@@ -4343,6 +4371,8 @@ pub enum PaperDocUpdatePolicy {
     Prepend,
     /// The document will be overwitten at the head with the provided content.
     OverwriteAll,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
@@ -4979,6 +5009,8 @@ pub enum UserOnPaperDocFilter {
     /// All uses who are shared on the Paper doc. This includes all users who have visited the Paper
     /// doc as well as those who have not.
     Shared,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
     Other,
 }
 
