@@ -16,6 +16,9 @@ pub mod auth;
 #[cfg(feature = "dbx_common")]
 pub mod common;
 
+#[cfg(feature = "dbx_contacts")]
+pub mod contacts;
+
 #[cfg(feature = "dbx_file_properties")]
 pub mod file_properties;
 

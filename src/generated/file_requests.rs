@@ -76,7 +76,8 @@ pub struct CreateFileRequestArgs {
     /// The path of the folder in the Dropbox where uploaded files will be sent. For apps with the
     /// app folder permission, this will be relative to the app folder.
     pub destination: super::files::Path,
-    /// The deadline for the file request. Deadlines can only be set by Pro and Business accounts.
+    /// The deadline for the file request. Deadlines can only be set by Professional and Business
+    /// accounts.
     pub deadline: Option<FileRequestDeadline>,
     /// Whether or not the file request should be open. If the file request is closed, it will not
     /// accept any file submissions, but it can be opened later.
@@ -1436,7 +1437,8 @@ pub struct UpdateFileRequestArgs {
     /// The new path of the folder in the Dropbox where uploaded files will be sent. For apps with
     /// the app folder permission, this will be relative to the app folder.
     pub destination: Option<super::files::Path>,
-    /// The new deadline for the file request.
+    /// The new deadline for the file request. Deadlines can only be set by Professional and
+    /// Business accounts.
     pub deadline: UpdateFileRequestDeadline,
     /// Whether to set this file request as open or closed.
     pub open: Option<bool>,

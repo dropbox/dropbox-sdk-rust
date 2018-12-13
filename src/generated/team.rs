@@ -26,7 +26,7 @@ pub fn devices_list_member_devices(
         None)
 }
 
-/// List all device sessions of a team.
+/// List all device sessions of a team. Permission : Team member file access.
 pub fn devices_list_members_devices(
     client: &::client_trait::HttpClient,
     arg: &ListMembersDevicesArg,
@@ -40,7 +40,7 @@ pub fn devices_list_members_devices(
         None)
 }
 
-/// List all device sessions of a team.
+/// List all device sessions of a team. Permission : Team member file access.
 pub fn devices_list_team_devices(
     client: &::client_trait::HttpClient,
     arg: &ListTeamDevicesArg,
@@ -715,7 +715,7 @@ pub fn members_unsuspend(
 pub fn namespaces_list(
     client: &::client_trait::HttpClient,
     arg: &TeamNamespacesListArg,
-) -> ::Result<Result<TeamNamespacesListResult, ()>> {
+) -> ::Result<Result<TeamNamespacesListResult, TeamNamespacesListError>> {
     ::client_helpers::request(
         client,
         ::client_trait::Endpoint::Api,
@@ -740,6 +740,7 @@ pub fn namespaces_list_continue(
         None)
 }
 
+/// Permission : Team member file access.
 pub fn properties_template_add(
     client: &::client_trait::HttpClient,
     arg: &super::file_properties::AddTemplateArg,
@@ -753,6 +754,7 @@ pub fn properties_template_add(
         None)
 }
 
+/// Permission : Team member file access.
 pub fn properties_template_get(
     client: &::client_trait::HttpClient,
     arg: &super::file_properties::GetTemplateArg,
@@ -766,6 +768,7 @@ pub fn properties_template_get(
         None)
 }
 
+/// Permission : Team member file access.
 pub fn properties_template_list(
     client: &::client_trait::HttpClient,
 ) -> ::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
@@ -778,6 +781,7 @@ pub fn properties_template_list(
         None)
 }
 
+/// Permission : Team member file access.
 pub fn properties_template_update(
     client: &::client_trait::HttpClient,
     arg: &super::file_properties::UpdateTemplateArg,
@@ -15679,18 +15683,22 @@ impl ::serde::ser::Serialize for RemoveCustomQuotaResult {
 pub struct RemovedStatus {
     /// True if the removed team member is recoverable.
     pub is_recoverable: bool,
+    /// True if the team member's account was converted to individual account.
+    pub is_disconnected: bool,
 }
 
 impl RemovedStatus {
-    pub fn new(is_recoverable: bool) -> Self {
+    pub fn new(is_recoverable: bool, is_disconnected: bool) -> Self {
         RemovedStatus {
             is_recoverable,
+            is_disconnected,
         }
     }
 
 }
 
-const REMOVED_STATUS_FIELDS: &[&str] = &["is_recoverable"];
+const REMOVED_STATUS_FIELDS: &[&str] = &["is_recoverable",
+                                         "is_disconnected"];
 impl RemovedStatus {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -15703,6 +15711,7 @@ impl RemovedStatus {
         optional: bool,
     ) -> Result<Option<RemovedStatus>, V::Error> {
         let mut field_is_recoverable = None;
+        let mut field_is_disconnected = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -15712,6 +15721,12 @@ impl RemovedStatus {
                         return Err(::serde::de::Error::duplicate_field("is_recoverable"));
                     }
                     field_is_recoverable = Some(map.next_value()?);
+                }
+                "is_disconnected" => {
+                    if field_is_disconnected.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("is_disconnected"));
+                    }
+                    field_is_disconnected = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -15724,6 +15739,7 @@ impl RemovedStatus {
         }
         let result = RemovedStatus {
             is_recoverable: field_is_recoverable.ok_or_else(|| ::serde::de::Error::missing_field("is_recoverable"))?,
+            is_disconnected: field_is_disconnected.ok_or_else(|| ::serde::de::Error::missing_field("is_disconnected"))?,
         };
         Ok(Some(result))
     }
@@ -15733,7 +15749,8 @@ impl RemovedStatus {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("is_recoverable", &self.is_recoverable)
+        s.serialize_field("is_recoverable", &self.is_recoverable)?;
+        s.serialize_field("is_disconnected", &self.is_disconnected)
     }
 }
 
@@ -15759,7 +15776,7 @@ impl ::serde::ser::Serialize for RemovedStatus {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("RemovedStatus", 1)?;
+        let mut s = serializer.serialize_struct("RemovedStatus", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -20273,7 +20290,7 @@ impl ::serde::ser::Serialize for TeamMemberStatus {
             }
             TeamMemberStatus::Removed(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("TeamMemberStatus", 2)?;
+                let mut s = serializer.serialize_struct("TeamMemberStatus", 3)?;
                 s.serialize_field(".tag", "removed")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -20516,9 +20533,11 @@ impl ::serde::ser::Serialize for TeamNamespacesListContinueArg {
 
 #[derive(Debug)]
 pub enum TeamNamespacesListContinueError {
+    /// Argument passed in is invalid.
+    InvalidArg,
+    Other,
     /// The cursor is invalid.
     InvalidCursor,
-    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for TeamNamespacesListContinueError {
@@ -20537,6 +20556,10 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamNamespacesListContinueError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
+                    "invalid_arg" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TeamNamespacesListContinueError::InvalidArg)
+                    }
                     "invalid_cursor" => {
                         ::eat_json_fields(&mut map)?;
                         Ok(TeamNamespacesListContinueError::InvalidCursor)
@@ -20548,8 +20571,9 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamNamespacesListContinueError {
                 }
             }
         }
-        const VARIANTS: &[&str] = &["invalid_cursor",
-                                    "other"];
+        const VARIANTS: &[&str] = &["invalid_arg",
+                                    "other",
+                                    "invalid_cursor"];
         deserializer.deserialize_struct("TeamNamespacesListContinueError", VARIANTS, EnumVisitor)
     }
 }
@@ -20559,6 +20583,12 @@ impl ::serde::ser::Serialize for TeamNamespacesListContinueError {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
+            TeamNamespacesListContinueError::InvalidArg => {
+                // unit
+                let mut s = serializer.serialize_struct("TeamNamespacesListContinueError", 1)?;
+                s.serialize_field(".tag", "invalid_arg")?;
+                s.end()
+            }
             TeamNamespacesListContinueError::InvalidCursor => {
                 // unit
                 let mut s = serializer.serialize_struct("TeamNamespacesListContinueError", 1)?;
@@ -20577,6 +20607,74 @@ impl ::std::error::Error for TeamNamespacesListContinueError {
 }
 
 impl ::std::fmt::Display for TeamNamespacesListContinueError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum TeamNamespacesListError {
+    /// Argument passed in is invalid.
+    InvalidArg,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamNamespacesListError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TeamNamespacesListError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a TeamNamespacesListError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "invalid_arg" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TeamNamespacesListError::InvalidArg)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TeamNamespacesListError::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["invalid_arg",
+                                    "other"];
+        deserializer.deserialize_struct("TeamNamespacesListError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamNamespacesListError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            TeamNamespacesListError::InvalidArg => {
+                // unit
+                let mut s = serializer.serialize_struct("TeamNamespacesListError", 1)?;
+                s.serialize_field(".tag", "invalid_arg")?;
+                s.end()
+            }
+            TeamNamespacesListError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for TeamNamespacesListError {
+    fn description(&self) -> &str {
+        "TeamNamespacesListError"
+    }
+}
+
+impl ::std::fmt::Display for TeamNamespacesListError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
     }

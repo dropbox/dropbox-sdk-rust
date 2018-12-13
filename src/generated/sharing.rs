@@ -35,8 +35,7 @@ pub fn add_file_member(
 
 /// Allows an owner or editor (if the ACL update policy allows) of a shared folder to add another
 /// member. For the new member to get access to all the functionality for this folder, you will need
-/// to call [`mount_folder()`](mount_folder) on their behalf. Apps must have full Dropbox access to
-/// use this endpoint.
+/// to call [`mount_folder()`](mount_folder) on their behalf.
 pub fn add_folder_member(
     client: &::client_trait::HttpClient,
     arg: &AddFolderMemberArg,
@@ -64,8 +63,7 @@ pub fn change_file_member_access(
         None)
 }
 
-/// Returns the status of an asynchronous job. Apps must have full Dropbox access to use this
-/// endpoint.
+/// Returns the status of an asynchronous job.
 pub fn check_job_status(
     client: &::client_trait::HttpClient,
     arg: &super::async::PollArg,
@@ -79,8 +77,7 @@ pub fn check_job_status(
         None)
 }
 
-/// Returns the status of an asynchronous job for sharing a folder. Apps must have full Dropbox
-/// access to use this endpoint.
+/// Returns the status of an asynchronous job for sharing a folder.
 pub fn check_remove_member_job_status(
     client: &::client_trait::HttpClient,
     arg: &super::async::PollArg,
@@ -94,8 +91,7 @@ pub fn check_remove_member_job_status(
         None)
 }
 
-/// Returns the status of an asynchronous job for sharing a folder. Apps must have full Dropbox
-/// access to use this endpoint.
+/// Returns the status of an asynchronous job for sharing a folder.
 pub fn check_share_job_status(
     client: &::client_trait::HttpClient,
     arg: &super::async::PollArg,
@@ -174,8 +170,7 @@ pub fn get_file_metadata_batch(
         None)
 }
 
-/// Returns shared folder metadata by its folder ID. Apps must have full Dropbox access to use this
-/// endpoint.
+/// Returns shared folder metadata by its folder ID.
 pub fn get_folder_metadata(
     client: &::client_trait::HttpClient,
     arg: &GetMetadataArgs,
@@ -287,8 +282,7 @@ pub fn list_file_members_continue(
         None)
 }
 
-/// Returns shared folder membership by its folder ID. Apps must have full Dropbox access to use
-/// this endpoint.
+/// Returns shared folder membership by its folder ID.
 pub fn list_folder_members(
     client: &::client_trait::HttpClient,
     arg: &ListFolderMembersArgs,
@@ -303,8 +297,7 @@ pub fn list_folder_members(
 }
 
 /// Once a cursor has been retrieved from [`list_folder_members()`](list_folder_members), use this
-/// to paginate through all shared folder members. Apps must have full Dropbox access to use this
-/// endpoint.
+/// to paginate through all shared folder members.
 pub fn list_folder_members_continue(
     client: &::client_trait::HttpClient,
     arg: &ListFolderMembersContinueArg,
@@ -318,8 +311,7 @@ pub fn list_folder_members_continue(
         None)
 }
 
-/// Return the list of all shared folders the current user has access to. Apps must have full
-/// Dropbox access to use this endpoint.
+/// Return the list of all shared folders the current user has access to.
 pub fn list_folders(
     client: &::client_trait::HttpClient,
     arg: &ListFoldersArgs,
@@ -335,8 +327,7 @@ pub fn list_folders(
 
 /// Once a cursor has been retrieved from [`list_folders()`](list_folders), use this to paginate
 /// through all shared folders. The cursor must come from a previous call to
-/// [`list_folders()`](list_folders) or [`list_folders_continue()`](list_folders_continue). Apps
-/// must have full Dropbox access to use this endpoint.
+/// [`list_folders()`](list_folders) or [`list_folders_continue()`](list_folders_continue).
 pub fn list_folders_continue(
     client: &::client_trait::HttpClient,
     arg: &ListFoldersContinueArg,
@@ -350,8 +341,7 @@ pub fn list_folders_continue(
         None)
 }
 
-/// Return the list of all shared folders the current user can mount or unmount. Apps must have full
-/// Dropbox access to use this endpoint.
+/// Return the list of all shared folders the current user can mount or unmount.
 pub fn list_mountable_folders(
     client: &::client_trait::HttpClient,
     arg: &ListFoldersArgs,
@@ -368,8 +358,7 @@ pub fn list_mountable_folders(
 /// Once a cursor has been retrieved from [`list_mountable_folders()`](list_mountable_folders), use
 /// this to paginate through all mountable shared folders. The cursor must come from a previous call
 /// to [`list_mountable_folders()`](list_mountable_folders) or
-/// [`list_mountable_folders_continue()`](list_mountable_folders_continue). Apps must have full
-/// Dropbox access to use this endpoint.
+/// [`list_mountable_folders_continue()`](list_mountable_folders_continue).
 pub fn list_mountable_folders_continue(
     client: &::client_trait::HttpClient,
     arg: &ListFoldersContinueArg,
@@ -449,8 +438,7 @@ pub fn modify_shared_link_settings(
 }
 
 /// The current user mounts the designated folder. Mount a shared folder for a user after they have
-/// been added as a member. Once mounted, the shared folder will appear in their Dropbox. Apps must
-/// have full Dropbox access to use this endpoint.
+/// been added as a member. Once mounted, the shared folder will appear in their Dropbox.
 pub fn mount_folder(
     client: &::client_trait::HttpClient,
     arg: &MountFolderArg,
@@ -465,8 +453,7 @@ pub fn mount_folder(
 }
 
 /// The current user relinquishes their membership in the designated file. Note that the current
-/// user may still have inherited access to this file through the parent folder. Apps must have full
-/// Dropbox access to use this endpoint.
+/// user may still have inherited access to this file through the parent folder.
 pub fn relinquish_file_membership(
     client: &::client_trait::HttpClient,
     arg: &RelinquishFileMembershipArg,
@@ -483,7 +470,7 @@ pub fn relinquish_file_membership(
 /// The current user relinquishes their membership in the designated shared folder and will no
 /// longer have access to the folder.  A folder owner cannot relinquish membership in their own
 /// folder. This will run synchronously if leave_a_copy is false, and asynchronously if leave_a_copy
-/// is true. Apps must have full Dropbox access to use this endpoint.
+/// is true.
 pub fn relinquish_folder_membership(
     client: &::client_trait::HttpClient,
     arg: &RelinquishFolderMembershipArg,
@@ -526,7 +513,7 @@ pub fn remove_file_member_2(
 }
 
 /// Allows an owner or editor (if the ACL update policy allows) of a shared folder to remove another
-/// member. Apps must have full Dropbox access to use this endpoint.
+/// member.
 pub fn remove_folder_member(
     client: &::client_trait::HttpClient,
     arg: &RemoveFolderMemberArg,
@@ -580,7 +567,7 @@ pub fn set_access_inheritance(
 /// `ShareFolderArg.force_async`. If a
 /// [`ShareFolderLaunch::AsyncJobId`](ShareFolderLaunch::AsyncJobId) is returned, you'll need to
 /// call [`check_share_job_status()`](check_share_job_status) until the action completes to get the
-/// metadata for the folder. Apps must have full Dropbox access to use this endpoint.
+/// metadata for the folder.
 pub fn share_folder(
     client: &::client_trait::HttpClient,
     arg: &ShareFolderArg,
@@ -596,7 +583,6 @@ pub fn share_folder(
 
 /// Transfer ownership of a shared folder to a member of the shared folder. User must have
 /// [`AccessLevel::Owner`](AccessLevel::Owner) access to the shared folder to perform a transfer.
-/// Apps must have full Dropbox access to use this endpoint.
 pub fn transfer_folder(
     client: &::client_trait::HttpClient,
     arg: &TransferFolderArg,
@@ -611,7 +597,7 @@ pub fn transfer_folder(
 }
 
 /// The current user unmounts the designated folder. They can re-mount the folder at a later time
-/// using [`mount_folder()`](mount_folder). Apps must have full Dropbox access to use this endpoint.
+/// using [`mount_folder()`](mount_folder).
 pub fn unmount_folder(
     client: &::client_trait::HttpClient,
     arg: &UnmountFolderArg,
@@ -641,7 +627,6 @@ pub fn unshare_file(
 
 /// Allows a shared folder owner to unshare the folder. You'll need to call
 /// [`check_job_status()`](check_job_status) to determine if the action has completed successfully.
-/// Apps must have full Dropbox access to use this endpoint.
 pub fn unshare_folder(
     client: &::client_trait::HttpClient,
     arg: &UnshareFolderArg,
@@ -669,8 +654,7 @@ pub fn update_file_member(
         None)
 }
 
-/// Allows an owner or editor of a shared folder to update another member's permissions. Apps must
-/// have full Dropbox access to use this endpoint.
+/// Allows an owner or editor of a shared folder to update another member's permissions.
 pub fn update_folder_member(
     client: &::client_trait::HttpClient,
     arg: &UpdateFolderMemberArg,
@@ -686,7 +670,6 @@ pub fn update_folder_member(
 
 /// Update the sharing policies for a shared folder. User must have
 /// [`AccessLevel::Owner`](AccessLevel::Owner) access to the shared folder to update its policies.
-/// Apps must have full Dropbox access to use this endpoint.
 pub fn update_folder_policy(
     client: &::client_trait::HttpClient,
     arg: &UpdateFolderPolicyArg,
@@ -7002,6 +6985,10 @@ pub enum LinkAudience {
     Public,
     /// Link is accessible only by team members.
     Team,
+    /// The link can be used by no one. The link merely points the user to the content, and does not
+    /// grant additional rights to the user. Members of the content who use this link can only
+    /// access the content with their pre-existing access rights.
+    NoOne,
     /// Link is accessible only by members of the content.
     Members,
     Other,
@@ -7031,6 +7018,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
                         ::eat_json_fields(&mut map)?;
                         Ok(LinkAudience::Team)
                     }
+                    "no_one" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkAudience::NoOne)
+                    }
                     "members" => {
                         ::eat_json_fields(&mut map)?;
                         Ok(LinkAudience::Members)
@@ -7044,6 +7035,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
         }
         const VARIANTS: &[&str] = &["public",
                                     "team",
+                                    "no_one",
                                     "members",
                                     "other"];
         deserializer.deserialize_struct("LinkAudience", VARIANTS, EnumVisitor)
@@ -7065,6 +7057,12 @@ impl ::serde::ser::Serialize for LinkAudience {
                 // unit
                 let mut s = serializer.serialize_struct("LinkAudience", 1)?;
                 s.serialize_field(".tag", "team")?;
+                s.end()
+            }
+            LinkAudience::NoOne => {
+                // unit
+                let mut s = serializer.serialize_struct("LinkAudience", 1)?;
+                s.serialize_field(".tag", "no_one")?;
                 s.end()
             }
             LinkAudience::Members => {

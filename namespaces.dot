@@ -2,6 +2,7 @@ digraph deps {
     async;
     auth -> { common };
     common;
+    contacts -> { common };
     file_properties;
     file_requests -> { common files };
     files -> { async auth common file_properties users_common };

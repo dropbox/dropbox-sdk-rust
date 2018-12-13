@@ -2817,6 +2817,267 @@ impl ::serde::ser::Serialize for AssetLogInfo {
     }
 }
 
+/// Policy for controlling if team members can activate camera uploads
+#[derive(Debug)]
+pub enum CameraUploadsPolicy {
+    Disabled,
+    Enabled,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CameraUploadsPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = CameraUploadsPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CameraUploadsPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CameraUploadsPolicy::Disabled)
+                    }
+                    "enabled" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CameraUploadsPolicy::Enabled)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(CameraUploadsPolicy::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("CameraUploadsPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CameraUploadsPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            CameraUploadsPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("CameraUploadsPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            CameraUploadsPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("CameraUploadsPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            CameraUploadsPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Changed camera uploads setting for team.
+#[derive(Debug)]
+pub struct CameraUploadsPolicyChangedDetails {
+    /// New camera uploads setting.
+    pub new_value: CameraUploadsPolicy,
+    /// Previous camera uploads setting.
+    pub previous_value: CameraUploadsPolicy,
+}
+
+impl CameraUploadsPolicyChangedDetails {
+    pub fn new(new_value: CameraUploadsPolicy, previous_value: CameraUploadsPolicy) -> Self {
+        CameraUploadsPolicyChangedDetails {
+            new_value,
+            previous_value,
+        }
+    }
+
+}
+
+const CAMERA_UPLOADS_POLICY_CHANGED_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                "previous_value"];
+impl CameraUploadsPolicyChangedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<CameraUploadsPolicyChangedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<CameraUploadsPolicyChangedDetails>, V::Error> {
+        let mut field_new_value = None;
+        let mut field_previous_value = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = CameraUploadsPolicyChangedDetails {
+            new_value: field_new_value.ok_or_else(|| ::serde::de::Error::missing_field("new_value"))?,
+            previous_value: field_previous_value.ok_or_else(|| ::serde::de::Error::missing_field("previous_value"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_value", &self.new_value)?;
+        s.serialize_field("previous_value", &self.previous_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CameraUploadsPolicyChangedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CameraUploadsPolicyChangedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CameraUploadsPolicyChangedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CameraUploadsPolicyChangedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CameraUploadsPolicyChangedDetails", CAMERA_UPLOADS_POLICY_CHANGED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CameraUploadsPolicyChangedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CameraUploadsPolicyChangedDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct CameraUploadsPolicyChangedType {
+    pub description: String,
+}
+
+impl CameraUploadsPolicyChangedType {
+    pub fn new(description: String) -> Self {
+        CameraUploadsPolicyChangedType {
+            description,
+        }
+    }
+
+}
+
+const CAMERA_UPLOADS_POLICY_CHANGED_TYPE_FIELDS: &[&str] = &["description"];
+impl CameraUploadsPolicyChangedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<CameraUploadsPolicyChangedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<CameraUploadsPolicyChangedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = CameraUploadsPolicyChangedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CameraUploadsPolicyChangedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CameraUploadsPolicyChangedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a CameraUploadsPolicyChangedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CameraUploadsPolicyChangedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CameraUploadsPolicyChangedType", CAMERA_UPLOADS_POLICY_CHANGED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CameraUploadsPolicyChangedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CameraUploadsPolicyChangedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Certificate details.
 #[derive(Debug)]
 pub struct Certificate {
@@ -3257,6 +3518,8 @@ pub enum ContextLogInfo {
     Anonymous,
     /// Action was done on behalf of the team.
     Team,
+    /// Action was done on behalf of a trusted non team member.
+    TrustedNonTeamMember(TrustedNonTeamMemberLogInfo),
     Other,
 }
 
@@ -3286,6 +3549,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ContextLogInfo {
                         ::eat_json_fields(&mut map)?;
                         Ok(ContextLogInfo::Team)
                     }
+                    "trusted_non_team_member" => Ok(ContextLogInfo::TrustedNonTeamMember(TrustedNonTeamMemberLogInfo::internal_deserialize(map)?)),
                     _ => {
                         ::eat_json_fields(&mut map)?;
                         Ok(ContextLogInfo::Other)
@@ -3297,6 +3561,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ContextLogInfo {
                                     "non_team_member",
                                     "anonymous",
                                     "team",
+                                    "trusted_non_team_member",
                                     "other"];
         deserializer.deserialize_struct("ContextLogInfo", VARIANTS, EnumVisitor)
     }
@@ -3331,6 +3596,13 @@ impl ::serde::ser::Serialize for ContextLogInfo {
                 // unit
                 let mut s = serializer.serialize_struct("ContextLogInfo", 1)?;
                 s.serialize_field(".tag", "team")?;
+                s.end()
+            }
+            ContextLogInfo::TrustedNonTeamMember(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("ContextLogInfo", 5)?;
+                s.serialize_field(".tag", "trusted_non_team_member")?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             ContextLogInfo::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -10681,6 +10953,7 @@ pub enum EventDetails {
     FileAddCommentDetails(FileAddCommentDetails),
     FileChangeCommentSubscriptionDetails(FileChangeCommentSubscriptionDetails),
     FileDeleteCommentDetails(FileDeleteCommentDetails),
+    FileEditCommentDetails(FileEditCommentDetails),
     FileLikeCommentDetails(FileLikeCommentDetails),
     FileResolveCommentDetails(FileResolveCommentDetails),
     FileUnlikeCommentDetails(FileUnlikeCommentDetails),
@@ -10920,6 +11193,7 @@ pub enum EventDetails {
     AccountCaptureChangePolicyDetails(AccountCaptureChangePolicyDetails),
     AllowDownloadDisabledDetails(AllowDownloadDisabledDetails),
     AllowDownloadEnabledDetails(AllowDownloadEnabledDetails),
+    CameraUploadsPolicyChangedDetails(CameraUploadsPolicyChangedDetails),
     DataPlacementRestrictionChangePolicyDetails(DataPlacementRestrictionChangePolicyDetails),
     DataPlacementRestrictionSatisfyPolicyDetails(DataPlacementRestrictionSatisfyPolicyDetails),
     DeviceApprovalsChangeDesktopPolicyDetails(DeviceApprovalsChangeDesktopPolicyDetails),
@@ -11011,6 +11285,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "file_add_comment_details" => Ok(EventDetails::FileAddCommentDetails(FileAddCommentDetails::internal_deserialize(map)?)),
                     "file_change_comment_subscription_details" => Ok(EventDetails::FileChangeCommentSubscriptionDetails(FileChangeCommentSubscriptionDetails::internal_deserialize(map)?)),
                     "file_delete_comment_details" => Ok(EventDetails::FileDeleteCommentDetails(FileDeleteCommentDetails::internal_deserialize(map)?)),
+                    "file_edit_comment_details" => Ok(EventDetails::FileEditCommentDetails(FileEditCommentDetails::internal_deserialize(map)?)),
                     "file_like_comment_details" => Ok(EventDetails::FileLikeCommentDetails(FileLikeCommentDetails::internal_deserialize(map)?)),
                     "file_resolve_comment_details" => Ok(EventDetails::FileResolveCommentDetails(FileResolveCommentDetails::internal_deserialize(map)?)),
                     "file_unlike_comment_details" => Ok(EventDetails::FileUnlikeCommentDetails(FileUnlikeCommentDetails::internal_deserialize(map)?)),
@@ -11250,6 +11525,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "account_capture_change_policy_details" => Ok(EventDetails::AccountCaptureChangePolicyDetails(AccountCaptureChangePolicyDetails::internal_deserialize(map)?)),
                     "allow_download_disabled_details" => Ok(EventDetails::AllowDownloadDisabledDetails(AllowDownloadDisabledDetails::internal_deserialize(map)?)),
                     "allow_download_enabled_details" => Ok(EventDetails::AllowDownloadEnabledDetails(AllowDownloadEnabledDetails::internal_deserialize(map)?)),
+                    "camera_uploads_policy_changed_details" => Ok(EventDetails::CameraUploadsPolicyChangedDetails(CameraUploadsPolicyChangedDetails::internal_deserialize(map)?)),
                     "data_placement_restriction_change_policy_details" => Ok(EventDetails::DataPlacementRestrictionChangePolicyDetails(DataPlacementRestrictionChangePolicyDetails::internal_deserialize(map)?)),
                     "data_placement_restriction_satisfy_policy_details" => Ok(EventDetails::DataPlacementRestrictionSatisfyPolicyDetails(DataPlacementRestrictionSatisfyPolicyDetails::internal_deserialize(map)?)),
                     "device_approvals_change_desktop_policy_details" => Ok(EventDetails::DeviceApprovalsChangeDesktopPolicyDetails(DeviceApprovalsChangeDesktopPolicyDetails::internal_deserialize(map)?)),
@@ -11328,6 +11604,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "file_add_comment_details",
                                     "file_change_comment_subscription_details",
                                     "file_delete_comment_details",
+                                    "file_edit_comment_details",
                                     "file_like_comment_details",
                                     "file_resolve_comment_details",
                                     "file_unlike_comment_details",
@@ -11567,6 +11844,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "account_capture_change_policy_details",
                                     "allow_download_disabled_details",
                                     "allow_download_enabled_details",
+                                    "camera_uploads_policy_changed_details",
                                     "data_placement_restriction_change_policy_details",
                                     "data_placement_restriction_satisfy_policy_details",
                                     "device_approvals_change_desktop_policy_details",
@@ -11687,6 +11965,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "file_delete_comment_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::FileEditCommentDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "file_edit_comment_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -13301,6 +13586,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 s.serialize_field(".tag", "allow_download_enabled_details")?;
                 s.end()
             }
+            EventDetails::CameraUploadsPolicyChangedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "camera_uploads_policy_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::DataPlacementRestrictionChangePolicyDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
@@ -13752,6 +14044,8 @@ pub enum EventType {
     FileChangeCommentSubscription(FileChangeCommentSubscriptionType),
     /// (comments) Deleted file comment
     FileDeleteComment(FileDeleteCommentType),
+    /// (comments) Edited file comment
+    FileEditComment(FileEditCommentType),
     /// (comments) Liked file comment (deprecated, no longer logged)
     FileLikeComment(FileLikeCommentType),
     /// (comments) Resolved file comment
@@ -13906,7 +14200,7 @@ pub enum EventType {
     MemberChangeName(MemberChangeNameType),
     /// (members) Changed member status (invited, joined, suspended, etc.)
     MemberChangeStatus(MemberChangeStatusType),
-    /// (members) Cleared saved contacts
+    /// (members) Cleared manually added contacts
     MemberDeleteManualContacts(MemberDeleteManualContactsType),
     /// (members) Permanently deleted contents of deleted team member account
     MemberPermanentlyDeleteAccountContents(MemberPermanentlyDeleteAccountContentsType),
@@ -14235,6 +14529,8 @@ pub enum EventType {
     AllowDownloadDisabled(AllowDownloadDisabledType),
     /// (team_policies) Enabled downloads (deprecated, no longer logged)
     AllowDownloadEnabled(AllowDownloadEnabledType),
+    /// (team_policies) Changed camera uploads setting for team
+    CameraUploadsPolicyChanged(CameraUploadsPolicyChangedType),
     /// (team_policies) Set restrictions on data center locations where team data resides
     DataPlacementRestrictionChangePolicy(DataPlacementRestrictionChangePolicyType),
     /// (team_policies) Completed restrictions on data center locations where team data resides
@@ -14394,6 +14690,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "file_add_comment" => Ok(EventType::FileAddComment(FileAddCommentType::internal_deserialize(map)?)),
                     "file_change_comment_subscription" => Ok(EventType::FileChangeCommentSubscription(FileChangeCommentSubscriptionType::internal_deserialize(map)?)),
                     "file_delete_comment" => Ok(EventType::FileDeleteComment(FileDeleteCommentType::internal_deserialize(map)?)),
+                    "file_edit_comment" => Ok(EventType::FileEditComment(FileEditCommentType::internal_deserialize(map)?)),
                     "file_like_comment" => Ok(EventType::FileLikeComment(FileLikeCommentType::internal_deserialize(map)?)),
                     "file_resolve_comment" => Ok(EventType::FileResolveComment(FileResolveCommentType::internal_deserialize(map)?)),
                     "file_unlike_comment" => Ok(EventType::FileUnlikeComment(FileUnlikeCommentType::internal_deserialize(map)?)),
@@ -14633,6 +14930,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "account_capture_change_policy" => Ok(EventType::AccountCaptureChangePolicy(AccountCaptureChangePolicyType::internal_deserialize(map)?)),
                     "allow_download_disabled" => Ok(EventType::AllowDownloadDisabled(AllowDownloadDisabledType::internal_deserialize(map)?)),
                     "allow_download_enabled" => Ok(EventType::AllowDownloadEnabled(AllowDownloadEnabledType::internal_deserialize(map)?)),
+                    "camera_uploads_policy_changed" => Ok(EventType::CameraUploadsPolicyChanged(CameraUploadsPolicyChangedType::internal_deserialize(map)?)),
                     "data_placement_restriction_change_policy" => Ok(EventType::DataPlacementRestrictionChangePolicy(DataPlacementRestrictionChangePolicyType::internal_deserialize(map)?)),
                     "data_placement_restriction_satisfy_policy" => Ok(EventType::DataPlacementRestrictionSatisfyPolicy(DataPlacementRestrictionSatisfyPolicyType::internal_deserialize(map)?)),
                     "device_approvals_change_desktop_policy" => Ok(EventType::DeviceApprovalsChangeDesktopPolicy(DeviceApprovalsChangeDesktopPolicyType::internal_deserialize(map)?)),
@@ -14710,6 +15008,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "file_add_comment",
                                     "file_change_comment_subscription",
                                     "file_delete_comment",
+                                    "file_edit_comment",
                                     "file_like_comment",
                                     "file_resolve_comment",
                                     "file_unlike_comment",
@@ -14949,6 +15248,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "account_capture_change_policy",
                                     "allow_download_disabled",
                                     "allow_download_enabled",
+                                    "camera_uploads_policy_changed",
                                     "data_placement_restriction_change_policy",
                                     "data_placement_restriction_satisfy_policy",
                                     "device_approvals_change_desktop_policy",
@@ -15068,6 +15368,13 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "file_delete_comment")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::FileEditComment(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "file_edit_comment")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -16741,6 +17048,13 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "allow_download_enabled")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::CameraUploadsPolicyChanged(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "camera_uploads_policy_changed")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -19306,6 +19620,204 @@ impl ::serde::ser::Serialize for FileDownloadType {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("FileDownloadType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Edited file comment.
+#[derive(Debug)]
+pub struct FileEditCommentDetails {
+    /// Previous comment text.
+    pub previous_comment_text: String,
+    /// Comment text. Might be missing due to historical data gap.
+    pub comment_text: Option<String>,
+}
+
+impl FileEditCommentDetails {
+    pub fn new(previous_comment_text: String) -> Self {
+        FileEditCommentDetails {
+            previous_comment_text,
+            comment_text: None,
+        }
+    }
+
+    pub fn with_comment_text(mut self, value: Option<String>) -> Self {
+        self.comment_text = value;
+        self
+    }
+
+}
+
+const FILE_EDIT_COMMENT_DETAILS_FIELDS: &[&str] = &["previous_comment_text",
+                                                    "comment_text"];
+impl FileEditCommentDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<FileEditCommentDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<FileEditCommentDetails>, V::Error> {
+        let mut field_previous_comment_text = None;
+        let mut field_comment_text = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "previous_comment_text" => {
+                    if field_previous_comment_text.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("previous_comment_text"));
+                    }
+                    field_previous_comment_text = Some(map.next_value()?);
+                }
+                "comment_text" => {
+                    if field_comment_text.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("comment_text"));
+                    }
+                    field_comment_text = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = FileEditCommentDetails {
+            previous_comment_text: field_previous_comment_text.ok_or_else(|| ::serde::de::Error::missing_field("previous_comment_text"))?,
+            comment_text: field_comment_text,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("previous_comment_text", &self.previous_comment_text)?;
+        s.serialize_field("comment_text", &self.comment_text)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileEditCommentDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = FileEditCommentDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a FileEditCommentDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                FileEditCommentDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("FileEditCommentDetails", FILE_EDIT_COMMENT_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileEditCommentDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("FileEditCommentDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct FileEditCommentType {
+    pub description: String,
+}
+
+impl FileEditCommentType {
+    pub fn new(description: String) -> Self {
+        FileEditCommentType {
+            description,
+        }
+    }
+
+}
+
+const FILE_EDIT_COMMENT_TYPE_FIELDS: &[&str] = &["description"];
+impl FileEditCommentType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<FileEditCommentType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<FileEditCommentType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = FileEditCommentType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileEditCommentType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = FileEditCommentType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a FileEditCommentType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                FileEditCommentType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("FileEditCommentType", FILE_EDIT_COMMENT_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileEditCommentType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("FileEditCommentType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -29429,7 +29941,7 @@ impl ::serde::ser::Serialize for MemberChangeStatusType {
     }
 }
 
-/// Cleared saved contacts.
+/// Cleared manually added contacts.
 #[derive(Debug)]
 pub struct MemberDeleteManualContactsDetails {
 }
@@ -41052,6 +41564,7 @@ pub enum PaperDownloadFormat {
     Docx,
     Html,
     Markdown,
+    Pdf,
     Other,
 }
 
@@ -41083,6 +41596,10 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDownloadFormat {
                         ::eat_json_fields(&mut map)?;
                         Ok(PaperDownloadFormat::Markdown)
                     }
+                    "pdf" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(PaperDownloadFormat::Pdf)
+                    }
                     _ => {
                         ::eat_json_fields(&mut map)?;
                         Ok(PaperDownloadFormat::Other)
@@ -41093,6 +41610,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDownloadFormat {
         const VARIANTS: &[&str] = &["docx",
                                     "html",
                                     "markdown",
+                                    "pdf",
                                     "other"];
         deserializer.deserialize_struct("PaperDownloadFormat", VARIANTS, EnumVisitor)
     }
@@ -41119,6 +41637,12 @@ impl ::serde::ser::Serialize for PaperDownloadFormat {
                 // unit
                 let mut s = serializer.serialize_struct("PaperDownloadFormat", 1)?;
                 s.serialize_field(".tag", "markdown")?;
+                s.end()
+            }
+            PaperDownloadFormat::Pdf => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDownloadFormat", 1)?;
+                s.serialize_field(".tag", "pdf")?;
                 s.end()
             }
             PaperDownloadFormat::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -56129,7 +56653,6 @@ impl ::serde::ser::Serialize for SharingLinkPolicy {
 pub enum SharingMemberPolicy {
     Allow,
     Forbid,
-    TeamMembersAndWhitelist,
     Other,
 }
 
@@ -56157,10 +56680,6 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingMemberPolicy {
                         ::eat_json_fields(&mut map)?;
                         Ok(SharingMemberPolicy::Forbid)
                     }
-                    "team_members_and_whitelist" => {
-                        ::eat_json_fields(&mut map)?;
-                        Ok(SharingMemberPolicy::TeamMembersAndWhitelist)
-                    }
                     _ => {
                         ::eat_json_fields(&mut map)?;
                         Ok(SharingMemberPolicy::Other)
@@ -56170,7 +56689,6 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingMemberPolicy {
         }
         const VARIANTS: &[&str] = &["allow",
                                     "forbid",
-                                    "team_members_and_whitelist",
                                     "other"];
         deserializer.deserialize_struct("SharingMemberPolicy", VARIANTS, EnumVisitor)
     }
@@ -56191,12 +56709,6 @@ impl ::serde::ser::Serialize for SharingMemberPolicy {
                 // unit
                 let mut s = serializer.serialize_struct("SharingMemberPolicy", 1)?;
                 s.serialize_field(".tag", "forbid")?;
-                s.end()
-            }
-            SharingMemberPolicy::TeamMembersAndWhitelist => {
-                // unit
-                let mut s = serializer.serialize_struct("SharingMemberPolicy", 1)?;
-                s.serialize_field(".tag", "team_members_and_whitelist")?;
                 s.end()
             }
             SharingMemberPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -69969,6 +70481,206 @@ impl ::serde::ser::Serialize for TimeUnit {
     }
 }
 
+/// User that is not a member of the team but considered trusted.
+#[derive(Debug)]
+pub struct TrustedNonTeamMemberLogInfo {
+    /// Indicates the type of the trusted non team member user.
+    pub trusted_non_team_member_type: TrustedNonTeamMemberType,
+    /// User unique ID. Might be missing due to historical data gap.
+    pub account_id: Option<super::users_common::AccountId>,
+    /// User display name. Might be missing due to historical data gap.
+    pub display_name: Option<super::common::DisplayNameLegacy>,
+    /// User email address. Might be missing due to historical data gap.
+    pub email: Option<EmailAddress>,
+}
+
+impl TrustedNonTeamMemberLogInfo {
+    pub fn new(trusted_non_team_member_type: TrustedNonTeamMemberType) -> Self {
+        TrustedNonTeamMemberLogInfo {
+            trusted_non_team_member_type,
+            account_id: None,
+            display_name: None,
+            email: None,
+        }
+    }
+
+    pub fn with_account_id(mut self, value: Option<super::users_common::AccountId>) -> Self {
+        self.account_id = value;
+        self
+    }
+
+    pub fn with_display_name(mut self, value: Option<super::common::DisplayNameLegacy>) -> Self {
+        self.display_name = value;
+        self
+    }
+
+    pub fn with_email(mut self, value: Option<EmailAddress>) -> Self {
+        self.email = value;
+        self
+    }
+
+}
+
+const TRUSTED_NON_TEAM_MEMBER_LOG_INFO_FIELDS: &[&str] = &["trusted_non_team_member_type",
+                                                           "account_id",
+                                                           "display_name",
+                                                           "email"];
+impl TrustedNonTeamMemberLogInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TrustedNonTeamMemberLogInfo, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TrustedNonTeamMemberLogInfo>, V::Error> {
+        let mut field_trusted_non_team_member_type = None;
+        let mut field_account_id = None;
+        let mut field_display_name = None;
+        let mut field_email = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "trusted_non_team_member_type" => {
+                    if field_trusted_non_team_member_type.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("trusted_non_team_member_type"));
+                    }
+                    field_trusted_non_team_member_type = Some(map.next_value()?);
+                }
+                "account_id" => {
+                    if field_account_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("account_id"));
+                    }
+                    field_account_id = Some(map.next_value()?);
+                }
+                "display_name" => {
+                    if field_display_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("display_name"));
+                    }
+                    field_display_name = Some(map.next_value()?);
+                }
+                "email" => {
+                    if field_email.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("email"));
+                    }
+                    field_email = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TrustedNonTeamMemberLogInfo {
+            trusted_non_team_member_type: field_trusted_non_team_member_type.ok_or_else(|| ::serde::de::Error::missing_field("trusted_non_team_member_type"))?,
+            account_id: field_account_id,
+            display_name: field_display_name,
+            email: field_email,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("trusted_non_team_member_type", &self.trusted_non_team_member_type)?;
+        s.serialize_field("account_id", &self.account_id)?;
+        s.serialize_field("display_name", &self.display_name)?;
+        s.serialize_field("email", &self.email)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TrustedNonTeamMemberLogInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TrustedNonTeamMemberLogInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a TrustedNonTeamMemberLogInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TrustedNonTeamMemberLogInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TrustedNonTeamMemberLogInfo", TRUSTED_NON_TEAM_MEMBER_LOG_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TrustedNonTeamMemberLogInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TrustedNonTeamMemberLogInfo", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum TrustedNonTeamMemberType {
+    MultiInstanceAdmin,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TrustedNonTeamMemberType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TrustedNonTeamMemberType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a TrustedNonTeamMemberType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "multi_instance_admin" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TrustedNonTeamMemberType::MultiInstanceAdmin)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(TrustedNonTeamMemberType::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["multi_instance_admin",
+                                    "other"];
+        deserializer.deserialize_struct("TrustedNonTeamMemberType", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TrustedNonTeamMemberType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            TrustedNonTeamMemberType::MultiInstanceAdmin => {
+                // unit
+                let mut s = serializer.serialize_struct("TrustedNonTeamMemberType", 1)?;
+                s.serialize_field(".tag", "multi_instance_admin")?;
+                s.end()
+            }
+            TrustedNonTeamMemberType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Enabled/disabled option for members to link personal Dropbox account and team account to same
 /// computer.
 #[derive(Debug)]
@@ -70332,6 +71044,7 @@ impl ::serde::ser::Serialize for UserLinkedAppLogInfo {
 #[derive(Debug)]
 pub enum UserLogInfo {
     TeamMember(TeamMemberLogInfo),
+    TrustedNonTeamMember(TrustedNonTeamMemberLogInfo),
     NonTeamMember(NonTeamMemberLogInfo),
     _Unknown
 }
@@ -70353,12 +71066,14 @@ impl<'de> ::serde::de::Deserialize<'de> for UserLogInfo {
                 };
                 match tag {
                     "team_member" => Ok(UserLogInfo::TeamMember(TeamMemberLogInfo::internal_deserialize(map)?)),
+                    "trusted_non_team_member" => Ok(UserLogInfo::TrustedNonTeamMember(TrustedNonTeamMemberLogInfo::internal_deserialize(map)?)),
                     "non_team_member" => Ok(UserLogInfo::NonTeamMember(NonTeamMemberLogInfo::internal_deserialize(map)?)),
                     _ => Ok(UserLogInfo::_Unknown)
                 }
             }
         }
         const VARIANTS: &[&str] = &["non_team_member",
+                                    "non_team_member",
                                     "non_team_member"];
         deserializer.deserialize_struct("UserLogInfo", VARIANTS, EnumVisitor)
     }
@@ -70377,6 +71092,15 @@ impl ::serde::ser::Serialize for UserLogInfo {
                 s.serialize_field("email", &x.email)?;
                 s.serialize_field("team_member_id", &x.team_member_id)?;
                 s.serialize_field("member_external_id", &x.member_external_id)?;
+                s.end()
+            }
+            UserLogInfo::TrustedNonTeamMember(ref x) => {
+                let mut s = serializer.serialize_struct("UserLogInfo", 5)?;
+                s.serialize_field(".tag", "trusted_non_team_member")?;
+                s.serialize_field("trusted_non_team_member_type", &x.trusted_non_team_member_type)?;
+                s.serialize_field("account_id", &x.account_id)?;
+                s.serialize_field("display_name", &x.display_name)?;
+                s.serialize_field("email", &x.email)?;
                 s.end()
             }
             UserLogInfo::NonTeamMember(ref x) => {

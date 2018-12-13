@@ -9,6 +9,7 @@
 
 //! This namespace contains endpoints and data types for basic file operations.
 
+pub type CopyBatchArg = RelocationBatchArgBase;
 pub type FileId = String;
 pub type Id = String;
 pub type ListFolderCursor = String;
@@ -87,6 +88,24 @@ pub fn copy(
         None)
 }
 
+/// Copy multiple files or folders to different locations at once in the user's Dropbox. This route
+/// will replace [`copy_batch()`](copy_batch). The main difference is this route will return stutus
+/// for each entry, while [`copy_batch()`](copy_batch) raises failure if any entry fails. This route
+/// will either finish synchronously, or return a job ID and do the async copy job in background.
+/// Please use [`copy_batch_check_v2()`](copy_batch_check_v2) to check the job status.
+pub fn copy_batch_v2(
+    client: &::client_trait::HttpClient,
+    arg: &CopyBatchArg,
+) -> ::Result<Result<RelocationBatchV2Launch, ()>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/copy_batch_v2",
+        arg,
+        None)
+}
+
 /// Copy multiple files or folders to different locations at once in the user's Dropbox. If
 /// [`RelocationBatchArg::allow_shared_folder`](RelocationBatchArg) is false, this route is atomic.
 /// If one entry fails, the whole transaction will abort. If
@@ -103,6 +122,21 @@ pub fn copy_batch(
         ::client_trait::Endpoint::Api,
         ::client_trait::Style::Rpc,
         "files/copy_batch",
+        arg,
+        None)
+}
+
+/// Returns the status of an asynchronous job for [`copy_batch_v2()`](copy_batch_v2). It returns
+/// list of results for each entry.
+pub fn copy_batch_check_v2(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<RelocationBatchV2JobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/copy_batch/check_v2",
         arg,
         None)
 }
@@ -592,6 +626,24 @@ pub fn do_move(
 }
 
 /// Move multiple files or folders to different locations at once in the user's Dropbox. This route
+/// will replace [`move_batch_v2()`](move_batch_v2). The main difference is this route will return
+/// stutus for each entry, while [`move_batch()`](move_batch) raises failure if any entry fails.
+/// This route will either finish synchronously, or return a job ID and do the async move job in
+/// background. Please use [`move_batch_check_v2()`](move_batch_check_v2) to check the job status.
+pub fn move_batch_v2(
+    client: &::client_trait::HttpClient,
+    arg: &MoveBatchArg,
+) -> ::Result<Result<RelocationBatchV2Launch, ()>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/move_batch_v2",
+        arg,
+        None)
+}
+
+/// Move multiple files or folders to different locations at once in the user's Dropbox. This route
 /// is 'all or nothing', which means if one entry fails, the whole transaction will abort. This
 /// route will return job ID immediately and do the async moving job in background. Please use
 /// [`move_batch_check()`](move_batch_check) to check the job status.
@@ -604,6 +656,21 @@ pub fn move_batch(
         ::client_trait::Endpoint::Api,
         ::client_trait::Style::Rpc,
         "files/move_batch",
+        arg,
+        None)
+}
+
+/// Returns the status of an asynchronous job for [`move_batch_v2()`](move_batch_v2). It returns
+/// list of results for each entry.
+pub fn move_batch_check_v2(
+    client: &::client_trait::HttpClient,
+    arg: &super::async::PollArg,
+) -> ::Result<Result<RelocationBatchV2JobStatus, super::async::PollError>> {
+    ::client_helpers::request(
+        client,
+        ::client_trait::Endpoint::Api,
+        ::client_trait::Style::Rpc,
+        "files/move_batch/check_v2",
         arg,
         None)
 }
@@ -729,8 +796,10 @@ pub fn restore(
         None)
 }
 
-/// Save a specified URL into a file in user's Dropbox. If the given path already exists, the file
-/// will be renamed to avoid the conflict (e.g. myfile (1).txt).
+/// Save the data from a specified URL into a file in user's Dropbox. Note that the transfer from
+/// the URL must complete within 5 minutes, or the operation will time out and the job will fail. If
+/// the given path already exists, the file will be renamed to avoid the conflict (e.g. myfile
+/// (1).txt).
 pub fn save_url(
     client: &::client_trait::HttpClient,
     arg: &SaveUrlArg,
@@ -2285,6 +2354,8 @@ impl ::serde::ser::Serialize for CreateFolderBatchLaunch {
 
 #[derive(Debug)]
 pub struct CreateFolderBatchResult {
+    /// Each entry in [`CreateFolderBatchArg::paths`](CreateFolderBatchArg) will appear at the same
+    /// position inside [`CreateFolderBatchResult::entries`](CreateFolderBatchResult).
     pub entries: Vec<CreateFolderBatchResultEntry>,
 }
 
@@ -3178,6 +3249,8 @@ impl ::serde::ser::Serialize for DeleteBatchLaunch {
 
 #[derive(Debug)]
 pub struct DeleteBatchResult {
+    /// Each entry in [`DeleteBatchArg::entries`](DeleteBatchArg) will appear at the same position
+    /// inside [`DeleteBatchResult::entries`](DeleteBatchResult).
     pub entries: Vec<DeleteBatchResultEntry>,
 }
 
@@ -8491,6 +8564,134 @@ impl ::serde::ser::Serialize for Metadata {
     }
 }
 
+#[derive(Debug)]
+pub struct MoveBatchArg {
+    /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
+    pub entries: Vec<RelocationPath>,
+    /// If there's a conflict with any file, have the Dropbox server try to autorename that file to
+    /// avoid the conflict.
+    pub autorename: bool,
+    /// Allow moves by owner even if it would result in an ownership transfer for the content being
+    /// moved. This does not apply to copies.
+    pub allow_ownership_transfer: bool,
+}
+
+impl MoveBatchArg {
+    pub fn new(entries: Vec<RelocationPath>) -> Self {
+        MoveBatchArg {
+            entries,
+            autorename: false,
+            allow_ownership_transfer: false,
+        }
+    }
+
+    pub fn with_autorename(mut self, value: bool) -> Self {
+        self.autorename = value;
+        self
+    }
+
+    pub fn with_allow_ownership_transfer(mut self, value: bool) -> Self {
+        self.allow_ownership_transfer = value;
+        self
+    }
+
+}
+
+const MOVE_BATCH_ARG_FIELDS: &[&str] = &["entries",
+                                         "autorename",
+                                         "allow_ownership_transfer"];
+impl MoveBatchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MoveBatchArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MoveBatchArg>, V::Error> {
+        let mut field_entries = None;
+        let mut field_autorename = None;
+        let mut field_allow_ownership_transfer = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                "autorename" => {
+                    if field_autorename.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("autorename"));
+                    }
+                    field_autorename = Some(map.next_value()?);
+                }
+                "allow_ownership_transfer" => {
+                    if field_allow_ownership_transfer.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("allow_ownership_transfer"));
+                    }
+                    field_allow_ownership_transfer = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MoveBatchArg {
+            entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
+            autorename: field_autorename.unwrap_or(false),
+            allow_ownership_transfer: field_allow_ownership_transfer.unwrap_or(false),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)?;
+        s.serialize_field("autorename", &self.autorename)?;
+        s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MoveBatchArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MoveBatchArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a MoveBatchArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MoveBatchArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MoveBatchArg", MOVE_BATCH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MoveBatchArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MoveBatchArg", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Metadata for a photo.
 #[derive(Debug)]
 pub struct PhotoMetadata {
@@ -8975,14 +9176,14 @@ impl ::serde::ser::Serialize for RelocationArg {
 pub struct RelocationBatchArg {
     /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
     pub entries: Vec<RelocationPath>,
-    /// If true, [`copy_batch()`](copy_batch) will copy contents in shared folder, otherwise
-    /// [`RelocationError::CantCopySharedFolder`](RelocationError::CantCopySharedFolder) will be
-    /// returned if [`RelocationPath::from_path`](RelocationPath) contains shared folder.  This
-    /// field is always true for [`move_batch()`](move_batch).
-    pub allow_shared_folder: bool,
     /// If there's a conflict with any file, have the Dropbox server try to autorename that file to
     /// avoid the conflict.
     pub autorename: bool,
+    /// If true, [`copy_batch()`](copy_batch) will copy contents in shared folder, otherwise
+    /// [`RelocationError::CantCopySharedFolder`](RelocationError::CantCopySharedFolder) will be
+    /// returned if [`RelocationPath::from_path`](RelocationPath) contains shared folder. This field
+    /// is always true for [`move_batch()`](move_batch).
+    pub allow_shared_folder: bool,
     /// Allow moves by owner even if it would result in an ownership transfer for the content being
     /// moved. This does not apply to copies.
     pub allow_ownership_transfer: bool,
@@ -8992,19 +9193,19 @@ impl RelocationBatchArg {
     pub fn new(entries: Vec<RelocationPath>) -> Self {
         RelocationBatchArg {
             entries,
-            allow_shared_folder: false,
             autorename: false,
+            allow_shared_folder: false,
             allow_ownership_transfer: false,
         }
     }
 
-    pub fn with_allow_shared_folder(mut self, value: bool) -> Self {
-        self.allow_shared_folder = value;
+    pub fn with_autorename(mut self, value: bool) -> Self {
+        self.autorename = value;
         self
     }
 
-    pub fn with_autorename(mut self, value: bool) -> Self {
-        self.autorename = value;
+    pub fn with_allow_shared_folder(mut self, value: bool) -> Self {
+        self.allow_shared_folder = value;
         self
     }
 
@@ -9016,8 +9217,8 @@ impl RelocationBatchArg {
 }
 
 const RELOCATION_BATCH_ARG_FIELDS: &[&str] = &["entries",
-                                               "allow_shared_folder",
                                                "autorename",
+                                               "allow_shared_folder",
                                                "allow_ownership_transfer"];
 impl RelocationBatchArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -9031,8 +9232,8 @@ impl RelocationBatchArg {
         optional: bool,
     ) -> Result<Option<RelocationBatchArg>, V::Error> {
         let mut field_entries = None;
-        let mut field_allow_shared_folder = None;
         let mut field_autorename = None;
+        let mut field_allow_shared_folder = None;
         let mut field_allow_ownership_transfer = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
@@ -9044,17 +9245,17 @@ impl RelocationBatchArg {
                     }
                     field_entries = Some(map.next_value()?);
                 }
-                "allow_shared_folder" => {
-                    if field_allow_shared_folder.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("allow_shared_folder"));
-                    }
-                    field_allow_shared_folder = Some(map.next_value()?);
-                }
                 "autorename" => {
                     if field_autorename.is_some() {
                         return Err(::serde::de::Error::duplicate_field("autorename"));
                     }
                     field_autorename = Some(map.next_value()?);
+                }
+                "allow_shared_folder" => {
+                    if field_allow_shared_folder.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("allow_shared_folder"));
+                    }
+                    field_allow_shared_folder = Some(map.next_value()?);
                 }
                 "allow_ownership_transfer" => {
                     if field_allow_ownership_transfer.is_some() {
@@ -9073,8 +9274,8 @@ impl RelocationBatchArg {
         }
         let result = RelocationBatchArg {
             entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
-            allow_shared_folder: field_allow_shared_folder.unwrap_or(false),
             autorename: field_autorename.unwrap_or(false),
+            allow_shared_folder: field_allow_shared_folder.unwrap_or(false),
             allow_ownership_transfer: field_allow_ownership_transfer.unwrap_or(false),
         };
         Ok(Some(result))
@@ -9086,8 +9287,8 @@ impl RelocationBatchArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("entries", &self.entries)?;
-        s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
         s.serialize_field("autorename", &self.autorename)?;
+        s.serialize_field("allow_shared_folder", &self.allow_shared_folder)?;
         s.serialize_field("allow_ownership_transfer", &self.allow_ownership_transfer)
     }
 }
@@ -9121,6 +9322,115 @@ impl ::serde::ser::Serialize for RelocationBatchArg {
 }
 
 #[derive(Debug)]
+pub struct RelocationBatchArgBase {
+    /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
+    pub entries: Vec<RelocationPath>,
+    /// If there's a conflict with any file, have the Dropbox server try to autorename that file to
+    /// avoid the conflict.
+    pub autorename: bool,
+}
+
+impl RelocationBatchArgBase {
+    pub fn new(entries: Vec<RelocationPath>) -> Self {
+        RelocationBatchArgBase {
+            entries,
+            autorename: false,
+        }
+    }
+
+    pub fn with_autorename(mut self, value: bool) -> Self {
+        self.autorename = value;
+        self
+    }
+
+}
+
+const RELOCATION_BATCH_ARG_BASE_FIELDS: &[&str] = &["entries",
+                                                    "autorename"];
+impl RelocationBatchArgBase {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<RelocationBatchArgBase, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RelocationBatchArgBase>, V::Error> {
+        let mut field_entries = None;
+        let mut field_autorename = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                "autorename" => {
+                    if field_autorename.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("autorename"));
+                    }
+                    field_autorename = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RelocationBatchArgBase {
+            entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
+            autorename: field_autorename.unwrap_or(false),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)?;
+        s.serialize_field("autorename", &self.autorename)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchArgBase {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RelocationBatchArgBase;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationBatchArgBase struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RelocationBatchArgBase::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RelocationBatchArgBase", RELOCATION_BATCH_ARG_BASE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationBatchArgBase {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RelocationBatchArgBase", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub enum RelocationBatchError {
     FromLookup(LookupError),
     FromWrite(WriteError),
@@ -9141,6 +9451,9 @@ pub enum RelocationBatchError {
     CantTransferOwnership,
     /// The current user does not have enough space to move or copy the files.
     InsufficientQuota,
+    /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action
+    /// you were taking succeeded, and if not, try again. This should happen very rarely.
+    InternalError,
     Other,
     /// There are too many write operations in user's Dropbox. Please retry this request.
     TooManyWriteOperations,
@@ -9211,6 +9524,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                         ::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::InsufficientQuota)
                     }
+                    "internal_error" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelocationBatchError::InternalError)
+                    }
                     "too_many_write_operations" => {
                         ::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::TooManyWriteOperations)
@@ -9232,6 +9549,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                                     "duplicated_or_nested_paths",
                                     "cant_transfer_ownership",
                                     "insufficient_quota",
+                                    "internal_error",
                                     "other",
                                     "too_many_write_operations"];
         deserializer.deserialize_struct("RelocationBatchError", VARIANTS, EnumVisitor)
@@ -9306,6 +9624,12 @@ impl ::serde::ser::Serialize for RelocationBatchError {
                 s.serialize_field(".tag", "insufficient_quota")?;
                 s.end()
             }
+            RelocationBatchError::InternalError => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
+                s.serialize_field(".tag", "internal_error")?;
+                s.end()
+            }
             RelocationBatchError::TooManyWriteOperations => {
                 // unit
                 let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
@@ -9326,6 +9650,93 @@ impl ::std::error::Error for RelocationBatchError {
 impl ::std::fmt::Display for RelocationBatchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub enum RelocationBatchErrorEntry {
+    /// User errors that retry won't help.
+    RelocationError(RelocationError),
+    /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action
+    /// you were taking succeeded, and if not, try again. This should happen very rarely.
+    InternalError,
+    /// There are too many write operations in user's Dropbox. Please retry this request.
+    TooManyWriteOperations,
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchErrorEntry {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RelocationBatchErrorEntry;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationBatchErrorEntry structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "relocation_error" => {
+                        match map.next_key()? {
+                            Some("relocation_error") => Ok(RelocationBatchErrorEntry::RelocationError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("relocation_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "internal_error" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelocationBatchErrorEntry::InternalError)
+                    }
+                    "too_many_write_operations" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelocationBatchErrorEntry::TooManyWriteOperations)
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelocationBatchErrorEntry::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["relocation_error",
+                                    "internal_error",
+                                    "too_many_write_operations",
+                                    "other"];
+        deserializer.deserialize_struct("RelocationBatchErrorEntry", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationBatchErrorEntry {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RelocationBatchErrorEntry::RelocationError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("RelocationBatchErrorEntry", 2)?;
+                s.serialize_field(".tag", "relocation_error")?;
+                s.serialize_field("relocation_error", x)?;
+                s.end()
+            }
+            RelocationBatchErrorEntry::InternalError => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchErrorEntry", 1)?;
+                s.serialize_field(".tag", "internal_error")?;
+                s.end()
+            }
+            RelocationBatchErrorEntry::TooManyWriteOperations => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchErrorEntry", 1)?;
+                s.serialize_field(".tag", "too_many_write_operations")?;
+                s.end()
+            }
+            RelocationBatchErrorEntry::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 
@@ -9660,6 +10071,302 @@ impl ::serde::ser::Serialize for RelocationBatchResultData {
 }
 
 #[derive(Debug)]
+pub enum RelocationBatchResultEntry {
+    Success(Metadata),
+    Failure(RelocationBatchErrorEntry),
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchResultEntry {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RelocationBatchResultEntry;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationBatchResultEntry structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "success" => {
+                        match map.next_key()? {
+                            Some("success") => Ok(RelocationBatchResultEntry::Success(map.next_value()?)),
+                            None => Err(de::Error::missing_field("success")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "failure" => {
+                        match map.next_key()? {
+                            Some("failure") => Ok(RelocationBatchResultEntry::Failure(map.next_value()?)),
+                            None => Err(de::Error::missing_field("failure")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelocationBatchResultEntry::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["success",
+                                    "failure",
+                                    "other"];
+        deserializer.deserialize_struct("RelocationBatchResultEntry", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationBatchResultEntry {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RelocationBatchResultEntry::Success(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("RelocationBatchResultEntry", 2)?;
+                s.serialize_field(".tag", "success")?;
+                s.serialize_field("success", x)?;
+                s.end()
+            }
+            RelocationBatchResultEntry::Failure(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("RelocationBatchResultEntry", 2)?;
+                s.serialize_field(".tag", "failure")?;
+                s.serialize_field("failure", x)?;
+                s.end()
+            }
+            RelocationBatchResultEntry::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Result returned by [`copy_batch_v2()`](copy_batch_v2) or [`move_batch_v2()`](move_batch_v2) that
+/// may either launch an asynchronous job or complete synchronously.
+#[derive(Debug)]
+pub enum RelocationBatchV2JobStatus {
+    /// The asynchronous job is still in progress.
+    InProgress,
+    /// The copy or move batch job has finished.
+    Complete(RelocationBatchV2Result),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchV2JobStatus {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RelocationBatchV2JobStatus;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationBatchV2JobStatus structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "in_progress" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelocationBatchV2JobStatus::InProgress)
+                    }
+                    "complete" => Ok(RelocationBatchV2JobStatus::Complete(RelocationBatchV2Result::internal_deserialize(map)?)),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete"];
+        deserializer.deserialize_struct("RelocationBatchV2JobStatus", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationBatchV2JobStatus {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RelocationBatchV2JobStatus::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchV2JobStatus", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            RelocationBatchV2JobStatus::Complete(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("RelocationBatchV2JobStatus", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+        }
+    }
+}
+
+/// Result returned by [`copy_batch_v2()`](copy_batch_v2) or [`move_batch_v2()`](move_batch_v2) that
+/// may either launch an asynchronous job or complete synchronously.
+#[derive(Debug)]
+pub enum RelocationBatchV2Launch {
+    /// This response indicates that the processing is asynchronous. The string is an id that can be
+    /// used to obtain the status of the asynchronous job.
+    AsyncJobId(super::async::AsyncJobId),
+    Complete(RelocationBatchV2Result),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchV2Launch {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RelocationBatchV2Launch;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationBatchV2Launch structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "async_job_id" => {
+                        match map.next_key()? {
+                            Some("async_job_id") => Ok(RelocationBatchV2Launch::AsyncJobId(map.next_value()?)),
+                            None => Err(de::Error::missing_field("async_job_id")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "complete" => Ok(RelocationBatchV2Launch::Complete(RelocationBatchV2Result::internal_deserialize(map)?)),
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["async_job_id",
+                                    "complete"];
+        deserializer.deserialize_struct("RelocationBatchV2Launch", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationBatchV2Launch {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RelocationBatchV2Launch::AsyncJobId(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("RelocationBatchV2Launch", 2)?;
+                s.serialize_field(".tag", "async_job_id")?;
+                s.serialize_field("async_job_id", x)?;
+                s.end()
+            }
+            RelocationBatchV2Launch::Complete(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("RelocationBatchV2Launch", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct RelocationBatchV2Result {
+    /// Each entry in CopyBatchArg.entries or [`MoveBatchArg::entries`](MoveBatchArg) will appear at
+    /// the same position inside [`RelocationBatchV2Result::entries`](RelocationBatchV2Result).
+    pub entries: Vec<RelocationBatchResultEntry>,
+}
+
+impl RelocationBatchV2Result {
+    pub fn new(entries: Vec<RelocationBatchResultEntry>) -> Self {
+        RelocationBatchV2Result {
+            entries,
+        }
+    }
+
+}
+
+const RELOCATION_BATCH_V2_RESULT_FIELDS: &[&str] = &["entries"];
+impl RelocationBatchV2Result {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<RelocationBatchV2Result, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RelocationBatchV2Result>, V::Error> {
+        let mut field_entries = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RelocationBatchV2Result {
+            entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchV2Result {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RelocationBatchV2Result;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+                f.write_str("a RelocationBatchV2Result struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RelocationBatchV2Result::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RelocationBatchV2Result", RELOCATION_BATCH_V2_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RelocationBatchV2Result {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RelocationBatchV2Result", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub enum RelocationError {
     FromLookup(LookupError),
     FromWrite(WriteError),
@@ -9680,6 +10387,9 @@ pub enum RelocationError {
     CantTransferOwnership,
     /// The current user does not have enough space to move or copy the files.
     InsufficientQuota,
+    /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action
+    /// you were taking succeeded, and if not, try again. This should happen very rarely.
+    InternalError,
     Other,
 }
 
@@ -9748,6 +10458,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                         ::eat_json_fields(&mut map)?;
                         Ok(RelocationError::InsufficientQuota)
                     }
+                    "internal_error" => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RelocationError::InternalError)
+                    }
                     _ => {
                         ::eat_json_fields(&mut map)?;
                         Ok(RelocationError::Other)
@@ -9765,6 +10479,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                                     "duplicated_or_nested_paths",
                                     "cant_transfer_ownership",
                                     "insufficient_quota",
+                                    "internal_error",
                                     "other"];
         deserializer.deserialize_struct("RelocationError", VARIANTS, EnumVisitor)
     }
@@ -9836,6 +10551,12 @@ impl ::serde::ser::Serialize for RelocationError {
                 // unit
                 let mut s = serializer.serialize_struct("RelocationError", 1)?;
                 s.serialize_field(".tag", "insufficient_quota")?;
+                s.end()
+            }
+            RelocationError::InternalError => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationError", 1)?;
+                s.serialize_field(".tag", "internal_error")?;
                 s.end()
             }
             RelocationError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -13310,7 +14031,9 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchLaunch {
 
 #[derive(Debug)]
 pub struct UploadSessionFinishBatchResult {
-    /// Commit result for each file in the batch.
+    /// Each entry in [`UploadSessionFinishBatchArg::entries`](UploadSessionFinishBatchArg) will
+    /// appear at the same position inside
+    /// [`UploadSessionFinishBatchResult::entries`](UploadSessionFinishBatchResult).
     pub entries: Vec<UploadSessionFinishBatchResultEntry>,
 }
 
