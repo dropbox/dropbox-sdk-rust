@@ -7218,7 +7218,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkMetadata {
                 match tag {
                     "path" => Ok(LinkMetadata::Path(PathLinkMetadata::internal_deserialize(map)?)),
                     "collection" => Ok(LinkMetadata::Collection(CollectionLinkMetadata::internal_deserialize(map)?)),
-                    _ => Ok(LinkMetadata::_Unknown)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(LinkMetadata::_Unknown)
+                    }
                 }
             }
         }
@@ -16348,7 +16351,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkMetadata {
                 match tag {
                     "file" => Ok(SharedLinkMetadata::File(FileLinkMetadata::internal_deserialize(map)?)),
                     "folder" => Ok(SharedLinkMetadata::Folder(FolderLinkMetadata::internal_deserialize(map)?)),
-                    _ => Ok(SharedLinkMetadata::_Unknown)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkMetadata::_Unknown)
+                    }
                 }
             }
         }

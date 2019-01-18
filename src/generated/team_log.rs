@@ -2328,7 +2328,10 @@ impl<'de> ::serde::de::Deserialize<'de> for AppLogInfo {
                     "user_or_team_linked_app" => Ok(AppLogInfo::UserOrTeamLinkedApp(UserOrTeamLinkedAppLogInfo::internal_deserialize(map)?)),
                     "user_linked_app" => Ok(AppLogInfo::UserLinkedApp(UserLinkedAppLogInfo::internal_deserialize(map)?)),
                     "team_linked_app" => Ok(AppLogInfo::TeamLinkedApp(TeamLinkedAppLogInfo::internal_deserialize(map)?)),
-                    _ => Ok(AppLogInfo::_Unknown)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(AppLogInfo::_Unknown)
+                    }
                 }
             }
         }
@@ -6864,7 +6867,10 @@ impl<'de> ::serde::de::Deserialize<'de> for DeviceSessionLogInfo {
                     "mobile_device_session" => Ok(DeviceSessionLogInfo::MobileDeviceSession(MobileDeviceSessionLogInfo::internal_deserialize(map)?)),
                     "web_device_session" => Ok(DeviceSessionLogInfo::WebDeviceSession(WebDeviceSessionLogInfo::internal_deserialize(map)?)),
                     "legacy_device_session" => Ok(DeviceSessionLogInfo::LegacyDeviceSession(LegacyDeviceSessionLogInfo::internal_deserialize(map)?)),
-                    _ => Ok(DeviceSessionLogInfo::_Unknown)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(DeviceSessionLogInfo::_Unknown)
+                    }
                 }
             }
         }
@@ -45316,7 +45322,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SessionLogInfo {
                     "web" => Ok(SessionLogInfo::Web(WebSessionLogInfo::internal_deserialize(map)?)),
                     "desktop" => Ok(SessionLogInfo::Desktop(DesktopSessionLogInfo::internal_deserialize(map)?)),
                     "mobile" => Ok(SessionLogInfo::Mobile(MobileSessionLogInfo::internal_deserialize(map)?)),
-                    _ => Ok(SessionLogInfo::_Unknown)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(SessionLogInfo::_Unknown)
+                    }
                 }
             }
         }
@@ -71188,7 +71197,10 @@ impl<'de> ::serde::de::Deserialize<'de> for UserLogInfo {
                     "team_member" => Ok(UserLogInfo::TeamMember(TeamMemberLogInfo::internal_deserialize(map)?)),
                     "trusted_non_team_member" => Ok(UserLogInfo::TrustedNonTeamMember(TrustedNonTeamMemberLogInfo::internal_deserialize(map)?)),
                     "non_team_member" => Ok(UserLogInfo::NonTeamMember(NonTeamMemberLogInfo::internal_deserialize(map)?)),
-                    _ => Ok(UserLogInfo::_Unknown)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(UserLogInfo::_Unknown)
+                    }
                 }
             }
         }

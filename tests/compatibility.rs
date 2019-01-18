@@ -69,3 +69,18 @@ fn test_void_union_with_fields() {
         panic!("wrong variant");
     }
 }
+
+#[test]
+fn test_open_polymorphic_struct() {
+    let json = r#"{
+        ".tag": "some other variant",
+        "root_namespace_id": "12345",
+        "home_namespace_id": "67890"
+    }"#;
+    let x = serde_json::from_str::<dropbox_sdk::common::RootInfo>(json).unwrap();
+    if let dropbox_sdk::common::RootInfo::_Unknown = x {
+        // yay
+    } else {
+        panic!("wrong variant");
+    }
+}

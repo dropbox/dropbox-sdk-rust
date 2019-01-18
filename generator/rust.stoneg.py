@@ -428,7 +428,13 @@ class RustBackend(RustHelperBackend):
                                     self.emit(u'Ok({}::{}(map.next_value()?))'
                                               .format(type_name, variant_name))
                         if struct.is_catch_all():
-                            self.emit(u'_ => Ok({}::_Unknown)'.format(type_name))
+                            with self.block(u'_ =>'):
+                                # TODO(wfraser): it'd be cool to grab any fields in the parent,
+                                # which are common to all variants, and stick them in the
+                                # '_Unknown' enum vaiant.
+                                # For now, just consume them and return a nullary variant.
+                                self.emit(u'::eat_json_fields(&mut map)?;')
+                                self.emit(u'Ok({}::_Unknown)'.format(type_name))
                         else:
                             self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(

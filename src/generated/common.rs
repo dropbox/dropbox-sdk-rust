@@ -230,7 +230,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RootInfo {
                 match tag {
                     "team" => Ok(RootInfo::Team(TeamRootInfo::internal_deserialize(map)?)),
                     "user" => Ok(RootInfo::User(UserRootInfo::internal_deserialize(map)?)),
-                    _ => Ok(RootInfo::_Unknown)
+                    _ => {
+                        ::eat_json_fields(&mut map)?;
+                        Ok(RootInfo::_Unknown)
+                    }
                 }
             }
         }
