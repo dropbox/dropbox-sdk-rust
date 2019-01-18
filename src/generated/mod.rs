@@ -56,7 +56,7 @@ pub mod users;
 pub mod users_common;
 
 pub(crate) fn eat_json_fields<'de, V>(map: &mut V) -> Result<(), V::Error> where V: ::serde::de::MapAccess<'de> {
-    for _ in map.next_entry::<&str, ::serde_json::Value>()? {
+    while let Some(_) = map.next_entry::<&str, ::serde_json::Value>()? {
         /* ignore */
     }
     Ok(())

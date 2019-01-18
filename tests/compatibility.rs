@@ -44,7 +44,8 @@ fn test_open_union_void() {
 fn test_open_union_fields() {
     let json = r#"{
         ".tag": "some other variant",
-        "some field": "some value"
+        "some field": "some value",
+        "another field": "another value"
     }"#;
     let x = serde_json::from_str::<dropbox_sdk::users::SpaceAllocation>(json).unwrap();
     if let dropbox_sdk::users::SpaceAllocation::Other = x {
@@ -58,7 +59,8 @@ fn test_open_union_fields() {
 fn test_void_union_with_fields() {
     let json = r#"{
         ".tag": "reset",
-        "some field": "some value"
+        "some field": "some value",
+        "another field": "another value"
     }"#;
     let x = serde_json::from_str::<dropbox_sdk::files::ListFolderLongpollError>(json).unwrap();
     if let dropbox_sdk::files::ListFolderLongpollError::Reset = x {
