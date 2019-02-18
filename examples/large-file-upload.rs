@@ -7,7 +7,7 @@ extern crate env_logger;
 
 use std::fs::File;
 use std::path::PathBuf;
-use std::io::{self, Read, Write};
+use std::io::{self, Read, Write, Seek, SeekFrom};
 use std::time::{Duration, Instant, SystemTime};
 
 fn prompt(msg: &str) -> String {
@@ -55,6 +55,13 @@ enum Operation {
 struct Args {
     source_path: PathBuf,
     dest_path: String,
+    resume: Option<Resume>,
+}
+
+#[derive(Debug)]
+struct Resume {
+    start_offset: u64,
+    session_id: String,
 }
 
 fn parse_args() -> Operation {
@@ -64,9 +71,27 @@ fn parse_args() -> Operation {
             Operation::Usage
         }
         (Some(src), Some(dest)) => {
+            let resume = match (a.next(), a.next()) {
+                (Some(start_offset_str), Some(session_id)) => {
+                    match start_offset_str.parse::<u64>() {
+                        Ok(start_offset) => Some(Resume { start_offset, session_id }),
+                        Err(e) => {
+                            eprintln!("Invalid start offset: {}", e);
+                            eprintln!("Usage: <source> <dest> <start offset> <session ID>");
+                            None
+                        }
+                    }
+                }
+                (Some(_), None) => {
+                    eprintln!("Usage: <source> <dest> <start offset> <session ID>");
+                    None
+                }
+                _ => None,
+            };
             Operation::Upload(Args {
                 source_path: PathBuf::from(src),
                 dest_path: dest,
+                resume,
             })
         }
         (Some(_), None) => {
@@ -79,28 +104,51 @@ fn parse_args() -> Operation {
     }
 }
 
+/// Similar to Read::read_exact except that this will partially fill the buffer on EOF instead of
+/// returning an error.
+/// The main reason this is needed is for reading from a stdin pipe, where normal Read::read may
+/// stop after it reads only a few kbytes, but where we really want a much larger buffer to upload.
+fn large_read(source: &mut impl Read, buffer: &mut [u8]) -> io::Result<usize> {
+    let mut nread = 0;
+    loop {
+        match source.read(&mut buffer[nread ..]) {
+            Ok(0) => {
+                return Ok(nread);
+            }
+            Ok(n) => {
+                nread += n;
+            }
+            Err(ref e) if e.kind() == io::ErrorKind::Interrupted => (),
+            Err(e) => {
+                return Err(e);
+            }
+        }
+    }
+}
+
 fn main() {
     env_logger::init();
 
     let mut args = match parse_args() {
         Operation::Usage => {
-            eprintln!("usage: {} <source> <Dropbox destination>", std::env::args().nth(0).unwrap());
+            eprintln!("usage: {} <source> <Dropbox destination> [<resume offset> <resume session ID>]",
+                      std::env::args().nth(0).unwrap());
             std::process::exit(1);
         }
         Operation::Upload(args) => args,
     };
 
     let mut source_file = File::open(&args.source_path)
-            .unwrap_or_else(|e| {
-                eprintln!("Source file {:?} not found: {}", args.source_path, e);
-                std::process::exit(2);
-            });
+        .unwrap_or_else(|e| {
+            eprintln!("Source file {:?} not found: {}", args.source_path, e);
+            std::process::exit(2);
+        });
     let (source_mtime, source_len) = source_file.metadata()
-            .and_then(|meta| meta.modified().map(|mtime| (mtime, meta.len())))
-            .unwrap_or_else(|e| {
-                eprintln!("Error getting source file {:?} metadata: {}", args.source_path, e);
-                std::process::exit(2);
-            });
+        .and_then(|meta| meta.modified().map(|mtime| (mtime, meta.len())))
+        .unwrap_or_else(|e| {
+            eprintln!("Error getting source file {:?} metadata: {}", args.source_path, e);
+            std::process::exit(2);
+        });
 
     let token = std::env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
         let client_id = prompt("Give me a Dropbox API app key");
@@ -174,14 +222,19 @@ fn main() {
     eprintln!("source = {:?}", args.source_path);
     eprintln!("dest   = {:?}", dest_path);
 
-    let session_id = match files::upload_session_start(
-        &client, &files::UploadSessionStartArg::default(), &[])
-    {
-        Ok(Ok(result)) => result.session_id,
-        Ok(Err(())) => panic!(),
-        Err(e) => {
-            eprintln!("Starting upload session failed: {}", e);
-            std::process::exit(2);
+    let session_id = match args.resume {
+        Some(ref resume) => resume.session_id.clone(),
+        None => {
+            match files::upload_session_start(
+                &client, &files::UploadSessionStartArg::default(), &[])
+            {
+                Ok(Ok(result)) => result.session_id,
+                Ok(Err(())) => panic!(),
+                Err(e) => {
+                    eprintln!("Starting upload session failed: {}", e);
+                    std::process::exit(2);
+                }
+            }
         }
     };
 
@@ -206,8 +259,18 @@ fn main() {
     let mut bytes_out = 0u64;
     let mut succeeded = false;
 
+    if let Some(resume) = args.resume {
+        eprintln!("Resuming upload: {:?}", resume);
+        source_file.seek(SeekFrom::Start(resume.start_offset)).unwrap_or_else(|e| {
+            eprintln!("Seek error: {}", e);
+            std::process::exit(2);
+        });
+        bytes_out = resume.start_offset;
+        append_arg.cursor.offset = resume.start_offset;
+    }
+
     loop {
-        let nread = source_file.read(&mut buf)
+        let nread = large_read(&mut source_file, &mut buf)
             .unwrap_or_else(|e| {
                 eprintln!("Read error: {}", e);
                 std::process::exit(2);
