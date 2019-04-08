@@ -39,15 +39,15 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountType {
                 };
                 match tag {
                     "basic" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AccountType::Basic)
                     }
                     "pro" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AccountType::Pro)
                     }
                     "business" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AccountType::Business)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))

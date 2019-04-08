@@ -14,13 +14,13 @@ pub type UserQuota = u32;
 
 /// List all device sessions of a team's member.
 pub fn devices_list_member_devices(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListMemberDevicesArg,
-) -> ::Result<Result<ListMemberDevicesResult, ListMemberDevicesError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListMemberDevicesResult, ListMemberDevicesError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/devices/list_member_devices",
         arg,
         None)
@@ -28,13 +28,13 @@ pub fn devices_list_member_devices(
 
 /// List all device sessions of a team. Permission : Team member file access.
 pub fn devices_list_members_devices(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListMembersDevicesArg,
-) -> ::Result<Result<ListMembersDevicesResult, ListMembersDevicesError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListMembersDevicesResult, ListMembersDevicesError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/devices/list_members_devices",
         arg,
         None)
@@ -42,13 +42,13 @@ pub fn devices_list_members_devices(
 
 /// List all device sessions of a team. Permission : Team member file access.
 pub fn devices_list_team_devices(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListTeamDevicesArg,
-) -> ::Result<Result<ListTeamDevicesResult, ListTeamDevicesError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListTeamDevicesResult, ListTeamDevicesError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/devices/list_team_devices",
         arg,
         None)
@@ -56,13 +56,13 @@ pub fn devices_list_team_devices(
 
 /// Revoke a device session of a team's member.
 pub fn devices_revoke_device_session(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RevokeDeviceSessionArg,
-) -> ::Result<Result<(), RevokeDeviceSessionError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), RevokeDeviceSessionError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/devices/revoke_device_session",
         arg,
         None)
@@ -70,13 +70,13 @@ pub fn devices_revoke_device_session(
 
 /// Revoke a list of device sessions of team members.
 pub fn devices_revoke_device_session_batch(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RevokeDeviceSessionBatchArg,
-) -> ::Result<Result<RevokeDeviceSessionBatchResult, RevokeDeviceSessionBatchError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<RevokeDeviceSessionBatchResult, RevokeDeviceSessionBatchError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/devices/revoke_device_session_batch",
         arg,
         None)
@@ -86,24 +86,26 @@ pub fn devices_revoke_device_session_batch(
 /// for what feature you can access or what value you have for certain features. Permission : Team
 /// information.
 pub fn features_get_values(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &FeaturesGetValuesBatchArg,
-) -> ::Result<Result<FeaturesGetValuesBatchResult, FeaturesGetValuesBatchError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FeaturesGetValuesBatchResult, FeaturesGetValuesBatchError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/features/get_values",
         arg,
         None)
 }
 
 /// Retrieves information about a team.
-pub fn get_info(client: &::client_trait::HttpClient) -> ::Result<Result<TeamGetInfoResult, ()>> {
-    ::client_helpers::request(
+pub fn get_info(
+    client: &crate::client_trait::HttpClient,
+) -> crate::Result<Result<TeamGetInfoResult, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/get_info",
         &(),
         None)
@@ -111,13 +113,13 @@ pub fn get_info(client: &::client_trait::HttpClient) -> ::Result<Result<TeamGetI
 
 /// Creates a new, empty group, with a requested name. Permission : Team member management.
 pub fn groups_create(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GroupCreateArg,
-) -> ::Result<Result<GroupFullInfo, GroupCreateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GroupFullInfo, GroupCreateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/groups/create",
         arg,
         None)
@@ -127,13 +129,13 @@ pub fn groups_create(
 /// may take additional time. Use the [`groups_job_status_get()`](groups_job_status_get) to
 /// determine whether this process has completed. Permission : Team member management.
 pub fn groups_delete(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GroupSelector,
-) -> ::Result<Result<super::async::LaunchEmptyResult, GroupDeleteError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<super::dbx_async::LaunchEmptyResult, GroupDeleteError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/groups/delete",
         arg,
         None)
@@ -143,13 +145,13 @@ pub fn groups_delete(
 /// [`GroupFullInfo::members`](GroupFullInfo) is not returned for system-managed groups. Permission
 /// : Team Information.
 pub fn groups_get_info(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GroupsSelector,
-) -> ::Result<Result<GroupsGetInfoResult, GroupsGetInfoError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GroupsGetInfoResult, GroupsGetInfoError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/groups/get_info",
         arg,
         None)
@@ -161,13 +163,13 @@ pub fn groups_get_info(
 /// granting/revoking group members' access to group-owned resources. Permission : Team member
 /// management.
 pub fn groups_job_status_get(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<super::async::PollEmptyResult, GroupsPollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<super::dbx_async::PollEmptyResult, GroupsPollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/groups/job_status/get",
         arg,
         None)
@@ -175,13 +177,13 @@ pub fn groups_job_status_get(
 
 /// Lists groups on a team. Permission : Team Information.
 pub fn groups_list(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GroupsListArg,
-) -> ::Result<Result<GroupsListResult, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GroupsListResult, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/groups/list",
         arg,
         None)
@@ -190,13 +192,13 @@ pub fn groups_list(
 /// Once a cursor has been retrieved from [`groups_list()`](groups_list), use this to paginate
 /// through all groups. Permission : Team Information.
 pub fn groups_list_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GroupsListContinueArg,
-) -> ::Result<Result<GroupsListResult, GroupsListContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GroupsListResult, GroupsListContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/groups/list/continue",
         arg,
         None)
@@ -206,13 +208,13 @@ pub fn groups_list_continue(
 /// resources may take additional time. Use the [`groups_job_status_get()`](groups_job_status_get)
 /// to determine whether this process has completed. Permission : Team member management.
 pub fn groups_members_add(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GroupMembersAddArg,
-) -> ::Result<Result<GroupMembersChangeResult, GroupMembersAddError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GroupMembersChangeResult, GroupMembersAddError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/groups/members/add",
         arg,
         None)
@@ -220,13 +222,13 @@ pub fn groups_members_add(
 
 /// Lists members of a group. Permission : Team Information.
 pub fn groups_members_list(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GroupsMembersListArg,
-) -> ::Result<Result<GroupsMembersListResult, GroupSelectorError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GroupsMembersListResult, GroupSelectorError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/groups/members/list",
         arg,
         None)
@@ -235,13 +237,13 @@ pub fn groups_members_list(
 /// Once a cursor has been retrieved from [`groups_members_list()`](groups_members_list), use this
 /// to paginate through all members of the group. Permission : Team information.
 pub fn groups_members_list_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GroupsMembersListContinueArg,
-) -> ::Result<Result<GroupsMembersListResult, GroupsMembersListContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GroupsMembersListResult, GroupsMembersListContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/groups/members/list/continue",
         arg,
         None)
@@ -253,13 +255,13 @@ pub fn groups_members_list_continue(
 /// completed. This method permits removing the only owner of a group, even in cases where this is
 /// not possible via the web client. Permission : Team member management.
 pub fn groups_members_remove(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GroupMembersRemoveArg,
-) -> ::Result<Result<GroupMembersChangeResult, GroupMembersRemoveError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GroupMembersChangeResult, GroupMembersRemoveError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/groups/members/remove",
         arg,
         None)
@@ -267,13 +269,13 @@ pub fn groups_members_remove(
 
 /// Sets a member's access type in a group. Permission : Team member management.
 pub fn groups_members_set_access_type(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GroupMembersSetAccessTypeArg,
-) -> ::Result<Result<GroupsGetInfoResult, GroupMemberSetAccessTypeError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GroupsGetInfoResult, GroupMemberSetAccessTypeError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/groups/members/set_access_type",
         arg,
         None)
@@ -281,13 +283,13 @@ pub fn groups_members_set_access_type(
 
 /// Updates a group's name and/or external ID. Permission : Team member management.
 pub fn groups_update(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GroupUpdateArgs,
-) -> ::Result<Result<GroupFullInfo, GroupUpdateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GroupFullInfo, GroupUpdateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/groups/update",
         arg,
         None)
@@ -296,13 +298,13 @@ pub fn groups_update(
 /// List all linked applications of the team member. Note, this endpoint does not list any
 /// team-linked applications.
 pub fn linked_apps_list_member_linked_apps(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListMemberAppsArg,
-) -> ::Result<Result<ListMemberAppsResult, ListMemberAppsError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListMemberAppsResult, ListMemberAppsError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/linked_apps/list_member_linked_apps",
         arg,
         None)
@@ -311,13 +313,13 @@ pub fn linked_apps_list_member_linked_apps(
 /// List all applications linked to the team members' accounts. Note, this endpoint does not list
 /// any team-linked applications.
 pub fn linked_apps_list_members_linked_apps(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListMembersAppsArg,
-) -> ::Result<Result<ListMembersAppsResult, ListMembersAppsError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListMembersAppsResult, ListMembersAppsError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/linked_apps/list_members_linked_apps",
         arg,
         None)
@@ -326,13 +328,13 @@ pub fn linked_apps_list_members_linked_apps(
 /// List all applications linked to the team members' accounts. Note, this endpoint doesn't list any
 /// team-linked applications.
 pub fn linked_apps_list_team_linked_apps(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListTeamAppsArg,
-) -> ::Result<Result<ListTeamAppsResult, ListTeamAppsError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListTeamAppsResult, ListTeamAppsError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/linked_apps/list_team_linked_apps",
         arg,
         None)
@@ -340,13 +342,13 @@ pub fn linked_apps_list_team_linked_apps(
 
 /// Revoke a linked application of the team member.
 pub fn linked_apps_revoke_linked_app(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RevokeLinkedApiAppArg,
-) -> ::Result<Result<(), RevokeLinkedAppError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), RevokeLinkedAppError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/linked_apps/revoke_linked_app",
         arg,
         None)
@@ -354,13 +356,13 @@ pub fn linked_apps_revoke_linked_app(
 
 /// Revoke a list of linked applications of the team members.
 pub fn linked_apps_revoke_linked_app_batch(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RevokeLinkedApiAppBatchArg,
-) -> ::Result<Result<RevokeLinkedAppBatchResult, RevokeLinkedAppBatchError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<RevokeLinkedAppBatchResult, RevokeLinkedAppBatchError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/linked_apps/revoke_linked_app_batch",
         arg,
         None)
@@ -368,13 +370,13 @@ pub fn linked_apps_revoke_linked_app_batch(
 
 /// Add users to member space limits excluded users list.
 pub fn member_space_limits_excluded_users_add(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ExcludedUsersUpdateArg,
-) -> ::Result<Result<ExcludedUsersUpdateResult, ExcludedUsersUpdateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ExcludedUsersUpdateResult, ExcludedUsersUpdateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/member_space_limits/excluded_users/add",
         arg,
         None)
@@ -382,13 +384,13 @@ pub fn member_space_limits_excluded_users_add(
 
 /// List member space limits excluded users.
 pub fn member_space_limits_excluded_users_list(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ExcludedUsersListArg,
-) -> ::Result<Result<ExcludedUsersListResult, ExcludedUsersListError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ExcludedUsersListResult, ExcludedUsersListError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/member_space_limits/excluded_users/list",
         arg,
         None)
@@ -396,13 +398,13 @@ pub fn member_space_limits_excluded_users_list(
 
 /// Continue listing member space limits excluded users.
 pub fn member_space_limits_excluded_users_list_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ExcludedUsersListContinueArg,
-) -> ::Result<Result<ExcludedUsersListResult, ExcludedUsersListContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ExcludedUsersListResult, ExcludedUsersListContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/member_space_limits/excluded_users/list/continue",
         arg,
         None)
@@ -410,13 +412,13 @@ pub fn member_space_limits_excluded_users_list_continue(
 
 /// Remove users from member space limits excluded users list.
 pub fn member_space_limits_excluded_users_remove(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ExcludedUsersUpdateArg,
-) -> ::Result<Result<ExcludedUsersUpdateResult, ExcludedUsersUpdateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ExcludedUsersUpdateResult, ExcludedUsersUpdateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/member_space_limits/excluded_users/remove",
         arg,
         None)
@@ -425,13 +427,13 @@ pub fn member_space_limits_excluded_users_remove(
 /// Get users custom quota. Returns none as the custom quota if none was set. A maximum of 1000
 /// members can be specified in a single call.
 pub fn member_space_limits_get_custom_quota(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &CustomQuotaUsersArg,
-) -> ::Result<Result<Vec<CustomQuotaResult>, CustomQuotaError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Vec<CustomQuotaResult>, CustomQuotaError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/member_space_limits/get_custom_quota",
         arg,
         None)
@@ -439,13 +441,13 @@ pub fn member_space_limits_get_custom_quota(
 
 /// Remove users custom quota. A maximum of 1000 members can be specified in a single call.
 pub fn member_space_limits_remove_custom_quota(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &CustomQuotaUsersArg,
-) -> ::Result<Result<Vec<RemoveCustomQuotaResult>, CustomQuotaError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Vec<RemoveCustomQuotaResult>, CustomQuotaError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/member_space_limits/remove_custom_quota",
         arg,
         None)
@@ -454,13 +456,13 @@ pub fn member_space_limits_remove_custom_quota(
 /// Set users custom quota. Custom quota has to be at least 15GB. A maximum of 1000 members can be
 /// specified in a single call.
 pub fn member_space_limits_set_custom_quota(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &SetCustomQuotaArg,
-) -> ::Result<Result<Vec<CustomQuotaResult>, SetCustomQuotaError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Vec<CustomQuotaResult>, SetCustomQuotaError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/member_space_limits/set_custom_quota",
         arg,
         None)
@@ -476,13 +478,13 @@ pub fn member_space_limits_set_custom_quota(
 /// team invitation and for 'Perform as team member' actions taken on the user before they become
 /// 'active'.
 pub fn members_add(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MembersAddArg,
-) -> ::Result<Result<MembersAddLaunch, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<MembersAddLaunch, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/add",
         arg,
         None)
@@ -491,13 +493,13 @@ pub fn members_add(
 /// Once an async_job_id is returned from [`members_add()`](members_add) , use this to poll the
 /// status of the asynchronous request. Permission : Team member management.
 pub fn members_add_job_status_get(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<MembersAddJobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<MembersAddJobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/add/job_status/get",
         arg,
         None)
@@ -507,13 +509,13 @@ pub fn members_add_job_status_get(
 /// will return [`MembersGetInfoItem::IdNotFound`](MembersGetInfoItem::IdNotFound), for IDs (or
 /// emails) that cannot be matched to a valid team member.
 pub fn members_get_info(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MembersGetInfoArgs,
-) -> ::Result<Result<MembersGetInfoResult, MembersGetInfoError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<MembersGetInfoResult, MembersGetInfoError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/get_info",
         arg,
         None)
@@ -521,13 +523,13 @@ pub fn members_get_info(
 
 /// Lists members of a team. Permission : Team information.
 pub fn members_list(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MembersListArg,
-) -> ::Result<Result<MembersListResult, MembersListError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<MembersListResult, MembersListError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/list",
         arg,
         None)
@@ -536,13 +538,13 @@ pub fn members_list(
 /// Once a cursor has been retrieved from [`members_list()`](members_list), use this to paginate
 /// through all team members. Permission : Team information.
 pub fn members_list_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MembersListContinueArg,
-) -> ::Result<Result<MembersListResult, MembersListContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<MembersListResult, MembersListContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/list/continue",
         arg,
         None)
@@ -553,13 +555,13 @@ pub fn members_list_continue(
 /// [`members_move_former_member_files_job_status_check()`](members_move_former_member_files_job_status_check).
 /// Permission : Team member management.
 pub fn members_move_former_member_files(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MembersDataTransferArg,
-) -> ::Result<Result<super::async::LaunchEmptyResult, MembersTransferFormerMembersFilesError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<super::dbx_async::LaunchEmptyResult, MembersTransferFormerMembersFilesError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/move_former_member_files",
         arg,
         None)
@@ -569,13 +571,13 @@ pub fn members_move_former_member_files(
 /// [`members_move_former_member_files()`](members_move_former_member_files) , use this to poll the
 /// status of the asynchronous request. Permission : Team member management.
 pub fn members_move_former_member_files_job_status_check(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<super::async::PollEmptyResult, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<super::dbx_async::PollEmptyResult, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/move_former_member_files/job_status/check",
         arg,
         None)
@@ -584,13 +586,13 @@ pub fn members_move_former_member_files_job_status_check(
 /// Recover a deleted member. Permission : Team member management Exactly one of team_member_id,
 /// email, or external_id must be provided to identify the user account.
 pub fn members_recover(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MembersRecoverArg,
-) -> ::Result<Result<(), MembersRecoverError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), MembersRecoverError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/recover",
         arg,
         None)
@@ -607,13 +609,13 @@ pub fn members_recover(
 /// asynchronous job. To obtain the final result of the job, the client should periodically poll
 /// [`members_remove_job_status_get()`](members_remove_job_status_get).
 pub fn members_remove(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MembersRemoveArg,
-) -> ::Result<Result<super::async::LaunchEmptyResult, MembersRemoveError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<super::dbx_async::LaunchEmptyResult, MembersRemoveError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/remove",
         arg,
         None)
@@ -622,13 +624,13 @@ pub fn members_remove(
 /// Once an async_job_id is returned from [`members_remove()`](members_remove) , use this to poll
 /// the status of the asynchronous request. Permission : Team member management.
 pub fn members_remove_job_status_get(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<super::async::PollEmptyResult, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<super::dbx_async::PollEmptyResult, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/remove/job_status/get",
         arg,
         None)
@@ -638,13 +640,13 @@ pub fn members_remove_job_status_get(
 /// team_member_id, email, or external_id must be provided to identify the user account. No-op if
 /// team member is not pending.
 pub fn members_send_welcome_email(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UserSelectorArg,
-) -> ::Result<Result<(), MembersSendWelcomeError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), MembersSendWelcomeError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/send_welcome_email",
         arg,
         None)
@@ -652,13 +654,13 @@ pub fn members_send_welcome_email(
 
 /// Updates a team member's permissions. Permission : Team member management.
 pub fn members_set_admin_permissions(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MembersSetPermissionsArg,
-) -> ::Result<Result<MembersSetPermissionsResult, MembersSetPermissionsError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<MembersSetPermissionsResult, MembersSetPermissionsError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/set_admin_permissions",
         arg,
         None)
@@ -666,13 +668,13 @@ pub fn members_set_admin_permissions(
 
 /// Updates a team member's profile. Permission : Team member management.
 pub fn members_set_profile(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MembersSetProfileArg,
-) -> ::Result<Result<TeamMemberInfo, MembersSetProfileError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<TeamMemberInfo, MembersSetProfileError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/set_profile",
         arg,
         None)
@@ -681,13 +683,13 @@ pub fn members_set_profile(
 /// Suspend a member from a team. Permission : Team member management Exactly one of team_member_id,
 /// email, or external_id must be provided to identify the user account.
 pub fn members_suspend(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MembersDeactivateArg,
-) -> ::Result<Result<(), MembersSuspendError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), MembersSuspendError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/suspend",
         arg,
         None)
@@ -696,13 +698,13 @@ pub fn members_suspend(
 /// Unsuspend a member from a team. Permission : Team member management Exactly one of
 /// team_member_id, email, or external_id must be provided to identify the user account.
 pub fn members_unsuspend(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MembersUnsuspendArg,
-) -> ::Result<Result<(), MembersUnsuspendError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), MembersUnsuspendError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/members/unsuspend",
         arg,
         None)
@@ -713,13 +715,13 @@ pub fn members_unsuspend(
 /// Home namespaces and app folders are always owned by this team or members of the team, but shared
 /// folders may be owned by other users or other teams. Duplicates may occur in the list.
 pub fn namespaces_list(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TeamNamespacesListArg,
-) -> ::Result<Result<TeamNamespacesListResult, TeamNamespacesListError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<TeamNamespacesListResult, TeamNamespacesListError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/namespaces/list",
         arg,
         None)
@@ -728,13 +730,13 @@ pub fn namespaces_list(
 /// Once a cursor has been retrieved from [`namespaces_list()`](namespaces_list), use this to
 /// paginate through all team-accessible namespaces. Duplicates may occur in the list.
 pub fn namespaces_list_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TeamNamespacesListContinueArg,
-) -> ::Result<Result<TeamNamespacesListResult, TeamNamespacesListContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<TeamNamespacesListResult, TeamNamespacesListContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/namespaces/list/continue",
         arg,
         None)
@@ -742,13 +744,13 @@ pub fn namespaces_list_continue(
 
 /// Permission : Team member file access.
 pub fn properties_template_add(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &super::file_properties::AddTemplateArg,
-) -> ::Result<Result<super::file_properties::AddTemplateResult, super::file_properties::ModifyTemplateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<super::file_properties::AddTemplateResult, super::file_properties::ModifyTemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/properties/template/add",
         arg,
         None)
@@ -756,13 +758,13 @@ pub fn properties_template_add(
 
 /// Permission : Team member file access.
 pub fn properties_template_get(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &super::file_properties::GetTemplateArg,
-) -> ::Result<Result<super::file_properties::GetTemplateResult, super::file_properties::TemplateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<super::file_properties::GetTemplateResult, super::file_properties::TemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/properties/template/get",
         arg,
         None)
@@ -770,12 +772,12 @@ pub fn properties_template_get(
 
 /// Permission : Team member file access.
 pub fn properties_template_list(
-    client: &::client_trait::HttpClient,
-) -> ::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+) -> crate::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/properties/template/list",
         &(),
         None)
@@ -783,13 +785,13 @@ pub fn properties_template_list(
 
 /// Permission : Team member file access.
 pub fn properties_template_update(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &super::file_properties::UpdateTemplateArg,
-) -> ::Result<Result<super::file_properties::UpdateTemplateResult, super::file_properties::ModifyTemplateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<super::file_properties::UpdateTemplateResult, super::file_properties::ModifyTemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/properties/template/update",
         arg,
         None)
@@ -797,13 +799,13 @@ pub fn properties_template_update(
 
 /// Retrieves reporting data about a team's user activity.
 pub fn reports_get_activity(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &DateRange,
-) -> ::Result<Result<GetActivityReport, DateRangeError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GetActivityReport, DateRangeError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/reports/get_activity",
         arg,
         None)
@@ -811,13 +813,13 @@ pub fn reports_get_activity(
 
 /// Retrieves reporting data about a team's linked devices.
 pub fn reports_get_devices(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &DateRange,
-) -> ::Result<Result<GetDevicesReport, DateRangeError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GetDevicesReport, DateRangeError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/reports/get_devices",
         arg,
         None)
@@ -825,13 +827,13 @@ pub fn reports_get_devices(
 
 /// Retrieves reporting data about a team's membership.
 pub fn reports_get_membership(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &DateRange,
-) -> ::Result<Result<GetMembershipReport, DateRangeError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GetMembershipReport, DateRangeError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/reports/get_membership",
         arg,
         None)
@@ -839,13 +841,13 @@ pub fn reports_get_membership(
 
 /// Retrieves reporting data about a team's storage usage.
 pub fn reports_get_storage(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &DateRange,
-) -> ::Result<Result<GetStorageReport, DateRangeError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GetStorageReport, DateRangeError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/reports/get_storage",
         arg,
         None)
@@ -853,13 +855,13 @@ pub fn reports_get_storage(
 
 /// Sets an archived team folder's status to active. Permission : Team member file access.
 pub fn team_folder_activate(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TeamFolderIdArg,
-) -> ::Result<Result<TeamFolderMetadata, TeamFolderActivateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<TeamFolderMetadata, TeamFolderActivateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/team_folder/activate",
         arg,
         None)
@@ -868,13 +870,13 @@ pub fn team_folder_activate(
 /// Sets an active team folder's status to archived and removes all folder and file members.
 /// Permission : Team member file access.
 pub fn team_folder_archive(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TeamFolderArchiveArg,
-) -> ::Result<Result<TeamFolderArchiveLaunch, TeamFolderArchiveError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<TeamFolderArchiveLaunch, TeamFolderArchiveError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/team_folder/archive",
         arg,
         None)
@@ -883,13 +885,13 @@ pub fn team_folder_archive(
 /// Returns the status of an asynchronous job for archiving a team folder. Permission : Team member
 /// file access.
 pub fn team_folder_archive_check(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<TeamFolderArchiveJobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<TeamFolderArchiveJobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/team_folder/archive/check",
         arg,
         None)
@@ -897,13 +899,13 @@ pub fn team_folder_archive_check(
 
 /// Creates a new, active, team folder with no members. Permission : Team member file access.
 pub fn team_folder_create(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TeamFolderCreateArg,
-) -> ::Result<Result<TeamFolderMetadata, TeamFolderCreateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<TeamFolderMetadata, TeamFolderCreateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/team_folder/create",
         arg,
         None)
@@ -911,13 +913,13 @@ pub fn team_folder_create(
 
 /// Retrieves metadata for team folders. Permission : Team member file access.
 pub fn team_folder_get_info(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TeamFolderIdListArg,
-) -> ::Result<Result<Vec<TeamFolderGetInfoItem>, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Vec<TeamFolderGetInfoItem>, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/team_folder/get_info",
         arg,
         None)
@@ -925,13 +927,13 @@ pub fn team_folder_get_info(
 
 /// Lists all team folders. Permission : Team member file access.
 pub fn team_folder_list(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TeamFolderListArg,
-) -> ::Result<Result<TeamFolderListResult, TeamFolderListError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<TeamFolderListResult, TeamFolderListError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/team_folder/list",
         arg,
         None)
@@ -940,13 +942,13 @@ pub fn team_folder_list(
 /// Once a cursor has been retrieved from [`team_folder_list()`](team_folder_list), use this to
 /// paginate through all team folders. Permission : Team member file access.
 pub fn team_folder_list_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TeamFolderListContinueArg,
-) -> ::Result<Result<TeamFolderListResult, TeamFolderListContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<TeamFolderListResult, TeamFolderListContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/team_folder/list/continue",
         arg,
         None)
@@ -954,13 +956,13 @@ pub fn team_folder_list_continue(
 
 /// Permanently deletes an archived team folder. Permission : Team member file access.
 pub fn team_folder_permanently_delete(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TeamFolderIdArg,
-) -> ::Result<Result<(), TeamFolderPermanentlyDeleteError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), TeamFolderPermanentlyDeleteError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/team_folder/permanently_delete",
         arg,
         None)
@@ -968,13 +970,13 @@ pub fn team_folder_permanently_delete(
 
 /// Changes an active team folder's name. Permission : Team member file access.
 pub fn team_folder_rename(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TeamFolderRenameArg,
-) -> ::Result<Result<TeamFolderMetadata, TeamFolderRenameError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<TeamFolderMetadata, TeamFolderRenameError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/team_folder/rename",
         arg,
         None)
@@ -983,13 +985,13 @@ pub fn team_folder_rename(
 /// Updates the sync settings on a team folder or its contents.  Use of this endpoint requires that
 /// the team has team selective sync enabled.
 pub fn team_folder_update_sync_settings(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TeamFolderUpdateSyncSettingsArg,
-) -> ::Result<Result<TeamFolderMetadata, TeamFolderUpdateSyncSettingsError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<TeamFolderMetadata, TeamFolderUpdateSyncSettingsError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/team_folder/update_sync_settings",
         arg,
         None)
@@ -998,12 +1000,12 @@ pub fn team_folder_update_sync_settings(
 /// Returns the member profile of the admin who generated the team access token used to make the
 /// call.
 pub fn token_get_authenticated_admin(
-    client: &::client_trait::HttpClient,
-) -> ::Result<Result<TokenGetAuthenticatedAdminResult, TokenGetAuthenticatedAdminError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+) -> crate::Result<Result<TokenGetAuthenticatedAdminResult, TokenGetAuthenticatedAdminError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "team/token/get_authenticated_admin",
         &(),
         None)
@@ -1259,19 +1261,19 @@ impl<'de> ::serde::de::Deserialize<'de> for AdminTier {
                 };
                 match tag {
                     "team_admin" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AdminTier::TeamAdmin)
                     }
                     "user_management_admin" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AdminTier::UserManagementAdmin)
                     }
                     "support_admin" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AdminTier::SupportAdmin)
                     }
                     "member_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AdminTier::MemberOnly)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -1630,7 +1632,7 @@ impl<'de> ::serde::de::Deserialize<'de> for BaseTeamFolderError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(BaseTeamFolderError::Other)
                     }
                 }
@@ -1714,11 +1716,11 @@ impl<'de> ::serde::de::Deserialize<'de> for CustomQuotaError {
                 };
                 match tag {
                     "too_many_users" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CustomQuotaError::TooManyUsers)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CustomQuotaError::Other)
                     }
                 }
@@ -1795,7 +1797,7 @@ impl<'de> ::serde::de::Deserialize<'de> for CustomQuotaResult {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CustomQuotaResult::Other)
                     }
                 }
@@ -2039,7 +2041,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DateRangeError {
                 };
                 match tag {
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DateRangeError::Other)
                     }
                 }
@@ -2335,19 +2337,19 @@ impl<'de> ::serde::de::Deserialize<'de> for DesktopPlatform {
                 };
                 match tag {
                     "windows" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DesktopPlatform::Windows)
                     }
                     "mac" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DesktopPlatform::Mac)
                     }
                     "linux" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DesktopPlatform::Linux)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DesktopPlatform::Other)
                     }
                 }
@@ -3030,11 +3032,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersListContinueError {
                 };
                 match tag {
                     "invalid_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ExcludedUsersListContinueError::InvalidCursor)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ExcludedUsersListContinueError::Other)
                     }
                 }
@@ -3101,11 +3103,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersListError {
                 };
                 match tag {
                     "list_error" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ExcludedUsersListError::ListError)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ExcludedUsersListError::Other)
                     }
                 }
@@ -3380,15 +3382,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersUpdateError {
                 };
                 match tag {
                     "users_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ExcludedUsersUpdateError::UsersNotInTeam)
                     }
                     "too_many_users" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ExcludedUsersUpdateError::TooManyUsers)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ExcludedUsersUpdateError::Other)
                     }
                 }
@@ -3553,11 +3555,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ExcludedUsersUpdateStatus {
                 };
                 match tag {
                     "success" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ExcludedUsersUpdateStatus::Success)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ExcludedUsersUpdateStatus::Other)
                     }
                 }
@@ -3618,23 +3620,23 @@ impl<'de> ::serde::de::Deserialize<'de> for Feature {
                 };
                 match tag {
                     "upload_api_rate_limit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(Feature::UploadApiRateLimit)
                     }
                     "has_team_shared_dropbox" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(Feature::HasTeamSharedDropbox)
                     }
                     "has_team_file_events" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(Feature::HasTeamFileEvents)
                     }
                     "has_team_selective_sync" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(Feature::HasTeamSelectiveSync)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(Feature::Other)
                     }
                 }
@@ -3741,7 +3743,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FeatureValue {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FeatureValue::Other)
                     }
                 }
@@ -3912,11 +3914,11 @@ impl<'de> ::serde::de::Deserialize<'de> for FeaturesGetValuesBatchError {
                 };
                 match tag {
                     "empty_features_list" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FeaturesGetValuesBatchError::EmptyFeaturesList)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FeaturesGetValuesBatchError::Other)
                     }
                 }
@@ -4831,11 +4833,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupAccessType {
                 };
                 match tag {
                     "member" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupAccessType::Member)
                     }
                     "owner" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupAccessType::Owner)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -5033,23 +5035,23 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupCreateError {
                 };
                 match tag {
                     "group_name_already_used" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupCreateError::GroupNameAlreadyUsed)
                     }
                     "group_name_invalid" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupCreateError::GroupNameInvalid)
                     }
                     "external_id_already_in_use" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupCreateError::ExternalIdAlreadyInUse)
                     }
                     "system_managed_group_disallowed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupCreateError::SystemManagedGroupDisallowed)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupCreateError::Other)
                     }
                 }
@@ -5140,19 +5142,19 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupDeleteError {
                 };
                 match tag {
                     "group_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupDeleteError::GroupNotFound)
                     }
                     "system_managed_group_disallowed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupDeleteError::SystemManagedGroupDisallowed)
                     }
                     "group_already_deleted" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupDeleteError::GroupAlreadyDeleted)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupDeleteError::Other)
                     }
                 }
@@ -5636,19 +5638,19 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMemberSelectorError {
                 };
                 match tag {
                     "group_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMemberSelectorError::GroupNotFound)
                     }
                     "system_managed_group_disallowed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMemberSelectorError::SystemManagedGroupDisallowed)
                     }
                     "member_not_in_group" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMemberSelectorError::MemberNotInGroup)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMemberSelectorError::Other)
                     }
                 }
@@ -5734,23 +5736,23 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMemberSetAccessTypeError {
                 };
                 match tag {
                     "group_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMemberSetAccessTypeError::GroupNotFound)
                     }
                     "system_managed_group_disallowed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMemberSetAccessTypeError::SystemManagedGroupDisallowed)
                     }
                     "member_not_in_group" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMemberSetAccessTypeError::MemberNotInGroup)
                     }
                     "user_cannot_be_manager_of_company_managed_group" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMemberSetAccessTypeError::UserCannotBeManagerOfCompanyManagedGroup)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMemberSetAccessTypeError::Other)
                     }
                 }
@@ -5978,19 +5980,19 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMembersAddError {
                 };
                 match tag {
                     "group_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersAddError::GroupNotFound)
                     }
                     "system_managed_group_disallowed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersAddError::SystemManagedGroupDisallowed)
                     }
                     "duplicate_user" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersAddError::DuplicateUser)
                     }
                     "group_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersAddError::GroupNotInTeam)
                     }
                     "members_not_in_team" => {
@@ -6008,7 +6010,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMembersAddError {
                         }
                     }
                     "user_must_be_active_to_be_owner" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersAddError::UserMustBeActiveToBeOwner)
                     }
                     "user_cannot_be_manager_of_company_managed_group" => {
@@ -6019,7 +6021,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMembersAddError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersAddError::Other)
                     }
                 }
@@ -6118,11 +6120,11 @@ pub struct GroupMembersChangeResult {
     /// The group info after member change operation has been performed.
     pub group_info: GroupFullInfo,
     /// An ID that can be used to obtain the status of granting/revoking group-owned resources.
-    pub async_job_id: super::async::AsyncJobId,
+    pub async_job_id: super::dbx_async::AsyncJobId,
 }
 
 impl GroupMembersChangeResult {
-    pub fn new(group_info: GroupFullInfo, async_job_id: super::async::AsyncJobId) -> Self {
+    pub fn new(group_info: GroupFullInfo, async_job_id: super::dbx_async::AsyncJobId) -> Self {
         GroupMembersChangeResult {
             group_info,
             async_job_id,
@@ -6376,19 +6378,19 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMembersRemoveError {
                 };
                 match tag {
                     "group_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersRemoveError::GroupNotFound)
                     }
                     "system_managed_group_disallowed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersRemoveError::SystemManagedGroupDisallowed)
                     }
                     "member_not_in_group" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersRemoveError::MemberNotInGroup)
                     }
                     "group_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersRemoveError::GroupNotInTeam)
                     }
                     "members_not_in_team" => {
@@ -6406,7 +6408,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMembersRemoveError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersRemoveError::Other)
                     }
                 }
@@ -6619,19 +6621,19 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupMembersSelectorError {
                 };
                 match tag {
                     "group_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersSelectorError::GroupNotFound)
                     }
                     "system_managed_group_disallowed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersSelectorError::SystemManagedGroupDisallowed)
                     }
                     "member_not_in_group" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersSelectorError::MemberNotInGroup)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupMembersSelectorError::Other)
                     }
                 }
@@ -6920,11 +6922,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupSelectorError {
                 };
                 match tag {
                     "group_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupSelectorError::GroupNotFound)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupSelectorError::Other)
                     }
                 }
@@ -6994,15 +6996,15 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupSelectorWithTeamGroupError {
                 };
                 match tag {
                     "group_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupSelectorWithTeamGroupError::GroupNotFound)
                     }
                     "system_managed_group_disallowed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupSelectorWithTeamGroupError::SystemManagedGroupDisallowed)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupSelectorWithTeamGroupError::Other)
                     }
                 }
@@ -7254,27 +7256,27 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupUpdateError {
                 };
                 match tag {
                     "group_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupUpdateError::GroupNotFound)
                     }
                     "system_managed_group_disallowed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupUpdateError::SystemManagedGroupDisallowed)
                     }
                     "group_name_already_used" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupUpdateError::GroupNameAlreadyUsed)
                     }
                     "group_name_invalid" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupUpdateError::GroupNameInvalid)
                     }
                     "external_id_already_in_use" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupUpdateError::ExternalIdAlreadyInUse)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupUpdateError::Other)
                     }
                 }
@@ -7368,11 +7370,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupsGetInfoError {
                 };
                 match tag {
                     "group_not_on_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupsGetInfoError::GroupNotOnTeam)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupsGetInfoError::Other)
                     }
                 }
@@ -7673,11 +7675,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupsListContinueError {
                 };
                 match tag {
                     "invalid_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupsListContinueError::InvalidCursor)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupsListContinueError::Other)
                     }
                 }
@@ -8062,11 +8064,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupsMembersListContinueError {
                 };
                 match tag {
                     "invalid_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupsMembersListContinueError::InvalidCursor)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupsMembersListContinueError::Other)
                     }
                 }
@@ -8254,19 +8256,19 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupsPollError {
                 };
                 match tag {
                     "invalid_async_job_id" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupsPollError::InvalidAsyncJobId)
                     }
                     "internal_error" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupsPollError::InternalError)
                     }
                     "access_denied" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupsPollError::AccessDenied)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupsPollError::Other)
                     }
                 }
@@ -8426,7 +8428,7 @@ impl<'de> ::serde::de::Deserialize<'de> for HasTeamFileEventsValue {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(HasTeamFileEventsValue::Other)
                     }
                 }
@@ -8489,7 +8491,7 @@ impl<'de> ::serde::de::Deserialize<'de> for HasTeamSelectiveSyncValue {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(HasTeamSelectiveSyncValue::Other)
                     }
                 }
@@ -8552,7 +8554,7 @@ impl<'de> ::serde::de::Deserialize<'de> for HasTeamSharedDropboxValue {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(HasTeamSharedDropboxValue::Other)
                     }
                 }
@@ -8779,11 +8781,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListMemberAppsError {
                 };
                 match tag {
                     "member_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListMemberAppsError::MemberNotFound)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListMemberAppsError::Other)
                     }
                 }
@@ -9083,11 +9085,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListMemberDevicesError {
                 };
                 match tag {
                     "member_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListMemberDevicesError::MemberNotFound)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListMemberDevicesError::Other)
                     }
                 }
@@ -9344,11 +9346,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListMembersAppsError {
                 };
                 match tag {
                     "reset" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListMembersAppsError::Reset)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListMembersAppsError::Other)
                     }
                 }
@@ -9663,11 +9665,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListMembersDevicesError {
                 };
                 match tag {
                     "reset" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListMembersDevicesError::Reset)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListMembersDevicesError::Other)
                     }
                 }
@@ -9942,11 +9944,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListTeamAppsError {
                 };
                 match tag {
                     "reset" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListTeamAppsError::Reset)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListTeamAppsError::Other)
                     }
                 }
@@ -10261,11 +10263,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListTeamDevicesError {
                 };
                 match tag {
                     "reset" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListTeamDevicesError::Reset)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListTeamDevicesError::Other)
                     }
                 }
@@ -11512,11 +11514,11 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSelectorError {
                 };
                 match tag {
                     "user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberSelectorError::UserNotFound)
                     }
                     "user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberSelectorError::UserNotInTeam)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -11699,7 +11701,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersAddJobStatus {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersAddJobStatus::InProgress)
                     }
                     "complete" => {
@@ -11760,7 +11762,7 @@ impl ::serde::ser::Serialize for MembersAddJobStatus {
 pub enum MembersAddLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::async::AsyncJobId),
+    AsyncJobId(super::dbx_async::AsyncJobId),
     Complete(Vec<MemberAddResult>),
 }
 
@@ -12176,15 +12178,15 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersDeactivateError {
                 };
                 match tag {
                     "user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersDeactivateError::UserNotFound)
                     }
                     "user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersDeactivateError::UserNotInTeam)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersDeactivateError::Other)
                     }
                 }
@@ -12346,7 +12348,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersGetInfoError {
                 };
                 match tag {
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersGetInfoError::Other)
                     }
                 }
@@ -12653,11 +12655,11 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersListContinueError {
                 };
                 match tag {
                     "invalid_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersListContinueError::InvalidCursor)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersListContinueError::Other)
                     }
                 }
@@ -12722,7 +12724,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersListError {
                 };
                 match tag {
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersListError::Other)
                     }
                 }
@@ -12996,23 +12998,23 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRecoverError {
                 };
                 match tag {
                     "user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRecoverError::UserNotFound)
                     }
                     "user_unrecoverable" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRecoverError::UserUnrecoverable)
                     }
                     "user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRecoverError::UserNotInTeam)
                     }
                     "team_license_limit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRecoverError::TeamLicenseLimit)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRecoverError::Other)
                     }
                 }
@@ -13296,71 +13298,71 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersRemoveError {
                 };
                 match tag {
                     "user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::UserNotFound)
                     }
                     "user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::UserNotInTeam)
                     }
                     "removed_and_transfer_dest_should_differ" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::RemovedAndTransferDestShouldDiffer)
                     }
                     "removed_and_transfer_admin_should_differ" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::RemovedAndTransferAdminShouldDiffer)
                     }
                     "transfer_dest_user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::TransferDestUserNotFound)
                     }
                     "transfer_dest_user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::TransferDestUserNotInTeam)
                     }
                     "transfer_admin_user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::TransferAdminUserNotInTeam)
                     }
                     "transfer_admin_user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::TransferAdminUserNotFound)
                     }
                     "unspecified_transfer_admin_id" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::UnspecifiedTransferAdminId)
                     }
                     "transfer_admin_is_not_admin" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::TransferAdminIsNotAdmin)
                     }
                     "recipient_not_verified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::RecipientNotVerified)
                     }
                     "remove_last_admin" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::RemoveLastAdmin)
                     }
                     "cannot_keep_account_and_transfer" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::CannotKeepAccountAndTransfer)
                     }
                     "cannot_keep_account_and_delete_data" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::CannotKeepAccountAndDeleteData)
                     }
                     "email_address_too_long_to_be_disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::EmailAddressTooLongToBeDisabled)
                     }
                     "cannot_keep_invited_user_account" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::CannotKeepInvitedUserAccount)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersRemoveError::Other)
                     }
                 }
@@ -13535,15 +13537,15 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersSendWelcomeError {
                 };
                 match tag {
                     "user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSendWelcomeError::UserNotFound)
                     }
                     "user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSendWelcomeError::UserNotInTeam)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSendWelcomeError::Other)
                     }
                 }
@@ -13730,27 +13732,27 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersSetPermissionsError {
                 };
                 match tag {
                     "user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetPermissionsError::UserNotFound)
                     }
                     "last_admin" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetPermissionsError::LastAdmin)
                     }
                     "user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetPermissionsError::UserNotInTeam)
                     }
                     "cannot_set_permissions" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetPermissionsError::CannotSetPermissions)
                     }
                     "team_license_limit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetPermissionsError::TeamLicenseLimit)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetPermissionsError::Other)
                     }
                 }
@@ -14174,51 +14176,51 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersSetProfileError {
                 };
                 match tag {
                     "user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetProfileError::UserNotFound)
                     }
                     "user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetProfileError::UserNotInTeam)
                     }
                     "external_id_and_new_external_id_unsafe" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetProfileError::ExternalIdAndNewExternalIdUnsafe)
                     }
                     "no_new_data_specified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetProfileError::NoNewDataSpecified)
                     }
                     "email_reserved_for_other_user" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetProfileError::EmailReservedForOtherUser)
                     }
                     "external_id_used_by_other_user" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetProfileError::ExternalIdUsedByOtherUser)
                     }
                     "set_profile_disallowed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetProfileError::SetProfileDisallowed)
                     }
                     "param_cannot_be_empty" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetProfileError::ParamCannotBeEmpty)
                     }
                     "persistent_id_disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetProfileError::PersistentIdDisabled)
                     }
                     "persistent_id_used_by_other_user" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetProfileError::PersistentIdUsedByOtherUser)
                     }
                     "directory_restricted_off" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetProfileError::DirectoryRestrictedOff)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSetProfileError::Other)
                     }
                 }
@@ -14363,27 +14365,27 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersSuspendError {
                 };
                 match tag {
                     "user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSuspendError::UserNotFound)
                     }
                     "user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSuspendError::UserNotInTeam)
                     }
                     "suspend_inactive_user" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSuspendError::SuspendInactiveUser)
                     }
                     "suspend_last_admin" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSuspendError::SuspendLastAdmin)
                     }
                     "team_license_limit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSuspendError::TeamLicenseLimit)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersSuspendError::Other)
                     }
                 }
@@ -14498,51 +14500,51 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersTransferFilesError {
                 };
                 match tag {
                     "user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFilesError::UserNotFound)
                     }
                     "user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFilesError::UserNotInTeam)
                     }
                     "removed_and_transfer_dest_should_differ" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFilesError::RemovedAndTransferDestShouldDiffer)
                     }
                     "removed_and_transfer_admin_should_differ" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFilesError::RemovedAndTransferAdminShouldDiffer)
                     }
                     "transfer_dest_user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFilesError::TransferDestUserNotFound)
                     }
                     "transfer_dest_user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFilesError::TransferDestUserNotInTeam)
                     }
                     "transfer_admin_user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFilesError::TransferAdminUserNotInTeam)
                     }
                     "transfer_admin_user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFilesError::TransferAdminUserNotFound)
                     }
                     "unspecified_transfer_admin_id" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFilesError::UnspecifiedTransferAdminId)
                     }
                     "transfer_admin_is_not_admin" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFilesError::TransferAdminIsNotAdmin)
                     }
                     "recipient_not_verified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFilesError::RecipientNotVerified)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFilesError::Other)
                     }
                 }
@@ -14707,67 +14709,67 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersTransferFormerMembersFilesErr
                 };
                 match tag {
                     "user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::UserNotFound)
                     }
                     "user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::UserNotInTeam)
                     }
                     "removed_and_transfer_dest_should_differ" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::RemovedAndTransferDestShouldDiffer)
                     }
                     "removed_and_transfer_admin_should_differ" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::RemovedAndTransferAdminShouldDiffer)
                     }
                     "transfer_dest_user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::TransferDestUserNotFound)
                     }
                     "transfer_dest_user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::TransferDestUserNotInTeam)
                     }
                     "transfer_admin_user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::TransferAdminUserNotInTeam)
                     }
                     "transfer_admin_user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::TransferAdminUserNotFound)
                     }
                     "unspecified_transfer_admin_id" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::UnspecifiedTransferAdminId)
                     }
                     "transfer_admin_is_not_admin" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::TransferAdminIsNotAdmin)
                     }
                     "recipient_not_verified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::RecipientNotVerified)
                     }
                     "user_data_is_being_transferred" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::UserDataIsBeingTransferred)
                     }
                     "user_not_removed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::UserNotRemoved)
                     }
                     "user_data_cannot_be_transferred" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::UserDataCannotBeTransferred)
                     }
                     "user_data_already_transferred" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::UserDataAlreadyTransferred)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersTransferFormerMembersFilesError::Other)
                     }
                 }
@@ -15030,23 +15032,23 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersUnsuspendError {
                 };
                 match tag {
                     "user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersUnsuspendError::UserNotFound)
                     }
                     "user_not_in_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersUnsuspendError::UserNotInTeam)
                     }
                     "unsuspend_non_suspended_member" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersUnsuspendError::UnsuspendNonSuspendedMember)
                     }
                     "team_license_limit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersUnsuspendError::TeamLicenseLimit)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MembersUnsuspendError::Other)
                     }
                 }
@@ -15141,27 +15143,27 @@ impl<'de> ::serde::de::Deserialize<'de> for MobileClientPlatform {
                 };
                 match tag {
                     "iphone" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MobileClientPlatform::Iphone)
                     }
                     "ipad" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MobileClientPlatform::Ipad)
                     }
                     "android" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MobileClientPlatform::Android)
                     }
                     "windows_phone" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MobileClientPlatform::WindowsPhone)
                     }
                     "blackberry" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MobileClientPlatform::Blackberry)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MobileClientPlatform::Other)
                     }
                 }
@@ -15636,23 +15638,23 @@ impl<'de> ::serde::de::Deserialize<'de> for NamespaceType {
                 };
                 match tag {
                     "app_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(NamespaceType::AppFolder)
                     }
                     "shared_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(NamespaceType::SharedFolder)
                     }
                     "team_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(NamespaceType::TeamFolder)
                     }
                     "team_member_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(NamespaceType::TeamMemberFolder)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(NamespaceType::Other)
                     }
                 }
@@ -15744,7 +15746,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveCustomQuotaResult {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RemoveCustomQuotaResult::Other)
                     }
                 }
@@ -16190,7 +16192,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeDeviceSessionBatchError {
                 };
                 match tag {
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeDeviceSessionBatchError::Other)
                     }
                 }
@@ -16338,15 +16340,15 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeDeviceSessionError {
                 };
                 match tag {
                     "device_session_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeDeviceSessionError::DeviceSessionNotFound)
                     }
                     "member_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeDeviceSessionError::MemberNotFound)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeDeviceSessionError::Other)
                     }
                 }
@@ -16737,7 +16739,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeLinkedAppBatchError {
                 };
                 match tag {
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeLinkedAppBatchError::Other)
                     }
                 }
@@ -16886,15 +16888,15 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeLinkedAppError {
                 };
                 match tag {
                     "app_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeLinkedAppError::AppNotFound)
                     }
                     "member_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeLinkedAppError::MemberNotFound)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeLinkedAppError::Other)
                     }
                 }
@@ -17168,15 +17170,15 @@ impl<'de> ::serde::de::Deserialize<'de> for SetCustomQuotaError {
                 };
                 match tag {
                     "too_many_users" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SetCustomQuotaError::TooManyUsers)
                     }
                     "some_users_are_excluded" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SetCustomQuotaError::SomeUsersAreExcluded)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SetCustomQuotaError::Other)
                     }
                 }
@@ -17356,15 +17358,15 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderAccessError {
                 };
                 match tag {
                     "invalid_team_folder_id" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderAccessError::InvalidTeamFolderId)
                     }
                     "no_access" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderAccessError::NoAccess)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderAccessError::Other)
                     }
                 }
@@ -17460,7 +17462,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderActivateError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderActivateError::Other)
                     }
                 }
@@ -17674,7 +17676,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderArchiveError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderArchiveError::Other)
                     }
                 }
@@ -17759,7 +17761,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderArchiveJobStatus {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderArchiveJobStatus::InProgress)
                     }
                     "complete" => Ok(TeamFolderArchiveJobStatus::Complete(TeamFolderMetadata::internal_deserialize(map)?)),
@@ -17814,7 +17816,7 @@ impl ::serde::ser::Serialize for TeamFolderArchiveJobStatus {
 pub enum TeamFolderArchiveLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::async::AsyncJobId),
+    AsyncJobId(super::dbx_async::AsyncJobId),
     Complete(TeamFolderMetadata),
 }
 
@@ -18016,15 +18018,15 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderCreateError {
                 };
                 match tag {
                     "invalid_folder_name" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderCreateError::InvalidFolderName)
                     }
                     "folder_name_already_used" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderCreateError::FolderNameAlreadyUsed)
                     }
                     "folder_name_reserved" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderCreateError::FolderNameReserved)
                     }
                     "sync_settings_error" => {
@@ -18035,7 +18037,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderCreateError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderCreateError::Other)
                     }
                 }
@@ -18373,19 +18375,19 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderInvalidStatusError {
                 };
                 match tag {
                     "active" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderInvalidStatusError::Active)
                     }
                     "archived" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderInvalidStatusError::Archived)
                     }
                     "archive_in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderInvalidStatusError::ArchiveInProgress)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderInvalidStatusError::Other)
                     }
                 }
@@ -18633,11 +18635,11 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderListContinueError {
                 };
                 match tag {
                     "invalid_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderListContinueError::InvalidCursor)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderListContinueError::Other)
                     }
                 }
@@ -19098,7 +19100,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderPermanentlyDeleteError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderPermanentlyDeleteError::Other)
                     }
                 }
@@ -19312,19 +19314,19 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderRenameError {
                         }
                     }
                     "invalid_folder_name" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderRenameError::InvalidFolderName)
                     }
                     "folder_name_already_used" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderRenameError::FolderNameAlreadyUsed)
                     }
                     "folder_name_reserved" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderRenameError::FolderNameReserved)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderRenameError::Other)
                     }
                 }
@@ -19432,19 +19434,19 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderStatus {
                 };
                 match tag {
                     "active" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderStatus::Active)
                     }
                     "archived" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderStatus::Archived)
                     }
                     "archive_in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderStatus::ArchiveInProgress)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderStatus::Other)
                     }
                 }
@@ -19512,11 +19514,11 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderTeamSharedDropboxError {
                 };
                 match tag {
                     "disallowed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderTeamSharedDropboxError::Disallowed)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderTeamSharedDropboxError::Other)
                     }
                 }
@@ -19743,7 +19745,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamFolderUpdateSyncSettingsError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamFolderUpdateSyncSettingsError::Other)
                     }
                 }
@@ -20375,15 +20377,15 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamMemberStatus {
                 };
                 match tag {
                     "active" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamMemberStatus::Active)
                     }
                     "invited" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamMemberStatus::Invited)
                     }
                     "suspended" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamMemberStatus::Suspended)
                     }
                     "removed" => Ok(TeamMemberStatus::Removed(RemovedStatus::internal_deserialize(map)?)),
@@ -20459,11 +20461,11 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamMembershipType {
                 };
                 match tag {
                     "full" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamMembershipType::Full)
                     }
                     "limited" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamMembershipType::Limited)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -20693,15 +20695,15 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamNamespacesListContinueError {
                 };
                 match tag {
                     "invalid_arg" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamNamespacesListContinueError::InvalidArg)
                     }
                     "invalid_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamNamespacesListContinueError::InvalidCursor)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamNamespacesListContinueError::Other)
                     }
                 }
@@ -20774,11 +20776,11 @@ impl<'de> ::serde::de::Deserialize<'de> for TeamNamespacesListError {
                 };
                 match tag {
                     "invalid_arg" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamNamespacesListError::InvalidArg)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TeamNamespacesListError::Other)
                     }
                 }
@@ -20968,15 +20970,15 @@ impl<'de> ::serde::de::Deserialize<'de> for TokenGetAuthenticatedAdminError {
                 };
                 match tag {
                     "mapping_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TokenGetAuthenticatedAdminError::MappingNotFound)
                     }
                     "admin_not_active" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TokenGetAuthenticatedAdminError::AdminNotActive)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TokenGetAuthenticatedAdminError::Other)
                     }
                 }
@@ -21144,7 +21146,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadApiRateLimitValue {
                 };
                 match tag {
                     "unlimited" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadApiRateLimitValue::Unlimited)
                     }
                     "limit" => {
@@ -21155,7 +21157,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadApiRateLimitValue {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadApiRateLimitValue::Other)
                     }
                 }
@@ -21513,7 +21515,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UserSelectorError {
                 };
                 match tag {
                     "user_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UserSelectorError::UserNotFound)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))

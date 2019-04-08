@@ -1,7 +1,7 @@
 use std::fmt::Debug;
 use std::marker::PhantomData;
-use ::{Error, ErrorKind, ResultExt};
-use client_trait::*;
+use crate::{Error, ErrorKind, ResultExt};
+use crate::client_trait::*;
 use serde::de::{self, Deserialize, DeserializeOwned, Deserializer, MapAccess, Visitor};
 use serde::ser::Serialize;
 use serde_json;

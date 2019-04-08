@@ -29,7 +29,8 @@ class RustBackend(RustHelperBackend):
             self._emit_header()
             for module in self._modules:
                 self.emit(u'#[cfg(feature = "dbx_{}")]'.format(module))
-                self.emit(u'pub mod {};'.format(module))
+                self.emit(u'pub mod {};'.format(
+                    self.namespace_name_raw(module)))
                 self.emit()
             with self.block(u'pub(crate) fn eat_json_fields<\'de, V>(map: &mut V)'
                             u' -> Result<(), V::Error>'
@@ -41,7 +42,8 @@ class RustBackend(RustHelperBackend):
     # Type Emitters
 
     def _emit_namespace(self, namespace):
-        with self.output_to_relative_path(namespace.name + '.rs'):
+        ns = self.namespace_name(namespace)
+        with self.output_to_relative_path(ns + '.rs'):
             self._current_namespace = namespace.name
             self._emit_header()
 
@@ -55,7 +57,7 @@ class RustBackend(RustHelperBackend):
                 self.emit()
 
             for fn in namespace.routes:
-                self._emit_route(namespace.name, fn)
+                self._emit_route(ns, fn)
 
             for typ in namespace.data_types:
                 self._current_type = typ
@@ -157,11 +159,11 @@ class RustBackend(RustHelperBackend):
         self._emit_doc(fn.doc)
         host = fn.attrs.get('host', 'api')
         if host == 'api':
-            endpoint = u'::client_trait::Endpoint::Api'
+            endpoint = u'crate::client_trait::Endpoint::Api'
         elif host == 'content':
-            endpoint = u'::client_trait::Endpoint::Content'
+            endpoint = u'crate::client_trait::Endpoint::Content'
         elif host == 'notify':
-            endpoint = u'::client_trait::Endpoint::Notify'
+            endpoint = u'crate::client_trait::Endpoint::Notify'
         else:
             raise RuntimeError(u'ERROR: unsupported endpoint: {}'.format(host))
 
@@ -175,38 +177,38 @@ class RustBackend(RustHelperBackend):
         if style == 'rpc':
             with self.emit_rust_function_def(
                     route_name,
-                    [u'client: &::client_trait::HttpClient']
+                    [u'client: &crate::client_trait::HttpClient']
                         + ([] if arg_void else
                             [u'arg: &{}'.format(self._rust_type(fn.arg_data_type))]),
-                    u'::Result<Result<{}, {}>>'.format(
+                    u'crate::Result<Result<{}, {}>>'.format(
                         self._rust_type(fn.result_data_type),
                         self._rust_type(fn.error_data_type)),
                     access=u'pub'):
                 self.emit_rust_fn_call(
-                    u'::client_helpers::request',
+                    u'crate::client_helpers::request',
                     [u'client',
                         endpoint,
-                        u'::client_trait::Style::Rpc',
+                        u'crate::client_trait::Style::Rpc',
                         u'"{}/{}"'.format(ns, name_with_version),
                         u'&()' if arg_void else u'arg',
                         u'None'])
         elif style == 'download':
             with self.emit_rust_function_def(
                     route_name,
-                    [u'client: &::client_trait::HttpClient']
+                    [u'client: &crate::client_trait::HttpClient']
                         + ([] if arg_void else
                             [u'arg: &{}'.format(self._rust_type(fn.arg_data_type))])
                         + [u'range_start: Option<u64>',
                             u'range_end: Option<u64>'],
-                    u'::Result<Result<::client_trait::HttpRequestResult<{}>, {}>>'.format(
+                    u'crate::Result<Result<crate::client_trait::HttpRequestResult<{}>, {}>>'.format(
                         self._rust_type(fn.result_data_type),
                         self._rust_type(fn.error_data_type)),
                     access=u'pub'):
                 self.emit_rust_fn_call(
-                    u'::client_helpers::request_with_body',
+                    u'crate::client_helpers::request_with_body',
                     [u'client',
                         endpoint,
-                        u'::client_trait::Style::Download',
+                        u'crate::client_trait::Style::Download',
                         u'"{}/{}"'.format(ns, name_with_version),
                         u'&()' if arg_void else u'arg',
                         u'None',
@@ -215,19 +217,19 @@ class RustBackend(RustHelperBackend):
         elif style == 'upload':
             with self.emit_rust_function_def(
                     route_name,
-                    [u'client: &::client_trait::HttpClient']
+                    [u'client: &crate::client_trait::HttpClient']
                         + ([] if arg_void else
                             [u'arg: &{}'.format(self._rust_type(fn.arg_data_type))])
                         + [u'body: &[u8]'],
-                    u'::Result<Result<{}, {}>>'.format(
+                    u'crate::Result<Result<{}, {}>>'.format(
                         self._rust_type(fn.result_data_type),
                         self._rust_type(fn.error_data_type)),
                     access=u'pub'):
                 self.emit_rust_fn_call(
-                    u'::client_helpers::request',
+                    u'crate::client_helpers::request',
                     [u'client',
                         endpoint,
-                        u'::client_trait::Style::Upload',
+                        u'crate::client_trait::Style::Upload',
                         u'"{}/{}"'.format(ns, name_with_version),
                         u'&()' if arg_void else u'arg',
                         u'Some(body)'])
@@ -433,7 +435,7 @@ class RustBackend(RustHelperBackend):
                                 # which are common to all variants, and stick them in the
                                 # '_Unknown' enum vaiant.
                                 # For now, just consume them and return a nullary variant.
-                                self.emit(u'::eat_json_fields(&mut map)?;')
+                                self.emit(u'crate::eat_json_fields(&mut map)?;')
                                 self.emit(u'Ok({}::_Unknown)'.format(type_name))
                         else:
                             self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
@@ -496,7 +498,7 @@ class RustBackend(RustHelperBackend):
                             ultimate_type = ir.unwrap(field.data_type)[0]
                             if isinstance(field.data_type, ir.Void):
                                 with self.block(u'"{}" =>'.format(field.name)):
-                                    self.emit(u'::eat_json_fields(&mut map)?;')
+                                    self.emit(u'crate::eat_json_fields(&mut map)?;')
                                     self.emit(u'Ok({}::{})'.format(type_name, variant_name))
                             elif isinstance(ultimate_type, ir.Struct) \
                                     and not ultimate_type.has_enumerated_subtypes():
@@ -540,7 +542,7 @@ class RustBackend(RustHelperBackend):
                                                   u'tag, VARIANTS))')
                         if not union.closed:
                             with self.block(u'_ =>'):
-                                self.emit(u'::eat_json_fields(&mut map)?;')
+                                self.emit(u'crate::eat_json_fields(&mut map)?;')
                                 self.emit(u'Ok({}::Other)'.format(type_name))
                         else:
                             self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')

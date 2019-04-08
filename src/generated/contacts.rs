@@ -9,11 +9,13 @@
 
 /// Removes all manually added contacts. You'll still keep contacts who are on your team or who you
 /// imported. New contacts will be added when you share.
-pub fn delete_manual_contacts(client: &::client_trait::HttpClient) -> ::Result<Result<(), ()>> {
-    ::client_helpers::request(
+pub fn delete_manual_contacts(
+    client: &crate::client_trait::HttpClient,
+) -> crate::Result<Result<(), ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "contacts/delete_manual_contacts",
         &(),
         None)
@@ -21,13 +23,13 @@ pub fn delete_manual_contacts(client: &::client_trait::HttpClient) -> ::Result<R
 
 /// Removes manually added contacts from the given list.
 pub fn delete_manual_contacts_batch(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &DeleteManualContactsArg,
-) -> ::Result<Result<(), DeleteManualContactsError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), DeleteManualContactsError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "contacts/delete_manual_contacts_batch",
         arg,
         None)
@@ -157,7 +159,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteManualContactsError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DeleteManualContactsError::Other)
                     }
                 }

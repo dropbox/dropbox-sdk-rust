@@ -35,15 +35,15 @@ impl<'de> ::serde::de::Deserialize<'de> for CameraUploadsPolicyState {
                 };
                 match tag {
                     "disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CameraUploadsPolicyState::Disabled)
                     }
                     "enabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CameraUploadsPolicyState::Enabled)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CameraUploadsPolicyState::Other)
                     }
                 }
@@ -108,19 +108,19 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmState {
                 };
                 match tag {
                     "disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(EmmState::Disabled)
                     }
                     "optional" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(EmmState::Optional)
                     }
                     "required" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(EmmState::Required)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(EmmState::Other)
                     }
                 }
@@ -187,11 +187,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupCreation {
                 };
                 match tag {
                     "admins_and_members" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupCreation::AdminsAndMembers)
                     }
                     "admins_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupCreation::AdminsOnly)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -253,15 +253,15 @@ impl<'de> ::serde::de::Deserialize<'de> for OfficeAddInPolicy {
                 };
                 match tag {
                     "disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(OfficeAddInPolicy::Disabled)
                     }
                     "enabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(OfficeAddInPolicy::Enabled)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(OfficeAddInPolicy::Other)
                     }
                 }
@@ -325,15 +325,15 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDeploymentPolicy {
                 };
                 match tag {
                     "full" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDeploymentPolicy::Full)
                     }
                     "partial" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDeploymentPolicy::Partial)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDeploymentPolicy::Other)
                     }
                 }
@@ -398,19 +398,19 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperEnabledPolicy {
                 };
                 match tag {
                     "disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperEnabledPolicy::Disabled)
                     }
                     "enabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperEnabledPolicy::Enabled)
                     }
                     "unspecified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperEnabledPolicy::Unspecified)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperEnabledPolicy::Other)
                     }
                 }
@@ -482,19 +482,19 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordStrengthPolicy {
                 };
                 match tag {
                     "minimal_requirements" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PasswordStrengthPolicy::MinimalRequirements)
                     }
                     "moderate_password" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PasswordStrengthPolicy::ModeratePassword)
                     }
                     "strong_password" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PasswordStrengthPolicy::StrongPassword)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PasswordStrengthPolicy::Other)
                     }
                 }
@@ -563,15 +563,15 @@ impl<'de> ::serde::de::Deserialize<'de> for RolloutMethod {
                 };
                 match tag {
                     "unlink_all" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RolloutMethod::UnlinkAll)
                     }
                     "unlink_most_inactive" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RolloutMethod::UnlinkMostInactive)
                     }
                     "add_member_to_exceptions" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RolloutMethod::AddMemberToExceptions)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -641,15 +641,15 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderJoinPolicy {
                 };
                 match tag {
                     "from_team_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderJoinPolicy::FromTeamOnly)
                     }
                     "from_anyone" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderJoinPolicy::FromAnyone)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderJoinPolicy::Other)
                     }
                 }
@@ -713,15 +713,15 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberPolicy {
                 };
                 match tag {
                     "team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderMemberPolicy::Team)
                     }
                     "anyone" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderMemberPolicy::Anyone)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderMemberPolicy::Other)
                     }
                 }
@@ -791,19 +791,19 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkCreatePolicy {
                 };
                 match tag {
                     "default_public" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkCreatePolicy::DefaultPublic)
                     }
                     "default_team_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkCreatePolicy::DefaultTeamOnly)
                     }
                     "team_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkCreatePolicy::TeamOnly)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkCreatePolicy::Other)
                     }
                 }
@@ -873,15 +873,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ShowcaseDownloadPolicy {
                 };
                 match tag {
                     "disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShowcaseDownloadPolicy::Disabled)
                     }
                     "enabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShowcaseDownloadPolicy::Enabled)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShowcaseDownloadPolicy::Other)
                     }
                 }
@@ -944,15 +944,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ShowcaseEnabledPolicy {
                 };
                 match tag {
                     "disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShowcaseEnabledPolicy::Disabled)
                     }
                     "enabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShowcaseEnabledPolicy::Enabled)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShowcaseEnabledPolicy::Other)
                     }
                 }
@@ -1015,15 +1015,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ShowcaseExternalSharingPolicy {
                 };
                 match tag {
                     "disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShowcaseExternalSharingPolicy::Disabled)
                     }
                     "enabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShowcaseExternalSharingPolicy::Enabled)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShowcaseExternalSharingPolicy::Other)
                     }
                 }
@@ -1086,15 +1086,15 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncPolicy {
                 };
                 match tag {
                     "local" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SmartSyncPolicy::Local)
                     }
                     "on_demand" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SmartSyncPolicy::OnDemand)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SmartSyncPolicy::Other)
                     }
                 }
@@ -1159,19 +1159,19 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoPolicy {
                 };
                 match tag {
                     "disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SsoPolicy::Disabled)
                     }
                     "optional" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SsoPolicy::Optional)
                     }
                     "required" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SsoPolicy::Required)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SsoPolicy::Other)
                     }
                 }
@@ -1487,15 +1487,15 @@ impl<'de> ::serde::de::Deserialize<'de> for TwoStepVerificationPolicy {
                 };
                 match tag {
                     "require_tfa_enable" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TwoStepVerificationPolicy::RequireTfaEnable)
                     }
                     "require_tfa_disable" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TwoStepVerificationPolicy::RequireTfaDisable)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TwoStepVerificationPolicy::Other)
                     }
                 }

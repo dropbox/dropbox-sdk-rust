@@ -28,13 +28,13 @@ pub type WritePathOrId = String;
 /// Returns the metadata for a file or folder. This is an alpha endpoint compatible with the
 /// properties API. Note: Metadata for the root folder is unsupported.
 pub fn alpha_get_metadata(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &AlphaGetMetadataArg,
-) -> ::Result<Result<Metadata, AlphaGetMetadataError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Metadata, AlphaGetMetadataError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/alpha/get_metadata",
         arg,
         None)
@@ -45,14 +45,14 @@ pub fn alpha_get_metadata(
 /// upload a file larger than 150 MB. Instead, create an upload session with
 /// [`upload_session_start()`](upload_session_start).
 pub fn alpha_upload(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &CommitInfoWithProperties,
     body: &[u8],
-) -> ::Result<Result<FileMetadata, UploadErrorWithProperties>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FileMetadata, UploadErrorWithProperties>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Content,
-        ::client_trait::Style::Upload,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Upload,
         "files/alpha/upload",
         arg,
         Some(body))
@@ -61,13 +61,13 @@ pub fn alpha_upload(
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be copied.
 pub fn copy_v2(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RelocationArg,
-) -> ::Result<Result<RelocationResult, RelocationError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<RelocationResult, RelocationError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/copy_v2",
         arg,
         None)
@@ -76,13 +76,13 @@ pub fn copy_v2(
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be copied.
 pub fn copy(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RelocationArg,
-) -> ::Result<Result<Metadata, RelocationError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Metadata, RelocationError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/copy",
         arg,
         None)
@@ -94,13 +94,13 @@ pub fn copy(
 /// will either finish synchronously, or return a job ID and do the async copy job in background.
 /// Please use [`copy_batch_check_v2()`](copy_batch_check_v2) to check the job status.
 pub fn copy_batch_v2(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &CopyBatchArg,
-) -> ::Result<Result<RelocationBatchV2Launch, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<RelocationBatchV2Launch, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/copy_batch_v2",
         arg,
         None)
@@ -114,13 +114,13 @@ pub fn copy_batch_v2(
 /// route will return job ID immediately and do the async copy job in background. Please use
 /// [`copy_batch_check()`](copy_batch_check) to check the job status.
 pub fn copy_batch(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RelocationBatchArg,
-) -> ::Result<Result<RelocationBatchLaunch, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<RelocationBatchLaunch, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/copy_batch",
         arg,
         None)
@@ -129,13 +129,13 @@ pub fn copy_batch(
 /// Returns the status of an asynchronous job for [`copy_batch_v2()`](copy_batch_v2). It returns
 /// list of results for each entry.
 pub fn copy_batch_check_v2(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<RelocationBatchV2JobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<RelocationBatchV2JobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/copy_batch/check_v2",
         arg,
         None)
@@ -144,13 +144,13 @@ pub fn copy_batch_check_v2(
 /// Returns the status of an asynchronous job for [`copy_batch()`](copy_batch). If success, it
 /// returns list of results for each entry.
 pub fn copy_batch_check(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<RelocationBatchJobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<RelocationBatchJobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/copy_batch/check",
         arg,
         None)
@@ -160,13 +160,13 @@ pub fn copy_batch_check(
 /// folder to another user's Dropbox by passing it to
 /// [`copy_reference_save()`](copy_reference_save).
 pub fn copy_reference_get(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetCopyReferenceArg,
-) -> ::Result<Result<GetCopyReferenceResult, GetCopyReferenceError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GetCopyReferenceResult, GetCopyReferenceError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/copy_reference/get",
         arg,
         None)
@@ -175,13 +175,13 @@ pub fn copy_reference_get(
 /// Save a copy reference returned by [`copy_reference_get()`](copy_reference_get) to the user's
 /// Dropbox.
 pub fn copy_reference_save(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &SaveCopyReferenceArg,
-) -> ::Result<Result<SaveCopyReferenceResult, SaveCopyReferenceError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SaveCopyReferenceResult, SaveCopyReferenceError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/copy_reference/save",
         arg,
         None)
@@ -189,13 +189,13 @@ pub fn copy_reference_save(
 
 /// Create a folder at a given path.
 pub fn create_folder_v2(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &CreateFolderArg,
-) -> ::Result<Result<CreateFolderResult, CreateFolderError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<CreateFolderResult, CreateFolderError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/create_folder_v2",
         arg,
         None)
@@ -203,13 +203,13 @@ pub fn create_folder_v2(
 
 /// Create a folder at a given path.
 pub fn create_folder(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &CreateFolderArg,
-) -> ::Result<Result<FolderMetadata, CreateFolderError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FolderMetadata, CreateFolderError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/create_folder",
         arg,
         None)
@@ -221,13 +221,13 @@ pub fn create_folder(
 /// behaviour by using the [`CreateFolderBatchArg::force_async`](CreateFolderBatchArg) flag.  Use
 /// [`create_folder_batch_check()`](create_folder_batch_check) to check the job status.
 pub fn create_folder_batch(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &CreateFolderBatchArg,
-) -> ::Result<Result<CreateFolderBatchLaunch, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<CreateFolderBatchLaunch, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/create_folder_batch",
         arg,
         None)
@@ -236,13 +236,13 @@ pub fn create_folder_batch(
 /// Returns the status of an asynchronous job for [`create_folder_batch()`](create_folder_batch). If
 /// success, it returns list of result for each entry.
 pub fn create_folder_batch_check(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<CreateFolderBatchJobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<CreateFolderBatchJobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/create_folder_batch/check",
         arg,
         None)
@@ -254,13 +254,13 @@ pub fn create_folder_batch_check(
 /// [`FolderMetadata`](FolderMetadata) for the item at time of deletion, and not a
 /// [`DeletedMetadata`](DeletedMetadata) object.
 pub fn delete_v2(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &DeleteArg,
-) -> ::Result<Result<DeleteResult, DeleteError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<DeleteResult, DeleteError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/delete_v2",
         arg,
         None)
@@ -272,13 +272,13 @@ pub fn delete_v2(
 /// [`FolderMetadata`](FolderMetadata) for the item at time of deletion, and not a
 /// [`DeletedMetadata`](DeletedMetadata) object.
 pub fn delete(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &DeleteArg,
-) -> ::Result<Result<Metadata, DeleteError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Metadata, DeleteError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/delete",
         arg,
         None)
@@ -288,13 +288,13 @@ pub fn delete(
 /// immediately and runs the delete batch asynchronously. Use
 /// [`delete_batch_check()`](delete_batch_check) to check the job status.
 pub fn delete_batch(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &DeleteBatchArg,
-) -> ::Result<Result<DeleteBatchLaunch, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<DeleteBatchLaunch, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/delete_batch",
         arg,
         None)
@@ -303,13 +303,13 @@ pub fn delete_batch(
 /// Returns the status of an asynchronous job for [`delete_batch()`](delete_batch). If success, it
 /// returns list of result for each entry.
 pub fn delete_batch_check(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<DeleteBatchJobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<DeleteBatchJobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/delete_batch/check",
         arg,
         None)
@@ -317,15 +317,15 @@ pub fn delete_batch_check(
 
 /// Download a file from a user's Dropbox.
 pub fn download(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &DownloadArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, DownloadError>> {
-    ::client_helpers::request_with_body(
+) -> crate::Result<Result<crate::client_trait::HttpRequestResult<FileMetadata>, DownloadError>> {
+    crate::client_helpers::request_with_body(
         client,
-        ::client_trait::Endpoint::Content,
-        ::client_trait::Style::Download,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Download,
         "files/download",
         arg,
         None,
@@ -337,15 +337,15 @@ pub fn download(
 /// size and have fewer than 10,000 total files. The input cannot be a single file. Any single file
 /// must be less than 4GB in size.
 pub fn download_zip(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &DownloadZipArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> ::Result<Result<::client_trait::HttpRequestResult<DownloadZipResult>, DownloadZipError>> {
-    ::client_helpers::request_with_body(
+) -> crate::Result<Result<crate::client_trait::HttpRequestResult<DownloadZipResult>, DownloadZipError>> {
+    crate::client_helpers::request_with_body(
         client,
-        ::client_trait::Endpoint::Content,
-        ::client_trait::Style::Download,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Download,
         "files/download_zip",
         arg,
         None,
@@ -355,13 +355,13 @@ pub fn download_zip(
 
 /// Returns the metadata for a file or folder. Note: Metadata for the root folder is unsupported.
 pub fn get_metadata(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetMetadataArg,
-) -> ::Result<Result<Metadata, GetMetadataError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Metadata, GetMetadataError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/get_metadata",
         arg,
         None)
@@ -372,15 +372,15 @@ pub fn get_metadata(
 /// .rtf. HTML previews are generated for files with the following extensions: .csv, .ods, .xls,
 /// .xlsm, .xlsx. Other formats will return an unsupported extension error.
 pub fn get_preview(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &PreviewArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, PreviewError>> {
-    ::client_helpers::request_with_body(
+) -> crate::Result<Result<crate::client_trait::HttpRequestResult<FileMetadata>, PreviewError>> {
+    crate::client_helpers::request_with_body(
         client,
-        ::client_trait::Endpoint::Content,
-        ::client_trait::Style::Download,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Download,
         "files/get_preview",
         arg,
         None,
@@ -392,13 +392,13 @@ pub fn get_preview(
 /// afterwards you will get 410 Gone. So this URL should not be used to display content directly in
 /// the browser.  Content-Type of the link is determined automatically by the file's mime type.
 pub fn get_temporary_link(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetTemporaryLinkArg,
-) -> ::Result<Result<GetTemporaryLinkResult, GetTemporaryLinkError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GetTemporaryLinkResult, GetTemporaryLinkError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/get_temporary_link",
         arg,
         None)
@@ -441,13 +441,13 @@ pub fn get_temporary_link(
 /// Example unsuccessful temporary upload link consumption response: Temporary upload link has been
 /// recently consumed.
 pub fn get_temporary_upload_link(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetTemporaryUploadLinkArg,
-) -> ::Result<Result<GetTemporaryUploadLinkResult, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GetTemporaryUploadLinkResult, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/get_temporary_upload_link",
         arg,
         None)
@@ -457,15 +457,15 @@ pub fn get_temporary_upload_link(
 /// extensions: jpg, jpeg, png, tiff, tif, gif and bmp. Photos that are larger than 20MB in size
 /// won't be converted to a thumbnail.
 pub fn get_thumbnail(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ThumbnailArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> ::Result<Result<::client_trait::HttpRequestResult<FileMetadata>, ThumbnailError>> {
-    ::client_helpers::request_with_body(
+) -> crate::Result<Result<crate::client_trait::HttpRequestResult<FileMetadata>, ThumbnailError>> {
+    crate::client_helpers::request_with_body(
         client,
-        ::client_trait::Endpoint::Content,
-        ::client_trait::Style::Download,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Download,
         "files/get_thumbnail",
         arg,
         None,
@@ -477,13 +477,13 @@ pub fn get_thumbnail(
 /// currently supports files with the following file extensions: jpg, jpeg, png, tiff, tif, gif and
 /// bmp. Photos that are larger than 20MB in size won't be converted to a thumbnail.
 pub fn get_thumbnail_batch(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetThumbnailBatchArg,
-) -> ::Result<Result<GetThumbnailBatchResult, GetThumbnailBatchError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GetThumbnailBatchResult, GetThumbnailBatchError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Content,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Rpc,
         "files/get_thumbnail_batch",
         arg,
         None)
@@ -510,13 +510,13 @@ pub fn get_thumbnail_batch(
 /// calls with same parameters are made simultaneously by same API app for same user. If your app
 /// implements retry logic, please hold off the retry until the previous request finishes.
 pub fn list_folder(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFolderArg,
-) -> ::Result<Result<ListFolderResult, ListFolderError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListFolderResult, ListFolderError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/list_folder",
         arg,
         None)
@@ -526,13 +526,13 @@ pub fn list_folder(
 /// through all files and retrieve updates to the folder, following the same rules as documented for
 /// [`list_folder()`](list_folder).
 pub fn list_folder_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFolderContinueArg,
-) -> ::Result<Result<ListFolderResult, ListFolderContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListFolderResult, ListFolderContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/list_folder/continue",
         arg,
         None)
@@ -543,13 +543,13 @@ pub fn list_folder_continue(
 /// This endpoint is for app which only needs to know about new files and modifications and doesn't
 /// need to know about files that already exist in Dropbox.
 pub fn list_folder_get_latest_cursor(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFolderArg,
-) -> ::Result<Result<ListFolderGetLatestCursorResult, ListFolderError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListFolderGetLatestCursorResult, ListFolderError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/list_folder/get_latest_cursor",
         arg,
         None)
@@ -562,13 +562,13 @@ pub fn list_folder_get_latest_cursor(
 /// server-side notifications, check out our [webhooks
 /// documentation](https://www.dropbox.com/developers/reference/webhooks).
 pub fn list_folder_longpoll(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFolderLongpollArg,
-) -> ::Result<Result<ListFolderLongpollResult, ListFolderLongpollError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListFolderLongpollResult, ListFolderLongpollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Notify,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Notify,
+        crate::client_trait::Style::Rpc,
         "files/list_folder/longpoll",
         arg,
         None)
@@ -583,13 +583,13 @@ pub fn list_folder_longpoll(
 /// [`ListRevisionsMode::Id`](ListRevisionsMode::Id) mode is useful to retrieve revisions for a
 /// given file across moves or renames.
 pub fn list_revisions(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListRevisionsArg,
-) -> ::Result<Result<ListRevisionsResult, ListRevisionsError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListRevisionsResult, ListRevisionsError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/list_revisions",
         arg,
         None)
@@ -598,13 +598,13 @@ pub fn list_revisions(
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be moved.
 pub fn move_v2(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RelocationArg,
-) -> ::Result<Result<RelocationResult, RelocationError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<RelocationResult, RelocationError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/move_v2",
         arg,
         None)
@@ -613,13 +613,13 @@ pub fn move_v2(
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be moved.
 pub fn do_move(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RelocationArg,
-) -> ::Result<Result<Metadata, RelocationError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Metadata, RelocationError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/move",
         arg,
         None)
@@ -631,13 +631,13 @@ pub fn do_move(
 /// This route will either finish synchronously, or return a job ID and do the async move job in
 /// background. Please use [`move_batch_check_v2()`](move_batch_check_v2) to check the job status.
 pub fn move_batch_v2(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MoveBatchArg,
-) -> ::Result<Result<RelocationBatchV2Launch, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<RelocationBatchV2Launch, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/move_batch_v2",
         arg,
         None)
@@ -648,13 +648,13 @@ pub fn move_batch_v2(
 /// route will return job ID immediately and do the async moving job in background. Please use
 /// [`move_batch_check()`](move_batch_check) to check the job status.
 pub fn move_batch(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RelocationBatchArg,
-) -> ::Result<Result<RelocationBatchLaunch, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<RelocationBatchLaunch, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/move_batch",
         arg,
         None)
@@ -663,13 +663,13 @@ pub fn move_batch(
 /// Returns the status of an asynchronous job for [`move_batch_v2()`](move_batch_v2). It returns
 /// list of results for each entry.
 pub fn move_batch_check_v2(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<RelocationBatchV2JobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<RelocationBatchV2JobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/move_batch/check_v2",
         arg,
         None)
@@ -678,13 +678,13 @@ pub fn move_batch_check_v2(
 /// Returns the status of an asynchronous job for [`move_batch()`](move_batch). If success, it
 /// returns list of results for each entry.
 pub fn move_batch_check(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<RelocationBatchJobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<RelocationBatchJobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/move_batch/check",
         arg,
         None)
@@ -693,90 +693,90 @@ pub fn move_batch_check(
 /// Permanently delete the file or folder at a given path (see https://www.dropbox.com/en/help/40).
 /// Note: This endpoint is only available for Dropbox Business apps.
 pub fn permanently_delete(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &DeleteArg,
-) -> ::Result<Result<(), DeleteError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), DeleteError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/permanently_delete",
         arg,
         None)
 }
 
 pub fn properties_add(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &super::file_properties::AddPropertiesArg,
-) -> ::Result<Result<(), super::file_properties::AddPropertiesError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), super::file_properties::AddPropertiesError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/properties/add",
         arg,
         None)
 }
 
 pub fn properties_overwrite(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &super::file_properties::OverwritePropertyGroupArg,
-) -> ::Result<Result<(), super::file_properties::InvalidPropertyGroupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), super::file_properties::InvalidPropertyGroupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/properties/overwrite",
         arg,
         None)
 }
 
 pub fn properties_remove(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &super::file_properties::RemovePropertiesArg,
-) -> ::Result<Result<(), super::file_properties::RemovePropertiesError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), super::file_properties::RemovePropertiesError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/properties/remove",
         arg,
         None)
 }
 
 pub fn properties_template_get(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &super::file_properties::GetTemplateArg,
-) -> ::Result<Result<super::file_properties::GetTemplateResult, super::file_properties::TemplateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<super::file_properties::GetTemplateResult, super::file_properties::TemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/properties/template/get",
         arg,
         None)
 }
 
 pub fn properties_template_list(
-    client: &::client_trait::HttpClient,
-) -> ::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+) -> crate::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/properties/template/list",
         &(),
         None)
 }
 
 pub fn properties_update(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &super::file_properties::UpdatePropertiesArg,
-) -> ::Result<Result<(), super::file_properties::UpdatePropertiesError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), super::file_properties::UpdatePropertiesError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/properties/update",
         arg,
         None)
@@ -784,13 +784,13 @@ pub fn properties_update(
 
 /// Restore a specific revision of a file to the given path.
 pub fn restore(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RestoreArg,
-) -> ::Result<Result<FileMetadata, RestoreError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FileMetadata, RestoreError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/restore",
         arg,
         None)
@@ -801,13 +801,13 @@ pub fn restore(
 /// the given path already exists, the file will be renamed to avoid the conflict (e.g. myfile
 /// (1).txt).
 pub fn save_url(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &SaveUrlArg,
-) -> ::Result<Result<SaveUrlResult, SaveUrlError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SaveUrlResult, SaveUrlError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/save_url",
         arg,
         None)
@@ -815,13 +815,13 @@ pub fn save_url(
 
 /// Check the status of a [`save_url()`](save_url) job.
 pub fn save_url_check_job_status(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<SaveUrlJobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<SaveUrlJobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/save_url/check_job_status",
         arg,
         None)
@@ -830,13 +830,13 @@ pub fn save_url_check_job_status(
 /// Searches for files and folders. Note: Recent changes may not immediately be reflected in search
 /// results due to a short delay in indexing.
 pub fn search(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &SearchArg,
-) -> ::Result<Result<SearchResult, SearchError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SearchResult, SearchError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/search",
         arg,
         None)
@@ -849,14 +849,14 @@ pub fn search(
 /// calls allowed per month. For more information, see the [Data transport limit
 /// page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &CommitInfo,
     body: &[u8],
-) -> ::Result<Result<FileMetadata, UploadError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FileMetadata, UploadError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Content,
-        ::client_trait::Style::Upload,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Upload,
         "files/upload",
         arg,
         Some(body))
@@ -869,14 +869,14 @@ pub fn upload(
 /// month. For more information, see the [Data transport limit
 /// page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload_session_append_v2(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UploadSessionAppendArg,
     body: &[u8],
-) -> ::Result<Result<(), UploadSessionLookupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), UploadSessionLookupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Content,
-        ::client_trait::Style::Upload,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Upload,
         "files/upload_session/append_v2",
         arg,
         Some(body))
@@ -888,14 +888,14 @@ pub fn upload_session_append_v2(
 /// data transport calls allowed per month. For more information, see the [Data transport limit
 /// page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload_session_append(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UploadSessionCursor,
     body: &[u8],
-) -> ::Result<Result<(), UploadSessionLookupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), UploadSessionLookupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Content,
-        ::client_trait::Style::Upload,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Upload,
         "files/upload_session/append",
         arg,
         Some(body))
@@ -908,14 +908,14 @@ pub fn upload_session_append(
 /// information, see the [Data transport limit
 /// page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload_session_finish(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UploadSessionFinishArg,
     body: &[u8],
-) -> ::Result<Result<FileMetadata, UploadSessionFinishError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FileMetadata, UploadSessionFinishError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Content,
-        ::client_trait::Style::Upload,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Upload,
         "files/upload_session/finish",
         arg,
         Some(body))
@@ -940,13 +940,13 @@ pub fn upload_session_finish(
 /// limit on the number of data transport calls allowed per month. For more information, see the
 /// [Data transport limit page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload_session_finish_batch(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UploadSessionFinishBatchArg,
-) -> ::Result<Result<UploadSessionFinishBatchLaunch, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<UploadSessionFinishBatchLaunch, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/upload_session/finish_batch",
         arg,
         None)
@@ -956,13 +956,13 @@ pub fn upload_session_finish_batch(
 /// [`upload_session_finish_batch()`](upload_session_finish_batch). If success, it returns list of
 /// result for each entry.
 pub fn upload_session_finish_batch_check(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<UploadSessionFinishBatchJobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<UploadSessionFinishBatchJobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "files/upload_session/finish_batch/check",
         arg,
         None)
@@ -982,14 +982,14 @@ pub fn upload_session_finish_batch_check(
 /// the number of data transport calls allowed per month. For more information, see the [Data
 /// transport limit page](https://www.dropbox.com/developers/reference/data-transport-limit).
 pub fn upload_session_start(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UploadSessionStartArg,
     body: &[u8],
-) -> ::Result<Result<UploadSessionStartResult, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<UploadSessionStartResult, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Content,
-        ::client_trait::Style::Upload,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Upload,
         "files/upload_session/start",
         arg,
         Some(body))
@@ -2153,11 +2153,11 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchError {
                 };
                 match tag {
                     "too_many_files" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFolderBatchError::TooManyFiles)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFolderBatchError::Other)
                     }
                 }
@@ -2227,7 +2227,7 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchJobStatus {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFolderBatchJobStatus::InProgress)
                     }
                     "complete" => Ok(CreateFolderBatchJobStatus::Complete(CreateFolderBatchResult::internal_deserialize(map)?)),
@@ -2239,7 +2239,7 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchJobStatus {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFolderBatchJobStatus::Other)
                     }
                 }
@@ -2289,7 +2289,7 @@ impl ::serde::ser::Serialize for CreateFolderBatchJobStatus {
 pub enum CreateFolderBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::async::AsyncJobId),
+    AsyncJobId(super::dbx_async::AsyncJobId),
     Complete(CreateFolderBatchResult),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -2321,7 +2321,7 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchLaunch {
                     }
                     "complete" => Ok(CreateFolderBatchLaunch::Complete(CreateFolderBatchResult::internal_deserialize(map)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFolderBatchLaunch::Other)
                     }
                 }
@@ -2544,7 +2544,7 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderEntryError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFolderEntryError::Other)
                     }
                 }
@@ -3056,11 +3056,11 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchError {
                 };
                 match tag {
                     "too_many_write_operations" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DeleteBatchError::TooManyWriteOperations)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DeleteBatchError::Other)
                     }
                 }
@@ -3130,7 +3130,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchJobStatus {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DeleteBatchJobStatus::InProgress)
                     }
                     "complete" => Ok(DeleteBatchJobStatus::Complete(DeleteBatchResult::internal_deserialize(map)?)),
@@ -3142,7 +3142,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchJobStatus {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DeleteBatchJobStatus::Other)
                     }
                 }
@@ -3192,7 +3192,7 @@ impl ::serde::ser::Serialize for DeleteBatchJobStatus {
 pub enum DeleteBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::async::AsyncJobId),
+    AsyncJobId(super::dbx_async::AsyncJobId),
     Complete(DeleteBatchResult),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -3224,7 +3224,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchLaunch {
                     }
                     "complete" => Ok(DeleteBatchLaunch::Complete(DeleteBatchResult::internal_deserialize(map)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DeleteBatchLaunch::Other)
                     }
                 }
@@ -3549,15 +3549,15 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteError {
                         }
                     }
                     "too_many_write_operations" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DeleteError::TooManyWriteOperations)
                     }
                     "too_many_files" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DeleteError::TooManyFiles)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DeleteError::Other)
                     }
                 }
@@ -4109,7 +4109,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DownloadError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DownloadError::Other)
                     }
                 }
@@ -4276,15 +4276,15 @@ impl<'de> ::serde::de::Deserialize<'de> for DownloadZipError {
                         }
                     }
                     "too_large" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DownloadZipError::TooLarge)
                     }
                     "too_many_files" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DownloadZipError::TooManyFiles)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DownloadZipError::Other)
                     }
                 }
@@ -5474,7 +5474,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetCopyReferenceError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetCopyReferenceError::Other)
                     }
                 }
@@ -5991,7 +5991,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetTemporaryLinkError::Other)
                     }
                 }
@@ -6452,11 +6452,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GetThumbnailBatchError {
                 };
                 match tag {
                     "too_many_files" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetThumbnailBatchError::TooManyFiles)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetThumbnailBatchError::Other)
                     }
                 }
@@ -6723,7 +6723,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetThumbnailBatchResultEntry {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetThumbnailBatchResultEntry::Other)
                     }
                 }
@@ -7235,11 +7235,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderContinueError {
                         }
                     }
                     "reset" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFolderContinueError::Reset)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFolderContinueError::Other)
                     }
                 }
@@ -7319,7 +7319,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFolderError::Other)
                     }
                 }
@@ -7590,11 +7590,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderLongpollError {
                 };
                 match tag {
                     "reset" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFolderLongpollError::Reset)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFolderLongpollError::Other)
                     }
                 }
@@ -8020,7 +8020,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListRevisionsError::Other)
                     }
                 }
@@ -8091,15 +8091,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsMode {
                 };
                 match tag {
                     "path" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListRevisionsMode::Path)
                     }
                     "id" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListRevisionsMode::Id)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListRevisionsMode::Other)
                     }
                 }
@@ -8299,23 +8299,23 @@ impl<'de> ::serde::de::Deserialize<'de> for LookupError {
                         }
                     }
                     "not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::NotFound)
                     }
                     "not_file" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::NotFile)
                     }
                     "not_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::NotFolder)
                     }
                     "restricted_content" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::RestrictedContent)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::Other)
                     }
                 }
@@ -8412,7 +8412,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MediaInfo {
                 };
                 match tag {
                     "pending" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MediaInfo::Pending)
                     }
                     "metadata" => {
@@ -8981,15 +8981,15 @@ impl<'de> ::serde::de::Deserialize<'de> for PreviewError {
                         }
                     }
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PreviewError::InProgress)
                     }
                     "unsupported_extension" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PreviewError::UnsupportedExtension)
                     }
                     "unsupported_content" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PreviewError::UnsupportedContent)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -9539,43 +9539,43 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                         }
                     }
                     "cant_copy_shared_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::CantCopySharedFolder)
                     }
                     "cant_nest_shared_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::CantNestSharedFolder)
                     }
                     "cant_move_folder_into_itself" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::CantMoveFolderIntoItself)
                     }
                     "too_many_files" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::TooManyFiles)
                     }
                     "duplicated_or_nested_paths" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::DuplicatedOrNestedPaths)
                     }
                     "cant_transfer_ownership" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::CantTransferOwnership)
                     }
                     "insufficient_quota" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::InsufficientQuota)
                     }
                     "internal_error" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::InternalError)
                     }
                     "too_many_write_operations" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::TooManyWriteOperations)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::Other)
                     }
                 }
@@ -9733,15 +9733,15 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchErrorEntry {
                         }
                     }
                     "internal_error" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchErrorEntry::InternalError)
                     }
                     "too_many_write_operations" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchErrorEntry::TooManyWriteOperations)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchErrorEntry::Other)
                     }
                 }
@@ -9811,7 +9811,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchJobStatus {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchJobStatus::InProgress)
                     }
                     "complete" => Ok(RelocationBatchJobStatus::Complete(RelocationBatchResult::internal_deserialize(map)?)),
@@ -9868,7 +9868,7 @@ impl ::serde::ser::Serialize for RelocationBatchJobStatus {
 pub enum RelocationBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::async::AsyncJobId),
+    AsyncJobId(super::dbx_async::AsyncJobId),
     Complete(RelocationBatchResult),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -9900,7 +9900,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchLaunch {
                     }
                     "complete" => Ok(RelocationBatchLaunch::Complete(RelocationBatchResult::internal_deserialize(map)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchLaunch::Other)
                     }
                 }
@@ -10156,7 +10156,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchResultEntry {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchResultEntry::Other)
                     }
                 }
@@ -10220,7 +10220,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchV2JobStatus {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchV2JobStatus::InProgress)
                     }
                     "complete" => Ok(RelocationBatchV2JobStatus::Complete(RelocationBatchV2Result::internal_deserialize(map)?)),
@@ -10262,7 +10262,7 @@ impl ::serde::ser::Serialize for RelocationBatchV2JobStatus {
 pub enum RelocationBatchV2Launch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::async::AsyncJobId),
+    AsyncJobId(super::dbx_async::AsyncJobId),
     Complete(RelocationBatchV2Result),
 }
 
@@ -10481,39 +10481,39 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                         }
                     }
                     "cant_copy_shared_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::CantCopySharedFolder)
                     }
                     "cant_nest_shared_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::CantNestSharedFolder)
                     }
                     "cant_move_folder_into_itself" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::CantMoveFolderIntoItself)
                     }
                     "too_many_files" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::TooManyFiles)
                     }
                     "duplicated_or_nested_paths" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::DuplicatedOrNestedPaths)
                     }
                     "cant_transfer_ownership" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::CantTransferOwnership)
                     }
                     "insufficient_quota" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::InsufficientQuota)
                     }
                     "internal_error" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::InternalError)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::Other)
                     }
                 }
@@ -10966,11 +10966,11 @@ impl<'de> ::serde::de::Deserialize<'de> for RestoreError {
                         }
                     }
                     "invalid_revision" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RestoreError::InvalidRevision)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RestoreError::Other)
                     }
                 }
@@ -11170,23 +11170,23 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveCopyReferenceError {
                         }
                     }
                     "invalid_copy_reference" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SaveCopyReferenceError::InvalidCopyReference)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SaveCopyReferenceError::NoPermission)
                     }
                     "not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SaveCopyReferenceError::NotFound)
                     }
                     "too_many_files" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SaveCopyReferenceError::TooManyFiles)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SaveCopyReferenceError::Other)
                     }
                 }
@@ -11486,19 +11486,19 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveUrlError {
                         }
                     }
                     "download_failed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SaveUrlError::DownloadFailed)
                     }
                     "invalid_url" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SaveUrlError::InvalidUrl)
                     }
                     "not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SaveUrlError::NotFound)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SaveUrlError::Other)
                     }
                 }
@@ -11586,7 +11586,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveUrlJobStatus {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SaveUrlJobStatus::InProgress)
                     }
                     "complete" => Ok(SaveUrlJobStatus::Complete(FileMetadata::internal_deserialize(map)?)),
@@ -11641,7 +11641,7 @@ impl ::serde::ser::Serialize for SaveUrlJobStatus {
 pub enum SaveUrlResult {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::async::AsyncJobId),
+    AsyncJobId(super::dbx_async::AsyncJobId),
     /// Metadata of the file where the URL is saved to.
     Complete(FileMetadata),
 }
@@ -11895,7 +11895,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SearchError::Other)
                     }
                 }
@@ -12067,15 +12067,15 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchMatchType {
                 };
                 match tag {
                     "filename" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SearchMatchType::Filename)
                     }
                     "content" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SearchMatchType::Content)
                     }
                     "both" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SearchMatchType::Both)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -12143,15 +12143,15 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchMode {
                 };
                 match tag {
                     "filename" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SearchMode::Filename)
                     }
                     "filename_and_content" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SearchMode::FilenameAndContent)
                     }
                     "deleted_filename" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SearchMode::DeletedFilename)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -12632,19 +12632,19 @@ impl<'de> ::serde::de::Deserialize<'de> for SyncSetting {
                 };
                 match tag {
                     "default" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SyncSetting::Default)
                     }
                     "not_synced" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SyncSetting::NotSynced)
                     }
                     "not_synced_inactive" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SyncSetting::NotSyncedInactive)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SyncSetting::Other)
                     }
                 }
@@ -12716,15 +12716,15 @@ impl<'de> ::serde::de::Deserialize<'de> for SyncSettingArg {
                 };
                 match tag {
                     "default" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SyncSettingArg::Default)
                     }
                     "not_synced" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SyncSettingArg::NotSynced)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SyncSettingArg::Other)
                     }
                 }
@@ -12795,15 +12795,15 @@ impl<'de> ::serde::de::Deserialize<'de> for SyncSettingsError {
                         }
                     }
                     "unsupported_combination" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SyncSettingsError::UnsupportedCombination)
                     }
                     "unsupported_configuration" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SyncSettingsError::UnsupportedConfiguration)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SyncSettingsError::Other)
                     }
                 }
@@ -13039,15 +13039,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailError {
                         }
                     }
                     "unsupported_extension" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailError::UnsupportedExtension)
                     }
                     "unsupported_image" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailError::UnsupportedImage)
                     }
                     "conversion_error" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailError::ConversionError)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -13131,11 +13131,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailFormat {
                 };
                 match tag {
                     "jpeg" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailFormat::Jpeg)
                     }
                     "png" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailFormat::Png)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -13196,15 +13196,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailMode {
                 };
                 match tag {
                     "strict" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailMode::Strict)
                     }
                     "bestfit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailMode::Bestfit)
                     }
                     "fitone_bestfit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailMode::FitoneBestfit)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -13284,39 +13284,39 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
                 };
                 match tag {
                     "w32h32" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailSize::W32h32)
                     }
                     "w64h64" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailSize::W64h64)
                     }
                     "w128h128" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailSize::W128h128)
                     }
                     "w256h256" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailSize::W256h256)
                     }
                     "w480h320" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailSize::W480h320)
                     }
                     "w640h480" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailSize::W640h480)
                     }
                     "w960h640" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailSize::W960h640)
                     }
                     "w1024h768" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailSize::W1024h768)
                     }
                     "w2048h1536" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ThumbnailSize::W2048h1536)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -13435,7 +13435,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadError::Other)
                     }
                 }
@@ -13520,7 +13520,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadErrorWithProperties {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadErrorWithProperties::Other)
                     }
                 }
@@ -13988,7 +13988,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchJobStatus {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionFinishBatchJobStatus::InProgress)
                     }
                     "complete" => Ok(UploadSessionFinishBatchJobStatus::Complete(UploadSessionFinishBatchResult::internal_deserialize(map)?)),
@@ -14030,7 +14030,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchJobStatus {
 pub enum UploadSessionFinishBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::async::AsyncJobId),
+    AsyncJobId(super::dbx_async::AsyncJobId),
     Complete(UploadSessionFinishBatchResult),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -14062,7 +14062,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchLaunch {
                     }
                     "complete" => Ok(UploadSessionFinishBatchLaunch::Complete(UploadSessionFinishBatchResult::internal_deserialize(map)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionFinishBatchLaunch::Other)
                     }
                 }
@@ -14312,15 +14312,15 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                         }
                     }
                     "too_many_shared_folder_targets" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionFinishError::TooManySharedFolderTargets)
                     }
                     "too_many_write_operations" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionFinishError::TooManyWriteOperations)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionFinishError::Other)
                     }
                 }
@@ -14429,24 +14429,24 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionLookupError {
                 };
                 match tag {
                     "not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionLookupError::NotFound)
                     }
                     "incorrect_offset" => Ok(UploadSessionLookupError::IncorrectOffset(UploadSessionOffsetError::internal_deserialize(map)?)),
                     "closed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionLookupError::Closed)
                     }
                     "not_closed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionLookupError::NotClosed)
                     }
                     "too_large" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionLookupError::TooLarge)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionLookupError::Other)
                     }
                 }
@@ -15029,19 +15029,19 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteConflictError {
                 };
                 match tag {
                     "file" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(WriteConflictError::File)
                     }
                     "folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(WriteConflictError::Folder)
                     }
                     "file_ancestor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(WriteConflictError::FileAncestor)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(WriteConflictError::Other)
                     }
                 }
@@ -15149,27 +15149,27 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteError {
                         }
                     }
                     "no_write_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(WriteError::NoWritePermission)
                     }
                     "insufficient_space" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(WriteError::InsufficientSpace)
                     }
                     "disallowed_name" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(WriteError::DisallowedName)
                     }
                     "team_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(WriteError::TeamFolder)
                     }
                     "too_many_write_operations" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(WriteError::TooManyWriteOperations)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(WriteError::Other)
                     }
                 }
@@ -15295,11 +15295,11 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteMode {
                 };
                 match tag {
                     "add" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(WriteMode::Add)
                     }
                     "overwrite" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(WriteMode::Overwrite)
                     }
                     "update" => {

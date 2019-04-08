@@ -14,13 +14,13 @@ pub type PaperDocId = String;
 /// Marks the given Paper doc as archived. Note: This action can be performed or undone by anyone
 /// with edit permissions to the doc.
 pub fn docs_archive(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RefPaperDoc,
-) -> ::Result<Result<(), DocLookupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), DocLookupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/archive",
         arg,
         None)
@@ -28,14 +28,14 @@ pub fn docs_archive(
 
 /// Creates a new Paper doc with the provided content.
 pub fn docs_create(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &PaperDocCreateArgs,
     body: &[u8],
-) -> ::Result<Result<PaperDocCreateUpdateResult, PaperDocCreateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<PaperDocCreateUpdateResult, PaperDocCreateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Upload,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Upload,
         "paper/docs/create",
         arg,
         Some(body))
@@ -43,15 +43,15 @@ pub fn docs_create(
 
 /// Exports and downloads Paper doc either as HTML or markdown.
 pub fn docs_download(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &PaperDocExport,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> ::Result<Result<::client_trait::HttpRequestResult<PaperDocExportResult>, DocLookupError>> {
-    ::client_helpers::request_with_body(
+) -> crate::Result<Result<crate::client_trait::HttpRequestResult<PaperDocExportResult>, DocLookupError>> {
+    crate::client_helpers::request_with_body(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Download,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Download,
         "paper/docs/download",
         arg,
         None,
@@ -63,13 +63,13 @@ pub fn docs_download(
 /// contained. For private folders all users (including owner) shared on the folder are listed and
 /// for team folders all non-team users shared on the folder are returned.
 pub fn docs_folder_users_list(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListUsersOnFolderArgs,
-) -> ::Result<Result<ListUsersOnFolderResponse, DocLookupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListUsersOnFolderResponse, DocLookupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/folder_users/list",
         arg,
         None)
@@ -78,13 +78,13 @@ pub fn docs_folder_users_list(
 /// Once a cursor has been retrieved from [`docs_folder_users_list()`](docs_folder_users_list), use
 /// this to paginate through all users on the Paper folder.
 pub fn docs_folder_users_list_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListUsersOnFolderContinueArgs,
-) -> ::Result<Result<ListUsersOnFolderResponse, ListUsersCursorError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListUsersOnFolderResponse, ListUsersCursorError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/folder_users/list/continue",
         arg,
         None)
@@ -97,13 +97,13 @@ pub fn docs_folder_users_list_continue(
 ///
 /// Note: If the Paper doc is not in any folder (aka unfiled) the response will be empty.
 pub fn docs_get_folder_info(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RefPaperDoc,
-) -> ::Result<Result<FoldersContainingPaperDoc, DocLookupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FoldersContainingPaperDoc, DocLookupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/get_folder_info",
         arg,
         None)
@@ -112,13 +112,13 @@ pub fn docs_get_folder_info(
 /// Return the list of all Paper docs according to the argument specifications. To iterate over
 /// through the full pagination, pass the cursor to [`docs_list_continue()`](docs_list_continue).
 pub fn docs_list(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListPaperDocsArgs,
-) -> ::Result<Result<ListPaperDocsResponse, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListPaperDocsResponse, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/list",
         arg,
         None)
@@ -127,13 +127,13 @@ pub fn docs_list(
 /// Once a cursor has been retrieved from [`docs_list()`](docs_list), use this to paginate through
 /// all Paper doc.
 pub fn docs_list_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListPaperDocsContinueArgs,
-) -> ::Result<Result<ListPaperDocsResponse, ListDocsCursorError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListPaperDocsResponse, ListDocsCursorError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/list/continue",
         arg,
         None)
@@ -143,13 +143,13 @@ pub fn docs_list_continue(
 ///
 /// Note: This action can be performed only by the doc owner.
 pub fn docs_permanently_delete(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RefPaperDoc,
-) -> ::Result<Result<(), DocLookupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), DocLookupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/permanently_delete",
         arg,
         None)
@@ -157,13 +157,13 @@ pub fn docs_permanently_delete(
 
 /// Gets the default sharing policy for the given Paper doc.
 pub fn docs_sharing_policy_get(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RefPaperDoc,
-) -> ::Result<Result<SharingPolicy, DocLookupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SharingPolicy, DocLookupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/sharing_policy/get",
         arg,
         None)
@@ -175,13 +175,13 @@ pub fn docs_sharing_policy_get(
 /// Note: 'public_sharing_policy' cannot be set to the value 'disabled' because this setting can be
 /// changed only via the team admin console.
 pub fn docs_sharing_policy_set(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &PaperDocSharingPolicy,
-) -> ::Result<Result<(), DocLookupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), DocLookupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/sharing_policy/set",
         arg,
         None)
@@ -189,14 +189,14 @@ pub fn docs_sharing_policy_set(
 
 /// Updates an existing Paper doc with the provided content.
 pub fn docs_update(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &PaperDocUpdateArgs,
     body: &[u8],
-) -> ::Result<Result<PaperDocCreateUpdateResult, PaperDocUpdateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<PaperDocCreateUpdateResult, PaperDocUpdateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Upload,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Upload,
         "paper/docs/update",
         arg,
         Some(body))
@@ -207,13 +207,13 @@ pub fn docs_update(
 ///
 /// Note: The Doc owner's permissions cannot be changed.
 pub fn docs_users_add(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &AddPaperDocUser,
-) -> ::Result<Result<Vec<AddPaperDocUserMemberResult>, DocLookupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Vec<AddPaperDocUserMemberResult>, DocLookupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/users/add",
         arg,
         None)
@@ -224,13 +224,13 @@ pub fn docs_users_add(
 /// list will include both users, the explicitly shared ones as well as those who came in using the
 /// Paper url link.
 pub fn docs_users_list(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListUsersOnPaperDocArgs,
-) -> ::Result<Result<ListUsersOnPaperDocResponse, DocLookupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListUsersOnPaperDocResponse, DocLookupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/users/list",
         arg,
         None)
@@ -239,13 +239,13 @@ pub fn docs_users_list(
 /// Once a cursor has been retrieved from [`docs_users_list()`](docs_users_list), use this to
 /// paginate through all users on the Paper doc.
 pub fn docs_users_list_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListUsersOnPaperDocContinueArgs,
-) -> ::Result<Result<ListUsersOnPaperDocResponse, ListUsersCursorError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListUsersOnPaperDocResponse, ListUsersCursorError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/users/list/continue",
         arg,
         None)
@@ -256,13 +256,13 @@ pub fn docs_users_list_continue(
 ///
 /// Note: Doc owner cannot be removed.
 pub fn docs_users_remove(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RemovePaperDocUser,
-) -> ::Result<Result<(), DocLookupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), DocLookupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "paper/docs/users/remove",
         arg,
         None)
@@ -659,35 +659,35 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPaperDocUserResult {
                 };
                 match tag {
                     "success" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPaperDocUserResult::Success)
                     }
                     "unknown_error" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPaperDocUserResult::UnknownError)
                     }
                     "sharing_outside_team_disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPaperDocUserResult::SharingOutsideTeamDisabled)
                     }
                     "daily_limit_reached" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPaperDocUserResult::DailyLimitReached)
                     }
                     "user_is_owner" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPaperDocUserResult::UserIsOwner)
                     }
                     "failed_user_data_retrieval" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPaperDocUserResult::FailedUserDataRetrieval)
                     }
                     "permission_already_granted" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPaperDocUserResult::PermissionAlreadyGranted)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPaperDocUserResult::Other)
                     }
                 }
@@ -902,15 +902,15 @@ impl<'de> ::serde::de::Deserialize<'de> for DocLookupError {
                 };
                 match tag {
                     "insufficient_permissions" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DocLookupError::InsufficientPermissions)
                     }
                     "doc_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DocLookupError::DocNotFound)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DocLookupError::Other)
                     }
                 }
@@ -987,19 +987,19 @@ impl<'de> ::serde::de::Deserialize<'de> for DocSubscriptionLevel {
                 };
                 match tag {
                     "default" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DocSubscriptionLevel::Default)
                     }
                     "ignore" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DocSubscriptionLevel::Ignore)
                     }
                     "every" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DocSubscriptionLevel::Every)
                     }
                     "no_email" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(DocSubscriptionLevel::NoEmail)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -1076,15 +1076,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ExportFormat {
                 };
                 match tag {
                     "html" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ExportFormat::Html)
                     }
                     "markdown" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ExportFormat::Markdown)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ExportFormat::Other)
                     }
                 }
@@ -1251,11 +1251,11 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderSharingPolicyType {
                 };
                 match tag {
                     "team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderSharingPolicyType::Team)
                     }
                     "invite_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderSharingPolicyType::InviteOnly)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -1319,19 +1319,19 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderSubscriptionLevel {
                 };
                 match tag {
                     "none" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderSubscriptionLevel::None)
                     }
                     "activity_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderSubscriptionLevel::ActivityOnly)
                     }
                     "daily_emails" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderSubscriptionLevel::DailyEmails)
                     }
                     "weekly_emails" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderSubscriptionLevel::WeeklyEmails)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -1504,19 +1504,19 @@ impl<'de> ::serde::de::Deserialize<'de> for ImportFormat {
                 };
                 match tag {
                     "html" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ImportFormat::Html)
                     }
                     "markdown" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ImportFormat::Markdown)
                     }
                     "plain_text" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ImportFormat::PlainText)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ImportFormat::Other)
                     }
                 }
@@ -1696,7 +1696,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ListDocsCursorError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListDocsCursorError::Other)
                     }
                 }
@@ -1974,15 +1974,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsFilterBy {
                 };
                 match tag {
                     "docs_accessed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListPaperDocsFilterBy::DocsAccessed)
                     }
                     "docs_created" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListPaperDocsFilterBy::DocsCreated)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListPaperDocsFilterBy::Other)
                     }
                 }
@@ -2170,19 +2170,19 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsSortBy {
                 };
                 match tag {
                     "accessed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListPaperDocsSortBy::Accessed)
                     }
                     "modified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListPaperDocsSortBy::Modified)
                     }
                     "created" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListPaperDocsSortBy::Created)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListPaperDocsSortBy::Other)
                     }
                 }
@@ -2252,15 +2252,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsSortOrder {
                 };
                 match tag {
                     "ascending" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListPaperDocsSortOrder::Ascending)
                     }
                     "descending" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListPaperDocsSortOrder::Descending)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListPaperDocsSortOrder::Other)
                     }
                 }
@@ -2324,11 +2324,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListUsersCursorError {
                 };
                 match tag {
                     "insufficient_permissions" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListUsersCursorError::InsufficientPermissions)
                     }
                     "doc_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListUsersCursorError::DocNotFound)
                     }
                     "cursor_error" => {
@@ -2339,7 +2339,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ListUsersCursorError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListUsersCursorError::Other)
                     }
                 }
@@ -3158,11 +3158,11 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperApiBaseError {
                 };
                 match tag {
                     "insufficient_permissions" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperApiBaseError::InsufficientPermissions)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperApiBaseError::Other)
                     }
                 }
@@ -3235,23 +3235,23 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperApiCursorError {
                 };
                 match tag {
                     "expired_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperApiCursorError::ExpiredCursor)
                     }
                     "invalid_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperApiCursorError::InvalidCursor)
                     }
                     "wrong_user_in_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperApiCursorError::WrongUserInCursor)
                     }
                     "reset" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperApiCursorError::Reset)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperApiCursorError::Other)
                     }
                 }
@@ -3456,27 +3456,27 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocCreateError {
                 };
                 match tag {
                     "insufficient_permissions" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocCreateError::InsufficientPermissions)
                     }
                     "content_malformed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocCreateError::ContentMalformed)
                     }
                     "folder_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocCreateError::FolderNotFound)
                     }
                     "doc_length_exceeded" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocCreateError::DocLengthExceeded)
                     }
                     "image_size_exceeded" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocCreateError::ImageSizeExceeded)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocCreateError::Other)
                     }
                 }
@@ -3920,15 +3920,15 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocPermissionLevel {
                 };
                 match tag {
                     "edit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocPermissionLevel::Edit)
                     }
                     "view_and_comment" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocPermissionLevel::ViewAndComment)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocPermissionLevel::Other)
                     }
                 }
@@ -4242,39 +4242,39 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdateError {
                 };
                 match tag {
                     "insufficient_permissions" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdateError::InsufficientPermissions)
                     }
                     "doc_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdateError::DocNotFound)
                     }
                     "content_malformed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdateError::ContentMalformed)
                     }
                     "revision_mismatch" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdateError::RevisionMismatch)
                     }
                     "doc_length_exceeded" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdateError::DocLengthExceeded)
                     }
                     "image_size_exceeded" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdateError::ImageSizeExceeded)
                     }
                     "doc_archived" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdateError::DocArchived)
                     }
                     "doc_deleted" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdateError::DocDeleted)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdateError::Other)
                     }
                 }
@@ -4393,19 +4393,19 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdatePolicy {
                 };
                 match tag {
                     "append" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdatePolicy::Append)
                     }
                     "prepend" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdatePolicy::Prepend)
                     }
                     "overwrite_all" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdatePolicy::OverwriteAll)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperDocUpdatePolicy::Other)
                     }
                 }
@@ -4762,19 +4762,19 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingPublicPolicyType {
                 };
                 match tag {
                     "people_with_link_can_edit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingPublicPolicyType::PeopleWithLinkCanEdit)
                     }
                     "people_with_link_can_view_and_comment" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingPublicPolicyType::PeopleWithLinkCanViewAndComment)
                     }
                     "invite_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingPublicPolicyType::InviteOnly)
                     }
                     "disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingPublicPolicyType::Disabled)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -4850,15 +4850,15 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingTeamPolicyType {
                 };
                 match tag {
                     "people_with_link_can_edit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingTeamPolicyType::PeopleWithLinkCanEdit)
                     }
                     "people_with_link_can_view_and_comment" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingTeamPolicyType::PeopleWithLinkCanViewAndComment)
                     }
                     "invite_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingTeamPolicyType::InviteOnly)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -5031,15 +5031,15 @@ impl<'de> ::serde::de::Deserialize<'de> for UserOnPaperDocFilter {
                 };
                 match tag {
                     "visited" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UserOnPaperDocFilter::Visited)
                     }
                     "shared" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UserOnPaperDocFilter::Shared)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UserOnPaperDocFilter::Other)
                     }
                 }

@@ -21,13 +21,13 @@ pub type TeamInfo = super::users::Team;
 
 /// Adds specified members to a file.
 pub fn add_file_member(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &AddFileMemberArgs,
-) -> ::Result<Result<Vec<FileMemberActionResult>, AddFileMemberError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Vec<FileMemberActionResult>, AddFileMemberError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/add_file_member",
         arg,
         None)
@@ -37,13 +37,13 @@ pub fn add_file_member(
 /// member. For the new member to get access to all the functionality for this folder, you will need
 /// to call [`mount_folder()`](mount_folder) on their behalf.
 pub fn add_folder_member(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &AddFolderMemberArg,
-) -> ::Result<Result<(), AddFolderMemberError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), AddFolderMemberError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/add_folder_member",
         arg,
         None)
@@ -51,13 +51,13 @@ pub fn add_folder_member(
 
 /// Identical to update_file_member but with less information returned.
 pub fn change_file_member_access(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ChangeFileMemberAccessArgs,
-) -> ::Result<Result<FileMemberActionResult, FileMemberActionError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FileMemberActionResult, FileMemberActionError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/change_file_member_access",
         arg,
         None)
@@ -65,13 +65,13 @@ pub fn change_file_member_access(
 
 /// Returns the status of an asynchronous job.
 pub fn check_job_status(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<JobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<JobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/check_job_status",
         arg,
         None)
@@ -79,13 +79,13 @@ pub fn check_job_status(
 
 /// Returns the status of an asynchronous job for sharing a folder.
 pub fn check_remove_member_job_status(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<RemoveMemberJobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<RemoveMemberJobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/check_remove_member_job_status",
         arg,
         None)
@@ -93,13 +93,13 @@ pub fn check_remove_member_job_status(
 
 /// Returns the status of an asynchronous job for sharing a folder.
 pub fn check_share_job_status(
-    client: &::client_trait::HttpClient,
-    arg: &super::async::PollArg,
-) -> ::Result<Result<ShareFolderJobStatus, super::async::PollError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<ShareFolderJobStatus, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/check_share_job_status",
         arg,
         None)
@@ -114,13 +114,13 @@ pub fn check_share_job_status(
 /// behavior. Instead, if your app needs to revoke a shared link, use
 /// [`revoke_shared_link()`](revoke_shared_link).
 pub fn create_shared_link(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &CreateSharedLinkArg,
-) -> ::Result<Result<PathLinkMetadata, CreateSharedLinkError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<PathLinkMetadata, CreateSharedLinkError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/create_shared_link",
         arg,
         None)
@@ -130,13 +130,13 @@ pub fn create_shared_link(
 /// is [`RequestedVisibility::Public`](RequestedVisibility::Public) (The resolved visibility,
 /// though, may depend on other aspects such as team and shared folder settings).
 pub fn create_shared_link_with_settings(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &CreateSharedLinkWithSettingsArg,
-) -> ::Result<Result<SharedLinkMetadata, CreateSharedLinkWithSettingsError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SharedLinkMetadata, CreateSharedLinkWithSettingsError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/create_shared_link_with_settings",
         arg,
         None)
@@ -144,13 +144,13 @@ pub fn create_shared_link_with_settings(
 
 /// Returns shared file metadata.
 pub fn get_file_metadata(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetFileMetadataArg,
-) -> ::Result<Result<SharedFileMetadata, GetFileMetadataError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SharedFileMetadata, GetFileMetadataError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/get_file_metadata",
         arg,
         None)
@@ -158,13 +158,13 @@ pub fn get_file_metadata(
 
 /// Returns shared file metadata.
 pub fn get_file_metadata_batch(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetFileMetadataBatchArg,
-) -> ::Result<Result<Vec<GetFileMetadataBatchResult>, SharingUserError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Vec<GetFileMetadataBatchResult>, SharingUserError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/get_file_metadata/batch",
         arg,
         None)
@@ -172,13 +172,13 @@ pub fn get_file_metadata_batch(
 
 /// Returns shared folder metadata by its folder ID.
 pub fn get_folder_metadata(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetMetadataArgs,
-) -> ::Result<Result<SharedFolderMetadata, SharedFolderAccessError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SharedFolderMetadata, SharedFolderAccessError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/get_folder_metadata",
         arg,
         None)
@@ -186,15 +186,15 @@ pub fn get_folder_metadata(
 
 /// Download the shared link's file from a user's Dropbox.
 pub fn get_shared_link_file(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetSharedLinkFileArg,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> ::Result<Result<::client_trait::HttpRequestResult<SharedLinkMetadata>, GetSharedLinkFileError>> {
-    ::client_helpers::request_with_body(
+) -> crate::Result<Result<crate::client_trait::HttpRequestResult<SharedLinkMetadata>, GetSharedLinkFileError>> {
+    crate::client_helpers::request_with_body(
         client,
-        ::client_trait::Endpoint::Content,
-        ::client_trait::Style::Download,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Download,
         "sharing/get_shared_link_file",
         arg,
         None,
@@ -204,13 +204,13 @@ pub fn get_shared_link_file(
 
 /// Get the shared link's metadata.
 pub fn get_shared_link_metadata(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetSharedLinkMetadataArg,
-) -> ::Result<Result<SharedLinkMetadata, SharedLinkError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SharedLinkMetadata, SharedLinkError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/get_shared_link_metadata",
         arg,
         None)
@@ -222,13 +222,13 @@ pub fn get_shared_link_metadata(
 /// all shared links that allow access to the given path.  Collection links are never returned in
 /// this case. Note that the url field in the response is never the shortened URL.
 pub fn get_shared_links(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetSharedLinksArg,
-) -> ::Result<Result<GetSharedLinksResult, GetSharedLinksError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GetSharedLinksResult, GetSharedLinksError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/get_shared_links",
         arg,
         None)
@@ -237,13 +237,13 @@ pub fn get_shared_links(
 /// Use to obtain the members who have been invited to a file, both inherited and uninherited
 /// members.
 pub fn list_file_members(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFileMembersArg,
-) -> ::Result<Result<SharedFileMembers, ListFileMembersError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SharedFileMembers, ListFileMembersError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/list_file_members",
         arg,
         None)
@@ -254,13 +254,13 @@ pub fn list_file_members(
 /// individual file endpoint. Inherited users and groups are not included in the result, and
 /// permissions are not returned for this endpoint.
 pub fn list_file_members_batch(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFileMembersBatchArg,
-) -> ::Result<Result<Vec<ListFileMembersBatchResult>, SharingUserError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<Vec<ListFileMembersBatchResult>, SharingUserError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/list_file_members/batch",
         arg,
         None)
@@ -270,13 +270,13 @@ pub fn list_file_members_batch(
 /// [`list_file_members_batch()`](list_file_members_batch), use this to paginate through all shared
 /// file members.
 pub fn list_file_members_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFileMembersContinueArg,
-) -> ::Result<Result<SharedFileMembers, ListFileMembersContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SharedFileMembers, ListFileMembersContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/list_file_members/continue",
         arg,
         None)
@@ -284,13 +284,13 @@ pub fn list_file_members_continue(
 
 /// Returns shared folder membership by its folder ID.
 pub fn list_folder_members(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFolderMembersArgs,
-) -> ::Result<Result<SharedFolderMembers, SharedFolderAccessError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SharedFolderMembers, SharedFolderAccessError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/list_folder_members",
         arg,
         None)
@@ -299,13 +299,13 @@ pub fn list_folder_members(
 /// Once a cursor has been retrieved from [`list_folder_members()`](list_folder_members), use this
 /// to paginate through all shared folder members.
 pub fn list_folder_members_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFolderMembersContinueArg,
-) -> ::Result<Result<SharedFolderMembers, ListFolderMembersContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SharedFolderMembers, ListFolderMembersContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/list_folder_members/continue",
         arg,
         None)
@@ -313,13 +313,13 @@ pub fn list_folder_members_continue(
 
 /// Return the list of all shared folders the current user has access to.
 pub fn list_folders(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFoldersArgs,
-) -> ::Result<Result<ListFoldersResult, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListFoldersResult, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/list_folders",
         arg,
         None)
@@ -329,13 +329,13 @@ pub fn list_folders(
 /// through all shared folders. The cursor must come from a previous call to
 /// [`list_folders()`](list_folders) or [`list_folders_continue()`](list_folders_continue).
 pub fn list_folders_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFoldersContinueArg,
-) -> ::Result<Result<ListFoldersResult, ListFoldersContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListFoldersResult, ListFoldersContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/list_folders/continue",
         arg,
         None)
@@ -343,13 +343,13 @@ pub fn list_folders_continue(
 
 /// Return the list of all shared folders the current user can mount or unmount.
 pub fn list_mountable_folders(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFoldersArgs,
-) -> ::Result<Result<ListFoldersResult, ()>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListFoldersResult, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/list_mountable_folders",
         arg,
         None)
@@ -360,13 +360,13 @@ pub fn list_mountable_folders(
 /// to [`list_mountable_folders()`](list_mountable_folders) or
 /// [`list_mountable_folders_continue()`](list_mountable_folders_continue).
 pub fn list_mountable_folders_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFoldersContinueArg,
-) -> ::Result<Result<ListFoldersResult, ListFoldersContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListFoldersResult, ListFoldersContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/list_mountable_folders/continue",
         arg,
         None)
@@ -375,13 +375,13 @@ pub fn list_mountable_folders_continue(
 /// Returns a list of all files shared with current user.  Does not include files the user has
 /// received via shared folders, and does  not include unclaimed invitations.
 pub fn list_received_files(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFilesArg,
-) -> ::Result<Result<ListFilesResult, SharingUserError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListFilesResult, SharingUserError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/list_received_files",
         arg,
         None)
@@ -389,13 +389,13 @@ pub fn list_received_files(
 
 /// Get more results with a cursor from [`list_received_files()`](list_received_files).
 pub fn list_received_files_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListFilesContinueArg,
-) -> ::Result<Result<ListFilesResult, ListFilesContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListFilesResult, ListFilesContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/list_received_files/continue",
         arg,
         None)
@@ -406,13 +406,13 @@ pub fn list_received_files_continue(
 /// to the given path - direct links to the given path and links to parent folders of the given
 /// path. Links to parent folders can be suppressed by setting direct_only to true.
 pub fn list_shared_links(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ListSharedLinksArg,
-) -> ::Result<Result<ListSharedLinksResult, ListSharedLinksError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ListSharedLinksResult, ListSharedLinksError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/list_shared_links",
         arg,
         None)
@@ -425,13 +425,13 @@ pub fn list_shared_links(
 /// and the [`LinkPermissions::requested_visibility`](LinkPermissions) will reflect the requested
 /// visibility.
 pub fn modify_shared_link_settings(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ModifySharedLinkSettingsArgs,
-) -> ::Result<Result<SharedLinkMetadata, ModifySharedLinkSettingsError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SharedLinkMetadata, ModifySharedLinkSettingsError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/modify_shared_link_settings",
         arg,
         None)
@@ -440,13 +440,13 @@ pub fn modify_shared_link_settings(
 /// The current user mounts the designated folder. Mount a shared folder for a user after they have
 /// been added as a member. Once mounted, the shared folder will appear in their Dropbox.
 pub fn mount_folder(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &MountFolderArg,
-) -> ::Result<Result<SharedFolderMetadata, MountFolderError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SharedFolderMetadata, MountFolderError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/mount_folder",
         arg,
         None)
@@ -455,13 +455,13 @@ pub fn mount_folder(
 /// The current user relinquishes their membership in the designated file. Note that the current
 /// user may still have inherited access to this file through the parent folder.
 pub fn relinquish_file_membership(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RelinquishFileMembershipArg,
-) -> ::Result<Result<(), RelinquishFileMembershipError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), RelinquishFileMembershipError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/relinquish_file_membership",
         arg,
         None)
@@ -472,13 +472,13 @@ pub fn relinquish_file_membership(
 /// folder. This will run synchronously if leave_a_copy is false, and asynchronously if leave_a_copy
 /// is true.
 pub fn relinquish_folder_membership(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RelinquishFolderMembershipArg,
-) -> ::Result<Result<super::async::LaunchEmptyResult, RelinquishFolderMembershipError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<super::dbx_async::LaunchEmptyResult, RelinquishFolderMembershipError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/relinquish_folder_membership",
         arg,
         None)
@@ -486,13 +486,13 @@ pub fn relinquish_folder_membership(
 
 /// Identical to remove_file_member_2 but with less information returned.
 pub fn remove_file_member(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RemoveFileMemberArg,
-) -> ::Result<Result<FileMemberActionIndividualResult, RemoveFileMemberError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FileMemberActionIndividualResult, RemoveFileMemberError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/remove_file_member",
         arg,
         None)
@@ -500,13 +500,13 @@ pub fn remove_file_member(
 
 /// Removes a specified member from the file.
 pub fn remove_file_member_2(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RemoveFileMemberArg,
-) -> ::Result<Result<FileMemberRemoveActionResult, RemoveFileMemberError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FileMemberRemoveActionResult, RemoveFileMemberError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/remove_file_member_2",
         arg,
         None)
@@ -515,13 +515,13 @@ pub fn remove_file_member_2(
 /// Allows an owner or editor (if the ACL update policy allows) of a shared folder to remove another
 /// member.
 pub fn remove_folder_member(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RemoveFolderMemberArg,
-) -> ::Result<Result<super::async::LaunchResultBase, RemoveFolderMemberError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<super::dbx_async::LaunchResultBase, RemoveFolderMemberError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/remove_folder_member",
         arg,
         None)
@@ -533,13 +533,13 @@ pub fn remove_folder_member(
 /// [`list_shared_links()`](list_shared_links) with the file as the
 /// [`ListSharedLinksArg::path`](ListSharedLinksArg) argument.
 pub fn revoke_shared_link(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RevokeSharedLinkArg,
-) -> ::Result<Result<(), RevokeSharedLinkError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), RevokeSharedLinkError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/revoke_shared_link",
         arg,
         None)
@@ -550,13 +550,13 @@ pub fn revoke_shared_link(
 /// returned, you'll need to call [`check_share_job_status()`](check_share_job_status) until the
 /// action completes to get the metadata for the folder.
 pub fn set_access_inheritance(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &SetAccessInheritanceArg,
-) -> ::Result<Result<ShareFolderLaunch, SetAccessInheritanceError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ShareFolderLaunch, SetAccessInheritanceError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/set_access_inheritance",
         arg,
         None)
@@ -569,13 +569,13 @@ pub fn set_access_inheritance(
 /// call [`check_share_job_status()`](check_share_job_status) until the action completes to get the
 /// metadata for the folder.
 pub fn share_folder(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &ShareFolderArg,
-) -> ::Result<Result<ShareFolderLaunch, ShareFolderError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<ShareFolderLaunch, ShareFolderError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/share_folder",
         arg,
         None)
@@ -584,13 +584,13 @@ pub fn share_folder(
 /// Transfer ownership of a shared folder to a member of the shared folder. User must have
 /// [`AccessLevel::Owner`](AccessLevel::Owner) access to the shared folder to perform a transfer.
 pub fn transfer_folder(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TransferFolderArg,
-) -> ::Result<Result<(), TransferFolderError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), TransferFolderError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/transfer_folder",
         arg,
         None)
@@ -599,13 +599,13 @@ pub fn transfer_folder(
 /// The current user unmounts the designated folder. They can re-mount the folder at a later time
 /// using [`mount_folder()`](mount_folder).
 pub fn unmount_folder(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UnmountFolderArg,
-) -> ::Result<Result<(), UnmountFolderError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), UnmountFolderError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/unmount_folder",
         arg,
         None)
@@ -613,13 +613,13 @@ pub fn unmount_folder(
 
 /// Remove all members from this file. Does not remove inherited members.
 pub fn unshare_file(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UnshareFileArg,
-) -> ::Result<Result<(), UnshareFileError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), UnshareFileError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/unshare_file",
         arg,
         None)
@@ -628,13 +628,13 @@ pub fn unshare_file(
 /// Allows a shared folder owner to unshare the folder. You'll need to call
 /// [`check_job_status()`](check_job_status) to determine if the action has completed successfully.
 pub fn unshare_folder(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UnshareFolderArg,
-) -> ::Result<Result<super::async::LaunchEmptyResult, UnshareFolderError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<super::dbx_async::LaunchEmptyResult, UnshareFolderError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/unshare_folder",
         arg,
         None)
@@ -642,13 +642,13 @@ pub fn unshare_folder(
 
 /// Changes a member's access on a shared file.
 pub fn update_file_member(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UpdateFileMemberArgs,
-) -> ::Result<Result<MemberAccessLevelResult, FileMemberActionError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<MemberAccessLevelResult, FileMemberActionError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/update_file_member",
         arg,
         None)
@@ -656,13 +656,13 @@ pub fn update_file_member(
 
 /// Allows an owner or editor of a shared folder to update another member's permissions.
 pub fn update_folder_member(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UpdateFolderMemberArg,
-) -> ::Result<Result<MemberAccessLevelResult, UpdateFolderMemberError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<MemberAccessLevelResult, UpdateFolderMemberError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/update_folder_member",
         arg,
         None)
@@ -671,13 +671,13 @@ pub fn update_folder_member(
 /// Update the sharing policies for a shared folder. User must have
 /// [`AccessLevel::Owner`](AccessLevel::Owner) access to the shared folder to update its policies.
 pub fn update_folder_policy(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UpdateFolderPolicyArg,
-) -> ::Result<Result<SharedFolderMetadata, UpdateFolderPolicyError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<SharedFolderMetadata, UpdateFolderPolicyError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "sharing/update_folder_policy",
         arg,
         None)
@@ -712,15 +712,15 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessInheritance {
                 };
                 match tag {
                     "inherit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AccessInheritance::Inherit)
                     }
                     "no_inherit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AccessInheritance::NoInherit)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AccessInheritance::Other)
                     }
                 }
@@ -790,23 +790,23 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessLevel {
                 };
                 match tag {
                     "owner" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AccessLevel::Owner)
                     }
                     "editor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AccessLevel::Editor)
                     }
                     "viewer" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AccessLevel::Viewer)
                     }
                     "viewer_no_comment" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AccessLevel::ViewerNoComment)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AccessLevel::Other)
                     }
                 }
@@ -885,15 +885,15 @@ impl<'de> ::serde::de::Deserialize<'de> for AclUpdatePolicy {
                 };
                 match tag {
                     "owner" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AclUpdatePolicy::Owner)
                     }
                     "editors" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AclUpdatePolicy::Editors)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AclUpdatePolicy::Other)
                     }
                 }
@@ -1150,15 +1150,15 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFileMemberError {
                         }
                     }
                     "rate_limit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddFileMemberError::RateLimit)
                     }
                     "invalid_comment" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddFileMemberError::InvalidComment)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddFileMemberError::Other)
                     }
                 }
@@ -1416,7 +1416,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
                         }
                     }
                     "email_unverified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddFolderMemberError::EmailUnverified)
                     }
                     "bad_member" => {
@@ -1427,7 +1427,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
                         }
                     }
                     "cant_share_outside_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddFolderMemberError::CantShareOutsideTeam)
                     }
                     "too_many_members" => {
@@ -1445,27 +1445,27 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
                         }
                     }
                     "rate_limit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddFolderMemberError::RateLimit)
                     }
                     "too_many_invitees" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddFolderMemberError::TooManyInvitees)
                     }
                     "insufficient_plan" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddFolderMemberError::InsufficientPlan)
                     }
                     "team_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddFolderMemberError::TeamFolder)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddFolderMemberError::NoPermission)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddFolderMemberError::Other)
                     }
                 }
@@ -1727,7 +1727,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddMemberSelectorError {
                 };
                 match tag {
                     "automatic_group" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddMemberSelectorError::AutomaticGroup)
                     }
                     "invalid_dropbox_id" => {
@@ -1752,15 +1752,15 @@ impl<'de> ::serde::de::Deserialize<'de> for AddMemberSelectorError {
                         }
                     }
                     "group_deleted" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddMemberSelectorError::GroupDeleted)
                     }
                     "group_not_on_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddMemberSelectorError::GroupNotOnTeam)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddMemberSelectorError::Other)
                     }
                 }
@@ -2557,7 +2557,7 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateSharedLinkError::Other)
                     }
                 }
@@ -2744,11 +2744,11 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkWithSettingsError {
                         }
                     }
                     "email_not_verified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateSharedLinkWithSettingsError::EmailNotVerified)
                     }
                     "shared_link_already_exists" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists)
                     }
                     "settings_error" => {
@@ -2759,7 +2759,7 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkWithSettingsError {
                         }
                     }
                     "access_denied" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateSharedLinkWithSettingsError::AccessDenied)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -3070,47 +3070,47 @@ impl<'de> ::serde::de::Deserialize<'de> for FileAction {
                 };
                 match tag {
                     "disable_viewer_info" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::DisableViewerInfo)
                     }
                     "edit_contents" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::EditContents)
                     }
                     "enable_viewer_info" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::EnableViewerInfo)
                     }
                     "invite_viewer" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::InviteViewer)
                     }
                     "invite_viewer_no_comment" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::InviteViewerNoComment)
                     }
                     "invite_editor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::InviteEditor)
                     }
                     "unshare" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::Unshare)
                     }
                     "relinquish_membership" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::RelinquishMembership)
                     }
                     "share_link" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::ShareLink)
                     }
                     "create_link" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::CreateLink)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::Other)
                     }
                 }
@@ -3252,7 +3252,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileErrorResult {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileErrorResult::Other)
                     }
                 }
@@ -3606,11 +3606,11 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMemberActionError {
                 };
                 match tag {
                     "invalid_member" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileMemberActionError::InvalidMember)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileMemberActionError::NoPermission)
                     }
                     "access_error" => {
@@ -3622,7 +3622,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMemberActionError {
                     }
                     "no_explicit_access" => Ok(FileMemberActionError::NoExplicitAccess(MemberAccessLevelResult::internal_deserialize(map)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileMemberActionError::Other)
                     }
                 }
@@ -3898,7 +3898,7 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMemberRemoveActionResult {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileMemberRemoveActionResult::Other)
                     }
                 }
@@ -4110,63 +4110,63 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderAction {
                 };
                 match tag {
                     "change_options" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::ChangeOptions)
                     }
                     "disable_viewer_info" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::DisableViewerInfo)
                     }
                     "edit_contents" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::EditContents)
                     }
                     "enable_viewer_info" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::EnableViewerInfo)
                     }
                     "invite_editor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::InviteEditor)
                     }
                     "invite_viewer" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::InviteViewer)
                     }
                     "invite_viewer_no_comment" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::InviteViewerNoComment)
                     }
                     "relinquish_membership" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::RelinquishMembership)
                     }
                     "unmount" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::Unmount)
                     }
                     "unshare" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::Unshare)
                     }
                     "leave_a_copy" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::LeaveACopy)
                     }
                     "share_link" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::ShareLink)
                     }
                     "create_link" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::CreateLink)
                     }
                     "set_access_inheritance" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::SetAccessInheritance)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FolderAction::Other)
                     }
                 }
@@ -5149,7 +5149,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileMetadataError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetFileMetadataError::Other)
                     }
                 }
@@ -5234,7 +5234,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileMetadataIndividualResult {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetFileMetadataIndividualResult::Other)
                     }
                 }
@@ -5413,23 +5413,23 @@ impl<'de> ::serde::de::Deserialize<'de> for GetSharedLinkFileError {
                 };
                 match tag {
                     "shared_link_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetSharedLinkFileError::SharedLinkNotFound)
                     }
                     "shared_link_access_denied" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetSharedLinkFileError::SharedLinkAccessDenied)
                     }
                     "unsupported_link_type" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetSharedLinkFileError::UnsupportedLinkType)
                     }
                     "shared_link_is_directory" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetSharedLinkFileError::SharedLinkIsDirectory)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetSharedLinkFileError::Other)
                     }
                 }
@@ -5727,7 +5727,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetSharedLinksError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetSharedLinksError::Other)
                     }
                 }
@@ -6495,7 +6495,7 @@ impl<'de> ::serde::de::Deserialize<'de> for InviteeInfo {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(InviteeInfo::Other)
                     }
                 }
@@ -6756,7 +6756,7 @@ impl<'de> ::serde::de::Deserialize<'de> for JobError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(JobError::Other)
                     }
                 }
@@ -6840,11 +6840,11 @@ impl<'de> ::serde::de::Deserialize<'de> for JobStatus {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(JobStatus::InProgress)
                     }
                     "complete" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(JobStatus::Complete)
                     }
                     "failed" => {
@@ -6930,31 +6930,31 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAction {
                 };
                 match tag {
                     "change_access_level" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkAction::ChangeAccessLevel)
                     }
                     "change_audience" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkAction::ChangeAudience)
                     }
                     "remove_expiry" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkAction::RemoveExpiry)
                     }
                     "remove_password" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkAction::RemovePassword)
                     }
                     "set_expiry" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkAction::SetExpiry)
                     }
                     "set_password" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkAction::SetPassword)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkAction::Other)
                     }
                 }
@@ -7051,23 +7051,23 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
                 };
                 match tag {
                     "public" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkAudience::Public)
                     }
                     "team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkAudience::Team)
                     }
                     "no_one" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkAudience::NoOne)
                     }
                     "members" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkAudience::Members)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkAudience::Other)
                     }
                 }
@@ -7144,7 +7144,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkExpiry {
                 };
                 match tag {
                     "remove_expiry" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkExpiry::RemoveExpiry)
                     }
                     "set_expiry" => {
@@ -7155,7 +7155,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkExpiry {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkExpiry::Other)
                     }
                 }
@@ -7219,7 +7219,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkMetadata {
                     "path" => Ok(LinkMetadata::Path(PathLinkMetadata::internal_deserialize(map)?)),
                     "collection" => Ok(LinkMetadata::Collection(CollectionLinkMetadata::internal_deserialize(map)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkMetadata::_Unknown)
                     }
                 }
@@ -7286,7 +7286,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkPassword {
                 };
                 match tag {
                     "remove_password" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkPassword::RemovePassword)
                     }
                     "set_password" => {
@@ -7297,7 +7297,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkPassword {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LinkPassword::Other)
                     }
                 }
@@ -8218,11 +8218,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersContinueError {
                         }
                     }
                     "invalid_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFileMembersContinueError::InvalidCursor)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFileMembersContinueError::Other)
                     }
                 }
@@ -8422,7 +8422,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFileMembersError::Other)
                     }
                 }
@@ -8507,7 +8507,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersIndividualResult {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFileMembersIndividualResult::Other)
                     }
                 }
@@ -8765,11 +8765,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFilesContinueError {
                         }
                     }
                     "invalid_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFilesContinueError::InvalidCursor)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFilesContinueError::Other)
                     }
                 }
@@ -9180,11 +9180,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderMembersContinueError {
                         }
                     }
                     "invalid_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFolderMembersContinueError::InvalidCursor)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFolderMembersContinueError::Other)
                     }
                 }
@@ -9535,11 +9535,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFoldersContinueError {
                 };
                 match tag {
                     "invalid_cursor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFoldersContinueError::InvalidCursor)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFoldersContinueError::Other)
                     }
                 }
@@ -9834,11 +9834,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListSharedLinksError {
                         }
                     }
                     "reset" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListSharedLinksError::Reset)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListSharedLinksError::Other)
                     }
                 }
@@ -10153,31 +10153,31 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberAction {
                 };
                 match tag {
                     "leave_a_copy" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberAction::LeaveACopy)
                     }
                     "make_editor" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberAction::MakeEditor)
                     }
                     "make_owner" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberAction::MakeOwner)
                     }
                     "make_viewer" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberAction::MakeViewer)
                     }
                     "make_viewer_no_comment" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberAction::MakeViewerNoComment)
                     }
                     "remove" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberAction::Remove)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberAction::Other)
                     }
                 }
@@ -10392,15 +10392,15 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberPolicy {
                 };
                 match tag {
                     "team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberPolicy::Team)
                     }
                     "anyone" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberPolicy::Anyone)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberPolicy::Other)
                     }
                 }
@@ -10478,7 +10478,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSelector {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberSelector::Other)
                     }
                 }
@@ -10817,15 +10817,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifySharedLinkSettingsError {
                 };
                 match tag {
                     "shared_link_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ModifySharedLinkSettingsError::SharedLinkNotFound)
                     }
                     "shared_link_access_denied" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ModifySharedLinkSettingsError::SharedLinkAccessDenied)
                     }
                     "unsupported_link_type" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ModifySharedLinkSettingsError::UnsupportedLinkType)
                     }
                     "settings_error" => {
@@ -10836,11 +10836,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifySharedLinkSettingsError {
                         }
                     }
                     "email_not_verified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ModifySharedLinkSettingsError::EmailNotVerified)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ModifySharedLinkSettingsError::Other)
                     }
                 }
@@ -11042,24 +11042,24 @@ impl<'de> ::serde::de::Deserialize<'de> for MountFolderError {
                         }
                     }
                     "inside_shared_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MountFolderError::InsideSharedFolder)
                     }
                     "insufficient_quota" => Ok(MountFolderError::InsufficientQuota(InsufficientQuotaAmounts::internal_deserialize(map)?)),
                     "already_mounted" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MountFolderError::AlreadyMounted)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MountFolderError::NoPermission)
                     }
                     "not_mountable" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MountFolderError::NotMountable)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MountFolderError::Other)
                     }
                 }
@@ -11432,11 +11432,11 @@ impl<'de> ::serde::de::Deserialize<'de> for PendingUploadMode {
                 };
                 match tag {
                     "file" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PendingUploadMode::File)
                     }
                     "folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PendingUploadMode::Folder)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -11524,64 +11524,64 @@ impl<'de> ::serde::de::Deserialize<'de> for PermissionDeniedReason {
                 };
                 match tag {
                     "user_not_same_team_as_owner" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::UserNotSameTeamAsOwner)
                     }
                     "user_not_allowed_by_owner" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::UserNotAllowedByOwner)
                     }
                     "target_is_indirect_member" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::TargetIsIndirectMember)
                     }
                     "target_is_owner" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::TargetIsOwner)
                     }
                     "target_is_self" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::TargetIsSelf)
                     }
                     "target_not_active" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::TargetNotActive)
                     }
                     "folder_is_limited_team_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::FolderIsLimitedTeamFolder)
                     }
                     "owner_not_on_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::OwnerNotOnTeam)
                     }
                     "permission_denied" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::PermissionDenied)
                     }
                     "restricted_by_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::RestrictedByTeam)
                     }
                     "user_account_type" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::UserAccountType)
                     }
                     "user_not_on_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::UserNotOnTeam)
                     }
                     "folder_is_inside_shared_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::FolderIsInsideSharedFolder)
                     }
                     "restricted_by_parent_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::RestrictedByParentFolder)
                     }
                     "insufficient_plan" => Ok(PermissionDeniedReason::InsufficientPlan(InsufficientPlan::internal_deserialize(map)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PermissionDeniedReason::Other)
                     }
                 }
@@ -11835,15 +11835,15 @@ impl<'de> ::serde::de::Deserialize<'de> for RelinquishFileMembershipError {
                         }
                     }
                     "group_access" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelinquishFileMembershipError::GroupAccess)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelinquishFileMembershipError::NoPermission)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelinquishFileMembershipError::Other)
                     }
                 }
@@ -12054,31 +12054,31 @@ impl<'de> ::serde::de::Deserialize<'de> for RelinquishFolderMembershipError {
                         }
                     }
                     "folder_owner" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelinquishFolderMembershipError::FolderOwner)
                     }
                     "mounted" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelinquishFolderMembershipError::Mounted)
                     }
                     "group_access" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelinquishFolderMembershipError::GroupAccess)
                     }
                     "team_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelinquishFolderMembershipError::TeamFolder)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelinquishFolderMembershipError::NoPermission)
                     }
                     "no_explicit_access" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelinquishFolderMembershipError::NoExplicitAccess)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RelinquishFolderMembershipError::Other)
                     }
                 }
@@ -12312,7 +12312,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveFileMemberError {
                     }
                     "no_explicit_access" => Ok(RemoveFileMemberError::NoExplicitAccess(MemberAccessLevelResult::internal_deserialize(map)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RemoveFileMemberError::Other)
                     }
                 }
@@ -12543,27 +12543,27 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveFolderMemberError {
                         }
                     }
                     "folder_owner" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RemoveFolderMemberError::FolderOwner)
                     }
                     "group_access" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RemoveFolderMemberError::GroupAccess)
                     }
                     "team_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RemoveFolderMemberError::TeamFolder)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RemoveFolderMemberError::NoPermission)
                     }
                     "too_many_files" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RemoveFolderMemberError::TooManyFiles)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RemoveFolderMemberError::Other)
                     }
                 }
@@ -12674,7 +12674,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveMemberJobStatus {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RemoveMemberJobStatus::InProgress)
                     }
                     "complete" => Ok(RemoveMemberJobStatus::Complete(MemberAccessLevelResult::internal_deserialize(map)?)),
@@ -12756,15 +12756,15 @@ impl<'de> ::serde::de::Deserialize<'de> for RequestedVisibility {
                 };
                 match tag {
                     "public" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RequestedVisibility::Public)
                     }
                     "team_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RequestedVisibility::TeamOnly)
                     }
                     "password" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RequestedVisibility::Password)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -12844,27 +12844,27 @@ impl<'de> ::serde::de::Deserialize<'de> for ResolvedVisibility {
                 };
                 match tag {
                     "public" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ResolvedVisibility::Public)
                     }
                     "team_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ResolvedVisibility::TeamOnly)
                     }
                     "password" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ResolvedVisibility::Password)
                     }
                     "team_and_password" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ResolvedVisibility::TeamAndPassword)
                     }
                     "shared_folder_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ResolvedVisibility::SharedFolderOnly)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ResolvedVisibility::Other)
                     }
                 }
@@ -13042,23 +13042,23 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeSharedLinkError {
                 };
                 match tag {
                     "shared_link_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeSharedLinkError::SharedLinkNotFound)
                     }
                     "shared_link_access_denied" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeSharedLinkError::SharedLinkAccessDenied)
                     }
                     "unsupported_link_type" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeSharedLinkError::UnsupportedLinkType)
                     }
                     "shared_link_malformed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeSharedLinkError::SharedLinkMalformed)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RevokeSharedLinkError::Other)
                     }
                 }
@@ -13262,11 +13262,11 @@ impl<'de> ::serde::de::Deserialize<'de> for SetAccessInheritanceError {
                         }
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SetAccessInheritanceError::NoPermission)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SetAccessInheritanceError::Other)
                     }
                 }
@@ -13787,7 +13787,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderError {
                 };
                 match tag {
                     "email_unverified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShareFolderError::EmailUnverified)
                     }
                     "bad_path" => {
@@ -13798,19 +13798,19 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderError {
                         }
                     }
                     "team_policy_disallows_member_policy" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShareFolderError::TeamPolicyDisallowsMemberPolicy)
                     }
                     "disallowed_shared_link_policy" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShareFolderError::DisallowedSharedLinkPolicy)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShareFolderError::NoPermission)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShareFolderError::Other)
                     }
                 }
@@ -13912,7 +13912,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderErrorBase {
                 };
                 match tag {
                     "email_unverified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShareFolderErrorBase::EmailUnverified)
                     }
                     "bad_path" => {
@@ -13923,15 +13923,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderErrorBase {
                         }
                     }
                     "team_policy_disallows_member_policy" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShareFolderErrorBase::TeamPolicyDisallowsMemberPolicy)
                     }
                     "disallowed_shared_link_policy" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShareFolderErrorBase::DisallowedSharedLinkPolicy)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShareFolderErrorBase::Other)
                     }
                 }
@@ -14007,7 +14007,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderJobStatus {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ShareFolderJobStatus::InProgress)
                     }
                     "complete" => Ok(ShareFolderJobStatus::Complete(SharedFolderMetadata::internal_deserialize(map)?)),
@@ -14062,7 +14062,7 @@ impl ::serde::ser::Serialize for ShareFolderJobStatus {
 pub enum ShareFolderLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
-    AsyncJobId(super::async::AsyncJobId),
+    AsyncJobId(super::dbx_async::AsyncJobId),
     Complete(SharedFolderMetadata),
 }
 
@@ -14173,56 +14173,56 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathError {
                 };
                 match tag {
                     "is_file" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::IsFile)
                     }
                     "inside_shared_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::InsideSharedFolder)
                     }
                     "contains_shared_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::ContainsSharedFolder)
                     }
                     "contains_app_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::ContainsAppFolder)
                     }
                     "contains_team_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::ContainsTeamFolder)
                     }
                     "is_app_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::IsAppFolder)
                     }
                     "inside_app_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::InsideAppFolder)
                     }
                     "is_public_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::IsPublicFolder)
                     }
                     "inside_public_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::InsidePublicFolder)
                     }
                     "already_shared" => Ok(SharePathError::AlreadyShared(SharedFolderMetadata::internal_deserialize(map)?)),
                     "invalid_path" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::InvalidPath)
                     }
                     "is_osx_package" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::IsOsxPackage)
                     }
                     "inside_osx_package" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::InsideOsxPackage)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::Other)
                     }
                 }
@@ -15281,23 +15281,23 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderAccessError {
                 };
                 match tag {
                     "invalid_id" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderAccessError::InvalidId)
                     }
                     "not_a_member" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderAccessError::NotAMember)
                     }
                     "email_unverified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderAccessError::EmailUnverified)
                     }
                     "unmounted" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderAccessError::Unmounted)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderAccessError::Other)
                     }
                 }
@@ -15388,16 +15388,16 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberError {
                 };
                 match tag {
                     "invalid_dropbox_id" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderMemberError::InvalidDropboxId)
                     }
                     "not_a_member" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderMemberError::NotAMember)
                     }
                     "no_explicit_access" => Ok(SharedFolderMemberError::NoExplicitAccess(MemberAccessLevelResult::internal_deserialize(map)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedFolderMemberError::Other)
                     }
                 }
@@ -16153,27 +16153,27 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkAccessFailureReason {
                 };
                 match tag {
                     "login_required" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkAccessFailureReason::LoginRequired)
                     }
                     "email_verify_required" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkAccessFailureReason::EmailVerifyRequired)
                     }
                     "password_required" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkAccessFailureReason::PasswordRequired)
                     }
                     "team_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkAccessFailureReason::TeamOnly)
                     }
                     "owner_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkAccessFailureReason::OwnerOnly)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkAccessFailureReason::Other)
                     }
                 }
@@ -16259,19 +16259,19 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkError {
                 };
                 match tag {
                     "shared_link_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkError::SharedLinkNotFound)
                     }
                     "shared_link_access_denied" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkError::SharedLinkAccessDenied)
                     }
                     "unsupported_link_type" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkError::UnsupportedLinkType)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkError::Other)
                     }
                 }
@@ -16352,7 +16352,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkMetadata {
                     "file" => Ok(SharedLinkMetadata::File(FileLinkMetadata::internal_deserialize(map)?)),
                     "folder" => Ok(SharedLinkMetadata::Folder(FolderLinkMetadata::internal_deserialize(map)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkMetadata::_Unknown)
                     }
                 }
@@ -16435,19 +16435,19 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkPolicy {
                 };
                 match tag {
                     "anyone" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkPolicy::Anyone)
                     }
                     "team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkPolicy::Team)
                     }
                     "members" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkPolicy::Members)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkPolicy::Other)
                     }
                 }
@@ -16627,11 +16627,11 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkSettingsError {
                 };
                 match tag {
                     "invalid_settings" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkSettingsError::InvalidSettings)
                     }
                     "not_authorized" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharedLinkSettingsError::NotAuthorized)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -16712,27 +16712,27 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingFileAccessError {
                 };
                 match tag {
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingFileAccessError::NoPermission)
                     }
                     "invalid_file" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingFileAccessError::InvalidFile)
                     }
                     "is_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingFileAccessError::IsFolder)
                     }
                     "inside_public_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingFileAccessError::InsidePublicFolder)
                     }
                     "inside_osx_package" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingFileAccessError::InsideOsxPackage)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingFileAccessError::Other)
                     }
                 }
@@ -16827,11 +16827,11 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingUserError {
                 };
                 match tag {
                     "email_unverified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingUserError::EmailUnverified)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SharingUserError::Other)
                     }
                 }
@@ -17141,31 +17141,31 @@ impl<'de> ::serde::de::Deserialize<'de> for TransferFolderError {
                         }
                     }
                     "invalid_dropbox_id" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TransferFolderError::InvalidDropboxId)
                     }
                     "new_owner_not_a_member" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TransferFolderError::NewOwnerNotAMember)
                     }
                     "new_owner_unmounted" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TransferFolderError::NewOwnerUnmounted)
                     }
                     "new_owner_email_unverified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TransferFolderError::NewOwnerEmailUnverified)
                     }
                     "team_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TransferFolderError::TeamFolder)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TransferFolderError::NoPermission)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TransferFolderError::Other)
                     }
                 }
@@ -17375,15 +17375,15 @@ impl<'de> ::serde::de::Deserialize<'de> for UnmountFolderError {
                         }
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UnmountFolderError::NoPermission)
                     }
                     "not_unmountable" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UnmountFolderError::NotUnmountable)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UnmountFolderError::Other)
                     }
                 }
@@ -17570,7 +17570,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UnshareFileError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UnshareFileError::Other)
                     }
                 }
@@ -17767,19 +17767,19 @@ impl<'de> ::serde::de::Deserialize<'de> for UnshareFolderError {
                         }
                     }
                     "team_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UnshareFolderError::TeamFolder)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UnshareFolderError::NoPermission)
                     }
                     "too_many_files" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UnshareFolderError::TooManyFiles)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UnshareFolderError::Other)
                     }
                 }
@@ -18135,15 +18135,15 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFolderMemberError {
                         }
                     }
                     "insufficient_plan" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFolderMemberError::InsufficientPlan)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFolderMemberError::NoPermission)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFolderMemberError::Other)
                     }
                 }
@@ -18461,27 +18461,27 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFolderPolicyError {
                         }
                     }
                     "not_on_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFolderPolicyError::NotOnTeam)
                     }
                     "team_policy_disallows_member_policy" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFolderPolicyError::TeamPolicyDisallowsMemberPolicy)
                     }
                     "disallowed_shared_link_policy" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFolderPolicyError::DisallowedSharedLinkPolicy)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFolderPolicyError::NoPermission)
                     }
                     "team_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFolderPolicyError::TeamFolder)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFolderPolicyError::Other)
                     }
                 }
@@ -19096,15 +19096,15 @@ impl<'de> ::serde::de::Deserialize<'de> for ViewerInfoPolicy {
                 };
                 match tag {
                     "enabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ViewerInfoPolicy::Enabled)
                     }
                     "disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ViewerInfoPolicy::Disabled)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ViewerInfoPolicy::Other)
                     }
                 }
@@ -19176,27 +19176,27 @@ impl<'de> ::serde::de::Deserialize<'de> for Visibility {
                 };
                 match tag {
                     "public" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(Visibility::Public)
                     }
                     "team_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(Visibility::TeamOnly)
                     }
                     "password" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(Visibility::Password)
                     }
                     "team_and_password" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(Visibility::TeamAndPassword)
                     }
                     "shared_folder_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(Visibility::SharedFolderOnly)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(Visibility::Other)
                     }
                 }

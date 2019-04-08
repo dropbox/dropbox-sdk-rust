@@ -40,23 +40,23 @@ impl<'de> ::serde::de::Deserialize<'de> for PlatformType {
                 };
                 match tag {
                     "web" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PlatformType::Web)
                     }
                     "mobile" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PlatformType::Mobile)
                     }
                     "desktop" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PlatformType::Desktop)
                     }
                     "unknown" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PlatformType::Unknown)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PlatformType::Other)
                     }
                 }

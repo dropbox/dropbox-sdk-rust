@@ -54,7 +54,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRoot {
                 };
                 match tag {
                     "home" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PathRoot::Home)
                     }
                     "root" => {
@@ -72,7 +72,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRoot {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PathRoot::Other)
                     }
                 }
@@ -152,11 +152,11 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRootError {
                         }
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PathRootError::NoPermission)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PathRootError::Other)
                     }
                 }
@@ -231,7 +231,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RootInfo {
                     "team" => Ok(RootInfo::Team(TeamRootInfo::internal_deserialize(map)?)),
                     "user" => Ok(RootInfo::User(UserRootInfo::internal_deserialize(map)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RootInfo::_Unknown)
                     }
                 }

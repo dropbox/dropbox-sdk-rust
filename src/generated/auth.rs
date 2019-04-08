@@ -9,24 +9,24 @@
 
 /// Creates an OAuth 2.0 access token from the supplied OAuth 1.0 access token.
 pub fn token_from_oauth1(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &TokenFromOAuth1Arg,
-) -> ::Result<Result<TokenFromOAuth1Result, TokenFromOAuth1Error>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<TokenFromOAuth1Result, TokenFromOAuth1Error>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "auth/token/from_oauth1",
         arg,
         None)
 }
 
 /// Disables the access token used to authenticate the call.
-pub fn token_revoke(client: &::client_trait::HttpClient) -> ::Result<Result<(), ()>> {
-    ::client_helpers::request(
+pub fn token_revoke(client: &crate::client_trait::HttpClient) -> crate::Result<Result<(), ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "auth/token/revoke",
         &(),
         None)
@@ -75,7 +75,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AccessError::Other)
                     }
                 }
@@ -159,27 +159,27 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                 };
                 match tag {
                     "invalid_access_token" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AuthError::InvalidAccessToken)
                     }
                     "invalid_select_user" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AuthError::InvalidSelectUser)
                     }
                     "invalid_select_admin" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AuthError::InvalidSelectAdmin)
                     }
                     "user_suspended" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AuthError::UserSuspended)
                     }
                     "expired_access_token" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AuthError::ExpiredAccessToken)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AuthError::Other)
                     }
                 }
@@ -275,15 +275,15 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidAccountTypeError {
                 };
                 match tag {
                     "endpoint" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(InvalidAccountTypeError::Endpoint)
                     }
                     "feature" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(InvalidAccountTypeError::Feature)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(InvalidAccountTypeError::Other)
                     }
                 }
@@ -358,15 +358,15 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperAccessError {
                 };
                 match tag {
                     "paper_disabled" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperAccessError::PaperDisabled)
                     }
                     "not_paper_user" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperAccessError::NotPaperUser)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PaperAccessError::Other)
                     }
                 }
@@ -550,15 +550,15 @@ impl<'de> ::serde::de::Deserialize<'de> for RateLimitReason {
                 };
                 match tag {
                     "too_many_requests" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RateLimitReason::TooManyRequests)
                     }
                     "too_many_write_operations" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RateLimitReason::TooManyWriteOperations)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RateLimitReason::Other)
                     }
                 }
@@ -724,15 +724,15 @@ impl<'de> ::serde::de::Deserialize<'de> for TokenFromOAuth1Error {
                 };
                 match tag {
                     "invalid_oauth1_token_info" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TokenFromOAuth1Error::InvalidOauth1TokenInfo)
                     }
                     "app_id_mismatch" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TokenFromOAuth1Error::AppIdMismatch)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TokenFromOAuth1Error::Other)
                     }
                 }

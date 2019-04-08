@@ -1,8 +1,8 @@
 use std::io::{self, Read};
 use std::str;
 
-use ::ErrorKind;
-use client_trait::{Endpoint, Style, HttpClient, HttpRequestResultRaw};
+use crate::ErrorKind;
+use crate::client_trait::{Endpoint, Style, HttpClient, HttpRequestResultRaw};
 use hyper::{self, Url};
 use hyper::header::Headers;
 use hyper::header::{

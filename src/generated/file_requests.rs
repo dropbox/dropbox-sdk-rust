@@ -14,13 +14,13 @@ pub type FileRequestValidationError = Option<String>;
 
 /// Creates a file request for this user.
 pub fn create(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &CreateFileRequestArgs,
-) -> ::Result<Result<FileRequest, CreateFileRequestError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FileRequest, CreateFileRequestError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_requests/create",
         arg,
         None)
@@ -28,13 +28,13 @@ pub fn create(
 
 /// Returns the specified file request.
 pub fn get(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetFileRequestArgs,
-) -> ::Result<Result<FileRequest, GetFileRequestError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FileRequest, GetFileRequestError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_requests/get",
         arg,
         None)
@@ -43,12 +43,12 @@ pub fn get(
 /// Returns a list of file requests owned by this user. For apps with the app folder permission,
 /// this will only return file requests with destinations in the app folder.
 pub fn list(
-    client: &::client_trait::HttpClient,
-) -> ::Result<Result<ListFileRequestsResult, ListFileRequestsError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+) -> crate::Result<Result<ListFileRequestsResult, ListFileRequestsError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_requests/list",
         &(),
         None)
@@ -56,13 +56,13 @@ pub fn list(
 
 /// Update a file request.
 pub fn update(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UpdateFileRequestArgs,
-) -> ::Result<Result<FileRequest, UpdateFileRequestError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<FileRequest, UpdateFileRequestError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_requests/update",
         arg,
         None)
@@ -259,43 +259,43 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFileRequestError {
                 };
                 match tag {
                     "disabled_for_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFileRequestError::DisabledForTeam)
                     }
                     "not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFileRequestError::NotFound)
                     }
                     "not_a_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFileRequestError::NotAFolder)
                     }
                     "app_lacks_access" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFileRequestError::AppLacksAccess)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFileRequestError::NoPermission)
                     }
                     "email_unverified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFileRequestError::EmailUnverified)
                     }
                     "validation_error" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFileRequestError::ValidationError)
                     }
                     "invalid_location" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFileRequestError::InvalidLocation)
                     }
                     "rate_limit" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFileRequestError::RateLimit)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(CreateFileRequestError::Other)
                     }
                 }
@@ -746,35 +746,35 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestError {
                 };
                 match tag {
                     "disabled_for_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileRequestError::DisabledForTeam)
                     }
                     "not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileRequestError::NotFound)
                     }
                     "not_a_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileRequestError::NotAFolder)
                     }
                     "app_lacks_access" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileRequestError::AppLacksAccess)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileRequestError::NoPermission)
                     }
                     "email_unverified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileRequestError::EmailUnverified)
                     }
                     "validation_error" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileRequestError::ValidationError)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(FileRequestError::Other)
                     }
                 }
@@ -883,11 +883,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GeneralFileRequestsError {
                 };
                 match tag {
                     "disabled_for_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GeneralFileRequestsError::DisabledForTeam)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GeneralFileRequestsError::Other)
                     }
                 }
@@ -1061,35 +1061,35 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileRequestError {
                 };
                 match tag {
                     "disabled_for_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetFileRequestError::DisabledForTeam)
                     }
                     "not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetFileRequestError::NotFound)
                     }
                     "not_a_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetFileRequestError::NotAFolder)
                     }
                     "app_lacks_access" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetFileRequestError::AppLacksAccess)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetFileRequestError::NoPermission)
                     }
                     "email_unverified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetFileRequestError::EmailUnverified)
                     }
                     "validation_error" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetFileRequestError::ValidationError)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetFileRequestError::Other)
                     }
                 }
@@ -1200,27 +1200,27 @@ impl<'de> ::serde::de::Deserialize<'de> for GracePeriod {
                 };
                 match tag {
                     "one_day" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GracePeriod::OneDay)
                     }
                     "two_days" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GracePeriod::TwoDays)
                     }
                     "seven_days" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GracePeriod::SevenDays)
                     }
                     "thirty_days" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GracePeriod::ThirtyDays)
                     }
                     "always" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GracePeriod::Always)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GracePeriod::Other)
                     }
                 }
@@ -1303,11 +1303,11 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileRequestsError {
                 };
                 match tag {
                     "disabled_for_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFileRequestsError::DisabledForTeam)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ListFileRequestsError::Other)
                     }
                 }
@@ -1632,12 +1632,12 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestDeadline {
                 };
                 match tag {
                     "no_update" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFileRequestDeadline::NoUpdate)
                     }
                     "update" => Ok(UpdateFileRequestDeadline::Update(FileRequestDeadline::internal_deserialize_opt(map, true)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFileRequestDeadline::Other)
                     }
                 }
@@ -1719,35 +1719,35 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestError {
                 };
                 match tag {
                     "disabled_for_team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFileRequestError::DisabledForTeam)
                     }
                     "not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFileRequestError::NotFound)
                     }
                     "not_a_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFileRequestError::NotAFolder)
                     }
                     "app_lacks_access" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFileRequestError::AppLacksAccess)
                     }
                     "no_permission" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFileRequestError::NoPermission)
                     }
                     "email_unverified" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFileRequestError::EmailUnverified)
                     }
                     "validation_error" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFileRequestError::ValidationError)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdateFileRequestError::Other)
                     }
                 }

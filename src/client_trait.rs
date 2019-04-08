@@ -13,7 +13,7 @@ pub trait HttpClient {
         body: Option<&[u8]>,
         range_start: Option<u64>,
         range_end: Option<u64>,
-    ) -> ::Result<HttpRequestResultRaw>;
+    ) -> crate::Result<HttpRequestResultRaw>;
 }
 
 pub struct HttpRequestResultRaw {

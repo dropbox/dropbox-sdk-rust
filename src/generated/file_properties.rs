@@ -47,13 +47,13 @@ pub type TemplateId = String;
 /// Add property groups to a Dropbox file. See [`templates_add_for_user()`](templates_add_for_user)
 /// or [`templates_add_for_team()`](templates_add_for_team) to create new templates.
 pub fn properties_add(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &AddPropertiesArg,
-) -> ::Result<Result<(), AddPropertiesError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), AddPropertiesError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/properties/add",
         arg,
         None)
@@ -65,13 +65,13 @@ pub fn properties_add(
 /// fields from a property group, whereas [`properties_update()`](properties_update) will only
 /// delete fields that are explicitly marked for deletion.
 pub fn properties_overwrite(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &OverwritePropertyGroupArg,
-) -> ::Result<Result<(), InvalidPropertyGroupError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), InvalidPropertyGroupError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/properties/overwrite",
         arg,
         None)
@@ -84,13 +84,13 @@ pub fn properties_overwrite(
 /// [`templates_remove_for_user()`](templates_remove_for_user) or
 /// [`templates_remove_for_team()`](templates_remove_for_team).
 pub fn properties_remove(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RemovePropertiesArg,
-) -> ::Result<Result<(), RemovePropertiesError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), RemovePropertiesError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/properties/remove",
         arg,
         None)
@@ -98,13 +98,13 @@ pub fn properties_remove(
 
 /// Search across property templates for particular property field values.
 pub fn properties_search(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &PropertiesSearchArg,
-) -> ::Result<Result<PropertiesSearchResult, PropertiesSearchError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<PropertiesSearchResult, PropertiesSearchError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/properties/search",
         arg,
         None)
@@ -113,13 +113,13 @@ pub fn properties_search(
 /// Once a cursor has been retrieved from [`properties_search()`](properties_search), use this to
 /// paginate through all search results.
 pub fn properties_search_continue(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &PropertiesSearchContinueArg,
-) -> ::Result<Result<PropertiesSearchResult, PropertiesSearchContinueError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<PropertiesSearchResult, PropertiesSearchContinueError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/properties/search/continue",
         arg,
         None)
@@ -132,13 +132,13 @@ pub fn properties_search_continue(
 /// [`properties_overwrite()`](properties_overwrite) will delete any fields that are omitted from a
 /// property group.
 pub fn properties_update(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UpdatePropertiesArg,
-) -> ::Result<Result<(), UpdatePropertiesError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), UpdatePropertiesError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/properties/update",
         arg,
         None)
@@ -147,13 +147,13 @@ pub fn properties_update(
 /// Add a template associated with a team. See [`properties_add()`](properties_add) to add
 /// properties to a file or folder. Note: this endpoint will create team-owned templates.
 pub fn templates_add_for_team(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &AddTemplateArg,
-) -> ::Result<Result<AddTemplateResult, ModifyTemplateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<AddTemplateResult, ModifyTemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/templates/add_for_team",
         arg,
         None)
@@ -162,13 +162,13 @@ pub fn templates_add_for_team(
 /// Add a template associated with a user. See [`properties_add()`](properties_add) to add
 /// properties to a file. This endpoint can't be called on a team member or admin's behalf.
 pub fn templates_add_for_user(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &AddTemplateArg,
-) -> ::Result<Result<AddTemplateResult, ModifyTemplateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<AddTemplateResult, ModifyTemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/templates/add_for_user",
         arg,
         None)
@@ -176,13 +176,13 @@ pub fn templates_add_for_user(
 
 /// Get the schema for a specified template.
 pub fn templates_get_for_team(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetTemplateArg,
-) -> ::Result<Result<GetTemplateResult, TemplateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GetTemplateResult, TemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/templates/get_for_team",
         arg,
         None)
@@ -191,13 +191,13 @@ pub fn templates_get_for_team(
 /// Get the schema for a specified template. This endpoint can't be called on a team member or
 /// admin's behalf.
 pub fn templates_get_for_user(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetTemplateArg,
-) -> ::Result<Result<GetTemplateResult, TemplateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GetTemplateResult, TemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/templates/get_for_user",
         arg,
         None)
@@ -206,12 +206,12 @@ pub fn templates_get_for_user(
 /// Get the template identifiers for a team. To get the schema of each template use
 /// [`templates_get_for_team()`](templates_get_for_team).
 pub fn templates_list_for_team(
-    client: &::client_trait::HttpClient,
-) -> ::Result<Result<ListTemplateResult, TemplateError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+) -> crate::Result<Result<ListTemplateResult, TemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/templates/list_for_team",
         &(),
         None)
@@ -221,12 +221,12 @@ pub fn templates_list_for_team(
 /// [`templates_get_for_user()`](templates_get_for_user). This endpoint can't be called on a team
 /// member or admin's behalf.
 pub fn templates_list_for_user(
-    client: &::client_trait::HttpClient,
-) -> ::Result<Result<ListTemplateResult, TemplateError>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+) -> crate::Result<Result<ListTemplateResult, TemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/templates/list_for_user",
         &(),
         None)
@@ -236,13 +236,13 @@ pub fn templates_list_for_user(
 /// [`templates_add_for_user()`](templates_add_for_user). All properties associated with the
 /// template will also be removed. This action cannot be undone.
 pub fn templates_remove_for_team(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RemoveTemplateArg,
-) -> ::Result<Result<(), TemplateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), TemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/templates/remove_for_team",
         arg,
         None)
@@ -252,13 +252,13 @@ pub fn templates_remove_for_team(
 /// [`templates_add_for_user()`](templates_add_for_user). All properties associated with the
 /// template will also be removed. This action cannot be undone.
 pub fn templates_remove_for_user(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &RemoveTemplateArg,
-) -> ::Result<Result<(), TemplateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<(), TemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/templates/remove_for_user",
         arg,
         None)
@@ -267,13 +267,13 @@ pub fn templates_remove_for_user(
 /// Update a template associated with a team. This route can update the template name, the template
 /// description and add optional properties to templates.
 pub fn templates_update_for_team(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UpdateTemplateArg,
-) -> ::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/templates/update_for_team",
         arg,
         None)
@@ -283,13 +283,13 @@ pub fn templates_update_for_team(
 /// description and add optional properties to templates. This endpoint can't be called on a team
 /// member or admin's behalf.
 pub fn templates_update_for_user(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &UpdateTemplateArg,
-) -> ::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<UpdateTemplateResult, ModifyTemplateError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "file_properties/templates/update_for_user",
         arg,
         None)
@@ -442,7 +442,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPropertiesError {
                         }
                     }
                     "restricted_content" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPropertiesError::RestrictedContent)
                     }
                     "path" => {
@@ -453,23 +453,23 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPropertiesError {
                         }
                     }
                     "unsupported_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPropertiesError::UnsupportedFolder)
                     }
                     "property_field_too_large" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPropertiesError::PropertyFieldTooLarge)
                     }
                     "does_not_fit_template" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPropertiesError::DoesNotFitTemplate)
                     }
                     "property_group_already_exists" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPropertiesError::PropertyGroupAlreadyExists)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(AddPropertiesError::Other)
                     }
                 }
@@ -1013,7 +1013,7 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
                         }
                     }
                     "restricted_content" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(InvalidPropertyGroupError::RestrictedContent)
                     }
                     "path" => {
@@ -1024,19 +1024,19 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
                         }
                     }
                     "unsupported_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(InvalidPropertyGroupError::UnsupportedFolder)
                     }
                     "property_field_too_large" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(InvalidPropertyGroupError::PropertyFieldTooLarge)
                     }
                     "does_not_fit_template" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(InvalidPropertyGroupError::DoesNotFitTemplate)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(InvalidPropertyGroupError::Other)
                     }
                 }
@@ -1232,11 +1232,11 @@ impl<'de> ::serde::de::Deserialize<'de> for LogicalOperator {
                 };
                 match tag {
                     "or_operator" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LogicalOperator::OrOperator)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LogicalOperator::Other)
                     }
                 }
@@ -1290,11 +1290,11 @@ impl<'de> ::serde::de::Deserialize<'de> for LookUpPropertiesError {
                 };
                 match tag {
                     "property_group_not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LookUpPropertiesError::PropertyGroupNotFound)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LookUpPropertiesError::Other)
                     }
                 }
@@ -1375,23 +1375,23 @@ impl<'de> ::serde::de::Deserialize<'de> for LookupError {
                         }
                     }
                     "not_found" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::NotFound)
                     }
                     "not_file" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::NotFile)
                     }
                     "not_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::NotFolder)
                     }
                     "restricted_content" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::RestrictedContent)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::Other)
                     }
                 }
@@ -1504,27 +1504,27 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifyTemplateError {
                         }
                     }
                     "restricted_content" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ModifyTemplateError::RestrictedContent)
                     }
                     "conflicting_property_names" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ModifyTemplateError::ConflictingPropertyNames)
                     }
                     "too_many_properties" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ModifyTemplateError::TooManyProperties)
                     }
                     "too_many_templates" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ModifyTemplateError::TooManyTemplates)
                     }
                     "template_attribute_too_large" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ModifyTemplateError::TemplateAttributeTooLarge)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(ModifyTemplateError::Other)
                     }
                 }
@@ -1741,7 +1741,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesError {
                         }
                     }
                     "restricted_content" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PropertiesError::RestrictedContent)
                     }
                     "path" => {
@@ -1752,11 +1752,11 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesError {
                         }
                     }
                     "unsupported_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PropertiesError::UnsupportedFolder)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PropertiesError::Other)
                     }
                 }
@@ -2045,11 +2045,11 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchContinueError {
                 };
                 match tag {
                     "reset" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PropertiesSearchContinueError::Reset)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PropertiesSearchContinueError::Other)
                     }
                 }
@@ -2121,7 +2121,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PropertiesSearchError::Other)
                     }
                 }
@@ -2329,7 +2329,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchMode {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PropertiesSearchMode::Other)
                     }
                 }
@@ -3193,11 +3193,11 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyType {
                 };
                 match tag {
                     "string" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PropertyType::String)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PropertyType::Other)
                     }
                 }
@@ -3369,7 +3369,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
                         }
                     }
                     "restricted_content" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RemovePropertiesError::RestrictedContent)
                     }
                     "path" => {
@@ -3380,7 +3380,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
                         }
                     }
                     "unsupported_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RemovePropertiesError::UnsupportedFolder)
                     }
                     "property_group_lookup" => {
@@ -3391,7 +3391,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(RemovePropertiesError::Other)
                     }
                 }
@@ -3588,11 +3588,11 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateError {
                         }
                     }
                     "restricted_content" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TemplateError::RestrictedContent)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TemplateError::Other)
                     }
                 }
@@ -3676,11 +3676,11 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateFilter {
                         }
                     }
                     "filter_none" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TemplateFilter::FilterNone)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TemplateFilter::Other)
                     }
                 }
@@ -3750,7 +3750,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateFilterBase {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TemplateFilterBase::Other)
                     }
                 }
@@ -3807,15 +3807,15 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateOwnerType {
                 };
                 match tag {
                     "user" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TemplateOwnerType::User)
                     }
                     "team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TemplateOwnerType::Team)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(TemplateOwnerType::Other)
                     }
                 }
@@ -3996,7 +3996,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {
                         }
                     }
                     "restricted_content" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdatePropertiesError::RestrictedContent)
                     }
                     "path" => {
@@ -4007,15 +4007,15 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {
                         }
                     }
                     "unsupported_folder" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdatePropertiesError::UnsupportedFolder)
                     }
                     "property_field_too_large" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdatePropertiesError::PropertyFieldTooLarge)
                     }
                     "does_not_fit_template" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdatePropertiesError::DoesNotFitTemplate)
                     }
                     "property_group_lookup" => {
@@ -4026,7 +4026,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(UpdatePropertiesError::Other)
                     }
                 }

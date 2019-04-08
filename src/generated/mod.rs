@@ -8,7 +8,7 @@
 ))]
 
 #[cfg(feature = "dbx_async")]
-pub mod async;
+pub mod dbx_async;
 
 #[cfg(feature = "dbx_auth")]
 pub mod auth;

@@ -44,19 +44,19 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupManagementType {
                 };
                 match tag {
                     "user_managed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupManagementType::UserManaged)
                     }
                     "company_managed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupManagementType::CompanyManaged)
                     }
                     "system_managed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupManagementType::SystemManaged)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupManagementType::Other)
                     }
                 }
@@ -283,15 +283,15 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupType {
                 };
                 match tag {
                     "team" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupType::Team)
                     }
                     "user_managed" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupType::UserManaged)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GroupType::Other)
                     }
                 }
@@ -359,19 +359,19 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitType {
                 };
                 match tag {
                     "off" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberSpaceLimitType::Off)
                     }
                     "alert_only" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberSpaceLimitType::AlertOnly)
                     }
                     "stop_sync" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberSpaceLimitType::StopSync)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(MemberSpaceLimitType::Other)
                     }
                 }

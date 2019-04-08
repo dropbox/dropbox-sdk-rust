@@ -44,7 +44,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LaunchEmptyResult {
                         }
                     }
                     "complete" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(LaunchEmptyResult::Complete)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -257,11 +257,11 @@ impl<'de> ::serde::de::Deserialize<'de> for PollEmptyResult {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PollEmptyResult::InProgress)
                     }
                     "complete" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PollEmptyResult::Complete)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))
@@ -325,15 +325,15 @@ impl<'de> ::serde::de::Deserialize<'de> for PollError {
                 };
                 match tag {
                     "invalid_async_job_id" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PollError::InvalidAsyncJobId)
                     }
                     "internal_error" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PollError::InternalError)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PollError::Other)
                     }
                 }
@@ -406,7 +406,7 @@ impl<'de> ::serde::de::Deserialize<'de> for PollResultBase {
                 };
                 match tag {
                     "in_progress" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(PollResultBase::InProgress)
                     }
                     _ => Err(de::Error::unknown_variant(tag, VARIANTS))

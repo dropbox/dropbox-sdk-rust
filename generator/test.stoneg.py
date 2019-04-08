@@ -47,7 +47,8 @@ class TestBackend(RustHelperBackend):
 
         print(u'Generating test code')
         for ns in api.namespaces.values():
-            with self.output_to_relative_path(ns.name + '.rs'):
+            ns_name = self.namespace_name(ns)
+            with self.output_to_relative_path(ns_name + '.rs'):
                 self._emit_header()
                 for typ in ns.data_types:
                     type_name = self.struct_name(typ)
@@ -104,7 +105,7 @@ class TestBackend(RustHelperBackend):
                     with self._test_fn(type_name):
                         self.emit(u'let json = r#"{}"#;'.format(json))
                         self.emit(u'let x = ::serde_json::from_str::<::dropbox_sdk::{}::{}>(json).unwrap();'
-                                  .format(ns.name,
+                                  .format(ns_name,
                                           self.struct_name(typ)))
                         test_value.emit_asserts(self, 'x')
 
@@ -114,7 +115,7 @@ class TestBackend(RustHelperBackend):
                             self.emit()
                             self.emit(u'let json2 = ::serde_json::to_string(&x).unwrap();')
                             de = u'::serde_json::from_str::<::dropbox_sdk::{}::{}>(&json2).unwrap()' \
-                                 .format(ns.name,
+                                 .format(ns_name,
                                          self.struct_name(typ))
 
                             if typ.all_fields:
@@ -135,7 +136,7 @@ class TestBackend(RustHelperBackend):
             self._emit_header()
             for ns in api.namespaces:
                 self.emit(u'#[cfg(feature = "dbx_{}")]'.format(ns))
-                self.emit(u'mod {};'.format(ns))
+                self.emit(u'mod {};'.format(self.namespace_name_raw(ns)))
                 self.emit()
 
     def _emit_header(self):
@@ -243,6 +244,7 @@ class TestUnion(TestValue):
         self._reference_impls = reference_impls
         self._rust_name = rust_generator.enum_name(stone_type)
         self._rust_variant_name = rust_generator.enum_variant_name_raw(variant.name)
+        self._rust_namespace_name = rust_generator.namespace_name(stone_type.namespace)
         self._variant_type = variant.data_type
 
         self._inner_value = make_test_field(
@@ -273,12 +275,12 @@ class TestUnion(TestValue):
         with codegen.block(u'match {}'.format(expression_path)):
             if ir.is_void_type(self._variant_type):
                 codegen.emit(u'::dropbox_sdk::{}::{}::{} => (),'.format(
-                    self._stone_type.namespace.name,
+                    self._rust_namespace_name,
                     self._rust_name,
                     self._rust_variant_name))
             else:
                 with codegen.block(u'::dropbox_sdk::{}::{}::{}(ref v) =>'.format(
-                        self._stone_type.namespace.name,
+                        self._rust_namespace_name,
                         self._rust_name,
                         self._rust_variant_name)):
                     self._inner_value.emit_assert(codegen, '(*v)')

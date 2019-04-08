@@ -8,11 +8,11 @@ from stone.backends.helpers import (
 )
 
 RUST_RESERVED_WORDS = [
-    "abstract", "alignof", "as", "become", "box", "break", "const", "continue", "crate", "do",
-    "else", "enum", "extern", "false", "final", "fn", "for", "if", "impl", "in", "let", "loop",
-    "macro", "match", "mod", "move", "mut", "offsetof", "override", "priv", "proc", "pub", "pure",
-    "ref", "return", "Self", "self", "sizeof", "static", "struct", "super", "trait", "true", "type",
-    "typeof", "unsafe", "unsized", "use", "virtual", "where", "while", "yield",
+    "abstract", "alignof", "as", "async", "become", "box", "break", "const", "continue", "crate",
+    "do", "else", "enum", "extern", "false", "final", "fn", "for", "if", "impl", "in", "let",
+    "loop", "macro", "match", "mod", "move", "mut", "offsetof", "override", "priv", "proc", "pub",
+    "pure", "ref", "return", "Self", "self", "sizeof", "static", "struct", "super", "trait",
+    "true", "type", "typeof", "unsafe", "unsized", "use", "virtual", "where", "while", "yield",
 ]
 
 # Also avoid using names of types that are in the prelude for the names of our types.
@@ -95,9 +95,12 @@ class RustHelperBackend(CodeBackend):
             (isinstance(typ, ir.Struct) and typ.has_enumerated_subtypes())
 
     def namespace_name(self, ns):
-        name = fmt_underscores(ns.name)
+        return self.namespace_name_raw(ns.name)
+
+    def namespace_name_raw(self, ns_name):
+        name = fmt_underscores(ns_name)
         if name in RUST_RESERVED_WORDS + RUST_GLOBAL_NAMESPACE:
-            name += '_namespace'
+            name = 'dbx_' + name
         return name
 
     def struct_name(self, struct):

@@ -13,13 +13,13 @@ pub type GetAccountBatchResult = Vec<BasicAccount>;
 
 /// Get information about a user's account.
 pub fn get_account(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetAccountArg,
-) -> ::Result<Result<BasicAccount, GetAccountError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<BasicAccount, GetAccountError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "users/get_account",
         arg,
         None)
@@ -27,13 +27,13 @@ pub fn get_account(
 
 /// Get information about multiple user accounts.  At most 300 accounts may be queried per request.
 pub fn get_account_batch(
-    client: &::client_trait::HttpClient,
+    client: &crate::client_trait::HttpClient,
     arg: &GetAccountBatchArg,
-) -> ::Result<Result<GetAccountBatchResult, GetAccountBatchError>> {
-    ::client_helpers::request(
+) -> crate::Result<Result<GetAccountBatchResult, GetAccountBatchError>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "users/get_account_batch",
         arg,
         None)
@@ -41,23 +41,25 @@ pub fn get_account_batch(
 
 /// Get information about the current user's account.
 pub fn get_current_account(
-    client: &::client_trait::HttpClient,
-) -> ::Result<Result<FullAccount, ()>> {
-    ::client_helpers::request(
+    client: &crate::client_trait::HttpClient,
+) -> crate::Result<Result<FullAccount, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "users/get_current_account",
         &(),
         None)
 }
 
 /// Get the space usage information for the current user's account.
-pub fn get_space_usage(client: &::client_trait::HttpClient) -> ::Result<Result<SpaceUsage, ()>> {
-    ::client_helpers::request(
+pub fn get_space_usage(
+    client: &crate::client_trait::HttpClient,
+) -> crate::Result<Result<SpaceUsage, ()>> {
+    crate::client_helpers::request(
         client,
-        ::client_trait::Endpoint::Api,
-        ::client_trait::Style::Rpc,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
         "users/get_space_usage",
         &(),
         None)
@@ -1078,7 +1080,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchError {
                         }
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetAccountBatchError::Other)
                     }
                 }
@@ -1145,11 +1147,11 @@ impl<'de> ::serde::de::Deserialize<'de> for GetAccountError {
                 };
                 match tag {
                     "no_account" => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetAccountError::NoAccount)
                     }
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(GetAccountError::Other)
                     }
                 }
@@ -1460,7 +1462,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceAllocation {
                     "individual" => Ok(SpaceAllocation::Individual(IndividualSpaceAllocation::internal_deserialize(map)?)),
                     "team" => Ok(SpaceAllocation::Team(TeamSpaceAllocation::internal_deserialize(map)?)),
                     _ => {
-                        ::eat_json_fields(&mut map)?;
+                        crate::eat_json_fields(&mut map)?;
                         Ok(SpaceAllocation::Other)
                     }
                 }
