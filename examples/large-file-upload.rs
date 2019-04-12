@@ -1,9 +1,7 @@
-extern crate dropbox_sdk;
+#![warn(rust_2018_idioms)]
+
 use dropbox_sdk::{HyperClient, Oauth2AuthorizeUrlBuilder, Oauth2Type};
 use dropbox_sdk::files;
-
-extern crate chrono;
-extern crate env_logger;
 
 use std::fs::File;
 use std::path::PathBuf;

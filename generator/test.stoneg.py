@@ -145,11 +145,11 @@ class TestBackend(RustHelperBackend):
         self.emit()
         self.emit(u'#![allow(bad_style)]')
         self.emit()
-        self.emit(u'#![cfg_attr(feature="cargo-clippy", allow(')
-        self.emit(u'    float_cmp,')
-        self.emit(u'    unreadable_literal,')
-        self.emit(u'    cyclomatic_complexity,')
-        self.emit(u'))]')
+        self.emit(u'#![allow(')
+        self.emit(u'    clippy::float_cmp,')
+        self.emit(u'    clippy::unreadable_literal,')
+        self.emit(u'    clippy::cyclomatic_complexity,')
+        self.emit(u')]')
         self.emit()
 
     def _test_fn(self, name):

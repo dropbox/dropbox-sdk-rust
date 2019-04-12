@@ -3,7 +3,7 @@
 use std::io::Read;
 
 pub trait HttpClient {
-    #[cfg_attr(feature="cargo-clippy", allow(too_many_arguments))]
+    #[allow(clippy::too_many_arguments)]
     fn request(
         &self,
         endpoint: Endpoint,
@@ -19,13 +19,13 @@ pub trait HttpClient {
 pub struct HttpRequestResultRaw {
     pub result_json: String,
     pub content_length: Option<u64>,
-    pub body: Option<Box<Read>>,
+    pub body: Option<Box<dyn Read>>,
 }
 
 pub struct HttpRequestResult<T> {
     pub result: T,
     pub content_length: Option<u64>,
-    pub body: Option<Box<Read>>,
+    pub body: Option<Box<dyn Read>>,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]

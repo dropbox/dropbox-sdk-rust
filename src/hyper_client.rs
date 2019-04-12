@@ -342,7 +342,7 @@ impl hyper::header::Header for UserAgent {
     fn parse_header(_: &[Vec<u8>]) -> Result<Self, hyper::Error> { unimplemented!() }
 }
 impl hyper::header::HeaderFormat for UserAgent {
-    fn fmt_header(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+    fn fmt_header(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         f.write_str(self.0)
     }
 }

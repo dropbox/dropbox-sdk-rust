@@ -22,7 +22,7 @@ impl<'de, T: DeserializeOwned> Deserialize<'de> for TopLevelError<T> {
         }
         impl<'de, T: DeserializeOwned> Visitor<'de> for StructVisitor<T> {
             type Value = TopLevelError<T>;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter) -> ::std::fmt::Result {
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
                 f.write_str("a top-level error struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
@@ -68,9 +68,9 @@ impl<'de, T: DeserializeOwned> Deserialize<'de> for TopLevelError<T> {
 /// went horribly wrong (I/O errors, parse errors, server 500 errors, etc.). The inner result has
 /// an error if the server returned one for the request, otherwise it has the deserialized JSON
 /// response and the body stream (if any).
-#[cfg_attr(feature="cargo-clippy", allow(too_many_arguments))]
+#[allow(clippy::too_many_arguments)]
 pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
-    client: &HttpClient,
+    client: &dyn HttpClient,
     endpoint: Endpoint,
     style: Style,
     function: &str,
@@ -126,7 +126,7 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
                     429 => {
                         Err(e).chain_err(|| ErrorKind::RateLimited(response))
                     },
-                    500...599 => {
+                    500 ..= 599 => {
                         Err(e).chain_err(|| ErrorKind::ServerError(response))
                     },
                     _ => {
@@ -144,7 +144,7 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
 }
 
 pub fn request<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
-    client: &HttpClient,
+    client: &dyn HttpClient,
     endpoint: Endpoint,
     style: Style,
     function: &str,

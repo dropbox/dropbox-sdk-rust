@@ -1,5 +1,4 @@
-extern crate dropbox_sdk;
-extern crate serde_json;
+#![warn(rust_2018_idioms)]
 
 //
 // Various tests for forward-compatibility.

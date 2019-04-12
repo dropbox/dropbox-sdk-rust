@@ -1,14 +1,7 @@
-// until tool_lints is stable, we can't use the 'clippy::' prefix on warnings, so we have to
-// silence the warning about THAT...
-#![cfg_attr(feature="cargo-clippy", allow(renamed_and_removed_lints))]
+#![warn(rust_2018_idioms)]
 
 #[macro_use] extern crate error_chain;
-#[cfg(feature = "hyper_client")] extern crate hyper;
-#[cfg(feature = "hyper_client")] extern crate hyper_native_tls;
 #[macro_use] extern crate log;
-extern crate serde;
-extern crate serde_json;
-extern crate url;
 
 error_chain! {
     types {

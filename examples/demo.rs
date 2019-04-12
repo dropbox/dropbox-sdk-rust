@@ -1,8 +1,7 @@
-extern crate dropbox_sdk;
+#![warn(rust_2018_idioms)]
+
 use dropbox_sdk::{files, HyperClient, Oauth2AuthorizeUrlBuilder, Oauth2Type};
 use dropbox_sdk::client_trait::HttpClient;
-
-extern crate env_logger;
 
 use std::collections::VecDeque;
 use std::env;
@@ -165,7 +164,7 @@ fn main() {
     }
 }
 
-fn list_directory<'a>(client: &'a HttpClient, path: &str, recursive: bool)
+fn list_directory<'a>(client: &'a dyn HttpClient, path: &str, recursive: bool)
     -> dropbox_sdk::Result<Result<DirectoryIterator<'a>, files::ListFolderError>>
 {
     assert!(path.starts_with('/'), "path needs to be absolute (start with a '/')");
@@ -187,7 +186,7 @@ fn list_directory<'a>(client: &'a HttpClient, path: &str, recursive: bool)
 }
 
 struct DirectoryIterator<'a> {
-    client: &'a HttpClient,
+    client: &'a dyn HttpClient,
     buffer: VecDeque<files::Metadata>,
     cursor: Option<String>,
 }
