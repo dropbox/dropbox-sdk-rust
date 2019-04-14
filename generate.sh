@@ -32,7 +32,7 @@ if [[ $RUST ]]; then
     # Generate the Rust code
     rm -rf src/generated
     mkdir -p src/generated
-    PYTHONPATH=stone python2.7 -m stone.cli -v generator/rust.stoneg.py --attribute :all src/generated $ALL
+    PYTHONPATH=stone python3 -m stone.cli -v generator/rust.stoneg.py --attribute :all src/generated $ALL
 fi
 
 if [[ $TEST ]]; then
@@ -40,5 +40,5 @@ if [[ $TEST ]]; then
     rm -rf tests/generated
     mkdir -p tests/generated
     mkdir -p tests/generated/reference
-    PYTHONPATH=stone python2.7 -m stone.cli -v generator/test.stoneg.py tests/generated $ALL
+    PYTHONPATH=stone python3 -m stone.cli -v generator/test.stoneg.py tests/generated $ALL
 fi

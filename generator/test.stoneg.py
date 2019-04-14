@@ -43,7 +43,11 @@ class TestBackend(RustHelperBackend):
         from reference.stone_serializers import json_encode
         for ns in api.namespaces:
             print('\t' + ns)
-            self.reference_impls[ns] = __import__('reference.'+ns).__dict__[ns]
+            python_ns = ns
+            if ns == 'async':
+                # hack to work around 'async' being a Python3 keyword
+                python_ns = 'async_'
+            self.reference_impls[ns] = __import__('reference.'+python_ns).__dict__[python_ns]
 
         print(u'Generating test code')
         for ns in api.namespaces.values():
@@ -394,6 +398,7 @@ class Unregex(object):
     def _generate(self, tokens):
         result = ''
         for (opcode, argument) in tokens:
+            opcode = str(opcode).lower()
             if opcode == 'literal':
                 result += chr(argument)
             elif opcode == 'at':
@@ -420,9 +425,9 @@ class Unregex(object):
             elif opcode == 'branch':
                 result += self._generate(argument[1][0])
             elif opcode == 'subpattern':
-                number, sub_tokens = argument
+                group_number, add_flags, del_flags, sub_tokens = argument
                 sub_result = self._generate(sub_tokens)
-                self._group_refs[number] = sub_result
+                self._group_refs[group_number] = sub_result
                 result += sub_result
             elif opcode == 'groupref':
                 result += self._group_refs[argument]

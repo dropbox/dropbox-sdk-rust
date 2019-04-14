@@ -1,4 +1,4 @@
-from contextlib import nested
+from contextlib import contextmanager
 
 from rust import RustHelperBackend
 from stone import ir
@@ -722,21 +722,23 @@ class RustBackend(RustHelperBackend):
             print("WARNING: unrecognized link tag '{}'".format(tag))
             return '`{}`'.format(val)
 
+    @contextmanager
     def _impl_deserialize(self, type_name):
-        return nested(self.block(u'impl<\'de> ::serde::de::Deserialize<\'de> for {}'.format(
-                type_name)),
-            self.emit_rust_function_def(
-                u'deserialize<D: ::serde::de::Deserializer<\'de>>',
-                [u'deserializer: D'],
-                u'Result<Self, D::Error>'))
+        with self.block(u'impl<\'de> ::serde::de::Deserialize<\'de> for {}'.format(type_name)), \
+                self.emit_rust_function_def(
+                    u'deserialize<D: ::serde::de::Deserializer<\'de>>',
+                    [u'deserializer: D'],
+                    u'Result<Self, D::Error>'):
+            yield
 
+    @contextmanager
     def _impl_serialize(self, type_name):
-        return nested(
-            self.block(u'impl ::serde::ser::Serialize for {}'.format(type_name)),
-            self.emit_rust_function_def(
-                u'serialize<S: ::serde::ser::Serializer>',
-                [u'&self', u'serializer: S'],
-                u'Result<S::Ok, S::Error>'))
+        with self.block(u'impl ::serde::ser::Serialize for {}'.format(type_name)), \
+                self.emit_rust_function_def(
+                    u'serialize<S: ::serde::ser::Serializer>',
+                    [u'&self', u'serializer: S'],
+                    u'Result<S::Ok, S::Error>'):
+            yield
 
     def _impl_default_for_struct(self, struct):
         struct_name = self.struct_name(struct)
