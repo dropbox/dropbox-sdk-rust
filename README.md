@@ -39,6 +39,22 @@ default_features = false
 features = ["dbx_files", "dbx_users"]
 ```
 
+## Result Types and Errors
+
+Routes return errors in two ways: the `Error` associated type of the future is
+used to convey errors that occur in actually making the request, such as
+network I/O errors or failure to serialize or deserialize the actual request
+data. Errors returned by the service are returned in the `Err` variant of the
+`Result` returned by the future. These errors reflect more "normal" problems
+with the request, such as file not found, lacking permissions, etc.
+
+The rationale for splitting the errors this way is that the former category
+usually can't be handled in any way other than by retrying the request, whereas
+the latter category indicate problems with the actual request itself and
+probably should not be retried. Since most callers can't handle I/O errors in
+any sensible way, this allows them to use the `?` syntax to pass it up the
+stack, while still handling errors returned by the server.
+
 ## Tests
 
 The tests are auto-generated from the spec as well, but unlike the main code,
@@ -61,6 +77,9 @@ Some implementation notes, limitations, and TODOs:
    Rust doesn't have these paradigms, so instead this SDK represents
    polymorphic parent structs as enums, and the inherited fields are put in all
    variants.  See `dropbox_sdk::files::Metadata` for an example.
+ * The `error_chain` crate is used to generate a composite Error type for
+   request errors, network I/O errors, and so on. This crate is deprecated, and
+   so the implementation of this type will need to be changed at some point.
  * This code does not use `serde_derive` and instead uses manually-emitted
    serialization code.  Previous work did attempt to use `serde_derive`, but
    the way the Dropbox API serializes unions containing structs (by collapsing
