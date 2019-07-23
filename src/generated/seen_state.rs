@@ -12,12 +12,19 @@
 pub enum PlatformType {
     /// The content was viewed on the web.
     Web,
-    /// The content was viewed on a mobile client.
-    Mobile,
     /// The content was viewed on a desktop client.
     Desktop,
+    /// The content was viewed on a mobile iOS client.
+    MobileIos,
+    /// The content was viewed on a mobile android client.
+    MobileAndroid,
+    /// The content was viewed from an API client.
+    Api,
     /// The content was viewed on an unknown platform.
     Unknown,
+    /// The content was viewed on a mobile client. DEPRECATED: Use mobile_ios or mobile_android
+    /// instead.
+    Mobile,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -43,17 +50,29 @@ impl<'de> ::serde::de::Deserialize<'de> for PlatformType {
                         crate::eat_json_fields(&mut map)?;
                         Ok(PlatformType::Web)
                     }
-                    "mobile" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PlatformType::Mobile)
-                    }
                     "desktop" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(PlatformType::Desktop)
                     }
+                    "mobile_ios" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PlatformType::MobileIos)
+                    }
+                    "mobile_android" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PlatformType::MobileAndroid)
+                    }
+                    "api" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PlatformType::Api)
+                    }
                     "unknown" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(PlatformType::Unknown)
+                    }
+                    "mobile" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PlatformType::Mobile)
                     }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
@@ -63,9 +82,12 @@ impl<'de> ::serde::de::Deserialize<'de> for PlatformType {
             }
         }
         const VARIANTS: &[&str] = &["web",
-                                    "mobile",
                                     "desktop",
+                                    "mobile_ios",
+                                    "mobile_android",
+                                    "api",
                                     "unknown",
+                                    "mobile",
                                     "other"];
         deserializer.deserialize_struct("PlatformType", VARIANTS, EnumVisitor)
     }
@@ -82,22 +104,40 @@ impl ::serde::ser::Serialize for PlatformType {
                 s.serialize_field(".tag", "web")?;
                 s.end()
             }
-            PlatformType::Mobile => {
-                // unit
-                let mut s = serializer.serialize_struct("PlatformType", 1)?;
-                s.serialize_field(".tag", "mobile")?;
-                s.end()
-            }
             PlatformType::Desktop => {
                 // unit
                 let mut s = serializer.serialize_struct("PlatformType", 1)?;
                 s.serialize_field(".tag", "desktop")?;
                 s.end()
             }
+            PlatformType::MobileIos => {
+                // unit
+                let mut s = serializer.serialize_struct("PlatformType", 1)?;
+                s.serialize_field(".tag", "mobile_ios")?;
+                s.end()
+            }
+            PlatformType::MobileAndroid => {
+                // unit
+                let mut s = serializer.serialize_struct("PlatformType", 1)?;
+                s.serialize_field(".tag", "mobile_android")?;
+                s.end()
+            }
+            PlatformType::Api => {
+                // unit
+                let mut s = serializer.serialize_struct("PlatformType", 1)?;
+                s.serialize_field(".tag", "api")?;
+                s.end()
+            }
             PlatformType::Unknown => {
                 // unit
                 let mut s = serializer.serialize_struct("PlatformType", 1)?;
                 s.serialize_field(".tag", "unknown")?;
+                s.end()
+            }
+            PlatformType::Mobile => {
+                // unit
+                let mut s = serializer.serialize_struct("PlatformType", 1)?;
+                s.serialize_field(".tag", "mobile")?;
                 s.end()
             }
             PlatformType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

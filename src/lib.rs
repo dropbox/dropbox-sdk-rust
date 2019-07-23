@@ -1,4 +1,4 @@
-#![warn(rust_2018_idioms)]
+#![deny(rust_2018_idioms)]
 
 #[macro_use] extern crate error_chain;
 #[macro_use] extern crate log;

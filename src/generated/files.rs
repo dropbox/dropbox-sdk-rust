@@ -89,7 +89,7 @@ pub fn copy(
 }
 
 /// Copy multiple files or folders to different locations at once in the user's Dropbox. This route
-/// will replace [`copy_batch()`](copy_batch). The main difference is this route will return stutus
+/// will replace [`copy_batch()`](copy_batch). The main difference is this route will return status
 /// for each entry, while [`copy_batch()`](copy_batch) raises failure if any entry fails. This route
 /// will either finish synchronously, or return a job ID and do the async copy job in background.
 /// Please use [`copy_batch_check_v2()`](copy_batch_check_v2) to check the job status.
@@ -353,6 +353,26 @@ pub fn download_zip(
         range_end)
 }
 
+/// Export a file from a user's Dropbox. This route only supports exporting files that cannot be
+/// downloaded directly  and whose [`ExportResult::file_metadata`](ExportResult) has
+/// [`ExportInfo::export_as`](ExportInfo) populated.
+pub fn export(
+    client: &dyn crate::client_trait::HttpClient,
+    arg: &ExportArg,
+    range_start: Option<u64>,
+    range_end: Option<u64>,
+) -> crate::Result<Result<crate::client_trait::HttpRequestResult<ExportResult>, ExportError>> {
+    crate::client_helpers::request_with_body(
+        client,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Download,
+        "files/export",
+        arg,
+        None,
+        range_start,
+        range_end)
+}
+
 /// Returns the metadata for a file or folder. Note: Metadata for the root folder is unsupported.
 pub fn get_metadata(
     client: &dyn crate::client_trait::HttpClient,
@@ -368,9 +388,10 @@ pub fn get_metadata(
 }
 
 /// Get a preview for a file. Currently, PDF previews are generated for files with the following
-/// extensions: .ai, .doc, .docm, .docx, .eps, .odp, .odt, .pps, .ppsm, .ppsx, .ppt, .pptm, .pptx,
-/// .rtf. HTML previews are generated for files with the following extensions: .csv, .ods, .xls,
-/// .xlsm, .xlsx. Other formats will return an unsupported extension error.
+/// extensions: .ai, .doc, .docm, .docx, .eps, .gdoc, .gslides, .odp, .odt, .pps, .ppsm, .ppsx,
+/// .ppt, .pptm, .pptx, .rtf. HTML previews are generated for files with the following extensions:
+/// .csv, .ods, .xls, .xlsm, .gsheet, .xlsx. Other formats will return an unsupported extension
+/// error.
 pub fn get_preview(
     client: &dyn crate::client_trait::HttpClient,
     arg: &PreviewArg,
@@ -389,8 +410,8 @@ pub fn get_preview(
 }
 
 /// Get a temporary link to stream content of a file. This link will expire in four hours and
-/// afterwards you will get 410 Gone. So this URL should not be used to display content directly in
-/// the browser.  Content-Type of the link is determined automatically by the file's mime type.
+/// afterwards you will get 410 Gone. This URL should not be used to display content directly in the
+/// browser. The Content-Type of the link is determined automatically by the file's mime type.
 pub fn get_temporary_link(
     client: &dyn crate::client_trait::HttpClient,
     arg: &GetTemporaryLinkArg,
@@ -626,10 +647,10 @@ pub fn do_move(
 }
 
 /// Move multiple files or folders to different locations at once in the user's Dropbox. This route
-/// will replace [`move_batch_v2()`](move_batch_v2). The main difference is this route will return
-/// stutus for each entry, while [`move_batch()`](move_batch) raises failure if any entry fails.
-/// This route will either finish synchronously, or return a job ID and do the async move job in
-/// background. Please use [`move_batch_check_v2()`](move_batch_check_v2) to check the job status.
+/// will replace [`move_batch()`](move_batch). The main difference is this route will return status
+/// for each entry, while [`move_batch()`](move_batch) raises failure if any entry fails. This route
+/// will either finish synchronously, or return a job ID and do the async move job in background.
+/// Please use [`move_batch_check_v2()`](move_batch_check_v2) to check the job status.
 pub fn move_batch_v2(
     client: &dyn crate::client_trait::HttpClient,
     arg: &MoveBatchArg,
@@ -4080,6 +4101,8 @@ impl ::serde::ser::Serialize for DownloadArg {
 #[derive(Debug)]
 pub enum DownloadError {
     Path(LookupError),
+    /// This file type cannot be downloaded directly; use [`export()`](export) instead.
+    UnsupportedFile,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -4108,6 +4131,10 @@ impl<'de> ::serde::de::Deserialize<'de> for DownloadError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "unsupported_file" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DownloadError::UnsupportedFile)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(DownloadError::Other)
@@ -4116,6 +4143,7 @@ impl<'de> ::serde::de::Deserialize<'de> for DownloadError {
             }
         }
         const VARIANTS: &[&str] = &["path",
+                                    "unsupported_file",
                                     "other"];
         deserializer.deserialize_struct("DownloadError", VARIANTS, EnumVisitor)
     }
@@ -4131,6 +4159,12 @@ impl ::serde::ser::Serialize for DownloadError {
                 let mut s = serializer.serialize_struct("DownloadError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
+                s.end()
+            }
+            DownloadError::UnsupportedFile => {
+                // unit
+                let mut s = serializer.serialize_struct("DownloadError", 1)?;
+                s.serialize_field(".tag", "unsupported_file")?;
                 s.end()
             }
             DownloadError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -4429,6 +4463,487 @@ impl ::serde::ser::Serialize for DownloadZipResult {
 }
 
 #[derive(Debug)]
+pub struct ExportArg {
+    /// The path of the file to be exported.
+    pub path: ReadPath,
+}
+
+impl ExportArg {
+    pub fn new(path: ReadPath) -> Self {
+        ExportArg {
+            path,
+        }
+    }
+
+}
+
+const EXPORT_ARG_FIELDS: &[&str] = &["path"];
+impl ExportArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ExportArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ExportArg>, V::Error> {
+        let mut field_path = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ExportArg {
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExportArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ExportArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ExportArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ExportArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ExportArg", EXPORT_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExportArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ExportArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum ExportError {
+    Path(LookupError),
+    /// This file type cannot be exported. Use [`download()`](download) instead.
+    NonExportable,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExportError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ExportError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ExportError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        match map.next_key()? {
+                            Some("path") => Ok(ExportError::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "non_exportable" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ExportError::NonExportable)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ExportError::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["path",
+                                    "non_exportable",
+                                    "other"];
+        deserializer.deserialize_struct("ExportError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExportError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ExportError::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("ExportError", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            ExportError::NonExportable => {
+                // unit
+                let mut s = serializer.serialize_struct("ExportError", 1)?;
+                s.serialize_field(".tag", "non_exportable")?;
+                s.end()
+            }
+            ExportError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for ExportError {
+    fn description(&self) -> &str {
+        "ExportError"
+    }
+}
+
+impl ::std::fmt::Display for ExportError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// Export information for a file.
+#[derive(Debug)]
+pub struct ExportInfo {
+    /// Format to which the file can be exported to.
+    pub export_as: Option<String>,
+}
+
+impl Default for ExportInfo {
+    fn default() -> Self {
+        ExportInfo {
+            export_as: None,
+        }
+    }
+}
+
+const EXPORT_INFO_FIELDS: &[&str] = &["export_as"];
+impl ExportInfo {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ExportInfo, V::Error> {
+        let mut field_export_as = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "export_as" => {
+                    if field_export_as.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("export_as"));
+                    }
+                    field_export_as = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = ExportInfo {
+            export_as: field_export_as,
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("export_as", &self.export_as)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExportInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ExportInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ExportInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ExportInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ExportInfo", EXPORT_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExportInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ExportInfo", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ExportMetadata {
+    /// The last component of the path (including extension). This never contains a slash.
+    pub name: String,
+    /// The file size in bytes.
+    pub size: u64,
+    /// A hash based on the exported file content. This field can be used to verify data integrity.
+    /// Similar to content hash. For more information see our [Content
+    /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
+    pub export_hash: Option<Sha256HexHash>,
+}
+
+impl ExportMetadata {
+    pub fn new(name: String, size: u64) -> Self {
+        ExportMetadata {
+            name,
+            size,
+            export_hash: None,
+        }
+    }
+
+    pub fn with_export_hash(mut self, value: Option<Sha256HexHash>) -> Self {
+        self.export_hash = value;
+        self
+    }
+
+}
+
+const EXPORT_METADATA_FIELDS: &[&str] = &["name",
+                                          "size",
+                                          "export_hash"];
+impl ExportMetadata {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ExportMetadata, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ExportMetadata>, V::Error> {
+        let mut field_name = None;
+        let mut field_size = None;
+        let mut field_export_hash = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "name" => {
+                    if field_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("name"));
+                    }
+                    field_name = Some(map.next_value()?);
+                }
+                "size" => {
+                    if field_size.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("size"));
+                    }
+                    field_size = Some(map.next_value()?);
+                }
+                "export_hash" => {
+                    if field_export_hash.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("export_hash"));
+                    }
+                    field_export_hash = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ExportMetadata {
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            size: field_size.ok_or_else(|| ::serde::de::Error::missing_field("size"))?,
+            export_hash: field_export_hash,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("size", &self.size)?;
+        s.serialize_field("export_hash", &self.export_hash)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExportMetadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ExportMetadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ExportMetadata struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ExportMetadata::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ExportMetadata", EXPORT_METADATA_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExportMetadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ExportMetadata", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ExportResult {
+    /// Metadata for the exported version of the file.
+    pub export_metadata: ExportMetadata,
+    /// Metadata for the original file.
+    pub file_metadata: FileMetadata,
+}
+
+impl ExportResult {
+    pub fn new(export_metadata: ExportMetadata, file_metadata: FileMetadata) -> Self {
+        ExportResult {
+            export_metadata,
+            file_metadata,
+        }
+    }
+
+}
+
+const EXPORT_RESULT_FIELDS: &[&str] = &["export_metadata",
+                                        "file_metadata"];
+impl ExportResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ExportResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ExportResult>, V::Error> {
+        let mut field_export_metadata = None;
+        let mut field_file_metadata = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "export_metadata" => {
+                    if field_export_metadata.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("export_metadata"));
+                    }
+                    field_export_metadata = Some(map.next_value()?);
+                }
+                "file_metadata" => {
+                    if field_file_metadata.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_metadata"));
+                    }
+                    field_file_metadata = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ExportResult {
+            export_metadata: field_export_metadata.ok_or_else(|| ::serde::de::Error::missing_field("export_metadata"))?,
+            file_metadata: field_file_metadata.ok_or_else(|| ::serde::de::Error::missing_field("file_metadata"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("export_metadata", &self.export_metadata)?;
+        s.serialize_field("file_metadata", &self.file_metadata)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ExportResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ExportResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ExportResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ExportResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ExportResult", EXPORT_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ExportResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ExportResult", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub struct FileMetadata {
     /// The last component of the path (including extension). This never contains a slash.
     pub name: String,
@@ -4459,12 +4974,20 @@ pub struct FileMetadata {
     /// Please use [`FileSharingInfo::parent_shared_folder_id`](FileSharingInfo) or
     /// [`FolderSharingInfo::parent_shared_folder_id`](FolderSharingInfo) instead.
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
-    /// Additional information if the file is a photo or video.
+    /// Additional information if the file is a photo or video. This field will not be set on
+    /// entries returned by [`list_folder()`](list_folder),
+    /// [`list_folder_continue()`](list_folder_continue), or
+    /// [`get_thumbnail_batch()`](get_thumbnail_batch), starting December 2, 2019.
     pub media_info: Option<MediaInfo>,
     /// Set if this file is a symlink.
     pub symlink_info: Option<SymlinkInfo>,
     /// Set if this file is contained in a shared folder.
     pub sharing_info: Option<FileSharingInfo>,
+    /// If true, file can be downloaded directly; else the file must be exported.
+    pub is_downloadable: bool,
+    /// Information about format this file can be exported to. This filed must be set if
+    /// `is_downloadable` is set to false.
+    pub export_info: Option<ExportInfo>,
     /// Additional information if the file has custom properties with the property template
     /// specified.
     pub property_groups: Option<Vec<super::file_properties::PropertyGroup>>,
@@ -4502,6 +5025,8 @@ impl FileMetadata {
             media_info: None,
             symlink_info: None,
             sharing_info: None,
+            is_downloadable: true,
+            export_info: None,
             property_groups: None,
             has_explicit_shared_members: None,
             content_hash: None,
@@ -4541,6 +5066,16 @@ impl FileMetadata {
         self
     }
 
+    pub fn with_is_downloadable(mut self, value: bool) -> Self {
+        self.is_downloadable = value;
+        self
+    }
+
+    pub fn with_export_info(mut self, value: Option<ExportInfo>) -> Self {
+        self.export_info = value;
+        self
+    }
+
     pub fn with_property_groups(
         mut self,
         value: Option<Vec<super::file_properties::PropertyGroup>>,
@@ -4573,6 +5108,8 @@ const FILE_METADATA_FIELDS: &[&str] = &["name",
                                         "media_info",
                                         "symlink_info",
                                         "sharing_info",
+                                        "is_downloadable",
+                                        "export_info",
                                         "property_groups",
                                         "has_explicit_shared_members",
                                         "content_hash"];
@@ -4599,6 +5136,8 @@ impl FileMetadata {
         let mut field_media_info = None;
         let mut field_symlink_info = None;
         let mut field_sharing_info = None;
+        let mut field_is_downloadable = None;
+        let mut field_export_info = None;
         let mut field_property_groups = None;
         let mut field_has_explicit_shared_members = None;
         let mut field_content_hash = None;
@@ -4678,6 +5217,18 @@ impl FileMetadata {
                     }
                     field_sharing_info = Some(map.next_value()?);
                 }
+                "is_downloadable" => {
+                    if field_is_downloadable.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("is_downloadable"));
+                    }
+                    field_is_downloadable = Some(map.next_value()?);
+                }
+                "export_info" => {
+                    if field_export_info.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("export_info"));
+                    }
+                    field_export_info = Some(map.next_value()?);
+                }
                 "property_groups" => {
                     if field_property_groups.is_some() {
                         return Err(::serde::de::Error::duplicate_field("property_groups"));
@@ -4718,6 +5269,8 @@ impl FileMetadata {
             media_info: field_media_info,
             symlink_info: field_symlink_info,
             sharing_info: field_sharing_info,
+            is_downloadable: field_is_downloadable.unwrap_or(true),
+            export_info: field_export_info,
             property_groups: field_property_groups,
             has_explicit_shared_members: field_has_explicit_shared_members,
             content_hash: field_content_hash,
@@ -4742,6 +5295,8 @@ impl FileMetadata {
         s.serialize_field("media_info", &self.media_info)?;
         s.serialize_field("symlink_info", &self.symlink_info)?;
         s.serialize_field("sharing_info", &self.sharing_info)?;
+        s.serialize_field("is_downloadable", &self.is_downloadable)?;
+        s.serialize_field("export_info", &self.export_info)?;
         s.serialize_field("property_groups", &self.property_groups)?;
         s.serialize_field("has_explicit_shared_members", &self.has_explicit_shared_members)?;
         s.serialize_field("content_hash", &self.content_hash)
@@ -4770,7 +5325,7 @@ impl ::serde::ser::Serialize for FileMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileMetadata", 15)?;
+        let mut s = serializer.serialize_struct("FileMetadata", 17)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -5962,6 +6517,10 @@ impl ::serde::ser::Serialize for GetTemporaryLinkArg {
 #[derive(Debug)]
 pub enum GetTemporaryLinkError {
     Path(LookupError),
+    /// The user's email address needs to be verified to use this functionality.
+    EmailNotVerified,
+    /// Cannot get temporary link to this file type; use [`export()`](export) instead.
+    UnsupportedFile,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -5990,6 +6549,14 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "email_not_verified" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(GetTemporaryLinkError::EmailNotVerified)
+                    }
+                    "unsupported_file" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(GetTemporaryLinkError::UnsupportedFile)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(GetTemporaryLinkError::Other)
@@ -5998,6 +6565,8 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkError {
             }
         }
         const VARIANTS: &[&str] = &["path",
+                                    "email_not_verified",
+                                    "unsupported_file",
                                     "other"];
         deserializer.deserialize_struct("GetTemporaryLinkError", VARIANTS, EnumVisitor)
     }
@@ -6013,6 +6582,18 @@ impl ::serde::ser::Serialize for GetTemporaryLinkError {
                 let mut s = serializer.serialize_struct("GetTemporaryLinkError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
+                s.end()
+            }
+            GetTemporaryLinkError::EmailNotVerified => {
+                // unit
+                let mut s = serializer.serialize_struct("GetTemporaryLinkError", 1)?;
+                s.serialize_field(".tag", "email_not_verified")?;
+                s.end()
+            }
+            GetTemporaryLinkError::UnsupportedFile => {
+                // unit
+                let mut s = serializer.serialize_struct("GetTemporaryLinkError", 1)?;
+                s.serialize_field(".tag", "unsupported_file")?;
                 s.end()
             }
             GetTemporaryLinkError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -6871,7 +7452,8 @@ pub struct ListFolderArg {
     /// If true, the list folder operation will be applied recursively to all subfolders and the
     /// response will contain contents of all subfolders.
     pub recursive: bool,
-    /// If true, [`FileMetadata::media_info`](FileMetadata) is set for photo and video.
+    /// If true, [`FileMetadata::media_info`](FileMetadata) is set for photo and video. This
+    /// parameter will no longer have an effect starting December 2, 2019.
     pub include_media_info: bool,
     /// If true, the results will include entries for files and folders that used to exist but were
     /// deleted.
@@ -6892,6 +7474,8 @@ pub struct ListFolderArg {
     /// If set to a valid list of template IDs, [`FileMetadata::property_groups`](FileMetadata) is
     /// set if there exists property data associated with the file and each of the listed templates.
     pub include_property_groups: Option<super::file_properties::TemplateFilterBase>,
+    /// If true, include files that are not downloadable, i.e. Google Docs.
+    pub include_non_downloadable_files: bool,
 }
 
 impl ListFolderArg {
@@ -6906,6 +7490,7 @@ impl ListFolderArg {
             limit: None,
             shared_link: None,
             include_property_groups: None,
+            include_non_downloadable_files: true,
         }
     }
 
@@ -6952,6 +7537,11 @@ impl ListFolderArg {
         self
     }
 
+    pub fn with_include_non_downloadable_files(mut self, value: bool) -> Self {
+        self.include_non_downloadable_files = value;
+        self
+    }
+
 }
 
 const LIST_FOLDER_ARG_FIELDS: &[&str] = &["path",
@@ -6962,7 +7552,8 @@ const LIST_FOLDER_ARG_FIELDS: &[&str] = &["path",
                                           "include_mounted_folders",
                                           "limit",
                                           "shared_link",
-                                          "include_property_groups"];
+                                          "include_property_groups",
+                                          "include_non_downloadable_files"];
 impl ListFolderArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -6983,6 +7574,7 @@ impl ListFolderArg {
         let mut field_limit = None;
         let mut field_shared_link = None;
         let mut field_include_property_groups = None;
+        let mut field_include_non_downloadable_files = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -7041,6 +7633,12 @@ impl ListFolderArg {
                     }
                     field_include_property_groups = Some(map.next_value()?);
                 }
+                "include_non_downloadable_files" => {
+                    if field_include_non_downloadable_files.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("include_non_downloadable_files"));
+                    }
+                    field_include_non_downloadable_files = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -7060,6 +7658,7 @@ impl ListFolderArg {
             limit: field_limit,
             shared_link: field_shared_link,
             include_property_groups: field_include_property_groups,
+            include_non_downloadable_files: field_include_non_downloadable_files.unwrap_or(true),
         };
         Ok(Some(result))
     }
@@ -7077,7 +7676,8 @@ impl ListFolderArg {
         s.serialize_field("include_mounted_folders", &self.include_mounted_folders)?;
         s.serialize_field("limit", &self.limit)?;
         s.serialize_field("shared_link", &self.shared_link)?;
-        s.serialize_field("include_property_groups", &self.include_property_groups)
+        s.serialize_field("include_property_groups", &self.include_property_groups)?;
+        s.serialize_field("include_non_downloadable_files", &self.include_non_downloadable_files)
     }
 }
 
@@ -7103,7 +7703,7 @@ impl ::serde::ser::Serialize for ListFolderArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ListFolderArg", 9)?;
+        let mut s = serializer.serialize_struct("ListFolderArg", 10)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -8270,6 +8870,8 @@ pub enum LookupError {
     /// The file cannot be transferred because the content is restricted.  For example, sometimes
     /// there are legal restrictions due to copyright claims.
     RestrictedContent,
+    /// This operation is not supported for this content type.
+    UnsupportedContentType,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -8314,6 +8916,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LookupError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::RestrictedContent)
                     }
+                    "unsupported_content_type" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LookupError::UnsupportedContentType)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::Other)
@@ -8326,6 +8932,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LookupError {
                                     "not_file",
                                     "not_folder",
                                     "restricted_content",
+                                    "unsupported_content_type",
                                     "other"];
         deserializer.deserialize_struct("LookupError", VARIANTS, EnumVisitor)
     }
@@ -8368,6 +8975,12 @@ impl ::serde::ser::Serialize for LookupError {
                 // unit
                 let mut s = serializer.serialize_struct("LookupError", 1)?;
                 s.serialize_field(".tag", "restricted_content")?;
+                s.end()
+            }
+            LookupError::UnsupportedContentType => {
+                // unit
+                let mut s = serializer.serialize_struct("LookupError", 1)?;
+                s.serialize_field(".tag", "unsupported_content_type")?;
                 s.end()
             }
             LookupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -8559,7 +9172,7 @@ impl ::serde::ser::Serialize for Metadata {
         use serde::ser::SerializeStruct;
         match *self {
             Metadata::File(ref x) => {
-                let mut s = serializer.serialize_struct("Metadata", 16)?;
+                let mut s = serializer.serialize_struct("Metadata", 18)?;
                 s.serialize_field(".tag", "file")?;
                 s.serialize_field("name", &x.name)?;
                 s.serialize_field("id", &x.id)?;
@@ -8573,6 +9186,8 @@ impl ::serde::ser::Serialize for Metadata {
                 s.serialize_field("media_info", &x.media_info)?;
                 s.serialize_field("symlink_info", &x.symlink_info)?;
                 s.serialize_field("sharing_info", &x.sharing_info)?;
+                s.serialize_field("is_downloadable", &x.is_downloadable)?;
+                s.serialize_field("export_info", &x.export_info)?;
                 s.serialize_field("property_groups", &x.property_groups)?;
                 s.serialize_field("has_explicit_shared_members", &x.has_explicit_shared_members)?;
                 s.serialize_field("content_hash", &x.content_hash)?;
@@ -9494,6 +10109,8 @@ pub enum RelocationBatchError {
     /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action
     /// you were taking succeeded, and if not, try again. This should happen very rarely.
     InternalError,
+    /// Can't move the shared folder to the given destination.
+    CantMoveSharedFolder,
     /// There are too many write operations in user's Dropbox. Please retry this request.
     TooManyWriteOperations,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -9570,6 +10187,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::InternalError)
                     }
+                    "cant_move_shared_folder" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(RelocationBatchError::CantMoveSharedFolder)
+                    }
                     "too_many_write_operations" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::TooManyWriteOperations)
@@ -9592,6 +10213,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                                     "cant_transfer_ownership",
                                     "insufficient_quota",
                                     "internal_error",
+                                    "cant_move_shared_folder",
                                     "other",
                                     "too_many_write_operations"];
         deserializer.deserialize_struct("RelocationBatchError", VARIANTS, EnumVisitor)
@@ -9670,6 +10292,12 @@ impl ::serde::ser::Serialize for RelocationBatchError {
                 // unit
                 let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
                 s.serialize_field(".tag", "internal_error")?;
+                s.end()
+            }
+            RelocationBatchError::CantMoveSharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
+                s.serialize_field(".tag", "cant_move_shared_folder")?;
                 s.end()
             }
             RelocationBatchError::TooManyWriteOperations => {
@@ -10193,8 +10821,9 @@ impl ::serde::ser::Serialize for RelocationBatchResultEntry {
     }
 }
 
-/// Result returned by [`copy_batch_v2()`](copy_batch_v2) or [`move_batch_v2()`](move_batch_v2) that
-/// may either launch an asynchronous job or complete synchronously.
+/// Result returned by [`copy_batch_check_v2()`](copy_batch_check_v2) or
+/// [`move_batch_check_v2()`](move_batch_check_v2) that may either be in progress or completed with
+/// result for each entry.
 #[derive(Debug)]
 pub enum RelocationBatchV2JobStatus {
     /// The asynchronous job is still in progress.
@@ -10438,6 +11067,8 @@ pub enum RelocationError {
     /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action
     /// you were taking succeeded, and if not, try again. This should happen very rarely.
     InternalError,
+    /// Can't move the shared folder to the given destination.
+    CantMoveSharedFolder,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -10512,6 +11143,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::InternalError)
                     }
+                    "cant_move_shared_folder" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(RelocationError::CantMoveSharedFolder)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::Other)
@@ -10530,6 +11165,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                                     "cant_transfer_ownership",
                                     "insufficient_quota",
                                     "internal_error",
+                                    "cant_move_shared_folder",
                                     "other"];
         deserializer.deserialize_struct("RelocationError", VARIANTS, EnumVisitor)
     }
@@ -10607,6 +11243,12 @@ impl ::serde::ser::Serialize for RelocationError {
                 // unit
                 let mut s = serializer.serialize_struct("RelocationError", 1)?;
                 s.serialize_field(".tag", "internal_error")?;
+                s.end()
+            }
+            RelocationError::CantMoveSharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("RelocationError", 1)?;
+                s.serialize_field(".tag", "cant_move_shared_folder")?;
                 s.end()
             }
             RelocationError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -11451,7 +12093,8 @@ impl ::serde::ser::Serialize for SaveUrlArg {
 #[derive(Debug)]
 pub enum SaveUrlError {
     Path(WriteError),
-    /// Failed downloading the given URL.
+    /// Failed downloading the given URL. The url may be password-protected / the password provided
+    /// was incorrect.
     DownloadFailed,
     /// The given URL is invalid.
     InvalidUrl,
@@ -11621,7 +12264,7 @@ impl ::serde::ser::Serialize for SaveUrlJobStatus {
             }
             SaveUrlJobStatus::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 16)?;
+                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 18)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -11694,7 +12337,7 @@ impl ::serde::ser::Serialize for SaveUrlResult {
             }
             SaveUrlResult::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SaveUrlResult", 16)?;
+                let mut s = serializer.serialize_struct("SaveUrlResult", 18)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -14238,7 +14881,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchResultEntry {
         match *self {
             UploadSessionFinishBatchResultEntry::Success(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 16)?;
+                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 18)?;
                 s.serialize_field(".tag", "success")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -14399,7 +15042,7 @@ pub enum UploadSessionLookupError {
     /// occur when a previous request was received and processed successfully but the client did not
     /// receive the response, e.g. due to a network error.
     IncorrectOffset(UploadSessionOffsetError),
-    /// You are attempting to append data to an upload session that has alread been closed (i.e.
+    /// You are attempting to append data to an upload session that has already been closed (i.e.
     /// committed).
     Closed,
     /// The session must be closed before calling upload_session/finish_batch.

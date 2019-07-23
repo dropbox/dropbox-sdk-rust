@@ -139,6 +139,8 @@ pub enum AuthError {
     UserSuspended,
     /// The access token has expired.
     ExpiredAccessToken,
+    /// The access token does not have the required scope to access the route.
+    MissingScope(TokenScopeError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -180,6 +182,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(AuthError::ExpiredAccessToken)
                     }
+                    "missing_scope" => Ok(AuthError::MissingScope(TokenScopeError::internal_deserialize(map)?)),
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(AuthError::Other)
@@ -192,6 +195,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                                     "invalid_select_admin",
                                     "user_suspended",
                                     "expired_access_token",
+                                    "missing_scope",
                                     "other"];
         deserializer.deserialize_struct("AuthError", VARIANTS, EnumVisitor)
     }
@@ -230,6 +234,13 @@ impl ::serde::ser::Serialize for AuthError {
                 // unit
                 let mut s = serializer.serialize_struct("AuthError", 1)?;
                 s.serialize_field(".tag", "expired_access_token")?;
+                s.end()
+            }
+            AuthError::MissingScope(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("AuthError", 2)?;
+                s.serialize_field(".tag", "missing_scope")?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             AuthError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -866,6 +877,96 @@ impl ::serde::ser::Serialize for TokenFromOAuth1Result {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("TokenFromOAuth1Result", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct TokenScopeError {
+    /// The required scope to access the route.
+    pub required_scope: String,
+}
+
+impl TokenScopeError {
+    pub fn new(required_scope: String) -> Self {
+        TokenScopeError {
+            required_scope,
+        }
+    }
+
+}
+
+const TOKEN_SCOPE_ERROR_FIELDS: &[&str] = &["required_scope"];
+impl TokenScopeError {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TokenScopeError, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TokenScopeError>, V::Error> {
+        let mut field_required_scope = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "required_scope" => {
+                    if field_required_scope.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("required_scope"));
+                    }
+                    field_required_scope = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TokenScopeError {
+            required_scope: field_required_scope.ok_or_else(|| ::serde::de::Error::missing_field("required_scope"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("required_scope", &self.required_scope)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TokenScopeError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TokenScopeError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TokenScopeError struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TokenScopeError::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TokenScopeError", TOKEN_SCOPE_ERROR_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TokenScopeError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TokenScopeError", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

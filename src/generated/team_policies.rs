@@ -297,6 +297,77 @@ impl ::serde::ser::Serialize for OfficeAddInPolicy {
 }
 
 #[derive(Debug)]
+pub enum PaperDefaultFolderPolicy {
+    /// Everyone in team will be the default option when creating a folder in Paper.
+    EveryoneInTeam,
+    /// Invite only will be the default option when creating a folder in Paper.
+    InviteOnly,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDefaultFolderPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PaperDefaultFolderPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PaperDefaultFolderPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "everyone_in_team" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PaperDefaultFolderPolicy::EveryoneInTeam)
+                    }
+                    "invite_only" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PaperDefaultFolderPolicy::InviteOnly)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PaperDefaultFolderPolicy::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["everyone_in_team",
+                                    "invite_only",
+                                    "other"];
+        deserializer.deserialize_struct("PaperDefaultFolderPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDefaultFolderPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PaperDefaultFolderPolicy::EveryoneInTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDefaultFolderPolicy", 1)?;
+                s.serialize_field(".tag", "everyone_in_team")?;
+                s.end()
+            }
+            PaperDefaultFolderPolicy::InviteOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDefaultFolderPolicy", 1)?;
+                s.serialize_field(".tag", "invite_only")?;
+                s.end()
+            }
+            PaperDefaultFolderPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
 pub enum PaperDeploymentPolicy {
     /// All team members have access to Paper.
     Full,
@@ -364,6 +435,77 @@ impl ::serde::ser::Serialize for PaperDeploymentPolicy {
                 s.end()
             }
             PaperDeploymentPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum PaperDesktopPolicy {
+    /// Do not allow team members to use Paper Desktop.
+    Disabled,
+    /// Allow team members to use Paper Desktop.
+    Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperDesktopPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PaperDesktopPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PaperDesktopPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PaperDesktopPolicy::Disabled)
+                    }
+                    "enabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PaperDesktopPolicy::Enabled)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PaperDesktopPolicy::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("PaperDesktopPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperDesktopPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PaperDesktopPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDesktopPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            PaperDesktopPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperDesktopPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            PaperDesktopPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -1526,6 +1668,77 @@ impl ::serde::ser::Serialize for TwoStepVerificationPolicy {
                 s.end()
             }
             TwoStepVerificationPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum TwoStepVerificationState {
+    /// Enabled require two factor authorization.
+    Required,
+    /// Optional require two factor authorization.
+    Optional,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TwoStepVerificationState {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TwoStepVerificationState;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TwoStepVerificationState structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "required" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(TwoStepVerificationState::Required)
+                    }
+                    "optional" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(TwoStepVerificationState::Optional)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(TwoStepVerificationState::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["required",
+                                    "optional",
+                                    "other"];
+        deserializer.deserialize_struct("TwoStepVerificationState", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TwoStepVerificationState {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            TwoStepVerificationState::Required => {
+                // unit
+                let mut s = serializer.serialize_struct("TwoStepVerificationState", 1)?;
+                s.serialize_field(".tag", "required")?;
+                s.end()
+            }
+            TwoStepVerificationState::Optional => {
+                // unit
+                let mut s = serializer.serialize_struct("TwoStepVerificationState", 1)?;
+                s.serialize_field(".tag", "optional")?;
+                s.end()
+            }
+            TwoStepVerificationState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }

@@ -11255,11 +11255,16 @@ pub struct MemberProfile {
     pub account_id: Option<super::users_common::AccountId>,
     /// The date and time the user joined as a member of a specific team.
     pub joined_on: Option<super::common::DropboxTimestamp>,
+    /// The date and time the user was suspended from the team (contains value only when the
+    /// member's status matches [`TeamMemberStatus::Suspended`](TeamMemberStatus::Suspended).
+    pub suspended_on: Option<super::common::DropboxTimestamp>,
     /// Persistent ID that a team can attach to the user. The persistent ID is unique ID to be used
     /// for SAML authentication.
     pub persistent_id: Option<String>,
     /// Whether the user is a directory restricted user.
     pub is_directory_restricted: Option<bool>,
+    /// URL for the photo representing the user, if one is set.
+    pub profile_photo_url: Option<String>,
 }
 
 impl MemberProfile {
@@ -11281,8 +11286,10 @@ impl MemberProfile {
             external_id: None,
             account_id: None,
             joined_on: None,
+            suspended_on: None,
             persistent_id: None,
             is_directory_restricted: None,
+            profile_photo_url: None,
         }
     }
 
@@ -11301,6 +11308,11 @@ impl MemberProfile {
         self
     }
 
+    pub fn with_suspended_on(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.suspended_on = value;
+        self
+    }
+
     pub fn with_persistent_id(mut self, value: Option<String>) -> Self {
         self.persistent_id = value;
         self
@@ -11308,6 +11320,11 @@ impl MemberProfile {
 
     pub fn with_is_directory_restricted(mut self, value: Option<bool>) -> Self {
         self.is_directory_restricted = value;
+        self
+    }
+
+    pub fn with_profile_photo_url(mut self, value: Option<String>) -> Self {
+        self.profile_photo_url = value;
         self
     }
 
@@ -11322,8 +11339,10 @@ const MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
                                          "external_id",
                                          "account_id",
                                          "joined_on",
+                                         "suspended_on",
                                          "persistent_id",
-                                         "is_directory_restricted"];
+                                         "is_directory_restricted",
+                                         "profile_photo_url"];
 impl MemberProfile {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -11344,8 +11363,10 @@ impl MemberProfile {
         let mut field_external_id = None;
         let mut field_account_id = None;
         let mut field_joined_on = None;
+        let mut field_suspended_on = None;
         let mut field_persistent_id = None;
         let mut field_is_directory_restricted = None;
+        let mut field_profile_photo_url = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -11404,6 +11425,12 @@ impl MemberProfile {
                     }
                     field_joined_on = Some(map.next_value()?);
                 }
+                "suspended_on" => {
+                    if field_suspended_on.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("suspended_on"));
+                    }
+                    field_suspended_on = Some(map.next_value()?);
+                }
                 "persistent_id" => {
                     if field_persistent_id.is_some() {
                         return Err(::serde::de::Error::duplicate_field("persistent_id"));
@@ -11415,6 +11442,12 @@ impl MemberProfile {
                         return Err(::serde::de::Error::duplicate_field("is_directory_restricted"));
                     }
                     field_is_directory_restricted = Some(map.next_value()?);
+                }
+                "profile_photo_url" => {
+                    if field_profile_photo_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("profile_photo_url"));
+                    }
+                    field_profile_photo_url = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -11435,8 +11468,10 @@ impl MemberProfile {
             external_id: field_external_id,
             account_id: field_account_id,
             joined_on: field_joined_on,
+            suspended_on: field_suspended_on,
             persistent_id: field_persistent_id,
             is_directory_restricted: field_is_directory_restricted,
+            profile_photo_url: field_profile_photo_url,
         };
         Ok(Some(result))
     }
@@ -11455,8 +11490,10 @@ impl MemberProfile {
         s.serialize_field("external_id", &self.external_id)?;
         s.serialize_field("account_id", &self.account_id)?;
         s.serialize_field("joined_on", &self.joined_on)?;
+        s.serialize_field("suspended_on", &self.suspended_on)?;
         s.serialize_field("persistent_id", &self.persistent_id)?;
-        s.serialize_field("is_directory_restricted", &self.is_directory_restricted)
+        s.serialize_field("is_directory_restricted", &self.is_directory_restricted)?;
+        s.serialize_field("profile_photo_url", &self.profile_photo_url)
     }
 }
 
@@ -11482,7 +11519,7 @@ impl ::serde::ser::Serialize for MemberProfile {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("MemberProfile", 11)?;
+        let mut s = serializer.serialize_struct("MemberProfile", 13)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -20088,11 +20125,16 @@ pub struct TeamMemberProfile {
     pub account_id: Option<super::users_common::AccountId>,
     /// The date and time the user joined as a member of a specific team.
     pub joined_on: Option<super::common::DropboxTimestamp>,
+    /// The date and time the user was suspended from the team (contains value only when the
+    /// member's status matches [`TeamMemberStatus::Suspended`](TeamMemberStatus::Suspended).
+    pub suspended_on: Option<super::common::DropboxTimestamp>,
     /// Persistent ID that a team can attach to the user. The persistent ID is unique ID to be used
     /// for SAML authentication.
     pub persistent_id: Option<String>,
     /// Whether the user is a directory restricted user.
     pub is_directory_restricted: Option<bool>,
+    /// URL for the photo representing the user, if one is set.
+    pub profile_photo_url: Option<String>,
 }
 
 impl TeamMemberProfile {
@@ -20118,8 +20160,10 @@ impl TeamMemberProfile {
             external_id: None,
             account_id: None,
             joined_on: None,
+            suspended_on: None,
             persistent_id: None,
             is_directory_restricted: None,
+            profile_photo_url: None,
         }
     }
 
@@ -20138,6 +20182,11 @@ impl TeamMemberProfile {
         self
     }
 
+    pub fn with_suspended_on(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.suspended_on = value;
+        self
+    }
+
     pub fn with_persistent_id(mut self, value: Option<String>) -> Self {
         self.persistent_id = value;
         self
@@ -20145,6 +20194,11 @@ impl TeamMemberProfile {
 
     pub fn with_is_directory_restricted(mut self, value: Option<bool>) -> Self {
         self.is_directory_restricted = value;
+        self
+    }
+
+    pub fn with_profile_photo_url(mut self, value: Option<String>) -> Self {
+        self.profile_photo_url = value;
         self
     }
 
@@ -20161,8 +20215,10 @@ const TEAM_MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
                                               "external_id",
                                               "account_id",
                                               "joined_on",
+                                              "suspended_on",
                                               "persistent_id",
-                                              "is_directory_restricted"];
+                                              "is_directory_restricted",
+                                              "profile_photo_url"];
 impl TeamMemberProfile {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -20185,8 +20241,10 @@ impl TeamMemberProfile {
         let mut field_external_id = None;
         let mut field_account_id = None;
         let mut field_joined_on = None;
+        let mut field_suspended_on = None;
         let mut field_persistent_id = None;
         let mut field_is_directory_restricted = None;
+        let mut field_profile_photo_url = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -20257,6 +20315,12 @@ impl TeamMemberProfile {
                     }
                     field_joined_on = Some(map.next_value()?);
                 }
+                "suspended_on" => {
+                    if field_suspended_on.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("suspended_on"));
+                    }
+                    field_suspended_on = Some(map.next_value()?);
+                }
                 "persistent_id" => {
                     if field_persistent_id.is_some() {
                         return Err(::serde::de::Error::duplicate_field("persistent_id"));
@@ -20268,6 +20332,12 @@ impl TeamMemberProfile {
                         return Err(::serde::de::Error::duplicate_field("is_directory_restricted"));
                     }
                     field_is_directory_restricted = Some(map.next_value()?);
+                }
+                "profile_photo_url" => {
+                    if field_profile_photo_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("profile_photo_url"));
+                    }
+                    field_profile_photo_url = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -20290,8 +20360,10 @@ impl TeamMemberProfile {
             external_id: field_external_id,
             account_id: field_account_id,
             joined_on: field_joined_on,
+            suspended_on: field_suspended_on,
             persistent_id: field_persistent_id,
             is_directory_restricted: field_is_directory_restricted,
+            profile_photo_url: field_profile_photo_url,
         };
         Ok(Some(result))
     }
@@ -20312,8 +20384,10 @@ impl TeamMemberProfile {
         s.serialize_field("external_id", &self.external_id)?;
         s.serialize_field("account_id", &self.account_id)?;
         s.serialize_field("joined_on", &self.joined_on)?;
+        s.serialize_field("suspended_on", &self.suspended_on)?;
         s.serialize_field("persistent_id", &self.persistent_id)?;
-        s.serialize_field("is_directory_restricted", &self.is_directory_restricted)
+        s.serialize_field("is_directory_restricted", &self.is_directory_restricted)?;
+        s.serialize_field("profile_photo_url", &self.profile_photo_url)
     }
 }
 
@@ -20339,7 +20413,7 @@ impl ::serde::ser::Serialize for TeamMemberProfile {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamMemberProfile", 13)?;
+        let mut s = serializer.serialize_struct("TeamMemberProfile", 15)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -20935,6 +21009,92 @@ impl ::serde::ser::Serialize for TeamNamespacesListResult {
         let mut s = serializer.serialize_struct("TeamNamespacesListResult", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum TeamReportFailureReason {
+    /// We couldn't create the report, but we think this was a fluke. Everything should work if you
+    /// try it again.
+    TemporaryError,
+    /// Too many other reports are being created right now. Try creating this report again once the
+    /// others finish.
+    ManyReportsAtOnce,
+    /// We couldn't create the report. Try creating the report again with less data.
+    TooMuchData,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamReportFailureReason {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = TeamReportFailureReason;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamReportFailureReason structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "temporary_error" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(TeamReportFailureReason::TemporaryError)
+                    }
+                    "many_reports_at_once" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(TeamReportFailureReason::ManyReportsAtOnce)
+                    }
+                    "too_much_data" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(TeamReportFailureReason::TooMuchData)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(TeamReportFailureReason::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["temporary_error",
+                                    "many_reports_at_once",
+                                    "too_much_data",
+                                    "other"];
+        deserializer.deserialize_struct("TeamReportFailureReason", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamReportFailureReason {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            TeamReportFailureReason::TemporaryError => {
+                // unit
+                let mut s = serializer.serialize_struct("TeamReportFailureReason", 1)?;
+                s.serialize_field(".tag", "temporary_error")?;
+                s.end()
+            }
+            TeamReportFailureReason::ManyReportsAtOnce => {
+                // unit
+                let mut s = serializer.serialize_struct("TeamReportFailureReason", 1)?;
+                s.serialize_field(".tag", "many_reports_at_once")?;
+                s.end()
+            }
+            TeamReportFailureReason::TooMuchData => {
+                // unit
+                let mut s = serializer.serialize_struct("TeamReportFailureReason", 1)?;
+                s.serialize_field(".tag", "too_much_data")?;
+                s.end()
+            }
+            TeamReportFailureReason::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 

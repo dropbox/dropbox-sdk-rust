@@ -12,6 +12,20 @@
 pub type FileRequestId = String;
 pub type FileRequestValidationError = Option<String>;
 
+/// Returns the total number of file requests owned by this user. Includes both open and closed file
+/// requests.
+pub fn count(
+    client: &dyn crate::client_trait::HttpClient,
+) -> crate::Result<Result<CountFileRequestsResult, CountFileRequestsError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "file_requests/count",
+        &(),
+        None)
+}
+
 /// Creates a file request for this user.
 pub fn create(
     client: &dyn crate::client_trait::HttpClient,
@@ -23,6 +37,33 @@ pub fn create(
         crate::client_trait::Style::Rpc,
         "file_requests/create",
         arg,
+        None)
+}
+
+/// Delete a batch of closed file requests.
+pub fn delete(
+    client: &dyn crate::client_trait::HttpClient,
+    arg: &DeleteFileRequestArgs,
+) -> crate::Result<Result<DeleteFileRequestsResult, DeleteFileRequestError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "file_requests/delete",
+        arg,
+        None)
+}
+
+/// Delete all closed file requests owned by this user.
+pub fn delete_all_closed(
+    client: &dyn crate::client_trait::HttpClient,
+) -> crate::Result<Result<DeleteAllClosedFileRequestsResult, DeleteAllClosedFileRequestsError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "file_requests/delete_all_closed",
+        &(),
         None)
 }
 
@@ -42,6 +83,21 @@ pub fn get(
 
 /// Returns a list of file requests owned by this user. For apps with the app folder permission,
 /// this will only return file requests with destinations in the app folder.
+pub fn list_v2(
+    client: &dyn crate::client_trait::HttpClient,
+    arg: &ListFileRequestsArg,
+) -> crate::Result<Result<ListFileRequestsV2Result, ListFileRequestsError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "file_requests/list_v2",
+        arg,
+        None)
+}
+
+/// Returns a list of file requests owned by this user. For apps with the app folder permission,
+/// this will only return file requests with destinations in the app folder.
 pub fn list(
     client: &dyn crate::client_trait::HttpClient,
 ) -> crate::Result<Result<ListFileRequestsResult, ListFileRequestsError>> {
@@ -51,6 +107,22 @@ pub fn list(
         crate::client_trait::Style::Rpc,
         "file_requests/list",
         &(),
+        None)
+}
+
+/// Once a cursor has been retrieved from [`list_v2()`](list_v2), use this to paginate through all
+/// file requests. The cursor must come from a previous call to [`list_v2()`](list_v2) or
+/// [`list_continue()`](list_continue).
+pub fn list_continue(
+    client: &dyn crate::client_trait::HttpClient,
+    arg: &ListFileRequestsContinueArg,
+) -> crate::Result<Result<ListFileRequestsV2Result, ListFileRequestsContinueError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "file_requests/list/continue",
+        arg,
         None)
 }
 
@@ -66,6 +138,168 @@ pub fn update(
         "file_requests/update",
         arg,
         None)
+}
+
+/// There was an error counting the file requests.
+#[derive(Debug)]
+pub enum CountFileRequestsError {
+    /// This user's Dropbox Business team doesn't allow file requests.
+    DisabledForTeam,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CountFileRequestsError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = CountFileRequestsError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a CountFileRequestsError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled_for_team" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(CountFileRequestsError::DisabledForTeam)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(CountFileRequestsError::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled_for_team",
+                                    "other"];
+        deserializer.deserialize_struct("CountFileRequestsError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CountFileRequestsError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            CountFileRequestsError::DisabledForTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("CountFileRequestsError", 1)?;
+                s.serialize_field(".tag", "disabled_for_team")?;
+                s.end()
+            }
+            CountFileRequestsError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for CountFileRequestsError {
+    fn description(&self) -> &str {
+        "CountFileRequestsError"
+    }
+}
+
+impl ::std::fmt::Display for CountFileRequestsError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// Result for [`count()`](count).
+#[derive(Debug)]
+pub struct CountFileRequestsResult {
+    /// The number file requests owner by this user.
+    pub file_request_count: u64,
+}
+
+impl CountFileRequestsResult {
+    pub fn new(file_request_count: u64) -> Self {
+        CountFileRequestsResult {
+            file_request_count,
+        }
+    }
+
+}
+
+const COUNT_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_request_count"];
+impl CountFileRequestsResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<CountFileRequestsResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<CountFileRequestsResult>, V::Error> {
+        let mut field_file_request_count = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "file_request_count" => {
+                    if field_file_request_count.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_request_count"));
+                    }
+                    field_file_request_count = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = CountFileRequestsResult {
+            file_request_count: field_file_request_count.ok_or_else(|| ::serde::de::Error::missing_field("file_request_count"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("file_request_count", &self.file_request_count)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CountFileRequestsResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CountFileRequestsResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a CountFileRequestsResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CountFileRequestsResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CountFileRequestsResult", COUNT_FILE_REQUESTS_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CountFileRequestsResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CountFileRequestsResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
 }
 
 /// Arguments for [`create()`](create).
@@ -388,6 +622,598 @@ impl ::std::error::Error for CreateFileRequestError {
 impl ::std::fmt::Display for CreateFileRequestError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
+    }
+}
+
+/// There was an error deleting all closed file requests.
+#[derive(Debug)]
+pub enum DeleteAllClosedFileRequestsError {
+    /// This user's Dropbox Business team doesn't allow file requests.
+    DisabledForTeam,
+    /// This file request ID was not found.
+    NotFound,
+    /// The specified path is not a folder.
+    NotAFolder,
+    /// This file request is not accessible to this app. Apps with the app folder permission can
+    /// only access file requests in their app folder.
+    AppLacksAccess,
+    /// This user doesn't have permission to access or modify this file request.
+    NoPermission,
+    /// This user's email address is not verified. File requests are only available on accounts with
+    /// a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
+    EmailUnverified,
+    /// There was an error validating the request. For example, the title was invalid, or there were
+    /// disallowed characters in the destination path.
+    ValidationError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeleteAllClosedFileRequestsError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = DeleteAllClosedFileRequestsError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DeleteAllClosedFileRequestsError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled_for_team" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteAllClosedFileRequestsError::DisabledForTeam)
+                    }
+                    "not_found" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteAllClosedFileRequestsError::NotFound)
+                    }
+                    "not_a_folder" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteAllClosedFileRequestsError::NotAFolder)
+                    }
+                    "app_lacks_access" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteAllClosedFileRequestsError::AppLacksAccess)
+                    }
+                    "no_permission" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteAllClosedFileRequestsError::NoPermission)
+                    }
+                    "email_unverified" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteAllClosedFileRequestsError::EmailUnverified)
+                    }
+                    "validation_error" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteAllClosedFileRequestsError::ValidationError)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteAllClosedFileRequestsError::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled_for_team",
+                                    "other",
+                                    "not_found",
+                                    "not_a_folder",
+                                    "app_lacks_access",
+                                    "no_permission",
+                                    "email_unverified",
+                                    "validation_error"];
+        deserializer.deserialize_struct("DeleteAllClosedFileRequestsError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeleteAllClosedFileRequestsError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            DeleteAllClosedFileRequestsError::DisabledForTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteAllClosedFileRequestsError", 1)?;
+                s.serialize_field(".tag", "disabled_for_team")?;
+                s.end()
+            }
+            DeleteAllClosedFileRequestsError::NotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteAllClosedFileRequestsError", 1)?;
+                s.serialize_field(".tag", "not_found")?;
+                s.end()
+            }
+            DeleteAllClosedFileRequestsError::NotAFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteAllClosedFileRequestsError", 1)?;
+                s.serialize_field(".tag", "not_a_folder")?;
+                s.end()
+            }
+            DeleteAllClosedFileRequestsError::AppLacksAccess => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteAllClosedFileRequestsError", 1)?;
+                s.serialize_field(".tag", "app_lacks_access")?;
+                s.end()
+            }
+            DeleteAllClosedFileRequestsError::NoPermission => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteAllClosedFileRequestsError", 1)?;
+                s.serialize_field(".tag", "no_permission")?;
+                s.end()
+            }
+            DeleteAllClosedFileRequestsError::EmailUnverified => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteAllClosedFileRequestsError", 1)?;
+                s.serialize_field(".tag", "email_unverified")?;
+                s.end()
+            }
+            DeleteAllClosedFileRequestsError::ValidationError => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteAllClosedFileRequestsError", 1)?;
+                s.serialize_field(".tag", "validation_error")?;
+                s.end()
+            }
+            DeleteAllClosedFileRequestsError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for DeleteAllClosedFileRequestsError {
+    fn description(&self) -> &str {
+        "DeleteAllClosedFileRequestsError"
+    }
+}
+
+impl ::std::fmt::Display for DeleteAllClosedFileRequestsError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// Result for [`delete_all_closed()`](delete_all_closed).
+#[derive(Debug)]
+pub struct DeleteAllClosedFileRequestsResult {
+    /// The file requests deleted for this user.
+    pub file_requests: Vec<FileRequest>,
+}
+
+impl DeleteAllClosedFileRequestsResult {
+    pub fn new(file_requests: Vec<FileRequest>) -> Self {
+        DeleteAllClosedFileRequestsResult {
+            file_requests,
+        }
+    }
+
+}
+
+const DELETE_ALL_CLOSED_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_requests"];
+impl DeleteAllClosedFileRequestsResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<DeleteAllClosedFileRequestsResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DeleteAllClosedFileRequestsResult>, V::Error> {
+        let mut field_file_requests = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "file_requests" => {
+                    if field_file_requests.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_requests"));
+                    }
+                    field_file_requests = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DeleteAllClosedFileRequestsResult {
+            file_requests: field_file_requests.ok_or_else(|| ::serde::de::Error::missing_field("file_requests"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("file_requests", &self.file_requests)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeleteAllClosedFileRequestsResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DeleteAllClosedFileRequestsResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DeleteAllClosedFileRequestsResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DeleteAllClosedFileRequestsResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DeleteAllClosedFileRequestsResult", DELETE_ALL_CLOSED_FILE_REQUESTS_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeleteAllClosedFileRequestsResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DeleteAllClosedFileRequestsResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Arguments for [`delete()`](delete).
+#[derive(Debug)]
+pub struct DeleteFileRequestArgs {
+    /// List IDs of the file requests to delete.
+    pub ids: Vec<FileRequestId>,
+}
+
+impl DeleteFileRequestArgs {
+    pub fn new(ids: Vec<FileRequestId>) -> Self {
+        DeleteFileRequestArgs {
+            ids,
+        }
+    }
+
+}
+
+const DELETE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["ids"];
+impl DeleteFileRequestArgs {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<DeleteFileRequestArgs, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DeleteFileRequestArgs>, V::Error> {
+        let mut field_ids = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "ids" => {
+                    if field_ids.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("ids"));
+                    }
+                    field_ids = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DeleteFileRequestArgs {
+            ids: field_ids.ok_or_else(|| ::serde::de::Error::missing_field("ids"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("ids", &self.ids)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeleteFileRequestArgs {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DeleteFileRequestArgs;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DeleteFileRequestArgs struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DeleteFileRequestArgs::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DeleteFileRequestArgs", DELETE_FILE_REQUEST_ARGS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeleteFileRequestArgs {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DeleteFileRequestArgs", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// There was an error deleting these file requests.
+#[derive(Debug)]
+pub enum DeleteFileRequestError {
+    /// This user's Dropbox Business team doesn't allow file requests.
+    DisabledForTeam,
+    /// This file request ID was not found.
+    NotFound,
+    /// The specified path is not a folder.
+    NotAFolder,
+    /// This file request is not accessible to this app. Apps with the app folder permission can
+    /// only access file requests in their app folder.
+    AppLacksAccess,
+    /// This user doesn't have permission to access or modify this file request.
+    NoPermission,
+    /// This user's email address is not verified. File requests are only available on accounts with
+    /// a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
+    EmailUnverified,
+    /// There was an error validating the request. For example, the title was invalid, or there were
+    /// disallowed characters in the destination path.
+    ValidationError,
+    /// One or more file requests currently open.
+    FileRequestOpen,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeleteFileRequestError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = DeleteFileRequestError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DeleteFileRequestError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled_for_team" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteFileRequestError::DisabledForTeam)
+                    }
+                    "not_found" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteFileRequestError::NotFound)
+                    }
+                    "not_a_folder" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteFileRequestError::NotAFolder)
+                    }
+                    "app_lacks_access" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteFileRequestError::AppLacksAccess)
+                    }
+                    "no_permission" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteFileRequestError::NoPermission)
+                    }
+                    "email_unverified" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteFileRequestError::EmailUnverified)
+                    }
+                    "validation_error" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteFileRequestError::ValidationError)
+                    }
+                    "file_request_open" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteFileRequestError::FileRequestOpen)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(DeleteFileRequestError::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled_for_team",
+                                    "other",
+                                    "not_found",
+                                    "not_a_folder",
+                                    "app_lacks_access",
+                                    "no_permission",
+                                    "email_unverified",
+                                    "validation_error",
+                                    "file_request_open"];
+        deserializer.deserialize_struct("DeleteFileRequestError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeleteFileRequestError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            DeleteFileRequestError::DisabledForTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteFileRequestError", 1)?;
+                s.serialize_field(".tag", "disabled_for_team")?;
+                s.end()
+            }
+            DeleteFileRequestError::NotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteFileRequestError", 1)?;
+                s.serialize_field(".tag", "not_found")?;
+                s.end()
+            }
+            DeleteFileRequestError::NotAFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteFileRequestError", 1)?;
+                s.serialize_field(".tag", "not_a_folder")?;
+                s.end()
+            }
+            DeleteFileRequestError::AppLacksAccess => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteFileRequestError", 1)?;
+                s.serialize_field(".tag", "app_lacks_access")?;
+                s.end()
+            }
+            DeleteFileRequestError::NoPermission => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteFileRequestError", 1)?;
+                s.serialize_field(".tag", "no_permission")?;
+                s.end()
+            }
+            DeleteFileRequestError::EmailUnverified => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteFileRequestError", 1)?;
+                s.serialize_field(".tag", "email_unverified")?;
+                s.end()
+            }
+            DeleteFileRequestError::ValidationError => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteFileRequestError", 1)?;
+                s.serialize_field(".tag", "validation_error")?;
+                s.end()
+            }
+            DeleteFileRequestError::FileRequestOpen => {
+                // unit
+                let mut s = serializer.serialize_struct("DeleteFileRequestError", 1)?;
+                s.serialize_field(".tag", "file_request_open")?;
+                s.end()
+            }
+            DeleteFileRequestError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for DeleteFileRequestError {
+    fn description(&self) -> &str {
+        "DeleteFileRequestError"
+    }
+}
+
+impl ::std::fmt::Display for DeleteFileRequestError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+/// Result for [`delete()`](delete).
+#[derive(Debug)]
+pub struct DeleteFileRequestsResult {
+    /// The file requests deleted by the request.
+    pub file_requests: Vec<FileRequest>,
+}
+
+impl DeleteFileRequestsResult {
+    pub fn new(file_requests: Vec<FileRequest>) -> Self {
+        DeleteFileRequestsResult {
+            file_requests,
+        }
+    }
+
+}
+
+const DELETE_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_requests"];
+impl DeleteFileRequestsResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<DeleteFileRequestsResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DeleteFileRequestsResult>, V::Error> {
+        let mut field_file_requests = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "file_requests" => {
+                    if field_file_requests.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_requests"));
+                    }
+                    field_file_requests = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DeleteFileRequestsResult {
+            file_requests: field_file_requests.ok_or_else(|| ::serde::de::Error::missing_field("file_requests"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("file_requests", &self.file_requests)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeleteFileRequestsResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DeleteFileRequestsResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DeleteFileRequestsResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DeleteFileRequestsResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DeleteFileRequestsResult", DELETE_FILE_REQUESTS_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeleteFileRequestsResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DeleteFileRequestsResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -1276,6 +2102,259 @@ impl ::serde::ser::Serialize for GracePeriod {
     }
 }
 
+/// Arguments for [`list_v2()`](list_v2).
+#[derive(Debug)]
+pub struct ListFileRequestsArg {
+    /// The maximum number of file requests that should be returned per request.
+    pub limit: u64,
+}
+
+impl Default for ListFileRequestsArg {
+    fn default() -> Self {
+        ListFileRequestsArg {
+            limit: 1000,
+        }
+    }
+}
+
+const LIST_FILE_REQUESTS_ARG_FIELDS: &[&str] = &["limit"];
+impl ListFileRequestsArg {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<ListFileRequestsArg, V::Error> {
+        let mut field_limit = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "limit" => {
+                    if field_limit.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("limit"));
+                    }
+                    field_limit = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = ListFileRequestsArg {
+            limit: field_limit.unwrap_or(1000),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("limit", &self.limit)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListFileRequestsArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListFileRequestsArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ListFileRequestsArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListFileRequestsArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListFileRequestsArg", LIST_FILE_REQUESTS_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListFileRequestsArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListFileRequestsArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct ListFileRequestsContinueArg {
+    /// The cursor returned by the previous API call specified in the endpoint description.
+    pub cursor: String,
+}
+
+impl ListFileRequestsContinueArg {
+    pub fn new(cursor: String) -> Self {
+        ListFileRequestsContinueArg {
+            cursor,
+        }
+    }
+
+}
+
+const LIST_FILE_REQUESTS_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
+impl ListFileRequestsContinueArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ListFileRequestsContinueArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListFileRequestsContinueArg>, V::Error> {
+        let mut field_cursor = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListFileRequestsContinueArg {
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("cursor", &self.cursor)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListFileRequestsContinueArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListFileRequestsContinueArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ListFileRequestsContinueArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListFileRequestsContinueArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListFileRequestsContinueArg", LIST_FILE_REQUESTS_CONTINUE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListFileRequestsContinueArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListFileRequestsContinueArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// There was an error retrieving the file requests.
+#[derive(Debug)]
+pub enum ListFileRequestsContinueError {
+    /// This user's Dropbox Business team doesn't allow file requests.
+    DisabledForTeam,
+    /// The cursor is invalid.
+    InvalidCursor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListFileRequestsContinueError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ListFileRequestsContinueError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ListFileRequestsContinueError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled_for_team" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ListFileRequestsContinueError::DisabledForTeam)
+                    }
+                    "invalid_cursor" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ListFileRequestsContinueError::InvalidCursor)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ListFileRequestsContinueError::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled_for_team",
+                                    "other",
+                                    "invalid_cursor"];
+        deserializer.deserialize_struct("ListFileRequestsContinueError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListFileRequestsContinueError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ListFileRequestsContinueError::DisabledForTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("ListFileRequestsContinueError", 1)?;
+                s.serialize_field(".tag", "disabled_for_team")?;
+                s.end()
+            }
+            ListFileRequestsContinueError::InvalidCursor => {
+                // unit
+                let mut s = serializer.serialize_struct("ListFileRequestsContinueError", 1)?;
+                s.serialize_field(".tag", "invalid_cursor")?;
+                s.end()
+            }
+            ListFileRequestsContinueError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for ListFileRequestsContinueError {
+    fn description(&self) -> &str {
+        "ListFileRequestsContinueError"
+    }
+}
+
+impl ::std::fmt::Display for ListFileRequestsContinueError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
 /// There was an error retrieving the file requests.
 #[derive(Debug)]
 pub enum ListFileRequestsError {
@@ -1434,6 +2513,125 @@ impl ::serde::ser::Serialize for ListFileRequestsResult {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("ListFileRequestsResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Result for [`list_v2()`](list_v2) and [`list_continue()`](list_continue).
+#[derive(Debug)]
+pub struct ListFileRequestsV2Result {
+    /// The file requests owned by this user. Apps with the app folder permission will only see file
+    /// requests in their app folder.
+    pub file_requests: Vec<FileRequest>,
+    /// Pass the cursor into [`list_continue()`](list_continue) to obtain additional file requests.
+    pub cursor: String,
+    /// Is true if there are additional file requests that have not been returned yet. An additional
+    /// call to :route:list/continue` can retrieve them.
+    pub has_more: bool,
+}
+
+impl ListFileRequestsV2Result {
+    pub fn new(file_requests: Vec<FileRequest>, cursor: String, has_more: bool) -> Self {
+        ListFileRequestsV2Result {
+            file_requests,
+            cursor,
+            has_more,
+        }
+    }
+
+}
+
+const LIST_FILE_REQUESTS_V2_RESULT_FIELDS: &[&str] = &["file_requests",
+                                                       "cursor",
+                                                       "has_more"];
+impl ListFileRequestsV2Result {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ListFileRequestsV2Result, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ListFileRequestsV2Result>, V::Error> {
+        let mut field_file_requests = None;
+        let mut field_cursor = None;
+        let mut field_has_more = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "file_requests" => {
+                    if field_file_requests.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_requests"));
+                    }
+                    field_file_requests = Some(map.next_value()?);
+                }
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                "has_more" => {
+                    if field_has_more.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("has_more"));
+                    }
+                    field_has_more = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ListFileRequestsV2Result {
+            file_requests: field_file_requests.ok_or_else(|| ::serde::de::Error::missing_field("file_requests"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
+            has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("file_requests", &self.file_requests)?;
+        s.serialize_field("cursor", &self.cursor)?;
+        s.serialize_field("has_more", &self.has_more)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ListFileRequestsV2Result {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ListFileRequestsV2Result;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ListFileRequestsV2Result struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ListFileRequestsV2Result::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ListFileRequestsV2Result", LIST_FILE_REQUESTS_V2_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ListFileRequestsV2Result {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ListFileRequestsV2Result", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

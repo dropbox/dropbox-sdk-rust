@@ -1367,6 +1367,8 @@ pub enum AddFolderMemberError {
     AccessError(SharedFolderAccessError),
     /// The current user's e-mail address is unverified.
     EmailUnverified,
+    /// The current user has been banned.
+    BannedMember,
     /// [`AddFolderMemberArg::members`](AddFolderMemberArg) contains a bad invitation recipient.
     BadMember(AddMemberSelectorError),
     /// Your team policy does not allow sharing outside of the team.
@@ -1418,6 +1420,10 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
                     "email_unverified" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(AddFolderMemberError::EmailUnverified)
+                    }
+                    "banned_member" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(AddFolderMemberError::BannedMember)
                     }
                     "bad_member" => {
                         match map.next_key()? {
@@ -1473,6 +1479,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
         }
         const VARIANTS: &[&str] = &["access_error",
                                     "email_unverified",
+                                    "banned_member",
                                     "bad_member",
                                     "cant_share_outside_team",
                                     "too_many_members",
@@ -1503,6 +1510,12 @@ impl ::serde::ser::Serialize for AddFolderMemberError {
                 // unit
                 let mut s = serializer.serialize_struct("AddFolderMemberError", 1)?;
                 s.serialize_field(".tag", "email_unverified")?;
+                s.end()
+            }
+            AddFolderMemberError::BannedMember => {
+                // unit
+                let mut s = serializer.serialize_struct("AddFolderMemberError", 1)?;
+                s.serialize_field(".tag", "banned_member")?;
                 s.end()
             }
             AddFolderMemberError::BadMember(ref x) => {
@@ -2712,8 +2725,8 @@ pub enum CreateSharedLinkWithSettingsError {
     /// User's email should be verified.
     EmailNotVerified,
     /// The shared link already exists. You can call [`list_shared_links()`](list_shared_links) to
-    /// get the existing link.
-    SharedLinkAlreadyExists,
+    /// get the  existing link, or use the provided metadata if it is returned.
+    SharedLinkAlreadyExists(Option<SharedLinkAlreadyExistsMetadata>),
     /// There is an error with the given settings.
     SettingsError(SharedLinkSettingsError),
     /// Access to the requested path is forbidden.
@@ -2748,8 +2761,11 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkWithSettingsError {
                         Ok(CreateSharedLinkWithSettingsError::EmailNotVerified)
                     }
                     "shared_link_already_exists" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists)
+                        match map.next_key()? {
+                            Some("shared_link_already_exists") => Ok(CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(map.next_value()?)),
+                            None => Ok(CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(None)),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
                     }
                     "settings_error" => {
                         match map.next_key()? {
@@ -2793,10 +2809,11 @@ impl ::serde::ser::Serialize for CreateSharedLinkWithSettingsError {
                 s.serialize_field(".tag", "email_not_verified")?;
                 s.end()
             }
-            CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists => {
-                // unit
-                let mut s = serializer.serialize_struct("CreateSharedLinkWithSettingsError", 1)?;
+            CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("CreateSharedLinkWithSettingsError", 2)?;
                 s.serialize_field(".tag", "shared_link_already_exists")?;
+                s.serialize_field("shared_link_already_exists", x)?;
                 s.end()
             }
             CreateSharedLinkWithSettingsError::SettingsError(ref x) => {
@@ -3044,10 +3061,14 @@ pub enum FileAction {
     Unshare,
     /// Relinquish one's own membership to the file.
     RelinquishMembership,
-    /// Use create_link instead.
+    /// Use create_view_link and create_edit_link instead.
     ShareLink,
-    /// Create a shared link to the file.
+    /// Use create_view_link and create_edit_link instead.
     CreateLink,
+    /// Create a shared link to a file that only allows users to view the content.
+    CreateViewLink,
+    /// Create a shared link to a file that allows users to edit the content.
+    CreateEditLink,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -3109,6 +3130,14 @@ impl<'de> ::serde::de::Deserialize<'de> for FileAction {
                         crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::CreateLink)
                     }
+                    "create_view_link" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileAction::CreateViewLink)
+                    }
+                    "create_edit_link" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileAction::CreateEditLink)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(FileAction::Other)
@@ -3126,6 +3155,8 @@ impl<'de> ::serde::de::Deserialize<'de> for FileAction {
                                     "relinquish_membership",
                                     "share_link",
                                     "create_link",
+                                    "create_view_link",
+                                    "create_edit_link",
                                     "other"];
         deserializer.deserialize_struct("FileAction", VARIANTS, EnumVisitor)
     }
@@ -3194,6 +3225,18 @@ impl ::serde::ser::Serialize for FileAction {
                 // unit
                 let mut s = serializer.serialize_struct("FileAction", 1)?;
                 s.serialize_field(".tag", "create_link")?;
+                s.end()
+            }
+            FileAction::CreateViewLink => {
+                // unit
+                let mut s = serializer.serialize_struct("FileAction", 1)?;
+                s.serialize_field(".tag", "create_view_link")?;
+                s.end()
+            }
+            FileAction::CreateEditLink => {
+                // unit
+                let mut s = serializer.serialize_struct("FileAction", 1)?;
+                s.serialize_field(".tag", "create_edit_link")?;
                 s.end()
             }
             FileAction::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -5387,7 +5430,7 @@ pub enum GetSharedLinkFileError {
     SharedLinkNotFound,
     /// The caller is not allowed to access this shared link.
     SharedLinkAccessDenied,
-    /// This type of link is not supported.
+    /// This type of link is not supported; use [`files::export()`](super::files::export) instead.
     UnsupportedLinkType,
     /// Directories cannot be retrieved by this endpoint.
     SharedLinkIsDirectory,
@@ -6893,6 +6936,77 @@ impl ::serde::ser::Serialize for JobStatus {
     }
 }
 
+#[derive(Debug)]
+pub enum LinkAccessLevel {
+    /// Users who use the link can view and comment on the content.
+    Viewer,
+    /// Users who use the link can edit, view and comment on the content.
+    Editor,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LinkAccessLevel {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = LinkAccessLevel;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LinkAccessLevel structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "viewer" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LinkAccessLevel::Viewer)
+                    }
+                    "editor" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LinkAccessLevel::Editor)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LinkAccessLevel::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["viewer",
+                                    "editor",
+                                    "other"];
+        deserializer.deserialize_struct("LinkAccessLevel", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LinkAccessLevel {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            LinkAccessLevel::Viewer => {
+                // unit
+                let mut s = serializer.serialize_struct("LinkAccessLevel", 1)?;
+                s.serialize_field(".tag", "viewer")?;
+                s.end()
+            }
+            LinkAccessLevel::Editor => {
+                // unit
+                let mut s = serializer.serialize_struct("LinkAccessLevel", 1)?;
+                s.serialize_field(".tag", "editor")?;
+                s.end()
+            }
+            LinkAccessLevel::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Actions that can be performed on a link.
 #[derive(Debug)]
 pub enum LinkAction {
@@ -7027,6 +7141,8 @@ pub enum LinkAudience {
     /// grant additional rights to the user. Members of the content who use this link can only
     /// access the content with their pre-existing access rights.
     NoOne,
+    /// A link-specific password is required to access the link. Login is not required.
+    Password,
     /// Link is accessible only by members of the content.
     Members,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -7062,6 +7178,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LinkAudience::NoOne)
                     }
+                    "password" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LinkAudience::Password)
+                    }
                     "members" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LinkAudience::Members)
@@ -7076,6 +7196,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
         const VARIANTS: &[&str] = &["public",
                                     "team",
                                     "no_one",
+                                    "password",
                                     "members",
                                     "other"];
         deserializer.deserialize_struct("LinkAudience", VARIANTS, EnumVisitor)
@@ -7103,6 +7224,12 @@ impl ::serde::ser::Serialize for LinkAudience {
                 // unit
                 let mut s = serializer.serialize_struct("LinkAudience", 1)?;
                 s.serialize_field(".tag", "no_one")?;
+                s.end()
+            }
+            LinkAudience::Password => {
+                // unit
+                let mut s = serializer.serialize_struct("LinkAudience", 1)?;
+                s.serialize_field(".tag", "password")?;
                 s.end()
             }
             LinkAudience::Members => {
@@ -7459,15 +7586,27 @@ pub struct LinkPermissions {
     /// The current visibility of the link after considering the shared links policies of the the
     /// team (in case the link's owner is part of a team) and the shared folder (in case the linked
     /// file is part of a shared folder). This field is shown only if the caller has access to this
-    /// info (the link's owner always has access to this data).
+    /// info (the link's owner always has access to this data). For some links, an
+    /// effective_audience value is returned instead.
     pub resolved_visibility: Option<ResolvedVisibility>,
     /// The shared link's requested visibility. This can be overridden by the team and shared folder
     /// policies. The final visibility, after considering these policies, can be found in
-    /// `resolved_visibility`. This is shown only if the caller is the link's owner.
+    /// `resolved_visibility`. This is shown only if the caller is the link's owner and
+    /// resolved_visibility is returned instead of effective_audience.
     pub requested_visibility: Option<RequestedVisibility>,
     /// The failure reason for revoking the link. This field will only be present if the
     /// `can_revoke` is `false`.
     pub revoke_failure_reason: Option<SharedLinkAccessFailureReason>,
+    /// The type of audience who can benefit from the access level specified by the
+    /// `link_access_level` field.
+    pub effective_audience: Option<LinkAudience>,
+    /// The access level that the link will grant to its users. A link can grant additional rights
+    /// to a user beyond their current access level. For example, if a user was invited as a viewer
+    /// to a file, and then opens a link with `link_access_level` set to `editor`, then they will
+    /// gain editor privileges. The `link_access_level` is a property of the link, and does not
+    /// depend on who is calling this API. In particular, `link_access_level` does not take into
+    /// account the API caller's current permissions to the content.
+    pub link_access_level: Option<LinkAccessLevel>,
 }
 
 impl LinkPermissions {
@@ -7477,6 +7616,8 @@ impl LinkPermissions {
             resolved_visibility: None,
             requested_visibility: None,
             revoke_failure_reason: None,
+            effective_audience: None,
+            link_access_level: None,
         }
     }
 
@@ -7498,12 +7639,24 @@ impl LinkPermissions {
         self
     }
 
+    pub fn with_effective_audience(mut self, value: Option<LinkAudience>) -> Self {
+        self.effective_audience = value;
+        self
+    }
+
+    pub fn with_link_access_level(mut self, value: Option<LinkAccessLevel>) -> Self {
+        self.link_access_level = value;
+        self
+    }
+
 }
 
 const LINK_PERMISSIONS_FIELDS: &[&str] = &["can_revoke",
                                            "resolved_visibility",
                                            "requested_visibility",
-                                           "revoke_failure_reason"];
+                                           "revoke_failure_reason",
+                                           "effective_audience",
+                                           "link_access_level"];
 impl LinkPermissions {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -7519,6 +7672,8 @@ impl LinkPermissions {
         let mut field_resolved_visibility = None;
         let mut field_requested_visibility = None;
         let mut field_revoke_failure_reason = None;
+        let mut field_effective_audience = None;
+        let mut field_link_access_level = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -7547,6 +7702,18 @@ impl LinkPermissions {
                     }
                     field_revoke_failure_reason = Some(map.next_value()?);
                 }
+                "effective_audience" => {
+                    if field_effective_audience.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("effective_audience"));
+                    }
+                    field_effective_audience = Some(map.next_value()?);
+                }
+                "link_access_level" => {
+                    if field_link_access_level.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("link_access_level"));
+                    }
+                    field_link_access_level = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -7561,6 +7728,8 @@ impl LinkPermissions {
             resolved_visibility: field_resolved_visibility,
             requested_visibility: field_requested_visibility,
             revoke_failure_reason: field_revoke_failure_reason,
+            effective_audience: field_effective_audience,
+            link_access_level: field_link_access_level,
         };
         Ok(Some(result))
     }
@@ -7573,7 +7742,9 @@ impl LinkPermissions {
         s.serialize_field("can_revoke", &self.can_revoke)?;
         s.serialize_field("resolved_visibility", &self.resolved_visibility)?;
         s.serialize_field("requested_visibility", &self.requested_visibility)?;
-        s.serialize_field("revoke_failure_reason", &self.revoke_failure_reason)
+        s.serialize_field("revoke_failure_reason", &self.revoke_failure_reason)?;
+        s.serialize_field("effective_audience", &self.effective_audience)?;
+        s.serialize_field("link_access_level", &self.link_access_level)
     }
 }
 
@@ -7599,7 +7770,7 @@ impl ::serde::ser::Serialize for LinkPermissions {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("LinkPermissions", 4)?;
+        let mut s = serializer.serialize_struct("LinkPermissions", 6)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -10789,7 +10960,7 @@ pub enum ModifySharedLinkSettingsError {
     SharedLinkNotFound,
     /// The caller is not allowed to access this shared link.
     SharedLinkAccessDenied,
-    /// This type of link is not supported.
+    /// This type of link is not supported; use [`files::export()`](super::files::export) instead.
     UnsupportedLinkType,
     /// There is an error with the given settings.
     SettingsError(SharedLinkSettingsError),
@@ -12725,6 +12896,90 @@ impl ::serde::ser::Serialize for RemoveMemberJobStatus {
     }
 }
 
+#[derive(Debug)]
+pub enum RequestedLinkAccessLevel {
+    /// Users who use the link can view and comment on the content.
+    Viewer,
+    /// Users who use the link can edit, view and comment on the content.
+    Editor,
+    /// Request for the maximum access level you can set the link to.
+    Max,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RequestedLinkAccessLevel {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RequestedLinkAccessLevel;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a RequestedLinkAccessLevel structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "viewer" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(RequestedLinkAccessLevel::Viewer)
+                    }
+                    "editor" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(RequestedLinkAccessLevel::Editor)
+                    }
+                    "max" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(RequestedLinkAccessLevel::Max)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(RequestedLinkAccessLevel::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["viewer",
+                                    "editor",
+                                    "max",
+                                    "other"];
+        deserializer.deserialize_struct("RequestedLinkAccessLevel", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RequestedLinkAccessLevel {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RequestedLinkAccessLevel::Viewer => {
+                // unit
+                let mut s = serializer.serialize_struct("RequestedLinkAccessLevel", 1)?;
+                s.serialize_field(".tag", "viewer")?;
+                s.end()
+            }
+            RequestedLinkAccessLevel::Editor => {
+                // unit
+                let mut s = serializer.serialize_struct("RequestedLinkAccessLevel", 1)?;
+                s.serialize_field(".tag", "editor")?;
+                s.end()
+            }
+            RequestedLinkAccessLevel::Max => {
+                // unit
+                let mut s = serializer.serialize_struct("RequestedLinkAccessLevel", 1)?;
+                s.serialize_field(".tag", "max")?;
+                s.end()
+            }
+            RequestedLinkAccessLevel::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// The access permission that can be requested by the caller for the shared link. Note that the
 /// final resolved visibility of the shared link takes into account other aspects, such as team and
 /// shared folder settings. Check the [`ResolvedVisibility`](ResolvedVisibility) for more info on
@@ -13016,7 +13271,7 @@ pub enum RevokeSharedLinkError {
     SharedLinkNotFound,
     /// The caller is not allowed to access this shared link.
     SharedLinkAccessDenied,
-    /// This type of link is not supported.
+    /// This type of link is not supported; use [`files::export()`](super::files::export) instead.
     UnsupportedLinkType,
     /// Shared link is malformed.
     SharedLinkMalformed,
@@ -16230,12 +16485,74 @@ impl ::serde::ser::Serialize for SharedLinkAccessFailureReason {
 }
 
 #[derive(Debug)]
+pub enum SharedLinkAlreadyExistsMetadata {
+    /// Metadata of the shared link that already exists.
+    Metadata(SharedLinkMetadata),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharedLinkAlreadyExistsMetadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SharedLinkAlreadyExistsMetadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharedLinkAlreadyExistsMetadata structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "metadata" => {
+                        match map.next_key()? {
+                            Some("metadata") => Ok(SharedLinkAlreadyExistsMetadata::Metadata(map.next_value()?)),
+                            None => Err(de::Error::missing_field("metadata")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SharedLinkAlreadyExistsMetadata::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["metadata",
+                                    "other"];
+        deserializer.deserialize_struct("SharedLinkAlreadyExistsMetadata", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharedLinkAlreadyExistsMetadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SharedLinkAlreadyExistsMetadata::Metadata(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("SharedLinkAlreadyExistsMetadata", 2)?;
+                s.serialize_field(".tag", "metadata")?;
+                s.serialize_field("metadata", x)?;
+                s.end()
+            }
+            SharedLinkAlreadyExistsMetadata::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
 pub enum SharedLinkError {
     /// The shared link wasn't found.
     SharedLinkNotFound,
     /// The caller is not allowed to access this shared link.
     SharedLinkAccessDenied,
-    /// This type of link is not supported.
+    /// This type of link is not supported; use [`files::export()`](super::files::export) instead.
     UnsupportedLinkType,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -16499,6 +16816,13 @@ pub struct SharedLinkSettings {
     pub link_password: Option<String>,
     /// Expiration time of the shared link. By default the link won't expire.
     pub expires: Option<super::common::DropboxTimestamp>,
+    /// The new audience who can benefit from the access level specified by the link's access level
+    /// specified in the `link_access_level` field of `LinkPermissions`. This is used in conjunction
+    /// with team policies and shared folder policies to determine the final effective audience type
+    /// in the `effective_audience` field of `LinkPermissions.
+    pub audience: Option<LinkAudience>,
+    /// Requested access level you want the audience to gain from this link.
+    pub access: Option<RequestedLinkAccessLevel>,
 }
 
 impl Default for SharedLinkSettings {
@@ -16507,13 +16831,17 @@ impl Default for SharedLinkSettings {
             requested_visibility: None,
             link_password: None,
             expires: None,
+            audience: None,
+            access: None,
         }
     }
 }
 
 const SHARED_LINK_SETTINGS_FIELDS: &[&str] = &["requested_visibility",
                                                "link_password",
-                                               "expires"];
+                                               "expires",
+                                               "audience",
+                                               "access"];
 impl SharedLinkSettings {
     // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -16522,6 +16850,8 @@ impl SharedLinkSettings {
         let mut field_requested_visibility = None;
         let mut field_link_password = None;
         let mut field_expires = None;
+        let mut field_audience = None;
+        let mut field_access = None;
         while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "requested_visibility" => {
@@ -16542,6 +16872,18 @@ impl SharedLinkSettings {
                     }
                     field_expires = Some(map.next_value()?);
                 }
+                "audience" => {
+                    if field_audience.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("audience"));
+                    }
+                    field_audience = Some(map.next_value()?);
+                }
+                "access" => {
+                    if field_access.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("access"));
+                    }
+                    field_access = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -16552,6 +16894,8 @@ impl SharedLinkSettings {
             requested_visibility: field_requested_visibility,
             link_password: field_link_password,
             expires: field_expires,
+            audience: field_audience,
+            access: field_access,
         };
         Ok(result)
     }
@@ -16563,7 +16907,9 @@ impl SharedLinkSettings {
         use serde::ser::SerializeStruct;
         s.serialize_field("requested_visibility", &self.requested_visibility)?;
         s.serialize_field("link_password", &self.link_password)?;
-        s.serialize_field("expires", &self.expires)
+        s.serialize_field("expires", &self.expires)?;
+        s.serialize_field("audience", &self.audience)?;
+        s.serialize_field("access", &self.access)
     }
 }
 
@@ -16589,7 +16935,7 @@ impl ::serde::ser::Serialize for SharedLinkSettings {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedLinkSettings", 3)?;
+        let mut s = serializer.serialize_struct("SharedLinkSettings", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
