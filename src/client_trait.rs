@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Dropbox, Inc.
+
 //! Everything needed to implement your HTTP client.
 
 use std::io::Read;

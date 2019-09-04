@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Dropbox, Inc.
+
 use std::fmt::Debug;
 use std::marker::PhantomData;
 use crate::{Error, ErrorKind, ResultExt};

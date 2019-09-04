@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Dropbox, Inc.
+
 use std::io::{self, Read};
 use std::str;
 

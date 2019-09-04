@@ -1,3 +1,5 @@
+// Copyright (c) 2019 Dropbox, Inc.
+
 #![deny(rust_2018_idioms)]
 
 #[macro_use] extern crate error_chain;
