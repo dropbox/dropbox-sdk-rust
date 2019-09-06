@@ -11,6 +11,17 @@ building. To regenrate or update it, run `./generate.sh dropbox-api-spec`.
 Doing so requires a working Python environment and some dependencies. See the
 Stone documentation for details.
 
+## Status of this SDK
+
+This SDK is not yet official. What does this mean?
+* There is no formal Dropbox support for the SDK at this point.
+* Bugs may or may not get fixed.
+* Not all SDK features may be implemented.
+
+However, that said,
+* The SDK is usable!
+* We are happy to get feedback and/or pull requests from the community!
+
 ## HTTP Client
 
 To actually use the API calls, you need a HTTP client -- all functions take a
