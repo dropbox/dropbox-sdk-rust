@@ -52,12 +52,14 @@ features = ["dbx_files", "dbx_users"]
 
 ## Result Types and Errors
 
-Routes return errors in two ways: the `Error` associated type of the future is
-used to convey errors that occur in actually making the request, such as
-network I/O errors or failure to serialize or deserialize the actual request
-data. Errors returned by the service are returned in the `Err` variant of the
-`Result` returned by the future. These errors reflect more "normal" problems
-with the request, such as file not found, lacking permissions, etc.
+Routes return a nested result type: `Result<Result<T, E>, dropbox_sdk::Error>`.
+The outer `Result` is `Err` if something went wrong in the course of actually
+making the request, such as network I/O errors or failure to serialize or
+deserialize the request data. This `Result`'s `Ok` variant is another `Result`
+where the `Ok` value is the deserialized successful result of the call, and the
+`Err` value is the strongly-typed error returned by the API. This inner error
+indicates some problem with the request, such as file not found, lacking
+permissions, etc.
 
 The rationale for splitting the errors this way is that the former category
 usually can't be handled in any way other than by retrying the request, whereas
