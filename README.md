@@ -93,14 +93,21 @@ Some implementation notes, limitations, and TODOs:
  * The `error_chain` crate is used to generate a composite Error type for
    request errors, network I/O errors, and so on. This crate is deprecated, and
    so the implementation of this type will need to be changed at some point.
+ * This crate only supports synchronous I/O. Eventually we probably want to
+   support async I/O, which will require making incompatible changes to the
+   types returned by routes. This should probably wait until the futures
+   ecosystem and async/await have stabilized some more.
+ * The `hyper` crate being used is the 0.10 branch, which is out of date. The
+   reason for using this old version is that 0.10 is the last non-async Hyper
+   implementation.
  * This code does not use `serde_derive` and instead uses manually-emitted
-   serialization code.  Previous work did attempt to use `serde_derive`, but
-   the way the Dropbox API serializes unions containing structs (by collapsing
-   their fields into the union) isn't supported by `serde_derive`.  It also
-   took an extremely long time to compile (~30 minutes for release build) and
-   huge (~190MB) .rlib files.  The hand-written code is more versatile,
-   compiles faster, and produces a smaller binary, at the expense of making the
-   generated code much larger.
+   serialization code. Previous work on this crate did attempt to use
+   `serde_derive`, but the way the Dropbox API serializes unions containing
+   structs (by collapsing their fields into the union) isn't supported by
+   `serde_derive`. It also took an extremely long time to compile (~30 minutes
+   for release build) and huge (~190MB) .rlib files. The hand-written code is
+   more versatile, compiles faster, and produces a smaller binary, at the
+   expense of making the generated source code much larger.
  * Types with constraints (such as strings with patterns or min/max lengths, or
    integers with a range) do not check that the data being stored in them meets
    the constraints.
