@@ -48,7 +48,7 @@ class RustBackend(RustHelperBackend):
             self._emit_header()
 
             if namespace.doc is not None:
-                self._emit_doc(namespace.doc, prefix=u'//!')
+                self._emit_doc(namespace.doc, prefix=u'//!', qualify_type_names=True)
                 self.emit()
 
             for alias in namespace.aliases:
@@ -639,15 +639,20 @@ class RustBackend(RustHelperBackend):
 
     # Helpers
 
-    def _emit_doc(self, doc_string, prefix=u'///'):
+    def _emit_doc(self, doc_string, prefix=u'///', qualify_type_names=False):
         if doc_string is not None:
             for idx, chunk in enumerate(doc_string.split(u'\n\n')):
                 if idx != 0: self.emit(prefix)
+                docf = lambda tag, val: self._docf(qualify_type_names, tag, val)
                 self.emit_wrapped_text(
-                        self.process_doc(chunk, self._docf),
+                        self.process_doc(chunk, docf),
                         prefix=prefix + u' ', width=100)
 
-    def _docf(self, tag, val):
+    def _docf(self, qualify_type_names, tag, val):
+        # qualify_type_names is meant to be used when generating documentation at the file scope
+        # using "//!". Because these are semantically outside the module, types referenced in them
+        # need to be qualified with the name of the module. Normally this gets done automatically
+        # using self._current_namespace, but for file comments this value is wrong.
         if tag == 'route':
             if ':' in val:
                 val, version = val.split(':')
@@ -703,13 +708,18 @@ class RustBackend(RustHelperBackend):
             if '.' in val:
                 ns, typ_name = val.split('.')
                 typ = self._all_types[ns][typ_name]
-                rust_name = self._rust_type(typ)
-                return '[`{}::{}`](super::{}::{})'.format(
-                    ns, rust_name, ns, rust_name)
+                rust_name = self._rust_type(typ, no_qualify=True)
+                full_rust_name = self._rust_type(typ)
+                return '[`{}::{}`]({})'.format(
+                    ns, rust_name, full_rust_name)
             else:
                 typ = self._all_types[self._current_namespace][val]
                 rust_name = self._rust_type(typ)
-                return '[`{}`]({})'.format(rust_name, rust_name)
+                if qualify_type_names:
+                    ns = self.namespace_name_raw(self._current_namespace)
+                    return '[`{}`]({}::{})'.format(rust_name, ns, rust_name)
+                else:
+                    return '[`{}`]({})'.format(rust_name, rust_name)
         elif tag == 'link':
             title, url = val.rsplit(' ', 1)
             return '[{}]({})'.format(title, url)
@@ -833,9 +843,9 @@ class RustBackend(RustHelperBackend):
 
     # Naming Rules
 
-    def _rust_type(self, typ):
+    def _rust_type(self, typ, no_qualify=False):
         if isinstance(typ, ir.Nullable):
-            return u'Option<{}>'.format(self._rust_type(typ.data_type))
+            return u'Option<{}>'.format(self._rust_type(typ.data_type, no_qualify))
         elif isinstance(typ, ir.Void):
             return u'()'
         elif isinstance(typ, ir.Bytes):
@@ -859,13 +869,13 @@ class RustBackend(RustHelperBackend):
         elif isinstance(typ, ir.Timestamp):
             return u'String /*Timestamp*/'  # TODO
         elif isinstance(typ, ir.List):
-            return u'Vec<{}>'.format(self._rust_type(typ.data_type))
+            return u'Vec<{}>'.format(self._rust_type(typ.data_type, no_qualify))
         elif isinstance(typ, ir.Map):
             return u'::std::collections::HashMap<{}, {}>'.format(
-                self._rust_type(typ.key_data_type),
-                self._rust_type(typ.value_data_type))
+                self._rust_type(typ.key_data_type, no_qualify),
+                self._rust_type(typ.value_data_type, no_qualify))
         elif isinstance(typ, ir.Alias):
-            if typ.namespace.name == self._current_namespace:
+            if typ.namespace.name == self._current_namespace or no_qualify:
                 return self.alias_name(typ)
             else:
                 return u'super::{}::{}'.format(
@@ -879,7 +889,7 @@ class RustBackend(RustHelperBackend):
             else:
                 raise RuntimeError(u'ERROR: user-defined type "{}" is neither Struct nor Union???'
                                    .format(typ))
-            if typ.namespace.name == self._current_namespace:
+            if typ.namespace.name == self._current_namespace or no_qualify:
                 return name
             else:
                 return u'super::{}::{}'.format(
