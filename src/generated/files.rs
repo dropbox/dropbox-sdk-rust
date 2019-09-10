@@ -525,11 +525,11 @@ pub fn get_thumbnail_batch(
 /// [`FolderSharingInfo::read_only`](FolderSharingInfo) and set all its children's read-only
 /// statuses to match. For each [`DeletedMetadata`](DeletedMetadata), if your local state has
 /// something at the given path, remove it and all its children. If there's nothing at the given
-/// path, ignore this entry. Note:
-/// [`auth::super::auth::RateLimitError`](super::auth::super::auth::RateLimitError) may be returned
-/// if multiple [`list_folder()`](list_folder) or [`list_folder_continue()`](list_folder_continue)
-/// calls with same parameters are made simultaneously by same API app for same user. If your app
-/// implements retry logic, please hold off the retry until the previous request finishes.
+/// path, ignore this entry. Note: [`auth::RateLimitError`](super::auth::RateLimitError) may be
+/// returned if multiple [`list_folder()`](list_folder) or
+/// [`list_folder_continue()`](list_folder_continue) calls with same parameters are made
+/// simultaneously by same API app for same user. If your app implements retry logic, please hold
+/// off the retry until the previous request finishes.
 pub fn list_folder(
     client: &dyn crate::client_trait::HttpClient,
     arg: &ListFolderArg,
