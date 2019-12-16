@@ -11,6 +11,20 @@
 
 pub type GetAccountBatchResult = Vec<BasicAccount>;
 
+/// Get a list of feature values that may be configured for the current account.
+pub fn features_get_values(
+    client: &dyn crate::client_trait::HttpClient,
+    arg: &UserFeaturesGetValuesBatchArg,
+) -> crate::Result<Result<UserFeaturesGetValuesBatchResult, UserFeaturesGetValuesBatchError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "users/features/get_values",
+        arg,
+        None)
+}
+
 /// Get information about a user's account.
 pub fn get_account(
     client: &dyn crate::client_trait::HttpClient,
@@ -1431,6 +1445,72 @@ impl ::serde::ser::Serialize for Name {
     }
 }
 
+/// The value for [`UserFeature::PaperAsFiles`](UserFeature::PaperAsFiles).
+#[derive(Debug)]
+pub enum PaperAsFilesValue {
+    /// When this value is true, the user's Paper docs are accessible in Dropbox with the .paper
+    /// extension and must be accessed via the /files endpoints.  When this value is false, the
+    /// user's Paper docs are stored separate from Dropbox files and folders and should be accessed
+    /// via the /paper endpoints.
+    Enabled(bool),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperAsFilesValue {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PaperAsFilesValue;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PaperAsFilesValue structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "enabled" => {
+                        match map.next_key()? {
+                            Some("enabled") => Ok(PaperAsFilesValue::Enabled(map.next_value()?)),
+                            None => Err(de::Error::missing_field("enabled")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PaperAsFilesValue::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["enabled",
+                                    "other"];
+        deserializer.deserialize_struct("PaperAsFilesValue", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperAsFilesValue {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PaperAsFilesValue::Enabled(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("PaperAsFilesValue", 2)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.serialize_field("enabled", x)?;
+                s.end()
+            }
+            PaperAsFilesValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Space is allocated differently based on the type of account.
 #[derive(Debug)]
 pub enum SpaceAllocation {
@@ -1489,7 +1569,7 @@ impl ::serde::ser::Serialize for SpaceAllocation {
             }
             SpaceAllocation::Team(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SpaceAllocation", 5)?;
+                let mut s = serializer.serialize_struct("SpaceAllocation", 6)?;
                 s.serialize_field(".tag", "team")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -1718,6 +1798,8 @@ pub struct TeamSpaceAllocation {
     pub user_within_team_space_allocated: u64,
     /// The type of the space limit imposed on the team member (off, alert_only, stop_sync).
     pub user_within_team_space_limit_type: super::team_common::MemberSpaceLimitType,
+    /// An accurate cached calculation of a team member's total space usage (bytes).
+    pub user_within_team_space_used_cached: u64,
 }
 
 impl TeamSpaceAllocation {
@@ -1726,12 +1808,14 @@ impl TeamSpaceAllocation {
         allocated: u64,
         user_within_team_space_allocated: u64,
         user_within_team_space_limit_type: super::team_common::MemberSpaceLimitType,
+        user_within_team_space_used_cached: u64,
     ) -> Self {
         TeamSpaceAllocation {
             used,
             allocated,
             user_within_team_space_allocated,
             user_within_team_space_limit_type,
+            user_within_team_space_used_cached,
         }
     }
 
@@ -1740,7 +1824,8 @@ impl TeamSpaceAllocation {
 const TEAM_SPACE_ALLOCATION_FIELDS: &[&str] = &["used",
                                                 "allocated",
                                                 "user_within_team_space_allocated",
-                                                "user_within_team_space_limit_type"];
+                                                "user_within_team_space_limit_type",
+                                                "user_within_team_space_used_cached"];
 impl TeamSpaceAllocation {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -1756,6 +1841,7 @@ impl TeamSpaceAllocation {
         let mut field_allocated = None;
         let mut field_user_within_team_space_allocated = None;
         let mut field_user_within_team_space_limit_type = None;
+        let mut field_user_within_team_space_used_cached = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -1784,6 +1870,12 @@ impl TeamSpaceAllocation {
                     }
                     field_user_within_team_space_limit_type = Some(map.next_value()?);
                 }
+                "user_within_team_space_used_cached" => {
+                    if field_user_within_team_space_used_cached.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("user_within_team_space_used_cached"));
+                    }
+                    field_user_within_team_space_used_cached = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -1798,6 +1890,7 @@ impl TeamSpaceAllocation {
             allocated: field_allocated.ok_or_else(|| ::serde::de::Error::missing_field("allocated"))?,
             user_within_team_space_allocated: field_user_within_team_space_allocated.ok_or_else(|| ::serde::de::Error::missing_field("user_within_team_space_allocated"))?,
             user_within_team_space_limit_type: field_user_within_team_space_limit_type.ok_or_else(|| ::serde::de::Error::missing_field("user_within_team_space_limit_type"))?,
+            user_within_team_space_used_cached: field_user_within_team_space_used_cached.ok_or_else(|| ::serde::de::Error::missing_field("user_within_team_space_used_cached"))?,
         };
         Ok(Some(result))
     }
@@ -1810,7 +1903,8 @@ impl TeamSpaceAllocation {
         s.serialize_field("used", &self.used)?;
         s.serialize_field("allocated", &self.allocated)?;
         s.serialize_field("user_within_team_space_allocated", &self.user_within_team_space_allocated)?;
-        s.serialize_field("user_within_team_space_limit_type", &self.user_within_team_space_limit_type)
+        s.serialize_field("user_within_team_space_limit_type", &self.user_within_team_space_limit_type)?;
+        s.serialize_field("user_within_team_space_used_cached", &self.user_within_team_space_used_cached)
     }
 }
 
@@ -1836,7 +1930,379 @@ impl ::serde::ser::Serialize for TeamSpaceAllocation {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamSpaceAllocation", 4)?;
+        let mut s = serializer.serialize_struct("TeamSpaceAllocation", 5)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// A set of features that a Dropbox User account may have configured.
+#[derive(Debug)]
+pub enum UserFeature {
+    /// This feature contains information about how the user's Paper files are stored.
+    PaperAsFiles,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UserFeature {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UserFeature;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UserFeature structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "paper_as_files" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UserFeature::PaperAsFiles)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UserFeature::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["paper_as_files",
+                                    "other"];
+        deserializer.deserialize_struct("UserFeature", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UserFeature {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            UserFeature::PaperAsFiles => {
+                // unit
+                let mut s = serializer.serialize_struct("UserFeature", 1)?;
+                s.serialize_field(".tag", "paper_as_files")?;
+                s.end()
+            }
+            UserFeature::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Values that correspond to entries in [`UserFeature`](UserFeature).
+#[derive(Debug)]
+pub enum UserFeatureValue {
+    PaperAsFiles(PaperAsFilesValue),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UserFeatureValue {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UserFeatureValue;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UserFeatureValue structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "paper_as_files" => {
+                        match map.next_key()? {
+                            Some("paper_as_files") => Ok(UserFeatureValue::PaperAsFiles(map.next_value()?)),
+                            None => Err(de::Error::missing_field("paper_as_files")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UserFeatureValue::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["paper_as_files",
+                                    "other"];
+        deserializer.deserialize_struct("UserFeatureValue", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UserFeatureValue {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            UserFeatureValue::PaperAsFiles(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("UserFeatureValue", 2)?;
+                s.serialize_field(".tag", "paper_as_files")?;
+                s.serialize_field("paper_as_files", x)?;
+                s.end()
+            }
+            UserFeatureValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct UserFeaturesGetValuesBatchArg {
+    /// A list of features in [`UserFeature`](UserFeature). If the list is empty, this route will
+    /// return [`UserFeaturesGetValuesBatchError`](UserFeaturesGetValuesBatchError).
+    pub features: Vec<UserFeature>,
+}
+
+impl UserFeaturesGetValuesBatchArg {
+    pub fn new(features: Vec<UserFeature>) -> Self {
+        UserFeaturesGetValuesBatchArg {
+            features,
+        }
+    }
+
+}
+
+const USER_FEATURES_GET_VALUES_BATCH_ARG_FIELDS: &[&str] = &["features"];
+impl UserFeaturesGetValuesBatchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UserFeaturesGetValuesBatchArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UserFeaturesGetValuesBatchArg>, V::Error> {
+        let mut field_features = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "features" => {
+                    if field_features.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("features"));
+                    }
+                    field_features = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UserFeaturesGetValuesBatchArg {
+            features: field_features.ok_or_else(|| ::serde::de::Error::missing_field("features"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("features", &self.features)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UserFeaturesGetValuesBatchArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UserFeaturesGetValuesBatchArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UserFeaturesGetValuesBatchArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UserFeaturesGetValuesBatchArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UserFeaturesGetValuesBatchArg", USER_FEATURES_GET_VALUES_BATCH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UserFeaturesGetValuesBatchArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UserFeaturesGetValuesBatchArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum UserFeaturesGetValuesBatchError {
+    /// At least one [`UserFeature`](UserFeature) must be included in the
+    /// [`UserFeaturesGetValuesBatchArg`](UserFeaturesGetValuesBatchArg).features list.
+    EmptyFeaturesList,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UserFeaturesGetValuesBatchError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UserFeaturesGetValuesBatchError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UserFeaturesGetValuesBatchError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "empty_features_list" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UserFeaturesGetValuesBatchError::EmptyFeaturesList)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UserFeaturesGetValuesBatchError::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["empty_features_list",
+                                    "other"];
+        deserializer.deserialize_struct("UserFeaturesGetValuesBatchError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UserFeaturesGetValuesBatchError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            UserFeaturesGetValuesBatchError::EmptyFeaturesList => {
+                // unit
+                let mut s = serializer.serialize_struct("UserFeaturesGetValuesBatchError", 1)?;
+                s.serialize_field(".tag", "empty_features_list")?;
+                s.end()
+            }
+            UserFeaturesGetValuesBatchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for UserFeaturesGetValuesBatchError {
+    fn description(&self) -> &str {
+        "UserFeaturesGetValuesBatchError"
+    }
+}
+
+impl ::std::fmt::Display for UserFeaturesGetValuesBatchError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct UserFeaturesGetValuesBatchResult {
+    pub values: Vec<UserFeatureValue>,
+}
+
+impl UserFeaturesGetValuesBatchResult {
+    pub fn new(values: Vec<UserFeatureValue>) -> Self {
+        UserFeaturesGetValuesBatchResult {
+            values,
+        }
+    }
+
+}
+
+const USER_FEATURES_GET_VALUES_BATCH_RESULT_FIELDS: &[&str] = &["values"];
+impl UserFeaturesGetValuesBatchResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UserFeaturesGetValuesBatchResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UserFeaturesGetValuesBatchResult>, V::Error> {
+        let mut field_values = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "values" => {
+                    if field_values.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("values"));
+                    }
+                    field_values = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UserFeaturesGetValuesBatchResult {
+            values: field_values.ok_or_else(|| ::serde::de::Error::missing_field("values"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("values", &self.values)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UserFeaturesGetValuesBatchResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UserFeaturesGetValuesBatchResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UserFeaturesGetValuesBatchResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UserFeaturesGetValuesBatchResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UserFeaturesGetValuesBatchResult", USER_FEATURES_GET_VALUES_BATCH_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UserFeaturesGetValuesBatchResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UserFeaturesGetValuesBatchResult", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

@@ -8,11 +8,20 @@
 )]
 
 //! This namespace contains endpoints and data types for managing docs and folders in Dropbox Paper.
+//! New Paper users will see docs they create in their filesystem as '.paper' files alongside their
+//! other Dropbox content. The /paper endpoints are being deprecated and you'll need to use /files
+//! and /sharing endpoints to interact with their Paper content. Read more in the [Paper Migration
+//! Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide).
 
 pub type PaperDocId = String;
 
-/// Marks the given Paper doc as archived. Note: This action can be performed or undone by anyone
-/// with edit permissions to the doc.
+/// Marks the given Paper doc as archived. This action can be performed or undone by anyone with
+/// edit permissions to the doc. Note that this endpoint will continue to work for content created
+/// by users on the older version of Paper. To check which version of Paper a user is on, use
+/// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running
+/// the new version of Paper. This endpoint will be retired in September 2020. Refer to the [Paper
+/// Migration Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for more
+/// information.
 pub fn docs_archive(
     client: &dyn crate::client_trait::HttpClient,
     arg: &RefPaperDoc,
@@ -26,7 +35,13 @@ pub fn docs_archive(
         None)
 }
 
-/// Creates a new Paper doc with the provided content.
+/// Creates a new Paper doc with the provided content. Note that this endpoint will continue to work
+/// for content created by users on the older version of Paper. To check which version of Paper a
+/// user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the
+/// user is running the new version of Paper. This endpoint will be retired in September 2020. Refer
+/// to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for more
+/// information.
 pub fn docs_create(
     client: &dyn crate::client_trait::HttpClient,
     arg: &PaperDocCreateArgs,
@@ -41,7 +56,12 @@ pub fn docs_create(
         Some(body))
 }
 
-/// Exports and downloads Paper doc either as HTML or markdown.
+/// Exports and downloads Paper doc either as HTML or markdown. Note that this endpoint will
+/// continue to work for content created by users on the older version of Paper. To check which
+/// version of Paper a user is on, use /users/features/get_values. If the paper_as_files feature is
+/// enabled, then the user is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 pub fn docs_download(
     client: &dyn crate::client_trait::HttpClient,
     arg: &PaperDocExport,
@@ -61,7 +81,12 @@ pub fn docs_download(
 
 /// Lists the users who are explicitly invited to the Paper folder in which the Paper doc is
 /// contained. For private folders all users (including owner) shared on the folder are listed and
-/// for team folders all non-team users shared on the folder are returned.
+/// for team folders all non-team users shared on the folder are returned. Note that this endpoint
+/// will continue to work for content created by users on the older version of Paper. To check which
+/// version of Paper a user is on, use /users/features/get_values. If the paper_as_files feature is
+/// enabled, then the user is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 pub fn docs_folder_users_list(
     client: &dyn crate::client_trait::HttpClient,
     arg: &ListUsersOnFolderArgs,
@@ -76,7 +101,12 @@ pub fn docs_folder_users_list(
 }
 
 /// Once a cursor has been retrieved from [`docs_folder_users_list()`](docs_folder_users_list), use
-/// this to paginate through all users on the Paper folder.
+/// this to paginate through all users on the Paper folder. Note that this endpoint will continue to
+/// work for content created by users on the older version of Paper. To check which version of Paper
+/// a user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the
+/// user is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 pub fn docs_folder_users_list_continue(
     client: &dyn crate::client_trait::HttpClient,
     arg: &ListUsersOnFolderContinueArgs,
@@ -95,7 +125,12 @@ pub fn docs_folder_users_list_continue(
 /// of folders (both folderId and folderName) from     the root folder to the folder directly
 /// containing the Paper doc.
 ///
-/// Note: If the Paper doc is not in any folder (aka unfiled) the response will be empty.
+/// If the Paper doc is not in any folder (aka unfiled) the response will be empty. Note that this
+/// endpoint will continue to work for content created by users on the older version of Paper. To
+/// check which version of Paper a user is on, use /users/features/get_values. If the paper_as_files
+/// feature is enabled, then the user is running the new version of Paper. Refer to the [Paper
+/// Migration Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for
+/// migration information.
 pub fn docs_get_folder_info(
     client: &dyn crate::client_trait::HttpClient,
     arg: &RefPaperDoc,
@@ -111,6 +146,12 @@ pub fn docs_get_folder_info(
 
 /// Return the list of all Paper docs according to the argument specifications. To iterate over
 /// through the full pagination, pass the cursor to [`docs_list_continue()`](docs_list_continue).
+/// Note that this endpoint will continue to work for content created by users on the older version
+/// of Paper. To check which version of Paper a user is on, use /users/features/get_values. If the
+/// paper_as_files feature is enabled, then the user is running the new version of Paper. Refer to
+/// the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 pub fn docs_list(
     client: &dyn crate::client_trait::HttpClient,
     arg: &ListPaperDocsArgs,
@@ -125,7 +166,12 @@ pub fn docs_list(
 }
 
 /// Once a cursor has been retrieved from [`docs_list()`](docs_list), use this to paginate through
-/// all Paper doc.
+/// all Paper doc. Note that this endpoint will continue to work for content created by users on the
+/// older version of Paper. To check which version of Paper a user is on, use
+/// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running
+/// the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 pub fn docs_list_continue(
     client: &dyn crate::client_trait::HttpClient,
     arg: &ListPaperDocsContinueArgs,
@@ -140,8 +186,12 @@ pub fn docs_list_continue(
 }
 
 /// Permanently deletes the given Paper doc. This operation is final as the doc cannot be recovered.
-///
-/// Note: This action can be performed only by the doc owner.
+/// This action can be performed only by the doc owner. Note that this endpoint will continue to
+/// work for content created by users on the older version of Paper. To check which version of Paper
+/// a user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the
+/// user is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 pub fn docs_permanently_delete(
     client: &dyn crate::client_trait::HttpClient,
     arg: &RefPaperDoc,
@@ -155,7 +205,12 @@ pub fn docs_permanently_delete(
         None)
 }
 
-/// Gets the default sharing policy for the given Paper doc.
+/// Gets the default sharing policy for the given Paper doc. Note that this endpoint will continue
+/// to work for content created by users on the older version of Paper. To check which version of
+/// Paper a user is on, use /users/features/get_values. If the paper_as_files feature is enabled,
+/// then the user is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 pub fn docs_sharing_policy_get(
     client: &dyn crate::client_trait::HttpClient,
     arg: &RefPaperDoc,
@@ -170,10 +225,14 @@ pub fn docs_sharing_policy_get(
 }
 
 /// Sets the default sharing policy for the given Paper doc. The default 'team_sharing_policy' can
-/// be changed only by teams, omit this field for personal accounts.
-///
-/// Note: 'public_sharing_policy' cannot be set to the value 'disabled' because this setting can be
-/// changed only via the team admin console.
+/// be changed only by teams, omit this field for personal accounts. The 'public_sharing_policy'
+/// policy can't be set to the value 'disabled' because this setting can be changed only via the
+/// team admin console. Note that this endpoint will continue to work for content created by users
+/// on the older version of Paper. To check which version of Paper a user is on, use
+/// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running
+/// the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 pub fn docs_sharing_policy_set(
     client: &dyn crate::client_trait::HttpClient,
     arg: &PaperDocSharingPolicy,
@@ -187,7 +246,13 @@ pub fn docs_sharing_policy_set(
         None)
 }
 
-/// Updates an existing Paper doc with the provided content.
+/// Updates an existing Paper doc with the provided content. Note that this endpoint will continue
+/// to work for content created by users on the older version of Paper. To check which version of
+/// Paper a user is on, use /users/features/get_values. If the paper_as_files feature is enabled,
+/// then the user is running the new version of Paper. This endpoint will be retired in September
+/// 2020. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for more
+/// information.
 pub fn docs_update(
     client: &dyn crate::client_trait::HttpClient,
     arg: &PaperDocUpdateArgs,
@@ -203,9 +268,13 @@ pub fn docs_update(
 }
 
 /// Allows an owner or editor to add users to a Paper doc or change their permissions using their
-/// email address or Dropbox account ID.
-///
-/// Note: The Doc owner's permissions cannot be changed.
+/// email address or Dropbox account ID. The doc owner's permissions cannot be changed. Note that
+/// this endpoint will continue to work for content created by users on the older version of Paper.
+/// To check which version of Paper a user is on, use /users/features/get_values. If the
+/// paper_as_files feature is enabled, then the user is running the new version of Paper. Refer to
+/// the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 pub fn docs_users_add(
     client: &dyn crate::client_trait::HttpClient,
     arg: &AddPaperDocUser,
@@ -222,7 +291,12 @@ pub fn docs_users_add(
 /// Lists all users who visited the Paper doc or users with explicit access. This call excludes
 /// users who have been removed. The list is sorted by the date of the visit or the share date. The
 /// list will include both users, the explicitly shared ones as well as those who came in using the
-/// Paper url link.
+/// Paper url link. Note that this endpoint will continue to work for content created by users on
+/// the older version of Paper. To check which version of Paper a user is on, use
+/// /users/features/get_values. If the paper_as_files feature is enabled, then the user is running
+/// the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 pub fn docs_users_list(
     client: &dyn crate::client_trait::HttpClient,
     arg: &ListUsersOnPaperDocArgs,
@@ -237,7 +311,12 @@ pub fn docs_users_list(
 }
 
 /// Once a cursor has been retrieved from [`docs_users_list()`](docs_users_list), use this to
-/// paginate through all users on the Paper doc.
+/// paginate through all users on the Paper doc. Note that this endpoint will continue to work for
+/// content created by users on the older version of Paper. To check which version of Paper a user
+/// is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the user
+/// is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 pub fn docs_users_list_continue(
     client: &dyn crate::client_trait::HttpClient,
     arg: &ListUsersOnPaperDocContinueArgs,
@@ -252,9 +331,12 @@ pub fn docs_users_list_continue(
 }
 
 /// Allows an owner or editor to remove users from a Paper doc using their email address or Dropbox
-/// account ID.
-///
-/// Note: Doc owner cannot be removed.
+/// account ID. The doc owner cannot be removed. Note that this endpoint will continue to work for
+/// content created by users on the older version of Paper. To check which version of Paper a user
+/// is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the user
+/// is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
 pub fn docs_users_remove(
     client: &dyn crate::client_trait::HttpClient,
     arg: &RemovePaperDocUser,
@@ -264,6 +346,25 @@ pub fn docs_users_remove(
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
         "paper/docs/users/remove",
+        arg,
+        None)
+}
+
+/// Create a new Paper folder with the provided info. Note that this endpoint will continue to work
+/// for content created by users on the older version of Paper. To check which version of Paper a
+/// user is on, use /users/features/get_values. If the paper_as_files feature is enabled, then the
+/// user is running the new version of Paper. Refer to the [Paper Migration
+/// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
+/// information.
+pub fn folders_create(
+    client: &dyn crate::client_trait::HttpClient,
+    arg: &PaperFolderCreateArg,
+) -> crate::Result<Result<PaperFolderCreateResult, PaperFolderCreateError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "paper/folders/create",
         arg,
         None)
 }
@@ -876,7 +977,10 @@ impl ::serde::ser::Serialize for Cursor {
 
 #[derive(Debug)]
 pub enum DocLookupError {
-    /// Your account does not have permissions to perform this action.
+    /// Your account does not have permissions to perform this action. This may be due to it only
+    /// having access to Paper as files in the Dropbox filesystem. For more information, refer to
+    /// the [Paper Migration
+    /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide).
     InsufficientPermissions,
     /// The required doc was not found.
     DocNotFound,
@@ -1223,9 +1327,8 @@ impl ::serde::ser::Serialize for Folder {
     }
 }
 
-/// The sharing policy of a Paper folder.
-///
-/// Note: The sharing policy of subfolders is inherited from the root folder.
+/// The sharing policy of a Paper folder. The sharing policy of subfolders is inherited from the
+/// root folder.
 #[derive(Debug)]
 pub enum FolderSharingPolicyType {
     /// Everyone in your team and anyone directly invited can access this folder.
@@ -1476,11 +1579,11 @@ impl ::serde::ser::Serialize for FoldersContainingPaperDoc {
 pub enum ImportFormat {
     /// The provided data is interpreted as standard HTML.
     Html,
-    /// The provided data is interpreted as markdown. Note: The first line of the provided document
-    /// will be used as the doc title.
+    /// The provided data is interpreted as markdown. The first line of the provided document will
+    /// be used as the doc title.
     Markdown,
-    /// The provided data is interpreted as plain text. Note: The first line of the provided
-    /// document will be used as the doc title.
+    /// The provided data is interpreted as plain text. The first line of the provided document will
+    /// be used as the doc title.
     PlainText,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -2297,7 +2400,10 @@ impl ::serde::ser::Serialize for ListPaperDocsSortOrder {
 
 #[derive(Debug)]
 pub enum ListUsersCursorError {
-    /// Your account does not have permissions to perform this action.
+    /// Your account does not have permissions to perform this action. This may be due to it only
+    /// having access to Paper as files in the Dropbox filesystem. For more information, refer to
+    /// the [Paper Migration
+    /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide).
     InsufficientPermissions,
     /// The required doc was not found.
     DocNotFound,
@@ -3134,7 +3240,10 @@ impl ::serde::ser::Serialize for ListUsersOnPaperDocResponse {
 
 #[derive(Debug)]
 pub enum PaperApiBaseError {
-    /// Your account does not have permissions to perform this action.
+    /// Your account does not have permissions to perform this action. This may be due to it only
+    /// having access to Paper as files in the Dropbox filesystem. For more information, refer to
+    /// the [Paper Migration
+    /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide).
     InsufficientPermissions,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -3423,7 +3532,10 @@ impl ::serde::ser::Serialize for PaperDocCreateArgs {
 
 #[derive(Debug)]
 pub enum PaperDocCreateError {
-    /// Your account does not have permissions to perform this action.
+    /// Your account does not have permissions to perform this action. This may be due to it only
+    /// having access to Paper as files in the Dropbox filesystem. For more information, refer to
+    /// the [Paper Migration
+    /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide).
     InsufficientPermissions,
     /// The provided content was malformed and cannot be imported to Paper.
     ContentMalformed,
@@ -3431,8 +3543,8 @@ pub enum PaperDocCreateError {
     FolderNotFound,
     /// The newly created Paper doc would be too large. Please split the content into multiple docs.
     DocLengthExceeded,
-    /// The imported document contains an image that is too large. The current limit is 1MB. Note:
-    /// This only applies to HTML with data uri.
+    /// The imported document contains an image that is too large. The current limit is 1MB. This
+    /// only applies to HTML with data URI.
     ImageSizeExceeded,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -4203,7 +4315,10 @@ impl ::serde::ser::Serialize for PaperDocUpdateArgs {
 
 #[derive(Debug)]
 pub enum PaperDocUpdateError {
-    /// Your account does not have permissions to perform this action.
+    /// Your account does not have permissions to perform this action. This may be due to it only
+    /// having access to Paper as files in the Dropbox filesystem. For more information, refer to
+    /// the [Paper Migration
+    /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide).
     InsufficientPermissions,
     /// The required doc was not found.
     DocNotFound,
@@ -4213,8 +4328,8 @@ pub enum PaperDocUpdateError {
     RevisionMismatch,
     /// The newly created Paper doc would be too large, split the content into multiple docs.
     DocLengthExceeded,
-    /// The imported document contains an image that is too large. The current limit is 1MB. Note:
-    /// This only applies to HTML with data uri.
+    /// The imported document contains an image that is too large. The current limit is 1MB. This
+    /// only applies to HTML with data URI.
     ImageSizeExceeded,
     /// This operation is not allowed on archived Paper docs.
     DocArchived,
@@ -4367,7 +4482,7 @@ impl ::std::fmt::Display for PaperDocUpdateError {
 pub enum PaperDocUpdatePolicy {
     /// The content will be appended to the doc.
     Append,
-    /// The content will be prepended to the doc. Note: the doc title will not be affected.
+    /// The content will be prepended to the doc. The doc title will not be affected.
     Prepend,
     /// The document will be overwitten at the head with the provided content.
     OverwriteAll,
@@ -4444,6 +4559,326 @@ impl ::serde::ser::Serialize for PaperDocUpdatePolicy {
             }
             PaperDocUpdatePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
+    }
+}
+
+#[derive(Debug)]
+pub struct PaperFolderCreateArg {
+    /// The name of the new Paper folder.
+    pub name: String,
+    /// The encrypted Paper folder Id where the new Paper folder should be created. The API user has
+    /// to have write access to this folder or error is thrown. If not supplied, the new folder will
+    /// be created at top level.
+    pub parent_folder_id: Option<String>,
+    /// Whether the folder to be created should be a team folder. This value will be ignored if
+    /// parent_folder_id is supplied, as the new folder will inherit the type (private or team
+    /// folder) from its parent. We will by default create a top-level private folder if both
+    /// parent_folder_id and is_team_folder are not supplied.
+    pub is_team_folder: Option<bool>,
+}
+
+impl PaperFolderCreateArg {
+    pub fn new(name: String) -> Self {
+        PaperFolderCreateArg {
+            name,
+            parent_folder_id: None,
+            is_team_folder: None,
+        }
+    }
+
+    pub fn with_parent_folder_id(mut self, value: Option<String>) -> Self {
+        self.parent_folder_id = value;
+        self
+    }
+
+    pub fn with_is_team_folder(mut self, value: Option<bool>) -> Self {
+        self.is_team_folder = value;
+        self
+    }
+
+}
+
+const PAPER_FOLDER_CREATE_ARG_FIELDS: &[&str] = &["name",
+                                                  "parent_folder_id",
+                                                  "is_team_folder"];
+impl PaperFolderCreateArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<PaperFolderCreateArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PaperFolderCreateArg>, V::Error> {
+        let mut field_name = None;
+        let mut field_parent_folder_id = None;
+        let mut field_is_team_folder = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "name" => {
+                    if field_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("name"));
+                    }
+                    field_name = Some(map.next_value()?);
+                }
+                "parent_folder_id" => {
+                    if field_parent_folder_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("parent_folder_id"));
+                    }
+                    field_parent_folder_id = Some(map.next_value()?);
+                }
+                "is_team_folder" => {
+                    if field_is_team_folder.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("is_team_folder"));
+                    }
+                    field_is_team_folder = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PaperFolderCreateArg {
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            parent_folder_id: field_parent_folder_id,
+            is_team_folder: field_is_team_folder,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("parent_folder_id", &self.parent_folder_id)?;
+        s.serialize_field("is_team_folder", &self.is_team_folder)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperFolderCreateArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperFolderCreateArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PaperFolderCreateArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperFolderCreateArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperFolderCreateArg", PAPER_FOLDER_CREATE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperFolderCreateArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperFolderCreateArg", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum PaperFolderCreateError {
+    /// Your account does not have permissions to perform this action. This may be due to it only
+    /// having access to Paper as files in the Dropbox filesystem. For more information, refer to
+    /// the [Paper Migration
+    /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide).
+    InsufficientPermissions,
+    /// The specified parent Paper folder cannot be found.
+    FolderNotFound,
+    /// The folder id cannot be decrypted to valid folder id.
+    InvalidFolderId,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperFolderCreateError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PaperFolderCreateError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PaperFolderCreateError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "insufficient_permissions" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PaperFolderCreateError::InsufficientPermissions)
+                    }
+                    "folder_not_found" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PaperFolderCreateError::FolderNotFound)
+                    }
+                    "invalid_folder_id" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PaperFolderCreateError::InvalidFolderId)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PaperFolderCreateError::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["insufficient_permissions",
+                                    "other",
+                                    "folder_not_found",
+                                    "invalid_folder_id"];
+        deserializer.deserialize_struct("PaperFolderCreateError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperFolderCreateError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PaperFolderCreateError::InsufficientPermissions => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperFolderCreateError", 1)?;
+                s.serialize_field(".tag", "insufficient_permissions")?;
+                s.end()
+            }
+            PaperFolderCreateError::FolderNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperFolderCreateError", 1)?;
+                s.serialize_field(".tag", "folder_not_found")?;
+                s.end()
+            }
+            PaperFolderCreateError::InvalidFolderId => {
+                // unit
+                let mut s = serializer.serialize_struct("PaperFolderCreateError", 1)?;
+                s.serialize_field(".tag", "invalid_folder_id")?;
+                s.end()
+            }
+            PaperFolderCreateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for PaperFolderCreateError {
+    fn description(&self) -> &str {
+        "PaperFolderCreateError"
+    }
+}
+
+impl ::std::fmt::Display for PaperFolderCreateError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct PaperFolderCreateResult {
+    /// Folder ID of the newly created folder.
+    pub folder_id: String,
+}
+
+impl PaperFolderCreateResult {
+    pub fn new(folder_id: String) -> Self {
+        PaperFolderCreateResult {
+            folder_id,
+        }
+    }
+
+}
+
+const PAPER_FOLDER_CREATE_RESULT_FIELDS: &[&str] = &["folder_id"];
+impl PaperFolderCreateResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<PaperFolderCreateResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<PaperFolderCreateResult>, V::Error> {
+        let mut field_folder_id = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "folder_id" => {
+                    if field_folder_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("folder_id"));
+                    }
+                    field_folder_id = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = PaperFolderCreateResult {
+            folder_id: field_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("folder_id"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("folder_id", &self.folder_id)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PaperFolderCreateResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PaperFolderCreateResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PaperFolderCreateResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PaperFolderCreateResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PaperFolderCreateResult", PAPER_FOLDER_CREATE_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PaperFolderCreateResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PaperFolderCreateResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 

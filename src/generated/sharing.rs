@@ -12900,7 +12900,8 @@ impl ::serde::ser::Serialize for RemoveMemberJobStatus {
 pub enum RequestedLinkAccessLevel {
     /// Users who use the link can view and comment on the content.
     Viewer,
-    /// Users who use the link can edit, view and comment on the content.
+    /// Users who use the link can edit, view and comment on the content. Note not all file types
+    /// support edit links yet.
     Editor,
     /// Request for the maximum access level you can set the link to.
     Max,
@@ -14297,7 +14298,7 @@ impl ::serde::ser::Serialize for ShareFolderJobStatus {
             }
             ShareFolderJobStatus::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("ShareFolderJobStatus", 16)?;
+                let mut s = serializer.serialize_struct("ShareFolderJobStatus", 17)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -14369,7 +14370,7 @@ impl ::serde::ser::Serialize for ShareFolderLaunch {
             }
             ShareFolderLaunch::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("ShareFolderLaunch", 16)?;
+                let mut s = serializer.serialize_struct("ShareFolderLaunch", 17)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -14562,7 +14563,7 @@ impl ::serde::ser::Serialize for SharePathError {
             }
             SharePathError::AlreadyShared(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SharePathError", 16)?;
+                let mut s = serializer.serialize_struct("SharePathError", 17)?;
                 s.serialize_field(".tag", "already_shared")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -15879,6 +15880,8 @@ pub struct SharedFolderMetadata {
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
     /// The lower-cased full path of this shared folder. Absent for unmounted folders.
     pub path_lower: Option<String>,
+    /// Display name for the parent folder.
+    pub parent_folder_name: Option<String>,
     /// The metadata of the shared content link to this shared folder. Absent if there is no link on
     /// the folder. This is for an unreleased feature so it may not be returned yet.
     pub link_metadata: Option<SharedContentLinkMetadata>,
@@ -15913,6 +15916,7 @@ impl SharedFolderMetadata {
             owner_team: None,
             parent_shared_folder_id: None,
             path_lower: None,
+            parent_folder_name: None,
             link_metadata: None,
             permissions: None,
             access_inheritance: AccessInheritance::Inherit,
@@ -15939,6 +15943,11 @@ impl SharedFolderMetadata {
 
     pub fn with_path_lower(mut self, value: Option<String>) -> Self {
         self.path_lower = value;
+        self
+    }
+
+    pub fn with_parent_folder_name(mut self, value: Option<String>) -> Self {
+        self.parent_folder_name = value;
         self
     }
 
@@ -15971,6 +15980,7 @@ const SHARED_FOLDER_METADATA_FIELDS: &[&str] = &["access_type",
                                                  "owner_team",
                                                  "parent_shared_folder_id",
                                                  "path_lower",
+                                                 "parent_folder_name",
                                                  "link_metadata",
                                                  "permissions",
                                                  "access_inheritance"];
@@ -15997,6 +16007,7 @@ impl SharedFolderMetadata {
         let mut field_owner_team = None;
         let mut field_parent_shared_folder_id = None;
         let mut field_path_lower = None;
+        let mut field_parent_folder_name = None;
         let mut field_link_metadata = None;
         let mut field_permissions = None;
         let mut field_access_inheritance = None;
@@ -16076,6 +16087,12 @@ impl SharedFolderMetadata {
                     }
                     field_path_lower = Some(map.next_value()?);
                 }
+                "parent_folder_name" => {
+                    if field_parent_folder_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("parent_folder_name"));
+                    }
+                    field_parent_folder_name = Some(map.next_value()?);
+                }
                 "link_metadata" => {
                     if field_link_metadata.is_some() {
                         return Err(::serde::de::Error::duplicate_field("link_metadata"));
@@ -16116,6 +16133,7 @@ impl SharedFolderMetadata {
             owner_team: field_owner_team,
             parent_shared_folder_id: field_parent_shared_folder_id,
             path_lower: field_path_lower,
+            parent_folder_name: field_parent_folder_name,
             link_metadata: field_link_metadata,
             permissions: field_permissions,
             access_inheritance: field_access_inheritance.unwrap_or_else(|| AccessInheritance::Inherit),
@@ -16140,6 +16158,7 @@ impl SharedFolderMetadata {
         s.serialize_field("owner_team", &self.owner_team)?;
         s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
         s.serialize_field("path_lower", &self.path_lower)?;
+        s.serialize_field("parent_folder_name", &self.parent_folder_name)?;
         s.serialize_field("link_metadata", &self.link_metadata)?;
         s.serialize_field("permissions", &self.permissions)?;
         s.serialize_field("access_inheritance", &self.access_inheritance)
@@ -16168,7 +16187,7 @@ impl ::serde::ser::Serialize for SharedFolderMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderMetadata", 15)?;
+        let mut s = serializer.serialize_struct("SharedFolderMetadata", 16)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -16195,6 +16214,8 @@ pub struct SharedFolderMetadataBase {
     pub parent_shared_folder_id: Option<super::common::SharedFolderId>,
     /// The lower-cased full path of this shared folder. Absent for unmounted folders.
     pub path_lower: Option<String>,
+    /// Display name for the parent folder.
+    pub parent_folder_name: Option<String>,
 }
 
 impl SharedFolderMetadataBase {
@@ -16211,6 +16232,7 @@ impl SharedFolderMetadataBase {
             owner_team: None,
             parent_shared_folder_id: None,
             path_lower: None,
+            parent_folder_name: None,
         }
     }
 
@@ -16237,6 +16259,11 @@ impl SharedFolderMetadataBase {
         self
     }
 
+    pub fn with_parent_folder_name(mut self, value: Option<String>) -> Self {
+        self.parent_folder_name = value;
+        self
+    }
+
 }
 
 const SHARED_FOLDER_METADATA_BASE_FIELDS: &[&str] = &["access_type",
@@ -16245,7 +16272,8 @@ const SHARED_FOLDER_METADATA_BASE_FIELDS: &[&str] = &["access_type",
                                                       "owner_display_names",
                                                       "owner_team",
                                                       "parent_shared_folder_id",
-                                                      "path_lower"];
+                                                      "path_lower",
+                                                      "parent_folder_name"];
 impl SharedFolderMetadataBase {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -16264,6 +16292,7 @@ impl SharedFolderMetadataBase {
         let mut field_owner_team = None;
         let mut field_parent_shared_folder_id = None;
         let mut field_path_lower = None;
+        let mut field_parent_folder_name = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -16310,6 +16339,12 @@ impl SharedFolderMetadataBase {
                     }
                     field_path_lower = Some(map.next_value()?);
                 }
+                "parent_folder_name" => {
+                    if field_parent_folder_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("parent_folder_name"));
+                    }
+                    field_parent_folder_name = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -16327,6 +16362,7 @@ impl SharedFolderMetadataBase {
             owner_team: field_owner_team,
             parent_shared_folder_id: field_parent_shared_folder_id,
             path_lower: field_path_lower,
+            parent_folder_name: field_parent_folder_name,
         };
         Ok(Some(result))
     }
@@ -16342,7 +16378,8 @@ impl SharedFolderMetadataBase {
         s.serialize_field("owner_display_names", &self.owner_display_names)?;
         s.serialize_field("owner_team", &self.owner_team)?;
         s.serialize_field("parent_shared_folder_id", &self.parent_shared_folder_id)?;
-        s.serialize_field("path_lower", &self.path_lower)
+        s.serialize_field("path_lower", &self.path_lower)?;
+        s.serialize_field("parent_folder_name", &self.parent_folder_name)
     }
 }
 
@@ -16368,7 +16405,7 @@ impl ::serde::ser::Serialize for SharedFolderMetadataBase {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedFolderMetadataBase", 7)?;
+        let mut s = serializer.serialize_struct("SharedFolderMetadataBase", 8)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -16821,7 +16858,8 @@ pub struct SharedLinkSettings {
     /// with team policies and shared folder policies to determine the final effective audience type
     /// in the `effective_audience` field of `LinkPermissions.
     pub audience: Option<LinkAudience>,
-    /// Requested access level you want the audience to gain from this link.
+    /// Requested access level you want the audience to gain from this link. Note, modifying access
+    /// level for an existing link is not supported.
     pub access: Option<RequestedLinkAccessLevel>,
 }
 

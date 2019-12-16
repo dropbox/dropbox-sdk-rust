@@ -141,6 +141,8 @@ pub enum AuthError {
     ExpiredAccessToken,
     /// The access token does not have the required scope to access the route.
     MissingScope(TokenScopeError),
+    /// The route is not available to public.
+    RouteAccessDenied,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -183,6 +185,10 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                         Ok(AuthError::ExpiredAccessToken)
                     }
                     "missing_scope" => Ok(AuthError::MissingScope(TokenScopeError::internal_deserialize(map)?)),
+                    "route_access_denied" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(AuthError::RouteAccessDenied)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(AuthError::Other)
@@ -196,6 +202,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                                     "user_suspended",
                                     "expired_access_token",
                                     "missing_scope",
+                                    "route_access_denied",
                                     "other"];
         deserializer.deserialize_struct("AuthError", VARIANTS, EnumVisitor)
     }
@@ -241,6 +248,12 @@ impl ::serde::ser::Serialize for AuthError {
                 let mut s = serializer.serialize_struct("AuthError", 2)?;
                 s.serialize_field(".tag", "missing_scope")?;
                 x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            AuthError::RouteAccessDenied => {
+                // unit
+                let mut s = serializer.serialize_struct("AuthError", 1)?;
+                s.serialize_field(".tag", "route_access_denied")?;
                 s.end()
             }
             AuthError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

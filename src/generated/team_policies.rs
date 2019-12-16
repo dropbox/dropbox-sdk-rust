@@ -163,6 +163,77 @@ impl ::serde::ser::Serialize for EmmState {
 }
 
 #[derive(Debug)]
+pub enum FileLockingPolicyState {
+    /// File locking feature is disabled.
+    Disabled,
+    /// File locking feature is allowed.
+    Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileLockingPolicyState {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = FileLockingPolicyState;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a FileLockingPolicyState structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileLockingPolicyState::Disabled)
+                    }
+                    "enabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileLockingPolicyState::Enabled)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileLockingPolicyState::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("FileLockingPolicyState", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileLockingPolicyState {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            FileLockingPolicyState::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("FileLockingPolicyState", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            FileLockingPolicyState::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("FileLockingPolicyState", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            FileLockingPolicyState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
 pub enum GroupCreation {
     /// Team admins and members can create groups.
     AdminsAndMembers,
@@ -590,6 +661,77 @@ impl ::serde::ser::Serialize for PaperEnabledPolicy {
                 s.end()
             }
             PaperEnabledPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub enum PasswordControlMode {
+    /// Password is disabled.
+    Disabled,
+    /// Password is enabled.
+    Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PasswordControlMode {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PasswordControlMode;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PasswordControlMode structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PasswordControlMode::Disabled)
+                    }
+                    "enabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PasswordControlMode::Enabled)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PasswordControlMode::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("PasswordControlMode", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PasswordControlMode {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PasswordControlMode::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("PasswordControlMode", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            PasswordControlMode::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("PasswordControlMode", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            PasswordControlMode::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -1272,6 +1414,77 @@ impl ::serde::ser::Serialize for SmartSyncPolicy {
 }
 
 #[derive(Debug)]
+pub enum SmarterSmartSyncPolicyState {
+    /// Smarter Smart Sync feature is disabled.
+    Disabled,
+    /// Smarter Smart Sync feature is enabled.
+    Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SmarterSmartSyncPolicyState {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SmarterSmartSyncPolicyState;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SmarterSmartSyncPolicyState structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SmarterSmartSyncPolicyState::Disabled)
+                    }
+                    "enabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SmarterSmartSyncPolicyState::Enabled)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SmarterSmartSyncPolicyState::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("SmarterSmartSyncPolicyState", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SmarterSmartSyncPolicyState {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SmarterSmartSyncPolicyState::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("SmarterSmartSyncPolicyState", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            SmarterSmartSyncPolicyState::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("SmarterSmartSyncPolicyState", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            SmarterSmartSyncPolicyState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
 pub enum SsoPolicy {
     /// Users will be able to sign in with their Dropbox credentials.
     Disabled,
@@ -1678,6 +1891,8 @@ pub enum TwoStepVerificationState {
     Required,
     /// Optional require two factor authorization.
     Optional,
+    /// Disabled require two factor authorization.
+    Disabled,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -1707,6 +1922,10 @@ impl<'de> ::serde::de::Deserialize<'de> for TwoStepVerificationState {
                         crate::eat_json_fields(&mut map)?;
                         Ok(TwoStepVerificationState::Optional)
                     }
+                    "disabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(TwoStepVerificationState::Disabled)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(TwoStepVerificationState::Other)
@@ -1716,6 +1935,7 @@ impl<'de> ::serde::de::Deserialize<'de> for TwoStepVerificationState {
         }
         const VARIANTS: &[&str] = &["required",
                                     "optional",
+                                    "disabled",
                                     "other"];
         deserializer.deserialize_struct("TwoStepVerificationState", VARIANTS, EnumVisitor)
     }
@@ -1736,6 +1956,12 @@ impl ::serde::ser::Serialize for TwoStepVerificationState {
                 // unit
                 let mut s = serializer.serialize_struct("TwoStepVerificationState", 1)?;
                 s.serialize_field(".tag", "optional")?;
+                s.end()
+            }
+            TwoStepVerificationState::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("TwoStepVerificationState", 1)?;
+                s.serialize_field(".tag", "disabled")?;
                 s.end()
             }
             TwoStepVerificationState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
