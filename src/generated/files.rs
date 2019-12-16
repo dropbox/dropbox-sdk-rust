@@ -20,6 +20,7 @@ pub type PathR = String;
 pub type PathROrId = String;
 pub type ReadPath = String;
 pub type Rev = String;
+pub type SearchV2Cursor = String;
 pub type Sha256HexHash = String;
 pub type SharedLinkUrl = String;
 pub type WritePath = String;
@@ -373,6 +374,20 @@ pub fn export(
         range_end)
 }
 
+/// Return the lock metadata for the given list of paths.
+pub fn get_file_lock_batch(
+    client: &dyn crate::client_trait::HttpClient,
+    arg: &LockFileBatchArg,
+) -> crate::Result<Result<LockFileBatchResult, LockFileError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "files/get_file_lock_batch",
+        arg,
+        None)
+}
+
 /// Returns the metadata for a file or folder. Note: Metadata for the root folder is unsupported.
 pub fn get_metadata(
     client: &dyn crate::client_trait::HttpClient,
@@ -612,6 +627,22 @@ pub fn list_revisions(
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
         "files/list_revisions",
+        arg,
+        None)
+}
+
+/// Lock the files at the given paths. A locked file will be writable only by the lock holder. A
+/// successful response indicates that the file has been locked. Returns a list of the locked file
+/// paths and their metadata after this operation.
+pub fn lock_file_batch(
+    client: &dyn crate::client_trait::HttpClient,
+    arg: &LockFileBatchArg,
+) -> crate::Result<Result<LockFileBatchResult, LockFileError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "files/lock_file_batch",
         arg,
         None)
 }
@@ -859,6 +890,57 @@ pub fn search(
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
         "files/search",
+        arg,
+        None)
+}
+
+/// Searches for files and folders. Note: [`search_v2()`](search_v2) along with
+/// [`search_continue_v2()`](search_continue_v2) can only be used to retrieve a maximum of 10,000
+/// matches. Recent changes may not immediately be reflected in search results due to a short delay
+/// in indexing. Duplicate results may be returned across pages. Some results may not be returned.
+pub fn search_v2(
+    client: &dyn crate::client_trait::HttpClient,
+    arg: &SearchV2Arg,
+) -> crate::Result<Result<SearchV2Result, SearchError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "files/search_v2",
+        arg,
+        None)
+}
+
+/// Fetches the next page of search results returned from [`search_v2()`](search_v2). Note:
+/// [`search_v2()`](search_v2) along with [`search_continue_v2()`](search_continue_v2) can only be
+/// used to retrieve a maximum of 10,000 matches. Recent changes may not immediately be reflected in
+/// search results due to a short delay in indexing. Duplicate results may be returned across pages.
+/// Some results may not be returned.
+pub fn search_continue_v2(
+    client: &dyn crate::client_trait::HttpClient,
+    arg: &SearchV2ContinueArg,
+) -> crate::Result<Result<SearchV2Result, SearchError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "files/search/continue_v2",
+        arg,
+        None)
+}
+
+/// Unlock the files at the given paths. A locked file can only be unlocked by the lock holder or,
+/// if a business account, a team admin. A successful response indicates that the file has been
+/// unlocked. Returns a list of the unlocked file paths and their metadata after this operation.
+pub fn unlock_file_batch(
+    client: &dyn crate::client_trait::HttpClient,
+    arg: &UnlockFileBatchArg,
+) -> crate::Result<Result<LockFileBatchResult, LockFileError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "files/unlock_file_batch",
         arg,
         None)
 }
@@ -4557,6 +4639,8 @@ pub enum ExportError {
     Path(LookupError),
     /// This file type cannot be exported. Use [`download()`](download) instead.
     NonExportable,
+    /// The exportable content is not yet available. Please retry later.
+    RetryError,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -4589,6 +4673,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ExportError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(ExportError::NonExportable)
                     }
+                    "retry_error" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ExportError::RetryError)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(ExportError::Other)
@@ -4598,6 +4686,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ExportError {
         }
         const VARIANTS: &[&str] = &["path",
                                     "non_exportable",
+                                    "retry_error",
                                     "other"];
         deserializer.deserialize_struct("ExportError", VARIANTS, EnumVisitor)
     }
@@ -4619,6 +4708,12 @@ impl ::serde::ser::Serialize for ExportError {
                 // unit
                 let mut s = serializer.serialize_struct("ExportError", 1)?;
                 s.serialize_field(".tag", "non_exportable")?;
+                s.end()
+            }
+            ExportError::RetryError => {
+                // unit
+                let mut s = serializer.serialize_struct("ExportError", 1)?;
+                s.serialize_field(".tag", "retry_error")?;
                 s.end()
             }
             ExportError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -4944,6 +5039,444 @@ impl ::serde::ser::Serialize for ExportResult {
 }
 
 #[derive(Debug)]
+pub enum FileCategory {
+    /// jpg, png, gif, and more.
+    Image,
+    /// doc, docx, txt, and more.
+    Document,
+    /// pdf.
+    Pdf,
+    /// xlsx, xls, csv, and more.
+    Spreadsheet,
+    /// ppt, pptx, key, and more.
+    Presentation,
+    /// mp3, wav, mid, and more.
+    Audio,
+    /// mov, wmv, mp4, and more.
+    Video,
+    /// dropbox folder.
+    Folder,
+    /// dropbox paper doc.
+    Paper,
+    /// any file not in one of the categories above.
+    Others,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileCategory {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = FileCategory;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a FileCategory structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "image" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileCategory::Image)
+                    }
+                    "document" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileCategory::Document)
+                    }
+                    "pdf" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileCategory::Pdf)
+                    }
+                    "spreadsheet" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileCategory::Spreadsheet)
+                    }
+                    "presentation" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileCategory::Presentation)
+                    }
+                    "audio" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileCategory::Audio)
+                    }
+                    "video" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileCategory::Video)
+                    }
+                    "folder" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileCategory::Folder)
+                    }
+                    "paper" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileCategory::Paper)
+                    }
+                    "others" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileCategory::Others)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileCategory::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["image",
+                                    "document",
+                                    "pdf",
+                                    "spreadsheet",
+                                    "presentation",
+                                    "audio",
+                                    "video",
+                                    "folder",
+                                    "paper",
+                                    "others",
+                                    "other"];
+        deserializer.deserialize_struct("FileCategory", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileCategory {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            FileCategory::Image => {
+                // unit
+                let mut s = serializer.serialize_struct("FileCategory", 1)?;
+                s.serialize_field(".tag", "image")?;
+                s.end()
+            }
+            FileCategory::Document => {
+                // unit
+                let mut s = serializer.serialize_struct("FileCategory", 1)?;
+                s.serialize_field(".tag", "document")?;
+                s.end()
+            }
+            FileCategory::Pdf => {
+                // unit
+                let mut s = serializer.serialize_struct("FileCategory", 1)?;
+                s.serialize_field(".tag", "pdf")?;
+                s.end()
+            }
+            FileCategory::Spreadsheet => {
+                // unit
+                let mut s = serializer.serialize_struct("FileCategory", 1)?;
+                s.serialize_field(".tag", "spreadsheet")?;
+                s.end()
+            }
+            FileCategory::Presentation => {
+                // unit
+                let mut s = serializer.serialize_struct("FileCategory", 1)?;
+                s.serialize_field(".tag", "presentation")?;
+                s.end()
+            }
+            FileCategory::Audio => {
+                // unit
+                let mut s = serializer.serialize_struct("FileCategory", 1)?;
+                s.serialize_field(".tag", "audio")?;
+                s.end()
+            }
+            FileCategory::Video => {
+                // unit
+                let mut s = serializer.serialize_struct("FileCategory", 1)?;
+                s.serialize_field(".tag", "video")?;
+                s.end()
+            }
+            FileCategory::Folder => {
+                // unit
+                let mut s = serializer.serialize_struct("FileCategory", 1)?;
+                s.serialize_field(".tag", "folder")?;
+                s.end()
+            }
+            FileCategory::Paper => {
+                // unit
+                let mut s = serializer.serialize_struct("FileCategory", 1)?;
+                s.serialize_field(".tag", "paper")?;
+                s.end()
+            }
+            FileCategory::Others => {
+                // unit
+                let mut s = serializer.serialize_struct("FileCategory", 1)?;
+                s.serialize_field(".tag", "others")?;
+                s.end()
+            }
+            FileCategory::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct FileLock {
+    /// The lock description.
+    pub content: FileLockContent,
+}
+
+impl FileLock {
+    pub fn new(content: FileLockContent) -> Self {
+        FileLock {
+            content,
+        }
+    }
+
+}
+
+const FILE_LOCK_FIELDS: &[&str] = &["content"];
+impl FileLock {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<FileLock, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<FileLock>, V::Error> {
+        let mut field_content = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "content" => {
+                    if field_content.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("content"));
+                    }
+                    field_content = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = FileLock {
+            content: field_content.ok_or_else(|| ::serde::de::Error::missing_field("content"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("content", &self.content)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileLock {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = FileLock;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a FileLock struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                FileLock::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("FileLock", FILE_LOCK_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileLock {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("FileLock", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum FileLockContent {
+    /// Empty type to indicate no lock.
+    Unlocked,
+    /// A lock held by a single user.
+    SingleUser(SingleUserLock),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileLockContent {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = FileLockContent;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a FileLockContent structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "unlocked" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileLockContent::Unlocked)
+                    }
+                    "single_user" => Ok(FileLockContent::SingleUser(SingleUserLock::internal_deserialize(map)?)),
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileLockContent::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["unlocked",
+                                    "single_user",
+                                    "other"];
+        deserializer.deserialize_struct("FileLockContent", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileLockContent {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            FileLockContent::Unlocked => {
+                // unit
+                let mut s = serializer.serialize_struct("FileLockContent", 1)?;
+                s.serialize_field(".tag", "unlocked")?;
+                s.end()
+            }
+            FileLockContent::SingleUser(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("FileLockContent", 4)?;
+                s.serialize_field(".tag", "single_user")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            FileLockContent::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct FileLockMetadata {
+    /// True if caller holds the file lock. Missing if is_locked is false.
+    pub is_lockholder: Option<bool>,
+    /// The display name of the lock holder. Missing if is_locked is false.
+    pub lockholder_name: Option<String>,
+    /// The timestamp of the lock was created. Missing if is_locked is false.
+    pub created: Option<super::common::DropboxTimestamp>,
+}
+
+impl Default for FileLockMetadata {
+    fn default() -> Self {
+        FileLockMetadata {
+            is_lockholder: None,
+            lockholder_name: None,
+            created: None,
+        }
+    }
+}
+
+const FILE_LOCK_METADATA_FIELDS: &[&str] = &["is_lockholder",
+                                             "lockholder_name",
+                                             "created"];
+impl FileLockMetadata {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<FileLockMetadata, V::Error> {
+        let mut field_is_lockholder = None;
+        let mut field_lockholder_name = None;
+        let mut field_created = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "is_lockholder" => {
+                    if field_is_lockholder.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("is_lockholder"));
+                    }
+                    field_is_lockholder = Some(map.next_value()?);
+                }
+                "lockholder_name" => {
+                    if field_lockholder_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("lockholder_name"));
+                    }
+                    field_lockholder_name = Some(map.next_value()?);
+                }
+                "created" => {
+                    if field_created.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("created"));
+                    }
+                    field_created = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = FileLockMetadata {
+            is_lockholder: field_is_lockholder,
+            lockholder_name: field_lockholder_name,
+            created: field_created,
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("is_lockholder", &self.is_lockholder)?;
+        s.serialize_field("lockholder_name", &self.lockholder_name)?;
+        s.serialize_field("created", &self.created)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileLockMetadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = FileLockMetadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a FileLockMetadata struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                FileLockMetadata::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("FileLockMetadata", FILE_LOCK_METADATA_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileLockMetadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("FileLockMetadata", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub struct FileMetadata {
     /// The last component of the path (including extension). This never contains a slash.
     pub name: String,
@@ -5001,6 +5534,8 @@ pub struct FileMetadata {
     /// information see our [Content
     /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
     pub content_hash: Option<Sha256HexHash>,
+    /// If present, the metadata associated with the file's current lock.
+    pub file_lock_info: Option<FileLockMetadata>,
 }
 
 impl FileMetadata {
@@ -5030,6 +5565,7 @@ impl FileMetadata {
             property_groups: None,
             has_explicit_shared_members: None,
             content_hash: None,
+            file_lock_info: None,
         }
     }
 
@@ -5094,6 +5630,11 @@ impl FileMetadata {
         self
     }
 
+    pub fn with_file_lock_info(mut self, value: Option<FileLockMetadata>) -> Self {
+        self.file_lock_info = value;
+        self
+    }
+
 }
 
 const FILE_METADATA_FIELDS: &[&str] = &["name",
@@ -5112,7 +5653,8 @@ const FILE_METADATA_FIELDS: &[&str] = &["name",
                                         "export_info",
                                         "property_groups",
                                         "has_explicit_shared_members",
-                                        "content_hash"];
+                                        "content_hash",
+                                        "file_lock_info"];
 impl FileMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -5141,6 +5683,7 @@ impl FileMetadata {
         let mut field_property_groups = None;
         let mut field_has_explicit_shared_members = None;
         let mut field_content_hash = None;
+        let mut field_file_lock_info = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -5247,6 +5790,12 @@ impl FileMetadata {
                     }
                     field_content_hash = Some(map.next_value()?);
                 }
+                "file_lock_info" => {
+                    if field_file_lock_info.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_lock_info"));
+                    }
+                    field_file_lock_info = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -5274,6 +5823,7 @@ impl FileMetadata {
             property_groups: field_property_groups,
             has_explicit_shared_members: field_has_explicit_shared_members,
             content_hash: field_content_hash,
+            file_lock_info: field_file_lock_info,
         };
         Ok(Some(result))
     }
@@ -5299,7 +5849,8 @@ impl FileMetadata {
         s.serialize_field("export_info", &self.export_info)?;
         s.serialize_field("property_groups", &self.property_groups)?;
         s.serialize_field("has_explicit_shared_members", &self.has_explicit_shared_members)?;
-        s.serialize_field("content_hash", &self.content_hash)
+        s.serialize_field("content_hash", &self.content_hash)?;
+        s.serialize_field("file_lock_info", &self.file_lock_info)
     }
 }
 
@@ -5325,7 +5876,7 @@ impl ::serde::ser::Serialize for FileMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileMetadata", 17)?;
+        let mut s = serializer.serialize_struct("FileMetadata", 18)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -5508,6 +6059,75 @@ impl ::serde::ser::Serialize for FileSharingInfo {
         let mut s = serializer.serialize_struct("FileSharingInfo", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum FileStatus {
+    Active,
+    Deleted,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileStatus {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = FileStatus;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a FileStatus structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "active" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileStatus::Active)
+                    }
+                    "deleted" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileStatus::Deleted)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileStatus::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["active",
+                                    "deleted",
+                                    "other"];
+        deserializer.deserialize_struct("FileStatus", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileStatus {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            FileStatus::Active => {
+                // unit
+                let mut s = serializer.serialize_struct("FileStatus", 1)?;
+                s.serialize_field(".tag", "active")?;
+                s.end()
+            }
+            FileStatus::Deleted => {
+                // unit
+                let mut s = serializer.serialize_struct("FileStatus", 1)?;
+                s.serialize_field(".tag", "deleted")?;
+                s.end()
+            }
+            FileStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 
@@ -7446,6 +8066,109 @@ impl ::serde::ser::Serialize for GpsCoordinates {
 }
 
 #[derive(Debug)]
+pub struct HighlightSpan {
+    /// String to be determined whether it should be highlighted or not.
+    pub highlight_str: String,
+    /// The string should be highlighted or not.
+    pub is_highlighted: bool,
+}
+
+impl HighlightSpan {
+    pub fn new(highlight_str: String, is_highlighted: bool) -> Self {
+        HighlightSpan {
+            highlight_str,
+            is_highlighted,
+        }
+    }
+
+}
+
+const HIGHLIGHT_SPAN_FIELDS: &[&str] = &["highlight_str",
+                                         "is_highlighted"];
+impl HighlightSpan {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<HighlightSpan, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<HighlightSpan>, V::Error> {
+        let mut field_highlight_str = None;
+        let mut field_is_highlighted = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "highlight_str" => {
+                    if field_highlight_str.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("highlight_str"));
+                    }
+                    field_highlight_str = Some(map.next_value()?);
+                }
+                "is_highlighted" => {
+                    if field_is_highlighted.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("is_highlighted"));
+                    }
+                    field_is_highlighted = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = HighlightSpan {
+            highlight_str: field_highlight_str.ok_or_else(|| ::serde::de::Error::missing_field("highlight_str"))?,
+            is_highlighted: field_is_highlighted.ok_or_else(|| ::serde::de::Error::missing_field("is_highlighted"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("highlight_str", &self.highlight_str)?;
+        s.serialize_field("is_highlighted", &self.is_highlighted)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for HighlightSpan {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = HighlightSpan;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a HighlightSpan struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                HighlightSpan::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("HighlightSpan", HIGHLIGHT_SPAN_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for HighlightSpan {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("HighlightSpan", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub struct ListFolderArg {
     /// A unique identifier for the file.
     pub path: PathROrId,
@@ -7890,6 +8613,7 @@ impl ::std::fmt::Display for ListFolderContinueError {
 #[derive(Debug)]
 pub enum ListFolderError {
     Path(LookupError),
+    TemplateError(super::file_properties::TemplateError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -7918,6 +8642,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "template_error" => {
+                        match map.next_key()? {
+                            Some("template_error") => Ok(ListFolderError::TemplateError(map.next_value()?)),
+                            None => Err(de::Error::missing_field("template_error")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(ListFolderError::Other)
@@ -7926,6 +8657,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderError {
             }
         }
         const VARIANTS: &[&str] = &["path",
+                                    "template_error",
                                     "other"];
         deserializer.deserialize_struct("ListFolderError", VARIANTS, EnumVisitor)
     }
@@ -7941,6 +8673,13 @@ impl ::serde::ser::Serialize for ListFolderError {
                 let mut s = serializer.serialize_struct("ListFolderError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
+                s.end()
+            }
+            ListFolderError::TemplateError(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("ListFolderError", 2)?;
+                s.serialize_field(".tag", "template_error")?;
+                s.serialize_field("template_error", x)?;
                 s.end()
             }
             ListFolderError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -8856,6 +9595,698 @@ impl ::serde::ser::Serialize for ListRevisionsResult {
 }
 
 #[derive(Debug)]
+pub struct LockConflictError {
+    /// The lock that caused the conflict.
+    pub lock: FileLock,
+}
+
+impl LockConflictError {
+    pub fn new(lock: FileLock) -> Self {
+        LockConflictError {
+            lock,
+        }
+    }
+
+}
+
+const LOCK_CONFLICT_ERROR_FIELDS: &[&str] = &["lock"];
+impl LockConflictError {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<LockConflictError, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<LockConflictError>, V::Error> {
+        let mut field_lock = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "lock" => {
+                    if field_lock.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("lock"));
+                    }
+                    field_lock = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = LockConflictError {
+            lock: field_lock.ok_or_else(|| ::serde::de::Error::missing_field("lock"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("lock", &self.lock)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LockConflictError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LockConflictError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LockConflictError struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LockConflictError::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LockConflictError", LOCK_CONFLICT_ERROR_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LockConflictError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LockConflictError", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct LockFileArg {
+    /// Path in the user's Dropbox to a file.
+    pub path: WritePath,
+}
+
+impl LockFileArg {
+    pub fn new(path: WritePath) -> Self {
+        LockFileArg {
+            path,
+        }
+    }
+
+}
+
+const LOCK_FILE_ARG_FIELDS: &[&str] = &["path"];
+impl LockFileArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<LockFileArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<LockFileArg>, V::Error> {
+        let mut field_path = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = LockFileArg {
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LockFileArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LockFileArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LockFileArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LockFileArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LockFileArg", LOCK_FILE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LockFileArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LockFileArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct LockFileBatchArg {
+    /// List of 'entries'. Each 'entry' contains a path of the file which will be locked or queried.
+    /// Duplicate path arguments in the batch are considered only once.
+    pub entries: Vec<LockFileArg>,
+}
+
+impl LockFileBatchArg {
+    pub fn new(entries: Vec<LockFileArg>) -> Self {
+        LockFileBatchArg {
+            entries,
+        }
+    }
+
+}
+
+const LOCK_FILE_BATCH_ARG_FIELDS: &[&str] = &["entries"];
+impl LockFileBatchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<LockFileBatchArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<LockFileBatchArg>, V::Error> {
+        let mut field_entries = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = LockFileBatchArg {
+            entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LockFileBatchArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LockFileBatchArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LockFileBatchArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LockFileBatchArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LockFileBatchArg", LOCK_FILE_BATCH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LockFileBatchArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LockFileBatchArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct LockFileBatchResult {
+    /// Each Entry in the 'entries' will have '.tag' with the operation status (e.g. success), the
+    /// metadata for the file and the lock state after the operation.
+    pub entries: Vec<LockFileResultEntry>,
+}
+
+impl LockFileBatchResult {
+    pub fn new(entries: Vec<LockFileResultEntry>) -> Self {
+        LockFileBatchResult {
+            entries,
+        }
+    }
+
+}
+
+const LOCK_FILE_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
+impl LockFileBatchResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<LockFileBatchResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<LockFileBatchResult>, V::Error> {
+        let mut field_entries = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = LockFileBatchResult {
+            entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LockFileBatchResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LockFileBatchResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LockFileBatchResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LockFileBatchResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LockFileBatchResult", LOCK_FILE_BATCH_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LockFileBatchResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LockFileBatchResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum LockFileError {
+    /// Could not find the specified resource.
+    PathLookup(LookupError),
+    /// There are too many write operations in user's Dropbox. Please retry this request.
+    TooManyWriteOperations,
+    /// There are too many files in one request. Please retry with fewer files.
+    TooManyFiles,
+    /// The user does not have permissions to change the lock state or access the file.
+    NoWritePermission,
+    /// Item is a type that cannot be locked.
+    CannotBeLocked,
+    /// Requested file is not currently shared.
+    FileNotShared,
+    /// The user action conflicts with an existing lock on the file.
+    LockConflict(LockConflictError),
+    /// Something went wrong with the job on Dropbox's end. You'll need to verify that the action
+    /// you were taking succeeded, and if not, try again. This should happen very rarely.
+    InternalError,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LockFileError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = LockFileError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LockFileError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path_lookup" => {
+                        match map.next_key()? {
+                            Some("path_lookup") => Ok(LockFileError::PathLookup(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path_lookup")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "too_many_write_operations" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LockFileError::TooManyWriteOperations)
+                    }
+                    "too_many_files" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LockFileError::TooManyFiles)
+                    }
+                    "no_write_permission" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LockFileError::NoWritePermission)
+                    }
+                    "cannot_be_locked" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LockFileError::CannotBeLocked)
+                    }
+                    "file_not_shared" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LockFileError::FileNotShared)
+                    }
+                    "lock_conflict" => Ok(LockFileError::LockConflict(LockConflictError::internal_deserialize(map)?)),
+                    "internal_error" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LockFileError::InternalError)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LockFileError::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["path_lookup",
+                                    "too_many_write_operations",
+                                    "too_many_files",
+                                    "no_write_permission",
+                                    "cannot_be_locked",
+                                    "file_not_shared",
+                                    "lock_conflict",
+                                    "internal_error",
+                                    "other"];
+        deserializer.deserialize_struct("LockFileError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LockFileError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            LockFileError::PathLookup(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("LockFileError", 2)?;
+                s.serialize_field(".tag", "path_lookup")?;
+                s.serialize_field("path_lookup", x)?;
+                s.end()
+            }
+            LockFileError::TooManyWriteOperations => {
+                // unit
+                let mut s = serializer.serialize_struct("LockFileError", 1)?;
+                s.serialize_field(".tag", "too_many_write_operations")?;
+                s.end()
+            }
+            LockFileError::TooManyFiles => {
+                // unit
+                let mut s = serializer.serialize_struct("LockFileError", 1)?;
+                s.serialize_field(".tag", "too_many_files")?;
+                s.end()
+            }
+            LockFileError::NoWritePermission => {
+                // unit
+                let mut s = serializer.serialize_struct("LockFileError", 1)?;
+                s.serialize_field(".tag", "no_write_permission")?;
+                s.end()
+            }
+            LockFileError::CannotBeLocked => {
+                // unit
+                let mut s = serializer.serialize_struct("LockFileError", 1)?;
+                s.serialize_field(".tag", "cannot_be_locked")?;
+                s.end()
+            }
+            LockFileError::FileNotShared => {
+                // unit
+                let mut s = serializer.serialize_struct("LockFileError", 1)?;
+                s.serialize_field(".tag", "file_not_shared")?;
+                s.end()
+            }
+            LockFileError::LockConflict(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("LockFileError", 2)?;
+                s.serialize_field(".tag", "lock_conflict")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            LockFileError::InternalError => {
+                // unit
+                let mut s = serializer.serialize_struct("LockFileError", 1)?;
+                s.serialize_field(".tag", "internal_error")?;
+                s.end()
+            }
+            LockFileError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for LockFileError {
+    fn description(&self) -> &str {
+        "LockFileError"
+    }
+}
+
+impl ::std::fmt::Display for LockFileError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct LockFileResult {
+    /// Metadata of the file.
+    pub metadata: Metadata,
+    /// The file lock state after the operation.
+    pub lock: FileLock,
+}
+
+impl LockFileResult {
+    pub fn new(metadata: Metadata, lock: FileLock) -> Self {
+        LockFileResult {
+            metadata,
+            lock,
+        }
+    }
+
+}
+
+const LOCK_FILE_RESULT_FIELDS: &[&str] = &["metadata",
+                                           "lock"];
+impl LockFileResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<LockFileResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<LockFileResult>, V::Error> {
+        let mut field_metadata = None;
+        let mut field_lock = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                "lock" => {
+                    if field_lock.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("lock"));
+                    }
+                    field_lock = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = LockFileResult {
+            metadata: field_metadata.ok_or_else(|| ::serde::de::Error::missing_field("metadata"))?,
+            lock: field_lock.ok_or_else(|| ::serde::de::Error::missing_field("lock"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("metadata", &self.metadata)?;
+        s.serialize_field("lock", &self.lock)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LockFileResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LockFileResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LockFileResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LockFileResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LockFileResult", LOCK_FILE_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LockFileResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LockFileResult", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum LockFileResultEntry {
+    Success(LockFileResult),
+    Failure(LockFileError),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LockFileResultEntry {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = LockFileResultEntry;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LockFileResultEntry structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "success" => Ok(LockFileResultEntry::Success(LockFileResult::internal_deserialize(map)?)),
+                    "failure" => {
+                        match map.next_key()? {
+                            Some("failure") => Ok(LockFileResultEntry::Failure(map.next_value()?)),
+                            None => Err(de::Error::missing_field("failure")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["success",
+                                    "failure"];
+        deserializer.deserialize_struct("LockFileResultEntry", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LockFileResultEntry {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            LockFileResultEntry::Success(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("LockFileResultEntry", 3)?;
+                s.serialize_field(".tag", "success")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            LockFileResultEntry::Failure(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("LockFileResultEntry", 2)?;
+                s.serialize_field(".tag", "failure")?;
+                s.serialize_field("failure", x)?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug)]
 pub enum LookupError {
     /// The given path does not satisfy the required path format. Please refer to the [Path formats
     /// documentation](https://www.dropbox.com/developers/documentation/http/documentation#path-formats)
@@ -9172,7 +10603,7 @@ impl ::serde::ser::Serialize for Metadata {
         use serde::ser::SerializeStruct;
         match *self {
             Metadata::File(ref x) => {
-                let mut s = serializer.serialize_struct("Metadata", 18)?;
+                let mut s = serializer.serialize_struct("Metadata", 19)?;
                 s.serialize_field(".tag", "file")?;
                 s.serialize_field("name", &x.name)?;
                 s.serialize_field("id", &x.id)?;
@@ -9191,6 +10622,7 @@ impl ::serde::ser::Serialize for Metadata {
                 s.serialize_field("property_groups", &x.property_groups)?;
                 s.serialize_field("has_explicit_shared_members", &x.has_explicit_shared_members)?;
                 s.serialize_field("content_hash", &x.content_hash)?;
+                s.serialize_field("file_lock_info", &x.file_lock_info)?;
                 s.end()
             }
             Metadata::Folder(ref x) => {
@@ -9215,6 +10647,68 @@ impl ::serde::ser::Serialize for Metadata {
                 s.serialize_field("parent_shared_folder_id", &x.parent_shared_folder_id)?;
                 s.end()
             }
+        }
+    }
+}
+
+/// Metadata for a file, folder or other resource types.
+#[derive(Debug)]
+pub enum MetadataV2 {
+    Metadata(Metadata),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MetadataV2 {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MetadataV2;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MetadataV2 structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "metadata" => {
+                        match map.next_key()? {
+                            Some("metadata") => Ok(MetadataV2::Metadata(map.next_value()?)),
+                            None => Err(de::Error::missing_field("metadata")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(MetadataV2::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["metadata",
+                                    "other"];
+        deserializer.deserialize_struct("MetadataV2", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MetadataV2 {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MetadataV2::Metadata(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("MetadataV2", 2)?;
+                s.serialize_field(".tag", "metadata")?;
+                s.serialize_field("metadata", x)?;
+                s.end()
+            }
+            MetadataV2::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -12093,8 +13587,8 @@ impl ::serde::ser::Serialize for SaveUrlArg {
 #[derive(Debug)]
 pub enum SaveUrlError {
     Path(WriteError),
-    /// Failed downloading the given URL. The url may be password-protected / the password provided
-    /// was incorrect.
+    /// Failed downloading the given URL. The URL may be  password-protected and the password
+    /// provided was incorrect,  or the link may be disabled.
     DownloadFailed,
     /// The given URL is invalid.
     InvalidUrl,
@@ -12264,7 +13758,7 @@ impl ::serde::ser::Serialize for SaveUrlJobStatus {
             }
             SaveUrlJobStatus::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 18)?;
+                let mut s = serializer.serialize_struct("SaveUrlJobStatus", 19)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -12337,7 +13831,7 @@ impl ::serde::ser::Serialize for SaveUrlResult {
             }
             SaveUrlResult::Complete(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("SaveUrlResult", 18)?;
+                let mut s = serializer.serialize_struct("SaveUrlResult", 19)?;
                 s.serialize_field(".tag", "complete")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -12760,6 +14254,114 @@ impl ::serde::ser::Serialize for SearchMatchType {
 }
 
 #[derive(Debug)]
+pub struct SearchMatchV2 {
+    /// The metadata for the matched file or folder.
+    pub metadata: MetadataV2,
+    /// The list of HighlightSpan determines which parts of the result should be highlighted.
+    pub highlight_spans: Option<Vec<HighlightSpan>>,
+}
+
+impl SearchMatchV2 {
+    pub fn new(metadata: MetadataV2) -> Self {
+        SearchMatchV2 {
+            metadata,
+            highlight_spans: None,
+        }
+    }
+
+    pub fn with_highlight_spans(mut self, value: Option<Vec<HighlightSpan>>) -> Self {
+        self.highlight_spans = value;
+        self
+    }
+
+}
+
+const SEARCH_MATCH_V2_FIELDS: &[&str] = &["metadata",
+                                          "highlight_spans"];
+impl SearchMatchV2 {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<SearchMatchV2, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SearchMatchV2>, V::Error> {
+        let mut field_metadata = None;
+        let mut field_highlight_spans = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "metadata" => {
+                    if field_metadata.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("metadata"));
+                    }
+                    field_metadata = Some(map.next_value()?);
+                }
+                "highlight_spans" => {
+                    if field_highlight_spans.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("highlight_spans"));
+                    }
+                    field_highlight_spans = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SearchMatchV2 {
+            metadata: field_metadata.ok_or_else(|| ::serde::de::Error::missing_field("metadata"))?,
+            highlight_spans: field_highlight_spans,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("metadata", &self.metadata)?;
+        s.serialize_field("highlight_spans", &self.highlight_spans)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchMatchV2 {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SearchMatchV2;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SearchMatchV2 struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SearchMatchV2::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SearchMatchV2", SEARCH_MATCH_V2_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchMatchV2 {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SearchMatchV2", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub enum SearchMode {
     /// Search file and folder names.
     Filename,
@@ -12832,6 +14434,151 @@ impl ::serde::ser::Serialize for SearchMode {
                 s.end()
             }
         }
+    }
+}
+
+#[derive(Debug)]
+pub struct SearchOptions {
+    /// Scopes the search to a path in the user's Dropbox. Searches the entire Dropbox if not
+    /// specified.
+    pub path: Option<PathROrId>,
+    /// The maximum number of search results to return.
+    pub max_results: u64,
+    /// Restricts search to the given file status.
+    pub file_status: FileStatus,
+    /// Restricts search to only match on filenames.
+    pub filename_only: bool,
+    /// Restricts search to only the extensions specified. Only supported for active file search.
+    pub file_extensions: Option<Vec<String>>,
+    /// Restricts search to only the file categories specified. Only supported for active file
+    /// search.
+    pub file_categories: Option<Vec<FileCategory>>,
+}
+
+impl Default for SearchOptions {
+    fn default() -> Self {
+        SearchOptions {
+            path: None,
+            max_results: 100,
+            file_status: FileStatus::Active,
+            filename_only: false,
+            file_extensions: None,
+            file_categories: None,
+        }
+    }
+}
+
+const SEARCH_OPTIONS_FIELDS: &[&str] = &["path",
+                                         "max_results",
+                                         "file_status",
+                                         "filename_only",
+                                         "file_extensions",
+                                         "file_categories"];
+impl SearchOptions {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SearchOptions, V::Error> {
+        let mut field_path = None;
+        let mut field_max_results = None;
+        let mut field_file_status = None;
+        let mut field_filename_only = None;
+        let mut field_file_extensions = None;
+        let mut field_file_categories = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "max_results" => {
+                    if field_max_results.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("max_results"));
+                    }
+                    field_max_results = Some(map.next_value()?);
+                }
+                "file_status" => {
+                    if field_file_status.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_status"));
+                    }
+                    field_file_status = Some(map.next_value()?);
+                }
+                "filename_only" => {
+                    if field_filename_only.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("filename_only"));
+                    }
+                    field_filename_only = Some(map.next_value()?);
+                }
+                "file_extensions" => {
+                    if field_file_extensions.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_extensions"));
+                    }
+                    field_file_extensions = Some(map.next_value()?);
+                }
+                "file_categories" => {
+                    if field_file_categories.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_categories"));
+                    }
+                    field_file_categories = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = SearchOptions {
+            path: field_path,
+            max_results: field_max_results.unwrap_or(100),
+            file_status: field_file_status.unwrap_or_else(|| FileStatus::Active),
+            filename_only: field_filename_only.unwrap_or(false),
+            file_extensions: field_file_extensions,
+            file_categories: field_file_categories,
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("max_results", &self.max_results)?;
+        s.serialize_field("file_status", &self.file_status)?;
+        s.serialize_field("filename_only", &self.filename_only)?;
+        s.serialize_field("file_extensions", &self.file_extensions)?;
+        s.serialize_field("file_categories", &self.file_categories)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchOptions {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SearchOptions;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SearchOptions struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SearchOptions::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SearchOptions", SEARCH_OPTIONS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchOptions {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SearchOptions", 6)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -12948,6 +14695,345 @@ impl ::serde::ser::Serialize for SearchResult {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("SearchResult", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct SearchV2Arg {
+    /// The string to search for. May match across multiple fields based on the request arguments.
+    pub query: String,
+    /// Options for more targeted search results.
+    pub options: Option<SearchOptions>,
+    pub include_highlights: bool,
+}
+
+impl SearchV2Arg {
+    pub fn new(query: String) -> Self {
+        SearchV2Arg {
+            query,
+            options: None,
+            include_highlights: false,
+        }
+    }
+
+    pub fn with_options(mut self, value: Option<SearchOptions>) -> Self {
+        self.options = value;
+        self
+    }
+
+    pub fn with_include_highlights(mut self, value: bool) -> Self {
+        self.include_highlights = value;
+        self
+    }
+
+}
+
+const SEARCH_V2_ARG_FIELDS: &[&str] = &["query",
+                                        "options",
+                                        "include_highlights"];
+impl SearchV2Arg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<SearchV2Arg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SearchV2Arg>, V::Error> {
+        let mut field_query = None;
+        let mut field_options = None;
+        let mut field_include_highlights = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "query" => {
+                    if field_query.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("query"));
+                    }
+                    field_query = Some(map.next_value()?);
+                }
+                "options" => {
+                    if field_options.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("options"));
+                    }
+                    field_options = Some(map.next_value()?);
+                }
+                "include_highlights" => {
+                    if field_include_highlights.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("include_highlights"));
+                    }
+                    field_include_highlights = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SearchV2Arg {
+            query: field_query.ok_or_else(|| ::serde::de::Error::missing_field("query"))?,
+            options: field_options,
+            include_highlights: field_include_highlights.unwrap_or(false),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("query", &self.query)?;
+        s.serialize_field("options", &self.options)?;
+        s.serialize_field("include_highlights", &self.include_highlights)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchV2Arg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SearchV2Arg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SearchV2Arg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SearchV2Arg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SearchV2Arg", SEARCH_V2_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchV2Arg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SearchV2Arg", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct SearchV2ContinueArg {
+    /// The cursor returned by your last call to [`search_v2()`](search_v2). Used to fetch the next
+    /// page of results.
+    pub cursor: SearchV2Cursor,
+}
+
+impl SearchV2ContinueArg {
+    pub fn new(cursor: SearchV2Cursor) -> Self {
+        SearchV2ContinueArg {
+            cursor,
+        }
+    }
+
+}
+
+const SEARCH_V2_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
+impl SearchV2ContinueArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<SearchV2ContinueArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SearchV2ContinueArg>, V::Error> {
+        let mut field_cursor = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SearchV2ContinueArg {
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("cursor", &self.cursor)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchV2ContinueArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SearchV2ContinueArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SearchV2ContinueArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SearchV2ContinueArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SearchV2ContinueArg", SEARCH_V2_CONTINUE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchV2ContinueArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SearchV2ContinueArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct SearchV2Result {
+    /// A list (possibly empty) of matches for the query.
+    pub matches: Vec<SearchMatchV2>,
+    /// Used for paging. If true, indicates there is another page of results available that can be
+    /// fetched by calling [`search_continue_v2()`](search_continue_v2) with the cursor.
+    pub has_more: bool,
+    /// Pass the cursor into [`search_continue_v2()`](search_continue_v2) to fetch the next page of
+    /// results.
+    pub cursor: Option<SearchV2Cursor>,
+}
+
+impl SearchV2Result {
+    pub fn new(matches: Vec<SearchMatchV2>, has_more: bool) -> Self {
+        SearchV2Result {
+            matches,
+            has_more,
+            cursor: None,
+        }
+    }
+
+    pub fn with_cursor(mut self, value: Option<SearchV2Cursor>) -> Self {
+        self.cursor = value;
+        self
+    }
+
+}
+
+const SEARCH_V2_RESULT_FIELDS: &[&str] = &["matches",
+                                           "has_more",
+                                           "cursor"];
+impl SearchV2Result {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<SearchV2Result, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SearchV2Result>, V::Error> {
+        let mut field_matches = None;
+        let mut field_has_more = None;
+        let mut field_cursor = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "matches" => {
+                    if field_matches.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("matches"));
+                    }
+                    field_matches = Some(map.next_value()?);
+                }
+                "has_more" => {
+                    if field_has_more.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("has_more"));
+                    }
+                    field_has_more = Some(map.next_value()?);
+                }
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SearchV2Result {
+            matches: field_matches.ok_or_else(|| ::serde::de::Error::missing_field("matches"))?,
+            has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
+            cursor: field_cursor,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("matches", &self.matches)?;
+        s.serialize_field("has_more", &self.has_more)?;
+        s.serialize_field("cursor", &self.cursor)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchV2Result {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SearchV2Result;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SearchV2Result struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SearchV2Result::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SearchV2Result", SEARCH_V2_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchV2Result {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SearchV2Result", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -13147,6 +15233,130 @@ impl ::serde::ser::Serialize for SharingInfo {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("SharingInfo", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct SingleUserLock {
+    /// The time the lock was created.
+    pub created: super::common::DropboxTimestamp,
+    /// The account ID of the lock holder if known.
+    pub lock_holder_account_id: super::users_common::AccountId,
+    /// The id of the team of the account holder if it exists.
+    pub lock_holder_team_id: Option<String>,
+}
+
+impl SingleUserLock {
+    pub fn new(
+        created: super::common::DropboxTimestamp,
+        lock_holder_account_id: super::users_common::AccountId,
+    ) -> Self {
+        SingleUserLock {
+            created,
+            lock_holder_account_id,
+            lock_holder_team_id: None,
+        }
+    }
+
+    pub fn with_lock_holder_team_id(mut self, value: Option<String>) -> Self {
+        self.lock_holder_team_id = value;
+        self
+    }
+
+}
+
+const SINGLE_USER_LOCK_FIELDS: &[&str] = &["created",
+                                           "lock_holder_account_id",
+                                           "lock_holder_team_id"];
+impl SingleUserLock {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<SingleUserLock, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SingleUserLock>, V::Error> {
+        let mut field_created = None;
+        let mut field_lock_holder_account_id = None;
+        let mut field_lock_holder_team_id = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "created" => {
+                    if field_created.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("created"));
+                    }
+                    field_created = Some(map.next_value()?);
+                }
+                "lock_holder_account_id" => {
+                    if field_lock_holder_account_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("lock_holder_account_id"));
+                    }
+                    field_lock_holder_account_id = Some(map.next_value()?);
+                }
+                "lock_holder_team_id" => {
+                    if field_lock_holder_team_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("lock_holder_team_id"));
+                    }
+                    field_lock_holder_team_id = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SingleUserLock {
+            created: field_created.ok_or_else(|| ::serde::de::Error::missing_field("created"))?,
+            lock_holder_account_id: field_lock_holder_account_id.ok_or_else(|| ::serde::de::Error::missing_field("lock_holder_account_id"))?,
+            lock_holder_team_id: field_lock_holder_team_id,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("created", &self.created)?;
+        s.serialize_field("lock_holder_account_id", &self.lock_holder_account_id)?;
+        s.serialize_field("lock_holder_team_id", &self.lock_holder_team_id)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SingleUserLock {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SingleUserLock;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SingleUserLock struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SingleUserLock::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SingleUserLock", SINGLE_USER_LOCK_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SingleUserLock {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SingleUserLock", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -14043,6 +16253,187 @@ impl ::serde::ser::Serialize for ThumbnailSize {
 }
 
 #[derive(Debug)]
+pub struct UnlockFileArg {
+    /// Path in the user's Dropbox to a file.
+    pub path: WritePath,
+}
+
+impl UnlockFileArg {
+    pub fn new(path: WritePath) -> Self {
+        UnlockFileArg {
+            path,
+        }
+    }
+
+}
+
+const UNLOCK_FILE_ARG_FIELDS: &[&str] = &["path"];
+impl UnlockFileArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UnlockFileArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UnlockFileArg>, V::Error> {
+        let mut field_path = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UnlockFileArg {
+            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("path", &self.path)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UnlockFileArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UnlockFileArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UnlockFileArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UnlockFileArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UnlockFileArg", UNLOCK_FILE_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UnlockFileArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UnlockFileArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct UnlockFileBatchArg {
+    /// List of 'entries'. Each 'entry' contains a path of the file which will be unlocked.
+    /// Duplicate path arguments in the batch are considered only once.
+    pub entries: Vec<UnlockFileArg>,
+}
+
+impl UnlockFileBatchArg {
+    pub fn new(entries: Vec<UnlockFileArg>) -> Self {
+        UnlockFileBatchArg {
+            entries,
+        }
+    }
+
+}
+
+const UNLOCK_FILE_BATCH_ARG_FIELDS: &[&str] = &["entries"];
+impl UnlockFileBatchArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<UnlockFileBatchArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<UnlockFileBatchArg>, V::Error> {
+        let mut field_entries = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "entries" => {
+                    if field_entries.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("entries"));
+                    }
+                    field_entries = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = UnlockFileBatchArg {
+            entries: field_entries.ok_or_else(|| ::serde::de::Error::missing_field("entries"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("entries", &self.entries)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UnlockFileBatchArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = UnlockFileBatchArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UnlockFileBatchArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                UnlockFileBatchArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("UnlockFileBatchArg", UNLOCK_FILE_BATCH_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UnlockFileBatchArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("UnlockFileBatchArg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub enum UploadError {
     /// Unable to save the uploaded contents to a file.
     Path(UploadWriteFailed),
@@ -14881,7 +17272,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchResultEntry {
         match *self {
             UploadSessionFinishBatchResultEntry::Success(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 18)?;
+                let mut s = serializer.serialize_struct("UploadSessionFinishBatchResultEntry", 19)?;
                 s.serialize_field(".tag", "success")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()

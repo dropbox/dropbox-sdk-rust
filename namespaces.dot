@@ -1,15 +1,18 @@
 digraph deps {
+    account -> { common };
     async;
     auth -> { common };
+    check;
     common;
     contacts -> { common };
     file_properties;
     file_requests -> { common files };
     files -> { async auth common file_properties users_common };
     paper -> { common sharing };
+    secondary_emails -> { common };
     seen_state;
     sharing -> { async common files seen_state team_common users users_common };
-    team -> { async common file_properties files team_common team_policies users users_common };
+    team -> { account async common file_properties files secondary_emails team_common team_policies users users_common };
     team_common -> { common };
     team_log -> { async common file_requests files sharing team team_common team_policies users_common };
     team_policies;

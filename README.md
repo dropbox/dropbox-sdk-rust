@@ -22,6 +22,16 @@ However, that said,
 * The SDK is usable!
 * We are happy to get feedback and/or pull requests from the community!
 
+## A Note on Semver
+
+This SDK is kept in sync with the current official API spec. While this spec is
+generally changed in a backwards-compatible way, sometimes significant feature
+additions are made, and sometimes backwards-incompatible changes may be
+introduced. This crate will have its minor version bumped each time the spec is
+updated. Users are encouraged to inspect the changes before updating the crate
+version targeted, which is most easily done by looking at what revision the
+`dropbox-api-spec` submodule is pinned to.
+
 ## HTTP Client
 
 To actually use the API calls, you need a HTTP client -- all functions take a

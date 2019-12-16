@@ -7,11 +7,17 @@
     clippy::doc_markdown,
 )]
 
+#[cfg(feature = "dbx_account")]
+pub mod account;
+
 #[cfg(feature = "dbx_async")]
 pub mod dbx_async;
 
 #[cfg(feature = "dbx_auth")]
 pub mod auth;
+
+#[cfg(feature = "dbx_check")]
+pub mod check;
 
 #[cfg(feature = "dbx_common")]
 pub mod common;
@@ -30,6 +36,9 @@ pub mod files;
 
 #[cfg(feature = "dbx_paper")]
 pub mod paper;
+
+#[cfg(feature = "dbx_secondary_emails")]
+pub mod secondary_emails;
 
 #[cfg(feature = "dbx_seen_state")]
 pub mod seen_state;

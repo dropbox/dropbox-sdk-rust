@@ -468,8 +468,8 @@ pub enum CreateFileRequestError {
     ValidationError,
     /// File requests are not available on the specified folder.
     InvalidLocation,
-    /// The user has reached the rate limit for creating file requests. The limit is currently 100
-    /// file requests per day.
+    /// The user has reached the rate limit for creating file requests. The limit is currently 4000
+    /// file requests total.
     RateLimit,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
