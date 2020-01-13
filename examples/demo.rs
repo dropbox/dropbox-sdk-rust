@@ -180,10 +180,16 @@ fn list_directory<'a>(client: &'a dyn HttpClient, path: &str, recursive: bool)
             .with_recursive(recursive))
     {
         Ok(Ok(result)) => {
+            let cursor = if result.has_more {
+                Some(result.cursor)
+            } else {
+                None
+            };
+
             Ok(Ok(DirectoryIterator {
                 client,
+                cursor,
                 buffer: result.entries.into(),
-                cursor: Some(result.cursor),
             }))
         },
         Ok(Err(e)) => Ok(Err(e)),
