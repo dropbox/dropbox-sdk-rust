@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Dropbox, Inc.
+// Copyright (c) 2019-2020 Dropbox, Inc.
 
 use std::io::{self, Read};
 use std::str;
@@ -9,8 +9,6 @@ use hyper::{self, Url};
 use hyper::header::Headers;
 use hyper::header::{
     Authorization, Bearer, ByteRangeSpec, Connection, ContentLength, ContentType, Range};
-use hyper_native_tls;
-use serde_json;
 use url::form_urlencoded::Serializer as UrlEncoder;
 
 const USER_AGENT: &str = concat!("Dropbox-APIv2-Rust/", env!("CARGO_PKG_VERSION"));
