@@ -16,11 +16,9 @@ pub type LegalHoldsPolicyCreateResult = LegalHoldPolicy;
 pub type LegalHoldsPolicyUpdateResult = LegalHoldPolicy;
 pub type ListHeldRevisionCursor = String;
 pub type MembersGetInfoResult = Vec<MembersGetInfoItem>;
-pub type NSpath = String;
 pub type NumberPerDay = Vec<Option<u64>>;
 pub type Path = String;
 pub type SecondaryEmail = super::secondary_emails::SecondaryEmail;
-pub type UserId = u64;
 pub type UserQuota = u32;
 
 /// List all device sessions of a team's member.
@@ -316,37 +314,6 @@ pub fn legal_holds_create_policy(
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
         "team/legal_holds/create_policy",
-        arg,
-        None)
-}
-
-/// Export everything for a single hold to a Dropbox file path. Permission : Team member file
-/// access.
-pub fn legal_holds_export_policy(
-    client: &dyn crate::client_trait::HttpClient,
-    arg: &LegalHoldsPolicyExportArg,
-) -> crate::Result<Result<LegalHoldsExportPolicyResult, LegalHoldsExportPolicyError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "team/legal_holds/export_policy",
-        arg,
-        None)
-}
-
-/// Returns the status of an asynchronous job for
-/// [`legal_holds_export_policy_job_status_check()`](legal_holds_export_policy_job_status_check).
-/// Permission : Team member file access.
-pub fn legal_holds_export_policy_job_status_check(
-    client: &dyn crate::client_trait::HttpClient,
-    arg: &super::dbx_async::PollArg,
-) -> crate::Result<Result<ExportPolicyJobStatusResult, super::dbx_async::PollError>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "team/legal_holds/export_policy_job_status/check",
         arg,
         None)
 }
@@ -4534,180 +4501,6 @@ impl ::serde::ser::Serialize for ExcludedUsersUpdateStatus {
     }
 }
 
-#[derive(Debug)]
-pub enum ExportPolicyJobStatus {
-    /// The asynchronous job is still in progress.
-    InProgress,
-    /// The asynchronous job has finished. Returning the metadata of the newly created folder that
-    /// includes the exported hold.
-    Complete,
-    /// The asynchronous job returned an error.
-    Failed,
-    /// Catch-all used for unrecognized values returned from the server. Encountering this value
-    /// typically indicates that this SDK version is out of date.
-    Other,
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ExportPolicyJobStatus {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // union deserializer
-        use serde::de::{self, MapAccess, Visitor};
-        struct EnumVisitor;
-        impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = ExportPolicyJobStatus;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a ExportPolicyJobStatus structure")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let tag: &str = match map.next_key()? {
-                    Some(".tag") => map.next_value()?,
-                    _ => return Err(de::Error::missing_field(".tag"))
-                };
-                match tag {
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ExportPolicyJobStatus::InProgress)
-                    }
-                    "complete" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ExportPolicyJobStatus::Complete)
-                    }
-                    "failed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ExportPolicyJobStatus::Failed)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ExportPolicyJobStatus::Other)
-                    }
-                }
-            }
-        }
-        const VARIANTS: &[&str] = &["in_progress",
-                                    "complete",
-                                    "failed",
-                                    "other"];
-        deserializer.deserialize_struct("ExportPolicyJobStatus", VARIANTS, EnumVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ExportPolicyJobStatus {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // union serializer
-        use serde::ser::SerializeStruct;
-        match *self {
-            ExportPolicyJobStatus::InProgress => {
-                // unit
-                let mut s = serializer.serialize_struct("ExportPolicyJobStatus", 1)?;
-                s.serialize_field(".tag", "in_progress")?;
-                s.end()
-            }
-            ExportPolicyJobStatus::Complete => {
-                // unit
-                let mut s = serializer.serialize_struct("ExportPolicyJobStatus", 1)?;
-                s.serialize_field(".tag", "complete")?;
-                s.end()
-            }
-            ExportPolicyJobStatus::Failed => {
-                // unit
-                let mut s = serializer.serialize_struct("ExportPolicyJobStatus", 1)?;
-                s.serialize_field(".tag", "failed")?;
-                s.end()
-            }
-            ExportPolicyJobStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
-        }
-    }
-}
-
-#[derive(Debug)]
-pub struct ExportPolicyJobStatusResult {
-    pub status: ExportPolicyJobStatus,
-}
-
-impl ExportPolicyJobStatusResult {
-    pub fn new(status: ExportPolicyJobStatus) -> Self {
-        ExportPolicyJobStatusResult {
-            status,
-        }
-    }
-
-}
-
-const EXPORT_POLICY_JOB_STATUS_RESULT_FIELDS: &[&str] = &["status"];
-impl ExportPolicyJobStatusResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        map: V,
-    ) -> Result<ExportPolicyJobStatusResult, V::Error> {
-        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
-    }
-
-    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-        optional: bool,
-    ) -> Result<Option<ExportPolicyJobStatusResult>, V::Error> {
-        let mut field_status = None;
-        let mut nothing = true;
-        while let Some(key) = map.next_key::<&str>()? {
-            nothing = false;
-            match key {
-                "status" => {
-                    if field_status.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("status"));
-                    }
-                    field_status = Some(map.next_value()?);
-                }
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        if optional && nothing {
-            return Ok(None);
-        }
-        let result = ExportPolicyJobStatusResult {
-            status: field_status.ok_or_else(|| ::serde::de::Error::missing_field("status"))?,
-        };
-        Ok(Some(result))
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("status", &self.status)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for ExportPolicyJobStatusResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = ExportPolicyJobStatusResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a ExportPolicyJobStatusResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                ExportPolicyJobStatusResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("ExportPolicyJobStatusResult", EXPORT_POLICY_JOB_STATUS_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for ExportPolicyJobStatusResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ExportPolicyJobStatusResult", 1)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
-    }
-}
-
 /// A set of features that a Dropbox Business account may support.
 #[derive(Debug)]
 pub enum Feature {
@@ -5996,6 +5789,8 @@ impl ::serde::ser::Serialize for GroupAccessType {
 pub struct GroupCreateArg {
     /// Group name.
     pub group_name: String,
+    /// Automatically add the creator of the group.
+    pub add_creator_as_owner: bool,
     /// The creator of a team can associate an arbitrary external ID to the group.
     pub group_external_id: Option<super::team_common::GroupExternalId>,
     /// Whether the team can be managed by selected users, or only by team admins.
@@ -6006,9 +5801,15 @@ impl GroupCreateArg {
     pub fn new(group_name: String) -> Self {
         GroupCreateArg {
             group_name,
+            add_creator_as_owner: false,
             group_external_id: None,
             group_management_type: None,
         }
+    }
+
+    pub fn with_add_creator_as_owner(mut self, value: bool) -> Self {
+        self.add_creator_as_owner = value;
+        self
     }
 
     pub fn with_group_external_id(
@@ -6030,6 +5831,7 @@ impl GroupCreateArg {
 }
 
 const GROUP_CREATE_ARG_FIELDS: &[&str] = &["group_name",
+                                           "add_creator_as_owner",
                                            "group_external_id",
                                            "group_management_type"];
 impl GroupCreateArg {
@@ -6044,6 +5846,7 @@ impl GroupCreateArg {
         optional: bool,
     ) -> Result<Option<GroupCreateArg>, V::Error> {
         let mut field_group_name = None;
+        let mut field_add_creator_as_owner = None;
         let mut field_group_external_id = None;
         let mut field_group_management_type = None;
         let mut nothing = true;
@@ -6055,6 +5858,12 @@ impl GroupCreateArg {
                         return Err(::serde::de::Error::duplicate_field("group_name"));
                     }
                     field_group_name = Some(map.next_value()?);
+                }
+                "add_creator_as_owner" => {
+                    if field_add_creator_as_owner.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("add_creator_as_owner"));
+                    }
+                    field_add_creator_as_owner = Some(map.next_value()?);
                 }
                 "group_external_id" => {
                     if field_group_external_id.is_some() {
@@ -6079,6 +5888,7 @@ impl GroupCreateArg {
         }
         let result = GroupCreateArg {
             group_name: field_group_name.ok_or_else(|| ::serde::de::Error::missing_field("group_name"))?,
+            add_creator_as_owner: field_add_creator_as_owner.unwrap_or(false),
             group_external_id: field_group_external_id,
             group_management_type: field_group_management_type,
         };
@@ -6091,6 +5901,7 @@ impl GroupCreateArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("group_name", &self.group_name)?;
+        s.serialize_field("add_creator_as_owner", &self.add_creator_as_owner)?;
         s.serialize_field("group_external_id", &self.group_external_id)?;
         s.serialize_field("group_management_type", &self.group_management_type)
     }
@@ -6118,7 +5929,7 @@ impl ::serde::ser::Serialize for GroupCreateArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("GroupCreateArg", 3)?;
+        let mut s = serializer.serialize_struct("GroupCreateArg", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -7240,7 +7051,9 @@ impl ::std::fmt::Display for GroupMembersAddError {
 pub struct GroupMembersChangeResult {
     /// The group info after member change operation has been performed.
     pub group_info: GroupFullInfo,
-    /// An ID that can be used to obtain the status of granting/revoking group-owned resources.
+    /// For legacy purposes async_job_id will always return one space ' '. Formerly, it was an ID
+    /// that was used to obtain the status of granting/revoking group-owned resources. It's no
+    /// longer necessary because the async processing now happens automatically.
     pub async_job_id: super::dbx_async::AsyncJobId,
 }
 
@@ -10010,7 +9823,7 @@ pub struct LegalHoldPolicy {
     pub id: LegalHoldId,
     /// Policy name.
     pub name: LegalHoldPolicyName,
-    pub members: Vec<super::team_common::TeamMemberId>,
+    pub members: MembersInfo,
     pub status: LegalHoldStatus,
     /// start date of the legal hold policy.
     pub start_date: super::common::DropboxTimestamp,
@@ -10026,7 +9839,7 @@ impl LegalHoldPolicy {
     pub fn new(
         id: LegalHoldId,
         name: LegalHoldPolicyName,
-        members: Vec<super::team_common::TeamMemberId>,
+        members: MembersInfo,
         status: LegalHoldStatus,
         start_date: super::common::DropboxTimestamp,
     ) -> Self {
@@ -10214,6 +10027,8 @@ pub enum LegalHoldStatus {
     Activating,
     /// The legal hold policy is updating.
     Updating,
+    /// The legal hold policy is exporting.
+    Exporting,
     /// The legal hold policy is releasing.
     Releasing,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -10253,6 +10068,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldStatus {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldStatus::Updating)
                     }
+                    "exporting" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldStatus::Exporting)
+                    }
                     "releasing" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldStatus::Releasing)
@@ -10268,6 +10087,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldStatus {
                                     "released",
                                     "activating",
                                     "updating",
+                                    "exporting",
                                     "releasing",
                                     "other"];
         deserializer.deserialize_struct("LegalHoldStatus", VARIANTS, EnumVisitor)
@@ -10303,6 +10123,12 @@ impl ::serde::ser::Serialize for LegalHoldStatus {
                 s.serialize_field(".tag", "updating")?;
                 s.end()
             }
+            LegalHoldStatus::Exporting => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldStatus", 1)?;
+                s.serialize_field(".tag", "exporting")?;
+                s.end()
+            }
             LegalHoldStatus::Releasing => {
                 // unit
                 let mut s = serializer.serialize_struct("LegalHoldStatus", 1)?;
@@ -10315,33 +10141,25 @@ impl ::serde::ser::Serialize for LegalHoldStatus {
 }
 
 #[derive(Debug)]
-pub enum LegalHoldsExportPolicyError {
-    /// The path provided is invalid.
-    InvalidPath,
-    /// Legal hold is currently performing another operation.
-    LegalHoldPerformingAnotherOperation,
+pub enum LegalHoldsError {
     /// There has been an unknown legal hold error.
     UnknownLegalHoldError,
-    /// Temporary infrastructure failure, please retry.
-    TransientError,
-    /// The current team does not have enough space to export the legal hold policy.
-    InsufficientQuota,
-    /// The legal hold is not holding any revisions yet
-    LegalHoldExportStillEmpty,
+    /// You don't have permissions to perform this action.
+    InsufficientPermissions,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsExportPolicyError {
+impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsError {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // union deserializer
         use serde::de::{self, MapAccess, Visitor};
         struct EnumVisitor;
         impl<'de> Visitor<'de> for EnumVisitor {
-            type Value = LegalHoldsExportPolicyError;
+            type Value = LegalHoldsError;
             fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a LegalHoldsExportPolicyError structure")
+                f.write_str("a LegalHoldsError structure")
             }
             fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
                 let tag: &str = match map.next_key()? {
@@ -10349,212 +10167,59 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsExportPolicyError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "invalid_path" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LegalHoldsExportPolicyError::InvalidPath)
-                    }
-                    "legal_hold_performing_another_operation" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LegalHoldsExportPolicyError::LegalHoldPerformingAnotherOperation)
-                    }
                     "unknown_legal_hold_error" => {
                         crate::eat_json_fields(&mut map)?;
-                        Ok(LegalHoldsExportPolicyError::UnknownLegalHoldError)
+                        Ok(LegalHoldsError::UnknownLegalHoldError)
                     }
-                    "transient_error" => {
+                    "insufficient_permissions" => {
                         crate::eat_json_fields(&mut map)?;
-                        Ok(LegalHoldsExportPolicyError::TransientError)
-                    }
-                    "insufficient_quota" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LegalHoldsExportPolicyError::InsufficientQuota)
-                    }
-                    "legal_hold_export_still_empty" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LegalHoldsExportPolicyError::LegalHoldExportStillEmpty)
+                        Ok(LegalHoldsError::InsufficientPermissions)
                     }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
-                        Ok(LegalHoldsExportPolicyError::Other)
+                        Ok(LegalHoldsError::Other)
                     }
                 }
             }
         }
-        const VARIANTS: &[&str] = &["invalid_path",
-                                    "legal_hold_performing_another_operation",
-                                    "unknown_legal_hold_error",
-                                    "transient_error",
-                                    "insufficient_quota",
-                                    "legal_hold_export_still_empty",
+        const VARIANTS: &[&str] = &["unknown_legal_hold_error",
+                                    "insufficient_permissions",
                                     "other"];
-        deserializer.deserialize_struct("LegalHoldsExportPolicyError", VARIANTS, EnumVisitor)
+        deserializer.deserialize_struct("LegalHoldsError", VARIANTS, EnumVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for LegalHoldsExportPolicyError {
+impl ::serde::ser::Serialize for LegalHoldsError {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            LegalHoldsExportPolicyError::InvalidPath => {
+            LegalHoldsError::UnknownLegalHoldError => {
                 // unit
-                let mut s = serializer.serialize_struct("LegalHoldsExportPolicyError", 1)?;
-                s.serialize_field(".tag", "invalid_path")?;
-                s.end()
-            }
-            LegalHoldsExportPolicyError::LegalHoldPerformingAnotherOperation => {
-                // unit
-                let mut s = serializer.serialize_struct("LegalHoldsExportPolicyError", 1)?;
-                s.serialize_field(".tag", "legal_hold_performing_another_operation")?;
-                s.end()
-            }
-            LegalHoldsExportPolicyError::UnknownLegalHoldError => {
-                // unit
-                let mut s = serializer.serialize_struct("LegalHoldsExportPolicyError", 1)?;
+                let mut s = serializer.serialize_struct("LegalHoldsError", 1)?;
                 s.serialize_field(".tag", "unknown_legal_hold_error")?;
                 s.end()
             }
-            LegalHoldsExportPolicyError::TransientError => {
+            LegalHoldsError::InsufficientPermissions => {
                 // unit
-                let mut s = serializer.serialize_struct("LegalHoldsExportPolicyError", 1)?;
-                s.serialize_field(".tag", "transient_error")?;
+                let mut s = serializer.serialize_struct("LegalHoldsError", 1)?;
+                s.serialize_field(".tag", "insufficient_permissions")?;
                 s.end()
             }
-            LegalHoldsExportPolicyError::InsufficientQuota => {
-                // unit
-                let mut s = serializer.serialize_struct("LegalHoldsExportPolicyError", 1)?;
-                s.serialize_field(".tag", "insufficient_quota")?;
-                s.end()
-            }
-            LegalHoldsExportPolicyError::LegalHoldExportStillEmpty => {
-                // unit
-                let mut s = serializer.serialize_struct("LegalHoldsExportPolicyError", 1)?;
-                s.serialize_field(".tag", "legal_hold_export_still_empty")?;
-                s.end()
-            }
-            LegalHoldsExportPolicyError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+            LegalHoldsError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
 
-impl ::std::error::Error for LegalHoldsExportPolicyError {
+impl ::std::error::Error for LegalHoldsError {
     fn description(&self) -> &str {
-        "LegalHoldsExportPolicyError"
+        "LegalHoldsError"
     }
 }
 
-impl ::std::fmt::Display for LegalHoldsExportPolicyError {
+impl ::std::fmt::Display for LegalHoldsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct LegalHoldsExportPolicyResult {
-    /// Pass the given ID into
-    /// [`legal_holds_export_policy_job_status_check()`](legal_holds_export_policy_job_status_check)
-    /// to obtain the status of the export policy job status.
-    pub async_job_id: super::dbx_async::AsyncJobId,
-    /// Metadata for the newly created folder that will eventually, once the export policy job
-    /// completes, include the hold's export.
-    pub export_folder_metadata: super::files::FolderMetadata,
-}
-
-impl LegalHoldsExportPolicyResult {
-    pub fn new(
-        async_job_id: super::dbx_async::AsyncJobId,
-        export_folder_metadata: super::files::FolderMetadata,
-    ) -> Self {
-        LegalHoldsExportPolicyResult {
-            async_job_id,
-            export_folder_metadata,
-        }
-    }
-
-}
-
-const LEGAL_HOLDS_EXPORT_POLICY_RESULT_FIELDS: &[&str] = &["async_job_id",
-                                                           "export_folder_metadata"];
-impl LegalHoldsExportPolicyResult {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        map: V,
-    ) -> Result<LegalHoldsExportPolicyResult, V::Error> {
-        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
-    }
-
-    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-        optional: bool,
-    ) -> Result<Option<LegalHoldsExportPolicyResult>, V::Error> {
-        let mut field_async_job_id = None;
-        let mut field_export_folder_metadata = None;
-        let mut nothing = true;
-        while let Some(key) = map.next_key::<&str>()? {
-            nothing = false;
-            match key {
-                "async_job_id" => {
-                    if field_async_job_id.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("async_job_id"));
-                    }
-                    field_async_job_id = Some(map.next_value()?);
-                }
-                "export_folder_metadata" => {
-                    if field_export_folder_metadata.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("export_folder_metadata"));
-                    }
-                    field_export_folder_metadata = Some(map.next_value()?);
-                }
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        if optional && nothing {
-            return Ok(None);
-        }
-        let result = LegalHoldsExportPolicyResult {
-            async_job_id: field_async_job_id.ok_or_else(|| ::serde::de::Error::missing_field("async_job_id"))?,
-            export_folder_metadata: field_export_folder_metadata.ok_or_else(|| ::serde::de::Error::missing_field("export_folder_metadata"))?,
-        };
-        Ok(Some(result))
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("async_job_id", &self.async_job_id)?;
-        s.serialize_field("export_folder_metadata", &self.export_folder_metadata)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsExportPolicyResult {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = LegalHoldsExportPolicyResult;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a LegalHoldsExportPolicyResult struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                LegalHoldsExportPolicyResult::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("LegalHoldsExportPolicyResult", LEGAL_HOLDS_EXPORT_POLICY_RESULT_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for LegalHoldsExportPolicyResult {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("LegalHoldsExportPolicyResult", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
     }
 }
 
@@ -10650,10 +10315,12 @@ impl ::serde::ser::Serialize for LegalHoldsGetPolicyArg {
 
 #[derive(Debug)]
 pub enum LegalHoldsGetPolicyError {
-    /// Legal hold policy does not exist for [`LegalHoldsGetPolicyArg::id`](LegalHoldsGetPolicyArg).
-    LegalHoldPolicyNotFound,
+    /// There has been an unknown legal hold error.
+    UnknownLegalHoldError,
     /// You don't have permissions to perform this action.
     InsufficientPermissions,
+    /// Legal hold policy does not exist for [`LegalHoldsGetPolicyArg::id`](LegalHoldsGetPolicyArg).
+    LegalHoldPolicyNotFound,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -10675,13 +10342,17 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsGetPolicyError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
-                    "legal_hold_policy_not_found" => {
+                    "unknown_legal_hold_error" => {
                         crate::eat_json_fields(&mut map)?;
-                        Ok(LegalHoldsGetPolicyError::LegalHoldPolicyNotFound)
+                        Ok(LegalHoldsGetPolicyError::UnknownLegalHoldError)
                     }
                     "insufficient_permissions" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsGetPolicyError::InsufficientPermissions)
+                    }
+                    "legal_hold_policy_not_found" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsGetPolicyError::LegalHoldPolicyNotFound)
                     }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
@@ -10690,9 +10361,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsGetPolicyError {
                 }
             }
         }
-        const VARIANTS: &[&str] = &["legal_hold_policy_not_found",
+        const VARIANTS: &[&str] = &["unknown_legal_hold_error",
                                     "insufficient_permissions",
-                                    "other"];
+                                    "other",
+                                    "legal_hold_policy_not_found"];
         deserializer.deserialize_struct("LegalHoldsGetPolicyError", VARIANTS, EnumVisitor)
     }
 }
@@ -10702,16 +10374,22 @@ impl ::serde::ser::Serialize for LegalHoldsGetPolicyError {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            LegalHoldsGetPolicyError::LegalHoldPolicyNotFound => {
+            LegalHoldsGetPolicyError::UnknownLegalHoldError => {
                 // unit
                 let mut s = serializer.serialize_struct("LegalHoldsGetPolicyError", 1)?;
-                s.serialize_field(".tag", "legal_hold_policy_not_found")?;
+                s.serialize_field(".tag", "unknown_legal_hold_error")?;
                 s.end()
             }
             LegalHoldsGetPolicyError::InsufficientPermissions => {
                 // unit
                 let mut s = serializer.serialize_struct("LegalHoldsGetPolicyError", 1)?;
                 s.serialize_field(".tag", "insufficient_permissions")?;
+                s.end()
+            }
+            LegalHoldsGetPolicyError::LegalHoldPolicyNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsGetPolicyError", 1)?;
+                s.serialize_field(".tag", "legal_hold_policy_not_found")?;
                 s.end()
             }
             LegalHoldsGetPolicyError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -11152,10 +10830,14 @@ impl ::std::fmt::Display for LegalHoldsListHeldRevisionsContinueError {
 pub enum LegalHoldsListHeldRevisionsError {
     /// There has been an unknown legal hold error.
     UnknownLegalHoldError,
+    /// You don't have permissions to perform this action.
+    InsufficientPermissions,
     /// Temporary infrastructure failure, please retry.
     TransientError,
     /// The legal hold is not holding any revisions yet
     LegalHoldStillEmpty,
+    /// Trying to list revisions for an inactive legal hold.
+    InactiveLegalHold,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -11181,6 +10863,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsListHeldRevisionsError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsListHeldRevisionsError::UnknownLegalHoldError)
                     }
+                    "insufficient_permissions" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsListHeldRevisionsError::InsufficientPermissions)
+                    }
                     "transient_error" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsListHeldRevisionsError::TransientError)
@@ -11188,6 +10874,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsListHeldRevisionsError {
                     "legal_hold_still_empty" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsListHeldRevisionsError::LegalHoldStillEmpty)
+                    }
+                    "inactive_legal_hold" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsListHeldRevisionsError::InactiveLegalHold)
                     }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
@@ -11197,9 +10887,11 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsListHeldRevisionsError {
             }
         }
         const VARIANTS: &[&str] = &["unknown_legal_hold_error",
+                                    "insufficient_permissions",
+                                    "other",
                                     "transient_error",
                                     "legal_hold_still_empty",
-                                    "other"];
+                                    "inactive_legal_hold"];
         deserializer.deserialize_struct("LegalHoldsListHeldRevisionsError", VARIANTS, EnumVisitor)
     }
 }
@@ -11215,6 +10907,12 @@ impl ::serde::ser::Serialize for LegalHoldsListHeldRevisionsError {
                 s.serialize_field(".tag", "unknown_legal_hold_error")?;
                 s.end()
             }
+            LegalHoldsListHeldRevisionsError::InsufficientPermissions => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsListHeldRevisionsError", 1)?;
+                s.serialize_field(".tag", "insufficient_permissions")?;
+                s.end()
+            }
             LegalHoldsListHeldRevisionsError::TransientError => {
                 // unit
                 let mut s = serializer.serialize_struct("LegalHoldsListHeldRevisionsError", 1)?;
@@ -11225,6 +10923,12 @@ impl ::serde::ser::Serialize for LegalHoldsListHeldRevisionsError {
                 // unit
                 let mut s = serializer.serialize_struct("LegalHoldsListHeldRevisionsError", 1)?;
                 s.serialize_field(".tag", "legal_hold_still_empty")?;
+                s.end()
+            }
+            LegalHoldsListHeldRevisionsError::InactiveLegalHold => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsListHeldRevisionsError", 1)?;
+                s.serialize_field(".tag", "inactive_legal_hold")?;
                 s.end()
             }
             LegalHoldsListHeldRevisionsError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -11324,6 +11028,10 @@ impl ::serde::ser::Serialize for LegalHoldsListPoliciesArg {
 
 #[derive(Debug)]
 pub enum LegalHoldsListPoliciesError {
+    /// There has been an unknown legal hold error.
+    UnknownLegalHoldError,
+    /// You don't have permissions to perform this action.
+    InsufficientPermissions,
     /// Temporary infrastructure failure, please retry.
     TransientError,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -11347,6 +11055,14 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsListPoliciesError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
+                    "unknown_legal_hold_error" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsListPoliciesError::UnknownLegalHoldError)
+                    }
+                    "insufficient_permissions" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsListPoliciesError::InsufficientPermissions)
+                    }
                     "transient_error" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsListPoliciesError::TransientError)
@@ -11358,8 +11074,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsListPoliciesError {
                 }
             }
         }
-        const VARIANTS: &[&str] = &["transient_error",
-                                    "other"];
+        const VARIANTS: &[&str] = &["unknown_legal_hold_error",
+                                    "insufficient_permissions",
+                                    "other",
+                                    "transient_error"];
         deserializer.deserialize_struct("LegalHoldsListPoliciesError", VARIANTS, EnumVisitor)
     }
 }
@@ -11369,6 +11087,18 @@ impl ::serde::ser::Serialize for LegalHoldsListPoliciesError {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
+            LegalHoldsListPoliciesError::UnknownLegalHoldError => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsListPoliciesError", 1)?;
+                s.serialize_field(".tag", "unknown_legal_hold_error")?;
+                s.end()
+            }
+            LegalHoldsListPoliciesError::InsufficientPermissions => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsListPoliciesError", 1)?;
+                s.serialize_field(".tag", "insufficient_permissions")?;
+                s.end()
+            }
             LegalHoldsListPoliciesError::TransientError => {
                 // unit
                 let mut s = serializer.serialize_struct("LegalHoldsListPoliciesError", 1)?;
@@ -11640,6 +11370,10 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyCreateArg {
 
 #[derive(Debug)]
 pub enum LegalHoldsPolicyCreateError {
+    /// There has been an unknown legal hold error.
+    UnknownLegalHoldError,
+    /// You don't have permissions to perform this action.
+    InsufficientPermissions,
     /// Start date must be earlier than end date.
     StartDateIsLaterThanEndDate,
     /// The users list must have at least one user.
@@ -11652,6 +11386,8 @@ pub enum LegalHoldsPolicyCreateError {
     TransientError,
     /// The name provided is already in use by another legal hold.
     NameMustBeUnique,
+    /// Team exceeded legal hold quota.
+    TeamExceededLegalHoldQuota,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -11673,6 +11409,14 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyCreateError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
+                    "unknown_legal_hold_error" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsPolicyCreateError::UnknownLegalHoldError)
+                    }
+                    "insufficient_permissions" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsPolicyCreateError::InsufficientPermissions)
+                    }
                     "start_date_is_later_than_end_date" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsPolicyCreateError::StartDateIsLaterThanEndDate)
@@ -11697,6 +11441,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyCreateError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsPolicyCreateError::NameMustBeUnique)
                     }
+                    "team_exceeded_legal_hold_quota" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsPolicyCreateError::TeamExceededLegalHoldQuota)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsPolicyCreateError::Other)
@@ -11704,13 +11452,16 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyCreateError {
                 }
             }
         }
-        const VARIANTS: &[&str] = &["start_date_is_later_than_end_date",
+        const VARIANTS: &[&str] = &["unknown_legal_hold_error",
+                                    "insufficient_permissions",
+                                    "other",
+                                    "start_date_is_later_than_end_date",
                                     "empty_members_list",
                                     "invalid_members",
                                     "number_of_users_on_hold_is_greater_than_hold_limitation",
                                     "transient_error",
                                     "name_must_be_unique",
-                                    "other"];
+                                    "team_exceeded_legal_hold_quota"];
         deserializer.deserialize_struct("LegalHoldsPolicyCreateError", VARIANTS, EnumVisitor)
     }
 }
@@ -11720,6 +11471,18 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyCreateError {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
+            LegalHoldsPolicyCreateError::UnknownLegalHoldError => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsPolicyCreateError", 1)?;
+                s.serialize_field(".tag", "unknown_legal_hold_error")?;
+                s.end()
+            }
+            LegalHoldsPolicyCreateError::InsufficientPermissions => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsPolicyCreateError", 1)?;
+                s.serialize_field(".tag", "insufficient_permissions")?;
+                s.end()
+            }
             LegalHoldsPolicyCreateError::StartDateIsLaterThanEndDate => {
                 // unit
                 let mut s = serializer.serialize_struct("LegalHoldsPolicyCreateError", 1)?;
@@ -11756,6 +11519,12 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyCreateError {
                 s.serialize_field(".tag", "name_must_be_unique")?;
                 s.end()
             }
+            LegalHoldsPolicyCreateError::TeamExceededLegalHoldQuota => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsPolicyCreateError", 1)?;
+                s.serialize_field(".tag", "team_exceeded_legal_hold_quota")?;
+                s.end()
+            }
             LegalHoldsPolicyCreateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -11770,111 +11539,6 @@ impl ::std::error::Error for LegalHoldsPolicyCreateError {
 impl ::std::fmt::Display for LegalHoldsPolicyCreateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
-    }
-}
-
-#[derive(Debug)]
-pub struct LegalHoldsPolicyExportArg {
-    /// The legal hold Id.
-    pub id: LegalHoldId,
-    /// The selected destination path in the team's Dropbox for the export. The path must be a
-    /// namespace path (see example) of a namespace that's accessible to the application. To get the
-    /// list of accessible namespaces use the route [`namespaces_list()`](namespaces_list).
-    pub path: NSpath,
-}
-
-impl LegalHoldsPolicyExportArg {
-    pub fn new(id: LegalHoldId, path: NSpath) -> Self {
-        LegalHoldsPolicyExportArg {
-            id,
-            path,
-        }
-    }
-
-}
-
-const LEGAL_HOLDS_POLICY_EXPORT_ARG_FIELDS: &[&str] = &["id",
-                                                        "path"];
-impl LegalHoldsPolicyExportArg {
-    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
-        map: V,
-    ) -> Result<LegalHoldsPolicyExportArg, V::Error> {
-        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
-    }
-
-    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
-        mut map: V,
-        optional: bool,
-    ) -> Result<Option<LegalHoldsPolicyExportArg>, V::Error> {
-        let mut field_id = None;
-        let mut field_path = None;
-        let mut nothing = true;
-        while let Some(key) = map.next_key::<&str>()? {
-            nothing = false;
-            match key {
-                "id" => {
-                    if field_id.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("id"));
-                    }
-                    field_id = Some(map.next_value()?);
-                }
-                "path" => {
-                    if field_path.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("path"));
-                    }
-                    field_path = Some(map.next_value()?);
-                }
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        if optional && nothing {
-            return Ok(None);
-        }
-        let result = LegalHoldsPolicyExportArg {
-            id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
-            path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-        };
-        Ok(Some(result))
-    }
-
-    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
-        &self,
-        s: &mut S::SerializeStruct,
-    ) -> Result<(), S::Error> {
-        use serde::ser::SerializeStruct;
-        s.serialize_field("id", &self.id)?;
-        s.serialize_field("path", &self.path)
-    }
-}
-
-impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyExportArg {
-    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        // struct deserializer
-        use serde::de::{MapAccess, Visitor};
-        struct StructVisitor;
-        impl<'de> Visitor<'de> for StructVisitor {
-            type Value = LegalHoldsPolicyExportArg;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a LegalHoldsPolicyExportArg struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                LegalHoldsPolicyExportArg::internal_deserialize(map)
-            }
-        }
-        deserializer.deserialize_struct("LegalHoldsPolicyExportArg", LEGAL_HOLDS_POLICY_EXPORT_ARG_FIELDS, StructVisitor)
-    }
-}
-
-impl ::serde::ser::Serialize for LegalHoldsPolicyExportArg {
-    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        // struct serializer
-        use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("LegalHoldsPolicyExportArg", 2)?;
-        self.internal_serialize::<S>(&mut s)?;
-        s.end()
     }
 }
 
@@ -11970,6 +11634,10 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyReleaseArg {
 
 #[derive(Debug)]
 pub enum LegalHoldsPolicyReleaseError {
+    /// There has been an unknown legal hold error.
+    UnknownLegalHoldError,
+    /// You don't have permissions to perform this action.
+    InsufficientPermissions,
     /// Legal hold is currently performing another operation.
     LegalHoldPerformingAnotherOperation,
     /// Legal hold is currently performing a release or is already released.
@@ -11998,6 +11666,14 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyReleaseError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
+                    "unknown_legal_hold_error" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsPolicyReleaseError::UnknownLegalHoldError)
+                    }
+                    "insufficient_permissions" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsPolicyReleaseError::InsufficientPermissions)
+                    }
                     "legal_hold_performing_another_operation" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsPolicyReleaseError::LegalHoldPerformingAnotherOperation)
@@ -12017,10 +11693,12 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyReleaseError {
                 }
             }
         }
-        const VARIANTS: &[&str] = &["legal_hold_performing_another_operation",
+        const VARIANTS: &[&str] = &["unknown_legal_hold_error",
+                                    "insufficient_permissions",
+                                    "other",
+                                    "legal_hold_performing_another_operation",
                                     "legal_hold_already_releasing",
-                                    "legal_hold_policy_not_found",
-                                    "other"];
+                                    "legal_hold_policy_not_found"];
         deserializer.deserialize_struct("LegalHoldsPolicyReleaseError", VARIANTS, EnumVisitor)
     }
 }
@@ -12030,6 +11708,18 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyReleaseError {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
+            LegalHoldsPolicyReleaseError::UnknownLegalHoldError => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsPolicyReleaseError", 1)?;
+                s.serialize_field(".tag", "unknown_legal_hold_error")?;
+                s.end()
+            }
+            LegalHoldsPolicyReleaseError::InsufficientPermissions => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsPolicyReleaseError", 1)?;
+                s.serialize_field(".tag", "insufficient_permissions")?;
+                s.end()
+            }
             LegalHoldsPolicyReleaseError::LegalHoldPerformingAnotherOperation => {
                 // unit
                 let mut s = serializer.serialize_struct("LegalHoldsPolicyReleaseError", 1)?;
@@ -12206,6 +11896,10 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyUpdateArg {
 
 #[derive(Debug)]
 pub enum LegalHoldsPolicyUpdateError {
+    /// There has been an unknown legal hold error.
+    UnknownLegalHoldError,
+    /// You don't have permissions to perform this action.
+    InsufficientPermissions,
     /// Trying to release an inactive legal hold.
     InactiveLegalHold,
     /// Legal hold is currently performing another operation.
@@ -12218,6 +11912,9 @@ pub enum LegalHoldsPolicyUpdateError {
     EmptyMembersList,
     /// The name provided is already in use by another legal hold.
     NameMustBeUnique,
+    /// Legal hold policy does not exist for
+    /// [`LegalHoldsPolicyUpdateArg::id`](LegalHoldsPolicyUpdateArg).
+    LegalHoldPolicyNotFound,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -12239,6 +11936,14 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyUpdateError {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 match tag {
+                    "unknown_legal_hold_error" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsPolicyUpdateError::UnknownLegalHoldError)
+                    }
+                    "insufficient_permissions" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsPolicyUpdateError::InsufficientPermissions)
+                    }
                     "inactive_legal_hold" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsPolicyUpdateError::InactiveLegalHold)
@@ -12263,6 +11968,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyUpdateError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsPolicyUpdateError::NameMustBeUnique)
                     }
+                    "legal_hold_policy_not_found" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsPolicyUpdateError::LegalHoldPolicyNotFound)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsPolicyUpdateError::Other)
@@ -12270,13 +11979,16 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyUpdateError {
                 }
             }
         }
-        const VARIANTS: &[&str] = &["inactive_legal_hold",
+        const VARIANTS: &[&str] = &["unknown_legal_hold_error",
+                                    "insufficient_permissions",
+                                    "other",
+                                    "inactive_legal_hold",
                                     "legal_hold_performing_another_operation",
                                     "invalid_members",
                                     "number_of_users_on_hold_is_greater_than_hold_limitation",
                                     "empty_members_list",
                                     "name_must_be_unique",
-                                    "other"];
+                                    "legal_hold_policy_not_found"];
         deserializer.deserialize_struct("LegalHoldsPolicyUpdateError", VARIANTS, EnumVisitor)
     }
 }
@@ -12286,6 +11998,18 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyUpdateError {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
+            LegalHoldsPolicyUpdateError::UnknownLegalHoldError => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsPolicyUpdateError", 1)?;
+                s.serialize_field(".tag", "unknown_legal_hold_error")?;
+                s.end()
+            }
+            LegalHoldsPolicyUpdateError::InsufficientPermissions => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsPolicyUpdateError", 1)?;
+                s.serialize_field(".tag", "insufficient_permissions")?;
+                s.end()
+            }
             LegalHoldsPolicyUpdateError::InactiveLegalHold => {
                 // unit
                 let mut s = serializer.serialize_struct("LegalHoldsPolicyUpdateError", 1)?;
@@ -12320,6 +12044,12 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyUpdateError {
                 // unit
                 let mut s = serializer.serialize_struct("LegalHoldsPolicyUpdateError", 1)?;
                 s.serialize_field(".tag", "name_must_be_unique")?;
+                s.end()
+            }
+            LegalHoldsPolicyUpdateError::LegalHoldPolicyNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsPolicyUpdateError", 1)?;
+                s.serialize_field(".tag", "legal_hold_policy_not_found")?;
                 s.end()
             }
             LegalHoldsPolicyUpdateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -16383,6 +16113,112 @@ impl ::serde::ser::Serialize for MembersGetInfoItem {
                 s.end()
             }
         }
+    }
+}
+
+#[derive(Debug)]
+pub struct MembersInfo {
+    /// Team member IDs of the users under this hold.
+    pub team_member_ids: Vec<super::team_common::TeamMemberId>,
+    /// The number of permanently deleted users that were under this hold.
+    pub permanently_deleted_users: u64,
+}
+
+impl MembersInfo {
+    pub fn new(
+        team_member_ids: Vec<super::team_common::TeamMemberId>,
+        permanently_deleted_users: u64,
+    ) -> Self {
+        MembersInfo {
+            team_member_ids,
+            permanently_deleted_users,
+        }
+    }
+
+}
+
+const MEMBERS_INFO_FIELDS: &[&str] = &["team_member_ids",
+                                       "permanently_deleted_users"];
+impl MembersInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MembersInfo, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersInfo>, V::Error> {
+        let mut field_team_member_ids = None;
+        let mut field_permanently_deleted_users = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "team_member_ids" => {
+                    if field_team_member_ids.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("team_member_ids"));
+                    }
+                    field_team_member_ids = Some(map.next_value()?);
+                }
+                "permanently_deleted_users" => {
+                    if field_permanently_deleted_users.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("permanently_deleted_users"));
+                    }
+                    field_permanently_deleted_users = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersInfo {
+            team_member_ids: field_team_member_ids.ok_or_else(|| ::serde::de::Error::missing_field("team_member_ids"))?,
+            permanently_deleted_users: field_permanently_deleted_users.ok_or_else(|| ::serde::de::Error::missing_field("permanently_deleted_users"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("team_member_ids", &self.team_member_ids)?;
+        s.serialize_field("permanently_deleted_users", &self.permanently_deleted_users)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MembersInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MembersInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MembersInfo", MEMBERS_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MembersInfo", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 

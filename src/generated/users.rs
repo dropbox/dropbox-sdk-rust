@@ -450,6 +450,71 @@ impl ::serde::ser::Serialize for BasicAccount {
     }
 }
 
+/// The value for [`UserFeature::FileLocking`](UserFeature::FileLocking).
+#[derive(Debug)]
+pub enum FileLockingValue {
+    /// When this value is True, the user can lock files in shared directories. When the value is
+    /// False the user can unlock the files they have locked or request to unlock files locked by
+    /// others.
+    Enabled(bool),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileLockingValue {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = FileLockingValue;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a FileLockingValue structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "enabled" => {
+                        match map.next_key()? {
+                            Some("enabled") => Ok(FileLockingValue::Enabled(map.next_value()?)),
+                            None => Err(de::Error::missing_field("enabled")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(FileLockingValue::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["enabled",
+                                    "other"];
+        deserializer.deserialize_struct("FileLockingValue", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileLockingValue {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            FileLockingValue::Enabled(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("FileLockingValue", 2)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.serialize_field("enabled", x)?;
+                s.end()
+            }
+            FileLockingValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Detailed information about the current user's account.
 #[derive(Debug)]
 pub struct FullAccount {
@@ -1941,6 +2006,8 @@ impl ::serde::ser::Serialize for TeamSpaceAllocation {
 pub enum UserFeature {
     /// This feature contains information about how the user's Paper files are stored.
     PaperAsFiles,
+    /// This feature allows users to lock files in order to restrict other users from editing them.
+    FileLocking,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -1966,6 +2033,10 @@ impl<'de> ::serde::de::Deserialize<'de> for UserFeature {
                         crate::eat_json_fields(&mut map)?;
                         Ok(UserFeature::PaperAsFiles)
                     }
+                    "file_locking" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UserFeature::FileLocking)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(UserFeature::Other)
@@ -1974,6 +2045,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UserFeature {
             }
         }
         const VARIANTS: &[&str] = &["paper_as_files",
+                                    "file_locking",
                                     "other"];
         deserializer.deserialize_struct("UserFeature", VARIANTS, EnumVisitor)
     }
@@ -1990,6 +2062,12 @@ impl ::serde::ser::Serialize for UserFeature {
                 s.serialize_field(".tag", "paper_as_files")?;
                 s.end()
             }
+            UserFeature::FileLocking => {
+                // unit
+                let mut s = serializer.serialize_struct("UserFeature", 1)?;
+                s.serialize_field(".tag", "file_locking")?;
+                s.end()
+            }
             UserFeature::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -1999,6 +2077,7 @@ impl ::serde::ser::Serialize for UserFeature {
 #[derive(Debug)]
 pub enum UserFeatureValue {
     PaperAsFiles(PaperAsFilesValue),
+    FileLocking(FileLockingValue),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -2027,6 +2106,13 @@ impl<'de> ::serde::de::Deserialize<'de> for UserFeatureValue {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "file_locking" => {
+                        match map.next_key()? {
+                            Some("file_locking") => Ok(UserFeatureValue::FileLocking(map.next_value()?)),
+                            None => Err(de::Error::missing_field("file_locking")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(UserFeatureValue::Other)
@@ -2035,6 +2121,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UserFeatureValue {
             }
         }
         const VARIANTS: &[&str] = &["paper_as_files",
+                                    "file_locking",
                                     "other"];
         deserializer.deserialize_struct("UserFeatureValue", VARIANTS, EnumVisitor)
     }
@@ -2050,6 +2137,13 @@ impl ::serde::ser::Serialize for UserFeatureValue {
                 let mut s = serializer.serialize_struct("UserFeatureValue", 2)?;
                 s.serialize_field(".tag", "paper_as_files")?;
                 s.serialize_field("paper_as_files", x)?;
+                s.end()
+            }
+            UserFeatureValue::FileLocking(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("UserFeatureValue", 2)?;
+                s.serialize_field(".tag", "file_locking")?;
+                s.serialize_field("file_locking", x)?;
                 s.end()
             }
             UserFeatureValue::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

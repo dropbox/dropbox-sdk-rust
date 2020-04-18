@@ -509,6 +509,24 @@ pub fn get_thumbnail(
         range_end)
 }
 
+/// Get a thumbnail for a file.
+pub fn get_thumbnail_v2(
+    client: &dyn crate::client_trait::HttpClient,
+    arg: &ThumbnailV2Arg,
+    range_start: Option<u64>,
+    range_end: Option<u64>,
+) -> crate::Result<Result<crate::client_trait::HttpRequestResult<PreviewResult>, ThumbnailV2Error>> {
+    crate::client_helpers::request_with_body(
+        client,
+        crate::client_trait::Endpoint::Content,
+        crate::client_trait::Style::Download,
+        "files/get_thumbnail_v2",
+        arg,
+        None,
+        range_start,
+        range_end)
+}
+
 /// Get thumbnails for a list of images. We allow up to 25 thumbnails in a single batch. This method
 /// currently supports files with the following file extensions: jpg, jpeg, png, tiff, tif, gif and
 /// bmp. Photos that are larger than 20MB in size won't be converted to a thumbnail.
@@ -648,7 +666,7 @@ pub fn lock_file_batch(
 }
 
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
-/// folder all its contents will be moved.
+/// folder all its contents will be moved. Note that we do not currently support case-only renaming.
 pub fn move_v2(
     client: &dyn crate::client_trait::HttpClient,
     arg: &RelocationArg,
@@ -677,11 +695,12 @@ pub fn do_move(
         None)
 }
 
-/// Move multiple files or folders to different locations at once in the user's Dropbox. This route
-/// will replace [`move_batch()`](move_batch). The main difference is this route will return status
-/// for each entry, while [`move_batch()`](move_batch) raises failure if any entry fails. This route
-/// will either finish synchronously, or return a job ID and do the async move job in background.
-/// Please use [`move_batch_check_v2()`](move_batch_check_v2) to check the job status.
+/// Move multiple files or folders to different locations at once in the user's Dropbox. Note that
+/// we do not currently support case-only renaming. This route will replace
+/// [`move_batch()`](move_batch). The main difference is this route will return status for each
+/// entry, while [`move_batch()`](move_batch) raises failure if any entry fails. This route will
+/// either finish synchronously, or return a job ID and do the async move job in background. Please
+/// use [`move_batch_check_v2()`](move_batch_check_v2) to check the job status.
 pub fn move_batch_v2(
     client: &dyn crate::client_trait::HttpClient,
     arg: &MoveBatchArg,
@@ -696,8 +715,7 @@ pub fn move_batch_v2(
 }
 
 /// Move multiple files or folders to different locations at once in the user's Dropbox. This route
-/// is 'all or nothing', which means if one entry fails, the whole transaction will abort. This
-/// route will return job ID immediately and do the async moving job in background. Please use
+/// will return job ID immediately and do the async moving job in background. Please use
 /// [`move_batch_check()`](move_batch_check) to check the job status.
 pub fn move_batch(
     client: &dyn crate::client_trait::HttpClient,
@@ -5374,11 +5392,13 @@ impl ::serde::ser::Serialize for FileLockContent {
 
 #[derive(Debug)]
 pub struct FileLockMetadata {
-    /// True if caller holds the file lock. Missing if is_locked is false.
+    /// True if caller holds the file lock.
     pub is_lockholder: Option<bool>,
-    /// The display name of the lock holder. Missing if is_locked is false.
+    /// The display name of the lock holder.
     pub lockholder_name: Option<String>,
-    /// The timestamp of the lock was created. Missing if is_locked is false.
+    /// The account ID of the lock holder if known.
+    pub lockholder_account_id: Option<super::users_common::AccountId>,
+    /// The timestamp of the lock was created.
     pub created: Option<super::common::DropboxTimestamp>,
 }
 
@@ -5387,6 +5407,7 @@ impl Default for FileLockMetadata {
         FileLockMetadata {
             is_lockholder: None,
             lockholder_name: None,
+            lockholder_account_id: None,
             created: None,
         }
     }
@@ -5394,6 +5415,7 @@ impl Default for FileLockMetadata {
 
 const FILE_LOCK_METADATA_FIELDS: &[&str] = &["is_lockholder",
                                              "lockholder_name",
+                                             "lockholder_account_id",
                                              "created"];
 impl FileLockMetadata {
     // no _opt deserializer
@@ -5402,6 +5424,7 @@ impl FileLockMetadata {
     ) -> Result<FileLockMetadata, V::Error> {
         let mut field_is_lockholder = None;
         let mut field_lockholder_name = None;
+        let mut field_lockholder_account_id = None;
         let mut field_created = None;
         while let Some(key) = map.next_key::<&str>()? {
             match key {
@@ -5416,6 +5439,12 @@ impl FileLockMetadata {
                         return Err(::serde::de::Error::duplicate_field("lockholder_name"));
                     }
                     field_lockholder_name = Some(map.next_value()?);
+                }
+                "lockholder_account_id" => {
+                    if field_lockholder_account_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("lockholder_account_id"));
+                    }
+                    field_lockholder_account_id = Some(map.next_value()?);
                 }
                 "created" => {
                     if field_created.is_some() {
@@ -5432,6 +5461,7 @@ impl FileLockMetadata {
         let result = FileLockMetadata {
             is_lockholder: field_is_lockholder,
             lockholder_name: field_lockholder_name,
+            lockholder_account_id: field_lockholder_account_id,
             created: field_created,
         };
         Ok(result)
@@ -5444,6 +5474,7 @@ impl FileLockMetadata {
         use serde::ser::SerializeStruct;
         s.serialize_field("is_lockholder", &self.is_lockholder)?;
         s.serialize_field("lockholder_name", &self.lockholder_name)?;
+        s.serialize_field("lockholder_account_id", &self.lockholder_account_id)?;
         s.serialize_field("created", &self.created)
     }
 }
@@ -5470,7 +5501,7 @@ impl ::serde::ser::Serialize for FileLockMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileLockMetadata", 3)?;
+        let mut s = serializer.serialize_struct("FileLockMetadata", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -9679,11 +9710,11 @@ impl ::serde::ser::Serialize for LockConflictError {
 #[derive(Debug)]
 pub struct LockFileArg {
     /// Path in the user's Dropbox to a file.
-    pub path: WritePath,
+    pub path: WritePathOrId,
 }
 
 impl LockFileArg {
-    pub fn new(path: WritePath) -> Self {
+    pub fn new(path: WritePathOrId) -> Self {
         LockFileArg {
             path,
         }
@@ -10706,6 +10737,147 @@ impl ::serde::ser::Serialize for MetadataV2 {
 }
 
 #[derive(Debug)]
+pub struct MinimalFileLinkMetadata {
+    /// URL of the shared link.
+    pub url: String,
+    /// A unique identifier for the current revision of a file. This field is the same rev as
+    /// elsewhere in the API and can be used to detect changes and avoid conflicts.
+    pub rev: Rev,
+    /// Unique identifier for the linked file.
+    pub id: Option<Id>,
+    /// Full path in the user's Dropbox. This always starts with a slash. This field will only be
+    /// present only if the linked file is in the authenticated user's Dropbox.
+    pub path: Option<String>,
+}
+
+impl MinimalFileLinkMetadata {
+    pub fn new(url: String, rev: Rev) -> Self {
+        MinimalFileLinkMetadata {
+            url,
+            rev,
+            id: None,
+            path: None,
+        }
+    }
+
+    pub fn with_id(mut self, value: Option<Id>) -> Self {
+        self.id = value;
+        self
+    }
+
+    pub fn with_path(mut self, value: Option<String>) -> Self {
+        self.path = value;
+        self
+    }
+
+}
+
+const MINIMAL_FILE_LINK_METADATA_FIELDS: &[&str] = &["url",
+                                                     "rev",
+                                                     "id",
+                                                     "path"];
+impl MinimalFileLinkMetadata {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MinimalFileLinkMetadata, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MinimalFileLinkMetadata>, V::Error> {
+        let mut field_url = None;
+        let mut field_rev = None;
+        let mut field_id = None;
+        let mut field_path = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "url" => {
+                    if field_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("url"));
+                    }
+                    field_url = Some(map.next_value()?);
+                }
+                "rev" => {
+                    if field_rev.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("rev"));
+                    }
+                    field_rev = Some(map.next_value()?);
+                }
+                "id" => {
+                    if field_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("id"));
+                    }
+                    field_id = Some(map.next_value()?);
+                }
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MinimalFileLinkMetadata {
+            url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
+            rev: field_rev.ok_or_else(|| ::serde::de::Error::missing_field("rev"))?,
+            id: field_id,
+            path: field_path,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("url", &self.url)?;
+        s.serialize_field("rev", &self.rev)?;
+        s.serialize_field("id", &self.id)?;
+        s.serialize_field("path", &self.path)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MinimalFileLinkMetadata {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MinimalFileLinkMetadata;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MinimalFileLinkMetadata struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MinimalFileLinkMetadata::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MinimalFileLinkMetadata", MINIMAL_FILE_LINK_METADATA_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MinimalFileLinkMetadata {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MinimalFileLinkMetadata", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
 pub struct MoveBatchArg {
     /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
     pub entries: Vec<RelocationPath>,
@@ -10830,6 +11002,77 @@ impl ::serde::ser::Serialize for MoveBatchArg {
         let mut s = serializer.serialize_struct("MoveBatchArg", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum PathOrLink {
+    Path(ReadPath),
+    Link(SharedLinkFileInfo),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PathOrLink {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = PathOrLink;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PathOrLink structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        match map.next_key()? {
+                            Some("path") => Ok(PathOrLink::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "link" => Ok(PathOrLink::Link(SharedLinkFileInfo::internal_deserialize(map)?)),
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(PathOrLink::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["path",
+                                    "link",
+                                    "other"];
+        deserializer.deserialize_struct("PathOrLink", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PathOrLink {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            PathOrLink::Path(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("PathOrLink", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            PathOrLink::Link(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("PathOrLink", 4)?;
+                s.serialize_field(".tag", "link")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            PathOrLink::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 
@@ -11148,6 +11391,99 @@ impl ::std::error::Error for PreviewError {
 impl ::std::fmt::Display for PreviewError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
+pub struct PreviewResult {
+    /// Metadata corresponding to the file received as an argument. Will be populated if the
+    /// endpoint is called with a path (ReadPath).
+    pub file_metadata: Option<FileMetadata>,
+    /// Minimal metadata corresponding to the file received as an argument. Will be populated if the
+    /// endpoint is called using a shared link (SharedLinkFileInfo).
+    pub link_metadata: Option<MinimalFileLinkMetadata>,
+}
+
+impl Default for PreviewResult {
+    fn default() -> Self {
+        PreviewResult {
+            file_metadata: None,
+            link_metadata: None,
+        }
+    }
+}
+
+const PREVIEW_RESULT_FIELDS: &[&str] = &["file_metadata",
+                                         "link_metadata"];
+impl PreviewResult {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<PreviewResult, V::Error> {
+        let mut field_file_metadata = None;
+        let mut field_link_metadata = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "file_metadata" => {
+                    if field_file_metadata.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_metadata"));
+                    }
+                    field_file_metadata = Some(map.next_value()?);
+                }
+                "link_metadata" => {
+                    if field_link_metadata.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("link_metadata"));
+                    }
+                    field_link_metadata = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = PreviewResult {
+            file_metadata: field_file_metadata,
+            link_metadata: field_link_metadata,
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("file_metadata", &self.file_metadata)?;
+        s.serialize_field("link_metadata", &self.link_metadata)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for PreviewResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = PreviewResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a PreviewResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                PreviewResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("PreviewResult", PREVIEW_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for PreviewResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("PreviewResult", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -13836,9 +14172,9 @@ impl ::serde::ser::Serialize for SaveUrlResult {
 pub struct SearchArg {
     /// The path in the user's Dropbox to search. Should probably be a folder.
     pub path: PathROrId,
-    /// The string to search for. The search string is split on spaces into multiple tokens. For
-    /// file name searching, the last token is used for prefix matching (i.e. "bat c" matches "bat
-    /// cave" but not "batman car").
+    /// The string to search for. Query string may be rewritten to improve relevance of results. The
+    /// string is split on spaces into multiple tokens. For file name searching, the last token is
+    /// used for prefix matching (i.e. "bat c" matches "bat cave" but not "batman car").
     pub query: String,
     /// The starting index within the search results (used for paging).
     pub start: u64,
@@ -13995,6 +14331,7 @@ impl ::serde::ser::Serialize for SearchArg {
 #[derive(Debug)]
 pub enum SearchError {
     Path(LookupError),
+    InvalidArgument(Option<String>),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -14023,6 +14360,13 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "invalid_argument" => {
+                        match map.next_key()? {
+                            Some("invalid_argument") => Ok(SearchError::InvalidArgument(map.next_value()?)),
+                            None => Ok(SearchError::InvalidArgument(None)),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(SearchError::Other)
@@ -14031,6 +14375,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchError {
             }
         }
         const VARIANTS: &[&str] = &["path",
+                                    "invalid_argument",
                                     "other"];
         deserializer.deserialize_struct("SearchError", VARIANTS, EnumVisitor)
     }
@@ -14046,6 +14391,16 @@ impl ::serde::ser::Serialize for SearchError {
                 let mut s = serializer.serialize_struct("SearchError", 2)?;
                 s.serialize_field(".tag", "path")?;
                 s.serialize_field("path", x)?;
+                s.end()
+            }
+            SearchError::InvalidArgument(ref x) => {
+                // nullable (struct or primitive)
+                let n = if x.is_some() { 2 } else { 1 };
+                let mut s = serializer.serialize_struct("SearchError", n)?;
+                s.serialize_field(".tag", "invalid_argument")?;
+                if let Some(ref x) = x {
+                    s.serialize_field("invalid_argument", &x)?;
+                }
                 s.end()
             }
             SearchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -14695,6 +15050,7 @@ impl ::serde::ser::Serialize for SearchResult {
 #[derive(Debug)]
 pub struct SearchV2Arg {
     /// The string to search for. May match across multiple fields based on the request arguments.
+    /// Query string may be rewritten to improve relevance of results.
     pub query: String,
     /// Options for more targeted search results.
     pub options: Option<SearchOptions>,
@@ -15134,6 +15490,136 @@ impl ::serde::ser::Serialize for SharedLink {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("SharedLink", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct SharedLinkFileInfo {
+    /// The shared link corresponding to either a file or shared link to a folder. If it is for a
+    /// folder shared link, we use the path param to determine for which file in the folder the view
+    /// is for.
+    pub url: String,
+    /// The path corresponding to a file in a shared link to a folder. Required for shared links to
+    /// folders.
+    pub path: Option<String>,
+    /// Password for the shared link. Required for password-protected shared links to files  unless
+    /// it can be read from a cookie.
+    pub password: Option<String>,
+}
+
+impl SharedLinkFileInfo {
+    pub fn new(url: String) -> Self {
+        SharedLinkFileInfo {
+            url,
+            path: None,
+            password: None,
+        }
+    }
+
+    pub fn with_path(mut self, value: Option<String>) -> Self {
+        self.path = value;
+        self
+    }
+
+    pub fn with_password(mut self, value: Option<String>) -> Self {
+        self.password = value;
+        self
+    }
+
+}
+
+const SHARED_LINK_FILE_INFO_FIELDS: &[&str] = &["url",
+                                                "path",
+                                                "password"];
+impl SharedLinkFileInfo {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<SharedLinkFileInfo, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<SharedLinkFileInfo>, V::Error> {
+        let mut field_url = None;
+        let mut field_path = None;
+        let mut field_password = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "url" => {
+                    if field_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("url"));
+                    }
+                    field_url = Some(map.next_value()?);
+                }
+                "path" => {
+                    if field_path.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("path"));
+                    }
+                    field_path = Some(map.next_value()?);
+                }
+                "password" => {
+                    if field_password.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("password"));
+                    }
+                    field_password = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = SharedLinkFileInfo {
+            url: field_url.ok_or_else(|| ::serde::de::Error::missing_field("url"))?,
+            path: field_path,
+            password: field_password,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("url", &self.url)?;
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("password", &self.password)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SharedLinkFileInfo {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SharedLinkFileInfo;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SharedLinkFileInfo struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SharedLinkFileInfo::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SharedLinkFileInfo", SHARED_LINK_FILE_INFO_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SharedLinkFileInfo {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SharedLinkFileInfo", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -16245,13 +16731,298 @@ impl ::serde::ser::Serialize for ThumbnailSize {
 }
 
 #[derive(Debug)]
+pub struct ThumbnailV2Arg {
+    /// Information specifying which file to preview. This could be a path to a file, a shared link
+    /// pointing to a file, or a shared link pointing to a folder, with a relative path.
+    pub resource: PathOrLink,
+    /// The format for the thumbnail image, jpeg (default) or png. For  images that are photos, jpeg
+    /// should be preferred, while png is  better for screenshots and digital arts.
+    pub format: ThumbnailFormat,
+    /// The size for the thumbnail image.
+    pub size: ThumbnailSize,
+    /// How to resize and crop the image to achieve the desired size.
+    pub mode: ThumbnailMode,
+}
+
+impl ThumbnailV2Arg {
+    pub fn new(resource: PathOrLink) -> Self {
+        ThumbnailV2Arg {
+            resource,
+            format: ThumbnailFormat::Jpeg,
+            size: ThumbnailSize::W64h64,
+            mode: ThumbnailMode::Strict,
+        }
+    }
+
+    pub fn with_format(mut self, value: ThumbnailFormat) -> Self {
+        self.format = value;
+        self
+    }
+
+    pub fn with_size(mut self, value: ThumbnailSize) -> Self {
+        self.size = value;
+        self
+    }
+
+    pub fn with_mode(mut self, value: ThumbnailMode) -> Self {
+        self.mode = value;
+        self
+    }
+
+}
+
+const THUMBNAIL_V2_ARG_FIELDS: &[&str] = &["resource",
+                                           "format",
+                                           "size",
+                                           "mode"];
+impl ThumbnailV2Arg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<ThumbnailV2Arg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<ThumbnailV2Arg>, V::Error> {
+        let mut field_resource = None;
+        let mut field_format = None;
+        let mut field_size = None;
+        let mut field_mode = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "resource" => {
+                    if field_resource.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("resource"));
+                    }
+                    field_resource = Some(map.next_value()?);
+                }
+                "format" => {
+                    if field_format.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("format"));
+                    }
+                    field_format = Some(map.next_value()?);
+                }
+                "size" => {
+                    if field_size.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("size"));
+                    }
+                    field_size = Some(map.next_value()?);
+                }
+                "mode" => {
+                    if field_mode.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("mode"));
+                    }
+                    field_mode = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = ThumbnailV2Arg {
+            resource: field_resource.ok_or_else(|| ::serde::de::Error::missing_field("resource"))?,
+            format: field_format.unwrap_or_else(|| ThumbnailFormat::Jpeg),
+            size: field_size.unwrap_or_else(|| ThumbnailSize::W64h64),
+            mode: field_mode.unwrap_or_else(|| ThumbnailMode::Strict),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("resource", &self.resource)?;
+        s.serialize_field("format", &self.format)?;
+        s.serialize_field("size", &self.size)?;
+        s.serialize_field("mode", &self.mode)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ThumbnailV2Arg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = ThumbnailV2Arg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ThumbnailV2Arg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                ThumbnailV2Arg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("ThumbnailV2Arg", THUMBNAIL_V2_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ThumbnailV2Arg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("ThumbnailV2Arg", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum ThumbnailV2Error {
+    /// An error occurred when downloading metadata for the image.
+    Path(LookupError),
+    /// The file extension doesn't allow conversion to a thumbnail.
+    UnsupportedExtension,
+    /// The image cannot be converted to a thumbnail.
+    UnsupportedImage,
+    /// An error occurred during thumbnail conversion.
+    ConversionError,
+    /// Access to this shared link is forbidden.
+    AccessDenied,
+    /// The shared link does not exist.
+    NotFound,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ThumbnailV2Error {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ThumbnailV2Error;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ThumbnailV2Error structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "path" => {
+                        match map.next_key()? {
+                            Some("path") => Ok(ThumbnailV2Error::Path(map.next_value()?)),
+                            None => Err(de::Error::missing_field("path")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "unsupported_extension" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ThumbnailV2Error::UnsupportedExtension)
+                    }
+                    "unsupported_image" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ThumbnailV2Error::UnsupportedImage)
+                    }
+                    "conversion_error" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ThumbnailV2Error::ConversionError)
+                    }
+                    "access_denied" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ThumbnailV2Error::AccessDenied)
+                    }
+                    "not_found" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ThumbnailV2Error::NotFound)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ThumbnailV2Error::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["path",
+                                    "unsupported_extension",
+                                    "unsupported_image",
+                                    "conversion_error",
+                                    "access_denied",
+                                    "not_found",
+                                    "other"];
+        deserializer.deserialize_struct("ThumbnailV2Error", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ThumbnailV2Error {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ThumbnailV2Error::Path(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("ThumbnailV2Error", 2)?;
+                s.serialize_field(".tag", "path")?;
+                s.serialize_field("path", x)?;
+                s.end()
+            }
+            ThumbnailV2Error::UnsupportedExtension => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailV2Error", 1)?;
+                s.serialize_field(".tag", "unsupported_extension")?;
+                s.end()
+            }
+            ThumbnailV2Error::UnsupportedImage => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailV2Error", 1)?;
+                s.serialize_field(".tag", "unsupported_image")?;
+                s.end()
+            }
+            ThumbnailV2Error::ConversionError => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailV2Error", 1)?;
+                s.serialize_field(".tag", "conversion_error")?;
+                s.end()
+            }
+            ThumbnailV2Error::AccessDenied => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailV2Error", 1)?;
+                s.serialize_field(".tag", "access_denied")?;
+                s.end()
+            }
+            ThumbnailV2Error::NotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("ThumbnailV2Error", 1)?;
+                s.serialize_field(".tag", "not_found")?;
+                s.end()
+            }
+            ThumbnailV2Error::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for ThumbnailV2Error {
+    fn description(&self) -> &str {
+        "ThumbnailV2Error"
+    }
+}
+
+impl ::std::fmt::Display for ThumbnailV2Error {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
+#[derive(Debug)]
 pub struct UnlockFileArg {
     /// Path in the user's Dropbox to a file.
-    pub path: WritePath,
+    pub path: WritePathOrId,
 }
 
 impl UnlockFileArg {
-    pub fn new(path: WritePath) -> Self {
+    pub fn new(path: WritePathOrId) -> Self {
         UnlockFileArg {
             path,
         }
