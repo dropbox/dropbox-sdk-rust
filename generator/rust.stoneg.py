@@ -288,57 +288,65 @@ class RustBackend(RustHelperBackend):
                     (u'Result<Option<{}>, V::Error>' if optional else u'Result<{}, V::Error>')
                     .format(type_name),
                     access=u'pub(crate)'):
-                for field in struct.all_fields:
-                    self.emit(u'let mut field_{} = None;'.format(self.field_name(field)))
-                if optional:
-                    self.emit(u'let mut nothing = true;')
-                with self.block(u'while let Some(key) = map.next_key::<&str>()?'):
+                if len(struct.all_fields) == 0:
+                    self.emit(u'// ignore any fields found; none are presently recognized')
+                    self.emit(u'crate::eat_json_fields(&mut map)?;')
                     if optional:
-                        self.emit(u'nothing = false;')
-                    with self.block(u'match key'):
+                        self.emit(u'Ok(None)')
+                    else:
+                        self.emit(u'Ok({} {{}})'.format(type_name))
+                else:
+                    for field in struct.all_fields:
+                        self.emit(u'let mut field_{} = None;'.format(self.field_name(field)))
+                    if optional:
+                        self.emit(u'let mut nothing = true;')
+                    with self.block(u'while let Some(key) = map.next_key::<&str>()?'):
+                        if optional:
+                            self.emit(u'nothing = false;')
+                        with self.block(u'match key'):
+                            for field in struct.all_fields:
+                                field_name = self.field_name(field)
+                                with self.block(u'"{}" =>'.format(field.name)):
+                                    with self.block(u'if field_{}.is_some()'.format(field_name)):
+                                        self.emit(u'return Err(::serde::de::Error::duplicate_field('
+                                                  u'"{}"));'
+                                                  .format(field.name))
+                                    self.emit(u'field_{} = Some(map.next_value()?);'
+                                              .format(field_name))
+                            with self.block(u'_ =>'):
+                                self.emit(u'// unknown field allowed and ignored')
+                                self.emit(u'map.next_value::<::serde_json::Value>()?;')
+                    if optional:
+                        with self.block(u'if optional && nothing'):
+                            self.emit(u'return Ok(None);')
+                    with self.block(u'let result = {}'.format(type_name), delim=(u'{', u'};')):
                         for field in struct.all_fields:
                             field_name = self.field_name(field)
-                            with self.block(u'"{}" =>'.format(field.name)):
-                                with self.block(u'if field_{}.is_some()'.format(field_name)):
-                                    self.emit(u'return Err(::serde::de::Error::duplicate_field('
-                                              u'"{}"));'
-                                              .format(field.name))
-                                self.emit(u'field_{} = Some(map.next_value()?);'
-                                          .format(field_name))
-                        with self.block(u'_ =>'):
-                            self.emit(u'// unknown field allowed and ignored')
-                            self.emit(u'map.next_value::<::serde_json::Value>()?;')
-                if optional:
-                    with self.block(u'if optional && nothing'):
-                        self.emit(u'return Ok(None);')
-                with self.block(u'let result = {}'.format(type_name), delim=(u'{', u'};')):
-                    for field in struct.all_fields:
-                        field_name = self.field_name(field)
-                        if isinstance(field.data_type, ir.Nullable):
-                            self.emit(u'{}: field_{},'.format(field_name, field_name))
-                        elif field.has_default:
-                            if isinstance(field.data_type, ir.String) \
-                                    and not field.default:
-                                self.emit(u'{}: field_{}.unwrap_or_else(String::new),'
-                                          .format(field_name, field_name))
-                            elif ir.is_primitive_type(ir.unwrap_aliases(field.data_type)[0]):
-                                self.emit(u'{}: field_{}.unwrap_or({}),'
-                                          .format(field_name,
-                                                  field_name,
-                                                  self._default_value(field)))
+                            if isinstance(field.data_type, ir.Nullable):
+                                self.emit(u'{}: field_{},'.format(field_name, field_name))
+                            elif field.has_default:
+                                if isinstance(field.data_type, ir.String) \
+                                        and not field.default:
+                                    self.emit(u'{}: field_{}.unwrap_or_else(String::new),'
+                                              .format(field_name, field_name))
+                                elif ir.is_primitive_type(ir.unwrap_aliases(field.data_type)[0]):
+                                    self.emit(u'{}: field_{}.unwrap_or({}),'
+                                              .format(field_name,
+                                                      field_name,
+                                                      self._default_value(field)))
+                                else:
+                                    self.emit(u'{}: field_{}.unwrap_or_else(|| {}),'
+                                              .format(field_name,
+                                                      field_name,
+                                                      self._default_value(field)))
                             else:
-                                self.emit(u'{}: field_{}.unwrap_or_else(|| {}),'
-                                          .format(field_name,
-                                                  field_name,
-                                                  self._default_value(field)))
-                        else:
-                            self.emit(u'{}: field_{}.ok_or_else(|| '
-                                      u'::serde::de::Error::missing_field("{}"))?,'
-                                      .format(field_name, field_name, field.name))
-                if optional:
-                    self.emit(u'Ok(Some(result))')
-                else:
-                    self.emit(u'Ok(result)')
+                                self.emit(u'{}: field_{}.ok_or_else(|| '
+                                          u'::serde::de::Error::missing_field("{}"))?,'
+                                          .format(field_name, field_name, field.name))
+                    if optional:
+                        self.emit(u'Ok(Some(result))')
+                    else:
+                        self.emit(u'Ok(result)')
             if struct.all_fields:
                 self.emit()
                 with self.emit_rust_function_def(
@@ -489,63 +497,69 @@ class RustBackend(RustHelperBackend):
                     with self.block(u'let tag: &str = match map.next_key()?', after=';'):
                         self.emit(u'Some(".tag") => map.next_value()?,')
                         self.emit(u'_ => return Err(de::Error::missing_field(".tag"))')
-                    with self.block(u'match tag'):
-                        for field in union.all_fields:
-                            if field.catch_all:
-                                # Handle the 'Other' variant at the end.
-                                continue
-                            variant_name = self.enum_variant_name(field)
-                            ultimate_type = ir.unwrap(field.data_type)[0]
-                            if isinstance(field.data_type, ir.Void):
-                                with self.block(u'"{}" =>'.format(field.name)):
-                                    self.emit(u'crate::eat_json_fields(&mut map)?;')
-                                    self.emit(u'Ok({}::{})'.format(type_name, variant_name))
-                            elif isinstance(ultimate_type, ir.Struct) \
-                                    and not ultimate_type.has_enumerated_subtypes():
-                                if isinstance(ir.unwrap_aliases(field.data_type)[0], ir.Nullable):
-                                    # A nullable here means we might have more fields that can be
-                                    # deserialized into the inner type, or we might have nothing,
-                                    # meaning None.
-                                    if not ultimate_type.all_required_fields:
-                                        raise RuntimeError('{}.{}: an optional struct with no'
-                                                           ' required fields is ambiguous'
-                                                           .format(union.name, field.name))
-                                    self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize_opt('
-                                              u'map, true)?)),'
-                                              .format(field.name,
-                                                      type_name,
-                                                      variant_name,
-                                                      self._rust_type(ultimate_type)))
-                                else:
-                                    self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'
-                                              .format(field.name,
-                                                      type_name,
-                                                      variant_name,
-                                                      self._rust_type(field.data_type)))
-                            else:
-                                with self.block(u'"{}" =>'.format(field.name)):
-                                    with self.block(u'match map.next_key()?'):
-                                        self.emit(u'Some("{}") => Ok({}::{}(map.next_value()?)),'
+                    if len(union.all_fields) == 1 and union.all_fields[0].catch_all:
+                        self.emit(u'// open enum with no defined variants')
+                        self.emit(u'let _ = tag;') # hax
+                        self.emit(u'crate::eat_json_fields(&mut map)?;')
+                        self.emit(u'Ok({}::Other)'.format(type_name))
+                    else:
+                        with self.block(u'match tag'):
+                            for field in union.all_fields:
+                                if field.catch_all:
+                                    # Handle the 'Other' variant at the end.
+                                    continue
+                                variant_name = self.enum_variant_name(field)
+                                ultimate_type = ir.unwrap(field.data_type)[0]
+                                if isinstance(field.data_type, ir.Void):
+                                    with self.block(u'"{}" =>'.format(field.name)):
+                                        self.emit(u'crate::eat_json_fields(&mut map)?;')
+                                        self.emit(u'Ok({}::{})'.format(type_name, variant_name))
+                                elif isinstance(ultimate_type, ir.Struct) \
+                                        and not ultimate_type.has_enumerated_subtypes():
+                                    if isinstance(ir.unwrap_aliases(field.data_type)[0], ir.Nullable):
+                                        # A nullable here means we might have more fields that can be
+                                        # deserialized into the inner type, or we might have nothing,
+                                        # meaning None.
+                                        if not ultimate_type.all_required_fields:
+                                            raise RuntimeError('{}.{}: an optional struct with no'
+                                                               ' required fields is ambiguous'
+                                                               .format(union.name, field.name))
+                                        self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize_opt('
+                                                  u'map, true)?)),'
                                                   .format(field.name,
                                                           type_name,
-                                                          variant_name))
-                                        if isinstance(ir.unwrap_aliases(field.data_type)[0],
-                                                      ir.Nullable):
-                                            # if it's null, the field can be omitted entirely
-                                            self.emit(u'None => Ok({}::{}(None)),'
-                                                      .format(type_name, variant_name))
-                                        else:
-                                            self.emit(u'None => Err('
-                                                      u'de::Error::missing_field("{}")),'
-                                                      .format(field.name))
-                                        self.emit(u'_ => Err(de::Error::unknown_field('
-                                                  u'tag, VARIANTS))')
-                        if not union.closed:
-                            with self.block(u'_ =>'):
-                                self.emit(u'crate::eat_json_fields(&mut map)?;')
-                                self.emit(u'Ok({}::Other)'.format(type_name))
-                        else:
-                            self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
+                                                          variant_name,
+                                                          self._rust_type(ultimate_type)))
+                                    else:
+                                        self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'
+                                                  .format(field.name,
+                                                          type_name,
+                                                          variant_name,
+                                                          self._rust_type(field.data_type)))
+                                else:
+                                    with self.block(u'"{}" =>'.format(field.name)):
+                                        with self.block(u'match map.next_key()?'):
+                                            self.emit(u'Some("{}") => Ok({}::{}(map.next_value()?)),'
+                                                      .format(field.name,
+                                                              type_name,
+                                                              variant_name))
+                                            if isinstance(ir.unwrap_aliases(field.data_type)[0],
+                                                          ir.Nullable):
+                                                # if it's null, the field can be omitted entirely
+                                                self.emit(u'None => Ok({}::{}(None)),'
+                                                          .format(type_name, variant_name))
+                                            else:
+                                                self.emit(u'None => Err('
+                                                          u'de::Error::missing_field("{}")),'
+                                                          .format(field.name))
+                                            self.emit(u'_ => Err(de::Error::unknown_field('
+                                                      u'tag, VARIANTS))')
+                            if not union.closed:
+                                with self.block(u'_ =>'):
+                                    self.emit(u'crate::eat_json_fields(&mut map)?;')
+                                    self.emit(u'Ok({}::Other)'.format(type_name))
+                            else:
+                                self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(
                     list(u'"{}"'.format(field.name) for field in union.all_fields),
                     before='const VARIANTS: &[&str] = &',

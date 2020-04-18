@@ -5899,17 +5899,9 @@ impl FileOpsResult {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FileOpsResult, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FileOpsResult {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FileOpsResult {})
     }
 }
 

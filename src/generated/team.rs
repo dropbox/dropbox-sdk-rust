@@ -2710,12 +2710,10 @@ impl<'de> ::serde::de::Deserialize<'de> for DateRangeError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DateRangeError::Other)
-                    }
-                }
+                // open enum with no defined variants
+                let _ = tag;
+                crate::eat_json_fields(&mut map)?;
+                Ok(DateRangeError::Other)
             }
         }
         const VARIANTS: &[&str] = &["other"];
@@ -16288,12 +16286,10 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersGetInfoError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MembersGetInfoError::Other)
-                    }
-                }
+                // open enum with no defined variants
+                let _ = tag;
+                crate::eat_json_fields(&mut map)?;
+                Ok(MembersGetInfoError::Other)
             }
         }
         const VARIANTS: &[&str] = &["other"];
@@ -16664,12 +16660,10 @@ impl<'de> ::serde::de::Deserialize<'de> for MembersListError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MembersListError::Other)
-                    }
-                }
+                // open enum with no defined variants
+                let _ = tag;
+                crate::eat_json_fields(&mut map)?;
+                Ok(MembersListError::Other)
             }
         }
         const VARIANTS: &[&str] = &["other"];
@@ -20732,12 +20726,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeDeviceSessionBatchError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RevokeDeviceSessionBatchError::Other)
-                    }
-                }
+                // open enum with no defined variants
+                let _ = tag;
+                crate::eat_json_fields(&mut map)?;
+                Ok(RevokeDeviceSessionBatchError::Other)
             }
         }
         const VARIANTS: &[&str] = &["other"];
@@ -21279,12 +21271,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeLinkedAppBatchError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RevokeLinkedAppBatchError::Other)
-                    }
-                }
+                // open enum with no defined variants
+                let _ = tag;
+                crate::eat_json_fields(&mut map)?;
+                Ok(RevokeLinkedAppBatchError::Other)
             }
         }
         const VARIANTS: &[&str] = &["other"];

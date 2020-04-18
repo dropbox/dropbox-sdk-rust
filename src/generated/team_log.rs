@@ -1674,17 +1674,9 @@ impl AllowDownloadDisabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<AllowDownloadDisabledDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = AllowDownloadDisabledDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(AllowDownloadDisabledDetails {})
     }
 }
 
@@ -1821,17 +1813,9 @@ impl AllowDownloadEnabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<AllowDownloadEnabledDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = AllowDownloadEnabledDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(AllowDownloadEnabledDetails {})
     }
 }
 
@@ -4284,17 +4268,9 @@ impl CreateFolderDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<CreateFolderDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = CreateFolderDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(CreateFolderDetails {})
     }
 }
 
@@ -5110,17 +5086,9 @@ impl DeviceApprovalsAddExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DeviceApprovalsAddExceptionDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = DeviceApprovalsAddExceptionDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DeviceApprovalsAddExceptionDetails {})
     }
 }
 
@@ -6050,17 +6018,9 @@ impl DeviceApprovalsRemoveExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DeviceApprovalsRemoveExceptionDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = DeviceApprovalsRemoveExceptionDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DeviceApprovalsRemoveExceptionDetails {})
     }
 }
 
@@ -7488,17 +7448,9 @@ impl DeviceManagementDisabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DeviceManagementDisabledDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = DeviceManagementDisabledDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DeviceManagementDisabledDetails {})
     }
 }
 
@@ -7635,17 +7587,9 @@ impl DeviceManagementEnabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DeviceManagementEnabledDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = DeviceManagementEnabledDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DeviceManagementEnabledDetails {})
     }
 }
 
@@ -8248,17 +8192,9 @@ impl DirectoryRestrictionsAddMembersDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DirectoryRestrictionsAddMembersDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = DirectoryRestrictionsAddMembersDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DirectoryRestrictionsAddMembersDetails {})
     }
 }
 
@@ -8395,17 +8331,9 @@ impl DirectoryRestrictionsRemoveMembersDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DirectoryRestrictionsRemoveMembersDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = DirectoryRestrictionsRemoveMembersDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DirectoryRestrictionsRemoveMembersDetails {})
     }
 }
 
@@ -8542,17 +8470,9 @@ impl DisabledDomainInvitesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DisabledDomainInvitesDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = DisabledDomainInvitesDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DisabledDomainInvitesDetails {})
     }
 }
 
@@ -8689,17 +8609,9 @@ impl DomainInvitesApproveRequestToJoinTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DomainInvitesApproveRequestToJoinTeamDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = DomainInvitesApproveRequestToJoinTeamDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DomainInvitesApproveRequestToJoinTeamDetails {})
     }
 }
 
@@ -8836,17 +8748,9 @@ impl DomainInvitesDeclineRequestToJoinTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DomainInvitesDeclineRequestToJoinTeamDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = DomainInvitesDeclineRequestToJoinTeamDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DomainInvitesDeclineRequestToJoinTeamDetails {})
     }
 }
 
@@ -9176,17 +9080,9 @@ impl DomainInvitesRequestToJoinTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DomainInvitesRequestToJoinTeamDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = DomainInvitesRequestToJoinTeamDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DomainInvitesRequestToJoinTeamDetails {})
     }
 }
 
@@ -9323,17 +9219,9 @@ impl DomainInvitesSetInviteNewUserPrefToNoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DomainInvitesSetInviteNewUserPrefToNoDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = DomainInvitesSetInviteNewUserPrefToNoDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DomainInvitesSetInviteNewUserPrefToNoDetails {})
     }
 }
 
@@ -9470,17 +9358,9 @@ impl DomainInvitesSetInviteNewUserPrefToYesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<DomainInvitesSetInviteNewUserPrefToYesDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = DomainInvitesSetInviteNewUserPrefToYesDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(DomainInvitesSetInviteNewUserPrefToYesDetails {})
     }
 }
 
@@ -10367,17 +10247,9 @@ impl EmmAddExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<EmmAddExceptionDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = EmmAddExceptionDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(EmmAddExceptionDetails {})
     }
 }
 
@@ -10712,17 +10584,9 @@ impl EmmCreateExceptionsReportDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<EmmCreateExceptionsReportDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = EmmCreateExceptionsReportDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(EmmCreateExceptionsReportDetails {})
     }
 }
 
@@ -10859,17 +10723,9 @@ impl EmmCreateUsageReportDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<EmmCreateUsageReportDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = EmmCreateUsageReportDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(EmmCreateUsageReportDetails {})
     }
 }
 
@@ -11186,17 +11042,9 @@ impl EmmRefreshAuthTokenDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<EmmRefreshAuthTokenDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = EmmRefreshAuthTokenDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(EmmRefreshAuthTokenDetails {})
     }
 }
 
@@ -11333,17 +11181,9 @@ impl EmmRemoveExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<EmmRemoveExceptionDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = EmmRemoveExceptionDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(EmmRemoveExceptionDetails {})
     }
 }
 
@@ -11480,17 +11320,9 @@ impl EnabledDomainInvitesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<EnabledDomainInvitesDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = EnabledDomainInvitesDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(EnabledDomainInvitesDetails {})
     }
 }
 
@@ -11807,17 +11639,9 @@ impl EndedEnterpriseAdminSessionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<EndedEnterpriseAdminSessionDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = EndedEnterpriseAdminSessionDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(EndedEnterpriseAdminSessionDetails {})
     }
 }
 
@@ -20610,17 +20434,9 @@ impl ExportMembersReportDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ExportMembersReportDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = ExportMembersReportDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(ExportMembersReportDetails {})
     }
 }
 
@@ -21925,17 +21741,9 @@ impl FileAddDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FileAddDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FileAddDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FileAddDetails {})
     }
 }
 
@@ -22956,17 +22764,9 @@ impl FileDeleteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FileDeleteDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FileDeleteDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FileDeleteDetails {})
     }
 }
 
@@ -23103,17 +22903,9 @@ impl FileDownloadDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FileDownloadDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FileDownloadDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FileDownloadDetails {})
     }
 }
 
@@ -23448,17 +23240,9 @@ impl FileEditDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FileEditDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FileEditDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FileEditDetails {})
     }
 }
 
@@ -23595,17 +23379,9 @@ impl FileGetCopyReferenceDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FileGetCopyReferenceDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FileGetCopyReferenceDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FileGetCopyReferenceDetails {})
     }
 }
 
@@ -24540,17 +24316,9 @@ impl FilePermanentlyDeleteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FilePermanentlyDeleteDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FilePermanentlyDeleteDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FilePermanentlyDeleteDetails {})
     }
 }
 
@@ -24687,17 +24455,9 @@ impl FilePreviewDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FilePreviewDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FilePreviewDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FilePreviewDetails {})
     }
 }
 
@@ -26431,17 +26191,9 @@ impl FileRequestsEmailsEnabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FileRequestsEmailsEnabledDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FileRequestsEmailsEnabledDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FileRequestsEmailsEnabledDetails {})
     }
 }
 
@@ -26578,17 +26330,9 @@ impl FileRequestsEmailsRestrictedToTeamOnlyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FileRequestsEmailsRestrictedToTeamOnlyDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FileRequestsEmailsRestrictedToTeamOnlyDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FileRequestsEmailsRestrictedToTeamOnlyDetails {})
     }
 }
 
@@ -26963,17 +26707,9 @@ impl FileRestoreDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FileRestoreDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FileRestoreDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FileRestoreDetails {})
     }
 }
 
@@ -27110,17 +26846,9 @@ impl FileRevertDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FileRevertDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FileRevertDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FileRevertDetails {})
     }
 }
 
@@ -27257,17 +26985,9 @@ impl FileRollbackChangesDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<FileRollbackChangesDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = FileRollbackChangesDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(FileRollbackChangesDetails {})
     }
 }
 
@@ -31985,17 +31705,9 @@ impl GroupDescriptionUpdatedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<GroupDescriptionUpdatedDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = GroupDescriptionUpdatedDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(GroupDescriptionUpdatedDetails {})
     }
 }
 
@@ -32509,17 +32221,9 @@ impl GroupMovedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<GroupMovedDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = GroupMovedDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(GroupMovedDetails {})
     }
 }
 
@@ -32836,17 +32540,9 @@ impl GroupRemoveMemberDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<GroupRemoveMemberDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = GroupRemoveMemberDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(GroupRemoveMemberDetails {})
     }
 }
 
@@ -37360,17 +37056,9 @@ impl LogoutDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<LogoutDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = LogoutDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(LogoutDetails {})
     }
 }
 
@@ -39051,17 +38739,9 @@ impl MemberDeleteManualContactsDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MemberDeleteManualContactsDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = MemberDeleteManualContactsDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(MemberDeleteManualContactsDetails {})
     }
 }
 
@@ -39198,17 +38878,9 @@ impl MemberDeleteProfilePhotoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MemberDeleteProfilePhotoDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = MemberDeleteProfilePhotoDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(MemberDeleteProfilePhotoDetails {})
     }
 }
 
@@ -39345,17 +39017,9 @@ impl MemberPermanentlyDeleteAccountContentsDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MemberPermanentlyDeleteAccountContentsDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = MemberPermanentlyDeleteAccountContentsDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(MemberPermanentlyDeleteAccountContentsDetails {})
     }
 }
 
@@ -40044,17 +39708,9 @@ impl MemberSetProfilePhotoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MemberSetProfilePhotoDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = MemberSetProfilePhotoDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(MemberSetProfilePhotoDetails {})
     }
 }
 
@@ -40371,17 +40027,9 @@ impl MemberSpaceLimitsAddExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MemberSpaceLimitsAddExceptionDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = MemberSpaceLimitsAddExceptionDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(MemberSpaceLimitsAddExceptionDetails {})
     }
 }
 
@@ -41278,17 +40926,9 @@ impl MemberSpaceLimitsRemoveCustomQuotaDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MemberSpaceLimitsRemoveCustomQuotaDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = MemberSpaceLimitsRemoveCustomQuotaDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(MemberSpaceLimitsRemoveCustomQuotaDetails {})
     }
 }
 
@@ -41425,17 +41065,9 @@ impl MemberSpaceLimitsRemoveExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MemberSpaceLimitsRemoveExceptionDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = MemberSpaceLimitsRemoveExceptionDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(MemberSpaceLimitsRemoveExceptionDetails {})
     }
 }
 
@@ -42125,17 +41757,9 @@ impl MemberTransferAccountContentsDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<MemberTransferAccountContentsDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = MemberTransferAccountContentsDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(MemberTransferAccountContentsDetails {})
     }
 }
 
@@ -43500,17 +43124,9 @@ impl NoteAclInviteOnlyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<NoteAclInviteOnlyDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = NoteAclInviteOnlyDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(NoteAclInviteOnlyDetails {})
     }
 }
 
@@ -43647,17 +43263,9 @@ impl NoteAclLinkDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<NoteAclLinkDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = NoteAclLinkDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(NoteAclLinkDetails {})
     }
 }
 
@@ -43794,17 +43402,9 @@ impl NoteAclTeamLinkDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<NoteAclTeamLinkDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = NoteAclTeamLinkDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(NoteAclTeamLinkDetails {})
     }
 }
 
@@ -43941,17 +43541,9 @@ impl NoteShareReceiveDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<NoteShareReceiveDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = NoteShareReceiveDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(NoteShareReceiveDetails {})
     }
 }
 
@@ -44088,17 +43680,9 @@ impl NoteSharedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<NoteSharedDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = NoteSharedDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(NoteSharedDetails {})
     }
 }
 
@@ -44235,17 +43819,9 @@ impl OpenNoteSharedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<OpenNoteSharedDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = OpenNoteSharedDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(OpenNoteSharedDetails {})
     }
 }
 
@@ -44754,17 +44330,9 @@ impl PaperAdminExportStartDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<PaperAdminExportStartDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = PaperAdminExportStartDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(PaperAdminExportStartDetails {})
     }
 }
 
@@ -52077,17 +51645,9 @@ impl PaperEnabledUsersGroupAdditionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<PaperEnabledUsersGroupAdditionDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = PaperEnabledUsersGroupAdditionDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(PaperEnabledUsersGroupAdditionDetails {})
     }
 }
 
@@ -52224,17 +51784,9 @@ impl PaperEnabledUsersGroupRemovalDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<PaperEnabledUsersGroupRemovalDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = PaperEnabledUsersGroupRemovalDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(PaperEnabledUsersGroupRemovalDetails {})
     }
 }
 
@@ -54753,17 +54305,9 @@ impl PasswordChangeDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<PasswordChangeDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = PasswordChangeDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(PasswordChangeDetails {})
     }
 }
 
@@ -54900,17 +54444,9 @@ impl PasswordResetAllDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<PasswordResetAllDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = PasswordResetAllDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(PasswordResetAllDetails {})
     }
 }
 
@@ -55047,17 +54583,9 @@ impl PasswordResetDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<PasswordResetDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = PasswordResetDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(PasswordResetDetails {})
     }
 }
 
@@ -56976,17 +56504,9 @@ impl ResellerSupportSessionEndDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ResellerSupportSessionEndDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = ResellerSupportSessionEndDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(ResellerSupportSessionEndDetails {})
     }
 }
 
@@ -57123,17 +56643,9 @@ impl ResellerSupportSessionStartDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ResellerSupportSessionStartDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = ResellerSupportSessionStartDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(ResellerSupportSessionStartDetails {})
     }
 }
 
@@ -61441,17 +60953,9 @@ impl SharedContentAddLinkPasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentAddLinkPasswordDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SharedContentAddLinkPasswordDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SharedContentAddLinkPasswordDetails {})
     }
 }
 
@@ -62559,17 +62063,9 @@ impl SharedContentChangeLinkPasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentChangeLinkPasswordDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SharedContentChangeLinkPasswordDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SharedContentChangeLinkPasswordDetails {})
     }
 }
 
@@ -63715,17 +63211,9 @@ impl SharedContentRelinquishMembershipDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentRelinquishMembershipDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SharedContentRelinquishMembershipDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SharedContentRelinquishMembershipDetails {})
     }
 }
 
@@ -64210,17 +63698,9 @@ impl SharedContentRemoveLinkPasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentRemoveLinkPasswordDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SharedContentRemoveLinkPasswordDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SharedContentRemoveLinkPasswordDetails {})
     }
 }
 
@@ -65069,17 +64549,9 @@ impl SharedContentUnshareDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedContentUnshareDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SharedContentUnshareDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SharedContentUnshareDetails {})
     }
 }
 
@@ -66393,17 +65865,9 @@ impl SharedFolderDeclineInvitationDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedFolderDeclineInvitationDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SharedFolderDeclineInvitationDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SharedFolderDeclineInvitationDetails {})
     }
 }
 
@@ -66610,17 +66074,9 @@ impl SharedFolderMountDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedFolderMountDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SharedFolderMountDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SharedFolderMountDetails {})
     }
 }
 
@@ -67162,17 +66618,9 @@ impl SharedFolderUnmountDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedFolderUnmountDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SharedFolderUnmountDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SharedFolderUnmountDetails {})
     }
 }
 
@@ -70947,17 +70395,9 @@ impl SharedNoteOpenedDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SharedNoteOpenedDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SharedNoteOpenedDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SharedNoteOpenedDetails {})
     }
 }
 
@@ -71923,17 +71363,9 @@ impl ShmodelGroupShareDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ShmodelGroupShareDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = ShmodelGroupShareDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(ShmodelGroupShareDetails {})
     }
 }
 
@@ -77389,17 +76821,9 @@ impl SignInAsSessionEndDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SignInAsSessionEndDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SignInAsSessionEndDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SignInAsSessionEndDetails {})
     }
 }
 
@@ -77536,17 +76960,9 @@ impl SignInAsSessionStartDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SignInAsSessionStartDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SignInAsSessionStartDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SignInAsSessionStartDetails {})
     }
 }
 
@@ -77864,17 +77280,9 @@ impl SmartSyncCreateAdminPrivilegeReportDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SmartSyncCreateAdminPrivilegeReportDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SmartSyncCreateAdminPrivilegeReportDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SmartSyncCreateAdminPrivilegeReportDetails {})
     }
 }
 
@@ -80496,17 +79904,9 @@ impl SsoRemoveCertDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<SsoRemoveCertDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = SsoRemoveCertDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(SsoRemoveCertDetails {})
     }
 }
 
@@ -82362,17 +81762,9 @@ impl TeamFolderCreateDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TeamFolderCreateDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TeamFolderCreateDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TeamFolderCreateDetails {})
     }
 }
 
@@ -82689,17 +82081,9 @@ impl TeamFolderPermanentlyDeleteDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TeamFolderPermanentlyDeleteDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TeamFolderPermanentlyDeleteDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TeamFolderPermanentlyDeleteDetails {})
     }
 }
 
@@ -87493,17 +86877,9 @@ impl TeamProfileAddLogoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TeamProfileAddLogoDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TeamProfileAddLogoDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TeamProfileAddLogoDetails {})
     }
 }
 
@@ -87836,17 +87212,9 @@ impl TeamProfileChangeLogoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TeamProfileChangeLogoDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TeamProfileChangeLogoDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TeamProfileChangeLogoDetails {})
     }
 }
 
@@ -88181,17 +87549,9 @@ impl TeamProfileRemoveLogoDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TeamProfileRemoveLogoDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TeamProfileRemoveLogoDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TeamProfileRemoveLogoDetails {})
     }
 }
 
@@ -88790,17 +88150,9 @@ impl TfaAddBackupPhoneDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TfaAddBackupPhoneDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TfaAddBackupPhoneDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TfaAddBackupPhoneDetails {})
     }
 }
 
@@ -88937,17 +88289,9 @@ impl TfaAddExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TfaAddExceptionDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TfaAddExceptionDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TfaAddExceptionDetails {})
     }
 }
 
@@ -89084,17 +88428,9 @@ impl TfaAddSecurityKeyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TfaAddSecurityKeyDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TfaAddSecurityKeyDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TfaAddSecurityKeyDetails {})
     }
 }
 
@@ -89231,17 +88567,9 @@ impl TfaChangeBackupPhoneDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TfaChangeBackupPhoneDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TfaChangeBackupPhoneDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TfaChangeBackupPhoneDetails {})
     }
 }
 
@@ -89891,17 +89219,9 @@ impl TfaRemoveBackupPhoneDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TfaRemoveBackupPhoneDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TfaRemoveBackupPhoneDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TfaRemoveBackupPhoneDetails {})
     }
 }
 
@@ -90038,17 +89358,9 @@ impl TfaRemoveExceptionDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TfaRemoveExceptionDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TfaRemoveExceptionDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TfaRemoveExceptionDetails {})
     }
 }
 
@@ -90185,17 +89497,9 @@ impl TfaRemoveSecurityKeyDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TfaRemoveSecurityKeyDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TfaRemoveSecurityKeyDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TfaRemoveSecurityKeyDetails {})
     }
 }
 
@@ -90332,17 +89636,9 @@ impl TfaResetDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<TfaResetDetails, V::Error> {
-        while let Some(key) = map.next_key::<&str>()? {
-            match key {
-                _ => {
-                    // unknown field allowed and ignored
-                    map.next_value::<::serde_json::Value>()?;
-                }
-            }
-        }
-        let result = TfaResetDetails {
-        };
-        Ok(result)
+        // ignore any fields found; none are presently recognized
+        crate::eat_json_fields(&mut map)?;
+        Ok(TfaResetDetails {})
     }
 }
 
