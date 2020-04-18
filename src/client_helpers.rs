@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Dropbox, Inc.
+// Copyright (c) 2019-2020 Dropbox, Inc.
 
 use std::fmt::Debug;
 use std::marker::PhantomData;
@@ -6,7 +6,6 @@ use crate::{Error, ErrorKind, ResultExt};
 use crate::client_trait::*;
 use serde::de::{self, Deserialize, DeserializeOwned, Deserializer, MapAccess, Visitor};
 use serde::ser::Serialize;
-use serde_json;
 
 // When Dropbox returns an error with HTTP 409, it uses an implicit JSON object with the following
 // structure, which contains the acutal error as a field.
