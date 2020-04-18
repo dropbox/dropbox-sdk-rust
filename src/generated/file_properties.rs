@@ -300,7 +300,8 @@ pub fn templates_update_for_user(
 pub struct AddPropertiesArg {
     /// A unique identifier for the file or folder.
     pub path: PathOrId,
-    /// The property groups which are to be added to a Dropbox file.
+    /// The property groups which are to be added to a Dropbox file. No two groups in the input
+    /// should  refer to the same template.
     pub property_groups: Vec<PropertyGroup>,
 }
 
@@ -412,6 +413,8 @@ pub enum AddPropertiesError {
     PropertyFieldTooLarge,
     /// One or more of the supplied property fields does not conform to the template specifications.
     DoesNotFitTemplate,
+    /// There are 2 or more property groups referring to the same templates in the input.
+    DuplicatePropertyGroups,
     /// A property group associated with this template and file already exists.
     PropertyGroupAlreadyExists,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -465,6 +468,10 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPropertiesError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(AddPropertiesError::DoesNotFitTemplate)
                     }
+                    "duplicate_property_groups" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(AddPropertiesError::DuplicatePropertyGroups)
+                    }
                     "property_group_already_exists" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(AddPropertiesError::PropertyGroupAlreadyExists)
@@ -483,6 +490,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPropertiesError {
                                     "unsupported_folder",
                                     "property_field_too_large",
                                     "does_not_fit_template",
+                                    "duplicate_property_groups",
                                     "property_group_already_exists"];
         deserializer.deserialize_struct("AddPropertiesError", VARIANTS, EnumVisitor)
     }
@@ -529,6 +537,12 @@ impl ::serde::ser::Serialize for AddPropertiesError {
                 // unit
                 let mut s = serializer.serialize_struct("AddPropertiesError", 1)?;
                 s.serialize_field(".tag", "does_not_fit_template")?;
+                s.end()
+            }
+            AddPropertiesError::DuplicatePropertyGroups => {
+                // unit
+                let mut s = serializer.serialize_struct("AddPropertiesError", 1)?;
+                s.serialize_field(".tag", "duplicate_property_groups")?;
                 s.end()
             }
             AddPropertiesError::PropertyGroupAlreadyExists => {
@@ -985,6 +999,8 @@ pub enum InvalidPropertyGroupError {
     PropertyFieldTooLarge,
     /// One or more of the supplied property fields does not conform to the template specifications.
     DoesNotFitTemplate,
+    /// There are 2 or more property groups referring to the same templates in the input.
+    DuplicatePropertyGroups,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -1036,6 +1052,10 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(InvalidPropertyGroupError::DoesNotFitTemplate)
                     }
+                    "duplicate_property_groups" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(InvalidPropertyGroupError::DuplicatePropertyGroups)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(InvalidPropertyGroupError::Other)
@@ -1049,7 +1069,8 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
                                     "path",
                                     "unsupported_folder",
                                     "property_field_too_large",
-                                    "does_not_fit_template"];
+                                    "does_not_fit_template",
+                                    "duplicate_property_groups"];
         deserializer.deserialize_struct("InvalidPropertyGroupError", VARIANTS, EnumVisitor)
     }
 }
@@ -1095,6 +1116,12 @@ impl ::serde::ser::Serialize for InvalidPropertyGroupError {
                 // unit
                 let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 1)?;
                 s.serialize_field(".tag", "does_not_fit_template")?;
+                s.end()
+            }
+            InvalidPropertyGroupError::DuplicatePropertyGroups => {
+                // unit
+                let mut s = serializer.serialize_struct("InvalidPropertyGroupError", 1)?;
+                s.serialize_field(".tag", "duplicate_property_groups")?;
                 s.end()
             }
             InvalidPropertyGroupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -1605,7 +1632,8 @@ impl ::std::fmt::Display for ModifyTemplateError {
 pub struct OverwritePropertyGroupArg {
     /// A unique identifier for the file or folder.
     pub path: PathOrId,
-    /// The property groups "snapshot" updates to force apply.
+    /// The property groups "snapshot" updates to force apply. No two groups in the input should
+    /// refer to the same template.
     pub property_groups: Vec<PropertyGroup>,
 }
 
@@ -3967,6 +3995,8 @@ pub enum UpdatePropertiesError {
     PropertyFieldTooLarge,
     /// One or more of the supplied property fields does not conform to the template specifications.
     DoesNotFitTemplate,
+    /// There are 2 or more property groups referring to the same templates in the input.
+    DuplicatePropertyGroups,
     PropertyGroupLookup(LookUpPropertiesError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -4019,6 +4049,10 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(UpdatePropertiesError::DoesNotFitTemplate)
                     }
+                    "duplicate_property_groups" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UpdatePropertiesError::DuplicatePropertyGroups)
+                    }
                     "property_group_lookup" => {
                         match map.next_key()? {
                             Some("property_group_lookup") => Ok(UpdatePropertiesError::PropertyGroupLookup(map.next_value()?)),
@@ -4040,6 +4074,7 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {
                                     "unsupported_folder",
                                     "property_field_too_large",
                                     "does_not_fit_template",
+                                    "duplicate_property_groups",
                                     "property_group_lookup"];
         deserializer.deserialize_struct("UpdatePropertiesError", VARIANTS, EnumVisitor)
     }
@@ -4086,6 +4121,12 @@ impl ::serde::ser::Serialize for UpdatePropertiesError {
                 // unit
                 let mut s = serializer.serialize_struct("UpdatePropertiesError", 1)?;
                 s.serialize_field(".tag", "does_not_fit_template")?;
+                s.end()
+            }
+            UpdatePropertiesError::DuplicatePropertyGroups => {
+                // unit
+                let mut s = serializer.serialize_struct("UpdatePropertiesError", 1)?;
+                s.serialize_field(".tag", "duplicate_property_groups")?;
                 s.end()
             }
             UpdatePropertiesError::PropertyGroupLookup(ref x) => {

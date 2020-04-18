@@ -15,9 +15,12 @@ pub type NamespaceId = String;
 pub type RequestId = String;
 pub type TeamEventList = Vec<TeamEvent>;
 
-/// Retrieves team events. Events have a lifespan of two years. Events older than two years will not
-/// be returned. Many attributes note 'may be missing due to historical data gap'. Note that the
-/// file_operations category and & analogous paper events are not available on all Dropbox Business
+/// Retrieves team events. If the result's [`GetTeamEventsResult::has_more`](GetTeamEventsResult)
+/// field is `true`, call [`get_events_continue()`](get_events_continue) with the returned cursor to
+/// retrieve more entries. If end_time is not specified in your request, you may use the returned
+/// cursor to poll [`get_events_continue()`](get_events_continue) for new events. Many attributes
+/// note 'may be missing due to historical data gap'. Note that the file_operations category and &
+/// analogous paper events are not available on all Dropbox Business
 /// [plans](/business/plans-comparison). Use
 /// [features/get_values](/developers/documentation/http/teams#team-features-get_values) to check
 /// for this feature. Permission : Team Auditing.
@@ -1343,6 +1346,268 @@ impl ::serde::ser::Serialize for AccountCaptureRelinquishAccountType {
     }
 }
 
+/// Unlocked/locked account after failed sign in attempts.
+#[derive(Debug)]
+pub struct AccountLockOrUnlockedDetails {
+    /// The previous account status.
+    pub previous_value: AccountState,
+    /// The new account status.
+    pub new_value: AccountState,
+}
+
+impl AccountLockOrUnlockedDetails {
+    pub fn new(previous_value: AccountState, new_value: AccountState) -> Self {
+        AccountLockOrUnlockedDetails {
+            previous_value,
+            new_value,
+        }
+    }
+
+}
+
+const ACCOUNT_LOCK_OR_UNLOCKED_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                           "new_value"];
+impl AccountLockOrUnlockedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<AccountLockOrUnlockedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<AccountLockOrUnlockedDetails>, V::Error> {
+        let mut field_previous_value = None;
+        let mut field_new_value = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = AccountLockOrUnlockedDetails {
+            previous_value: field_previous_value.ok_or_else(|| ::serde::de::Error::missing_field("previous_value"))?,
+            new_value: field_new_value.ok_or_else(|| ::serde::de::Error::missing_field("new_value"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("previous_value", &self.previous_value)?;
+        s.serialize_field("new_value", &self.new_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AccountLockOrUnlockedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = AccountLockOrUnlockedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a AccountLockOrUnlockedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                AccountLockOrUnlockedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("AccountLockOrUnlockedDetails", ACCOUNT_LOCK_OR_UNLOCKED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AccountLockOrUnlockedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("AccountLockOrUnlockedDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct AccountLockOrUnlockedType {
+    pub description: String,
+}
+
+impl AccountLockOrUnlockedType {
+    pub fn new(description: String) -> Self {
+        AccountLockOrUnlockedType {
+            description,
+        }
+    }
+
+}
+
+const ACCOUNT_LOCK_OR_UNLOCKED_TYPE_FIELDS: &[&str] = &["description"];
+impl AccountLockOrUnlockedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<AccountLockOrUnlockedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<AccountLockOrUnlockedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = AccountLockOrUnlockedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AccountLockOrUnlockedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = AccountLockOrUnlockedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a AccountLockOrUnlockedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                AccountLockOrUnlockedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("AccountLockOrUnlockedType", ACCOUNT_LOCK_OR_UNLOCKED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AccountLockOrUnlockedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("AccountLockOrUnlockedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum AccountState {
+    Locked,
+    Unlocked,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for AccountState {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = AccountState;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a AccountState structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "locked" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(AccountState::Locked)
+                    }
+                    "unlocked" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(AccountState::Unlocked)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(AccountState::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["locked",
+                                    "unlocked",
+                                    "other"];
+        deserializer.deserialize_struct("AccountState", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for AccountState {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            AccountState::Locked => {
+                // unit
+                let mut s = serializer.serialize_struct("AccountState", 1)?;
+                s.serialize_field(".tag", "locked")?;
+                s.end()
+            }
+            AccountState::Unlocked => {
+                // unit
+                let mut s = serializer.serialize_struct("AccountState", 1)?;
+                s.serialize_field(".tag", "unlocked")?;
+                s.end()
+            }
+            AccountState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Additional information indicating the action taken that caused status change.
 #[derive(Debug)]
 pub enum ActionDetails {
@@ -1350,6 +1615,8 @@ pub enum ActionDetails {
     TeamJoinDetails(JoinTeamDetails),
     /// Define how the user was removed from the team.
     RemoveAction(MemberRemoveActionType),
+    /// Additional information relevant when someone is invited to the team.
+    TeamInviteDetails(TeamInviteDetails),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -1379,6 +1646,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ActionDetails {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "team_invite_details" => Ok(ActionDetails::TeamInviteDetails(TeamInviteDetails::internal_deserialize(map)?)),
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(ActionDetails::Other)
@@ -1388,6 +1656,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ActionDetails {
         }
         const VARIANTS: &[&str] = &["team_join_details",
                                     "remove_action",
+                                    "team_invite_details",
                                     "other"];
         deserializer.deserialize_struct("ActionDetails", VARIANTS, EnumVisitor)
     }
@@ -1400,7 +1669,7 @@ impl ::serde::ser::Serialize for ActionDetails {
         match *self {
             ActionDetails::TeamJoinDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("ActionDetails", 7)?;
+                let mut s = serializer.serialize_struct("ActionDetails", 10)?;
                 s.serialize_field(".tag", "team_join_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -1410,6 +1679,13 @@ impl ::serde::ser::Serialize for ActionDetails {
                 let mut s = serializer.serialize_struct("ActionDetails", 2)?;
                 s.serialize_field(".tag", "remove_action")?;
                 s.serialize_field("remove_action", x)?;
+                s.end()
+            }
+            ActionDetails::TeamInviteDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("ActionDetails", 2)?;
+                s.serialize_field(".tag", "team_invite_details")?;
+                x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             ActionDetails::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -2881,14 +3157,14 @@ impl ::serde::ser::Serialize for AssetLogInfo {
         match *self {
             AssetLogInfo::File(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("AssetLogInfo", 4)?;
+                let mut s = serializer.serialize_struct("AssetLogInfo", 5)?;
                 s.serialize_field(".tag", "file")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             AssetLogInfo::Folder(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("AssetLogInfo", 4)?;
+                let mut s = serializer.serialize_struct("AssetLogInfo", 6)?;
                 s.serialize_field(".tag", "folder")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -2916,6 +3192,1690 @@ impl ::serde::ser::Serialize for AssetLogInfo {
             }
             AssetLogInfo::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
+    }
+}
+
+/// Added Binder page.
+#[derive(Debug)]
+pub struct BinderAddPageDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+    /// Title of the Binder doc.
+    pub doc_title: String,
+    /// Name of the Binder page/section.
+    pub binder_item_name: String,
+}
+
+impl BinderAddPageDetails {
+    pub fn new(event_uuid: String, doc_title: String, binder_item_name: String) -> Self {
+        BinderAddPageDetails {
+            event_uuid,
+            doc_title,
+            binder_item_name,
+        }
+    }
+
+}
+
+const BINDER_ADD_PAGE_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                  "doc_title",
+                                                  "binder_item_name"];
+impl BinderAddPageDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderAddPageDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderAddPageDetails>, V::Error> {
+        let mut field_event_uuid = None;
+        let mut field_doc_title = None;
+        let mut field_binder_item_name = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                "doc_title" => {
+                    if field_doc_title.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("doc_title"));
+                    }
+                    field_doc_title = Some(map.next_value()?);
+                }
+                "binder_item_name" => {
+                    if field_binder_item_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("binder_item_name"));
+                    }
+                    field_binder_item_name = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderAddPageDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| ::serde::de::Error::missing_field("event_uuid"))?,
+            doc_title: field_doc_title.ok_or_else(|| ::serde::de::Error::missing_field("doc_title"))?,
+            binder_item_name: field_binder_item_name.ok_or_else(|| ::serde::de::Error::missing_field("binder_item_name"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)?;
+        s.serialize_field("doc_title", &self.doc_title)?;
+        s.serialize_field("binder_item_name", &self.binder_item_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderAddPageDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderAddPageDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderAddPageDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderAddPageDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderAddPageDetails", BINDER_ADD_PAGE_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderAddPageDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderAddPageDetails", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct BinderAddPageType {
+    pub description: String,
+}
+
+impl BinderAddPageType {
+    pub fn new(description: String) -> Self {
+        BinderAddPageType {
+            description,
+        }
+    }
+
+}
+
+const BINDER_ADD_PAGE_TYPE_FIELDS: &[&str] = &["description"];
+impl BinderAddPageType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderAddPageType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderAddPageType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderAddPageType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderAddPageType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderAddPageType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderAddPageType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderAddPageType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderAddPageType", BINDER_ADD_PAGE_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderAddPageType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderAddPageType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Added Binder section.
+#[derive(Debug)]
+pub struct BinderAddSectionDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+    /// Title of the Binder doc.
+    pub doc_title: String,
+    /// Name of the Binder page/section.
+    pub binder_item_name: String,
+}
+
+impl BinderAddSectionDetails {
+    pub fn new(event_uuid: String, doc_title: String, binder_item_name: String) -> Self {
+        BinderAddSectionDetails {
+            event_uuid,
+            doc_title,
+            binder_item_name,
+        }
+    }
+
+}
+
+const BINDER_ADD_SECTION_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                     "doc_title",
+                                                     "binder_item_name"];
+impl BinderAddSectionDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderAddSectionDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderAddSectionDetails>, V::Error> {
+        let mut field_event_uuid = None;
+        let mut field_doc_title = None;
+        let mut field_binder_item_name = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                "doc_title" => {
+                    if field_doc_title.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("doc_title"));
+                    }
+                    field_doc_title = Some(map.next_value()?);
+                }
+                "binder_item_name" => {
+                    if field_binder_item_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("binder_item_name"));
+                    }
+                    field_binder_item_name = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderAddSectionDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| ::serde::de::Error::missing_field("event_uuid"))?,
+            doc_title: field_doc_title.ok_or_else(|| ::serde::de::Error::missing_field("doc_title"))?,
+            binder_item_name: field_binder_item_name.ok_or_else(|| ::serde::de::Error::missing_field("binder_item_name"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)?;
+        s.serialize_field("doc_title", &self.doc_title)?;
+        s.serialize_field("binder_item_name", &self.binder_item_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderAddSectionDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderAddSectionDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderAddSectionDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderAddSectionDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderAddSectionDetails", BINDER_ADD_SECTION_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderAddSectionDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderAddSectionDetails", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct BinderAddSectionType {
+    pub description: String,
+}
+
+impl BinderAddSectionType {
+    pub fn new(description: String) -> Self {
+        BinderAddSectionType {
+            description,
+        }
+    }
+
+}
+
+const BINDER_ADD_SECTION_TYPE_FIELDS: &[&str] = &["description"];
+impl BinderAddSectionType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderAddSectionType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderAddSectionType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderAddSectionType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderAddSectionType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderAddSectionType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderAddSectionType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderAddSectionType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderAddSectionType", BINDER_ADD_SECTION_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderAddSectionType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderAddSectionType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Removed Binder page.
+#[derive(Debug)]
+pub struct BinderRemovePageDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+    /// Title of the Binder doc.
+    pub doc_title: String,
+    /// Name of the Binder page/section.
+    pub binder_item_name: String,
+}
+
+impl BinderRemovePageDetails {
+    pub fn new(event_uuid: String, doc_title: String, binder_item_name: String) -> Self {
+        BinderRemovePageDetails {
+            event_uuid,
+            doc_title,
+            binder_item_name,
+        }
+    }
+
+}
+
+const BINDER_REMOVE_PAGE_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                     "doc_title",
+                                                     "binder_item_name"];
+impl BinderRemovePageDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderRemovePageDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderRemovePageDetails>, V::Error> {
+        let mut field_event_uuid = None;
+        let mut field_doc_title = None;
+        let mut field_binder_item_name = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                "doc_title" => {
+                    if field_doc_title.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("doc_title"));
+                    }
+                    field_doc_title = Some(map.next_value()?);
+                }
+                "binder_item_name" => {
+                    if field_binder_item_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("binder_item_name"));
+                    }
+                    field_binder_item_name = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderRemovePageDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| ::serde::de::Error::missing_field("event_uuid"))?,
+            doc_title: field_doc_title.ok_or_else(|| ::serde::de::Error::missing_field("doc_title"))?,
+            binder_item_name: field_binder_item_name.ok_or_else(|| ::serde::de::Error::missing_field("binder_item_name"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)?;
+        s.serialize_field("doc_title", &self.doc_title)?;
+        s.serialize_field("binder_item_name", &self.binder_item_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderRemovePageDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderRemovePageDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderRemovePageDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderRemovePageDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderRemovePageDetails", BINDER_REMOVE_PAGE_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderRemovePageDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderRemovePageDetails", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct BinderRemovePageType {
+    pub description: String,
+}
+
+impl BinderRemovePageType {
+    pub fn new(description: String) -> Self {
+        BinderRemovePageType {
+            description,
+        }
+    }
+
+}
+
+const BINDER_REMOVE_PAGE_TYPE_FIELDS: &[&str] = &["description"];
+impl BinderRemovePageType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderRemovePageType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderRemovePageType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderRemovePageType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderRemovePageType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderRemovePageType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderRemovePageType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderRemovePageType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderRemovePageType", BINDER_REMOVE_PAGE_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderRemovePageType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderRemovePageType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Removed Binder section.
+#[derive(Debug)]
+pub struct BinderRemoveSectionDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+    /// Title of the Binder doc.
+    pub doc_title: String,
+    /// Name of the Binder page/section.
+    pub binder_item_name: String,
+}
+
+impl BinderRemoveSectionDetails {
+    pub fn new(event_uuid: String, doc_title: String, binder_item_name: String) -> Self {
+        BinderRemoveSectionDetails {
+            event_uuid,
+            doc_title,
+            binder_item_name,
+        }
+    }
+
+}
+
+const BINDER_REMOVE_SECTION_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                        "doc_title",
+                                                        "binder_item_name"];
+impl BinderRemoveSectionDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderRemoveSectionDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderRemoveSectionDetails>, V::Error> {
+        let mut field_event_uuid = None;
+        let mut field_doc_title = None;
+        let mut field_binder_item_name = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                "doc_title" => {
+                    if field_doc_title.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("doc_title"));
+                    }
+                    field_doc_title = Some(map.next_value()?);
+                }
+                "binder_item_name" => {
+                    if field_binder_item_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("binder_item_name"));
+                    }
+                    field_binder_item_name = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderRemoveSectionDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| ::serde::de::Error::missing_field("event_uuid"))?,
+            doc_title: field_doc_title.ok_or_else(|| ::serde::de::Error::missing_field("doc_title"))?,
+            binder_item_name: field_binder_item_name.ok_or_else(|| ::serde::de::Error::missing_field("binder_item_name"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)?;
+        s.serialize_field("doc_title", &self.doc_title)?;
+        s.serialize_field("binder_item_name", &self.binder_item_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderRemoveSectionDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderRemoveSectionDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderRemoveSectionDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderRemoveSectionDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderRemoveSectionDetails", BINDER_REMOVE_SECTION_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderRemoveSectionDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderRemoveSectionDetails", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct BinderRemoveSectionType {
+    pub description: String,
+}
+
+impl BinderRemoveSectionType {
+    pub fn new(description: String) -> Self {
+        BinderRemoveSectionType {
+            description,
+        }
+    }
+
+}
+
+const BINDER_REMOVE_SECTION_TYPE_FIELDS: &[&str] = &["description"];
+impl BinderRemoveSectionType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderRemoveSectionType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderRemoveSectionType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderRemoveSectionType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderRemoveSectionType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderRemoveSectionType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderRemoveSectionType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderRemoveSectionType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderRemoveSectionType", BINDER_REMOVE_SECTION_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderRemoveSectionType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderRemoveSectionType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Renamed Binder page.
+#[derive(Debug)]
+pub struct BinderRenamePageDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+    /// Title of the Binder doc.
+    pub doc_title: String,
+    /// Name of the Binder page/section.
+    pub binder_item_name: String,
+    /// Previous name of the Binder page/section.
+    pub previous_binder_item_name: Option<String>,
+}
+
+impl BinderRenamePageDetails {
+    pub fn new(event_uuid: String, doc_title: String, binder_item_name: String) -> Self {
+        BinderRenamePageDetails {
+            event_uuid,
+            doc_title,
+            binder_item_name,
+            previous_binder_item_name: None,
+        }
+    }
+
+    pub fn with_previous_binder_item_name(mut self, value: Option<String>) -> Self {
+        self.previous_binder_item_name = value;
+        self
+    }
+
+}
+
+const BINDER_RENAME_PAGE_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                     "doc_title",
+                                                     "binder_item_name",
+                                                     "previous_binder_item_name"];
+impl BinderRenamePageDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderRenamePageDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderRenamePageDetails>, V::Error> {
+        let mut field_event_uuid = None;
+        let mut field_doc_title = None;
+        let mut field_binder_item_name = None;
+        let mut field_previous_binder_item_name = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                "doc_title" => {
+                    if field_doc_title.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("doc_title"));
+                    }
+                    field_doc_title = Some(map.next_value()?);
+                }
+                "binder_item_name" => {
+                    if field_binder_item_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("binder_item_name"));
+                    }
+                    field_binder_item_name = Some(map.next_value()?);
+                }
+                "previous_binder_item_name" => {
+                    if field_previous_binder_item_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("previous_binder_item_name"));
+                    }
+                    field_previous_binder_item_name = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderRenamePageDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| ::serde::de::Error::missing_field("event_uuid"))?,
+            doc_title: field_doc_title.ok_or_else(|| ::serde::de::Error::missing_field("doc_title"))?,
+            binder_item_name: field_binder_item_name.ok_or_else(|| ::serde::de::Error::missing_field("binder_item_name"))?,
+            previous_binder_item_name: field_previous_binder_item_name,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)?;
+        s.serialize_field("doc_title", &self.doc_title)?;
+        s.serialize_field("binder_item_name", &self.binder_item_name)?;
+        s.serialize_field("previous_binder_item_name", &self.previous_binder_item_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderRenamePageDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderRenamePageDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderRenamePageDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderRenamePageDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderRenamePageDetails", BINDER_RENAME_PAGE_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderRenamePageDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderRenamePageDetails", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct BinderRenamePageType {
+    pub description: String,
+}
+
+impl BinderRenamePageType {
+    pub fn new(description: String) -> Self {
+        BinderRenamePageType {
+            description,
+        }
+    }
+
+}
+
+const BINDER_RENAME_PAGE_TYPE_FIELDS: &[&str] = &["description"];
+impl BinderRenamePageType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderRenamePageType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderRenamePageType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderRenamePageType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderRenamePageType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderRenamePageType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderRenamePageType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderRenamePageType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderRenamePageType", BINDER_RENAME_PAGE_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderRenamePageType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderRenamePageType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Renamed Binder section.
+#[derive(Debug)]
+pub struct BinderRenameSectionDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+    /// Title of the Binder doc.
+    pub doc_title: String,
+    /// Name of the Binder page/section.
+    pub binder_item_name: String,
+    /// Previous name of the Binder page/section.
+    pub previous_binder_item_name: Option<String>,
+}
+
+impl BinderRenameSectionDetails {
+    pub fn new(event_uuid: String, doc_title: String, binder_item_name: String) -> Self {
+        BinderRenameSectionDetails {
+            event_uuid,
+            doc_title,
+            binder_item_name,
+            previous_binder_item_name: None,
+        }
+    }
+
+    pub fn with_previous_binder_item_name(mut self, value: Option<String>) -> Self {
+        self.previous_binder_item_name = value;
+        self
+    }
+
+}
+
+const BINDER_RENAME_SECTION_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                        "doc_title",
+                                                        "binder_item_name",
+                                                        "previous_binder_item_name"];
+impl BinderRenameSectionDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderRenameSectionDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderRenameSectionDetails>, V::Error> {
+        let mut field_event_uuid = None;
+        let mut field_doc_title = None;
+        let mut field_binder_item_name = None;
+        let mut field_previous_binder_item_name = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                "doc_title" => {
+                    if field_doc_title.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("doc_title"));
+                    }
+                    field_doc_title = Some(map.next_value()?);
+                }
+                "binder_item_name" => {
+                    if field_binder_item_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("binder_item_name"));
+                    }
+                    field_binder_item_name = Some(map.next_value()?);
+                }
+                "previous_binder_item_name" => {
+                    if field_previous_binder_item_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("previous_binder_item_name"));
+                    }
+                    field_previous_binder_item_name = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderRenameSectionDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| ::serde::de::Error::missing_field("event_uuid"))?,
+            doc_title: field_doc_title.ok_or_else(|| ::serde::de::Error::missing_field("doc_title"))?,
+            binder_item_name: field_binder_item_name.ok_or_else(|| ::serde::de::Error::missing_field("binder_item_name"))?,
+            previous_binder_item_name: field_previous_binder_item_name,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)?;
+        s.serialize_field("doc_title", &self.doc_title)?;
+        s.serialize_field("binder_item_name", &self.binder_item_name)?;
+        s.serialize_field("previous_binder_item_name", &self.previous_binder_item_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderRenameSectionDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderRenameSectionDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderRenameSectionDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderRenameSectionDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderRenameSectionDetails", BINDER_RENAME_SECTION_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderRenameSectionDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderRenameSectionDetails", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct BinderRenameSectionType {
+    pub description: String,
+}
+
+impl BinderRenameSectionType {
+    pub fn new(description: String) -> Self {
+        BinderRenameSectionType {
+            description,
+        }
+    }
+
+}
+
+const BINDER_RENAME_SECTION_TYPE_FIELDS: &[&str] = &["description"];
+impl BinderRenameSectionType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderRenameSectionType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderRenameSectionType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderRenameSectionType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderRenameSectionType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderRenameSectionType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderRenameSectionType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderRenameSectionType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderRenameSectionType", BINDER_RENAME_SECTION_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderRenameSectionType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderRenameSectionType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Reordered Binder page.
+#[derive(Debug)]
+pub struct BinderReorderPageDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+    /// Title of the Binder doc.
+    pub doc_title: String,
+    /// Name of the Binder page/section.
+    pub binder_item_name: String,
+}
+
+impl BinderReorderPageDetails {
+    pub fn new(event_uuid: String, doc_title: String, binder_item_name: String) -> Self {
+        BinderReorderPageDetails {
+            event_uuid,
+            doc_title,
+            binder_item_name,
+        }
+    }
+
+}
+
+const BINDER_REORDER_PAGE_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                      "doc_title",
+                                                      "binder_item_name"];
+impl BinderReorderPageDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderReorderPageDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderReorderPageDetails>, V::Error> {
+        let mut field_event_uuid = None;
+        let mut field_doc_title = None;
+        let mut field_binder_item_name = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                "doc_title" => {
+                    if field_doc_title.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("doc_title"));
+                    }
+                    field_doc_title = Some(map.next_value()?);
+                }
+                "binder_item_name" => {
+                    if field_binder_item_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("binder_item_name"));
+                    }
+                    field_binder_item_name = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderReorderPageDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| ::serde::de::Error::missing_field("event_uuid"))?,
+            doc_title: field_doc_title.ok_or_else(|| ::serde::de::Error::missing_field("doc_title"))?,
+            binder_item_name: field_binder_item_name.ok_or_else(|| ::serde::de::Error::missing_field("binder_item_name"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)?;
+        s.serialize_field("doc_title", &self.doc_title)?;
+        s.serialize_field("binder_item_name", &self.binder_item_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderReorderPageDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderReorderPageDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderReorderPageDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderReorderPageDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderReorderPageDetails", BINDER_REORDER_PAGE_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderReorderPageDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderReorderPageDetails", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct BinderReorderPageType {
+    pub description: String,
+}
+
+impl BinderReorderPageType {
+    pub fn new(description: String) -> Self {
+        BinderReorderPageType {
+            description,
+        }
+    }
+
+}
+
+const BINDER_REORDER_PAGE_TYPE_FIELDS: &[&str] = &["description"];
+impl BinderReorderPageType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderReorderPageType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderReorderPageType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderReorderPageType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderReorderPageType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderReorderPageType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderReorderPageType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderReorderPageType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderReorderPageType", BINDER_REORDER_PAGE_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderReorderPageType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderReorderPageType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Reordered Binder section.
+#[derive(Debug)]
+pub struct BinderReorderSectionDetails {
+    /// Event unique identifier.
+    pub event_uuid: String,
+    /// Title of the Binder doc.
+    pub doc_title: String,
+    /// Name of the Binder page/section.
+    pub binder_item_name: String,
+}
+
+impl BinderReorderSectionDetails {
+    pub fn new(event_uuid: String, doc_title: String, binder_item_name: String) -> Self {
+        BinderReorderSectionDetails {
+            event_uuid,
+            doc_title,
+            binder_item_name,
+        }
+    }
+
+}
+
+const BINDER_REORDER_SECTION_DETAILS_FIELDS: &[&str] = &["event_uuid",
+                                                         "doc_title",
+                                                         "binder_item_name"];
+impl BinderReorderSectionDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderReorderSectionDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderReorderSectionDetails>, V::Error> {
+        let mut field_event_uuid = None;
+        let mut field_doc_title = None;
+        let mut field_binder_item_name = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "event_uuid" => {
+                    if field_event_uuid.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("event_uuid"));
+                    }
+                    field_event_uuid = Some(map.next_value()?);
+                }
+                "doc_title" => {
+                    if field_doc_title.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("doc_title"));
+                    }
+                    field_doc_title = Some(map.next_value()?);
+                }
+                "binder_item_name" => {
+                    if field_binder_item_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("binder_item_name"));
+                    }
+                    field_binder_item_name = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderReorderSectionDetails {
+            event_uuid: field_event_uuid.ok_or_else(|| ::serde::de::Error::missing_field("event_uuid"))?,
+            doc_title: field_doc_title.ok_or_else(|| ::serde::de::Error::missing_field("doc_title"))?,
+            binder_item_name: field_binder_item_name.ok_or_else(|| ::serde::de::Error::missing_field("binder_item_name"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("event_uuid", &self.event_uuid)?;
+        s.serialize_field("doc_title", &self.doc_title)?;
+        s.serialize_field("binder_item_name", &self.binder_item_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderReorderSectionDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderReorderSectionDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderReorderSectionDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderReorderSectionDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderReorderSectionDetails", BINDER_REORDER_SECTION_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderReorderSectionDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderReorderSectionDetails", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct BinderReorderSectionType {
+    pub description: String,
+}
+
+impl BinderReorderSectionType {
+    pub fn new(description: String) -> Self {
+        BinderReorderSectionType {
+            description,
+        }
+    }
+
+}
+
+const BINDER_REORDER_SECTION_TYPE_FIELDS: &[&str] = &["description"];
+impl BinderReorderSectionType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<BinderReorderSectionType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<BinderReorderSectionType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = BinderReorderSectionType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for BinderReorderSectionType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = BinderReorderSectionType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a BinderReorderSectionType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                BinderReorderSectionType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("BinderReorderSectionType", BINDER_REORDER_SECTION_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for BinderReorderSectionType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("BinderReorderSectionType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -4389,6 +6349,199 @@ impl ::serde::ser::Serialize for CreateFolderType {
     }
 }
 
+/// Created team invite link.
+#[derive(Debug)]
+pub struct CreateTeamInviteLinkDetails {
+    /// The invite link url that was created.
+    pub link_url: String,
+    /// The expiration date of the invite link.
+    pub expiry_date: String,
+}
+
+impl CreateTeamInviteLinkDetails {
+    pub fn new(link_url: String, expiry_date: String) -> Self {
+        CreateTeamInviteLinkDetails {
+            link_url,
+            expiry_date,
+        }
+    }
+
+}
+
+const CREATE_TEAM_INVITE_LINK_DETAILS_FIELDS: &[&str] = &["link_url",
+                                                          "expiry_date"];
+impl CreateTeamInviteLinkDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<CreateTeamInviteLinkDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<CreateTeamInviteLinkDetails>, V::Error> {
+        let mut field_link_url = None;
+        let mut field_expiry_date = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "link_url" => {
+                    if field_link_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("link_url"));
+                    }
+                    field_link_url = Some(map.next_value()?);
+                }
+                "expiry_date" => {
+                    if field_expiry_date.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("expiry_date"));
+                    }
+                    field_expiry_date = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = CreateTeamInviteLinkDetails {
+            link_url: field_link_url.ok_or_else(|| ::serde::de::Error::missing_field("link_url"))?,
+            expiry_date: field_expiry_date.ok_or_else(|| ::serde::de::Error::missing_field("expiry_date"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("link_url", &self.link_url)?;
+        s.serialize_field("expiry_date", &self.expiry_date)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateTeamInviteLinkDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CreateTeamInviteLinkDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a CreateTeamInviteLinkDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CreateTeamInviteLinkDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CreateTeamInviteLinkDetails", CREATE_TEAM_INVITE_LINK_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateTeamInviteLinkDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CreateTeamInviteLinkDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct CreateTeamInviteLinkType {
+    pub description: String,
+}
+
+impl CreateTeamInviteLinkType {
+    pub fn new(description: String) -> Self {
+        CreateTeamInviteLinkType {
+            description,
+        }
+    }
+
+}
+
+const CREATE_TEAM_INVITE_LINK_TYPE_FIELDS: &[&str] = &["description"];
+impl CreateTeamInviteLinkType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<CreateTeamInviteLinkType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<CreateTeamInviteLinkType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = CreateTeamInviteLinkType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for CreateTeamInviteLinkType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = CreateTeamInviteLinkType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a CreateTeamInviteLinkType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                CreateTeamInviteLinkType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("CreateTeamInviteLinkType", CREATE_TEAM_INVITE_LINK_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for CreateTeamInviteLinkType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("CreateTeamInviteLinkType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Set restrictions on data center locations where team data resides.
 #[derive(Debug)]
 pub struct DataPlacementRestrictionChangePolicyDetails {
@@ -4757,6 +6910,186 @@ impl ::serde::ser::Serialize for DataPlacementRestrictionSatisfyPolicyType {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("DataPlacementRestrictionSatisfyPolicyType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Deleted team invite link.
+#[derive(Debug)]
+pub struct DeleteTeamInviteLinkDetails {
+    /// The invite link url that was deleted.
+    pub link_url: String,
+}
+
+impl DeleteTeamInviteLinkDetails {
+    pub fn new(link_url: String) -> Self {
+        DeleteTeamInviteLinkDetails {
+            link_url,
+        }
+    }
+
+}
+
+const DELETE_TEAM_INVITE_LINK_DETAILS_FIELDS: &[&str] = &["link_url"];
+impl DeleteTeamInviteLinkDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<DeleteTeamInviteLinkDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DeleteTeamInviteLinkDetails>, V::Error> {
+        let mut field_link_url = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "link_url" => {
+                    if field_link_url.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("link_url"));
+                    }
+                    field_link_url = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DeleteTeamInviteLinkDetails {
+            link_url: field_link_url.ok_or_else(|| ::serde::de::Error::missing_field("link_url"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("link_url", &self.link_url)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeleteTeamInviteLinkDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DeleteTeamInviteLinkDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DeleteTeamInviteLinkDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DeleteTeamInviteLinkDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DeleteTeamInviteLinkDetails", DELETE_TEAM_INVITE_LINK_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeleteTeamInviteLinkDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DeleteTeamInviteLinkDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct DeleteTeamInviteLinkType {
+    pub description: String,
+}
+
+impl DeleteTeamInviteLinkType {
+    pub fn new(description: String) -> Self {
+        DeleteTeamInviteLinkType {
+            description,
+        }
+    }
+
+}
+
+const DELETE_TEAM_INVITE_LINK_TYPE_FIELDS: &[&str] = &["description"];
+impl DeleteTeamInviteLinkType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<DeleteTeamInviteLinkType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<DeleteTeamInviteLinkType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = DeleteTeamInviteLinkType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for DeleteTeamInviteLinkType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = DeleteTeamInviteLinkType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a DeleteTeamInviteLinkType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                DeleteTeamInviteLinkType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("DeleteTeamInviteLinkType", DELETE_TEAM_INVITE_LINK_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for DeleteTeamInviteLinkType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("DeleteTeamInviteLinkType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -11760,6 +14093,230 @@ impl ::serde::ser::Serialize for EndedEnterpriseAdminSessionType {
     }
 }
 
+/// Changed who can update a setting.
+#[derive(Debug)]
+pub struct EnterpriseSettingsLockingDetails {
+    /// The secondary team name.
+    pub team_name: String,
+    /// Settings page name.
+    pub settings_page_name: String,
+    /// Previous locked settings page state.
+    pub previous_settings_page_locking_state: String,
+    /// New locked settings page state.
+    pub new_settings_page_locking_state: String,
+}
+
+impl EnterpriseSettingsLockingDetails {
+    pub fn new(
+        team_name: String,
+        settings_page_name: String,
+        previous_settings_page_locking_state: String,
+        new_settings_page_locking_state: String,
+    ) -> Self {
+        EnterpriseSettingsLockingDetails {
+            team_name,
+            settings_page_name,
+            previous_settings_page_locking_state,
+            new_settings_page_locking_state,
+        }
+    }
+
+}
+
+const ENTERPRISE_SETTINGS_LOCKING_DETAILS_FIELDS: &[&str] = &["team_name",
+                                                              "settings_page_name",
+                                                              "previous_settings_page_locking_state",
+                                                              "new_settings_page_locking_state"];
+impl EnterpriseSettingsLockingDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<EnterpriseSettingsLockingDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<EnterpriseSettingsLockingDetails>, V::Error> {
+        let mut field_team_name = None;
+        let mut field_settings_page_name = None;
+        let mut field_previous_settings_page_locking_state = None;
+        let mut field_new_settings_page_locking_state = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "team_name" => {
+                    if field_team_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("team_name"));
+                    }
+                    field_team_name = Some(map.next_value()?);
+                }
+                "settings_page_name" => {
+                    if field_settings_page_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("settings_page_name"));
+                    }
+                    field_settings_page_name = Some(map.next_value()?);
+                }
+                "previous_settings_page_locking_state" => {
+                    if field_previous_settings_page_locking_state.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("previous_settings_page_locking_state"));
+                    }
+                    field_previous_settings_page_locking_state = Some(map.next_value()?);
+                }
+                "new_settings_page_locking_state" => {
+                    if field_new_settings_page_locking_state.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("new_settings_page_locking_state"));
+                    }
+                    field_new_settings_page_locking_state = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = EnterpriseSettingsLockingDetails {
+            team_name: field_team_name.ok_or_else(|| ::serde::de::Error::missing_field("team_name"))?,
+            settings_page_name: field_settings_page_name.ok_or_else(|| ::serde::de::Error::missing_field("settings_page_name"))?,
+            previous_settings_page_locking_state: field_previous_settings_page_locking_state.ok_or_else(|| ::serde::de::Error::missing_field("previous_settings_page_locking_state"))?,
+            new_settings_page_locking_state: field_new_settings_page_locking_state.ok_or_else(|| ::serde::de::Error::missing_field("new_settings_page_locking_state"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("team_name", &self.team_name)?;
+        s.serialize_field("settings_page_name", &self.settings_page_name)?;
+        s.serialize_field("previous_settings_page_locking_state", &self.previous_settings_page_locking_state)?;
+        s.serialize_field("new_settings_page_locking_state", &self.new_settings_page_locking_state)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for EnterpriseSettingsLockingDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = EnterpriseSettingsLockingDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a EnterpriseSettingsLockingDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                EnterpriseSettingsLockingDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("EnterpriseSettingsLockingDetails", ENTERPRISE_SETTINGS_LOCKING_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for EnterpriseSettingsLockingDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("EnterpriseSettingsLockingDetails", 4)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct EnterpriseSettingsLockingType {
+    pub description: String,
+}
+
+impl EnterpriseSettingsLockingType {
+    pub fn new(description: String) -> Self {
+        EnterpriseSettingsLockingType {
+            description,
+        }
+    }
+
+}
+
+const ENTERPRISE_SETTINGS_LOCKING_TYPE_FIELDS: &[&str] = &["description"];
+impl EnterpriseSettingsLockingType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<EnterpriseSettingsLockingType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<EnterpriseSettingsLockingType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = EnterpriseSettingsLockingType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for EnterpriseSettingsLockingType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = EnterpriseSettingsLockingType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a EnterpriseSettingsLockingType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                EnterpriseSettingsLockingType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("EnterpriseSettingsLockingType", ENTERPRISE_SETTINGS_LOCKING_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for EnterpriseSettingsLockingType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("EnterpriseSettingsLockingType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Category of events in event audit log.
 #[derive(Debug)]
 pub enum EventCategory {
@@ -12133,6 +14690,7 @@ pub enum EventDetails {
     FileDownloadDetails(FileDownloadDetails),
     FileEditDetails(FileEditDetails),
     FileGetCopyReferenceDetails(FileGetCopyReferenceDetails),
+    FileLockingLockStatusChangedDetails(FileLockingLockStatusChangedDetails),
     FileMoveDetails(FileMoveDetails),
     FilePermanentlyDeleteDetails(FilePermanentlyDeleteDetails),
     FilePreviewDetails(FilePreviewDetails),
@@ -12144,6 +14702,7 @@ pub enum EventDetails {
     FolderOverviewDescriptionChangedDetails(FolderOverviewDescriptionChangedDetails),
     FolderOverviewItemPinnedDetails(FolderOverviewItemPinnedDetails),
     FolderOverviewItemUnpinnedDetails(FolderOverviewItemUnpinnedDetails),
+    RewindFolderDetails(RewindFolderDetails),
     FileRequestChangeDetails(FileRequestChangeDetails),
     FileRequestCloseDetails(FileRequestCloseDetails),
     FileRequestCreateDetails(FileRequestCreateDetails),
@@ -12167,9 +14726,13 @@ pub enum EventDetails {
     LegalHoldsChangeHoldDetailsDetails(LegalHoldsChangeHoldDetailsDetails),
     LegalHoldsChangeHoldNameDetails(LegalHoldsChangeHoldNameDetails),
     LegalHoldsExportAHoldDetails(LegalHoldsExportAHoldDetails),
+    LegalHoldsExportCancelledDetails(LegalHoldsExportCancelledDetails),
+    LegalHoldsExportDownloadedDetails(LegalHoldsExportDownloadedDetails),
+    LegalHoldsExportRemovedDetails(LegalHoldsExportRemovedDetails),
     LegalHoldsReleaseAHoldDetails(LegalHoldsReleaseAHoldDetails),
     LegalHoldsRemoveMembersDetails(LegalHoldsRemoveMembersDetails),
     LegalHoldsReportAHoldDetails(LegalHoldsReportAHoldDetails),
+    AccountLockOrUnlockedDetails(AccountLockOrUnlockedDetails),
     EmmErrorDetails(EmmErrorDetails),
     GuestAdminSignedInViaTrustedTeamsDetails(GuestAdminSignedInViaTrustedTeamsDetails),
     GuestAdminSignedOutViaTrustedTeamsDetails(GuestAdminSignedOutViaTrustedTeamsDetails),
@@ -12181,6 +14744,8 @@ pub enum EventDetails {
     SignInAsSessionEndDetails(SignInAsSessionEndDetails),
     SignInAsSessionStartDetails(SignInAsSessionStartDetails),
     SsoErrorDetails(SsoErrorDetails),
+    CreateTeamInviteLinkDetails(CreateTeamInviteLinkDetails),
+    DeleteTeamInviteLinkDetails(DeleteTeamInviteLinkDetails),
     MemberAddExternalIdDetails(MemberAddExternalIdDetails),
     MemberAddNameDetails(MemberAddNameDetails),
     MemberChangeAdminRoleDetails(MemberChangeAdminRoleDetails),
@@ -12204,6 +14769,14 @@ pub enum EventDetails {
     SecondaryEmailDeletedDetails(SecondaryEmailDeletedDetails),
     SecondaryEmailVerifiedDetails(SecondaryEmailVerifiedDetails),
     SecondaryMailsPolicyChangedDetails(SecondaryMailsPolicyChangedDetails),
+    BinderAddPageDetails(BinderAddPageDetails),
+    BinderAddSectionDetails(BinderAddSectionDetails),
+    BinderRemovePageDetails(BinderRemovePageDetails),
+    BinderRemoveSectionDetails(BinderRemoveSectionDetails),
+    BinderRenamePageDetails(BinderRenamePageDetails),
+    BinderRenameSectionDetails(BinderRenameSectionDetails),
+    BinderReorderPageDetails(BinderReorderPageDetails),
+    BinderReorderSectionDetails(BinderReorderSectionDetails),
     PaperContentAddMemberDetails(PaperContentAddMemberDetails),
     PaperContentAddToFolderDetails(PaperContentAddToFolderDetails),
     PaperContentArchiveDetails(PaperContentArchiveDetails),
@@ -12252,6 +14825,14 @@ pub enum EventDetails {
     EmmCreateUsageReportDetails(EmmCreateUsageReportDetails),
     ExportMembersReportDetails(ExportMembersReportDetails),
     ExportMembersReportFailDetails(ExportMembersReportFailDetails),
+    NoExpirationLinkGenCreateReportDetails(NoExpirationLinkGenCreateReportDetails),
+    NoExpirationLinkGenReportFailedDetails(NoExpirationLinkGenReportFailedDetails),
+    NoPasswordLinkGenCreateReportDetails(NoPasswordLinkGenCreateReportDetails),
+    NoPasswordLinkGenReportFailedDetails(NoPasswordLinkGenReportFailedDetails),
+    NoPasswordLinkViewCreateReportDetails(NoPasswordLinkViewCreateReportDetails),
+    NoPasswordLinkViewReportFailedDetails(NoPasswordLinkViewReportFailedDetails),
+    OutdatedLinkViewCreateReportDetails(OutdatedLinkViewCreateReportDetails),
+    OutdatedLinkViewReportFailedDetails(OutdatedLinkViewReportFailedDetails),
     PaperAdminExportStartDetails(PaperAdminExportStartDetails),
     SmartSyncCreateAdminPrivilegeReportDetails(SmartSyncCreateAdminPrivilegeReportDetails),
     TeamActivityCreateReportDetails(TeamActivityCreateReportDetails),
@@ -12404,6 +14985,7 @@ pub enum EventDetails {
     GroupUserManagementChangePolicyDetails(GroupUserManagementChangePolicyDetails),
     IntegrationPolicyChangedDetails(IntegrationPolicyChangedDetails),
     MemberRequestsChangePolicyDetails(MemberRequestsChangePolicyDetails),
+    MemberSendInvitePolicyChangedDetails(MemberSendInvitePolicyChangedDetails),
     MemberSpaceLimitsAddExceptionDetails(MemberSpaceLimitsAddExceptionDetails),
     MemberSpaceLimitsChangeCapsTypePolicyDetails(MemberSpaceLimitsChangeCapsTypePolicyDetails),
     MemberSpaceLimitsChangePolicyDetails(MemberSpaceLimitsChangePolicyDetails),
@@ -12422,6 +15004,7 @@ pub enum EventDetails {
     PasswordStrengthRequirementsChangePolicyDetails(PasswordStrengthRequirementsChangePolicyDetails),
     PermanentDeleteChangePolicyDetails(PermanentDeleteChangePolicyDetails),
     ResellerSupportChangePolicyDetails(ResellerSupportChangePolicyDetails),
+    RewindPolicyChangedDetails(RewindPolicyChangedDetails),
     SharingChangeFolderJoinPolicyDetails(SharingChangeFolderJoinPolicyDetails),
     SharingChangeLinkPolicyDetails(SharingChangeLinkPolicyDetails),
     SharingChangeMemberPolicyDetails(SharingChangeMemberPolicyDetails),
@@ -12435,12 +15018,14 @@ pub enum EventDetails {
     SsoChangePolicyDetails(SsoChangePolicyDetails),
     TeamExtensionsPolicyChangedDetails(TeamExtensionsPolicyChangedDetails),
     TeamSelectiveSyncPolicyChangedDetails(TeamSelectiveSyncPolicyChangedDetails),
+    TeamSharingWhitelistSubjectsChangedDetails(TeamSharingWhitelistSubjectsChangedDetails),
     TfaAddExceptionDetails(TfaAddExceptionDetails),
     TfaChangePolicyDetails(TfaChangePolicyDetails),
     TfaRemoveExceptionDetails(TfaRemoveExceptionDetails),
     TwoAccountChangePolicyDetails(TwoAccountChangePolicyDetails),
     ViewerInfoPolicyChangedDetails(ViewerInfoPolicyChangedDetails),
     WatermarkingPolicyChangedDetails(WatermarkingPolicyChangedDetails),
+    WebSessionsChangeActiveSessionLimitDetails(WebSessionsChangeActiveSessionLimitDetails),
     WebSessionsChangeFixedLengthPolicyDetails(WebSessionsChangeFixedLengthPolicyDetails),
     WebSessionsChangeIdleLengthPolicyDetails(WebSessionsChangeIdleLengthPolicyDetails),
     TeamMergeFromDetails(TeamMergeFromDetails),
@@ -12461,6 +15046,7 @@ pub enum EventDetails {
     ChangedEnterpriseConnectedTeamStatusDetails(ChangedEnterpriseConnectedTeamStatusDetails),
     EndedEnterpriseAdminSessionDetails(EndedEnterpriseAdminSessionDetails),
     EndedEnterpriseAdminSessionDeprecatedDetails(EndedEnterpriseAdminSessionDeprecatedDetails),
+    EnterpriseSettingsLockingDetails(EnterpriseSettingsLockingDetails),
     GuestAdminChangeStatusDetails(GuestAdminChangeStatusDetails),
     StartedEnterpriseAdminSessionDetails(StartedEnterpriseAdminSessionDetails),
     TeamMergeRequestAcceptedDetails(TeamMergeRequestAcceptedDetails),
@@ -12551,6 +15137,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "file_download_details" => Ok(EventDetails::FileDownloadDetails(FileDownloadDetails::internal_deserialize(map)?)),
                     "file_edit_details" => Ok(EventDetails::FileEditDetails(FileEditDetails::internal_deserialize(map)?)),
                     "file_get_copy_reference_details" => Ok(EventDetails::FileGetCopyReferenceDetails(FileGetCopyReferenceDetails::internal_deserialize(map)?)),
+                    "file_locking_lock_status_changed_details" => Ok(EventDetails::FileLockingLockStatusChangedDetails(FileLockingLockStatusChangedDetails::internal_deserialize(map)?)),
                     "file_move_details" => Ok(EventDetails::FileMoveDetails(FileMoveDetails::internal_deserialize(map)?)),
                     "file_permanently_delete_details" => Ok(EventDetails::FilePermanentlyDeleteDetails(FilePermanentlyDeleteDetails::internal_deserialize(map)?)),
                     "file_preview_details" => Ok(EventDetails::FilePreviewDetails(FilePreviewDetails::internal_deserialize(map)?)),
@@ -12562,6 +15149,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "folder_overview_description_changed_details" => Ok(EventDetails::FolderOverviewDescriptionChangedDetails(FolderOverviewDescriptionChangedDetails::internal_deserialize(map)?)),
                     "folder_overview_item_pinned_details" => Ok(EventDetails::FolderOverviewItemPinnedDetails(FolderOverviewItemPinnedDetails::internal_deserialize(map)?)),
                     "folder_overview_item_unpinned_details" => Ok(EventDetails::FolderOverviewItemUnpinnedDetails(FolderOverviewItemUnpinnedDetails::internal_deserialize(map)?)),
+                    "rewind_folder_details" => Ok(EventDetails::RewindFolderDetails(RewindFolderDetails::internal_deserialize(map)?)),
                     "file_request_change_details" => Ok(EventDetails::FileRequestChangeDetails(FileRequestChangeDetails::internal_deserialize(map)?)),
                     "file_request_close_details" => Ok(EventDetails::FileRequestCloseDetails(FileRequestCloseDetails::internal_deserialize(map)?)),
                     "file_request_create_details" => Ok(EventDetails::FileRequestCreateDetails(FileRequestCreateDetails::internal_deserialize(map)?)),
@@ -12585,9 +15173,13 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "legal_holds_change_hold_details_details" => Ok(EventDetails::LegalHoldsChangeHoldDetailsDetails(LegalHoldsChangeHoldDetailsDetails::internal_deserialize(map)?)),
                     "legal_holds_change_hold_name_details" => Ok(EventDetails::LegalHoldsChangeHoldNameDetails(LegalHoldsChangeHoldNameDetails::internal_deserialize(map)?)),
                     "legal_holds_export_a_hold_details" => Ok(EventDetails::LegalHoldsExportAHoldDetails(LegalHoldsExportAHoldDetails::internal_deserialize(map)?)),
+                    "legal_holds_export_cancelled_details" => Ok(EventDetails::LegalHoldsExportCancelledDetails(LegalHoldsExportCancelledDetails::internal_deserialize(map)?)),
+                    "legal_holds_export_downloaded_details" => Ok(EventDetails::LegalHoldsExportDownloadedDetails(LegalHoldsExportDownloadedDetails::internal_deserialize(map)?)),
+                    "legal_holds_export_removed_details" => Ok(EventDetails::LegalHoldsExportRemovedDetails(LegalHoldsExportRemovedDetails::internal_deserialize(map)?)),
                     "legal_holds_release_a_hold_details" => Ok(EventDetails::LegalHoldsReleaseAHoldDetails(LegalHoldsReleaseAHoldDetails::internal_deserialize(map)?)),
                     "legal_holds_remove_members_details" => Ok(EventDetails::LegalHoldsRemoveMembersDetails(LegalHoldsRemoveMembersDetails::internal_deserialize(map)?)),
                     "legal_holds_report_a_hold_details" => Ok(EventDetails::LegalHoldsReportAHoldDetails(LegalHoldsReportAHoldDetails::internal_deserialize(map)?)),
+                    "account_lock_or_unlocked_details" => Ok(EventDetails::AccountLockOrUnlockedDetails(AccountLockOrUnlockedDetails::internal_deserialize(map)?)),
                     "emm_error_details" => Ok(EventDetails::EmmErrorDetails(EmmErrorDetails::internal_deserialize(map)?)),
                     "guest_admin_signed_in_via_trusted_teams_details" => Ok(EventDetails::GuestAdminSignedInViaTrustedTeamsDetails(GuestAdminSignedInViaTrustedTeamsDetails::internal_deserialize(map)?)),
                     "guest_admin_signed_out_via_trusted_teams_details" => Ok(EventDetails::GuestAdminSignedOutViaTrustedTeamsDetails(GuestAdminSignedOutViaTrustedTeamsDetails::internal_deserialize(map)?)),
@@ -12599,6 +15191,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "sign_in_as_session_end_details" => Ok(EventDetails::SignInAsSessionEndDetails(SignInAsSessionEndDetails::internal_deserialize(map)?)),
                     "sign_in_as_session_start_details" => Ok(EventDetails::SignInAsSessionStartDetails(SignInAsSessionStartDetails::internal_deserialize(map)?)),
                     "sso_error_details" => Ok(EventDetails::SsoErrorDetails(SsoErrorDetails::internal_deserialize(map)?)),
+                    "create_team_invite_link_details" => Ok(EventDetails::CreateTeamInviteLinkDetails(CreateTeamInviteLinkDetails::internal_deserialize(map)?)),
+                    "delete_team_invite_link_details" => Ok(EventDetails::DeleteTeamInviteLinkDetails(DeleteTeamInviteLinkDetails::internal_deserialize(map)?)),
                     "member_add_external_id_details" => Ok(EventDetails::MemberAddExternalIdDetails(MemberAddExternalIdDetails::internal_deserialize(map)?)),
                     "member_add_name_details" => Ok(EventDetails::MemberAddNameDetails(MemberAddNameDetails::internal_deserialize(map)?)),
                     "member_change_admin_role_details" => Ok(EventDetails::MemberChangeAdminRoleDetails(MemberChangeAdminRoleDetails::internal_deserialize(map)?)),
@@ -12622,6 +15216,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "secondary_email_deleted_details" => Ok(EventDetails::SecondaryEmailDeletedDetails(SecondaryEmailDeletedDetails::internal_deserialize(map)?)),
                     "secondary_email_verified_details" => Ok(EventDetails::SecondaryEmailVerifiedDetails(SecondaryEmailVerifiedDetails::internal_deserialize(map)?)),
                     "secondary_mails_policy_changed_details" => Ok(EventDetails::SecondaryMailsPolicyChangedDetails(SecondaryMailsPolicyChangedDetails::internal_deserialize(map)?)),
+                    "binder_add_page_details" => Ok(EventDetails::BinderAddPageDetails(BinderAddPageDetails::internal_deserialize(map)?)),
+                    "binder_add_section_details" => Ok(EventDetails::BinderAddSectionDetails(BinderAddSectionDetails::internal_deserialize(map)?)),
+                    "binder_remove_page_details" => Ok(EventDetails::BinderRemovePageDetails(BinderRemovePageDetails::internal_deserialize(map)?)),
+                    "binder_remove_section_details" => Ok(EventDetails::BinderRemoveSectionDetails(BinderRemoveSectionDetails::internal_deserialize(map)?)),
+                    "binder_rename_page_details" => Ok(EventDetails::BinderRenamePageDetails(BinderRenamePageDetails::internal_deserialize(map)?)),
+                    "binder_rename_section_details" => Ok(EventDetails::BinderRenameSectionDetails(BinderRenameSectionDetails::internal_deserialize(map)?)),
+                    "binder_reorder_page_details" => Ok(EventDetails::BinderReorderPageDetails(BinderReorderPageDetails::internal_deserialize(map)?)),
+                    "binder_reorder_section_details" => Ok(EventDetails::BinderReorderSectionDetails(BinderReorderSectionDetails::internal_deserialize(map)?)),
                     "paper_content_add_member_details" => Ok(EventDetails::PaperContentAddMemberDetails(PaperContentAddMemberDetails::internal_deserialize(map)?)),
                     "paper_content_add_to_folder_details" => Ok(EventDetails::PaperContentAddToFolderDetails(PaperContentAddToFolderDetails::internal_deserialize(map)?)),
                     "paper_content_archive_details" => Ok(EventDetails::PaperContentArchiveDetails(PaperContentArchiveDetails::internal_deserialize(map)?)),
@@ -12670,6 +15272,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "emm_create_usage_report_details" => Ok(EventDetails::EmmCreateUsageReportDetails(EmmCreateUsageReportDetails::internal_deserialize(map)?)),
                     "export_members_report_details" => Ok(EventDetails::ExportMembersReportDetails(ExportMembersReportDetails::internal_deserialize(map)?)),
                     "export_members_report_fail_details" => Ok(EventDetails::ExportMembersReportFailDetails(ExportMembersReportFailDetails::internal_deserialize(map)?)),
+                    "no_expiration_link_gen_create_report_details" => Ok(EventDetails::NoExpirationLinkGenCreateReportDetails(NoExpirationLinkGenCreateReportDetails::internal_deserialize(map)?)),
+                    "no_expiration_link_gen_report_failed_details" => Ok(EventDetails::NoExpirationLinkGenReportFailedDetails(NoExpirationLinkGenReportFailedDetails::internal_deserialize(map)?)),
+                    "no_password_link_gen_create_report_details" => Ok(EventDetails::NoPasswordLinkGenCreateReportDetails(NoPasswordLinkGenCreateReportDetails::internal_deserialize(map)?)),
+                    "no_password_link_gen_report_failed_details" => Ok(EventDetails::NoPasswordLinkGenReportFailedDetails(NoPasswordLinkGenReportFailedDetails::internal_deserialize(map)?)),
+                    "no_password_link_view_create_report_details" => Ok(EventDetails::NoPasswordLinkViewCreateReportDetails(NoPasswordLinkViewCreateReportDetails::internal_deserialize(map)?)),
+                    "no_password_link_view_report_failed_details" => Ok(EventDetails::NoPasswordLinkViewReportFailedDetails(NoPasswordLinkViewReportFailedDetails::internal_deserialize(map)?)),
+                    "outdated_link_view_create_report_details" => Ok(EventDetails::OutdatedLinkViewCreateReportDetails(OutdatedLinkViewCreateReportDetails::internal_deserialize(map)?)),
+                    "outdated_link_view_report_failed_details" => Ok(EventDetails::OutdatedLinkViewReportFailedDetails(OutdatedLinkViewReportFailedDetails::internal_deserialize(map)?)),
                     "paper_admin_export_start_details" => Ok(EventDetails::PaperAdminExportStartDetails(PaperAdminExportStartDetails::internal_deserialize(map)?)),
                     "smart_sync_create_admin_privilege_report_details" => Ok(EventDetails::SmartSyncCreateAdminPrivilegeReportDetails(SmartSyncCreateAdminPrivilegeReportDetails::internal_deserialize(map)?)),
                     "team_activity_create_report_details" => Ok(EventDetails::TeamActivityCreateReportDetails(TeamActivityCreateReportDetails::internal_deserialize(map)?)),
@@ -12822,6 +15432,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "group_user_management_change_policy_details" => Ok(EventDetails::GroupUserManagementChangePolicyDetails(GroupUserManagementChangePolicyDetails::internal_deserialize(map)?)),
                     "integration_policy_changed_details" => Ok(EventDetails::IntegrationPolicyChangedDetails(IntegrationPolicyChangedDetails::internal_deserialize(map)?)),
                     "member_requests_change_policy_details" => Ok(EventDetails::MemberRequestsChangePolicyDetails(MemberRequestsChangePolicyDetails::internal_deserialize(map)?)),
+                    "member_send_invite_policy_changed_details" => Ok(EventDetails::MemberSendInvitePolicyChangedDetails(MemberSendInvitePolicyChangedDetails::internal_deserialize(map)?)),
                     "member_space_limits_add_exception_details" => Ok(EventDetails::MemberSpaceLimitsAddExceptionDetails(MemberSpaceLimitsAddExceptionDetails::internal_deserialize(map)?)),
                     "member_space_limits_change_caps_type_policy_details" => Ok(EventDetails::MemberSpaceLimitsChangeCapsTypePolicyDetails(MemberSpaceLimitsChangeCapsTypePolicyDetails::internal_deserialize(map)?)),
                     "member_space_limits_change_policy_details" => Ok(EventDetails::MemberSpaceLimitsChangePolicyDetails(MemberSpaceLimitsChangePolicyDetails::internal_deserialize(map)?)),
@@ -12840,6 +15451,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "password_strength_requirements_change_policy_details" => Ok(EventDetails::PasswordStrengthRequirementsChangePolicyDetails(PasswordStrengthRequirementsChangePolicyDetails::internal_deserialize(map)?)),
                     "permanent_delete_change_policy_details" => Ok(EventDetails::PermanentDeleteChangePolicyDetails(PermanentDeleteChangePolicyDetails::internal_deserialize(map)?)),
                     "reseller_support_change_policy_details" => Ok(EventDetails::ResellerSupportChangePolicyDetails(ResellerSupportChangePolicyDetails::internal_deserialize(map)?)),
+                    "rewind_policy_changed_details" => Ok(EventDetails::RewindPolicyChangedDetails(RewindPolicyChangedDetails::internal_deserialize(map)?)),
                     "sharing_change_folder_join_policy_details" => Ok(EventDetails::SharingChangeFolderJoinPolicyDetails(SharingChangeFolderJoinPolicyDetails::internal_deserialize(map)?)),
                     "sharing_change_link_policy_details" => Ok(EventDetails::SharingChangeLinkPolicyDetails(SharingChangeLinkPolicyDetails::internal_deserialize(map)?)),
                     "sharing_change_member_policy_details" => Ok(EventDetails::SharingChangeMemberPolicyDetails(SharingChangeMemberPolicyDetails::internal_deserialize(map)?)),
@@ -12853,12 +15465,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "sso_change_policy_details" => Ok(EventDetails::SsoChangePolicyDetails(SsoChangePolicyDetails::internal_deserialize(map)?)),
                     "team_extensions_policy_changed_details" => Ok(EventDetails::TeamExtensionsPolicyChangedDetails(TeamExtensionsPolicyChangedDetails::internal_deserialize(map)?)),
                     "team_selective_sync_policy_changed_details" => Ok(EventDetails::TeamSelectiveSyncPolicyChangedDetails(TeamSelectiveSyncPolicyChangedDetails::internal_deserialize(map)?)),
+                    "team_sharing_whitelist_subjects_changed_details" => Ok(EventDetails::TeamSharingWhitelistSubjectsChangedDetails(TeamSharingWhitelistSubjectsChangedDetails::internal_deserialize(map)?)),
                     "tfa_add_exception_details" => Ok(EventDetails::TfaAddExceptionDetails(TfaAddExceptionDetails::internal_deserialize(map)?)),
                     "tfa_change_policy_details" => Ok(EventDetails::TfaChangePolicyDetails(TfaChangePolicyDetails::internal_deserialize(map)?)),
                     "tfa_remove_exception_details" => Ok(EventDetails::TfaRemoveExceptionDetails(TfaRemoveExceptionDetails::internal_deserialize(map)?)),
                     "two_account_change_policy_details" => Ok(EventDetails::TwoAccountChangePolicyDetails(TwoAccountChangePolicyDetails::internal_deserialize(map)?)),
                     "viewer_info_policy_changed_details" => Ok(EventDetails::ViewerInfoPolicyChangedDetails(ViewerInfoPolicyChangedDetails::internal_deserialize(map)?)),
                     "watermarking_policy_changed_details" => Ok(EventDetails::WatermarkingPolicyChangedDetails(WatermarkingPolicyChangedDetails::internal_deserialize(map)?)),
+                    "web_sessions_change_active_session_limit_details" => Ok(EventDetails::WebSessionsChangeActiveSessionLimitDetails(WebSessionsChangeActiveSessionLimitDetails::internal_deserialize(map)?)),
                     "web_sessions_change_fixed_length_policy_details" => Ok(EventDetails::WebSessionsChangeFixedLengthPolicyDetails(WebSessionsChangeFixedLengthPolicyDetails::internal_deserialize(map)?)),
                     "web_sessions_change_idle_length_policy_details" => Ok(EventDetails::WebSessionsChangeIdleLengthPolicyDetails(WebSessionsChangeIdleLengthPolicyDetails::internal_deserialize(map)?)),
                     "team_merge_from_details" => Ok(EventDetails::TeamMergeFromDetails(TeamMergeFromDetails::internal_deserialize(map)?)),
@@ -12879,6 +15493,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                     "changed_enterprise_connected_team_status_details" => Ok(EventDetails::ChangedEnterpriseConnectedTeamStatusDetails(ChangedEnterpriseConnectedTeamStatusDetails::internal_deserialize(map)?)),
                     "ended_enterprise_admin_session_details" => Ok(EventDetails::EndedEnterpriseAdminSessionDetails(EndedEnterpriseAdminSessionDetails::internal_deserialize(map)?)),
                     "ended_enterprise_admin_session_deprecated_details" => Ok(EventDetails::EndedEnterpriseAdminSessionDeprecatedDetails(EndedEnterpriseAdminSessionDeprecatedDetails::internal_deserialize(map)?)),
+                    "enterprise_settings_locking_details" => Ok(EventDetails::EnterpriseSettingsLockingDetails(EnterpriseSettingsLockingDetails::internal_deserialize(map)?)),
                     "guest_admin_change_status_details" => Ok(EventDetails::GuestAdminChangeStatusDetails(GuestAdminChangeStatusDetails::internal_deserialize(map)?)),
                     "started_enterprise_admin_session_details" => Ok(EventDetails::StartedEnterpriseAdminSessionDetails(StartedEnterpriseAdminSessionDetails::internal_deserialize(map)?)),
                     "team_merge_request_accepted_details" => Ok(EventDetails::TeamMergeRequestAcceptedDetails(TeamMergeRequestAcceptedDetails::internal_deserialize(map)?)),
@@ -12954,6 +15569,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "file_download_details",
                                     "file_edit_details",
                                     "file_get_copy_reference_details",
+                                    "file_locking_lock_status_changed_details",
                                     "file_move_details",
                                     "file_permanently_delete_details",
                                     "file_preview_details",
@@ -12965,6 +15581,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "folder_overview_description_changed_details",
                                     "folder_overview_item_pinned_details",
                                     "folder_overview_item_unpinned_details",
+                                    "rewind_folder_details",
                                     "file_request_change_details",
                                     "file_request_close_details",
                                     "file_request_create_details",
@@ -12988,9 +15605,13 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "legal_holds_change_hold_details_details",
                                     "legal_holds_change_hold_name_details",
                                     "legal_holds_export_a_hold_details",
+                                    "legal_holds_export_cancelled_details",
+                                    "legal_holds_export_downloaded_details",
+                                    "legal_holds_export_removed_details",
                                     "legal_holds_release_a_hold_details",
                                     "legal_holds_remove_members_details",
                                     "legal_holds_report_a_hold_details",
+                                    "account_lock_or_unlocked_details",
                                     "emm_error_details",
                                     "guest_admin_signed_in_via_trusted_teams_details",
                                     "guest_admin_signed_out_via_trusted_teams_details",
@@ -13002,6 +15623,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "sign_in_as_session_end_details",
                                     "sign_in_as_session_start_details",
                                     "sso_error_details",
+                                    "create_team_invite_link_details",
+                                    "delete_team_invite_link_details",
                                     "member_add_external_id_details",
                                     "member_add_name_details",
                                     "member_change_admin_role_details",
@@ -13025,6 +15648,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "secondary_email_deleted_details",
                                     "secondary_email_verified_details",
                                     "secondary_mails_policy_changed_details",
+                                    "binder_add_page_details",
+                                    "binder_add_section_details",
+                                    "binder_remove_page_details",
+                                    "binder_remove_section_details",
+                                    "binder_rename_page_details",
+                                    "binder_rename_section_details",
+                                    "binder_reorder_page_details",
+                                    "binder_reorder_section_details",
                                     "paper_content_add_member_details",
                                     "paper_content_add_to_folder_details",
                                     "paper_content_archive_details",
@@ -13073,6 +15704,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "emm_create_usage_report_details",
                                     "export_members_report_details",
                                     "export_members_report_fail_details",
+                                    "no_expiration_link_gen_create_report_details",
+                                    "no_expiration_link_gen_report_failed_details",
+                                    "no_password_link_gen_create_report_details",
+                                    "no_password_link_gen_report_failed_details",
+                                    "no_password_link_view_create_report_details",
+                                    "no_password_link_view_report_failed_details",
+                                    "outdated_link_view_create_report_details",
+                                    "outdated_link_view_report_failed_details",
                                     "paper_admin_export_start_details",
                                     "smart_sync_create_admin_privilege_report_details",
                                     "team_activity_create_report_details",
@@ -13225,6 +15864,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "group_user_management_change_policy_details",
                                     "integration_policy_changed_details",
                                     "member_requests_change_policy_details",
+                                    "member_send_invite_policy_changed_details",
                                     "member_space_limits_add_exception_details",
                                     "member_space_limits_change_caps_type_policy_details",
                                     "member_space_limits_change_policy_details",
@@ -13243,6 +15883,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "password_strength_requirements_change_policy_details",
                                     "permanent_delete_change_policy_details",
                                     "reseller_support_change_policy_details",
+                                    "rewind_policy_changed_details",
                                     "sharing_change_folder_join_policy_details",
                                     "sharing_change_link_policy_details",
                                     "sharing_change_member_policy_details",
@@ -13256,12 +15897,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "sso_change_policy_details",
                                     "team_extensions_policy_changed_details",
                                     "team_selective_sync_policy_changed_details",
+                                    "team_sharing_whitelist_subjects_changed_details",
                                     "tfa_add_exception_details",
                                     "tfa_change_policy_details",
                                     "tfa_remove_exception_details",
                                     "two_account_change_policy_details",
                                     "viewer_info_policy_changed_details",
                                     "watermarking_policy_changed_details",
+                                    "web_sessions_change_active_session_limit_details",
                                     "web_sessions_change_fixed_length_policy_details",
                                     "web_sessions_change_idle_length_policy_details",
                                     "team_merge_from_details",
@@ -13282,6 +15925,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventDetails {
                                     "changed_enterprise_connected_team_status_details",
                                     "ended_enterprise_admin_session_details",
                                     "ended_enterprise_admin_session_deprecated_details",
+                                    "enterprise_settings_locking_details",
                                     "guest_admin_change_status_details",
                                     "started_enterprise_admin_session_details",
                                     "team_merge_request_accepted_details",
@@ -13626,6 +16270,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 s.serialize_field(".tag", "file_get_copy_reference_details")?;
                 s.end()
             }
+            EventDetails::FileLockingLockStatusChangedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "file_locking_lock_status_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::FileMoveDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 2)?;
@@ -13695,6 +16346,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "folder_overview_item_unpinned_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::RewindFolderDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "rewind_folder_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -13851,8 +16509,29 @@ impl ::serde::ser::Serialize for EventDetails {
             }
             EventDetails::LegalHoldsExportAHoldDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
                 s.serialize_field(".tag", "legal_holds_export_a_hold_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::LegalHoldsExportCancelledDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                s.serialize_field(".tag", "legal_holds_export_cancelled_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::LegalHoldsExportDownloadedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 6)?;
+                s.serialize_field(".tag", "legal_holds_export_downloaded_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::LegalHoldsExportRemovedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                s.serialize_field(".tag", "legal_holds_export_removed_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -13874,6 +16553,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "legal_holds_report_a_hold_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::AccountLockOrUnlockedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "account_lock_or_unlocked_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -13946,6 +16632,20 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "sso_error_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::CreateTeamInviteLinkDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "create_team_invite_link_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::DeleteTeamInviteLinkDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "delete_team_invite_link_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -14101,6 +16801,62 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "secondary_mails_policy_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::BinderAddPageDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                s.serialize_field(".tag", "binder_add_page_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::BinderAddSectionDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                s.serialize_field(".tag", "binder_add_section_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::BinderRemovePageDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                s.serialize_field(".tag", "binder_remove_page_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::BinderRemoveSectionDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                s.serialize_field(".tag", "binder_remove_section_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::BinderRenamePageDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 5)?;
+                s.serialize_field(".tag", "binder_rename_page_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::BinderRenameSectionDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 5)?;
+                s.serialize_field(".tag", "binder_rename_section_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::BinderReorderPageDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                s.serialize_field(".tag", "binder_reorder_page_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::BinderReorderSectionDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                s.serialize_field(".tag", "binder_reorder_section_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -14431,6 +17187,62 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "export_members_report_fail_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::NoExpirationLinkGenCreateReportDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "no_expiration_link_gen_create_report_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::NoExpirationLinkGenReportFailedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "no_expiration_link_gen_report_failed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::NoPasswordLinkGenCreateReportDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "no_password_link_gen_create_report_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::NoPasswordLinkGenReportFailedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "no_password_link_gen_report_failed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::NoPasswordLinkViewCreateReportDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "no_password_link_view_create_report_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::NoPasswordLinkViewReportFailedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "no_password_link_view_report_failed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::OutdatedLinkViewCreateReportDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "outdated_link_view_create_report_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::OutdatedLinkViewReportFailedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                s.serialize_field(".tag", "outdated_link_view_report_failed_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -14917,63 +17729,63 @@ impl ::serde::ser::Serialize for EventDetails {
             }
             EventDetails::SharedLinkSettingsAddExpirationDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
                 s.serialize_field(".tag", "shared_link_settings_add_expiration_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedLinkSettingsAddPasswordDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "shared_link_settings_add_password_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedLinkSettingsAllowDownloadDisabledDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "shared_link_settings_allow_download_disabled_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedLinkSettingsAllowDownloadEnabledDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "shared_link_settings_allow_download_enabled_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedLinkSettingsChangeAudienceDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                let mut s = serializer.serialize_struct("EventDetails", 5)?;
                 s.serialize_field(".tag", "shared_link_settings_change_audience_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedLinkSettingsChangeExpirationDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 4)?;
+                let mut s = serializer.serialize_struct("EventDetails", 5)?;
                 s.serialize_field(".tag", "shared_link_settings_change_expiration_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedLinkSettingsChangePasswordDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "shared_link_settings_change_password_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedLinkSettingsRemoveExpirationDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                let mut s = serializer.serialize_struct("EventDetails", 4)?;
                 s.serialize_field(".tag", "shared_link_settings_remove_expiration_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
             EventDetails::SharedLinkSettingsRemovePasswordDetails(ref x) => {
                 // struct
-                let mut s = serializer.serialize_struct("EventDetails", 2)?;
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "shared_link_settings_remove_password_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
@@ -15467,6 +18279,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventDetails::MemberSendInvitePolicyChangedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "member_send_invite_policy_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::MemberSpaceLimitsAddExceptionDetails(_) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 1)?;
@@ -15589,6 +18408,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventDetails::RewindPolicyChangedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "rewind_policy_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::SharingChangeFolderJoinPolicyDetails(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
@@ -15680,6 +18506,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventDetails::TeamSharingWhitelistSubjectsChangedDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "team_sharing_whitelist_subjects_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventDetails::TfaAddExceptionDetails(_) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 1)?;
@@ -15717,6 +18550,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 3)?;
                 s.serialize_field(".tag", "watermarking_policy_changed_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::WebSessionsChangeActiveSessionLimitDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 3)?;
+                s.serialize_field(".tag", "web_sessions_change_active_session_limit_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -15847,6 +18687,13 @@ impl ::serde::ser::Serialize for EventDetails {
                 // struct
                 let mut s = serializer.serialize_struct("EventDetails", 2)?;
                 s.serialize_field(".tag", "ended_enterprise_admin_session_deprecated_details")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventDetails::EnterpriseSettingsLockingDetails(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventDetails", 5)?;
+                s.serialize_field(".tag", "enterprise_settings_locking_details")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -16099,6 +18946,8 @@ pub enum EventType {
     FileEdit(FileEditType),
     /// (file_operations) Created copy reference to file/folder
     FileGetCopyReference(FileGetCopyReferenceType),
+    /// (file_operations) Locked/unlocked editing for a file
+    FileLockingLockStatusChanged(FileLockingLockStatusChangedType),
     /// (file_operations) Moved files and/or folders
     FileMove(FileMoveType),
     /// (file_operations) Permanently deleted files and/or folders
@@ -16121,6 +18970,8 @@ pub enum EventType {
     FolderOverviewItemPinned(FolderOverviewItemPinnedType),
     /// (file_operations) Unpinned item from folder overview
     FolderOverviewItemUnpinned(FolderOverviewItemUnpinnedType),
+    /// (file_operations) Rewound a folder
+    RewindFolder(RewindFolderType),
     /// (file_requests) Changed file request
     FileRequestChange(FileRequestChangeType),
     /// (file_requests) Closed file request
@@ -16167,12 +19018,20 @@ pub enum EventType {
     LegalHoldsChangeHoldName(LegalHoldsChangeHoldNameType),
     /// (legal_holds) Exported hold
     LegalHoldsExportAHold(LegalHoldsExportAHoldType),
+    /// (legal_holds) Canceled export for a hold
+    LegalHoldsExportCancelled(LegalHoldsExportCancelledType),
+    /// (legal_holds) Downloaded export for a hold
+    LegalHoldsExportDownloaded(LegalHoldsExportDownloadedType),
+    /// (legal_holds) Removed export for a hold
+    LegalHoldsExportRemoved(LegalHoldsExportRemovedType),
     /// (legal_holds) Released a hold
     LegalHoldsReleaseAHold(LegalHoldsReleaseAHoldType),
     /// (legal_holds) Removed members from a hold
     LegalHoldsRemoveMembers(LegalHoldsRemoveMembersType),
     /// (legal_holds) Created a summary report for a hold
     LegalHoldsReportAHold(LegalHoldsReportAHoldType),
+    /// (logins) Unlocked/locked account after failed sign in attempts
+    AccountLockOrUnlocked(AccountLockOrUnlockedType),
     /// (logins) Failed to sign in via EMM (deprecated, replaced by 'Failed to sign in')
     EmmError(EmmErrorType),
     /// (logins) Started trusted team admin session
@@ -16195,6 +19054,10 @@ pub enum EventType {
     SignInAsSessionStart(SignInAsSessionStartType),
     /// (logins) Failed to sign in via SSO (deprecated, replaced by 'Failed to sign in')
     SsoError(SsoErrorType),
+    /// (members) Created team invite link
+    CreateTeamInviteLink(CreateTeamInviteLinkType),
+    /// (members) Deleted team invite link
+    DeleteTeamInviteLink(DeleteTeamInviteLinkType),
     /// (members) Added an external ID for team member
     MemberAddExternalId(MemberAddExternalIdType),
     /// (members) Added team member name
@@ -16241,6 +19104,22 @@ pub enum EventType {
     SecondaryEmailVerified(SecondaryEmailVerifiedType),
     /// (members) Secondary mails policy changed
     SecondaryMailsPolicyChanged(SecondaryMailsPolicyChangedType),
+    /// (paper) Added Binder page (deprecated, replaced by 'Edited files')
+    BinderAddPage(BinderAddPageType),
+    /// (paper) Added Binder section (deprecated, replaced by 'Edited files')
+    BinderAddSection(BinderAddSectionType),
+    /// (paper) Removed Binder page (deprecated, replaced by 'Edited files')
+    BinderRemovePage(BinderRemovePageType),
+    /// (paper) Removed Binder section (deprecated, replaced by 'Edited files')
+    BinderRemoveSection(BinderRemoveSectionType),
+    /// (paper) Renamed Binder page (deprecated, replaced by 'Edited files')
+    BinderRenamePage(BinderRenamePageType),
+    /// (paper) Renamed Binder section (deprecated, replaced by 'Edited files')
+    BinderRenameSection(BinderRenameSectionType),
+    /// (paper) Reordered Binder page (deprecated, replaced by 'Edited files')
+    BinderReorderPage(BinderReorderPageType),
+    /// (paper) Reordered Binder section (deprecated, replaced by 'Edited files')
+    BinderReorderSection(BinderReorderSectionType),
     /// (paper) Added users and/or groups to Paper doc/folder
     PaperContentAddMember(PaperContentAddMemberType),
     /// (paper) Added Paper doc/folder to folder
@@ -16338,6 +19217,22 @@ pub enum EventType {
     ExportMembersReport(ExportMembersReportType),
     /// (reports) Failed to create members data report
     ExportMembersReportFail(ExportMembersReportFailType),
+    /// (reports) Report created: Links created with no expiration
+    NoExpirationLinkGenCreateReport(NoExpirationLinkGenCreateReportType),
+    /// (reports) Couldn't create report: Links created with no expiration
+    NoExpirationLinkGenReportFailed(NoExpirationLinkGenReportFailedType),
+    /// (reports) Report created: Links created without passwords
+    NoPasswordLinkGenCreateReport(NoPasswordLinkGenCreateReportType),
+    /// (reports) Couldn't create report: Links created without passwords
+    NoPasswordLinkGenReportFailed(NoPasswordLinkGenReportFailedType),
+    /// (reports) Report created: Views of links without passwords
+    NoPasswordLinkViewCreateReport(NoPasswordLinkViewCreateReportType),
+    /// (reports) Couldn't create report: Views of links without passwords
+    NoPasswordLinkViewReportFailed(NoPasswordLinkViewReportFailedType),
+    /// (reports) Report created: Views of old links
+    OutdatedLinkViewCreateReport(OutdatedLinkViewCreateReportType),
+    /// (reports) Couldn't create report: Views of old links
+    OutdatedLinkViewReportFailed(OutdatedLinkViewReportFailedType),
     /// (reports) Exported all team Paper docs
     PaperAdminExportStart(PaperAdminExportStartType),
     /// (reports) Created Smart Sync non-admin devices report
@@ -16650,6 +19545,8 @@ pub enum EventType {
     IntegrationPolicyChanged(IntegrationPolicyChangedType),
     /// (team_policies) Changed whether users can find team when not invited
     MemberRequestsChangePolicy(MemberRequestsChangePolicyType),
+    /// (team_policies) Changed member send invite policy for team
+    MemberSendInvitePolicyChanged(MemberSendInvitePolicyChangedType),
     /// (team_policies) Added members to member space limit exception list
     MemberSpaceLimitsAddException(MemberSpaceLimitsAddExceptionType),
     /// (team_policies) Changed member space limit type for team
@@ -16689,6 +19586,8 @@ pub enum EventType {
     PermanentDeleteChangePolicy(PermanentDeleteChangePolicyType),
     /// (team_policies) Enabled/disabled reseller support
     ResellerSupportChangePolicy(ResellerSupportChangePolicyType),
+    /// (team_policies) Changed Rewind policy for team
+    RewindPolicyChanged(RewindPolicyChangedType),
     /// (team_policies) Changed whether team members can join shared folders owned outside team
     SharingChangeFolderJoinPolicy(SharingChangeFolderJoinPolicyType),
     /// (team_policies) Changed whether members can share links outside team, and if links are
@@ -16716,6 +19615,8 @@ pub enum EventType {
     TeamExtensionsPolicyChanged(TeamExtensionsPolicyChangedType),
     /// (team_policies) Enabled/disabled Team Selective Sync for team
     TeamSelectiveSyncPolicyChanged(TeamSelectiveSyncPolicyChangedType),
+    /// (team_policies) Edited the approved list for sharing externally
+    TeamSharingWhitelistSubjectsChanged(TeamSharingWhitelistSubjectsChangedType),
     /// (team_policies) Added members to two factor authentication exception list
     TfaAddException(TfaAddExceptionType),
     /// (team_policies) Changed two-step verification setting for team
@@ -16729,6 +19630,8 @@ pub enum EventType {
     ViewerInfoPolicyChanged(ViewerInfoPolicyChangedType),
     /// (team_policies) Changed watermarking policy for team
     WatermarkingPolicyChanged(WatermarkingPolicyChangedType),
+    /// (team_policies) Changed limit on active sessions per member
+    WebSessionsChangeActiveSessionLimit(WebSessionsChangeActiveSessionLimitType),
     /// (team_policies) Changed how long members can stay signed in to Dropbox.com
     WebSessionsChangeFixedLengthPolicy(WebSessionsChangeFixedLengthPolicyType),
     /// (team_policies) Changed how long team members can be idle while signed in to Dropbox.com
@@ -16770,6 +19673,8 @@ pub enum EventType {
     /// (trusted_teams) Ended enterprise admin session (deprecated, replaced by 'Ended enterprise
     /// admin session')
     EndedEnterpriseAdminSessionDeprecated(EndedEnterpriseAdminSessionDeprecatedType),
+    /// (trusted_teams) Changed who can update a setting
+    EnterpriseSettingsLocking(EnterpriseSettingsLockingType),
     /// (trusted_teams) Changed guest team admin status
     GuestAdminChangeStatus(GuestAdminChangeStatusType),
     /// (trusted_teams) Started enterprise admin session
@@ -16886,6 +19791,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "file_download" => Ok(EventType::FileDownload(FileDownloadType::internal_deserialize(map)?)),
                     "file_edit" => Ok(EventType::FileEdit(FileEditType::internal_deserialize(map)?)),
                     "file_get_copy_reference" => Ok(EventType::FileGetCopyReference(FileGetCopyReferenceType::internal_deserialize(map)?)),
+                    "file_locking_lock_status_changed" => Ok(EventType::FileLockingLockStatusChanged(FileLockingLockStatusChangedType::internal_deserialize(map)?)),
                     "file_move" => Ok(EventType::FileMove(FileMoveType::internal_deserialize(map)?)),
                     "file_permanently_delete" => Ok(EventType::FilePermanentlyDelete(FilePermanentlyDeleteType::internal_deserialize(map)?)),
                     "file_preview" => Ok(EventType::FilePreview(FilePreviewType::internal_deserialize(map)?)),
@@ -16897,6 +19803,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "folder_overview_description_changed" => Ok(EventType::FolderOverviewDescriptionChanged(FolderOverviewDescriptionChangedType::internal_deserialize(map)?)),
                     "folder_overview_item_pinned" => Ok(EventType::FolderOverviewItemPinned(FolderOverviewItemPinnedType::internal_deserialize(map)?)),
                     "folder_overview_item_unpinned" => Ok(EventType::FolderOverviewItemUnpinned(FolderOverviewItemUnpinnedType::internal_deserialize(map)?)),
+                    "rewind_folder" => Ok(EventType::RewindFolder(RewindFolderType::internal_deserialize(map)?)),
                     "file_request_change" => Ok(EventType::FileRequestChange(FileRequestChangeType::internal_deserialize(map)?)),
                     "file_request_close" => Ok(EventType::FileRequestClose(FileRequestCloseType::internal_deserialize(map)?)),
                     "file_request_create" => Ok(EventType::FileRequestCreate(FileRequestCreateType::internal_deserialize(map)?)),
@@ -16920,9 +19827,13 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "legal_holds_change_hold_details" => Ok(EventType::LegalHoldsChangeHoldDetails(LegalHoldsChangeHoldDetailsType::internal_deserialize(map)?)),
                     "legal_holds_change_hold_name" => Ok(EventType::LegalHoldsChangeHoldName(LegalHoldsChangeHoldNameType::internal_deserialize(map)?)),
                     "legal_holds_export_a_hold" => Ok(EventType::LegalHoldsExportAHold(LegalHoldsExportAHoldType::internal_deserialize(map)?)),
+                    "legal_holds_export_cancelled" => Ok(EventType::LegalHoldsExportCancelled(LegalHoldsExportCancelledType::internal_deserialize(map)?)),
+                    "legal_holds_export_downloaded" => Ok(EventType::LegalHoldsExportDownloaded(LegalHoldsExportDownloadedType::internal_deserialize(map)?)),
+                    "legal_holds_export_removed" => Ok(EventType::LegalHoldsExportRemoved(LegalHoldsExportRemovedType::internal_deserialize(map)?)),
                     "legal_holds_release_a_hold" => Ok(EventType::LegalHoldsReleaseAHold(LegalHoldsReleaseAHoldType::internal_deserialize(map)?)),
                     "legal_holds_remove_members" => Ok(EventType::LegalHoldsRemoveMembers(LegalHoldsRemoveMembersType::internal_deserialize(map)?)),
                     "legal_holds_report_a_hold" => Ok(EventType::LegalHoldsReportAHold(LegalHoldsReportAHoldType::internal_deserialize(map)?)),
+                    "account_lock_or_unlocked" => Ok(EventType::AccountLockOrUnlocked(AccountLockOrUnlockedType::internal_deserialize(map)?)),
                     "emm_error" => Ok(EventType::EmmError(EmmErrorType::internal_deserialize(map)?)),
                     "guest_admin_signed_in_via_trusted_teams" => Ok(EventType::GuestAdminSignedInViaTrustedTeams(GuestAdminSignedInViaTrustedTeamsType::internal_deserialize(map)?)),
                     "guest_admin_signed_out_via_trusted_teams" => Ok(EventType::GuestAdminSignedOutViaTrustedTeams(GuestAdminSignedOutViaTrustedTeamsType::internal_deserialize(map)?)),
@@ -16934,6 +19845,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "sign_in_as_session_end" => Ok(EventType::SignInAsSessionEnd(SignInAsSessionEndType::internal_deserialize(map)?)),
                     "sign_in_as_session_start" => Ok(EventType::SignInAsSessionStart(SignInAsSessionStartType::internal_deserialize(map)?)),
                     "sso_error" => Ok(EventType::SsoError(SsoErrorType::internal_deserialize(map)?)),
+                    "create_team_invite_link" => Ok(EventType::CreateTeamInviteLink(CreateTeamInviteLinkType::internal_deserialize(map)?)),
+                    "delete_team_invite_link" => Ok(EventType::DeleteTeamInviteLink(DeleteTeamInviteLinkType::internal_deserialize(map)?)),
                     "member_add_external_id" => Ok(EventType::MemberAddExternalId(MemberAddExternalIdType::internal_deserialize(map)?)),
                     "member_add_name" => Ok(EventType::MemberAddName(MemberAddNameType::internal_deserialize(map)?)),
                     "member_change_admin_role" => Ok(EventType::MemberChangeAdminRole(MemberChangeAdminRoleType::internal_deserialize(map)?)),
@@ -16957,6 +19870,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "secondary_email_deleted" => Ok(EventType::SecondaryEmailDeleted(SecondaryEmailDeletedType::internal_deserialize(map)?)),
                     "secondary_email_verified" => Ok(EventType::SecondaryEmailVerified(SecondaryEmailVerifiedType::internal_deserialize(map)?)),
                     "secondary_mails_policy_changed" => Ok(EventType::SecondaryMailsPolicyChanged(SecondaryMailsPolicyChangedType::internal_deserialize(map)?)),
+                    "binder_add_page" => Ok(EventType::BinderAddPage(BinderAddPageType::internal_deserialize(map)?)),
+                    "binder_add_section" => Ok(EventType::BinderAddSection(BinderAddSectionType::internal_deserialize(map)?)),
+                    "binder_remove_page" => Ok(EventType::BinderRemovePage(BinderRemovePageType::internal_deserialize(map)?)),
+                    "binder_remove_section" => Ok(EventType::BinderRemoveSection(BinderRemoveSectionType::internal_deserialize(map)?)),
+                    "binder_rename_page" => Ok(EventType::BinderRenamePage(BinderRenamePageType::internal_deserialize(map)?)),
+                    "binder_rename_section" => Ok(EventType::BinderRenameSection(BinderRenameSectionType::internal_deserialize(map)?)),
+                    "binder_reorder_page" => Ok(EventType::BinderReorderPage(BinderReorderPageType::internal_deserialize(map)?)),
+                    "binder_reorder_section" => Ok(EventType::BinderReorderSection(BinderReorderSectionType::internal_deserialize(map)?)),
                     "paper_content_add_member" => Ok(EventType::PaperContentAddMember(PaperContentAddMemberType::internal_deserialize(map)?)),
                     "paper_content_add_to_folder" => Ok(EventType::PaperContentAddToFolder(PaperContentAddToFolderType::internal_deserialize(map)?)),
                     "paper_content_archive" => Ok(EventType::PaperContentArchive(PaperContentArchiveType::internal_deserialize(map)?)),
@@ -17005,6 +19926,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "emm_create_usage_report" => Ok(EventType::EmmCreateUsageReport(EmmCreateUsageReportType::internal_deserialize(map)?)),
                     "export_members_report" => Ok(EventType::ExportMembersReport(ExportMembersReportType::internal_deserialize(map)?)),
                     "export_members_report_fail" => Ok(EventType::ExportMembersReportFail(ExportMembersReportFailType::internal_deserialize(map)?)),
+                    "no_expiration_link_gen_create_report" => Ok(EventType::NoExpirationLinkGenCreateReport(NoExpirationLinkGenCreateReportType::internal_deserialize(map)?)),
+                    "no_expiration_link_gen_report_failed" => Ok(EventType::NoExpirationLinkGenReportFailed(NoExpirationLinkGenReportFailedType::internal_deserialize(map)?)),
+                    "no_password_link_gen_create_report" => Ok(EventType::NoPasswordLinkGenCreateReport(NoPasswordLinkGenCreateReportType::internal_deserialize(map)?)),
+                    "no_password_link_gen_report_failed" => Ok(EventType::NoPasswordLinkGenReportFailed(NoPasswordLinkGenReportFailedType::internal_deserialize(map)?)),
+                    "no_password_link_view_create_report" => Ok(EventType::NoPasswordLinkViewCreateReport(NoPasswordLinkViewCreateReportType::internal_deserialize(map)?)),
+                    "no_password_link_view_report_failed" => Ok(EventType::NoPasswordLinkViewReportFailed(NoPasswordLinkViewReportFailedType::internal_deserialize(map)?)),
+                    "outdated_link_view_create_report" => Ok(EventType::OutdatedLinkViewCreateReport(OutdatedLinkViewCreateReportType::internal_deserialize(map)?)),
+                    "outdated_link_view_report_failed" => Ok(EventType::OutdatedLinkViewReportFailed(OutdatedLinkViewReportFailedType::internal_deserialize(map)?)),
                     "paper_admin_export_start" => Ok(EventType::PaperAdminExportStart(PaperAdminExportStartType::internal_deserialize(map)?)),
                     "smart_sync_create_admin_privilege_report" => Ok(EventType::SmartSyncCreateAdminPrivilegeReport(SmartSyncCreateAdminPrivilegeReportType::internal_deserialize(map)?)),
                     "team_activity_create_report" => Ok(EventType::TeamActivityCreateReport(TeamActivityCreateReportType::internal_deserialize(map)?)),
@@ -17157,6 +20086,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "group_user_management_change_policy" => Ok(EventType::GroupUserManagementChangePolicy(GroupUserManagementChangePolicyType::internal_deserialize(map)?)),
                     "integration_policy_changed" => Ok(EventType::IntegrationPolicyChanged(IntegrationPolicyChangedType::internal_deserialize(map)?)),
                     "member_requests_change_policy" => Ok(EventType::MemberRequestsChangePolicy(MemberRequestsChangePolicyType::internal_deserialize(map)?)),
+                    "member_send_invite_policy_changed" => Ok(EventType::MemberSendInvitePolicyChanged(MemberSendInvitePolicyChangedType::internal_deserialize(map)?)),
                     "member_space_limits_add_exception" => Ok(EventType::MemberSpaceLimitsAddException(MemberSpaceLimitsAddExceptionType::internal_deserialize(map)?)),
                     "member_space_limits_change_caps_type_policy" => Ok(EventType::MemberSpaceLimitsChangeCapsTypePolicy(MemberSpaceLimitsChangeCapsTypePolicyType::internal_deserialize(map)?)),
                     "member_space_limits_change_policy" => Ok(EventType::MemberSpaceLimitsChangePolicy(MemberSpaceLimitsChangePolicyType::internal_deserialize(map)?)),
@@ -17175,6 +20105,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "password_strength_requirements_change_policy" => Ok(EventType::PasswordStrengthRequirementsChangePolicy(PasswordStrengthRequirementsChangePolicyType::internal_deserialize(map)?)),
                     "permanent_delete_change_policy" => Ok(EventType::PermanentDeleteChangePolicy(PermanentDeleteChangePolicyType::internal_deserialize(map)?)),
                     "reseller_support_change_policy" => Ok(EventType::ResellerSupportChangePolicy(ResellerSupportChangePolicyType::internal_deserialize(map)?)),
+                    "rewind_policy_changed" => Ok(EventType::RewindPolicyChanged(RewindPolicyChangedType::internal_deserialize(map)?)),
                     "sharing_change_folder_join_policy" => Ok(EventType::SharingChangeFolderJoinPolicy(SharingChangeFolderJoinPolicyType::internal_deserialize(map)?)),
                     "sharing_change_link_policy" => Ok(EventType::SharingChangeLinkPolicy(SharingChangeLinkPolicyType::internal_deserialize(map)?)),
                     "sharing_change_member_policy" => Ok(EventType::SharingChangeMemberPolicy(SharingChangeMemberPolicyType::internal_deserialize(map)?)),
@@ -17188,12 +20119,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "sso_change_policy" => Ok(EventType::SsoChangePolicy(SsoChangePolicyType::internal_deserialize(map)?)),
                     "team_extensions_policy_changed" => Ok(EventType::TeamExtensionsPolicyChanged(TeamExtensionsPolicyChangedType::internal_deserialize(map)?)),
                     "team_selective_sync_policy_changed" => Ok(EventType::TeamSelectiveSyncPolicyChanged(TeamSelectiveSyncPolicyChangedType::internal_deserialize(map)?)),
+                    "team_sharing_whitelist_subjects_changed" => Ok(EventType::TeamSharingWhitelistSubjectsChanged(TeamSharingWhitelistSubjectsChangedType::internal_deserialize(map)?)),
                     "tfa_add_exception" => Ok(EventType::TfaAddException(TfaAddExceptionType::internal_deserialize(map)?)),
                     "tfa_change_policy" => Ok(EventType::TfaChangePolicy(TfaChangePolicyType::internal_deserialize(map)?)),
                     "tfa_remove_exception" => Ok(EventType::TfaRemoveException(TfaRemoveExceptionType::internal_deserialize(map)?)),
                     "two_account_change_policy" => Ok(EventType::TwoAccountChangePolicy(TwoAccountChangePolicyType::internal_deserialize(map)?)),
                     "viewer_info_policy_changed" => Ok(EventType::ViewerInfoPolicyChanged(ViewerInfoPolicyChangedType::internal_deserialize(map)?)),
                     "watermarking_policy_changed" => Ok(EventType::WatermarkingPolicyChanged(WatermarkingPolicyChangedType::internal_deserialize(map)?)),
+                    "web_sessions_change_active_session_limit" => Ok(EventType::WebSessionsChangeActiveSessionLimit(WebSessionsChangeActiveSessionLimitType::internal_deserialize(map)?)),
                     "web_sessions_change_fixed_length_policy" => Ok(EventType::WebSessionsChangeFixedLengthPolicy(WebSessionsChangeFixedLengthPolicyType::internal_deserialize(map)?)),
                     "web_sessions_change_idle_length_policy" => Ok(EventType::WebSessionsChangeIdleLengthPolicy(WebSessionsChangeIdleLengthPolicyType::internal_deserialize(map)?)),
                     "team_merge_from" => Ok(EventType::TeamMergeFrom(TeamMergeFromType::internal_deserialize(map)?)),
@@ -17214,6 +20147,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                     "changed_enterprise_connected_team_status" => Ok(EventType::ChangedEnterpriseConnectedTeamStatus(ChangedEnterpriseConnectedTeamStatusType::internal_deserialize(map)?)),
                     "ended_enterprise_admin_session" => Ok(EventType::EndedEnterpriseAdminSession(EndedEnterpriseAdminSessionType::internal_deserialize(map)?)),
                     "ended_enterprise_admin_session_deprecated" => Ok(EventType::EndedEnterpriseAdminSessionDeprecated(EndedEnterpriseAdminSessionDeprecatedType::internal_deserialize(map)?)),
+                    "enterprise_settings_locking" => Ok(EventType::EnterpriseSettingsLocking(EnterpriseSettingsLockingType::internal_deserialize(map)?)),
                     "guest_admin_change_status" => Ok(EventType::GuestAdminChangeStatus(GuestAdminChangeStatusType::internal_deserialize(map)?)),
                     "started_enterprise_admin_session" => Ok(EventType::StartedEnterpriseAdminSession(StartedEnterpriseAdminSessionType::internal_deserialize(map)?)),
                     "team_merge_request_accepted" => Ok(EventType::TeamMergeRequestAccepted(TeamMergeRequestAcceptedType::internal_deserialize(map)?)),
@@ -17288,6 +20222,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "file_download",
                                     "file_edit",
                                     "file_get_copy_reference",
+                                    "file_locking_lock_status_changed",
                                     "file_move",
                                     "file_permanently_delete",
                                     "file_preview",
@@ -17299,6 +20234,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "folder_overview_description_changed",
                                     "folder_overview_item_pinned",
                                     "folder_overview_item_unpinned",
+                                    "rewind_folder",
                                     "file_request_change",
                                     "file_request_close",
                                     "file_request_create",
@@ -17322,9 +20258,13 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "legal_holds_change_hold_details",
                                     "legal_holds_change_hold_name",
                                     "legal_holds_export_a_hold",
+                                    "legal_holds_export_cancelled",
+                                    "legal_holds_export_downloaded",
+                                    "legal_holds_export_removed",
                                     "legal_holds_release_a_hold",
                                     "legal_holds_remove_members",
                                     "legal_holds_report_a_hold",
+                                    "account_lock_or_unlocked",
                                     "emm_error",
                                     "guest_admin_signed_in_via_trusted_teams",
                                     "guest_admin_signed_out_via_trusted_teams",
@@ -17336,6 +20276,8 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "sign_in_as_session_end",
                                     "sign_in_as_session_start",
                                     "sso_error",
+                                    "create_team_invite_link",
+                                    "delete_team_invite_link",
                                     "member_add_external_id",
                                     "member_add_name",
                                     "member_change_admin_role",
@@ -17359,6 +20301,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "secondary_email_deleted",
                                     "secondary_email_verified",
                                     "secondary_mails_policy_changed",
+                                    "binder_add_page",
+                                    "binder_add_section",
+                                    "binder_remove_page",
+                                    "binder_remove_section",
+                                    "binder_rename_page",
+                                    "binder_rename_section",
+                                    "binder_reorder_page",
+                                    "binder_reorder_section",
                                     "paper_content_add_member",
                                     "paper_content_add_to_folder",
                                     "paper_content_archive",
@@ -17407,6 +20357,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "emm_create_usage_report",
                                     "export_members_report",
                                     "export_members_report_fail",
+                                    "no_expiration_link_gen_create_report",
+                                    "no_expiration_link_gen_report_failed",
+                                    "no_password_link_gen_create_report",
+                                    "no_password_link_gen_report_failed",
+                                    "no_password_link_view_create_report",
+                                    "no_password_link_view_report_failed",
+                                    "outdated_link_view_create_report",
+                                    "outdated_link_view_report_failed",
                                     "paper_admin_export_start",
                                     "smart_sync_create_admin_privilege_report",
                                     "team_activity_create_report",
@@ -17559,6 +20517,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "group_user_management_change_policy",
                                     "integration_policy_changed",
                                     "member_requests_change_policy",
+                                    "member_send_invite_policy_changed",
                                     "member_space_limits_add_exception",
                                     "member_space_limits_change_caps_type_policy",
                                     "member_space_limits_change_policy",
@@ -17577,6 +20536,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "password_strength_requirements_change_policy",
                                     "permanent_delete_change_policy",
                                     "reseller_support_change_policy",
+                                    "rewind_policy_changed",
                                     "sharing_change_folder_join_policy",
                                     "sharing_change_link_policy",
                                     "sharing_change_member_policy",
@@ -17590,12 +20550,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "sso_change_policy",
                                     "team_extensions_policy_changed",
                                     "team_selective_sync_policy_changed",
+                                    "team_sharing_whitelist_subjects_changed",
                                     "tfa_add_exception",
                                     "tfa_change_policy",
                                     "tfa_remove_exception",
                                     "two_account_change_policy",
                                     "viewer_info_policy_changed",
                                     "watermarking_policy_changed",
+                                    "web_sessions_change_active_session_limit",
                                     "web_sessions_change_fixed_length_policy",
                                     "web_sessions_change_idle_length_policy",
                                     "team_merge_from",
@@ -17616,6 +20578,7 @@ impl<'de> ::serde::de::Deserialize<'de> for EventType {
                                     "changed_enterprise_connected_team_status",
                                     "ended_enterprise_admin_session",
                                     "ended_enterprise_admin_session_deprecated",
+                                    "enterprise_settings_locking",
                                     "guest_admin_change_status",
                                     "started_enterprise_admin_session",
                                     "team_merge_request_accepted",
@@ -17975,6 +20938,13 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::FileLockingLockStatusChanged(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "file_locking_lock_status_changed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::FileMove(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -18049,6 +21019,13 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "folder_overview_item_unpinned")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::RewindFolder(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "rewind_folder")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -18213,6 +21190,27 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::LegalHoldsExportCancelled(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "legal_holds_export_cancelled")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::LegalHoldsExportDownloaded(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "legal_holds_export_downloaded")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::LegalHoldsExportRemoved(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "legal_holds_export_removed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::LegalHoldsReleaseAHold(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -18231,6 +21229,13 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "legal_holds_report_a_hold")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::AccountLockOrUnlocked(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "account_lock_or_unlocked")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -18308,6 +21313,20 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "sso_error")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::CreateTeamInviteLink(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "create_team_invite_link")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::DeleteTeamInviteLink(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "delete_team_invite_link")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -18469,6 +21488,62 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "secondary_mails_policy_changed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::BinderAddPage(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "binder_add_page")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::BinderAddSection(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "binder_add_section")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::BinderRemovePage(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "binder_remove_page")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::BinderRemoveSection(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "binder_remove_section")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::BinderRenamePage(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "binder_rename_page")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::BinderRenameSection(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "binder_rename_section")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::BinderReorderPage(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "binder_reorder_page")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::BinderReorderSection(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "binder_reorder_section")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -18805,6 +21880,62 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "export_members_report_fail")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::NoExpirationLinkGenCreateReport(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "no_expiration_link_gen_create_report")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::NoExpirationLinkGenReportFailed(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "no_expiration_link_gen_report_failed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::NoPasswordLinkGenCreateReport(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "no_password_link_gen_create_report")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::NoPasswordLinkGenReportFailed(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "no_password_link_gen_report_failed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::NoPasswordLinkViewCreateReport(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "no_password_link_view_create_report")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::NoPasswordLinkViewReportFailed(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "no_password_link_view_report_failed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::OutdatedLinkViewCreateReport(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "outdated_link_view_create_report")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::OutdatedLinkViewReportFailed(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "outdated_link_view_report_failed")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -19872,6 +23003,13 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::MemberSendInvitePolicyChanged(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "member_send_invite_policy_changed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::MemberSpaceLimitsAddException(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -19998,6 +23136,13 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::RewindPolicyChanged(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "rewind_policy_changed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::SharingChangeFolderJoinPolicy(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -20089,6 +23234,13 @@ impl ::serde::ser::Serialize for EventType {
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
+            EventType::TeamSharingWhitelistSubjectsChanged(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "team_sharing_whitelist_subjects_changed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
             EventType::TfaAddException(ref x) => {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
@@ -20128,6 +23280,13 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "watermarking_policy_changed")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::WebSessionsChangeActiveSessionLimit(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "web_sessions_change_active_session_limit")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -20268,6 +23427,13 @@ impl ::serde::ser::Serialize for EventType {
                 // struct
                 let mut s = serializer.serialize_struct("EventType", 2)?;
                 s.serialize_field(".tag", "ended_enterprise_admin_session_deprecated")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            EventType::EnterpriseSettingsLocking(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("EventType", 2)?;
+                s.serialize_field(".tag", "enterprise_settings_locking")?;
                 x.internal_serialize::<S>(&mut s)?;
                 s.end()
             }
@@ -23668,6 +26834,199 @@ impl ::serde::ser::Serialize for FileLikeCommentType {
     }
 }
 
+/// Locked/unlocked editing for a file.
+#[derive(Debug)]
+pub struct FileLockingLockStatusChangedDetails {
+    /// Previous lock status of the file.
+    pub previous_value: LockStatus,
+    /// New lock status of the file.
+    pub new_value: LockStatus,
+}
+
+impl FileLockingLockStatusChangedDetails {
+    pub fn new(previous_value: LockStatus, new_value: LockStatus) -> Self {
+        FileLockingLockStatusChangedDetails {
+            previous_value,
+            new_value,
+        }
+    }
+
+}
+
+const FILE_LOCKING_LOCK_STATUS_CHANGED_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                                   "new_value"];
+impl FileLockingLockStatusChangedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<FileLockingLockStatusChangedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<FileLockingLockStatusChangedDetails>, V::Error> {
+        let mut field_previous_value = None;
+        let mut field_new_value = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = FileLockingLockStatusChangedDetails {
+            previous_value: field_previous_value.ok_or_else(|| ::serde::de::Error::missing_field("previous_value"))?,
+            new_value: field_new_value.ok_or_else(|| ::serde::de::Error::missing_field("new_value"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("previous_value", &self.previous_value)?;
+        s.serialize_field("new_value", &self.new_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileLockingLockStatusChangedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = FileLockingLockStatusChangedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a FileLockingLockStatusChangedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                FileLockingLockStatusChangedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("FileLockingLockStatusChangedDetails", FILE_LOCKING_LOCK_STATUS_CHANGED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileLockingLockStatusChangedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("FileLockingLockStatusChangedDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct FileLockingLockStatusChangedType {
+    pub description: String,
+}
+
+impl FileLockingLockStatusChangedType {
+    pub fn new(description: String) -> Self {
+        FileLockingLockStatusChangedType {
+            description,
+        }
+    }
+
+}
+
+const FILE_LOCKING_LOCK_STATUS_CHANGED_TYPE_FIELDS: &[&str] = &["description"];
+impl FileLockingLockStatusChangedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<FileLockingLockStatusChangedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<FileLockingLockStatusChangedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = FileLockingLockStatusChangedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for FileLockingLockStatusChangedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = FileLockingLockStatusChangedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a FileLockingLockStatusChangedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                FileLockingLockStatusChangedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("FileLockingLockStatusChangedType", FILE_LOCKING_LOCK_STATUS_CHANGED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for FileLockingLockStatusChangedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("FileLockingLockStatusChangedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Changed file locking policy for team.
 #[derive(Debug)]
 pub struct FileLockingPolicyChangedDetails {
@@ -23873,6 +27232,8 @@ pub struct FileLogInfo {
     pub display_name: Option<String>,
     /// Unique ID. Might be missing due to historical data gap.
     pub file_id: Option<String>,
+    /// File or folder size in bytes.
+    pub file_size: Option<u64>,
 }
 
 impl FileLogInfo {
@@ -23881,6 +27242,7 @@ impl FileLogInfo {
             path,
             display_name: None,
             file_id: None,
+            file_size: None,
         }
     }
 
@@ -23894,11 +27256,17 @@ impl FileLogInfo {
         self
     }
 
+    pub fn with_file_size(mut self, value: Option<u64>) -> Self {
+        self.file_size = value;
+        self
+    }
+
 }
 
 const FILE_LOG_INFO_FIELDS: &[&str] = &["path",
                                         "display_name",
-                                        "file_id"];
+                                        "file_id",
+                                        "file_size"];
 impl FileLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -23913,6 +27281,7 @@ impl FileLogInfo {
         let mut field_path = None;
         let mut field_display_name = None;
         let mut field_file_id = None;
+        let mut field_file_size = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -23935,6 +27304,12 @@ impl FileLogInfo {
                     }
                     field_file_id = Some(map.next_value()?);
                 }
+                "file_size" => {
+                    if field_file_size.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_size"));
+                    }
+                    field_file_size = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -23948,6 +27323,7 @@ impl FileLogInfo {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             display_name: field_display_name,
             file_id: field_file_id,
+            file_size: field_file_size,
         };
         Ok(Some(result))
     }
@@ -23959,7 +27335,8 @@ impl FileLogInfo {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("display_name", &self.display_name)?;
-        s.serialize_field("file_id", &self.file_id)
+        s.serialize_field("file_id", &self.file_id)?;
+        s.serialize_field("file_size", &self.file_size)
     }
 }
 
@@ -23985,7 +27362,7 @@ impl ::serde::ser::Serialize for FileLogInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileLogInfo", 3)?;
+        let mut s = serializer.serialize_struct("FileLogInfo", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -24180,6 +27557,8 @@ pub struct FileOrFolderLogInfo {
     pub display_name: Option<String>,
     /// Unique ID. Might be missing due to historical data gap.
     pub file_id: Option<String>,
+    /// File or folder size in bytes.
+    pub file_size: Option<u64>,
 }
 
 impl FileOrFolderLogInfo {
@@ -24188,6 +27567,7 @@ impl FileOrFolderLogInfo {
             path,
             display_name: None,
             file_id: None,
+            file_size: None,
         }
     }
 
@@ -24201,11 +27581,17 @@ impl FileOrFolderLogInfo {
         self
     }
 
+    pub fn with_file_size(mut self, value: Option<u64>) -> Self {
+        self.file_size = value;
+        self
+    }
+
 }
 
 const FILE_OR_FOLDER_LOG_INFO_FIELDS: &[&str] = &["path",
                                                   "display_name",
-                                                  "file_id"];
+                                                  "file_id",
+                                                  "file_size"];
 impl FileOrFolderLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -24220,6 +27606,7 @@ impl FileOrFolderLogInfo {
         let mut field_path = None;
         let mut field_display_name = None;
         let mut field_file_id = None;
+        let mut field_file_size = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -24242,6 +27629,12 @@ impl FileOrFolderLogInfo {
                     }
                     field_file_id = Some(map.next_value()?);
                 }
+                "file_size" => {
+                    if field_file_size.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_size"));
+                    }
+                    field_file_size = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -24255,6 +27648,7 @@ impl FileOrFolderLogInfo {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             display_name: field_display_name,
             file_id: field_file_id,
+            file_size: field_file_size,
         };
         Ok(Some(result))
     }
@@ -24266,7 +27660,8 @@ impl FileOrFolderLogInfo {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("display_name", &self.display_name)?;
-        s.serialize_field("file_id", &self.file_id)
+        s.serialize_field("file_id", &self.file_id)?;
+        s.serialize_field("file_size", &self.file_size)
     }
 }
 
@@ -24292,7 +27687,7 @@ impl ::serde::ser::Serialize for FileOrFolderLogInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileOrFolderLogInfo", 3)?;
+        let mut s = serializer.serialize_struct("FileOrFolderLogInfo", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -28794,6 +32189,10 @@ pub struct FolderLogInfo {
     pub display_name: Option<String>,
     /// Unique ID. Might be missing due to historical data gap.
     pub file_id: Option<String>,
+    /// File or folder size in bytes.
+    pub file_size: Option<u64>,
+    /// Number of files within the folder.
+    pub file_count: Option<u64>,
 }
 
 impl FolderLogInfo {
@@ -28802,6 +32201,8 @@ impl FolderLogInfo {
             path,
             display_name: None,
             file_id: None,
+            file_size: None,
+            file_count: None,
         }
     }
 
@@ -28815,11 +32216,23 @@ impl FolderLogInfo {
         self
     }
 
+    pub fn with_file_size(mut self, value: Option<u64>) -> Self {
+        self.file_size = value;
+        self
+    }
+
+    pub fn with_file_count(mut self, value: Option<u64>) -> Self {
+        self.file_count = value;
+        self
+    }
+
 }
 
 const FOLDER_LOG_INFO_FIELDS: &[&str] = &["path",
                                           "display_name",
-                                          "file_id"];
+                                          "file_id",
+                                          "file_size",
+                                          "file_count"];
 impl FolderLogInfo {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -28834,6 +32247,8 @@ impl FolderLogInfo {
         let mut field_path = None;
         let mut field_display_name = None;
         let mut field_file_id = None;
+        let mut field_file_size = None;
+        let mut field_file_count = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -28856,6 +32271,18 @@ impl FolderLogInfo {
                     }
                     field_file_id = Some(map.next_value()?);
                 }
+                "file_size" => {
+                    if field_file_size.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_size"));
+                    }
+                    field_file_size = Some(map.next_value()?);
+                }
+                "file_count" => {
+                    if field_file_count.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_count"));
+                    }
+                    field_file_count = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -28869,6 +32296,8 @@ impl FolderLogInfo {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
             display_name: field_display_name,
             file_id: field_file_id,
+            file_size: field_file_size,
+            file_count: field_file_count,
         };
         Ok(Some(result))
     }
@@ -28880,7 +32309,9 @@ impl FolderLogInfo {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("display_name", &self.display_name)?;
-        s.serialize_field("file_id", &self.file_id)
+        s.serialize_field("file_id", &self.file_id)?;
+        s.serialize_field("file_size", &self.file_size)?;
+        s.serialize_field("file_count", &self.file_count)
     }
 }
 
@@ -28906,7 +32337,7 @@ impl ::serde::ser::Serialize for FolderLogInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FolderLogInfo", 3)?;
+        let mut s = serializer.serialize_struct("FolderLogInfo", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -34386,14 +37817,72 @@ impl ::serde::ser::Serialize for IntegrationPolicyChangedType {
     }
 }
 
+#[derive(Debug)]
+pub enum InviteMethod {
+    InviteLink,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for InviteMethod {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = InviteMethod;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a InviteMethod structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "invite_link" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(InviteMethod::InviteLink)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(InviteMethod::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["invite_link",
+                                    "other"];
+        deserializer.deserialize_struct("InviteMethod", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for InviteMethod {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            InviteMethod::InviteLink => {
+                // unit
+                let mut s = serializer.serialize_struct("InviteMethod", 1)?;
+                s.serialize_field(".tag", "invite_link")?;
+                s.end()
+            }
+            InviteMethod::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Additional information relevant when a new member joins the team.
 #[derive(Debug)]
 pub struct JoinTeamDetails {
-    /// Linked applications.
+    /// Linked applications. (Deprecated) Please use has_linked_apps boolean field instead.
     pub linked_apps: Vec<UserLinkedAppLogInfo>,
-    /// Linked devices.
+    /// Linked devices. (Deprecated) Please use has_linked_devices boolean field instead.
     pub linked_devices: Vec<LinkedDeviceLogInfo>,
-    /// Linked shared folders.
+    /// Linked shared folders. (Deprecated) Please use has_linked_shared_folders boolean field
+    /// instead.
     pub linked_shared_folders: Vec<FolderLogInfo>,
     /// True if the linked_apps list was truncated to the maximum supported length (50).
     pub was_linked_apps_truncated: Option<bool>,
@@ -34401,6 +37890,12 @@ pub struct JoinTeamDetails {
     pub was_linked_devices_truncated: Option<bool>,
     /// True if the linked_shared_folders list was truncated to the maximum supported length (50).
     pub was_linked_shared_folders_truncated: Option<bool>,
+    /// True if the user had linked apps at event time.
+    pub has_linked_apps: Option<bool>,
+    /// True if the user had linked apps at event time.
+    pub has_linked_devices: Option<bool>,
+    /// True if the user had linked shared folders at event time.
+    pub has_linked_shared_folders: Option<bool>,
 }
 
 impl JoinTeamDetails {
@@ -34416,6 +37911,9 @@ impl JoinTeamDetails {
             was_linked_apps_truncated: None,
             was_linked_devices_truncated: None,
             was_linked_shared_folders_truncated: None,
+            has_linked_apps: None,
+            has_linked_devices: None,
+            has_linked_shared_folders: None,
         }
     }
 
@@ -34434,6 +37932,21 @@ impl JoinTeamDetails {
         self
     }
 
+    pub fn with_has_linked_apps(mut self, value: Option<bool>) -> Self {
+        self.has_linked_apps = value;
+        self
+    }
+
+    pub fn with_has_linked_devices(mut self, value: Option<bool>) -> Self {
+        self.has_linked_devices = value;
+        self
+    }
+
+    pub fn with_has_linked_shared_folders(mut self, value: Option<bool>) -> Self {
+        self.has_linked_shared_folders = value;
+        self
+    }
+
 }
 
 const JOIN_TEAM_DETAILS_FIELDS: &[&str] = &["linked_apps",
@@ -34441,7 +37954,10 @@ const JOIN_TEAM_DETAILS_FIELDS: &[&str] = &["linked_apps",
                                             "linked_shared_folders",
                                             "was_linked_apps_truncated",
                                             "was_linked_devices_truncated",
-                                            "was_linked_shared_folders_truncated"];
+                                            "was_linked_shared_folders_truncated",
+                                            "has_linked_apps",
+                                            "has_linked_devices",
+                                            "has_linked_shared_folders"];
 impl JoinTeamDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -34459,6 +37975,9 @@ impl JoinTeamDetails {
         let mut field_was_linked_apps_truncated = None;
         let mut field_was_linked_devices_truncated = None;
         let mut field_was_linked_shared_folders_truncated = None;
+        let mut field_has_linked_apps = None;
+        let mut field_has_linked_devices = None;
+        let mut field_has_linked_shared_folders = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -34499,6 +38018,24 @@ impl JoinTeamDetails {
                     }
                     field_was_linked_shared_folders_truncated = Some(map.next_value()?);
                 }
+                "has_linked_apps" => {
+                    if field_has_linked_apps.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("has_linked_apps"));
+                    }
+                    field_has_linked_apps = Some(map.next_value()?);
+                }
+                "has_linked_devices" => {
+                    if field_has_linked_devices.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("has_linked_devices"));
+                    }
+                    field_has_linked_devices = Some(map.next_value()?);
+                }
+                "has_linked_shared_folders" => {
+                    if field_has_linked_shared_folders.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("has_linked_shared_folders"));
+                    }
+                    field_has_linked_shared_folders = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -34515,6 +38052,9 @@ impl JoinTeamDetails {
             was_linked_apps_truncated: field_was_linked_apps_truncated,
             was_linked_devices_truncated: field_was_linked_devices_truncated,
             was_linked_shared_folders_truncated: field_was_linked_shared_folders_truncated,
+            has_linked_apps: field_has_linked_apps,
+            has_linked_devices: field_has_linked_devices,
+            has_linked_shared_folders: field_has_linked_shared_folders,
         };
         Ok(Some(result))
     }
@@ -34529,7 +38069,10 @@ impl JoinTeamDetails {
         s.serialize_field("linked_shared_folders", &self.linked_shared_folders)?;
         s.serialize_field("was_linked_apps_truncated", &self.was_linked_apps_truncated)?;
         s.serialize_field("was_linked_devices_truncated", &self.was_linked_devices_truncated)?;
-        s.serialize_field("was_linked_shared_folders_truncated", &self.was_linked_shared_folders_truncated)
+        s.serialize_field("was_linked_shared_folders_truncated", &self.was_linked_shared_folders_truncated)?;
+        s.serialize_field("has_linked_apps", &self.has_linked_apps)?;
+        s.serialize_field("has_linked_devices", &self.has_linked_devices)?;
+        s.serialize_field("has_linked_shared_folders", &self.has_linked_shared_folders)
     }
 }
 
@@ -34555,7 +38098,7 @@ impl ::serde::ser::Serialize for JoinTeamDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("JoinTeamDetails", 6)?;
+        let mut s = serializer.serialize_struct("JoinTeamDetails", 9)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -35645,6 +39188,8 @@ pub struct LegalHoldsExportAHoldDetails {
     pub legal_hold_id: String,
     /// Hold name.
     pub name: String,
+    /// Export name.
+    pub export_name: Option<String>,
 }
 
 impl LegalHoldsExportAHoldDetails {
@@ -35652,13 +39197,20 @@ impl LegalHoldsExportAHoldDetails {
         LegalHoldsExportAHoldDetails {
             legal_hold_id,
             name,
+            export_name: None,
         }
+    }
+
+    pub fn with_export_name(mut self, value: Option<String>) -> Self {
+        self.export_name = value;
+        self
     }
 
 }
 
 const LEGAL_HOLDS_EXPORT_A_HOLD_DETAILS_FIELDS: &[&str] = &["legal_hold_id",
-                                                            "name"];
+                                                            "name",
+                                                            "export_name"];
 impl LegalHoldsExportAHoldDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -35672,6 +39224,7 @@ impl LegalHoldsExportAHoldDetails {
     ) -> Result<Option<LegalHoldsExportAHoldDetails>, V::Error> {
         let mut field_legal_hold_id = None;
         let mut field_name = None;
+        let mut field_export_name = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -35688,6 +39241,12 @@ impl LegalHoldsExportAHoldDetails {
                     }
                     field_name = Some(map.next_value()?);
                 }
+                "export_name" => {
+                    if field_export_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("export_name"));
+                    }
+                    field_export_name = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -35700,6 +39259,7 @@ impl LegalHoldsExportAHoldDetails {
         let result = LegalHoldsExportAHoldDetails {
             legal_hold_id: field_legal_hold_id.ok_or_else(|| ::serde::de::Error::missing_field("legal_hold_id"))?,
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            export_name: field_export_name,
         };
         Ok(Some(result))
     }
@@ -35710,7 +39270,8 @@ impl LegalHoldsExportAHoldDetails {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("legal_hold_id", &self.legal_hold_id)?;
-        s.serialize_field("name", &self.name)
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("export_name", &self.export_name)
     }
 }
 
@@ -35736,7 +39297,7 @@ impl ::serde::ser::Serialize for LegalHoldsExportAHoldDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("LegalHoldsExportAHoldDetails", 2)?;
+        let mut s = serializer.serialize_struct("LegalHoldsExportAHoldDetails", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -35826,6 +39387,660 @@ impl ::serde::ser::Serialize for LegalHoldsExportAHoldType {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("LegalHoldsExportAHoldType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Canceled export for a hold.
+#[derive(Debug)]
+pub struct LegalHoldsExportCancelledDetails {
+    /// Hold ID.
+    pub legal_hold_id: String,
+    /// Hold name.
+    pub name: String,
+    /// Export name.
+    pub export_name: String,
+}
+
+impl LegalHoldsExportCancelledDetails {
+    pub fn new(legal_hold_id: String, name: String, export_name: String) -> Self {
+        LegalHoldsExportCancelledDetails {
+            legal_hold_id,
+            name,
+            export_name,
+        }
+    }
+
+}
+
+const LEGAL_HOLDS_EXPORT_CANCELLED_DETAILS_FIELDS: &[&str] = &["legal_hold_id",
+                                                               "name",
+                                                               "export_name"];
+impl LegalHoldsExportCancelledDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<LegalHoldsExportCancelledDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<LegalHoldsExportCancelledDetails>, V::Error> {
+        let mut field_legal_hold_id = None;
+        let mut field_name = None;
+        let mut field_export_name = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "legal_hold_id" => {
+                    if field_legal_hold_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("legal_hold_id"));
+                    }
+                    field_legal_hold_id = Some(map.next_value()?);
+                }
+                "name" => {
+                    if field_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("name"));
+                    }
+                    field_name = Some(map.next_value()?);
+                }
+                "export_name" => {
+                    if field_export_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("export_name"));
+                    }
+                    field_export_name = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = LegalHoldsExportCancelledDetails {
+            legal_hold_id: field_legal_hold_id.ok_or_else(|| ::serde::de::Error::missing_field("legal_hold_id"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            export_name: field_export_name.ok_or_else(|| ::serde::de::Error::missing_field("export_name"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("legal_hold_id", &self.legal_hold_id)?;
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("export_name", &self.export_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsExportCancelledDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LegalHoldsExportCancelledDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LegalHoldsExportCancelledDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LegalHoldsExportCancelledDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LegalHoldsExportCancelledDetails", LEGAL_HOLDS_EXPORT_CANCELLED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LegalHoldsExportCancelledDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LegalHoldsExportCancelledDetails", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct LegalHoldsExportCancelledType {
+    pub description: String,
+}
+
+impl LegalHoldsExportCancelledType {
+    pub fn new(description: String) -> Self {
+        LegalHoldsExportCancelledType {
+            description,
+        }
+    }
+
+}
+
+const LEGAL_HOLDS_EXPORT_CANCELLED_TYPE_FIELDS: &[&str] = &["description"];
+impl LegalHoldsExportCancelledType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<LegalHoldsExportCancelledType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<LegalHoldsExportCancelledType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = LegalHoldsExportCancelledType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsExportCancelledType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LegalHoldsExportCancelledType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LegalHoldsExportCancelledType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LegalHoldsExportCancelledType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LegalHoldsExportCancelledType", LEGAL_HOLDS_EXPORT_CANCELLED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LegalHoldsExportCancelledType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LegalHoldsExportCancelledType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Downloaded export for a hold.
+#[derive(Debug)]
+pub struct LegalHoldsExportDownloadedDetails {
+    /// Hold ID.
+    pub legal_hold_id: String,
+    /// Hold name.
+    pub name: String,
+    /// Export name.
+    pub export_name: String,
+    /// Part.
+    pub part: Option<String>,
+    /// Filename.
+    pub file_name: Option<String>,
+}
+
+impl LegalHoldsExportDownloadedDetails {
+    pub fn new(legal_hold_id: String, name: String, export_name: String) -> Self {
+        LegalHoldsExportDownloadedDetails {
+            legal_hold_id,
+            name,
+            export_name,
+            part: None,
+            file_name: None,
+        }
+    }
+
+    pub fn with_part(mut self, value: Option<String>) -> Self {
+        self.part = value;
+        self
+    }
+
+    pub fn with_file_name(mut self, value: Option<String>) -> Self {
+        self.file_name = value;
+        self
+    }
+
+}
+
+const LEGAL_HOLDS_EXPORT_DOWNLOADED_DETAILS_FIELDS: &[&str] = &["legal_hold_id",
+                                                                "name",
+                                                                "export_name",
+                                                                "part",
+                                                                "file_name"];
+impl LegalHoldsExportDownloadedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<LegalHoldsExportDownloadedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<LegalHoldsExportDownloadedDetails>, V::Error> {
+        let mut field_legal_hold_id = None;
+        let mut field_name = None;
+        let mut field_export_name = None;
+        let mut field_part = None;
+        let mut field_file_name = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "legal_hold_id" => {
+                    if field_legal_hold_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("legal_hold_id"));
+                    }
+                    field_legal_hold_id = Some(map.next_value()?);
+                }
+                "name" => {
+                    if field_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("name"));
+                    }
+                    field_name = Some(map.next_value()?);
+                }
+                "export_name" => {
+                    if field_export_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("export_name"));
+                    }
+                    field_export_name = Some(map.next_value()?);
+                }
+                "part" => {
+                    if field_part.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("part"));
+                    }
+                    field_part = Some(map.next_value()?);
+                }
+                "file_name" => {
+                    if field_file_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("file_name"));
+                    }
+                    field_file_name = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = LegalHoldsExportDownloadedDetails {
+            legal_hold_id: field_legal_hold_id.ok_or_else(|| ::serde::de::Error::missing_field("legal_hold_id"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            export_name: field_export_name.ok_or_else(|| ::serde::de::Error::missing_field("export_name"))?,
+            part: field_part,
+            file_name: field_file_name,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("legal_hold_id", &self.legal_hold_id)?;
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("export_name", &self.export_name)?;
+        s.serialize_field("part", &self.part)?;
+        s.serialize_field("file_name", &self.file_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsExportDownloadedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LegalHoldsExportDownloadedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LegalHoldsExportDownloadedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LegalHoldsExportDownloadedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LegalHoldsExportDownloadedDetails", LEGAL_HOLDS_EXPORT_DOWNLOADED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LegalHoldsExportDownloadedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LegalHoldsExportDownloadedDetails", 5)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct LegalHoldsExportDownloadedType {
+    pub description: String,
+}
+
+impl LegalHoldsExportDownloadedType {
+    pub fn new(description: String) -> Self {
+        LegalHoldsExportDownloadedType {
+            description,
+        }
+    }
+
+}
+
+const LEGAL_HOLDS_EXPORT_DOWNLOADED_TYPE_FIELDS: &[&str] = &["description"];
+impl LegalHoldsExportDownloadedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<LegalHoldsExportDownloadedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<LegalHoldsExportDownloadedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = LegalHoldsExportDownloadedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsExportDownloadedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LegalHoldsExportDownloadedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LegalHoldsExportDownloadedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LegalHoldsExportDownloadedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LegalHoldsExportDownloadedType", LEGAL_HOLDS_EXPORT_DOWNLOADED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LegalHoldsExportDownloadedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LegalHoldsExportDownloadedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Removed export for a hold.
+#[derive(Debug)]
+pub struct LegalHoldsExportRemovedDetails {
+    /// Hold ID.
+    pub legal_hold_id: String,
+    /// Hold name.
+    pub name: String,
+    /// Export name.
+    pub export_name: String,
+}
+
+impl LegalHoldsExportRemovedDetails {
+    pub fn new(legal_hold_id: String, name: String, export_name: String) -> Self {
+        LegalHoldsExportRemovedDetails {
+            legal_hold_id,
+            name,
+            export_name,
+        }
+    }
+
+}
+
+const LEGAL_HOLDS_EXPORT_REMOVED_DETAILS_FIELDS: &[&str] = &["legal_hold_id",
+                                                             "name",
+                                                             "export_name"];
+impl LegalHoldsExportRemovedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<LegalHoldsExportRemovedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<LegalHoldsExportRemovedDetails>, V::Error> {
+        let mut field_legal_hold_id = None;
+        let mut field_name = None;
+        let mut field_export_name = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "legal_hold_id" => {
+                    if field_legal_hold_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("legal_hold_id"));
+                    }
+                    field_legal_hold_id = Some(map.next_value()?);
+                }
+                "name" => {
+                    if field_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("name"));
+                    }
+                    field_name = Some(map.next_value()?);
+                }
+                "export_name" => {
+                    if field_export_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("export_name"));
+                    }
+                    field_export_name = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = LegalHoldsExportRemovedDetails {
+            legal_hold_id: field_legal_hold_id.ok_or_else(|| ::serde::de::Error::missing_field("legal_hold_id"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            export_name: field_export_name.ok_or_else(|| ::serde::de::Error::missing_field("export_name"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("legal_hold_id", &self.legal_hold_id)?;
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("export_name", &self.export_name)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsExportRemovedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LegalHoldsExportRemovedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LegalHoldsExportRemovedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LegalHoldsExportRemovedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LegalHoldsExportRemovedDetails", LEGAL_HOLDS_EXPORT_REMOVED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LegalHoldsExportRemovedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LegalHoldsExportRemovedDetails", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct LegalHoldsExportRemovedType {
+    pub description: String,
+}
+
+impl LegalHoldsExportRemovedType {
+    pub fn new(description: String) -> Self {
+        LegalHoldsExportRemovedType {
+            description,
+        }
+    }
+
+}
+
+const LEGAL_HOLDS_EXPORT_REMOVED_TYPE_FIELDS: &[&str] = &["description"];
+impl LegalHoldsExportRemovedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<LegalHoldsExportRemovedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<LegalHoldsExportRemovedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = LegalHoldsExportRemovedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsExportRemovedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = LegalHoldsExportRemovedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LegalHoldsExportRemovedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                LegalHoldsExportRemovedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("LegalHoldsExportRemovedType", LEGAL_HOLDS_EXPORT_REMOVED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LegalHoldsExportRemovedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("LegalHoldsExportRemovedType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -36500,6 +40715,76 @@ impl ::serde::ser::Serialize for LinkedDeviceLogInfo {
     }
 }
 
+/// File lock status
+#[derive(Debug)]
+pub enum LockStatus {
+    Locked,
+    Unlocked,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for LockStatus {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = LockStatus;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a LockStatus structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "locked" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LockStatus::Locked)
+                    }
+                    "unlocked" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LockStatus::Unlocked)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LockStatus::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["locked",
+                                    "unlocked",
+                                    "other"];
+        deserializer.deserialize_struct("LockStatus", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for LockStatus {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            LockStatus::Locked => {
+                // unit
+                let mut s = serializer.serialize_struct("LockStatus", 1)?;
+                s.serialize_field(".tag", "locked")?;
+                s.end()
+            }
+            LockStatus::Unlocked => {
+                // unit
+                let mut s = serializer.serialize_struct("LockStatus", 1)?;
+                s.serialize_field(".tag", "unlocked")?;
+                s.end()
+            }
+            LockStatus::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Failed to sign in.
 #[derive(Debug)]
 pub struct LoginFailDetails {
@@ -36720,6 +41005,7 @@ pub enum LoginMethod {
     WebSession,
     QrCode,
     AppleOauth,
+    FirstPartyTokenExchange,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -36769,6 +41055,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LoginMethod {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LoginMethod::AppleOauth)
                     }
+                    "first_party_token_exchange" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LoginMethod::FirstPartyTokenExchange)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LoginMethod::Other)
@@ -36783,6 +41073,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LoginMethod {
                                     "web_session",
                                     "qr_code",
                                     "apple_oauth",
+                                    "first_party_token_exchange",
                                     "other"];
         deserializer.deserialize_struct("LoginMethod", VARIANTS, EnumVisitor)
     }
@@ -36833,6 +41124,12 @@ impl ::serde::ser::Serialize for LoginMethod {
                 // unit
                 let mut s = serializer.serialize_struct("LoginMethod", 1)?;
                 s.serialize_field(".tag", "apple_oauth")?;
+                s.end()
+            }
+            LoginMethod::FirstPartyTokenExchange => {
+                // unit
+                let mut s = serializer.serialize_struct("LoginMethod", 1)?;
+                s.serialize_field(".tag", "first_party_token_exchange")?;
                 s.end()
             }
             LoginMethod::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -39687,6 +43984,281 @@ impl ::serde::ser::Serialize for MemberRequestsPolicy {
             }
             MemberRequestsPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
+    }
+}
+
+/// Policy for controlling whether team members can send team invites
+#[derive(Debug)]
+pub enum MemberSendInvitePolicy {
+    Disabled,
+    SpecificMembers,
+    Everyone,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberSendInvitePolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MemberSendInvitePolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MemberSendInvitePolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(MemberSendInvitePolicy::Disabled)
+                    }
+                    "specific_members" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(MemberSendInvitePolicy::SpecificMembers)
+                    }
+                    "everyone" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(MemberSendInvitePolicy::Everyone)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(MemberSendInvitePolicy::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "specific_members",
+                                    "everyone",
+                                    "other"];
+        deserializer.deserialize_struct("MemberSendInvitePolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberSendInvitePolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MemberSendInvitePolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("MemberSendInvitePolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            MemberSendInvitePolicy::SpecificMembers => {
+                // unit
+                let mut s = serializer.serialize_struct("MemberSendInvitePolicy", 1)?;
+                s.serialize_field(".tag", "specific_members")?;
+                s.end()
+            }
+            MemberSendInvitePolicy::Everyone => {
+                // unit
+                let mut s = serializer.serialize_struct("MemberSendInvitePolicy", 1)?;
+                s.serialize_field(".tag", "everyone")?;
+                s.end()
+            }
+            MemberSendInvitePolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Changed member send invite policy for team.
+#[derive(Debug)]
+pub struct MemberSendInvitePolicyChangedDetails {
+    /// New team member send invite policy.
+    pub new_value: MemberSendInvitePolicy,
+    /// Previous team member send invite policy.
+    pub previous_value: MemberSendInvitePolicy,
+}
+
+impl MemberSendInvitePolicyChangedDetails {
+    pub fn new(new_value: MemberSendInvitePolicy, previous_value: MemberSendInvitePolicy) -> Self {
+        MemberSendInvitePolicyChangedDetails {
+            new_value,
+            previous_value,
+        }
+    }
+
+}
+
+const MEMBER_SEND_INVITE_POLICY_CHANGED_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                                    "previous_value"];
+impl MemberSendInvitePolicyChangedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MemberSendInvitePolicyChangedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MemberSendInvitePolicyChangedDetails>, V::Error> {
+        let mut field_new_value = None;
+        let mut field_previous_value = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MemberSendInvitePolicyChangedDetails {
+            new_value: field_new_value.ok_or_else(|| ::serde::de::Error::missing_field("new_value"))?,
+            previous_value: field_previous_value.ok_or_else(|| ::serde::de::Error::missing_field("previous_value"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_value", &self.new_value)?;
+        s.serialize_field("previous_value", &self.previous_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberSendInvitePolicyChangedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberSendInvitePolicyChangedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MemberSendInvitePolicyChangedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberSendInvitePolicyChangedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberSendInvitePolicyChangedDetails", MEMBER_SEND_INVITE_POLICY_CHANGED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberSendInvitePolicyChangedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberSendInvitePolicyChangedDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct MemberSendInvitePolicyChangedType {
+    pub description: String,
+}
+
+impl MemberSendInvitePolicyChangedType {
+    pub fn new(description: String) -> Self {
+        MemberSendInvitePolicyChangedType {
+            description,
+        }
+    }
+
+}
+
+const MEMBER_SEND_INVITE_POLICY_CHANGED_TYPE_FIELDS: &[&str] = &["description"];
+impl MemberSendInvitePolicyChangedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MemberSendInvitePolicyChangedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MemberSendInvitePolicyChangedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MemberSendInvitePolicyChangedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberSendInvitePolicyChangedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberSendInvitePolicyChangedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MemberSendInvitePolicyChangedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberSendInvitePolicyChangedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberSendInvitePolicyChangedType", MEMBER_SEND_INVITE_POLICY_CHANGED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberSendInvitePolicyChangedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberSendInvitePolicyChangedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -42910,6 +47482,1134 @@ impl ::serde::ser::Serialize for NetworkControlPolicy {
     }
 }
 
+/// Report created: Links created with no expiration.
+#[derive(Debug)]
+pub struct NoExpirationLinkGenCreateReportDetails {
+    /// Report start date.
+    pub start_date: super::common::DropboxTimestamp,
+    /// Report end date.
+    pub end_date: super::common::DropboxTimestamp,
+}
+
+impl NoExpirationLinkGenCreateReportDetails {
+    pub fn new(
+        start_date: super::common::DropboxTimestamp,
+        end_date: super::common::DropboxTimestamp,
+    ) -> Self {
+        NoExpirationLinkGenCreateReportDetails {
+            start_date,
+            end_date,
+        }
+    }
+
+}
+
+const NO_EXPIRATION_LINK_GEN_CREATE_REPORT_DETAILS_FIELDS: &[&str] = &["start_date",
+                                                                       "end_date"];
+impl NoExpirationLinkGenCreateReportDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<NoExpirationLinkGenCreateReportDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NoExpirationLinkGenCreateReportDetails>, V::Error> {
+        let mut field_start_date = None;
+        let mut field_end_date = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "start_date" => {
+                    if field_start_date.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("start_date"));
+                    }
+                    field_start_date = Some(map.next_value()?);
+                }
+                "end_date" => {
+                    if field_end_date.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("end_date"));
+                    }
+                    field_end_date = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NoExpirationLinkGenCreateReportDetails {
+            start_date: field_start_date.ok_or_else(|| ::serde::de::Error::missing_field("start_date"))?,
+            end_date: field_end_date.ok_or_else(|| ::serde::de::Error::missing_field("end_date"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("start_date", &self.start_date)?;
+        s.serialize_field("end_date", &self.end_date)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoExpirationLinkGenCreateReportDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = NoExpirationLinkGenCreateReportDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoExpirationLinkGenCreateReportDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                NoExpirationLinkGenCreateReportDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("NoExpirationLinkGenCreateReportDetails", NO_EXPIRATION_LINK_GEN_CREATE_REPORT_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoExpirationLinkGenCreateReportDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("NoExpirationLinkGenCreateReportDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct NoExpirationLinkGenCreateReportType {
+    pub description: String,
+}
+
+impl NoExpirationLinkGenCreateReportType {
+    pub fn new(description: String) -> Self {
+        NoExpirationLinkGenCreateReportType {
+            description,
+        }
+    }
+
+}
+
+const NO_EXPIRATION_LINK_GEN_CREATE_REPORT_TYPE_FIELDS: &[&str] = &["description"];
+impl NoExpirationLinkGenCreateReportType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<NoExpirationLinkGenCreateReportType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NoExpirationLinkGenCreateReportType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NoExpirationLinkGenCreateReportType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoExpirationLinkGenCreateReportType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = NoExpirationLinkGenCreateReportType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoExpirationLinkGenCreateReportType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                NoExpirationLinkGenCreateReportType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("NoExpirationLinkGenCreateReportType", NO_EXPIRATION_LINK_GEN_CREATE_REPORT_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoExpirationLinkGenCreateReportType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("NoExpirationLinkGenCreateReportType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Couldn't create report: Links created with no expiration.
+#[derive(Debug)]
+pub struct NoExpirationLinkGenReportFailedDetails {
+    /// Failure reason.
+    pub failure_reason: super::team::TeamReportFailureReason,
+}
+
+impl NoExpirationLinkGenReportFailedDetails {
+    pub fn new(failure_reason: super::team::TeamReportFailureReason) -> Self {
+        NoExpirationLinkGenReportFailedDetails {
+            failure_reason,
+        }
+    }
+
+}
+
+const NO_EXPIRATION_LINK_GEN_REPORT_FAILED_DETAILS_FIELDS: &[&str] = &["failure_reason"];
+impl NoExpirationLinkGenReportFailedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<NoExpirationLinkGenReportFailedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NoExpirationLinkGenReportFailedDetails>, V::Error> {
+        let mut field_failure_reason = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "failure_reason" => {
+                    if field_failure_reason.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("failure_reason"));
+                    }
+                    field_failure_reason = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NoExpirationLinkGenReportFailedDetails {
+            failure_reason: field_failure_reason.ok_or_else(|| ::serde::de::Error::missing_field("failure_reason"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("failure_reason", &self.failure_reason)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoExpirationLinkGenReportFailedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = NoExpirationLinkGenReportFailedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoExpirationLinkGenReportFailedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                NoExpirationLinkGenReportFailedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("NoExpirationLinkGenReportFailedDetails", NO_EXPIRATION_LINK_GEN_REPORT_FAILED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoExpirationLinkGenReportFailedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("NoExpirationLinkGenReportFailedDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct NoExpirationLinkGenReportFailedType {
+    pub description: String,
+}
+
+impl NoExpirationLinkGenReportFailedType {
+    pub fn new(description: String) -> Self {
+        NoExpirationLinkGenReportFailedType {
+            description,
+        }
+    }
+
+}
+
+const NO_EXPIRATION_LINK_GEN_REPORT_FAILED_TYPE_FIELDS: &[&str] = &["description"];
+impl NoExpirationLinkGenReportFailedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<NoExpirationLinkGenReportFailedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NoExpirationLinkGenReportFailedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NoExpirationLinkGenReportFailedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoExpirationLinkGenReportFailedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = NoExpirationLinkGenReportFailedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoExpirationLinkGenReportFailedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                NoExpirationLinkGenReportFailedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("NoExpirationLinkGenReportFailedType", NO_EXPIRATION_LINK_GEN_REPORT_FAILED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoExpirationLinkGenReportFailedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("NoExpirationLinkGenReportFailedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Report created: Links created without passwords.
+#[derive(Debug)]
+pub struct NoPasswordLinkGenCreateReportDetails {
+    /// Report start date.
+    pub start_date: super::common::DropboxTimestamp,
+    /// Report end date.
+    pub end_date: super::common::DropboxTimestamp,
+}
+
+impl NoPasswordLinkGenCreateReportDetails {
+    pub fn new(
+        start_date: super::common::DropboxTimestamp,
+        end_date: super::common::DropboxTimestamp,
+    ) -> Self {
+        NoPasswordLinkGenCreateReportDetails {
+            start_date,
+            end_date,
+        }
+    }
+
+}
+
+const NO_PASSWORD_LINK_GEN_CREATE_REPORT_DETAILS_FIELDS: &[&str] = &["start_date",
+                                                                     "end_date"];
+impl NoPasswordLinkGenCreateReportDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<NoPasswordLinkGenCreateReportDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NoPasswordLinkGenCreateReportDetails>, V::Error> {
+        let mut field_start_date = None;
+        let mut field_end_date = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "start_date" => {
+                    if field_start_date.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("start_date"));
+                    }
+                    field_start_date = Some(map.next_value()?);
+                }
+                "end_date" => {
+                    if field_end_date.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("end_date"));
+                    }
+                    field_end_date = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NoPasswordLinkGenCreateReportDetails {
+            start_date: field_start_date.ok_or_else(|| ::serde::de::Error::missing_field("start_date"))?,
+            end_date: field_end_date.ok_or_else(|| ::serde::de::Error::missing_field("end_date"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("start_date", &self.start_date)?;
+        s.serialize_field("end_date", &self.end_date)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoPasswordLinkGenCreateReportDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = NoPasswordLinkGenCreateReportDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoPasswordLinkGenCreateReportDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                NoPasswordLinkGenCreateReportDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("NoPasswordLinkGenCreateReportDetails", NO_PASSWORD_LINK_GEN_CREATE_REPORT_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoPasswordLinkGenCreateReportDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("NoPasswordLinkGenCreateReportDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct NoPasswordLinkGenCreateReportType {
+    pub description: String,
+}
+
+impl NoPasswordLinkGenCreateReportType {
+    pub fn new(description: String) -> Self {
+        NoPasswordLinkGenCreateReportType {
+            description,
+        }
+    }
+
+}
+
+const NO_PASSWORD_LINK_GEN_CREATE_REPORT_TYPE_FIELDS: &[&str] = &["description"];
+impl NoPasswordLinkGenCreateReportType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<NoPasswordLinkGenCreateReportType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NoPasswordLinkGenCreateReportType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NoPasswordLinkGenCreateReportType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoPasswordLinkGenCreateReportType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = NoPasswordLinkGenCreateReportType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoPasswordLinkGenCreateReportType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                NoPasswordLinkGenCreateReportType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("NoPasswordLinkGenCreateReportType", NO_PASSWORD_LINK_GEN_CREATE_REPORT_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoPasswordLinkGenCreateReportType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("NoPasswordLinkGenCreateReportType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Couldn't create report: Links created without passwords.
+#[derive(Debug)]
+pub struct NoPasswordLinkGenReportFailedDetails {
+    /// Failure reason.
+    pub failure_reason: super::team::TeamReportFailureReason,
+}
+
+impl NoPasswordLinkGenReportFailedDetails {
+    pub fn new(failure_reason: super::team::TeamReportFailureReason) -> Self {
+        NoPasswordLinkGenReportFailedDetails {
+            failure_reason,
+        }
+    }
+
+}
+
+const NO_PASSWORD_LINK_GEN_REPORT_FAILED_DETAILS_FIELDS: &[&str] = &["failure_reason"];
+impl NoPasswordLinkGenReportFailedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<NoPasswordLinkGenReportFailedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NoPasswordLinkGenReportFailedDetails>, V::Error> {
+        let mut field_failure_reason = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "failure_reason" => {
+                    if field_failure_reason.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("failure_reason"));
+                    }
+                    field_failure_reason = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NoPasswordLinkGenReportFailedDetails {
+            failure_reason: field_failure_reason.ok_or_else(|| ::serde::de::Error::missing_field("failure_reason"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("failure_reason", &self.failure_reason)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoPasswordLinkGenReportFailedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = NoPasswordLinkGenReportFailedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoPasswordLinkGenReportFailedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                NoPasswordLinkGenReportFailedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("NoPasswordLinkGenReportFailedDetails", NO_PASSWORD_LINK_GEN_REPORT_FAILED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoPasswordLinkGenReportFailedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("NoPasswordLinkGenReportFailedDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct NoPasswordLinkGenReportFailedType {
+    pub description: String,
+}
+
+impl NoPasswordLinkGenReportFailedType {
+    pub fn new(description: String) -> Self {
+        NoPasswordLinkGenReportFailedType {
+            description,
+        }
+    }
+
+}
+
+const NO_PASSWORD_LINK_GEN_REPORT_FAILED_TYPE_FIELDS: &[&str] = &["description"];
+impl NoPasswordLinkGenReportFailedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<NoPasswordLinkGenReportFailedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NoPasswordLinkGenReportFailedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NoPasswordLinkGenReportFailedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoPasswordLinkGenReportFailedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = NoPasswordLinkGenReportFailedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoPasswordLinkGenReportFailedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                NoPasswordLinkGenReportFailedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("NoPasswordLinkGenReportFailedType", NO_PASSWORD_LINK_GEN_REPORT_FAILED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoPasswordLinkGenReportFailedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("NoPasswordLinkGenReportFailedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Report created: Views of links without passwords.
+#[derive(Debug)]
+pub struct NoPasswordLinkViewCreateReportDetails {
+    /// Report start date.
+    pub start_date: super::common::DropboxTimestamp,
+    /// Report end date.
+    pub end_date: super::common::DropboxTimestamp,
+}
+
+impl NoPasswordLinkViewCreateReportDetails {
+    pub fn new(
+        start_date: super::common::DropboxTimestamp,
+        end_date: super::common::DropboxTimestamp,
+    ) -> Self {
+        NoPasswordLinkViewCreateReportDetails {
+            start_date,
+            end_date,
+        }
+    }
+
+}
+
+const NO_PASSWORD_LINK_VIEW_CREATE_REPORT_DETAILS_FIELDS: &[&str] = &["start_date",
+                                                                      "end_date"];
+impl NoPasswordLinkViewCreateReportDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<NoPasswordLinkViewCreateReportDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NoPasswordLinkViewCreateReportDetails>, V::Error> {
+        let mut field_start_date = None;
+        let mut field_end_date = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "start_date" => {
+                    if field_start_date.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("start_date"));
+                    }
+                    field_start_date = Some(map.next_value()?);
+                }
+                "end_date" => {
+                    if field_end_date.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("end_date"));
+                    }
+                    field_end_date = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NoPasswordLinkViewCreateReportDetails {
+            start_date: field_start_date.ok_or_else(|| ::serde::de::Error::missing_field("start_date"))?,
+            end_date: field_end_date.ok_or_else(|| ::serde::de::Error::missing_field("end_date"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("start_date", &self.start_date)?;
+        s.serialize_field("end_date", &self.end_date)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoPasswordLinkViewCreateReportDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = NoPasswordLinkViewCreateReportDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoPasswordLinkViewCreateReportDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                NoPasswordLinkViewCreateReportDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("NoPasswordLinkViewCreateReportDetails", NO_PASSWORD_LINK_VIEW_CREATE_REPORT_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoPasswordLinkViewCreateReportDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("NoPasswordLinkViewCreateReportDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct NoPasswordLinkViewCreateReportType {
+    pub description: String,
+}
+
+impl NoPasswordLinkViewCreateReportType {
+    pub fn new(description: String) -> Self {
+        NoPasswordLinkViewCreateReportType {
+            description,
+        }
+    }
+
+}
+
+const NO_PASSWORD_LINK_VIEW_CREATE_REPORT_TYPE_FIELDS: &[&str] = &["description"];
+impl NoPasswordLinkViewCreateReportType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<NoPasswordLinkViewCreateReportType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NoPasswordLinkViewCreateReportType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NoPasswordLinkViewCreateReportType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoPasswordLinkViewCreateReportType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = NoPasswordLinkViewCreateReportType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoPasswordLinkViewCreateReportType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                NoPasswordLinkViewCreateReportType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("NoPasswordLinkViewCreateReportType", NO_PASSWORD_LINK_VIEW_CREATE_REPORT_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoPasswordLinkViewCreateReportType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("NoPasswordLinkViewCreateReportType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Couldn't create report: Views of links without passwords.
+#[derive(Debug)]
+pub struct NoPasswordLinkViewReportFailedDetails {
+    /// Failure reason.
+    pub failure_reason: super::team::TeamReportFailureReason,
+}
+
+impl NoPasswordLinkViewReportFailedDetails {
+    pub fn new(failure_reason: super::team::TeamReportFailureReason) -> Self {
+        NoPasswordLinkViewReportFailedDetails {
+            failure_reason,
+        }
+    }
+
+}
+
+const NO_PASSWORD_LINK_VIEW_REPORT_FAILED_DETAILS_FIELDS: &[&str] = &["failure_reason"];
+impl NoPasswordLinkViewReportFailedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<NoPasswordLinkViewReportFailedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NoPasswordLinkViewReportFailedDetails>, V::Error> {
+        let mut field_failure_reason = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "failure_reason" => {
+                    if field_failure_reason.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("failure_reason"));
+                    }
+                    field_failure_reason = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NoPasswordLinkViewReportFailedDetails {
+            failure_reason: field_failure_reason.ok_or_else(|| ::serde::de::Error::missing_field("failure_reason"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("failure_reason", &self.failure_reason)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoPasswordLinkViewReportFailedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = NoPasswordLinkViewReportFailedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoPasswordLinkViewReportFailedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                NoPasswordLinkViewReportFailedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("NoPasswordLinkViewReportFailedDetails", NO_PASSWORD_LINK_VIEW_REPORT_FAILED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoPasswordLinkViewReportFailedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("NoPasswordLinkViewReportFailedDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct NoPasswordLinkViewReportFailedType {
+    pub description: String,
+}
+
+impl NoPasswordLinkViewReportFailedType {
+    pub fn new(description: String) -> Self {
+        NoPasswordLinkViewReportFailedType {
+            description,
+        }
+    }
+
+}
+
+const NO_PASSWORD_LINK_VIEW_REPORT_FAILED_TYPE_FIELDS: &[&str] = &["description"];
+impl NoPasswordLinkViewReportFailedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<NoPasswordLinkViewReportFailedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<NoPasswordLinkViewReportFailedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = NoPasswordLinkViewReportFailedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for NoPasswordLinkViewReportFailedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = NoPasswordLinkViewReportFailedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a NoPasswordLinkViewReportFailedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                NoPasswordLinkViewReportFailedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("NoPasswordLinkViewReportFailedType", NO_PASSWORD_LINK_VIEW_REPORT_FAILED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for NoPasswordLinkViewReportFailedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("NoPasswordLinkViewReportFailedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Non team member's logged information.
 #[derive(Debug)]
 pub struct NonTeamMemberLogInfo {
@@ -44226,6 +49926,382 @@ impl ::serde::ser::Serialize for OriginLogInfo {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("OriginLogInfo", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Report created: Views of old links.
+#[derive(Debug)]
+pub struct OutdatedLinkViewCreateReportDetails {
+    /// Report start date.
+    pub start_date: super::common::DropboxTimestamp,
+    /// Report end date.
+    pub end_date: super::common::DropboxTimestamp,
+}
+
+impl OutdatedLinkViewCreateReportDetails {
+    pub fn new(
+        start_date: super::common::DropboxTimestamp,
+        end_date: super::common::DropboxTimestamp,
+    ) -> Self {
+        OutdatedLinkViewCreateReportDetails {
+            start_date,
+            end_date,
+        }
+    }
+
+}
+
+const OUTDATED_LINK_VIEW_CREATE_REPORT_DETAILS_FIELDS: &[&str] = &["start_date",
+                                                                   "end_date"];
+impl OutdatedLinkViewCreateReportDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<OutdatedLinkViewCreateReportDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<OutdatedLinkViewCreateReportDetails>, V::Error> {
+        let mut field_start_date = None;
+        let mut field_end_date = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "start_date" => {
+                    if field_start_date.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("start_date"));
+                    }
+                    field_start_date = Some(map.next_value()?);
+                }
+                "end_date" => {
+                    if field_end_date.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("end_date"));
+                    }
+                    field_end_date = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = OutdatedLinkViewCreateReportDetails {
+            start_date: field_start_date.ok_or_else(|| ::serde::de::Error::missing_field("start_date"))?,
+            end_date: field_end_date.ok_or_else(|| ::serde::de::Error::missing_field("end_date"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("start_date", &self.start_date)?;
+        s.serialize_field("end_date", &self.end_date)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for OutdatedLinkViewCreateReportDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = OutdatedLinkViewCreateReportDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a OutdatedLinkViewCreateReportDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                OutdatedLinkViewCreateReportDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("OutdatedLinkViewCreateReportDetails", OUTDATED_LINK_VIEW_CREATE_REPORT_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for OutdatedLinkViewCreateReportDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("OutdatedLinkViewCreateReportDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct OutdatedLinkViewCreateReportType {
+    pub description: String,
+}
+
+impl OutdatedLinkViewCreateReportType {
+    pub fn new(description: String) -> Self {
+        OutdatedLinkViewCreateReportType {
+            description,
+        }
+    }
+
+}
+
+const OUTDATED_LINK_VIEW_CREATE_REPORT_TYPE_FIELDS: &[&str] = &["description"];
+impl OutdatedLinkViewCreateReportType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<OutdatedLinkViewCreateReportType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<OutdatedLinkViewCreateReportType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = OutdatedLinkViewCreateReportType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for OutdatedLinkViewCreateReportType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = OutdatedLinkViewCreateReportType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a OutdatedLinkViewCreateReportType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                OutdatedLinkViewCreateReportType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("OutdatedLinkViewCreateReportType", OUTDATED_LINK_VIEW_CREATE_REPORT_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for OutdatedLinkViewCreateReportType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("OutdatedLinkViewCreateReportType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Couldn't create report: Views of old links.
+#[derive(Debug)]
+pub struct OutdatedLinkViewReportFailedDetails {
+    /// Failure reason.
+    pub failure_reason: super::team::TeamReportFailureReason,
+}
+
+impl OutdatedLinkViewReportFailedDetails {
+    pub fn new(failure_reason: super::team::TeamReportFailureReason) -> Self {
+        OutdatedLinkViewReportFailedDetails {
+            failure_reason,
+        }
+    }
+
+}
+
+const OUTDATED_LINK_VIEW_REPORT_FAILED_DETAILS_FIELDS: &[&str] = &["failure_reason"];
+impl OutdatedLinkViewReportFailedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<OutdatedLinkViewReportFailedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<OutdatedLinkViewReportFailedDetails>, V::Error> {
+        let mut field_failure_reason = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "failure_reason" => {
+                    if field_failure_reason.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("failure_reason"));
+                    }
+                    field_failure_reason = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = OutdatedLinkViewReportFailedDetails {
+            failure_reason: field_failure_reason.ok_or_else(|| ::serde::de::Error::missing_field("failure_reason"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("failure_reason", &self.failure_reason)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for OutdatedLinkViewReportFailedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = OutdatedLinkViewReportFailedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a OutdatedLinkViewReportFailedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                OutdatedLinkViewReportFailedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("OutdatedLinkViewReportFailedDetails", OUTDATED_LINK_VIEW_REPORT_FAILED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for OutdatedLinkViewReportFailedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("OutdatedLinkViewReportFailedDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct OutdatedLinkViewReportFailedType {
+    pub description: String,
+}
+
+impl OutdatedLinkViewReportFailedType {
+    pub fn new(description: String) -> Self {
+        OutdatedLinkViewReportFailedType {
+            description,
+        }
+    }
+
+}
+
+const OUTDATED_LINK_VIEW_REPORT_FAILED_TYPE_FIELDS: &[&str] = &["description"];
+impl OutdatedLinkViewReportFailedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<OutdatedLinkViewReportFailedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<OutdatedLinkViewReportFailedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = OutdatedLinkViewReportFailedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for OutdatedLinkViewReportFailedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = OutdatedLinkViewReportFailedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a OutdatedLinkViewReportFailedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                OutdatedLinkViewReportFailedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("OutdatedLinkViewReportFailedType", OUTDATED_LINK_VIEW_REPORT_FAILED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for OutdatedLinkViewReportFailedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("OutdatedLinkViewReportFailedType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -46164,18 +52240,28 @@ pub struct PaperContentRemoveFromFolderDetails {
     /// Event unique identifier.
     pub event_uuid: String,
     /// Target asset position in the Assets list.
-    pub target_asset_index: u64,
+    pub target_asset_index: Option<u64>,
     /// Parent asset position in the Assets list.
-    pub parent_asset_index: u64,
+    pub parent_asset_index: Option<u64>,
 }
 
 impl PaperContentRemoveFromFolderDetails {
-    pub fn new(event_uuid: String, target_asset_index: u64, parent_asset_index: u64) -> Self {
+    pub fn new(event_uuid: String) -> Self {
         PaperContentRemoveFromFolderDetails {
             event_uuid,
-            target_asset_index,
-            parent_asset_index,
+            target_asset_index: None,
+            parent_asset_index: None,
         }
+    }
+
+    pub fn with_target_asset_index(mut self, value: Option<u64>) -> Self {
+        self.target_asset_index = value;
+        self
+    }
+
+    pub fn with_parent_asset_index(mut self, value: Option<u64>) -> Self {
+        self.parent_asset_index = value;
+        self
     }
 
 }
@@ -46230,8 +52316,8 @@ impl PaperContentRemoveFromFolderDetails {
         }
         let result = PaperContentRemoveFromFolderDetails {
             event_uuid: field_event_uuid.ok_or_else(|| ::serde::de::Error::missing_field("event_uuid"))?,
-            target_asset_index: field_target_asset_index.ok_or_else(|| ::serde::de::Error::missing_field("target_asset_index"))?,
-            parent_asset_index: field_parent_asset_index.ok_or_else(|| ::serde::de::Error::missing_field("parent_asset_index"))?,
+            target_asset_index: field_target_asset_index,
+            parent_asset_index: field_parent_asset_index,
         };
         Ok(Some(result))
     }
@@ -56759,6 +62845,449 @@ impl ::serde::ser::Serialize for ResellerSupportSessionStartType {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("ResellerSupportSessionStartType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Rewound a folder.
+#[derive(Debug)]
+pub struct RewindFolderDetails {
+    /// Folder was Rewound to this date.
+    pub rewind_folder_target_ts_ms: super::common::DropboxTimestamp,
+}
+
+impl RewindFolderDetails {
+    pub fn new(rewind_folder_target_ts_ms: super::common::DropboxTimestamp) -> Self {
+        RewindFolderDetails {
+            rewind_folder_target_ts_ms,
+        }
+    }
+
+}
+
+const REWIND_FOLDER_DETAILS_FIELDS: &[&str] = &["rewind_folder_target_ts_ms"];
+impl RewindFolderDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<RewindFolderDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RewindFolderDetails>, V::Error> {
+        let mut field_rewind_folder_target_ts_ms = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "rewind_folder_target_ts_ms" => {
+                    if field_rewind_folder_target_ts_ms.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("rewind_folder_target_ts_ms"));
+                    }
+                    field_rewind_folder_target_ts_ms = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RewindFolderDetails {
+            rewind_folder_target_ts_ms: field_rewind_folder_target_ts_ms.ok_or_else(|| ::serde::de::Error::missing_field("rewind_folder_target_ts_ms"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("rewind_folder_target_ts_ms", &self.rewind_folder_target_ts_ms)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RewindFolderDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RewindFolderDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a RewindFolderDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RewindFolderDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RewindFolderDetails", REWIND_FOLDER_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RewindFolderDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RewindFolderDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct RewindFolderType {
+    pub description: String,
+}
+
+impl RewindFolderType {
+    pub fn new(description: String) -> Self {
+        RewindFolderType {
+            description,
+        }
+    }
+
+}
+
+const REWIND_FOLDER_TYPE_FIELDS: &[&str] = &["description"];
+impl RewindFolderType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<RewindFolderType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RewindFolderType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RewindFolderType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RewindFolderType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RewindFolderType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a RewindFolderType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RewindFolderType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RewindFolderType", REWIND_FOLDER_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RewindFolderType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RewindFolderType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Policy for controlling whether team members can rewind
+#[derive(Debug)]
+pub enum RewindPolicy {
+    AdminsOnly,
+    Everyone,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RewindPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = RewindPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a RewindPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "admins_only" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(RewindPolicy::AdminsOnly)
+                    }
+                    "everyone" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(RewindPolicy::Everyone)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(RewindPolicy::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["admins_only",
+                                    "everyone",
+                                    "other"];
+        deserializer.deserialize_struct("RewindPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RewindPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            RewindPolicy::AdminsOnly => {
+                // unit
+                let mut s = serializer.serialize_struct("RewindPolicy", 1)?;
+                s.serialize_field(".tag", "admins_only")?;
+                s.end()
+            }
+            RewindPolicy::Everyone => {
+                // unit
+                let mut s = serializer.serialize_struct("RewindPolicy", 1)?;
+                s.serialize_field(".tag", "everyone")?;
+                s.end()
+            }
+            RewindPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+/// Changed Rewind policy for team.
+#[derive(Debug)]
+pub struct RewindPolicyChangedDetails {
+    /// New Dropbox Rewind policy.
+    pub new_value: RewindPolicy,
+    /// Previous Dropbox Rewind policy.
+    pub previous_value: RewindPolicy,
+}
+
+impl RewindPolicyChangedDetails {
+    pub fn new(new_value: RewindPolicy, previous_value: RewindPolicy) -> Self {
+        RewindPolicyChangedDetails {
+            new_value,
+            previous_value,
+        }
+    }
+
+}
+
+const REWIND_POLICY_CHANGED_DETAILS_FIELDS: &[&str] = &["new_value",
+                                                        "previous_value"];
+impl RewindPolicyChangedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<RewindPolicyChangedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RewindPolicyChangedDetails>, V::Error> {
+        let mut field_new_value = None;
+        let mut field_previous_value = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RewindPolicyChangedDetails {
+            new_value: field_new_value.ok_or_else(|| ::serde::de::Error::missing_field("new_value"))?,
+            previous_value: field_previous_value.ok_or_else(|| ::serde::de::Error::missing_field("previous_value"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_value", &self.new_value)?;
+        s.serialize_field("previous_value", &self.previous_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RewindPolicyChangedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RewindPolicyChangedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a RewindPolicyChangedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RewindPolicyChangedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RewindPolicyChangedDetails", REWIND_POLICY_CHANGED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RewindPolicyChangedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RewindPolicyChangedDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct RewindPolicyChangedType {
+    pub description: String,
+}
+
+impl RewindPolicyChangedType {
+    pub fn new(description: String) -> Self {
+        RewindPolicyChangedType {
+            description,
+        }
+    }
+
+}
+
+const REWIND_POLICY_CHANGED_TYPE_FIELDS: &[&str] = &["description"];
+impl RewindPolicyChangedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<RewindPolicyChangedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<RewindPolicyChangedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = RewindPolicyChangedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for RewindPolicyChangedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = RewindPolicyChangedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a RewindPolicyChangedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                RewindPolicyChangedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("RewindPolicyChangedType", REWIND_POLICY_CHANGED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for RewindPolicyChangedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("RewindPolicyChangedType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -68225,6 +74754,8 @@ impl ::serde::ser::Serialize for SharedLinkRemoveExpiryType {
 pub struct SharedLinkSettingsAddExpirationDetails {
     /// Shared content access level.
     pub shared_content_access_level: super::sharing::AccessLevel,
+    /// Shared content link.
+    pub shared_content_link: Option<String>,
     /// New shared content link expiration date. Might be missing due to historical data gap.
     pub new_value: Option<super::common::DropboxTimestamp>,
 }
@@ -68233,8 +74764,14 @@ impl SharedLinkSettingsAddExpirationDetails {
     pub fn new(shared_content_access_level: super::sharing::AccessLevel) -> Self {
         SharedLinkSettingsAddExpirationDetails {
             shared_content_access_level,
+            shared_content_link: None,
             new_value: None,
         }
+    }
+
+    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
+        self.shared_content_link = value;
+        self
     }
 
     pub fn with_new_value(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
@@ -68245,6 +74782,7 @@ impl SharedLinkSettingsAddExpirationDetails {
 }
 
 const SHARED_LINK_SETTINGS_ADD_EXPIRATION_DETAILS_FIELDS: &[&str] = &["shared_content_access_level",
+                                                                      "shared_content_link",
                                                                       "new_value"];
 impl SharedLinkSettingsAddExpirationDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -68258,6 +74796,7 @@ impl SharedLinkSettingsAddExpirationDetails {
         optional: bool,
     ) -> Result<Option<SharedLinkSettingsAddExpirationDetails>, V::Error> {
         let mut field_shared_content_access_level = None;
+        let mut field_shared_content_link = None;
         let mut field_new_value = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
@@ -68268,6 +74807,12 @@ impl SharedLinkSettingsAddExpirationDetails {
                         return Err(::serde::de::Error::duplicate_field("shared_content_access_level"));
                     }
                     field_shared_content_access_level = Some(map.next_value()?);
+                }
+                "shared_content_link" => {
+                    if field_shared_content_link.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("shared_content_link"));
+                    }
+                    field_shared_content_link = Some(map.next_value()?);
                 }
                 "new_value" => {
                     if field_new_value.is_some() {
@@ -68286,6 +74831,7 @@ impl SharedLinkSettingsAddExpirationDetails {
         }
         let result = SharedLinkSettingsAddExpirationDetails {
             shared_content_access_level: field_shared_content_access_level.ok_or_else(|| ::serde::de::Error::missing_field("shared_content_access_level"))?,
+            shared_content_link: field_shared_content_link,
             new_value: field_new_value,
         };
         Ok(Some(result))
@@ -68297,6 +74843,7 @@ impl SharedLinkSettingsAddExpirationDetails {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("shared_content_link", &self.shared_content_link)?;
         s.serialize_field("new_value", &self.new_value)
     }
 }
@@ -68323,7 +74870,7 @@ impl ::serde::ser::Serialize for SharedLinkSettingsAddExpirationDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedLinkSettingsAddExpirationDetails", 2)?;
+        let mut s = serializer.serialize_struct("SharedLinkSettingsAddExpirationDetails", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -68423,18 +74970,27 @@ impl ::serde::ser::Serialize for SharedLinkSettingsAddExpirationType {
 pub struct SharedLinkSettingsAddPasswordDetails {
     /// Shared content access level.
     pub shared_content_access_level: super::sharing::AccessLevel,
+    /// Shared content link.
+    pub shared_content_link: Option<String>,
 }
 
 impl SharedLinkSettingsAddPasswordDetails {
     pub fn new(shared_content_access_level: super::sharing::AccessLevel) -> Self {
         SharedLinkSettingsAddPasswordDetails {
             shared_content_access_level,
+            shared_content_link: None,
         }
+    }
+
+    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
+        self.shared_content_link = value;
+        self
     }
 
 }
 
-const SHARED_LINK_SETTINGS_ADD_PASSWORD_DETAILS_FIELDS: &[&str] = &["shared_content_access_level"];
+const SHARED_LINK_SETTINGS_ADD_PASSWORD_DETAILS_FIELDS: &[&str] = &["shared_content_access_level",
+                                                                    "shared_content_link"];
 impl SharedLinkSettingsAddPasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -68447,6 +75003,7 @@ impl SharedLinkSettingsAddPasswordDetails {
         optional: bool,
     ) -> Result<Option<SharedLinkSettingsAddPasswordDetails>, V::Error> {
         let mut field_shared_content_access_level = None;
+        let mut field_shared_content_link = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -68456,6 +75013,12 @@ impl SharedLinkSettingsAddPasswordDetails {
                         return Err(::serde::de::Error::duplicate_field("shared_content_access_level"));
                     }
                     field_shared_content_access_level = Some(map.next_value()?);
+                }
+                "shared_content_link" => {
+                    if field_shared_content_link.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("shared_content_link"));
+                    }
+                    field_shared_content_link = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -68468,6 +75031,7 @@ impl SharedLinkSettingsAddPasswordDetails {
         }
         let result = SharedLinkSettingsAddPasswordDetails {
             shared_content_access_level: field_shared_content_access_level.ok_or_else(|| ::serde::de::Error::missing_field("shared_content_access_level"))?,
+            shared_content_link: field_shared_content_link,
         };
         Ok(Some(result))
     }
@@ -68477,7 +75041,8 @@ impl SharedLinkSettingsAddPasswordDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)
+        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("shared_content_link", &self.shared_content_link)
     }
 }
 
@@ -68503,7 +75068,7 @@ impl ::serde::ser::Serialize for SharedLinkSettingsAddPasswordDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedLinkSettingsAddPasswordDetails", 1)?;
+        let mut s = serializer.serialize_struct("SharedLinkSettingsAddPasswordDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -68603,18 +75168,27 @@ impl ::serde::ser::Serialize for SharedLinkSettingsAddPasswordType {
 pub struct SharedLinkSettingsAllowDownloadDisabledDetails {
     /// Shared content access level.
     pub shared_content_access_level: super::sharing::AccessLevel,
+    /// Shared content link.
+    pub shared_content_link: Option<String>,
 }
 
 impl SharedLinkSettingsAllowDownloadDisabledDetails {
     pub fn new(shared_content_access_level: super::sharing::AccessLevel) -> Self {
         SharedLinkSettingsAllowDownloadDisabledDetails {
             shared_content_access_level,
+            shared_content_link: None,
         }
+    }
+
+    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
+        self.shared_content_link = value;
+        self
     }
 
 }
 
-const SHARED_LINK_SETTINGS_ALLOW_DOWNLOAD_DISABLED_DETAILS_FIELDS: &[&str] = &["shared_content_access_level"];
+const SHARED_LINK_SETTINGS_ALLOW_DOWNLOAD_DISABLED_DETAILS_FIELDS: &[&str] = &["shared_content_access_level",
+                                                                               "shared_content_link"];
 impl SharedLinkSettingsAllowDownloadDisabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -68627,6 +75201,7 @@ impl SharedLinkSettingsAllowDownloadDisabledDetails {
         optional: bool,
     ) -> Result<Option<SharedLinkSettingsAllowDownloadDisabledDetails>, V::Error> {
         let mut field_shared_content_access_level = None;
+        let mut field_shared_content_link = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -68636,6 +75211,12 @@ impl SharedLinkSettingsAllowDownloadDisabledDetails {
                         return Err(::serde::de::Error::duplicate_field("shared_content_access_level"));
                     }
                     field_shared_content_access_level = Some(map.next_value()?);
+                }
+                "shared_content_link" => {
+                    if field_shared_content_link.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("shared_content_link"));
+                    }
+                    field_shared_content_link = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -68648,6 +75229,7 @@ impl SharedLinkSettingsAllowDownloadDisabledDetails {
         }
         let result = SharedLinkSettingsAllowDownloadDisabledDetails {
             shared_content_access_level: field_shared_content_access_level.ok_or_else(|| ::serde::de::Error::missing_field("shared_content_access_level"))?,
+            shared_content_link: field_shared_content_link,
         };
         Ok(Some(result))
     }
@@ -68657,7 +75239,8 @@ impl SharedLinkSettingsAllowDownloadDisabledDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)
+        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("shared_content_link", &self.shared_content_link)
     }
 }
 
@@ -68683,7 +75266,7 @@ impl ::serde::ser::Serialize for SharedLinkSettingsAllowDownloadDisabledDetails 
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedLinkSettingsAllowDownloadDisabledDetails", 1)?;
+        let mut s = serializer.serialize_struct("SharedLinkSettingsAllowDownloadDisabledDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -68783,18 +75366,27 @@ impl ::serde::ser::Serialize for SharedLinkSettingsAllowDownloadDisabledType {
 pub struct SharedLinkSettingsAllowDownloadEnabledDetails {
     /// Shared content access level.
     pub shared_content_access_level: super::sharing::AccessLevel,
+    /// Shared content link.
+    pub shared_content_link: Option<String>,
 }
 
 impl SharedLinkSettingsAllowDownloadEnabledDetails {
     pub fn new(shared_content_access_level: super::sharing::AccessLevel) -> Self {
         SharedLinkSettingsAllowDownloadEnabledDetails {
             shared_content_access_level,
+            shared_content_link: None,
         }
+    }
+
+    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
+        self.shared_content_link = value;
+        self
     }
 
 }
 
-const SHARED_LINK_SETTINGS_ALLOW_DOWNLOAD_ENABLED_DETAILS_FIELDS: &[&str] = &["shared_content_access_level"];
+const SHARED_LINK_SETTINGS_ALLOW_DOWNLOAD_ENABLED_DETAILS_FIELDS: &[&str] = &["shared_content_access_level",
+                                                                              "shared_content_link"];
 impl SharedLinkSettingsAllowDownloadEnabledDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -68807,6 +75399,7 @@ impl SharedLinkSettingsAllowDownloadEnabledDetails {
         optional: bool,
     ) -> Result<Option<SharedLinkSettingsAllowDownloadEnabledDetails>, V::Error> {
         let mut field_shared_content_access_level = None;
+        let mut field_shared_content_link = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -68816,6 +75409,12 @@ impl SharedLinkSettingsAllowDownloadEnabledDetails {
                         return Err(::serde::de::Error::duplicate_field("shared_content_access_level"));
                     }
                     field_shared_content_access_level = Some(map.next_value()?);
+                }
+                "shared_content_link" => {
+                    if field_shared_content_link.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("shared_content_link"));
+                    }
+                    field_shared_content_link = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -68828,6 +75427,7 @@ impl SharedLinkSettingsAllowDownloadEnabledDetails {
         }
         let result = SharedLinkSettingsAllowDownloadEnabledDetails {
             shared_content_access_level: field_shared_content_access_level.ok_or_else(|| ::serde::de::Error::missing_field("shared_content_access_level"))?,
+            shared_content_link: field_shared_content_link,
         };
         Ok(Some(result))
     }
@@ -68837,7 +75437,8 @@ impl SharedLinkSettingsAllowDownloadEnabledDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)
+        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("shared_content_link", &self.shared_content_link)
     }
 }
 
@@ -68863,7 +75464,7 @@ impl ::serde::ser::Serialize for SharedLinkSettingsAllowDownloadEnabledDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedLinkSettingsAllowDownloadEnabledDetails", 1)?;
+        let mut s = serializer.serialize_struct("SharedLinkSettingsAllowDownloadEnabledDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -68961,24 +75562,32 @@ impl ::serde::ser::Serialize for SharedLinkSettingsAllowDownloadEnabledType {
 /// Changed the audience of the shared link.
 #[derive(Debug)]
 pub struct SharedLinkSettingsChangeAudienceDetails {
-    /// New link audience value.
-    pub new_value: super::sharing::LinkAudience,
     /// Shared content access level.
     pub shared_content_access_level: super::sharing::AccessLevel,
+    /// New link audience value.
+    pub new_value: super::sharing::LinkAudience,
+    /// Shared content link.
+    pub shared_content_link: Option<String>,
     /// Previous link audience value.
     pub previous_value: Option<super::sharing::LinkAudience>,
 }
 
 impl SharedLinkSettingsChangeAudienceDetails {
     pub fn new(
-        new_value: super::sharing::LinkAudience,
         shared_content_access_level: super::sharing::AccessLevel,
+        new_value: super::sharing::LinkAudience,
     ) -> Self {
         SharedLinkSettingsChangeAudienceDetails {
-            new_value,
             shared_content_access_level,
+            new_value,
+            shared_content_link: None,
             previous_value: None,
         }
+    }
+
+    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
+        self.shared_content_link = value;
+        self
     }
 
     pub fn with_previous_value(mut self, value: Option<super::sharing::LinkAudience>) -> Self {
@@ -68988,8 +75597,9 @@ impl SharedLinkSettingsChangeAudienceDetails {
 
 }
 
-const SHARED_LINK_SETTINGS_CHANGE_AUDIENCE_DETAILS_FIELDS: &[&str] = &["new_value",
-                                                                       "shared_content_access_level",
+const SHARED_LINK_SETTINGS_CHANGE_AUDIENCE_DETAILS_FIELDS: &[&str] = &["shared_content_access_level",
+                                                                       "new_value",
+                                                                       "shared_content_link",
                                                                        "previous_value"];
 impl SharedLinkSettingsChangeAudienceDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -69002,24 +75612,31 @@ impl SharedLinkSettingsChangeAudienceDetails {
         mut map: V,
         optional: bool,
     ) -> Result<Option<SharedLinkSettingsChangeAudienceDetails>, V::Error> {
-        let mut field_new_value = None;
         let mut field_shared_content_access_level = None;
+        let mut field_new_value = None;
+        let mut field_shared_content_link = None;
         let mut field_previous_value = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
             match key {
+                "shared_content_access_level" => {
+                    if field_shared_content_access_level.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("shared_content_access_level"));
+                    }
+                    field_shared_content_access_level = Some(map.next_value()?);
+                }
                 "new_value" => {
                     if field_new_value.is_some() {
                         return Err(::serde::de::Error::duplicate_field("new_value"));
                     }
                     field_new_value = Some(map.next_value()?);
                 }
-                "shared_content_access_level" => {
-                    if field_shared_content_access_level.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("shared_content_access_level"));
+                "shared_content_link" => {
+                    if field_shared_content_link.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("shared_content_link"));
                     }
-                    field_shared_content_access_level = Some(map.next_value()?);
+                    field_shared_content_link = Some(map.next_value()?);
                 }
                 "previous_value" => {
                     if field_previous_value.is_some() {
@@ -69037,8 +75654,9 @@ impl SharedLinkSettingsChangeAudienceDetails {
             return Ok(None);
         }
         let result = SharedLinkSettingsChangeAudienceDetails {
-            new_value: field_new_value.ok_or_else(|| ::serde::de::Error::missing_field("new_value"))?,
             shared_content_access_level: field_shared_content_access_level.ok_or_else(|| ::serde::de::Error::missing_field("shared_content_access_level"))?,
+            new_value: field_new_value.ok_or_else(|| ::serde::de::Error::missing_field("new_value"))?,
+            shared_content_link: field_shared_content_link,
             previous_value: field_previous_value,
         };
         Ok(Some(result))
@@ -69049,8 +75667,9 @@ impl SharedLinkSettingsChangeAudienceDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("new_value", &self.new_value)?;
+        s.serialize_field("shared_content_link", &self.shared_content_link)?;
         s.serialize_field("previous_value", &self.previous_value)
     }
 }
@@ -69077,7 +75696,7 @@ impl ::serde::ser::Serialize for SharedLinkSettingsChangeAudienceDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedLinkSettingsChangeAudienceDetails", 3)?;
+        let mut s = serializer.serialize_struct("SharedLinkSettingsChangeAudienceDetails", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -69177,6 +75796,8 @@ impl ::serde::ser::Serialize for SharedLinkSettingsChangeAudienceType {
 pub struct SharedLinkSettingsChangeExpirationDetails {
     /// Shared content access level.
     pub shared_content_access_level: super::sharing::AccessLevel,
+    /// Shared content link.
+    pub shared_content_link: Option<String>,
     /// New shared content link expiration date. Might be missing due to historical data gap.
     pub new_value: Option<super::common::DropboxTimestamp>,
     /// Previous shared content link expiration date. Might be missing due to historical data gap.
@@ -69187,9 +75808,15 @@ impl SharedLinkSettingsChangeExpirationDetails {
     pub fn new(shared_content_access_level: super::sharing::AccessLevel) -> Self {
         SharedLinkSettingsChangeExpirationDetails {
             shared_content_access_level,
+            shared_content_link: None,
             new_value: None,
             previous_value: None,
         }
+    }
+
+    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
+        self.shared_content_link = value;
+        self
     }
 
     pub fn with_new_value(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
@@ -69205,6 +75832,7 @@ impl SharedLinkSettingsChangeExpirationDetails {
 }
 
 const SHARED_LINK_SETTINGS_CHANGE_EXPIRATION_DETAILS_FIELDS: &[&str] = &["shared_content_access_level",
+                                                                         "shared_content_link",
                                                                          "new_value",
                                                                          "previous_value"];
 impl SharedLinkSettingsChangeExpirationDetails {
@@ -69219,6 +75847,7 @@ impl SharedLinkSettingsChangeExpirationDetails {
         optional: bool,
     ) -> Result<Option<SharedLinkSettingsChangeExpirationDetails>, V::Error> {
         let mut field_shared_content_access_level = None;
+        let mut field_shared_content_link = None;
         let mut field_new_value = None;
         let mut field_previous_value = None;
         let mut nothing = true;
@@ -69230,6 +75859,12 @@ impl SharedLinkSettingsChangeExpirationDetails {
                         return Err(::serde::de::Error::duplicate_field("shared_content_access_level"));
                     }
                     field_shared_content_access_level = Some(map.next_value()?);
+                }
+                "shared_content_link" => {
+                    if field_shared_content_link.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("shared_content_link"));
+                    }
+                    field_shared_content_link = Some(map.next_value()?);
                 }
                 "new_value" => {
                     if field_new_value.is_some() {
@@ -69254,6 +75889,7 @@ impl SharedLinkSettingsChangeExpirationDetails {
         }
         let result = SharedLinkSettingsChangeExpirationDetails {
             shared_content_access_level: field_shared_content_access_level.ok_or_else(|| ::serde::de::Error::missing_field("shared_content_access_level"))?,
+            shared_content_link: field_shared_content_link,
             new_value: field_new_value,
             previous_value: field_previous_value,
         };
@@ -69266,6 +75902,7 @@ impl SharedLinkSettingsChangeExpirationDetails {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("shared_content_link", &self.shared_content_link)?;
         s.serialize_field("new_value", &self.new_value)?;
         s.serialize_field("previous_value", &self.previous_value)
     }
@@ -69293,7 +75930,7 @@ impl ::serde::ser::Serialize for SharedLinkSettingsChangeExpirationDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedLinkSettingsChangeExpirationDetails", 3)?;
+        let mut s = serializer.serialize_struct("SharedLinkSettingsChangeExpirationDetails", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -69393,18 +76030,27 @@ impl ::serde::ser::Serialize for SharedLinkSettingsChangeExpirationType {
 pub struct SharedLinkSettingsChangePasswordDetails {
     /// Shared content access level.
     pub shared_content_access_level: super::sharing::AccessLevel,
+    /// Shared content link.
+    pub shared_content_link: Option<String>,
 }
 
 impl SharedLinkSettingsChangePasswordDetails {
     pub fn new(shared_content_access_level: super::sharing::AccessLevel) -> Self {
         SharedLinkSettingsChangePasswordDetails {
             shared_content_access_level,
+            shared_content_link: None,
         }
+    }
+
+    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
+        self.shared_content_link = value;
+        self
     }
 
 }
 
-const SHARED_LINK_SETTINGS_CHANGE_PASSWORD_DETAILS_FIELDS: &[&str] = &["shared_content_access_level"];
+const SHARED_LINK_SETTINGS_CHANGE_PASSWORD_DETAILS_FIELDS: &[&str] = &["shared_content_access_level",
+                                                                       "shared_content_link"];
 impl SharedLinkSettingsChangePasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -69417,6 +76063,7 @@ impl SharedLinkSettingsChangePasswordDetails {
         optional: bool,
     ) -> Result<Option<SharedLinkSettingsChangePasswordDetails>, V::Error> {
         let mut field_shared_content_access_level = None;
+        let mut field_shared_content_link = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -69426,6 +76073,12 @@ impl SharedLinkSettingsChangePasswordDetails {
                         return Err(::serde::de::Error::duplicate_field("shared_content_access_level"));
                     }
                     field_shared_content_access_level = Some(map.next_value()?);
+                }
+                "shared_content_link" => {
+                    if field_shared_content_link.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("shared_content_link"));
+                    }
+                    field_shared_content_link = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -69438,6 +76091,7 @@ impl SharedLinkSettingsChangePasswordDetails {
         }
         let result = SharedLinkSettingsChangePasswordDetails {
             shared_content_access_level: field_shared_content_access_level.ok_or_else(|| ::serde::de::Error::missing_field("shared_content_access_level"))?,
+            shared_content_link: field_shared_content_link,
         };
         Ok(Some(result))
     }
@@ -69447,7 +76101,8 @@ impl SharedLinkSettingsChangePasswordDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)
+        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("shared_content_link", &self.shared_content_link)
     }
 }
 
@@ -69473,7 +76128,7 @@ impl ::serde::ser::Serialize for SharedLinkSettingsChangePasswordDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedLinkSettingsChangePasswordDetails", 1)?;
+        let mut s = serializer.serialize_struct("SharedLinkSettingsChangePasswordDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -69573,6 +76228,8 @@ impl ::serde::ser::Serialize for SharedLinkSettingsChangePasswordType {
 pub struct SharedLinkSettingsRemoveExpirationDetails {
     /// Shared content access level.
     pub shared_content_access_level: super::sharing::AccessLevel,
+    /// Shared content link.
+    pub shared_content_link: Option<String>,
     /// Previous shared link expiration date. Might be missing due to historical data gap.
     pub previous_value: Option<super::common::DropboxTimestamp>,
 }
@@ -69581,8 +76238,14 @@ impl SharedLinkSettingsRemoveExpirationDetails {
     pub fn new(shared_content_access_level: super::sharing::AccessLevel) -> Self {
         SharedLinkSettingsRemoveExpirationDetails {
             shared_content_access_level,
+            shared_content_link: None,
             previous_value: None,
         }
+    }
+
+    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
+        self.shared_content_link = value;
+        self
     }
 
     pub fn with_previous_value(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
@@ -69593,6 +76256,7 @@ impl SharedLinkSettingsRemoveExpirationDetails {
 }
 
 const SHARED_LINK_SETTINGS_REMOVE_EXPIRATION_DETAILS_FIELDS: &[&str] = &["shared_content_access_level",
+                                                                         "shared_content_link",
                                                                          "previous_value"];
 impl SharedLinkSettingsRemoveExpirationDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -69606,6 +76270,7 @@ impl SharedLinkSettingsRemoveExpirationDetails {
         optional: bool,
     ) -> Result<Option<SharedLinkSettingsRemoveExpirationDetails>, V::Error> {
         let mut field_shared_content_access_level = None;
+        let mut field_shared_content_link = None;
         let mut field_previous_value = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
@@ -69616,6 +76281,12 @@ impl SharedLinkSettingsRemoveExpirationDetails {
                         return Err(::serde::de::Error::duplicate_field("shared_content_access_level"));
                     }
                     field_shared_content_access_level = Some(map.next_value()?);
+                }
+                "shared_content_link" => {
+                    if field_shared_content_link.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("shared_content_link"));
+                    }
+                    field_shared_content_link = Some(map.next_value()?);
                 }
                 "previous_value" => {
                     if field_previous_value.is_some() {
@@ -69634,6 +76305,7 @@ impl SharedLinkSettingsRemoveExpirationDetails {
         }
         let result = SharedLinkSettingsRemoveExpirationDetails {
             shared_content_access_level: field_shared_content_access_level.ok_or_else(|| ::serde::de::Error::missing_field("shared_content_access_level"))?,
+            shared_content_link: field_shared_content_link,
             previous_value: field_previous_value,
         };
         Ok(Some(result))
@@ -69645,6 +76317,7 @@ impl SharedLinkSettingsRemoveExpirationDetails {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("shared_content_link", &self.shared_content_link)?;
         s.serialize_field("previous_value", &self.previous_value)
     }
 }
@@ -69671,7 +76344,7 @@ impl ::serde::ser::Serialize for SharedLinkSettingsRemoveExpirationDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedLinkSettingsRemoveExpirationDetails", 2)?;
+        let mut s = serializer.serialize_struct("SharedLinkSettingsRemoveExpirationDetails", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -69771,18 +76444,27 @@ impl ::serde::ser::Serialize for SharedLinkSettingsRemoveExpirationType {
 pub struct SharedLinkSettingsRemovePasswordDetails {
     /// Shared content access level.
     pub shared_content_access_level: super::sharing::AccessLevel,
+    /// Shared content link.
+    pub shared_content_link: Option<String>,
 }
 
 impl SharedLinkSettingsRemovePasswordDetails {
     pub fn new(shared_content_access_level: super::sharing::AccessLevel) -> Self {
         SharedLinkSettingsRemovePasswordDetails {
             shared_content_access_level,
+            shared_content_link: None,
         }
+    }
+
+    pub fn with_shared_content_link(mut self, value: Option<String>) -> Self {
+        self.shared_content_link = value;
+        self
     }
 
 }
 
-const SHARED_LINK_SETTINGS_REMOVE_PASSWORD_DETAILS_FIELDS: &[&str] = &["shared_content_access_level"];
+const SHARED_LINK_SETTINGS_REMOVE_PASSWORD_DETAILS_FIELDS: &[&str] = &["shared_content_access_level",
+                                                                       "shared_content_link"];
 impl SharedLinkSettingsRemovePasswordDetails {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -69795,6 +76477,7 @@ impl SharedLinkSettingsRemovePasswordDetails {
         optional: bool,
     ) -> Result<Option<SharedLinkSettingsRemovePasswordDetails>, V::Error> {
         let mut field_shared_content_access_level = None;
+        let mut field_shared_content_link = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -69804,6 +76487,12 @@ impl SharedLinkSettingsRemovePasswordDetails {
                         return Err(::serde::de::Error::duplicate_field("shared_content_access_level"));
                     }
                     field_shared_content_access_level = Some(map.next_value()?);
+                }
+                "shared_content_link" => {
+                    if field_shared_content_link.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("shared_content_link"));
+                    }
+                    field_shared_content_link = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -69816,6 +76505,7 @@ impl SharedLinkSettingsRemovePasswordDetails {
         }
         let result = SharedLinkSettingsRemovePasswordDetails {
             shared_content_access_level: field_shared_content_access_level.ok_or_else(|| ::serde::de::Error::missing_field("shared_content_access_level"))?,
+            shared_content_link: field_shared_content_link,
         };
         Ok(Some(result))
     }
@@ -69825,7 +76515,8 @@ impl SharedLinkSettingsRemovePasswordDetails {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)
+        s.serialize_field("shared_content_access_level", &self.shared_content_access_level)?;
+        s.serialize_field("shared_content_link", &self.shared_content_link)
     }
 }
 
@@ -69851,7 +76542,7 @@ impl ::serde::ser::Serialize for SharedLinkSettingsRemovePasswordDetails {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SharedLinkSettingsRemovePasswordDetails", 1)?;
+        let mut s = serializer.serialize_struct("SharedLinkSettingsRemovePasswordDetails", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -82395,6 +89086,97 @@ impl ::serde::ser::Serialize for TeamFolderRenameType {
     }
 }
 
+/// Details about team invites
+#[derive(Debug)]
+pub struct TeamInviteDetails {
+    /// How the user was invited to the team.
+    pub invite_method: InviteMethod,
+}
+
+impl TeamInviteDetails {
+    pub fn new(invite_method: InviteMethod) -> Self {
+        TeamInviteDetails {
+            invite_method,
+        }
+    }
+
+}
+
+const TEAM_INVITE_DETAILS_FIELDS: &[&str] = &["invite_method"];
+impl TeamInviteDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TeamInviteDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamInviteDetails>, V::Error> {
+        let mut field_invite_method = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "invite_method" => {
+                    if field_invite_method.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("invite_method"));
+                    }
+                    field_invite_method = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamInviteDetails {
+            invite_method: field_invite_method.ok_or_else(|| ::serde::de::Error::missing_field("invite_method"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("invite_method", &self.invite_method)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamInviteDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TeamInviteDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamInviteDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TeamInviteDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TeamInviteDetails", TEAM_INVITE_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamInviteDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TeamInviteDetails", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Team linked app
 #[derive(Debug)]
 pub struct TeamLinkedAppLogInfo {
@@ -88132,6 +94914,202 @@ impl ::serde::ser::Serialize for TeamSelectiveSyncSettingsChangedType {
     }
 }
 
+/// Edited the approved list for sharing externally.
+#[derive(Debug)]
+pub struct TeamSharingWhitelistSubjectsChangedDetails {
+    /// Domains or emails added to the approved list for sharing externally.
+    pub added_whitelist_subjects: Vec<String>,
+    /// Domains or emails removed from the approved list for sharing externally.
+    pub removed_whitelist_subjects: Vec<String>,
+}
+
+impl TeamSharingWhitelistSubjectsChangedDetails {
+    pub fn new(
+        added_whitelist_subjects: Vec<String>,
+        removed_whitelist_subjects: Vec<String>,
+    ) -> Self {
+        TeamSharingWhitelistSubjectsChangedDetails {
+            added_whitelist_subjects,
+            removed_whitelist_subjects,
+        }
+    }
+
+}
+
+const TEAM_SHARING_WHITELIST_SUBJECTS_CHANGED_DETAILS_FIELDS: &[&str] = &["added_whitelist_subjects",
+                                                                          "removed_whitelist_subjects"];
+impl TeamSharingWhitelistSubjectsChangedDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TeamSharingWhitelistSubjectsChangedDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamSharingWhitelistSubjectsChangedDetails>, V::Error> {
+        let mut field_added_whitelist_subjects = None;
+        let mut field_removed_whitelist_subjects = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "added_whitelist_subjects" => {
+                    if field_added_whitelist_subjects.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("added_whitelist_subjects"));
+                    }
+                    field_added_whitelist_subjects = Some(map.next_value()?);
+                }
+                "removed_whitelist_subjects" => {
+                    if field_removed_whitelist_subjects.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("removed_whitelist_subjects"));
+                    }
+                    field_removed_whitelist_subjects = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamSharingWhitelistSubjectsChangedDetails {
+            added_whitelist_subjects: field_added_whitelist_subjects.ok_or_else(|| ::serde::de::Error::missing_field("added_whitelist_subjects"))?,
+            removed_whitelist_subjects: field_removed_whitelist_subjects.ok_or_else(|| ::serde::de::Error::missing_field("removed_whitelist_subjects"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("added_whitelist_subjects", &self.added_whitelist_subjects)?;
+        s.serialize_field("removed_whitelist_subjects", &self.removed_whitelist_subjects)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamSharingWhitelistSubjectsChangedDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TeamSharingWhitelistSubjectsChangedDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamSharingWhitelistSubjectsChangedDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TeamSharingWhitelistSubjectsChangedDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TeamSharingWhitelistSubjectsChangedDetails", TEAM_SHARING_WHITELIST_SUBJECTS_CHANGED_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamSharingWhitelistSubjectsChangedDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TeamSharingWhitelistSubjectsChangedDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct TeamSharingWhitelistSubjectsChangedType {
+    pub description: String,
+}
+
+impl TeamSharingWhitelistSubjectsChangedType {
+    pub fn new(description: String) -> Self {
+        TeamSharingWhitelistSubjectsChangedType {
+            description,
+        }
+    }
+
+}
+
+const TEAM_SHARING_WHITELIST_SUBJECTS_CHANGED_TYPE_FIELDS: &[&str] = &["description"];
+impl TeamSharingWhitelistSubjectsChangedType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TeamSharingWhitelistSubjectsChangedType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamSharingWhitelistSubjectsChangedType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamSharingWhitelistSubjectsChangedType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamSharingWhitelistSubjectsChangedType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TeamSharingWhitelistSubjectsChangedType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamSharingWhitelistSubjectsChangedType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TeamSharingWhitelistSubjectsChangedType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TeamSharingWhitelistSubjectsChangedType", TEAM_SHARING_WHITELIST_SUBJECTS_CHANGED_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamSharingWhitelistSubjectsChangedType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TeamSharingWhitelistSubjectsChangedType", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Added backup phone for two-step verification.
 #[derive(Debug)]
 pub struct TfaAddBackupPhoneDetails {
@@ -91693,6 +98671,199 @@ impl ::serde::ser::Serialize for WebSessionLogInfo {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("WebSessionLogInfo", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Changed limit on active sessions per member.
+#[derive(Debug)]
+pub struct WebSessionsChangeActiveSessionLimitDetails {
+    /// Previous max number of concurrent active sessions policy.
+    pub previous_value: String,
+    /// New max number of concurrent active sessions policy.
+    pub new_value: String,
+}
+
+impl WebSessionsChangeActiveSessionLimitDetails {
+    pub fn new(previous_value: String, new_value: String) -> Self {
+        WebSessionsChangeActiveSessionLimitDetails {
+            previous_value,
+            new_value,
+        }
+    }
+
+}
+
+const WEB_SESSIONS_CHANGE_ACTIVE_SESSION_LIMIT_DETAILS_FIELDS: &[&str] = &["previous_value",
+                                                                           "new_value"];
+impl WebSessionsChangeActiveSessionLimitDetails {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<WebSessionsChangeActiveSessionLimitDetails, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<WebSessionsChangeActiveSessionLimitDetails>, V::Error> {
+        let mut field_previous_value = None;
+        let mut field_new_value = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "previous_value" => {
+                    if field_previous_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("previous_value"));
+                    }
+                    field_previous_value = Some(map.next_value()?);
+                }
+                "new_value" => {
+                    if field_new_value.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("new_value"));
+                    }
+                    field_new_value = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = WebSessionsChangeActiveSessionLimitDetails {
+            previous_value: field_previous_value.ok_or_else(|| ::serde::de::Error::missing_field("previous_value"))?,
+            new_value: field_new_value.ok_or_else(|| ::serde::de::Error::missing_field("new_value"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("previous_value", &self.previous_value)?;
+        s.serialize_field("new_value", &self.new_value)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for WebSessionsChangeActiveSessionLimitDetails {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = WebSessionsChangeActiveSessionLimitDetails;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a WebSessionsChangeActiveSessionLimitDetails struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                WebSessionsChangeActiveSessionLimitDetails::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("WebSessionsChangeActiveSessionLimitDetails", WEB_SESSIONS_CHANGE_ACTIVE_SESSION_LIMIT_DETAILS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for WebSessionsChangeActiveSessionLimitDetails {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("WebSessionsChangeActiveSessionLimitDetails", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug)]
+pub struct WebSessionsChangeActiveSessionLimitType {
+    pub description: String,
+}
+
+impl WebSessionsChangeActiveSessionLimitType {
+    pub fn new(description: String) -> Self {
+        WebSessionsChangeActiveSessionLimitType {
+            description,
+        }
+    }
+
+}
+
+const WEB_SESSIONS_CHANGE_ACTIVE_SESSION_LIMIT_TYPE_FIELDS: &[&str] = &["description"];
+impl WebSessionsChangeActiveSessionLimitType {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<WebSessionsChangeActiveSessionLimitType, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<WebSessionsChangeActiveSessionLimitType>, V::Error> {
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = WebSessionsChangeActiveSessionLimitType {
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for WebSessionsChangeActiveSessionLimitType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = WebSessionsChangeActiveSessionLimitType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a WebSessionsChangeActiveSessionLimitType struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                WebSessionsChangeActiveSessionLimitType::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("WebSessionsChangeActiveSessionLimitType", WEB_SESSIONS_CHANGE_ACTIVE_SESSION_LIMIT_TYPE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for WebSessionsChangeActiveSessionLimitType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("WebSessionsChangeActiveSessionLimitType", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
