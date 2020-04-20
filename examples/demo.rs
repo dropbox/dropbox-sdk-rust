@@ -91,20 +91,22 @@ fn main() {
         eprintln!();
         let mut bytes_out = 0u64;
         let download_arg = files::DownloadArg::new(path);
+        let stdout = io::stdout();
+        let mut stdout_lock = stdout.lock();
         'download: loop {
             let result = files::download(&client, &download_arg, Some(bytes_out), None);
             match result {
                 Ok(Ok(download_result)) => {
                     let mut body = download_result.body.expect("no body received!");
-                    let mut buf = [0u8; 1024 * 1024];
                     loop {
-                        match body.read(&mut buf) {
+                        // limit read to 1 MiB per loop iteration so we can output progress
+                        let mut input_chunk = (&mut body).take(1024 * 1024);
+                        match io::copy(&mut input_chunk, &mut stdout_lock) {
                             Ok(0) => {
                                 eprint!("\r");
                                 break 'download;
                             }
                             Ok(len) => {
-                                io::stdout().write_all(&buf[0..len]).unwrap();
                                 bytes_out += len as u64;
                                 if let Some(total) = download_result.content_length {
                                     eprint!("\r{:.01}%",
