@@ -129,6 +129,7 @@ fn main() {
                     eprintln!("Error: {}", request_error);
                 }
             }
+            break 'download;
         }
     } else {
         eprintln!("listing all files");
