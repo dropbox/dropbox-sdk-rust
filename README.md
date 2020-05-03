@@ -100,9 +100,6 @@ Some implementation notes, limitations, and TODOs:
    Rust doesn't have these paradigms, so instead this SDK represents
    polymorphic parent structs as enums, and the inherited fields are put in all
    variants.  See `dropbox_sdk::files::Metadata` for an example.
- * The `error_chain` crate is used to generate a composite Error type for
-   request errors, network I/O errors, and so on. This crate is deprecated, and
-   so the implementation of this type will need to be changed at some point.
  * This crate only supports synchronous I/O. Eventually we probably want to
    support async I/O, which will require making incompatible changes to the
    types returned by routes. This should probably wait until the futures

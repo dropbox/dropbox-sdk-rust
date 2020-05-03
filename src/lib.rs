@@ -2,59 +2,49 @@
 
 #![deny(rust_2018_idioms)]
 
-#[macro_use] extern crate error_chain;
+use thiserror::Error;
 #[macro_use] extern crate log;
 
-error_chain! {
-    types {
-        Error, ErrorKind, ResultExt, Result;
-    }
+#[derive(Error, Debug)]
+pub enum Error {
 
-    foreign_links {
-        Hyper(hyper::Error) #[cfg(feature = "hyper_client")]; // TODO: this should be made more abstract
-        Io(std::io::Error);
-        Json(serde_json::Error);
-        Utf8(std::string::FromUtf8Error);
-    }
+    #[cfg(feature = "hyper_client")]
+    #[error("error from HTTP client: {0}")]
+    Hyper(#[from] hyper::Error),
 
-    errors {
-        /// The API returned something invalid.
-        UnexpectedError(reason: &'static str) {
-            description("Dropbox unexpected API error")
-            display("Dropbox unexpected API error: {}", reason)
-        }
+    #[error("JSON serialization error: {0}")]
+    Json(#[from] serde_json::Error),
 
-        /// The API indicated that the request was malformed.
-        BadRequest(message: String) {
-            description("Dropbox returned 400 Bad Request")
-            display("Dropbox returned 400 Bad Request: {}", message)
-        }
+    #[error("Invalid UTF-8 string")]
+    Utf8(#[from] std::string::FromUtf8Error),
 
-        /// The API indicated that the access token is bad.
-        InvalidToken(message: String) {
-            description("Dropbox API token is invalid, expired, or revoked")
-            display("Dropbox API token is invalid, expired, or revoked: {}", message)
-        }
+    #[error("I/O error: {0}")]
+    IO(#[from] std::io::Error),
 
-        /// The API declined the request due to rate-limiting.
-        RateLimited(reason: String) {
-            description("Dropbox denied the request due to rate-limiting")
-            display("Dropbox denied the request due to rate-limiting: {}", reason)
-        }
+    #[error("Dropbox API returned something unexpected: {0}")]
+    UnexpectedResponse(&'static str),
 
-        /// The API had an internal server error.
-        ServerError(message: String) {
-            description("Dropbox had an internal server error")
-            display("Dropbox had an internal server error: {}", message)
-        }
+    #[error("Dropbox API indicated that the request was malformed: {0}")]
+    BadRequest(String),
 
-        /// The API returned an unexpected HTTP error code.
-        GeneralHttpError(code: u16, status: String, json: String) {
-            description("Dropbox API returned failure")
-            display("Dropbox API returned HTTP {} {} - {}", code, status, json)
-        }
-    }
+    #[error("Dropbox API indicated that the access token is bad: {0}")]
+    InvalidToken(String),
+
+    #[error("Dropbox API declined the request due to rate-limiting: {0}")]
+    RateLimited(String),
+
+    #[error("Dropbox API had an internal server error: {0}")]
+    ServerError(String),
+
+    #[error("Dropbox API returned HTTP {code} {status} - {json}")]
+    UnexpectedHttpError {
+        code: u16,
+        status: String,
+        json: String,
+    },
 }
+
+pub type Result<T> = std::result::Result<T, Error>;
 
 #[cfg(feature = "hyper_client")] mod hyper_client;
 #[cfg(feature = "hyper_client")] pub use hyper_client::{

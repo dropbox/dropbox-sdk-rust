@@ -2,7 +2,7 @@
 
 use std::fmt::Debug;
 use std::marker::PhantomData;
-use crate::{Error, ErrorKind, ResultExt};
+use crate::Error;
 use crate::client_trait::*;
 use serde::de::{self, Deserialize, DeserializeOwned, Deserializer, MapAccess, Visitor};
 use serde::ser::Serialize;
@@ -79,7 +79,7 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
     body: Option<&[u8]>,
     range_start: Option<u64>,
     range_end: Option<u64>,
-) -> super::Result<Result<HttpRequestResult<T>, E>> {
+) -> crate::Result<Result<HttpRequestResult<T>, E>> {
     let params_json = serde_json::to_string(params)?;
     let result = client.request(endpoint, style, function, params_json, body, range_start, range_end);
     match result {
@@ -93,9 +93,9 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
             }))
         },
         Err(e) => {
-            let innards = if let Error(ErrorKind::GeneralHttpError(
-                    ref code, ref status, ref response), _) = e {
-                Some((*code, status.clone(), response.clone()))
+            let innards = if let Error::UnexpectedHttpError {
+                    ref code, ref status, ref json } = e {
+                Some((*code, status.clone(), json.clone()))
             } else {
                 None
             };
@@ -105,10 +105,10 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
                 error!("HTTP {} {}: {}", code, status, response);
                 return match code {
                     400 => {
-                        Err(e).chain_err(|| ErrorKind::BadRequest(response))
+                        Err(Error::BadRequest(response))
                     },
                     401 => {
-                        Err(e).chain_err(|| ErrorKind::InvalidToken(response))
+                        Err(Error::InvalidToken(response))
                     },
                     409 => {
                         // Response should be JSON-deseraializable into the strongly-typed
@@ -120,21 +120,21 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
                             },
                             Err(de_error) => {
                                 error!("Failed to deserialize JSON from API error: {}", de_error);
-                                Err(e).chain_err(|| ErrorKind::Json(de_error))
+                                Err(Error::Json(de_error))
                             }
                         }
                     },
                     429 => {
-                        Err(e).chain_err(|| ErrorKind::RateLimited(response))
+                        Err(Error::RateLimited(response))
                     },
                     500 ..= 599 => {
-                        Err(e).chain_err(|| ErrorKind::ServerError(response))
+                        Err(Error::ServerError(response))
                     },
                     _ => {
                         Err(e)
                     }
                 }
-            } else if let Error(ErrorKind::Json(ref json_err), _) = e {
+            } else if let Error::Json(ref json_err) = e {
                 error!("JSON deserialization error: {}", json_err);
             } else {
                 error!("HTTP request error: {}", e);
@@ -151,7 +151,7 @@ pub fn request<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
     function: &str,
     params: &P,
     body: Option<&[u8]>,
-) -> super::Result<Result<T, E>> {
+) -> crate::Result<Result<T, E>> {
     request_with_body(client, endpoint, style, function, params, body, None, None)
         .map(|result| result.map(|HttpRequestResult { result, .. }| result))
 }
