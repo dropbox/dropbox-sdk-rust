@@ -1389,6 +1389,8 @@ pub enum AddFolderMemberError {
     TeamFolder,
     /// The current user does not have permission to perform this action.
     NoPermission,
+    /// Invalid shared folder error will be returned as an access_error.
+    InvalidSharedFolder,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -1470,6 +1472,10 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(AddFolderMemberError::NoPermission)
                     }
+                    "invalid_shared_folder" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(AddFolderMemberError::InvalidSharedFolder)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(AddFolderMemberError::Other)
@@ -1489,6 +1495,7 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
                                     "insufficient_plan",
                                     "team_folder",
                                     "no_permission",
+                                    "invalid_shared_folder",
                                     "other"];
         deserializer.deserialize_struct("AddFolderMemberError", VARIANTS, EnumVisitor)
     }
@@ -1573,6 +1580,12 @@ impl ::serde::ser::Serialize for AddFolderMemberError {
                 // unit
                 let mut s = serializer.serialize_struct("AddFolderMemberError", 1)?;
                 s.serialize_field(".tag", "no_permission")?;
+                s.end()
+            }
+            AddFolderMemberError::InvalidSharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("AddFolderMemberError", 1)?;
+                s.serialize_field(".tag", "invalid_shared_folder")?;
                 s.end()
             }
             AddFolderMemberError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -14407,6 +14420,8 @@ pub enum SharePathError {
     IsOsxPackage,
     /// We do not support sharing a folder inside a Mac OS X package.
     InsideOsxPackage,
+    /// We do not support sharing the Vault folder.
+    IsVault,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -14477,6 +14492,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::InsideOsxPackage)
                     }
+                    "is_vault" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::IsVault)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::Other)
@@ -14497,6 +14516,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathError {
                                     "invalid_path",
                                     "is_osx_package",
                                     "inside_osx_package",
+                                    "is_vault",
                                     "other"];
         deserializer.deserialize_struct("SharePathError", VARIANTS, EnumVisitor)
     }
@@ -14584,6 +14604,12 @@ impl ::serde::ser::Serialize for SharePathError {
                 // unit
                 let mut s = serializer.serialize_struct("SharePathError", 1)?;
                 s.serialize_field(".tag", "inside_osx_package")?;
+                s.end()
+            }
+            SharePathError::IsVault => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathError", 1)?;
+                s.serialize_field(".tag", "is_vault")?;
                 s.end()
             }
             SharePathError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

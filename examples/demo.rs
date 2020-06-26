@@ -175,7 +175,7 @@ fn list_directory<'a>(client: &'a dyn HttpClient, path: &str, recursive: bool)
         // Root folder should be requested as empty string
         String::new()
     } else {
-        (&path[1..]).to_owned()
+        path.to_owned()
     };
     match files::list_folder(
         client,
