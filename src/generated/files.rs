@@ -457,7 +457,7 @@ pub fn get_temporary_link(
 ///
 /// Example temporary upload link consumption request:
 ///
-/// curl -X POST https://dl.dropboxusercontent.com/apitul/1/bNi2uIYF51cVBND --header "Content-Type:
+/// curl -X POST https://content.dropboxapi.com/apitul/1/bNi2uIYF51cVBND --header "Content-Type:
 /// application/octet-stream" --data-binary @local_file.txt
 ///
 /// A successful temporary upload link consumption request returns the content hash of the uploaded
@@ -897,8 +897,9 @@ pub fn save_url_check_job_status(
         None)
 }
 
-/// Searches for files and folders. Note: Recent changes may not immediately be reflected in search
-/// results due to a short delay in indexing.
+/// Searches for files and folders. Note: Recent changes will be reflected in search results within
+/// a few seconds and older revisions of existing files may still match your query for up to a few
+/// days.
 pub fn search(
     client: &dyn crate::client_trait::HttpClient,
     arg: &SearchArg,
@@ -10326,6 +10327,8 @@ pub enum LookupError {
     RestrictedContent,
     /// This operation is not supported for this content type.
     UnsupportedContentType,
+    /// The given path is locked.
+    Locked,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -10374,6 +10377,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LookupError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::UnsupportedContentType)
                     }
+                    "locked" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LookupError::Locked)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LookupError::Other)
@@ -10387,6 +10394,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LookupError {
                                     "not_folder",
                                     "restricted_content",
                                     "unsupported_content_type",
+                                    "locked",
                                     "other"];
         deserializer.deserialize_struct("LookupError", VARIANTS, EnumVisitor)
     }
@@ -10435,6 +10443,12 @@ impl ::serde::ser::Serialize for LookupError {
                 // unit
                 let mut s = serializer.serialize_struct("LookupError", 1)?;
                 s.serialize_field(".tag", "unsupported_content_type")?;
+                s.end()
+            }
+            LookupError::Locked => {
+                // unit
+                let mut s = serializer.serialize_struct("LookupError", 1)?;
+                s.serialize_field(".tag", "locked")?;
                 s.end()
             }
             LookupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -11002,6 +11016,76 @@ impl ::serde::ser::Serialize for MoveBatchArg {
         let mut s = serializer.serialize_struct("MoveBatchArg", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum MoveIntoVaultError {
+    /// Moving shared folder into Vault is not allowed.
+    IsSharedFolder,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MoveIntoVaultError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MoveIntoVaultError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MoveIntoVaultError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "is_shared_folder" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(MoveIntoVaultError::IsSharedFolder)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(MoveIntoVaultError::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["is_shared_folder",
+                                    "other"];
+        deserializer.deserialize_struct("MoveIntoVaultError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MoveIntoVaultError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MoveIntoVaultError::IsSharedFolder => {
+                // unit
+                let mut s = serializer.serialize_struct("MoveIntoVaultError", 1)?;
+                s.serialize_field(".tag", "is_shared_folder")?;
+                s.end()
+            }
+            MoveIntoVaultError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for MoveIntoVaultError {
+    fn description(&self) -> &str {
+        "MoveIntoVaultError"
+    }
+}
+
+impl ::std::fmt::Display for MoveIntoVaultError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
     }
 }
 
@@ -11933,6 +12017,8 @@ pub enum RelocationBatchError {
     InternalError,
     /// Can't move the shared folder to the given destination.
     CantMoveSharedFolder,
+    /// Some content cannot be moved into Vault under certain circumstances, see detailed error.
+    CantMoveIntoVault(MoveIntoVaultError),
     /// There are too many write operations in user's Dropbox. Please retry this request.
     TooManyWriteOperations,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -12013,6 +12099,13 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::CantMoveSharedFolder)
                     }
+                    "cant_move_into_vault" => {
+                        match map.next_key()? {
+                            Some("cant_move_into_vault") => Ok(RelocationBatchError::CantMoveIntoVault(map.next_value()?)),
+                            None => Err(de::Error::missing_field("cant_move_into_vault")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     "too_many_write_operations" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(RelocationBatchError::TooManyWriteOperations)
@@ -12036,6 +12129,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                                     "insufficient_quota",
                                     "internal_error",
                                     "cant_move_shared_folder",
+                                    "cant_move_into_vault",
                                     "other",
                                     "too_many_write_operations"];
         deserializer.deserialize_struct("RelocationBatchError", VARIANTS, EnumVisitor)
@@ -12120,6 +12214,13 @@ impl ::serde::ser::Serialize for RelocationBatchError {
                 // unit
                 let mut s = serializer.serialize_struct("RelocationBatchError", 1)?;
                 s.serialize_field(".tag", "cant_move_shared_folder")?;
+                s.end()
+            }
+            RelocationBatchError::CantMoveIntoVault(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("RelocationBatchError", 2)?;
+                s.serialize_field(".tag", "cant_move_into_vault")?;
+                s.serialize_field("cant_move_into_vault", x)?;
                 s.end()
             }
             RelocationBatchError::TooManyWriteOperations => {
@@ -12891,6 +12992,8 @@ pub enum RelocationError {
     InternalError,
     /// Can't move the shared folder to the given destination.
     CantMoveSharedFolder,
+    /// Some content cannot be moved into Vault under certain circumstances, see detailed error.
+    CantMoveIntoVault(MoveIntoVaultError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -12969,6 +13072,13 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::CantMoveSharedFolder)
                     }
+                    "cant_move_into_vault" => {
+                        match map.next_key()? {
+                            Some("cant_move_into_vault") => Ok(RelocationError::CantMoveIntoVault(map.next_value()?)),
+                            None => Err(de::Error::missing_field("cant_move_into_vault")),
+                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(RelocationError::Other)
@@ -12988,6 +13098,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                                     "insufficient_quota",
                                     "internal_error",
                                     "cant_move_shared_folder",
+                                    "cant_move_into_vault",
                                     "other"];
         deserializer.deserialize_struct("RelocationError", VARIANTS, EnumVisitor)
     }
@@ -13071,6 +13182,13 @@ impl ::serde::ser::Serialize for RelocationError {
                 // unit
                 let mut s = serializer.serialize_struct("RelocationError", 1)?;
                 s.serialize_field(".tag", "cant_move_shared_folder")?;
+                s.end()
+            }
+            RelocationError::CantMoveIntoVault(ref x) => {
+                // union or polymporphic struct
+                let mut s = serializer.serialize_struct("RelocationError", 2)?;
+                s.serialize_field(".tag", "cant_move_into_vault")?;
+                s.serialize_field("cant_move_into_vault", x)?;
                 s.end()
             }
             RelocationError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -14332,6 +14450,8 @@ impl ::serde::ser::Serialize for SearchArg {
 pub enum SearchError {
     Path(LookupError),
     InvalidArgument(Option<String>),
+    /// Something went wrong, please try again.
+    InternalError,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -14367,6 +14487,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchError {
                             _ => Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "internal_error" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SearchError::InternalError)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(SearchError::Other)
@@ -14376,6 +14500,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchError {
         }
         const VARIANTS: &[&str] = &["path",
                                     "invalid_argument",
+                                    "internal_error",
                                     "other"];
         deserializer.deserialize_struct("SearchError", VARIANTS, EnumVisitor)
     }
@@ -14401,6 +14526,12 @@ impl ::serde::ser::Serialize for SearchError {
                 if let Some(ref x) = x {
                     s.serialize_field("invalid_argument", &x)?;
                 }
+                s.end()
+            }
+            SearchError::InternalError => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchError", 1)?;
+                s.serialize_field(".tag", "internal_error")?;
                 s.end()
             }
             SearchError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -14523,6 +14654,84 @@ impl ::serde::ser::Serialize for SearchMatch {
     }
 }
 
+#[derive(Debug)]
+pub struct SearchMatchFieldOptions {
+    /// Whether to include highlight span from file title.
+    pub include_highlights: bool,
+}
+
+impl Default for SearchMatchFieldOptions {
+    fn default() -> Self {
+        SearchMatchFieldOptions {
+            include_highlights: false,
+        }
+    }
+}
+
+const SEARCH_MATCH_FIELD_OPTIONS_FIELDS: &[&str] = &["include_highlights"];
+impl SearchMatchFieldOptions {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<SearchMatchFieldOptions, V::Error> {
+        let mut field_include_highlights = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "include_highlights" => {
+                    if field_include_highlights.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("include_highlights"));
+                    }
+                    field_include_highlights = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = SearchMatchFieldOptions {
+            include_highlights: field_include_highlights.unwrap_or(false),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("include_highlights", &self.include_highlights)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchMatchFieldOptions {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = SearchMatchFieldOptions;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SearchMatchFieldOptions struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                SearchMatchFieldOptions::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("SearchMatchFieldOptions", SEARCH_MATCH_FIELD_OPTIONS_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchMatchFieldOptions {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("SearchMatchFieldOptions", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 /// Indicates what type of match was found for a given item.
 #[derive(Debug)]
 pub enum SearchMatchType {
@@ -14604,7 +14813,7 @@ impl ::serde::ser::Serialize for SearchMatchType {
 pub struct SearchMatchV2 {
     /// The metadata for the matched file or folder.
     pub metadata: MetadataV2,
-    /// The list of HighlightSpan determines which parts of the result should be highlighted.
+    /// The list of HighlightSpan determines which parts of the file title should be highlighted.
     pub highlight_spans: Option<Vec<HighlightSpan>>,
 }
 
@@ -15054,6 +15263,9 @@ pub struct SearchV2Arg {
     pub query: String,
     /// Options for more targeted search results.
     pub options: Option<SearchOptions>,
+    /// Options for search results match fields.
+    pub match_field_options: Option<SearchMatchFieldOptions>,
+    /// Deprecated and moved this option to SearchMatchFieldOptions.
     pub include_highlights: bool,
 }
 
@@ -15062,12 +15274,18 @@ impl SearchV2Arg {
         SearchV2Arg {
             query,
             options: None,
+            match_field_options: None,
             include_highlights: false,
         }
     }
 
     pub fn with_options(mut self, value: Option<SearchOptions>) -> Self {
         self.options = value;
+        self
+    }
+
+    pub fn with_match_field_options(mut self, value: Option<SearchMatchFieldOptions>) -> Self {
+        self.match_field_options = value;
         self
     }
 
@@ -15080,6 +15298,7 @@ impl SearchV2Arg {
 
 const SEARCH_V2_ARG_FIELDS: &[&str] = &["query",
                                         "options",
+                                        "match_field_options",
                                         "include_highlights"];
 impl SearchV2Arg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -15094,6 +15313,7 @@ impl SearchV2Arg {
     ) -> Result<Option<SearchV2Arg>, V::Error> {
         let mut field_query = None;
         let mut field_options = None;
+        let mut field_match_field_options = None;
         let mut field_include_highlights = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
@@ -15110,6 +15330,12 @@ impl SearchV2Arg {
                         return Err(::serde::de::Error::duplicate_field("options"));
                     }
                     field_options = Some(map.next_value()?);
+                }
+                "match_field_options" => {
+                    if field_match_field_options.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("match_field_options"));
+                    }
+                    field_match_field_options = Some(map.next_value()?);
                 }
                 "include_highlights" => {
                     if field_include_highlights.is_some() {
@@ -15129,6 +15355,7 @@ impl SearchV2Arg {
         let result = SearchV2Arg {
             query: field_query.ok_or_else(|| ::serde::de::Error::missing_field("query"))?,
             options: field_options,
+            match_field_options: field_match_field_options,
             include_highlights: field_include_highlights.unwrap_or(false),
         };
         Ok(Some(result))
@@ -15141,6 +15368,7 @@ impl SearchV2Arg {
         use serde::ser::SerializeStruct;
         s.serialize_field("query", &self.query)?;
         s.serialize_field("options", &self.options)?;
+        s.serialize_field("match_field_options", &self.match_field_options)?;
         s.serialize_field("include_highlights", &self.include_highlights)
     }
 }
@@ -15167,7 +15395,7 @@ impl ::serde::ser::Serialize for SearchV2Arg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SearchV2Arg", 3)?;
+        let mut s = serializer.serialize_struct("SearchV2Arg", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

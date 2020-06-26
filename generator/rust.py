@@ -38,7 +38,7 @@ class RustHelperBackend(CodeBackend):
     def _arg_list(self, args):
         arg_list = u''
         for arg in args:
-            arg_list += (u', ' if arg_list is not u'' else u'') + arg
+            arg_list += (u', ' if arg_list != u'' else u'') + arg
         return arg_list
 
     @contextmanager

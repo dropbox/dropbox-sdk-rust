@@ -49,6 +49,9 @@ pub mod seen_state;
 #[cfg(feature = "dbx_sharing")]
 pub mod sharing;
 
+#[cfg(feature = "dbx_stone_fixtures")]
+pub mod stone_fixtures;
+
 #[cfg(feature = "dbx_team")]
 pub mod team;
 

@@ -304,7 +304,8 @@ pub fn groups_update(
         None)
 }
 
-/// Creates new legal hold policy. Permission : Team member file access.
+/// Creates new legal hold policy. Note: Legal Holds is a paid add-on. Not all teams have the
+/// feature. Permission : Team member file access.
 pub fn legal_holds_create_policy(
     client: &dyn crate::client_trait::HttpClient,
     arg: &LegalHoldsPolicyCreateArg,
@@ -318,7 +319,8 @@ pub fn legal_holds_create_policy(
         None)
 }
 
-/// Gets a legal hold by Id. Permission : Team member file access.
+/// Gets a legal hold by Id. Note: Legal Holds is a paid add-on. Not all teams have the feature.
+/// Permission : Team member file access.
 pub fn legal_holds_get_policy(
     client: &dyn crate::client_trait::HttpClient,
     arg: &LegalHoldsGetPolicyArg,
@@ -332,6 +334,8 @@ pub fn legal_holds_get_policy(
         None)
 }
 
+/// List the file metadata that's under the hold. Note: Legal Holds is a paid add-on. Not all teams
+/// have the feature. Permission : Team member file access.
 pub fn legal_holds_list_held_revisions(
     client: &dyn crate::client_trait::HttpClient,
     arg: &LegalHoldsListHeldRevisionsArg,
@@ -345,6 +349,8 @@ pub fn legal_holds_list_held_revisions(
         None)
 }
 
+/// Continue listing the file metadata that's under the hold. Note: Legal Holds is a paid add-on.
+/// Not all teams have the feature. Permission : Team member file access.
 pub fn legal_holds_list_held_revisions_continue(
     client: &dyn crate::client_trait::HttpClient,
     arg: &LegalHoldsListHeldRevisionsContinueArg,
@@ -358,7 +364,8 @@ pub fn legal_holds_list_held_revisions_continue(
         None)
 }
 
-/// Lists legal holds on a team. Permission : Team member file access.
+/// Lists legal holds on a team. Note: Legal Holds is a paid add-on. Not all teams have the feature.
+/// Permission : Team member file access.
 pub fn legal_holds_list_policies(
     client: &dyn crate::client_trait::HttpClient,
     arg: &LegalHoldsListPoliciesArg,
@@ -372,7 +379,8 @@ pub fn legal_holds_list_policies(
         None)
 }
 
-/// Releases a legal hold by Id. Permission : Team member file access.
+/// Releases a legal hold by Id. Note: Legal Holds is a paid add-on. Not all teams have the feature.
+/// Permission : Team member file access.
 pub fn legal_holds_release_policy(
     client: &dyn crate::client_trait::HttpClient,
     arg: &LegalHoldsPolicyReleaseArg,
@@ -386,7 +394,8 @@ pub fn legal_holds_release_policy(
         None)
 }
 
-/// Updates a legal hold. Permission : Team member file access.
+/// Updates a legal hold. Note: Legal Holds is a paid add-on. Not all teams have the feature.
+/// Permission : Team member file access.
 pub fn legal_holds_update_policy(
     client: &dyn crate::client_trait::HttpClient,
     arg: &LegalHoldsPolicyUpdateArg,
@@ -9823,15 +9832,17 @@ pub struct LegalHoldPolicy {
     pub id: LegalHoldId,
     /// Policy name.
     pub name: LegalHoldPolicyName,
+    /// Team members IDs and number of permanetly deleted members under hold.
     pub members: MembersInfo,
+    /// The current state of the hold.
     pub status: LegalHoldStatus,
-    /// start date of the legal hold policy.
+    /// Start date of the legal hold policy.
     pub start_date: super::common::DropboxTimestamp,
     /// A description of the legal hold policy.
     pub description: Option<LegalHoldPolicyDescription>,
     /// The time at which the legal hold was activated.
     pub activation_time: Option<super::common::DropboxTimestamp>,
-    /// end date of the legal hold policy.
+    /// End date of the legal hold policy.
     pub end_date: Option<super::common::DropboxTimestamp>,
 }
 
@@ -10411,11 +10422,14 @@ impl ::std::fmt::Display for LegalHoldsGetPolicyError {
 
 #[derive(Debug)]
 pub struct LegalHoldsListHeldRevisionResult {
-    /// Entries list.
+    /// List of file entries that under the hold.
     pub entries: Vec<LegalHoldHeldRevisionMetadata>,
-    /// Has more.
+    /// True if there are more file entries that haven't been returned. You can retrieve them with a
+    /// call to /legal_holds/list_held_revisions_continue.
     pub has_more: bool,
-    /// List held revisions cursor.
+    /// The cursor idicates where to continue reading file metadata entries for the next API call.
+    /// When there are no more entries, the cursor will return none. Pass the cursor into
+    /// /2/team/legal_holds/list_held_revisions/continue.
     pub cursor: Option<ListHeldRevisionCursor>,
 }
 
@@ -10624,7 +10638,8 @@ impl ::serde::ser::Serialize for LegalHoldsListHeldRevisionsArg {
 pub struct LegalHoldsListHeldRevisionsContinueArg {
     /// The legal hold Id.
     pub id: LegalHoldId,
-    /// cursor of list held revisions.
+    /// The cursor idicates where to continue reading file metadata entries for the next API call.
+    /// When there are no more entries, the cursor will return none.
     pub cursor: Option<ListHeldRevisionCursor>,
 }
 
@@ -10834,7 +10849,7 @@ pub enum LegalHoldsListHeldRevisionsError {
     InsufficientPermissions,
     /// Temporary infrastructure failure, please retry.
     TransientError,
-    /// The legal hold is not holding any revisions yet
+    /// The legal hold is not holding any revisions yet.
     LegalHoldStillEmpty,
     /// Trying to list revisions for an inactive legal hold.
     InactiveLegalHold,
@@ -11215,7 +11230,7 @@ impl ::serde::ser::Serialize for LegalHoldsListPoliciesResult {
 pub struct LegalHoldsPolicyCreateArg {
     /// Policy name.
     pub name: LegalHoldPolicyName,
-    /// List of team members added to the hold.
+    /// List of team member IDs added to the hold.
     pub members: Vec<super::team_common::TeamMemberId>,
     /// A description of the legal hold policy.
     pub description: Option<LegalHoldPolicyDescription>,
@@ -11759,21 +11774,21 @@ impl ::std::fmt::Display for LegalHoldsPolicyReleaseError {
 pub struct LegalHoldsPolicyUpdateArg {
     /// The legal hold Id.
     pub id: LegalHoldId,
-    /// List of team members to apply the policy on.
-    pub members: Vec<super::team_common::TeamMemberId>,
     /// Policy new name.
     pub name: Option<LegalHoldPolicyName>,
     /// Policy new description.
     pub description: Option<LegalHoldPolicyDescription>,
+    /// List of team member IDs to apply the policy on.
+    pub members: Option<Vec<super::team_common::TeamMemberId>>,
 }
 
 impl LegalHoldsPolicyUpdateArg {
-    pub fn new(id: LegalHoldId, members: Vec<super::team_common::TeamMemberId>) -> Self {
+    pub fn new(id: LegalHoldId) -> Self {
         LegalHoldsPolicyUpdateArg {
             id,
-            members,
             name: None,
             description: None,
+            members: None,
         }
     }
 
@@ -11787,12 +11802,17 @@ impl LegalHoldsPolicyUpdateArg {
         self
     }
 
+    pub fn with_members(mut self, value: Option<Vec<super::team_common::TeamMemberId>>) -> Self {
+        self.members = value;
+        self
+    }
+
 }
 
 const LEGAL_HOLDS_POLICY_UPDATE_ARG_FIELDS: &[&str] = &["id",
-                                                        "members",
                                                         "name",
-                                                        "description"];
+                                                        "description",
+                                                        "members"];
 impl LegalHoldsPolicyUpdateArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -11805,9 +11825,9 @@ impl LegalHoldsPolicyUpdateArg {
         optional: bool,
     ) -> Result<Option<LegalHoldsPolicyUpdateArg>, V::Error> {
         let mut field_id = None;
-        let mut field_members = None;
         let mut field_name = None;
         let mut field_description = None;
+        let mut field_members = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -11817,12 +11837,6 @@ impl LegalHoldsPolicyUpdateArg {
                         return Err(::serde::de::Error::duplicate_field("id"));
                     }
                     field_id = Some(map.next_value()?);
-                }
-                "members" => {
-                    if field_members.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("members"));
-                    }
-                    field_members = Some(map.next_value()?);
                 }
                 "name" => {
                     if field_name.is_some() {
@@ -11836,6 +11850,12 @@ impl LegalHoldsPolicyUpdateArg {
                     }
                     field_description = Some(map.next_value()?);
                 }
+                "members" => {
+                    if field_members.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("members"));
+                    }
+                    field_members = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -11847,9 +11867,9 @@ impl LegalHoldsPolicyUpdateArg {
         }
         let result = LegalHoldsPolicyUpdateArg {
             id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
-            members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
             name: field_name,
             description: field_description,
+            members: field_members,
         };
         Ok(Some(result))
     }
@@ -11860,9 +11880,9 @@ impl LegalHoldsPolicyUpdateArg {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("id", &self.id)?;
-        s.serialize_field("members", &self.members)?;
         s.serialize_field("name", &self.name)?;
-        s.serialize_field("description", &self.description)
+        s.serialize_field("description", &self.description)?;
+        s.serialize_field("members", &self.members)
     }
 }
 
@@ -16862,11 +16882,11 @@ pub struct MembersRemoveArg {
     /// with their Dropbox  account and data in their account that is not restricted to team
     /// members. In order to keep the account the argument `wipe_data` should be set to `false`.
     pub keep_account: bool,
-    /// If provided, allows removed users to keep access to folders already explicitly shared with
-    /// them (not via a group) when they are downgraded to a Basic account. Users will not retain
-    /// access to folders that do not allow external sharing. In order to keep the sharing
-    /// relationships, the arguments `wipe_data` should be set to `false` and `keep_account` should
-    /// be set to `true`.
+    /// If provided, allows removed users to keep access to Dropbox folders (not Dropbox Paper
+    /// folders) already explicitly shared with them (not via a group) when they are downgraded to a
+    /// Basic account. Users will not retain access to folders that do not allow external sharing.
+    /// In order to keep the sharing relationships, the arguments `wipe_data` should be set to
+    /// `false` and `keep_account` should be set to `true`.
     pub retain_team_shares: bool,
 }
 
@@ -20879,7 +20899,8 @@ pub struct RevokeLinkedApiAppArg {
     pub app_id: String,
     /// The unique id of the member owning the device.
     pub team_member_id: String,
-    /// Whether to keep the application dedicated folder (in case the application uses  one).
+    /// This flag is not longer supported, the application dedicated folder (in case the application
+    /// uses  one) will be kept.
     pub keep_app_folder: bool,
 }
 
@@ -21234,6 +21255,8 @@ pub enum RevokeLinkedAppError {
     AppNotFound,
     /// Member not found.
     MemberNotFound,
+    /// App folder removal is not supported.
+    AppFolderRemovalNotSupported,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -21263,6 +21286,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeLinkedAppError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(RevokeLinkedAppError::MemberNotFound)
                     }
+                    "app_folder_removal_not_supported" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(RevokeLinkedAppError::AppFolderRemovalNotSupported)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(RevokeLinkedAppError::Other)
@@ -21272,6 +21299,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeLinkedAppError {
         }
         const VARIANTS: &[&str] = &["app_not_found",
                                     "member_not_found",
+                                    "app_folder_removal_not_supported",
                                     "other"];
         deserializer.deserialize_struct("RevokeLinkedAppError", VARIANTS, EnumVisitor)
     }
@@ -21292,6 +21320,12 @@ impl ::serde::ser::Serialize for RevokeLinkedAppError {
                 // unit
                 let mut s = serializer.serialize_struct("RevokeLinkedAppError", 1)?;
                 s.serialize_field(".tag", "member_not_found")?;
+                s.end()
+            }
+            RevokeLinkedAppError::AppFolderRemovalNotSupported => {
+                // unit
+                let mut s = serializer.serialize_struct("RevokeLinkedAppError", 1)?;
+                s.serialize_field(".tag", "app_folder_removal_not_supported")?;
                 s.end()
             }
             RevokeLinkedAppError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
