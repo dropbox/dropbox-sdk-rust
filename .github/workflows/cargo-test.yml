@@ -25,7 +25,7 @@ jobs:
           python-version: 3.8
 
       - name: Generate tests
-        run: ./generate.sh dropbox-sdk-rust test
+        run: ./generate.sh dropbox-api-spec test
 
       - name: Run cargo test
         uses: actions-rs/cargo@v1
