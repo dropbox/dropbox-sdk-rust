@@ -29,7 +29,7 @@ class TestBackend(RustHelperBackend):
         from stone.backends.python_types import PythonTypesBackend
         self.target_path = target_folder_path
         self.ref_path = os.path.join(target_folder_path, 'reference')
-        self.reference = PythonTypesBackend(self.ref_path, args)
+        self.reference = PythonTypesBackend(self.ref_path, args + ["--package", "reference"])
         self.reference_impls = {}
 
     def generate(self, api):
@@ -40,7 +40,8 @@ class TestBackend(RustHelperBackend):
 
         print(u'Loading reference code:')
         sys.path.insert(0, self.target_path)
-        from reference.stone_serializers import json_encode
+        sys.path.insert(1, "stone")
+        from stone.backends.python_rsrc.stone_serializers import json_encode
         for ns in api.namespaces:
             print('\t' + ns)
             python_ns = ns
