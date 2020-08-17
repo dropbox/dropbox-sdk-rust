@@ -73,10 +73,10 @@ impl HyperClient {
                         serde_json::Value::Object(mut map) => {
                             match map.remove("access_token") {
                                 Some(serde_json::Value::String(token)) => Ok(token),
-                                _ => return Err(Error::UnexpectedResponse("no access token in response!")),
+                                _ => Err(Error::UnexpectedResponse("no access token in response!")),
                             }
                         },
-                        _ => return Err(Error::UnexpectedResponse("response is not a JSON object")),
+                        _ => Err(Error::UnexpectedResponse("response is not a JSON object")),
                     }
                 }
             },

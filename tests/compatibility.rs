@@ -19,7 +19,7 @@ fn test_extra_fields() {
     let x = serde_json::from_str::<dropbox_sdk::files::Metadata>(json).unwrap();
     if let dropbox_sdk::files::Metadata::Deleted(d) = x {
         assert_eq!("f", &d.name);
-        assert_eq!(Some("spaghetti"), d.parent_shared_folder_id.as_ref().map(String::as_str));
+        assert_eq!(Some("spaghetti"), d.parent_shared_folder_id.as_deref());
     } else {
         panic!("wrong variant");
     }
