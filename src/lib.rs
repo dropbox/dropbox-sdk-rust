@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Dropbox, Inc.
+// Copyright (c) 2019-2020 Dropbox, Inc.
 
 #![deny(rust_2018_idioms)]
 

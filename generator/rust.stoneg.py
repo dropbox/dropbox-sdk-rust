@@ -35,7 +35,7 @@ class RustBackend(RustHelperBackend):
             with self.block(u'pub(crate) fn eat_json_fields<\'de, V>(map: &mut V)'
                             u' -> Result<(), V::Error>'
                             u' where V: ::serde::de::MapAccess<\'de>'):
-                with self.block(u'while let Some(_) = map.next_entry::<&str, ::serde_json::Value>()?'):
+                with self.block(u'while map.next_entry::<&str, ::serde_json::Value>()?.is_some()'):
                     self.emit(u'/* ignore */')
                 self.emit(u'Ok(())')
 
