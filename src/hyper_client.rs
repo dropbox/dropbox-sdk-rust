@@ -18,6 +18,35 @@ pub struct HyperClient {
     token: String,
 }
 
+#[derive(thiserror::Error, Debug)]
+pub enum HyperClientError {
+    #[error("Invalid UTF-8 string")]
+    Utf8(#[from] std::string::FromUtf8Error),
+
+    #[error("I/O error: {0}")]
+    IO(#[from] std::io::Error),
+
+    #[error(transparent)]
+    Hyper(#[from] hyper::Error),
+}
+
+// Implement From for some errors so that they get wrapped in a HyperClientError and then
+// propogated via Error::HttpClient. Note that this only works for types that don't already have a
+// variant in the crate Error type, because doing so would produce a conflicting impl.
+macro_rules! hyper_error {
+    ($e:ty) => {
+        impl From<$e> for crate::Error {
+            fn from(e: $e) -> Self {
+                Self::HttpClient(Box::new(HyperClientError::from(e)))
+            }
+        }
+    }
+}
+
+hyper_error!(std::io::Error);
+hyper_error!(std::string::FromUtf8Error);
+hyper_error!(hyper::Error);
+
 impl HyperClient {
     pub fn new(token: String) -> HyperClient {
         HyperClient {
