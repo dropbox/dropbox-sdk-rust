@@ -8,18 +8,11 @@ use thiserror::Error;
 #[derive(Error, Debug)]
 pub enum Error {
 
-    #[cfg(feature = "hyper_client")]
     #[error("error from HTTP client: {0}")]
-    Hyper(#[from] hyper::Error),
+    HttpClient(Box<dyn std::error::Error + Send + Sync + 'static>),
 
     #[error("JSON serialization error: {0}")]
     Json(#[from] serde_json::Error),
-
-    #[error("Invalid UTF-8 string")]
-    Utf8(#[from] std::string::FromUtf8Error),
-
-    #[error("I/O error: {0}")]
-    IO(#[from] std::io::Error),
 
     #[error("Dropbox API returned something unexpected: {0}")]
     UnexpectedResponse(&'static str),
