@@ -1,4 +1,4 @@
-#![warn(rust_2018_idioms)]
+#![deny(rust_2018_idioms)]
 
 use dropbox_sdk::{files, HyperClient, Oauth2AuthorizeUrlBuilder, Oauth2Type};
 use dropbox_sdk::client_trait::HttpClient;
@@ -14,7 +14,7 @@ enum Operation {
 }
 
 fn parse_args() -> Operation {
-    match std::env::args().nth(1).as_ref().map(|s| s.as_str()) {
+    match std::env::args().nth(1).as_deref() {
         None | Some("--help") | Some("-h") => Operation::Usage,
         Some("--list") => Operation::List,
         Some(path) if path.starts_with('/') => Operation::Download { path: path.to_owned() },
@@ -39,7 +39,7 @@ fn main() {
 
     let download_path = match parse_args() {
         Operation::Usage => {
-            eprintln!("usage: {} [option]", std::env::args().nth(0).unwrap());
+            eprintln!("usage: {} [option]", std::env::args().next().unwrap());
             eprintln!("    options:");
             eprintln!("        --help | -h      view this text");
             eprintln!("        --list           list all files in your Dropbox");
