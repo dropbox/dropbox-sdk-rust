@@ -1,4 +1,4 @@
-#![warn(rust_2018_idioms)]
+#![deny(rust_2018_idioms)]
 
 use dropbox_sdk::{HyperClient, Oauth2AuthorizeUrlBuilder, Oauth2Type};
 use dropbox_sdk::files;
@@ -130,7 +130,7 @@ fn main() {
     let mut args = match parse_args() {
         Operation::Usage => {
             eprintln!("usage: {} <source> <Dropbox destination> [<resume offset> <resume session ID>]",
-                      std::env::args().nth(0).unwrap());
+                      std::env::args().next().unwrap());
             std::process::exit(1);
         }
         Operation::Upload(args) => args,
@@ -249,8 +249,7 @@ fn main() {
     // if the buffer is small we can stack-allocate it:
     //let mut buf = [0u8; BUF_SIZE];
     // otherwise it has to be heap-allocated:
-    let mut buf = Vec::with_capacity(BUF_SIZE);
-    buf.resize(BUF_SIZE, 0);
+    let mut buf = vec![0; BUF_SIZE];
 
     let start_time = Instant::now();
     let mut last_time = Instant::now();
