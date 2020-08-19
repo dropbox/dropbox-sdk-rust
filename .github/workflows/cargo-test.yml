@@ -1,10 +1,10 @@
-name: Cargo Test
+name: Cargo Checks
 
 on: [push, pull_request]
 
 jobs:
   check:
-    name: Test
+    name: Cargo Checks
     runs-on: ubuntu-latest
     steps:
       - name: Checkout sources
@@ -22,15 +22,25 @@ jobs:
           python -m pip install --upgrade pip
           pip install ply six
 
-      - name: Generate tests
-        run: ./generate.sh dropbox-api-spec test
+      - name: Run the generator
+        run: ./generate.sh dropbox-api-spec
+
+      - name: Check generated files against repo
+        run: if [[ ! -z `git status --porcelain=v1` ]]; then echo "::error::Workspace is dirty after running generator. Did you remember to check in the generated files?"; exit 1; fi
 
       - name: Install stable toolchain
         uses: actions-rs/toolchain@v1
         with:
           profile: minimal
+          components: clippy
           toolchain: stable
           override: true
+
+      - name: Run clippy
+        uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: --all-targets -- --deny warnings
 
       - name: Run cargo test
         uses: actions-rs/cargo@v1
