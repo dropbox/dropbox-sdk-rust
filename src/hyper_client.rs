@@ -86,15 +86,15 @@ impl HyperClient {
         match client.post(url).headers(headers).body(body.as_bytes()).send() {
             Ok(mut resp) => {
                 if !resp.status.is_success() {
-                    let (code, status) = {
-                        let &hyper::http::RawStatus(ref code, ref status) = resp.status_raw();
-                        use std::ops::Deref;
-                        (*code, status.deref().to_owned())
-                    };
+                    let hyper::http::RawStatus(code, status) = resp.status_raw().clone();
                     let mut body = String::new();
                     resp.read_to_string(&mut body)?;
                     debug!("error body: {}", body);
-                    Err(Error::UnexpectedHttpError { code, status, json: body })
+                    Err(Error::UnexpectedHttpError {
+                        code,
+                        status: status.into_owned(),
+                        json: body,
+                    })
                 } else {
                     let body = serde_json::from_reader(resp)?;
                     debug!("response: {:?}", body);
@@ -200,14 +200,14 @@ impl HttpClient for HyperClient {
             };
 
             if !resp.status.is_success() {
-                let (code, status) = {
-                    let &hyper::http::RawStatus(ref code, ref status) = resp.status_raw();
-                    use std::ops::Deref;
-                    (*code, status.deref().to_owned())
-                };
+                let hyper::http::RawStatus(code, status) = resp.status_raw().clone();
                 let mut json = String::new();
                 resp.read_to_string(&mut json)?;
-                return Err(Error::UnexpectedHttpError { code, status, json });
+                return Err(Error::UnexpectedHttpError {
+                    code,
+                    status: status.into_owned(),
+                    json,
+                });
             }
 
             return match style {
