@@ -20,7 +20,8 @@ This SDK is not yet official. What does this mean?
 
 However, that said,
 * The SDK is usable!
-* We are happy to get feedback and/or pull requests from the community!
+* We are happy to get feedback and/or pull requests from the community! See..
+[CONTRIBUTING.md][contributing] for more information.
 
 ## A Note on Semver
 
