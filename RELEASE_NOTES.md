@@ -1,3 +1,10 @@
+# v0.6.0
+2020-09-24
+* API update
+  * notably, the `cloud_docs` namespace has been removed.
+* add Dropbox-standard meta files
+* enabled Dependabot
+
 # v0.5.0
 2020-08-17
 * change CI to GitHub Actions
