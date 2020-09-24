@@ -11403,6 +11403,8 @@ pub enum LegalHoldsPolicyCreateError {
     NameMustBeUnique,
     /// Team exceeded legal hold quota.
     TeamExceededLegalHoldQuota,
+    /// The provided date is invalid.
+    InvalidDate,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -11460,6 +11462,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyCreateError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsPolicyCreateError::TeamExceededLegalHoldQuota)
                     }
+                    "invalid_date" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsPolicyCreateError::InvalidDate)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsPolicyCreateError::Other)
@@ -11476,7 +11482,8 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyCreateError {
                                     "number_of_users_on_hold_is_greater_than_hold_limitation",
                                     "transient_error",
                                     "name_must_be_unique",
-                                    "team_exceeded_legal_hold_quota"];
+                                    "team_exceeded_legal_hold_quota",
+                                    "invalid_date"];
         deserializer.deserialize_struct("LegalHoldsPolicyCreateError", VARIANTS, EnumVisitor)
     }
 }
@@ -11538,6 +11545,12 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyCreateError {
                 // unit
                 let mut s = serializer.serialize_struct("LegalHoldsPolicyCreateError", 1)?;
                 s.serialize_field(".tag", "team_exceeded_legal_hold_quota")?;
+                s.end()
+            }
+            LegalHoldsPolicyCreateError::InvalidDate => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsPolicyCreateError", 1)?;
+                s.serialize_field(".tag", "invalid_date")?;
                 s.end()
             }
             LegalHoldsPolicyCreateError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

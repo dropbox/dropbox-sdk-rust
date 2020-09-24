@@ -19,9 +19,6 @@ pub mod auth;
 #[cfg(feature = "dbx_check")]
 pub mod check;
 
-#[cfg(feature = "dbx_cloud_docs")]
-pub mod cloud_docs;
-
 #[cfg(feature = "dbx_common")]
 pub mod common;
 

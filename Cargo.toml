@@ -36,7 +36,6 @@ dbx_account = ["dbx_common"]
 dbx_async = []
 dbx_auth = ["dbx_common"]
 dbx_check = []
-dbx_cloud_docs = ["dbx_files"]
 dbx_common = []
 dbx_contacts = ["dbx_common"]
 dbx_file_properties = []
@@ -62,7 +61,6 @@ default = [
     "dbx_async",
     "dbx_auth",
     "dbx_check",
-    "dbx_cloud_docs",
     "dbx_common",
     "dbx_contacts",
     "dbx_file_properties",

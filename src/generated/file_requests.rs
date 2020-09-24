@@ -316,6 +316,8 @@ pub struct CreateFileRequestArgs {
     /// Whether or not the file request should be open. If the file request is closed, it will not
     /// accept any file submissions, but it can be opened later.
     pub open: bool,
+    /// A description of the file request.
+    pub description: Option<String>,
 }
 
 impl CreateFileRequestArgs {
@@ -325,6 +327,7 @@ impl CreateFileRequestArgs {
             destination,
             deadline: None,
             open: true,
+            description: None,
         }
     }
 
@@ -338,12 +341,18 @@ impl CreateFileRequestArgs {
         self
     }
 
+    pub fn with_description(mut self, value: Option<String>) -> Self {
+        self.description = value;
+        self
+    }
+
 }
 
 const CREATE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["title",
                                                    "destination",
                                                    "deadline",
-                                                   "open"];
+                                                   "open",
+                                                   "description"];
 impl CreateFileRequestArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -359,6 +368,7 @@ impl CreateFileRequestArgs {
         let mut field_destination = None;
         let mut field_deadline = None;
         let mut field_open = None;
+        let mut field_description = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -387,6 +397,12 @@ impl CreateFileRequestArgs {
                     }
                     field_open = Some(map.next_value()?);
                 }
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -401,6 +417,7 @@ impl CreateFileRequestArgs {
             destination: field_destination.ok_or_else(|| ::serde::de::Error::missing_field("destination"))?,
             deadline: field_deadline,
             open: field_open.unwrap_or(true),
+            description: field_description,
         };
         Ok(Some(result))
     }
@@ -413,7 +430,8 @@ impl CreateFileRequestArgs {
         s.serialize_field("title", &self.title)?;
         s.serialize_field("destination", &self.destination)?;
         s.serialize_field("deadline", &self.deadline)?;
-        s.serialize_field("open", &self.open)
+        s.serialize_field("open", &self.open)?;
+        s.serialize_field("description", &self.description)
     }
 }
 
@@ -439,7 +457,7 @@ impl ::serde::ser::Serialize for CreateFileRequestArgs {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("CreateFileRequestArgs", 4)?;
+        let mut s = serializer.serialize_struct("CreateFileRequestArgs", 5)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -1240,6 +1258,8 @@ pub struct FileRequest {
     pub destination: Option<super::files::Path>,
     /// The deadline for this file request. Only set if the request has a deadline.
     pub deadline: Option<FileRequestDeadline>,
+    /// A description of the file request.
+    pub description: Option<String>,
 }
 
 impl FileRequest {
@@ -1260,6 +1280,7 @@ impl FileRequest {
             file_count,
             destination: None,
             deadline: None,
+            description: None,
         }
     }
 
@@ -1273,6 +1294,11 @@ impl FileRequest {
         self
     }
 
+    pub fn with_description(mut self, value: Option<String>) -> Self {
+        self.description = value;
+        self
+    }
+
 }
 
 const FILE_REQUEST_FIELDS: &[&str] = &["id",
@@ -1282,7 +1308,8 @@ const FILE_REQUEST_FIELDS: &[&str] = &["id",
                                        "is_open",
                                        "file_count",
                                        "destination",
-                                       "deadline"];
+                                       "deadline",
+                                       "description"];
 impl FileRequest {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -1302,6 +1329,7 @@ impl FileRequest {
         let mut field_file_count = None;
         let mut field_destination = None;
         let mut field_deadline = None;
+        let mut field_description = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -1354,6 +1382,12 @@ impl FileRequest {
                     }
                     field_deadline = Some(map.next_value()?);
                 }
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -1372,6 +1406,7 @@ impl FileRequest {
             file_count: field_file_count.ok_or_else(|| ::serde::de::Error::missing_field("file_count"))?,
             destination: field_destination,
             deadline: field_deadline,
+            description: field_description,
         };
         Ok(Some(result))
     }
@@ -1388,7 +1423,8 @@ impl FileRequest {
         s.serialize_field("is_open", &self.is_open)?;
         s.serialize_field("file_count", &self.file_count)?;
         s.serialize_field("destination", &self.destination)?;
-        s.serialize_field("deadline", &self.deadline)
+        s.serialize_field("deadline", &self.deadline)?;
+        s.serialize_field("description", &self.description)
     }
 }
 
@@ -1414,7 +1450,7 @@ impl ::serde::ser::Serialize for FileRequest {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("FileRequest", 8)?;
+        let mut s = serializer.serialize_struct("FileRequest", 9)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -2652,6 +2688,8 @@ pub struct UpdateFileRequestArgs {
     pub deadline: UpdateFileRequestDeadline,
     /// Whether to set this file request as open or closed.
     pub open: Option<bool>,
+    /// The description of the file request.
+    pub description: Option<String>,
 }
 
 impl UpdateFileRequestArgs {
@@ -2662,6 +2700,7 @@ impl UpdateFileRequestArgs {
             destination: None,
             deadline: UpdateFileRequestDeadline::NoUpdate,
             open: None,
+            description: None,
         }
     }
 
@@ -2685,13 +2724,19 @@ impl UpdateFileRequestArgs {
         self
     }
 
+    pub fn with_description(mut self, value: Option<String>) -> Self {
+        self.description = value;
+        self
+    }
+
 }
 
 const UPDATE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["id",
                                                    "title",
                                                    "destination",
                                                    "deadline",
-                                                   "open"];
+                                                   "open",
+                                                   "description"];
 impl UpdateFileRequestArgs {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -2708,6 +2753,7 @@ impl UpdateFileRequestArgs {
         let mut field_destination = None;
         let mut field_deadline = None;
         let mut field_open = None;
+        let mut field_description = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -2742,6 +2788,12 @@ impl UpdateFileRequestArgs {
                     }
                     field_open = Some(map.next_value()?);
                 }
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -2757,6 +2809,7 @@ impl UpdateFileRequestArgs {
             destination: field_destination,
             deadline: field_deadline.unwrap_or_else(|| UpdateFileRequestDeadline::NoUpdate),
             open: field_open,
+            description: field_description,
         };
         Ok(Some(result))
     }
@@ -2770,7 +2823,8 @@ impl UpdateFileRequestArgs {
         s.serialize_field("title", &self.title)?;
         s.serialize_field("destination", &self.destination)?;
         s.serialize_field("deadline", &self.deadline)?;
-        s.serialize_field("open", &self.open)
+        s.serialize_field("open", &self.open)?;
+        s.serialize_field("description", &self.description)
     }
 }
 
@@ -2796,7 +2850,7 @@ impl ::serde::ser::Serialize for UpdateFileRequestArgs {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UpdateFileRequestArgs", 5)?;
+        let mut s = serializer.serialize_struct("UpdateFileRequestArgs", 6)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }

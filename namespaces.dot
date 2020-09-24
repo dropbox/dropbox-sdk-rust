@@ -3,7 +3,6 @@ digraph deps {
     async;
     auth -> { common };
     check;
-    cloud_docs -> { files };
     common;
     contacts -> { common };
     file_properties;

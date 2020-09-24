@@ -1411,6 +1411,8 @@ pub struct CommitInfo {
     /// Be more strict about how each [`WriteMode`](WriteMode) detects conflict. For example, always
     /// return a conflict error when `mode` = [`WriteMode::Update`](WriteMode::Update) and the given
     /// "rev" doesn't match the existing file's "rev", even if the existing file has been deleted.
+    /// This also forces a conflict even when the target path refers to a file with identical
+    /// contents.
     pub strict_conflict: bool,
 }
 
@@ -1620,6 +1622,8 @@ pub struct CommitInfoWithProperties {
     /// Be more strict about how each [`WriteMode`](WriteMode) detects conflict. For example, always
     /// return a conflict error when `mode` = [`WriteMode::Update`](WriteMode::Update) and the given
     /// "rev" doesn't match the existing file's "rev", even if the existing file has been deleted.
+    /// This also forces a conflict even when the target path refers to a file with identical
+    /// contents.
     pub strict_conflict: bool,
 }
 
@@ -7161,7 +7165,9 @@ impl ::serde::ser::Serialize for GetTemporaryLinkArg {
 #[derive(Debug)]
 pub enum GetTemporaryLinkError {
     Path(LookupError),
-    /// The user's email address needs to be verified to use this functionality.
+    /// This user's email address is not verified. This functionality is only available on accounts
+    /// with a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     EmailNotVerified,
     /// Cannot get temporary link to this file type; use [`export()`](export) instead.
     UnsupportedFile,
@@ -13510,8 +13516,10 @@ pub enum RestoreError {
     PathLookup(LookupError),
     /// An error occurs when trying to restore the file to that path.
     PathWrite(WriteError),
-    /// The revision is invalid. It may not exist.
+    /// The revision is invalid. It may not exist or may point to a deleted file.
     InvalidRevision,
+    /// The restore is currently executing, but has not yet completed.
+    InProgress,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -13551,6 +13559,10 @@ impl<'de> ::serde::de::Deserialize<'de> for RestoreError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(RestoreError::InvalidRevision)
                     }
+                    "in_progress" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(RestoreError::InProgress)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(RestoreError::Other)
@@ -13561,6 +13573,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RestoreError {
         const VARIANTS: &[&str] = &["path_lookup",
                                     "path_write",
                                     "invalid_revision",
+                                    "in_progress",
                                     "other"];
         deserializer.deserialize_struct("RestoreError", VARIANTS, EnumVisitor)
     }
@@ -13589,6 +13602,12 @@ impl ::serde::ser::Serialize for RestoreError {
                 // unit
                 let mut s = serializer.serialize_struct("RestoreError", 1)?;
                 s.serialize_field(".tag", "invalid_revision")?;
+                s.end()
+            }
+            RestoreError::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("RestoreError", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
                 s.end()
             }
             RestoreError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -19136,6 +19155,8 @@ pub enum WriteError {
     DisallowedName,
     /// This endpoint cannot move or delete team folders.
     TeamFolder,
+    /// This file operation is not allowed at this path.
+    OperationSuppressed,
     /// There are too many write operations in user's Dropbox. Please retry this request.
     TooManyWriteOperations,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -19189,6 +19210,10 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(WriteError::TeamFolder)
                     }
+                    "operation_suppressed" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(WriteError::OperationSuppressed)
+                    }
                     "too_many_write_operations" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(WriteError::TooManyWriteOperations)
@@ -19206,6 +19231,7 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteError {
                                     "insufficient_space",
                                     "disallowed_name",
                                     "team_folder",
+                                    "operation_suppressed",
                                     "too_many_write_operations",
                                     "other"];
         deserializer.deserialize_struct("WriteError", VARIANTS, EnumVisitor)
@@ -19256,6 +19282,12 @@ impl ::serde::ser::Serialize for WriteError {
                 // unit
                 let mut s = serializer.serialize_struct("WriteError", 1)?;
                 s.serialize_field(".tag", "team_folder")?;
+                s.end()
+            }
+            WriteError::OperationSuppressed => {
+                // unit
+                let mut s = serializer.serialize_struct("WriteError", 1)?;
+                s.serialize_field(".tag", "operation_suppressed")?;
                 s.end()
             }
             WriteError::TooManyWriteOperations => {

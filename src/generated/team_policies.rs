@@ -1568,6 +1568,77 @@ impl ::serde::ser::Serialize for SsoPolicy {
     }
 }
 
+#[derive(Debug)]
+pub enum SuggestMembersPolicy {
+    /// Suggest members is disabled.
+    Disabled,
+    /// Suggest members is enabled.
+    Enabled,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SuggestMembersPolicy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SuggestMembersPolicy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SuggestMembersPolicy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SuggestMembersPolicy::Disabled)
+                    }
+                    "enabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SuggestMembersPolicy::Enabled)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SuggestMembersPolicy::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "other"];
+        deserializer.deserialize_struct("SuggestMembersPolicy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SuggestMembersPolicy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SuggestMembersPolicy::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("SuggestMembersPolicy", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            SuggestMembersPolicy::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("SuggestMembersPolicy", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            SuggestMembersPolicy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 /// Policies governing team members.
 #[derive(Debug)]
 pub struct TeamMemberPolicies {
@@ -1581,6 +1652,9 @@ pub struct TeamMemberPolicies {
     pub emm_state: EmmState,
     /// The admin policy around the Dropbox Office Add-In for this team.
     pub office_addin: OfficeAddInPolicy,
+    /// The team policy on if teammembers are allowed to suggest users for admins to invite to the
+    /// team.
+    pub suggest_members_policy: SuggestMembersPolicy,
 }
 
 impl TeamMemberPolicies {
@@ -1588,11 +1662,13 @@ impl TeamMemberPolicies {
         sharing: TeamSharingPolicies,
         emm_state: EmmState,
         office_addin: OfficeAddInPolicy,
+        suggest_members_policy: SuggestMembersPolicy,
     ) -> Self {
         TeamMemberPolicies {
             sharing,
             emm_state,
             office_addin,
+            suggest_members_policy,
         }
     }
 
@@ -1600,7 +1676,8 @@ impl TeamMemberPolicies {
 
 const TEAM_MEMBER_POLICIES_FIELDS: &[&str] = &["sharing",
                                                "emm_state",
-                                               "office_addin"];
+                                               "office_addin",
+                                               "suggest_members_policy"];
 impl TeamMemberPolicies {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -1615,6 +1692,7 @@ impl TeamMemberPolicies {
         let mut field_sharing = None;
         let mut field_emm_state = None;
         let mut field_office_addin = None;
+        let mut field_suggest_members_policy = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -1637,6 +1715,12 @@ impl TeamMemberPolicies {
                     }
                     field_office_addin = Some(map.next_value()?);
                 }
+                "suggest_members_policy" => {
+                    if field_suggest_members_policy.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("suggest_members_policy"));
+                    }
+                    field_suggest_members_policy = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -1650,6 +1734,7 @@ impl TeamMemberPolicies {
             sharing: field_sharing.ok_or_else(|| ::serde::de::Error::missing_field("sharing"))?,
             emm_state: field_emm_state.ok_or_else(|| ::serde::de::Error::missing_field("emm_state"))?,
             office_addin: field_office_addin.ok_or_else(|| ::serde::de::Error::missing_field("office_addin"))?,
+            suggest_members_policy: field_suggest_members_policy.ok_or_else(|| ::serde::de::Error::missing_field("suggest_members_policy"))?,
         };
         Ok(Some(result))
     }
@@ -1661,7 +1746,8 @@ impl TeamMemberPolicies {
         use serde::ser::SerializeStruct;
         s.serialize_field("sharing", &self.sharing)?;
         s.serialize_field("emm_state", &self.emm_state)?;
-        s.serialize_field("office_addin", &self.office_addin)
+        s.serialize_field("office_addin", &self.office_addin)?;
+        s.serialize_field("suggest_members_policy", &self.suggest_members_policy)
     }
 }
 
@@ -1687,7 +1773,7 @@ impl ::serde::ser::Serialize for TeamMemberPolicies {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("TeamMemberPolicies", 3)?;
+        let mut s = serializer.serialize_struct("TeamMemberPolicies", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
