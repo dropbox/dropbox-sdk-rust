@@ -20,7 +20,7 @@ This SDK is not yet official. What does this mean?
 
 However, that said,
 * The SDK is usable!
-* We are happy to get feedback and/or pull requests from the community! See..
+* We are happy to get feedback and/or pull requests from the community! See
 [CONTRIBUTING.md][contributing] for more information.
 
 ## A Note on Semver
@@ -124,3 +124,5 @@ Some implementation notes, limitations, and TODOs:
    tests for all variants.
 
 ## Happy Dropboxing!
+
+[contributing]: https://github.com/dropbox/dropbox-sdk-rust/blob/master/CONTRIBUTING.md
