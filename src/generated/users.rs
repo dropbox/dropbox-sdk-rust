@@ -87,10 +87,10 @@ pub struct Account {
     pub account_id: super::users_common::AccountId,
     /// Details of a user's name.
     pub name: Name,
-    /// The user's e-mail address. Do not rely on this without checking the `email_verified` field.
-    /// Even then, it's possible that the user has since lost access to their e-mail.
+    /// The user's email address. Do not rely on this without checking the `email_verified` field.
+    /// Even then, it's possible that the user has since lost access to their email.
     pub email: String,
-    /// Whether the user has verified their e-mail address.
+    /// Whether the user has verified their email address.
     pub email_verified: bool,
     /// Whether the user has been disabled.
     pub disabled: bool,
@@ -255,10 +255,10 @@ pub struct BasicAccount {
     pub account_id: super::users_common::AccountId,
     /// Details of a user's name.
     pub name: Name,
-    /// The user's e-mail address. Do not rely on this without checking the `email_verified` field.
-    /// Even then, it's possible that the user has since lost access to their e-mail.
+    /// The user's email address. Do not rely on this without checking the `email_verified` field.
+    /// Even then, it's possible that the user has since lost access to their email.
     pub email: String,
-    /// Whether the user has verified their e-mail address.
+    /// Whether the user has verified their email address.
     pub email_verified: bool,
     /// Whether the user has been disabled.
     pub disabled: bool,
@@ -522,10 +522,10 @@ pub struct FullAccount {
     pub account_id: super::users_common::AccountId,
     /// Details of a user's name.
     pub name: Name,
-    /// The user's e-mail address. Do not rely on this without checking the `email_verified` field.
-    /// Even then, it's possible that the user has since lost access to their e-mail.
+    /// The user's email address. Do not rely on this without checking the `email_verified` field.
+    /// Even then, it's possible that the user has since lost access to their email.
     pub email: String,
-    /// Whether the user has verified their e-mail address.
+    /// Whether the user has verified their email address.
     pub email_verified: bool,
     /// Whether the user has been disabled.
     pub disabled: bool,

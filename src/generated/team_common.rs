@@ -11,6 +11,7 @@ pub type GroupExternalId = String;
 pub type GroupId = String;
 pub type MemberExternalId = String;
 pub type ResellerId = String;
+pub type TeamId = String;
 pub type TeamMemberId = String;
 
 /// The group type determines how a group is managed.

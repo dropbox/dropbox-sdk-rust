@@ -402,9 +402,13 @@ pub fn list_received_files_continue(
 }
 
 /// List shared links of this user. If no path is given, returns a list of all shared links for the
-/// current user. If a non-empty path is given, returns a list of all shared links that allow access
-/// to the given path - direct links to the given path and links to parent folders of the given
-/// path. Links to parent folders can be suppressed by setting direct_only to true.
+/// current user. For members of business teams using team space and member folders, returns all
+/// shared links in the team member's home folder unless the team space ID is specified in the
+/// request header. For more information, refer to the [Namespace
+/// Guide](https://www.dropbox.com/developers/reference/namespace-guide). If a non-empty path is
+/// given, returns a list of all shared links that allow access to the given path - direct links to
+/// the given path and links to parent folders of the given path. Links to parent folders can be
+/// suppressed by setting direct_only to true.
 pub fn list_shared_links(
     client: &dyn crate::client_trait::HttpClient,
     arg: &ListSharedLinksArg,
@@ -1365,7 +1369,9 @@ impl ::serde::ser::Serialize for AddFolderMemberArg {
 pub enum AddFolderMemberError {
     /// Unable to access shared folder.
     AccessError(SharedFolderAccessError),
-    /// The current user's e-mail address is unverified.
+    /// This user's email address is not verified. This functionality is only available on accounts
+    /// with a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     EmailUnverified,
     /// The current user has been banned.
     BannedMember,
@@ -1723,8 +1729,8 @@ pub enum AddMemberSelectorError {
     InvalidDropboxId(DropboxId),
     /// The value is the e-email address that is malformed.
     InvalidEmail(super::common::EmailAddress),
-    /// The value is the ID of the Dropbox user with an unverified e-mail address.  Invite
-    /// unverified users by e-mail address instead of by their Dropbox ID.
+    /// The value is the ID of the Dropbox user with an unverified email address. Invite unverified
+    /// users by email address instead of by their Dropbox ID.
     UnverifiedDropboxId(DropboxId),
     /// At least one of the specified groups in [`AddFolderMemberArg::members`](AddFolderMemberArg)
     /// is deleted.
@@ -2735,7 +2741,9 @@ impl ::serde::ser::Serialize for CreateSharedLinkWithSettingsArg {
 #[derive(Debug)]
 pub enum CreateSharedLinkWithSettingsError {
     Path(super::files::LookupError),
-    /// User's email should be verified.
+    /// This user's email address is not verified. This functionality is only available on accounts
+    /// with a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     EmailNotVerified,
     /// The shared link already exists. You can call [`list_shared_links()`](list_shared_links) to
     /// get the  existing link, or use the provided metadata if it is returned.
@@ -6520,7 +6528,7 @@ impl ::serde::ser::Serialize for InsufficientQuotaAmounts {
 /// Information about the recipient of a shared content invitation.
 #[derive(Debug)]
 pub enum InviteeInfo {
-    /// E-mail address of invited user.
+    /// Email address of invited user.
     Email(super::common::EmailAddress),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -10624,7 +10632,7 @@ impl ::serde::ser::Serialize for MemberPolicy {
 pub enum MemberSelector {
     /// Dropbox account, team member, or group ID of member.
     DropboxId(DropboxId),
-    /// E-mail address of member.
+    /// Email address of member.
     Email(super::common::EmailAddress),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -10977,7 +10985,9 @@ pub enum ModifySharedLinkSettingsError {
     UnsupportedLinkType,
     /// There is an error with the given settings.
     SettingsError(SharedLinkSettingsError),
-    /// The caller's email should be verified.
+    /// This user's email address is not verified. This functionality is only available on accounts
+    /// with a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     EmailNotVerified,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -14023,7 +14033,9 @@ impl ::serde::ser::Serialize for ShareFolderArgBase {
 
 #[derive(Debug)]
 pub enum ShareFolderError {
-    /// The current user's e-mail address is unverified.
+    /// This user's email address is not verified. This functionality is only available on accounts
+    /// with a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     EmailUnverified,
     /// [`ShareFolderArg::path`](ShareFolderArg) is invalid.
     BadPath(SharePathError),
@@ -14150,7 +14162,9 @@ impl ::std::fmt::Display for ShareFolderError {
 
 #[derive(Debug)]
 pub enum ShareFolderErrorBase {
-    /// The current user's e-mail address is unverified.
+    /// This user's email address is not verified. This functionality is only available on accounts
+    /// with a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     EmailUnverified,
     /// [`ShareFolderArg::path`](ShareFolderArg) is invalid.
     BadPath(SharePathError),
@@ -16441,7 +16455,9 @@ impl ::serde::ser::Serialize for SharedFolderMetadataBase {
 pub enum SharedLinkAccessFailureReason {
     /// User is not logged in.
     LoginRequired,
-    /// User's email is not verified.
+    /// This user's email address is not verified. This functionality is only available on accounts
+    /// with a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     EmailVerifyRequired,
     /// The link is password protected.
     PasswordRequired,
@@ -17213,7 +17229,9 @@ impl ::std::fmt::Display for SharingFileAccessError {
 /// User account had a problem preventing this action.
 #[derive(Debug)]
 pub enum SharingUserError {
-    /// The current user must verify the account e-mail address before performing this action.
+    /// This user's email address is not verified. This functionality is only available on accounts
+    /// with a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     EmailUnverified,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -17516,7 +17534,9 @@ pub enum TransferFolderError {
     NewOwnerNotAMember,
     /// The new designated owner has not added the folder to their Dropbox.
     NewOwnerUnmounted,
-    /// The new designated owner's e-mail address is unverified.
+    /// The new designated owner's email address is not verified. This functionality is only
+    /// available on accounts with a verified email address. Users can verify their email address
+    /// [here](https://www.dropbox.com/help/317).
     NewOwnerEmailUnverified,
     /// This action cannot be performed on a team shared folder.
     TeamFolder,
