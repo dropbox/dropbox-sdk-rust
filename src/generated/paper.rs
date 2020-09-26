@@ -30,6 +30,7 @@ pub fn docs_archive(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/archive",
         arg,
         None)
@@ -51,6 +52,7 @@ pub fn docs_create(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Upload,
+        crate::client_trait::Auth::Token,
         "paper/docs/create",
         arg,
         Some(body))
@@ -72,6 +74,7 @@ pub fn docs_download(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Download,
+        crate::client_trait::Auth::Token,
         "paper/docs/download",
         arg,
         None,
@@ -95,6 +98,7 @@ pub fn docs_folder_users_list(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/folder_users/list",
         arg,
         None)
@@ -115,6 +119,7 @@ pub fn docs_folder_users_list_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/folder_users/list/continue",
         arg,
         None)
@@ -139,6 +144,7 @@ pub fn docs_get_folder_info(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/get_folder_info",
         arg,
         None)
@@ -160,6 +166,7 @@ pub fn docs_list(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/list",
         arg,
         None)
@@ -180,6 +187,7 @@ pub fn docs_list_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/list/continue",
         arg,
         None)
@@ -200,6 +208,7 @@ pub fn docs_permanently_delete(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/permanently_delete",
         arg,
         None)
@@ -219,6 +228,7 @@ pub fn docs_sharing_policy_get(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/sharing_policy/get",
         arg,
         None)
@@ -241,6 +251,7 @@ pub fn docs_sharing_policy_set(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/sharing_policy/set",
         arg,
         None)
@@ -262,6 +273,7 @@ pub fn docs_update(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Upload,
+        crate::client_trait::Auth::Token,
         "paper/docs/update",
         arg,
         Some(body))
@@ -283,6 +295,7 @@ pub fn docs_users_add(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/users/add",
         arg,
         None)
@@ -305,6 +318,7 @@ pub fn docs_users_list(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/users/list",
         arg,
         None)
@@ -325,6 +339,7 @@ pub fn docs_users_list_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/users/list/continue",
         arg,
         None)
@@ -345,6 +360,7 @@ pub fn docs_users_remove(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/docs/users/remove",
         arg,
         None)
@@ -364,6 +380,7 @@ pub fn folders_create(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "paper/folders/create",
         arg,
         None)

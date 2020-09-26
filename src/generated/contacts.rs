@@ -16,6 +16,7 @@ pub fn delete_manual_contacts(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "contacts/delete_manual_contacts",
         &(),
         None)
@@ -30,6 +31,7 @@ pub fn delete_manual_contacts_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "contacts/delete_manual_contacts_batch",
         arg,
         None)

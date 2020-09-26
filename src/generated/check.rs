@@ -7,24 +7,6 @@
     clippy::doc_markdown,
 )]
 
-/// This endpoint performs App Authentication, validating the supplied app key and secret, and
-/// returns the supplied string, to allow you to test your code and connection to the Dropbox API.
-/// It has no other effect. If you receive an HTTP 200 response with the supplied query, it
-/// indicates at least part of the Dropbox API infrastructure is working and that the app key and
-/// secret valid.
-pub fn app(
-    client: &dyn crate::client_trait::HttpClient,
-    arg: &EchoArg,
-) -> crate::Result<Result<EchoResult, ()>> {
-    crate::client_helpers::request(
-        client,
-        crate::client_trait::Endpoint::Api,
-        crate::client_trait::Style::Rpc,
-        "check/app",
-        arg,
-        None)
-}
-
 /// This endpoint performs User Authentication, validating the supplied access token, and returns
 /// the supplied string, to allow you to test your code and connection to the Dropbox API. It has no
 /// other effect. If you receive an HTTP 200 response with the supplied query, it indicates at least
@@ -37,6 +19,7 @@ pub fn user(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "check/user",
         arg,
         None)

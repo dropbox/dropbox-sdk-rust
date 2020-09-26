@@ -30,6 +30,7 @@ pub fn devices_list_member_devices(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/devices/list_member_devices",
         arg,
         None)
@@ -44,6 +45,7 @@ pub fn devices_list_members_devices(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/devices/list_members_devices",
         arg,
         None)
@@ -58,6 +60,7 @@ pub fn devices_list_team_devices(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/devices/list_team_devices",
         arg,
         None)
@@ -72,6 +75,7 @@ pub fn devices_revoke_device_session(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/devices/revoke_device_session",
         arg,
         None)
@@ -86,6 +90,7 @@ pub fn devices_revoke_device_session_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/devices/revoke_device_session_batch",
         arg,
         None)
@@ -102,6 +107,7 @@ pub fn features_get_values(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/features/get_values",
         arg,
         None)
@@ -115,6 +121,7 @@ pub fn get_info(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/get_info",
         &(),
         None)
@@ -129,6 +136,7 @@ pub fn groups_create(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/groups/create",
         arg,
         None)
@@ -145,6 +153,7 @@ pub fn groups_delete(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/groups/delete",
         arg,
         None)
@@ -161,6 +170,7 @@ pub fn groups_get_info(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/groups/get_info",
         arg,
         None)
@@ -179,6 +189,7 @@ pub fn groups_job_status_get(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/groups/job_status/get",
         arg,
         None)
@@ -193,6 +204,7 @@ pub fn groups_list(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/groups/list",
         arg,
         None)
@@ -208,6 +220,7 @@ pub fn groups_list_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/groups/list/continue",
         arg,
         None)
@@ -224,6 +237,7 @@ pub fn groups_members_add(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/groups/members/add",
         arg,
         None)
@@ -238,6 +252,7 @@ pub fn groups_members_list(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/groups/members/list",
         arg,
         None)
@@ -253,6 +268,7 @@ pub fn groups_members_list_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/groups/members/list/continue",
         arg,
         None)
@@ -271,6 +287,7 @@ pub fn groups_members_remove(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/groups/members/remove",
         arg,
         None)
@@ -285,6 +302,7 @@ pub fn groups_members_set_access_type(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/groups/members/set_access_type",
         arg,
         None)
@@ -299,6 +317,7 @@ pub fn groups_update(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/groups/update",
         arg,
         None)
@@ -314,6 +333,7 @@ pub fn legal_holds_create_policy(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/legal_holds/create_policy",
         arg,
         None)
@@ -329,6 +349,7 @@ pub fn legal_holds_get_policy(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/legal_holds/get_policy",
         arg,
         None)
@@ -344,6 +365,7 @@ pub fn legal_holds_list_held_revisions(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/legal_holds/list_held_revisions",
         arg,
         None)
@@ -359,6 +381,7 @@ pub fn legal_holds_list_held_revisions_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/legal_holds/list_held_revisions_continue",
         arg,
         None)
@@ -374,6 +397,7 @@ pub fn legal_holds_list_policies(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/legal_holds/list_policies",
         arg,
         None)
@@ -389,6 +413,7 @@ pub fn legal_holds_release_policy(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/legal_holds/release_policy",
         arg,
         None)
@@ -404,6 +429,7 @@ pub fn legal_holds_update_policy(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/legal_holds/update_policy",
         arg,
         None)
@@ -419,6 +445,7 @@ pub fn linked_apps_list_member_linked_apps(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/linked_apps/list_member_linked_apps",
         arg,
         None)
@@ -434,6 +461,7 @@ pub fn linked_apps_list_members_linked_apps(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/linked_apps/list_members_linked_apps",
         arg,
         None)
@@ -449,6 +477,7 @@ pub fn linked_apps_list_team_linked_apps(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/linked_apps/list_team_linked_apps",
         arg,
         None)
@@ -463,6 +492,7 @@ pub fn linked_apps_revoke_linked_app(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/linked_apps/revoke_linked_app",
         arg,
         None)
@@ -477,6 +507,7 @@ pub fn linked_apps_revoke_linked_app_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/linked_apps/revoke_linked_app_batch",
         arg,
         None)
@@ -491,6 +522,7 @@ pub fn member_space_limits_excluded_users_add(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/member_space_limits/excluded_users/add",
         arg,
         None)
@@ -505,6 +537,7 @@ pub fn member_space_limits_excluded_users_list(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/member_space_limits/excluded_users/list",
         arg,
         None)
@@ -519,6 +552,7 @@ pub fn member_space_limits_excluded_users_list_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/member_space_limits/excluded_users/list/continue",
         arg,
         None)
@@ -533,6 +567,7 @@ pub fn member_space_limits_excluded_users_remove(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/member_space_limits/excluded_users/remove",
         arg,
         None)
@@ -548,6 +583,7 @@ pub fn member_space_limits_get_custom_quota(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/member_space_limits/get_custom_quota",
         arg,
         None)
@@ -562,6 +598,7 @@ pub fn member_space_limits_remove_custom_quota(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/member_space_limits/remove_custom_quota",
         arg,
         None)
@@ -577,6 +614,7 @@ pub fn member_space_limits_set_custom_quota(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/member_space_limits/set_custom_quota",
         arg,
         None)
@@ -599,6 +637,7 @@ pub fn members_add(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/add",
         arg,
         None)
@@ -614,6 +653,7 @@ pub fn members_add_job_status_get(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/add/job_status/get",
         arg,
         None)
@@ -628,6 +668,7 @@ pub fn members_delete_profile_photo(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/delete_profile_photo",
         arg,
         None)
@@ -644,6 +685,7 @@ pub fn members_get_info(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/get_info",
         arg,
         None)
@@ -658,6 +700,7 @@ pub fn members_list(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/list",
         arg,
         None)
@@ -673,6 +716,7 @@ pub fn members_list_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/list/continue",
         arg,
         None)
@@ -690,6 +734,7 @@ pub fn members_move_former_member_files(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/move_former_member_files",
         arg,
         None)
@@ -706,6 +751,7 @@ pub fn members_move_former_member_files_job_status_check(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/move_former_member_files/job_status/check",
         arg,
         None)
@@ -721,6 +767,7 @@ pub fn members_recover(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/recover",
         arg,
         None)
@@ -744,6 +791,7 @@ pub fn members_remove(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/remove",
         arg,
         None)
@@ -759,6 +807,7 @@ pub fn members_remove_job_status_get(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/remove/job_status/get",
         arg,
         None)
@@ -775,6 +824,7 @@ pub fn members_secondary_emails_add(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/secondary_emails/add",
         arg,
         None)
@@ -790,6 +840,7 @@ pub fn members_secondary_emails_delete(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/secondary_emails/delete",
         arg,
         None)
@@ -804,6 +855,7 @@ pub fn members_secondary_emails_resend_verification_emails(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/secondary_emails/resend_verification_emails",
         arg,
         None)
@@ -820,6 +872,7 @@ pub fn members_send_welcome_email(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/send_welcome_email",
         arg,
         None)
@@ -834,6 +887,7 @@ pub fn members_set_admin_permissions(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/set_admin_permissions",
         arg,
         None)
@@ -848,6 +902,7 @@ pub fn members_set_profile(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/set_profile",
         arg,
         None)
@@ -862,6 +917,7 @@ pub fn members_set_profile_photo(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/set_profile_photo",
         arg,
         None)
@@ -877,6 +933,7 @@ pub fn members_suspend(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/suspend",
         arg,
         None)
@@ -892,6 +949,7 @@ pub fn members_unsuspend(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/members/unsuspend",
         arg,
         None)
@@ -909,6 +967,7 @@ pub fn namespaces_list(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/namespaces/list",
         arg,
         None)
@@ -924,6 +983,7 @@ pub fn namespaces_list_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/namespaces/list/continue",
         arg,
         None)
@@ -938,6 +998,7 @@ pub fn properties_template_add(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/properties/template/add",
         arg,
         None)
@@ -952,6 +1013,7 @@ pub fn properties_template_get(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/properties/template/get",
         arg,
         None)
@@ -965,6 +1027,7 @@ pub fn properties_template_list(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/properties/template/list",
         &(),
         None)
@@ -979,6 +1042,7 @@ pub fn properties_template_update(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/properties/template/update",
         arg,
         None)
@@ -993,6 +1057,7 @@ pub fn reports_get_activity(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/reports/get_activity",
         arg,
         None)
@@ -1007,6 +1072,7 @@ pub fn reports_get_devices(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/reports/get_devices",
         arg,
         None)
@@ -1021,6 +1087,7 @@ pub fn reports_get_membership(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/reports/get_membership",
         arg,
         None)
@@ -1035,6 +1102,7 @@ pub fn reports_get_storage(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/reports/get_storage",
         arg,
         None)
@@ -1049,6 +1117,7 @@ pub fn team_folder_activate(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/team_folder/activate",
         arg,
         None)
@@ -1064,6 +1133,7 @@ pub fn team_folder_archive(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/team_folder/archive",
         arg,
         None)
@@ -1079,6 +1149,7 @@ pub fn team_folder_archive_check(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/team_folder/archive/check",
         arg,
         None)
@@ -1093,6 +1164,7 @@ pub fn team_folder_create(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/team_folder/create",
         arg,
         None)
@@ -1107,6 +1179,7 @@ pub fn team_folder_get_info(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/team_folder/get_info",
         arg,
         None)
@@ -1121,6 +1194,7 @@ pub fn team_folder_list(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/team_folder/list",
         arg,
         None)
@@ -1136,6 +1210,7 @@ pub fn team_folder_list_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/team_folder/list/continue",
         arg,
         None)
@@ -1150,6 +1225,7 @@ pub fn team_folder_permanently_delete(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/team_folder/permanently_delete",
         arg,
         None)
@@ -1164,6 +1240,7 @@ pub fn team_folder_rename(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/team_folder/rename",
         arg,
         None)
@@ -1179,6 +1256,7 @@ pub fn team_folder_update_sync_settings(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/team_folder/update_sync_settings",
         arg,
         None)
@@ -1193,6 +1271,7 @@ pub fn token_get_authenticated_admin(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "team/token/get_authenticated_admin",
         &(),
         None)

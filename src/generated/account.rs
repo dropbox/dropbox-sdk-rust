@@ -16,6 +16,7 @@ pub fn set_profile_photo(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "account/set_profile_photo",
         arg,
         None)

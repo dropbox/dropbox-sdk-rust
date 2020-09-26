@@ -28,6 +28,7 @@ pub fn add_file_member(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/add_file_member",
         arg,
         None)
@@ -44,6 +45,7 @@ pub fn add_folder_member(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/add_folder_member",
         arg,
         None)
@@ -58,6 +60,7 @@ pub fn change_file_member_access(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/change_file_member_access",
         arg,
         None)
@@ -72,6 +75,7 @@ pub fn check_job_status(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/check_job_status",
         arg,
         None)
@@ -86,6 +90,7 @@ pub fn check_remove_member_job_status(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/check_remove_member_job_status",
         arg,
         None)
@@ -100,6 +105,7 @@ pub fn check_share_job_status(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/check_share_job_status",
         arg,
         None)
@@ -121,6 +127,7 @@ pub fn create_shared_link(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/create_shared_link",
         arg,
         None)
@@ -137,6 +144,7 @@ pub fn create_shared_link_with_settings(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/create_shared_link_with_settings",
         arg,
         None)
@@ -151,6 +159,7 @@ pub fn get_file_metadata(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/get_file_metadata",
         arg,
         None)
@@ -165,6 +174,7 @@ pub fn get_file_metadata_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/get_file_metadata/batch",
         arg,
         None)
@@ -179,6 +189,7 @@ pub fn get_folder_metadata(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/get_folder_metadata",
         arg,
         None)
@@ -195,6 +206,7 @@ pub fn get_shared_link_file(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Download,
+        crate::client_trait::Auth::Token,
         "sharing/get_shared_link_file",
         arg,
         None,
@@ -211,6 +223,7 @@ pub fn get_shared_link_metadata(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/get_shared_link_metadata",
         arg,
         None)
@@ -229,6 +242,7 @@ pub fn get_shared_links(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/get_shared_links",
         arg,
         None)
@@ -244,6 +258,7 @@ pub fn list_file_members(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/list_file_members",
         arg,
         None)
@@ -261,6 +276,7 @@ pub fn list_file_members_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/list_file_members/batch",
         arg,
         None)
@@ -277,6 +293,7 @@ pub fn list_file_members_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/list_file_members/continue",
         arg,
         None)
@@ -291,6 +308,7 @@ pub fn list_folder_members(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/list_folder_members",
         arg,
         None)
@@ -306,6 +324,7 @@ pub fn list_folder_members_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/list_folder_members/continue",
         arg,
         None)
@@ -320,6 +339,7 @@ pub fn list_folders(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/list_folders",
         arg,
         None)
@@ -336,6 +356,7 @@ pub fn list_folders_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/list_folders/continue",
         arg,
         None)
@@ -350,6 +371,7 @@ pub fn list_mountable_folders(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/list_mountable_folders",
         arg,
         None)
@@ -367,6 +389,7 @@ pub fn list_mountable_folders_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/list_mountable_folders/continue",
         arg,
         None)
@@ -382,6 +405,7 @@ pub fn list_received_files(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/list_received_files",
         arg,
         None)
@@ -396,6 +420,7 @@ pub fn list_received_files_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/list_received_files/continue",
         arg,
         None)
@@ -417,6 +442,7 @@ pub fn list_shared_links(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/list_shared_links",
         arg,
         None)
@@ -436,6 +462,7 @@ pub fn modify_shared_link_settings(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/modify_shared_link_settings",
         arg,
         None)
@@ -451,6 +478,7 @@ pub fn mount_folder(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/mount_folder",
         arg,
         None)
@@ -466,6 +494,7 @@ pub fn relinquish_file_membership(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/relinquish_file_membership",
         arg,
         None)
@@ -483,6 +512,7 @@ pub fn relinquish_folder_membership(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/relinquish_folder_membership",
         arg,
         None)
@@ -497,6 +527,7 @@ pub fn remove_file_member(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/remove_file_member",
         arg,
         None)
@@ -511,6 +542,7 @@ pub fn remove_file_member_2(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/remove_file_member_2",
         arg,
         None)
@@ -526,6 +558,7 @@ pub fn remove_folder_member(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/remove_folder_member",
         arg,
         None)
@@ -544,6 +577,7 @@ pub fn revoke_shared_link(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/revoke_shared_link",
         arg,
         None)
@@ -561,6 +595,7 @@ pub fn set_access_inheritance(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/set_access_inheritance",
         arg,
         None)
@@ -580,6 +615,7 @@ pub fn share_folder(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/share_folder",
         arg,
         None)
@@ -595,6 +631,7 @@ pub fn transfer_folder(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/transfer_folder",
         arg,
         None)
@@ -610,6 +647,7 @@ pub fn unmount_folder(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/unmount_folder",
         arg,
         None)
@@ -624,6 +662,7 @@ pub fn unshare_file(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/unshare_file",
         arg,
         None)
@@ -639,6 +678,7 @@ pub fn unshare_folder(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/unshare_folder",
         arg,
         None)
@@ -653,6 +693,7 @@ pub fn update_file_member(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/update_file_member",
         arg,
         None)
@@ -667,6 +708,7 @@ pub fn update_folder_member(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/update_folder_member",
         arg,
         None)
@@ -682,6 +724,7 @@ pub fn update_folder_policy(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "sharing/update_folder_policy",
         arg,
         None)

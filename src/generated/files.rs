@@ -36,6 +36,7 @@ pub fn alpha_get_metadata(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/alpha/get_metadata",
         arg,
         None)
@@ -54,6 +55,7 @@ pub fn alpha_upload(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Upload,
+        crate::client_trait::Auth::Token,
         "files/alpha/upload",
         arg,
         Some(body))
@@ -69,6 +71,7 @@ pub fn copy_v2(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/copy_v2",
         arg,
         None)
@@ -84,6 +87,7 @@ pub fn copy(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/copy",
         arg,
         None)
@@ -102,6 +106,7 @@ pub fn copy_batch_v2(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/copy_batch_v2",
         arg,
         None)
@@ -122,6 +127,7 @@ pub fn copy_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/copy_batch",
         arg,
         None)
@@ -137,6 +143,7 @@ pub fn copy_batch_check_v2(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/copy_batch/check_v2",
         arg,
         None)
@@ -152,6 +159,7 @@ pub fn copy_batch_check(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/copy_batch/check",
         arg,
         None)
@@ -168,6 +176,7 @@ pub fn copy_reference_get(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/copy_reference/get",
         arg,
         None)
@@ -183,6 +192,7 @@ pub fn copy_reference_save(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/copy_reference/save",
         arg,
         None)
@@ -197,6 +207,7 @@ pub fn create_folder_v2(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/create_folder_v2",
         arg,
         None)
@@ -211,6 +222,7 @@ pub fn create_folder(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/create_folder",
         arg,
         None)
@@ -229,6 +241,7 @@ pub fn create_folder_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/create_folder_batch",
         arg,
         None)
@@ -244,6 +257,7 @@ pub fn create_folder_batch_check(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/create_folder_batch/check",
         arg,
         None)
@@ -262,6 +276,7 @@ pub fn delete_v2(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/delete_v2",
         arg,
         None)
@@ -280,6 +295,7 @@ pub fn delete(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/delete",
         arg,
         None)
@@ -296,6 +312,7 @@ pub fn delete_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/delete_batch",
         arg,
         None)
@@ -311,6 +328,7 @@ pub fn delete_batch_check(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/delete_batch/check",
         arg,
         None)
@@ -327,6 +345,7 @@ pub fn download(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Download,
+        crate::client_trait::Auth::Token,
         "files/download",
         arg,
         None,
@@ -347,6 +366,7 @@ pub fn download_zip(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Download,
+        crate::client_trait::Auth::Token,
         "files/download_zip",
         arg,
         None,
@@ -367,6 +387,7 @@ pub fn export(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Download,
+        crate::client_trait::Auth::Token,
         "files/export",
         arg,
         None,
@@ -383,6 +404,7 @@ pub fn get_file_lock_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/get_file_lock_batch",
         arg,
         None)
@@ -397,6 +419,7 @@ pub fn get_metadata(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/get_metadata",
         arg,
         None)
@@ -417,6 +440,7 @@ pub fn get_preview(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Download,
+        crate::client_trait::Auth::Token,
         "files/get_preview",
         arg,
         None,
@@ -435,6 +459,7 @@ pub fn get_temporary_link(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/get_temporary_link",
         arg,
         None)
@@ -484,6 +509,7 @@ pub fn get_temporary_upload_link(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/get_temporary_upload_link",
         arg,
         None)
@@ -502,6 +528,7 @@ pub fn get_thumbnail(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Download,
+        crate::client_trait::Auth::Token,
         "files/get_thumbnail",
         arg,
         None,
@@ -520,6 +547,7 @@ pub fn get_thumbnail_v2(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Download,
+        crate::client_trait::Auth::Token,
         "files/get_thumbnail_v2",
         arg,
         None,
@@ -538,6 +566,7 @@ pub fn get_thumbnail_batch(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/get_thumbnail_batch",
         arg,
         None)
@@ -571,6 +600,7 @@ pub fn list_folder(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/list_folder",
         arg,
         None)
@@ -587,6 +617,7 @@ pub fn list_folder_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/list_folder/continue",
         arg,
         None)
@@ -604,6 +635,7 @@ pub fn list_folder_get_latest_cursor(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/list_folder/get_latest_cursor",
         arg,
         None)
@@ -623,6 +655,7 @@ pub fn list_folder_longpoll(
         client,
         crate::client_trait::Endpoint::Notify,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Noauth,
         "files/list_folder/longpoll",
         arg,
         None)
@@ -644,6 +677,7 @@ pub fn list_revisions(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/list_revisions",
         arg,
         None)
@@ -660,6 +694,7 @@ pub fn lock_file_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/lock_file_batch",
         arg,
         None)
@@ -675,6 +710,7 @@ pub fn move_v2(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/move_v2",
         arg,
         None)
@@ -690,6 +726,7 @@ pub fn do_move(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/move",
         arg,
         None)
@@ -709,6 +746,7 @@ pub fn move_batch_v2(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/move_batch_v2",
         arg,
         None)
@@ -725,6 +763,7 @@ pub fn move_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/move_batch",
         arg,
         None)
@@ -740,6 +779,7 @@ pub fn move_batch_check_v2(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/move_batch/check_v2",
         arg,
         None)
@@ -755,6 +795,7 @@ pub fn move_batch_check(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/move_batch/check",
         arg,
         None)
@@ -770,6 +811,7 @@ pub fn permanently_delete(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/permanently_delete",
         arg,
         None)
@@ -783,6 +825,7 @@ pub fn properties_add(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/properties/add",
         arg,
         None)
@@ -796,6 +839,7 @@ pub fn properties_overwrite(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/properties/overwrite",
         arg,
         None)
@@ -809,6 +853,7 @@ pub fn properties_remove(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/properties/remove",
         arg,
         None)
@@ -822,6 +867,7 @@ pub fn properties_template_get(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/properties/template/get",
         arg,
         None)
@@ -834,6 +880,7 @@ pub fn properties_template_list(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/properties/template/list",
         &(),
         None)
@@ -847,6 +894,7 @@ pub fn properties_update(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/properties/update",
         arg,
         None)
@@ -861,6 +909,7 @@ pub fn restore(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/restore",
         arg,
         None)
@@ -878,6 +927,7 @@ pub fn save_url(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/save_url",
         arg,
         None)
@@ -892,6 +942,7 @@ pub fn save_url_check_job_status(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/save_url/check_job_status",
         arg,
         None)
@@ -908,6 +959,7 @@ pub fn search(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/search",
         arg,
         None)
@@ -925,6 +977,7 @@ pub fn search_v2(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/search_v2",
         arg,
         None)
@@ -943,6 +996,7 @@ pub fn search_continue_v2(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/search/continue_v2",
         arg,
         None)
@@ -959,6 +1013,7 @@ pub fn unlock_file_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/unlock_file_batch",
         arg,
         None)
@@ -979,6 +1034,7 @@ pub fn upload(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Upload,
+        crate::client_trait::Auth::Token,
         "files/upload",
         arg,
         Some(body))
@@ -999,6 +1055,7 @@ pub fn upload_session_append_v2(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Upload,
+        crate::client_trait::Auth::Token,
         "files/upload_session/append_v2",
         arg,
         Some(body))
@@ -1018,6 +1075,7 @@ pub fn upload_session_append(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Upload,
+        crate::client_trait::Auth::Token,
         "files/upload_session/append",
         arg,
         Some(body))
@@ -1038,6 +1096,7 @@ pub fn upload_session_finish(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Upload,
+        crate::client_trait::Auth::Token,
         "files/upload_session/finish",
         arg,
         Some(body))
@@ -1069,6 +1128,7 @@ pub fn upload_session_finish_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/upload_session/finish_batch",
         arg,
         None)
@@ -1085,6 +1145,7 @@ pub fn upload_session_finish_batch_check(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "files/upload_session/finish_batch/check",
         arg,
         None)
@@ -1112,6 +1173,7 @@ pub fn upload_session_start(
         client,
         crate::client_trait::Endpoint::Content,
         crate::client_trait::Style::Upload,
+        crate::client_trait::Auth::Token,
         "files/upload_session/start",
         arg,
         Some(body))

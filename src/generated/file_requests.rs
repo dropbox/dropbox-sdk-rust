@@ -21,6 +21,7 @@ pub fn count(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "file_requests/count",
         &(),
         None)
@@ -35,6 +36,7 @@ pub fn create(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "file_requests/create",
         arg,
         None)
@@ -49,6 +51,7 @@ pub fn delete(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "file_requests/delete",
         arg,
         None)
@@ -62,6 +65,7 @@ pub fn delete_all_closed(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "file_requests/delete_all_closed",
         &(),
         None)
@@ -76,6 +80,7 @@ pub fn get(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "file_requests/get",
         arg,
         None)
@@ -91,6 +96,7 @@ pub fn list_v2(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "file_requests/list_v2",
         arg,
         None)
@@ -105,6 +111,7 @@ pub fn list(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "file_requests/list",
         &(),
         None)
@@ -121,6 +128,7 @@ pub fn list_continue(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "file_requests/list/continue",
         arg,
         None)
@@ -135,6 +143,7 @@ pub fn update(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "file_requests/update",
         arg,
         None)

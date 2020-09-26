@@ -10,6 +10,7 @@ pub trait HttpClient {
         &self,
         endpoint: Endpoint,
         style: Style,
+        auth: Auth,
         function: &str,
         params_json: String,
         body: Option<&[u8]>,
@@ -42,6 +43,23 @@ pub enum Style {
     Rpc,
     Upload,
     Download,
+}
+
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum Auth {
+    /// No authentication needed.
+    Noauth,
+
+    /// Either User or Team. Send a 'Authorization: Bearer <TOKEN>' header.
+    Token,
+
+    // TODO: not supported yet.
+    // At least one route exists that can be used with both user and app auth, so we'd need some
+    // way to let callers select between the two. See `files/get_thumbnail:2`.
+    /*
+    /// App authorization, Send a 'Authorization: Basic <base64(KEY:SECRET)>' header.
+    App,
+    */
 }
 
 impl Endpoint {

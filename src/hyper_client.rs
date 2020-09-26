@@ -4,7 +4,7 @@ use std::io::{self, Read};
 use std::str;
 
 use crate::Error;
-use crate::client_trait::{Endpoint, Style, HttpClient, HttpRequestResultRaw};
+use crate::client_trait::{Auth, Endpoint, Style, HttpClient, HttpRequestResultRaw};
 use hyper::{self, Url};
 use hyper::header::Headers;
 use hyper::header::{
@@ -131,6 +131,7 @@ impl HttpClient for HyperClient {
         &self,
         endpoint: Endpoint,
         style: Style,
+        auth: Auth,
         function: &str,
         params_json: String,
         body: Option<&[u8]>,
@@ -146,7 +147,12 @@ impl HttpClient for HyperClient {
 
             let mut headers = Headers::new();
             headers.set(UserAgent(USER_AGENT));
-            headers.set(Authorization(Bearer { token: self.token.clone() }));
+
+            match auth {
+                Auth::Noauth => (),
+                Auth::Token => headers.set(Authorization(Bearer { token: self.token.clone() })),
+            }
+
             headers.set(Connection::keep_alive());
 
             if let Some(start) = range_start {

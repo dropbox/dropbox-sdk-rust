@@ -21,7 +21,7 @@ This SDK is not yet official. What does this mean?
 However, that said,
 * The SDK is usable!
 * We are happy to get feedback and/or pull requests from the community! See
-[CONTRIBUTING.md][contributing] for more information.
+[contributing](CONTRIBUTING.md) for more information.
 
 ## A Note on Semver
 
@@ -46,6 +46,24 @@ it, build with the `hyper_client` feature flag, and then there will be a
 `dropbox_sdk::hyper_client::HyperClient` type that you can use.  The default
 Hyper client needs a Dropbox API token; how you get one is up to you and your
 program.
+
+## Authentication Types
+
+The Dropbox API has a number of different [authentication types]. This SDK
+supports the User, Team, and No Authentication types, but does not yet
+support App Authentication.
+
+The default HTTP client currently makes no distinction between User and Team
+authentication, and for Team authentication, it does not support selection of
+an admin user, or team member impersonation. If you need this functionality,
+you could implement it with a custom HTTP client (so you can add the desired
+`Dropbox-API-Select-User` or `Dropbox-API-Select-Admin` header), or submit a
+feature request and we may implement support for it in the future.
+
+To switch between User and Team auth contexts, construct a separate HTTP client
+for each type of token, and switch which client is used with the function call.
+
+[authentication types]: https://www.dropbox.com/developers/reference/auth-types
 
 ## Feature Flags
 
@@ -124,5 +142,3 @@ Some implementation notes, limitations, and TODOs:
    tests for all variants.
 
 ## Happy Dropboxing!
-
-[contributing]: https://github.com/dropbox/dropbox-sdk-rust/blob/master/CONTRIBUTING.md

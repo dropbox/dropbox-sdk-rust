@@ -20,6 +20,7 @@ pub fn features_get_values(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "users/features/get_values",
         arg,
         None)
@@ -34,6 +35,7 @@ pub fn get_account(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "users/get_account",
         arg,
         None)
@@ -48,6 +50,7 @@ pub fn get_account_batch(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "users/get_account_batch",
         arg,
         None)
@@ -61,6 +64,7 @@ pub fn get_current_account(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "users/get_current_account",
         &(),
         None)
@@ -74,6 +78,7 @@ pub fn get_space_usage(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
+        crate::client_trait::Auth::Token,
         "users/get_space_usage",
         &(),
         None)

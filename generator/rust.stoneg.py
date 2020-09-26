@@ -156,7 +156,6 @@ class RustBackend(RustHelperBackend):
 
     def _emit_route(self, ns, fn):
         route_name = self.route_name(fn)
-        self._emit_doc(fn.doc)
         host = fn.attrs.get('host', 'api')
         if host == 'api':
             endpoint = u'crate::client_trait::Endpoint::Api'
@@ -171,6 +170,22 @@ class RustBackend(RustHelperBackend):
             name_with_version = "{}_v{}".format(fn.name, fn.version)
         else:
             name_with_version = fn.name
+
+        auths_str = fn.attrs.get('auth', 'user')
+        auths = map(lambda s: s.strip(), auths_str.split(','))
+        auths = list(filter(lambda s: s != 'app', auths)) # TODO: app auth not supported yet
+        auths.sort()
+        if auths == ['user'] or auths == ['team'] or auths == ['team', 'user']:
+            auth = u'crate::client_trait::Auth::Token'
+        elif auths == ['noauth']:
+            auth = u'crate::client_trait::Auth::Noauth'
+        else:
+            # currently auth/token/from_oauth1 and check/app have only app auth, and hit this.
+            self.logger.warn('route {}/{}: unsupported auth type(s): {}. SKIPPING.'.format(
+                ns, name_with_version, auths_str))
+            return
+
+        self._emit_doc(fn.doc)
 
         arg_void = isinstance(fn.arg_data_type, ir.Void)
         style = fn.attrs.get('style', 'rpc')
@@ -189,6 +204,7 @@ class RustBackend(RustHelperBackend):
                     [u'client',
                         endpoint,
                         u'crate::client_trait::Style::Rpc',
+                        auth,
                         u'"{}/{}"'.format(ns, name_with_version),
                         u'&()' if arg_void else u'arg',
                         u'None'])
@@ -209,6 +225,7 @@ class RustBackend(RustHelperBackend):
                     [u'client',
                         endpoint,
                         u'crate::client_trait::Style::Download',
+                        auth,
                         u'"{}/{}"'.format(ns, name_with_version),
                         u'&()' if arg_void else u'arg',
                         u'None',
@@ -230,6 +247,7 @@ class RustBackend(RustHelperBackend):
                     [u'client',
                         endpoint,
                         u'crate::client_trait::Style::Upload',
+                        auth,
                         u'"{}/{}"'.format(ns, name_with_version),
                         u'&()' if arg_void else u'arg',
                         u'Some(body)'])
