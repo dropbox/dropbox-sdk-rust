@@ -10,7 +10,6 @@ pub trait HttpClient {
         &self,
         endpoint: Endpoint,
         style: Style,
-        auth: Auth,
         function: &str,
         params_json: String,
         body: Option<&[u8]>,
@@ -18,6 +17,23 @@ pub trait HttpClient {
         range_end: Option<u64>,
     ) -> crate::Result<HttpRequestResultRaw>;
 }
+
+/// Marker trait to indicate that a HTTP client supports unauthenticated routes.
+pub trait NoauthClient: HttpClient {}
+
+/// Marker trait to indicate that a HTTP client supports User authentication.
+/// Team authentication works by adding a `Authorization: Bearer <TOKEN>` header.
+pub trait UserAuthClient: HttpClient {}
+
+/// Marker trait to indicate that a HTTP client supports Team authentication.
+/// Team authentication works by adding a `Authorization: Bearer <TOKEN>` header, and optionally a
+/// `Dropbox-API-Select-Admin` or `Dropbox-API-Select-User` header.
+pub trait TeamAuthClient: HttpClient {}
+
+/// Marker trait to indicate that a HTTP client supports App authentication.
+/// App authentication works by adding a `Authorization: Basic <base64(APP_KEY:APP_SECRET)>` header
+/// to the HTTP request.
+pub trait AppAuthClient: HttpClient {}
 
 pub struct HttpRequestResultRaw {
     pub result_json: String,
@@ -43,23 +59,6 @@ pub enum Style {
     Rpc,
     Upload,
     Download,
-}
-
-#[derive(Debug, Copy, Clone, PartialEq)]
-pub enum Auth {
-    /// No authentication needed.
-    Noauth,
-
-    /// Either User or Team. Send a 'Authorization: Bearer <TOKEN>' header.
-    Token,
-
-    // TODO: not supported yet.
-    // At least one route exists that can be used with both user and app auth, so we'd need some
-    // way to let callers select between the two. See `files/get_thumbnail:2`.
-    /*
-    /// App authorization, Send a 'Authorization: Basic <base64(KEY:SECRET)>' header.
-    App,
-    */
 }
 
 impl Endpoint {

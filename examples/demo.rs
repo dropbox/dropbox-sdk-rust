@@ -1,7 +1,8 @@
 #![deny(rust_2018_idioms)]
 
-use dropbox_sdk::{files, HyperClient, Oauth2AuthorizeUrlBuilder, Oauth2Type};
-use dropbox_sdk::client_trait::HttpClient;
+use dropbox_sdk::{files, UserAuthClient};
+use dropbox_sdk::hyper_client::{oauth2_token_from_authorization_code, Oauth2AuthorizeUrlBuilder,
+    Oauth2Type, UserAuthHyperClient};
 
 use std::collections::VecDeque;
 use std::env;
@@ -66,7 +67,7 @@ fn main() {
         let auth_code = prompt("Then paste the code here");
 
         eprintln!("requesting OAuth2 token");
-        match HyperClient::oauth2_token_from_authorization_code(
+        match oauth2_token_from_authorization_code(
             &client_id, &client_secret, auth_code.trim(), None)
         {
             Ok(token) => {
@@ -84,7 +85,7 @@ fn main() {
         }
     });
 
-    let client = HyperClient::new(token);
+    let client = UserAuthHyperClient::new(token);
 
     if let Some(path) = download_path {
         eprintln!("downloading file {}", path);
@@ -167,8 +168,8 @@ fn main() {
     }
 }
 
-fn list_directory<'a>(client: &'a dyn HttpClient, path: &str, recursive: bool)
-    -> dropbox_sdk::Result<Result<DirectoryIterator<'a>, files::ListFolderError>>
+fn list_directory<'a, T: UserAuthClient>(client: &'a T, path: &str, recursive: bool)
+    -> dropbox_sdk::Result<Result<DirectoryIterator<'a, T>, files::ListFolderError>>
 {
     assert!(path.starts_with('/'), "path needs to be absolute (start with a '/')");
     let requested_path = if path == "/" {
@@ -200,13 +201,13 @@ fn list_directory<'a>(client: &'a dyn HttpClient, path: &str, recursive: bool)
     }
 }
 
-struct DirectoryIterator<'a> {
-    client: &'a dyn HttpClient,
+struct DirectoryIterator<'a, T: UserAuthClient> {
+    client: &'a T,
     buffer: VecDeque<files::Metadata>,
     cursor: Option<String>,
 }
 
-impl<'a> Iterator for DirectoryIterator<'a> {
+impl<'a, T: UserAuthClient> Iterator for DirectoryIterator<'a, T> {
     type Item = dropbox_sdk::Result<Result<files::Metadata, files::ListFolderContinueError>>;
 
     fn next(&mut self) -> Option<Self::Item> {

@@ -39,14 +39,10 @@ pub enum Error {
 
 pub type Result<T> = std::result::Result<T, Error>;
 
-#[cfg(feature = "hyper_client")] mod hyper_client;
-#[cfg(feature = "hyper_client")] pub use hyper_client::{
-    HyperClient,
-    Oauth2AuthorizeUrlBuilder,
-    Oauth2Type,
-};
+#[cfg(feature = "hyper_client")] pub mod hyper_client;
 
 pub mod client_trait;
+pub use client_trait::{AppAuthClient, NoauthClient, UserAuthClient, TeamAuthClient};
 pub(crate) mod client_helpers;
 
 mod generated; // You need to run the Stone generator to create this module.

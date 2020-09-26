@@ -36,32 +36,29 @@ version targeted, which is most easily done by looking at what revision the
 ## HTTP Client
 
 To actually use the API calls, you need a HTTP client -- all functions take a
-`&HttpClient` as their first argument.  This trait is located at
-`dropbox_sdk::client_trait::HttpClient`. Implement this trait and pass it as
-the client argument.
+type that implements `HttpClient` as their first argument.  This trait is
+located at `dropbox_sdk::client_trait::HttpClient`. Implement this trait and
+pass it as the client argument.
 
 If you don't want to implement your own, this SDK comes with an optional
 default client that uses Hyper and your system's native TLS library.  To use
 it, build with the `hyper_client` feature flag, and then there will be a
-`dropbox_sdk::hyper_client::HyperClient` type that you can use.  The default
-Hyper client needs a Dropbox API token; how you get one is up to you and your
-program.
+set of clents in the `dropbox_sdk::hyper_client` module that you can use,
+corresponding to each of the authentication types Dropbox uses (see below). The
+default Hyper client needs a Dropbox API token; how you get one is up to you
+and your program. See the programs under [examples/](examples/) for examples.
 
 ## Authentication Types
 
-The Dropbox API has a number of different [authentication types]. This SDK
-supports the User, Team, and No Authentication types, but does not yet
-support App Authentication.
+The Dropbox API has a number of different [authentication types]. Each route
+requires a HTTP client compatible with the specific authentication type needed.
+The authentication type is designated by implementing a marker trait in
+addition to the base `HttpClient` trait: one of `NoauthClient`,
+`UserAuthClient`, `TeamAuthClient`, or `AppAuthClient`.
 
-The default HTTP client currently makes no distinction between User and Team
-authentication, and for Team authentication, it does not support selection of
-an admin user, or team member impersonation. If you need this functionality,
-you could implement it with a custom HTTP client (so you can add the desired
-`Dropbox-API-Select-User` or `Dropbox-API-Select-Admin` header), or submit a
-feature request and we may implement support for it in the future.
-
-To switch between User and Team auth contexts, construct a separate HTTP client
-for each type of token, and switch which client is used with the function call.
+The default Hyper client has implementations of all of these (except for
+`AppAuthClient` currently). They all share a common implementation and differ
+only in which HTTP headers they add to the request.
 
 [authentication types]: https://www.dropbox.com/developers/reference/auth-types
 

@@ -7,15 +7,28 @@
     clippy::doc_markdown,
 )]
 
+/// Creates an OAuth 2.0 access token from the supplied OAuth 1.0 access token.
+pub fn token_from_oauth1(
+    client: &impl crate::client_trait::AppAuthClient,
+    arg: &TokenFromOAuth1Arg,
+) -> crate::Result<Result<TokenFromOAuth1Result, TokenFromOAuth1Error>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "auth/token/from_oauth1",
+        arg,
+        None)
+}
+
 /// Disables the access token used to authenticate the call.
 pub fn token_revoke(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<(), ()>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
-        crate::client_trait::Auth::Token,
         "auth/token/revoke",
         &(),
         None)

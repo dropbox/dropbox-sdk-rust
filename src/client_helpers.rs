@@ -71,10 +71,9 @@ impl<'de, T: DeserializeOwned> Deserialize<'de> for TopLevelError<T> {
 /// response and the body stream (if any).
 #[allow(clippy::too_many_arguments)]
 pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
-    client: &dyn HttpClient,
+    client: &impl HttpClient,
     endpoint: Endpoint,
     style: Style,
-    auth: Auth,
     function: &str,
     params: &P,
     body: Option<&[u8]>,
@@ -82,7 +81,7 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
     range_end: Option<u64>,
 ) -> crate::Result<Result<HttpRequestResult<T>, E>> {
     let params_json = serde_json::to_string(params)?;
-    let result = client.request(endpoint, style, auth, function, params_json, body, range_start, range_end);
+    let result = client.request(endpoint, style, function, params_json, body, range_start, range_end);
     match result {
         Ok(HttpRequestResultRaw { result_json, content_length, body }) => {
             debug!("json: {}", result_json);
@@ -146,14 +145,13 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
 }
 
 pub fn request<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
-    client: &dyn HttpClient,
+    client: &impl HttpClient,
     endpoint: Endpoint,
     style: Style,
-    auth: Auth,
     function: &str,
     params: &P,
     body: Option<&[u8]>,
 ) -> crate::Result<Result<T, E>> {
-    request_with_body(client, endpoint, style, auth, function, params, body, None, None)
+    request_with_body(client, endpoint, style, function, params, body, None, None)
         .map(|result| result.map(|HttpRequestResult { result, .. }| result))
 }
