@@ -274,7 +274,7 @@ impl HyperClient {
                 headers.set(Range::Bytes(vec![ByteRangeSpec::Last(end)]));
             }
 
-            // If the params are totally empt, don't send any arg header or body.
+            // If the params are totally empty, don't send any arg header or body.
             if !params_json.is_empty() {
                 match style {
                     Style::Rpc => {
