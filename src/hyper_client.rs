@@ -5,7 +5,7 @@ use std::str;
 
 use crate::Error;
 use crate::client_trait::{Endpoint, Style, HttpClient, HttpRequestResultRaw, TeamAuthClient,
-    UserAuthClient};
+    TeamSelect, UserAuthClient};
 use hyper::{self, Url};
 use hyper::header::Headers;
 use hyper::header::{
@@ -14,62 +14,61 @@ use url::form_urlencoded::Serializer as UrlEncoder;
 
 const USER_AGENT: &str = concat!("Dropbox-APIv2-Rust/", env!("CARGO_PKG_VERSION"));
 
-#[derive(Default)]
-pub struct NoauthHyperClient {
-    client: HyperClient,
-}
-
-impl HttpClient for NoauthHyperClient {
-    fn request(
-        &self,
-        endpoint: Endpoint,
-        style: Style,
-        function: &str,
-        params_json: String,
-        body: Option<&[u8]>,
-        range_start: Option<u64>,
-        range_end: Option<u64>,
-    ) -> crate::Result<HttpRequestResultRaw> {
-        self.client.request(
-            endpoint, style, function, params_json, body, range_start, range_end, None, None)
+macro_rules! forward_request {
+    { $self:ident, client: $client:expr, token: $token:expr, team_select: $team_select:expr } => {
+        fn request(
+            &$self,
+            endpoint: Endpoint,
+            style: Style,
+            function: &str,
+            params_json: String,
+            body: Option<&[u8]>,
+            range_start: Option<u64>,
+            range_end: Option<u64>,
+        ) -> crate::Result<HttpRequestResultRaw> {
+            $client.request(endpoint, style, function, params_json, body, range_start,
+                range_end, $token, $team_select)
+        }
     }
 }
 
+// Noauth client:
+
+#[derive(Default)]
+pub struct NoauthHyperClient {
+    inner: HyperClient,
+}
+
+impl HttpClient for NoauthHyperClient {
+    forward_request! { self, client: self.inner, token: None, team_select: None }
+}
+
+// User auth client:
+
 pub struct UserAuthHyperClient {
-    client: HyperClient,
+    inner: HyperClient,
     token: String,
 }
 
 impl UserAuthHyperClient {
     pub fn new(token: String) -> Self {
         Self {
-            client: HyperClient::default(),
+            inner: HyperClient::default(),
             token,
         }
     }
 }
 
 impl HttpClient for UserAuthHyperClient {
-    fn request(
-        &self,
-        endpoint: Endpoint,
-        style: Style,
-        function: &str,
-        params_json: String,
-        body: Option<&[u8]>,
-        range_start: Option<u64>,
-        range_end: Option<u64>,
-    ) -> crate::Result<HttpRequestResultRaw> {
-        self.client.request(
-            endpoint, style, function, params_json, body, range_start, range_end,
-            Some(&self.token), None)
-    }
+    forward_request! { self, client: self.inner, token: Some(&self.token), team_select: None }
 }
 
 impl UserAuthClient for UserAuthHyperClient {}
 
+// Team auth client:
+
 pub struct TeamAuthHyperClient {
-    client: HyperClient,
+    inner: HyperClient,
     token: String,
     team_select: Option<TeamSelect>,
 }
@@ -77,7 +76,7 @@ pub struct TeamAuthHyperClient {
 impl TeamAuthHyperClient {
     pub fn new(token: String) -> Self {
         Self {
-            client: HyperClient::default(),
+            inner: HyperClient::default(),
             token,
             team_select: None,
         }
@@ -89,33 +88,13 @@ impl TeamAuthHyperClient {
 }
 
 impl HttpClient for TeamAuthHyperClient {
-    fn request(
-        &self,
-        endpoint: Endpoint,
-        style: Style,
-        function: &str,
-        params_json: String,
-        body: Option<&[u8]>,
-        range_start: Option<u64>,
-        range_end: Option<u64>,
-    ) -> crate::Result<HttpRequestResultRaw> {
-        self.client.request(
-            endpoint, style, function, params_json, body, range_start, range_end,
-            Some(&self.token), self.team_select.as_ref())
-    }
+    forward_request! { self, client: self.inner, token: Some(&self.token),
+        team_select: self.team_select.as_ref() }
 }
 
 impl TeamAuthClient for TeamAuthHyperClient {}
 
-#[derive(Debug, Clone)]
-/// Used with Team authentication to select a user context within that team.
-pub enum TeamSelect {
-    /// A team member's user ID.
-    User(String),
-
-    /// A team admin's user ID, which grants additional access.
-    Admin(String),
-}
+// Errors:
 
 #[derive(thiserror::Error, Debug)]
 pub enum HyperClientError {
@@ -146,66 +125,7 @@ hyper_error!(std::io::Error);
 hyper_error!(std::string::FromUtf8Error);
 hyper_error!(hyper::Error);
 
-/// Given an authorization code, request an OAuth2 token from Dropbox API.
-/// Requires the App ID and secret, as well as the redirect URI used in the prior authorize
-/// request, if there was one.
-pub fn oauth2_token_from_authorization_code(
-    client_id: &str,
-    client_secret: &str,
-    authorization_code: &str,
-    redirect_uri: Option<&str>,
-) -> crate::Result<String> {
-
-    let client = http_client();
-    let url = Url::parse("https://api.dropboxapi.com/oauth2/token").unwrap();
-
-    let mut headers = Headers::new();
-    headers.set(UserAgent(USER_AGENT));
-
-    // This endpoint wants parameters using URL-encoding instead of JSON.
-    headers.set(ContentType("application/x-www-form-urlencoded".parse().unwrap()));
-    let mut params = UrlEncoder::new(String::new());
-    params.append_pair("code", authorization_code);
-    params.append_pair("grant_type", "authorization_code");
-    params.append_pair("client_id", client_id);
-    params.append_pair("client_secret", client_secret);
-    if let Some(value) = redirect_uri {
-        params.append_pair("redirect_uri", value);
-    }
-    let body = params.finish();
-
-    match client.post(url).headers(headers).body(body.as_bytes()).send() {
-        Ok(mut resp) => {
-            if !resp.status.is_success() {
-                let hyper::http::RawStatus(code, status) = resp.status_raw().clone();
-                let mut body = String::new();
-                resp.read_to_string(&mut body)?;
-                debug!("error body: {}", body);
-                Err(Error::UnexpectedHttpError {
-                    code,
-                    status: status.into_owned(),
-                    json: body,
-                })
-            } else {
-                let body = serde_json::from_reader(resp)?;
-                debug!("response: {:?}", body);
-                match body {
-                    serde_json::Value::Object(mut map) => {
-                        match map.remove("access_token") {
-                            Some(serde_json::Value::String(token)) => Ok(token),
-                            _ => Err(Error::UnexpectedResponse("no access token in response!")),
-                        }
-                    },
-                    _ => Err(Error::UnexpectedResponse("response is not a JSON object")),
-                }
-            }
-        },
-        Err(e) => {
-            error!("error getting OAuth2 token: {}", e);
-            Err(e.into())
-        }
-    }
-}
+// Common HTTP client:
 
 fn http_client() -> hyper::client::Client {
     let tls = hyper_native_tls::NativeTlsClient::new().unwrap();
@@ -255,12 +175,11 @@ impl HyperClient {
                 headers.set(Authorization(Bearer { token: token.to_owned() }));
             }
             if let Some(team_select) = team_select {
-                match team_select {
-                    TeamSelect::User(id) =>
-                        headers.set_raw("Dropbox-API-Select-User", vec![id.clone().into_bytes()]),
-                    TeamSelect::Admin(id) =>
-                        headers.set_raw("Dropbox-API-Select-Admin", vec![id.clone().into_bytes()]),
-                }
+                let value = match team_select {
+                    TeamSelect::User(id) => id,
+                    TeamSelect::Admin(id) => id,
+                };
+                headers.set_raw(team_select.header_name(), vec![value.to_owned().into_bytes()]);
             }
             headers.set(Connection::keep_alive());
 
@@ -358,6 +277,69 @@ impl HyperClient {
                 }
             }
 
+        }
+    }
+}
+
+// OAuth2 helpers:
+
+/// Given an authorization code, request an OAuth2 token from Dropbox API.
+/// Requires the App ID and secret, as well as the redirect URI used in the prior authorize
+/// request, if there was one.
+pub fn oauth2_token_from_authorization_code(
+    client_id: &str,
+    client_secret: &str,
+    authorization_code: &str,
+    redirect_uri: Option<&str>,
+) -> crate::Result<String> {
+
+    let client = http_client();
+    let url = Url::parse("https://api.dropboxapi.com/oauth2/token").unwrap();
+
+    let mut headers = Headers::new();
+    headers.set(UserAgent(USER_AGENT));
+
+    // This endpoint wants parameters using URL-encoding instead of JSON.
+    headers.set(ContentType("application/x-www-form-urlencoded".parse().unwrap()));
+    let mut params = UrlEncoder::new(String::new());
+    params.append_pair("code", authorization_code);
+    params.append_pair("grant_type", "authorization_code");
+    params.append_pair("client_id", client_id);
+    params.append_pair("client_secret", client_secret);
+    if let Some(value) = redirect_uri {
+        params.append_pair("redirect_uri", value);
+    }
+    let body = params.finish();
+
+    match client.post(url).headers(headers).body(body.as_bytes()).send() {
+        Ok(mut resp) => {
+            if !resp.status.is_success() {
+                let hyper::http::RawStatus(code, status) = resp.status_raw().clone();
+                let mut body = String::new();
+                resp.read_to_string(&mut body)?;
+                debug!("error body: {}", body);
+                Err(Error::UnexpectedHttpError {
+                    code,
+                    status: status.into_owned(),
+                    json: body,
+                })
+            } else {
+                let body = serde_json::from_reader(resp)?;
+                debug!("response: {:?}", body);
+                match body {
+                    serde_json::Value::Object(mut map) => {
+                        match map.remove("access_token") {
+                            Some(serde_json::Value::String(token)) => Ok(token),
+                            _ => Err(Error::UnexpectedResponse("no access token in response!")),
+                        }
+                    },
+                    _ => Err(Error::UnexpectedResponse("response is not a JSON object")),
+                }
+            }
+        },
+        Err(e) => {
+            error!("error getting OAuth2 token: {}", e);
+            Err(e.into())
         }
     }
 }

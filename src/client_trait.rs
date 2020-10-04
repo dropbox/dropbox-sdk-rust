@@ -86,3 +86,23 @@ impl Endpoint {
         }
     }
 }
+
+/// Used with Team Authentication to select a user context within that team.
+#[derive(Debug, Clone)]
+pub enum TeamSelect {
+    /// A team member's user ID.
+    User(String),
+
+    /// A team admin's user ID, which grants additional access.
+    Admin(String),
+}
+
+impl TeamSelect {
+    /// The name of the HTTP header that must be set.
+    pub fn header_name(&self) -> &'static str {
+        match self {
+            TeamSelect::User(_) => "Dropbox-API-Select-User",
+            TeamSelect::Admin(_) => "Dropbox-API-Select-Admin",
+        }
+    }
+}
