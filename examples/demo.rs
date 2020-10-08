@@ -1,8 +1,9 @@
 #![deny(rust_2018_idioms)]
 
 use dropbox_sdk::{files, UserAuthClient};
-use dropbox_sdk::hyper_client::{oauth2_token_from_authorization_code, Oauth2AuthorizeUrlBuilder,
-    Oauth2Type, UserAuthHyperClient};
+use dropbox_sdk::oauth2::{oauth2_token_from_authorization_code, Oauth2AuthorizeUrlBuilder,
+    Oauth2Type};
+use dropbox_sdk::hyper_client::{NoauthHyperClient, UserAuthHyperClient};
 
 use std::collections::VecDeque;
 use std::env;
@@ -68,7 +69,7 @@ fn main() {
 
         eprintln!("requesting OAuth2 token");
         match oauth2_token_from_authorization_code(
-            &client_id, &client_secret, auth_code.trim(), None)
+            NoauthHyperClient::default(), &client_id, &client_secret, auth_code.trim(), None)
         {
             Ok(token) => {
                 eprintln!("got token: {}", token);

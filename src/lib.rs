@@ -44,6 +44,7 @@ pub type Result<T> = std::result::Result<T, Error>;
 pub mod client_trait;
 pub use client_trait::{AppAuthClient, NoauthClient, UserAuthClient, TeamAuthClient};
 pub(crate) mod client_helpers;
+pub mod oauth2;
 
 mod generated; // You need to run the Stone generator to create this module.
 pub use generated::*;

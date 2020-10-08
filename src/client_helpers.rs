@@ -81,7 +81,8 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
     range_end: Option<u64>,
 ) -> crate::Result<Result<HttpRequestResult<T>, E>> {
     let params_json = serde_json::to_string(params)?;
-    let result = client.request(endpoint, style, function, params_json, body, range_start, range_end);
+    let result = client.request(endpoint, style, function, params_json, ParamsType::Json, body,
+        range_start, range_end);
     match result {
         Ok(HttpRequestResultRaw { result_json, content_length, body }) => {
             debug!("json: {}", result_json);

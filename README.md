@@ -46,7 +46,8 @@ it, build with the `hyper_client` feature flag, and then there will be a
 set of clents in the `dropbox_sdk::hyper_client` module that you can use,
 corresponding to each of the authentication types Dropbox uses (see below). The
 default Hyper client needs a Dropbox API token; how you get one is up to you
-and your program. See the programs under [examples/](examples/) for examples.
+and your program. See the programs under [examples/](examples/) for examples,
+and see the helper code in the [oauth2](src/oauth2.rs) module.
 
 ## Authentication Types
 

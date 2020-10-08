@@ -4,6 +4,10 @@ yyyy-mm-dd
   * `HyperClient` is now `UserAuthHyperClient`.
   * API methods now take a different type of client for their first argument, depending on the auth
     type they require.
+* Moved OAuth2 helper code out of hyper_client and made it independent of the HTTP client used, so
+  users of custom HTTP clients don't have to reinvent the wheel for OAuth2.
+  * The `oauth2_token_from_authorization_code` now is in a different module, and takes a HTTP
+    client implementation as a new first argument.
 
 # v0.6.0
 2020-09-24

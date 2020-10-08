@@ -12,7 +12,8 @@ pub trait HttpClient {
         endpoint: Endpoint,
         style: Style,
         function: &str,
-        params_json: String,
+        params: String,
+        params_type: ParamsType,
         body: Option<&[u8]>,
         range_start: Option<u64>,
         range_end: Option<u64>,
@@ -58,6 +59,18 @@ pub enum Endpoint {
     Api,
     Content,
     Notify,
+    OAuth2,
+}
+
+impl Endpoint {
+    pub fn url(self) -> &'static str {
+        match self {
+            Endpoint::Api => "https://api.dropboxapi.com/2/",
+            Endpoint::Content => "https://content.dropboxapi.com/2/",
+            Endpoint::Notify => "https://notify.dropboxapi.com/2/",
+            Endpoint::OAuth2 => "https://api.dropboxapi.com/", // note no '2/'
+        }
+    }
 }
 
 /// The style of a request, which determines how arguments are passed, and whether there is a
@@ -77,12 +90,22 @@ pub enum Style {
     Download,
 }
 
-impl Endpoint {
-    pub fn url(self) -> &'static str {
+/// The format of arguments being sent in a request.
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub enum ParamsType {
+    /// JSON.
+    Json,
+
+    /// WWW Form URL-encoded. Only used for OAuth2 requests.
+    Form,
+}
+
+impl ParamsType {
+    /// The value for the HTTP Content-Type header for the given params format.
+    pub fn content_type(self) -> &'static str {
         match self {
-            Endpoint::Api => "https://api.dropboxapi.com/2/",
-            Endpoint::Content => "https://content.dropboxapi.com/2/",
-            Endpoint::Notify => "https://notify.dropboxapi.com/2/",
+            ParamsType::Json => "text/json",
+            ParamsType::Form => "application/x-www-form-urlencoded",
         }
     }
 }
