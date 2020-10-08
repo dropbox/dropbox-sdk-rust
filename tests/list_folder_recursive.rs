@@ -1,5 +1,5 @@
 use dropbox_sdk::files;
-use dropbox_sdk::hyper_client::UserAuthHyperClient;
+use dropbox_sdk::default_client::UserAuthDefaultClient;
 use std::collections::HashSet;
 use std::sync::Arc;
 
@@ -9,7 +9,7 @@ mod common;
 #[ignore] // very time-consuming to run; should be run separately
 fn list_folder_recursive() {
     let token = std::env::var("DBX_OAUTH_TOKEN").expect("DBX_OAUTH_TOKEN must be set");
-    let client = Arc::new(UserAuthHyperClient::new(token));
+    let client = Arc::new(UserAuthDefaultClient::new(token));
 
     const FOLDER: &str = "/list_folder_recursive";
     const FOLDER_INNER: &str = "/list_folder_recursive/subfolder";

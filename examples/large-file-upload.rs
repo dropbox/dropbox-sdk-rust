@@ -3,7 +3,7 @@
 use dropbox_sdk::oauth2::{oauth2_token_from_authorization_code, Oauth2AuthorizeUrlBuilder,
     Oauth2Type};
 use dropbox_sdk::files;
-use dropbox_sdk::hyper_client::{NoauthHyperClient, UserAuthHyperClient};
+use dropbox_sdk::default_client::{NoauthDefaultClient, UserAuthDefaultClient};
 
 use std::fs::File;
 use std::path::PathBuf;
@@ -162,7 +162,7 @@ fn main() {
 
         eprintln!("requesting OAuth2 token");
         match oauth2_token_from_authorization_code(
-            NoauthHyperClient::default(), &client_id, &client_secret, auth_code.trim(), None)
+            NoauthDefaultClient::default(), &client_id, &client_secret, auth_code.trim(), None)
         {
             Ok(token) => {
                 eprintln!("got token: {}", token);
@@ -175,7 +175,7 @@ fn main() {
         }
     });
 
-    let client = UserAuthHyperClient::new(token);
+    let client = UserAuthDefaultClient::new(token);
 
     // Figure out if destination is a folder or not and change the destination path accordingly.
     let dest_path = match files::get_metadata(
