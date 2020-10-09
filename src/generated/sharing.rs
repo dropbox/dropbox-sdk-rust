@@ -14436,6 +14436,8 @@ pub enum SharePathError {
     InsideOsxPackage,
     /// We do not support sharing the Vault folder.
     IsVault,
+    /// We do not support sharing the Family folder.
+    IsFamily,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -14510,6 +14512,10 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::IsVault)
                     }
+                    "is_family" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SharePathError::IsFamily)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(SharePathError::Other)
@@ -14531,6 +14537,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathError {
                                     "is_osx_package",
                                     "inside_osx_package",
                                     "is_vault",
+                                    "is_family",
                                     "other"];
         deserializer.deserialize_struct("SharePathError", VARIANTS, EnumVisitor)
     }
@@ -14624,6 +14631,12 @@ impl ::serde::ser::Serialize for SharePathError {
                 // unit
                 let mut s = serializer.serialize_struct("SharePathError", 1)?;
                 s.serialize_field(".tag", "is_vault")?;
+                s.end()
+            }
+            SharePathError::IsFamily => {
+                // unit
+                let mut s = serializer.serialize_struct("SharePathError", 1)?;
+                s.serialize_field(".tag", "is_family")?;
                 s.end()
             }
             SharePathError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))

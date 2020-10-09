@@ -79,6 +79,90 @@ impl ::serde::ser::Serialize for CameraUploadsPolicyState {
 }
 
 #[derive(Debug)]
+pub enum ComputerBackupPolicyState {
+    /// Computer Backup feature is disabled.
+    Disabled,
+    /// Computer Backup feature is enabled.
+    Enabled,
+    /// Computer Backup defaults to ON for SSB teams, and OFF for Enterprise teams.
+    Default,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for ComputerBackupPolicyState {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = ComputerBackupPolicyState;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a ComputerBackupPolicyState structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "disabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ComputerBackupPolicyState::Disabled)
+                    }
+                    "enabled" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ComputerBackupPolicyState::Enabled)
+                    }
+                    "default" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ComputerBackupPolicyState::Default)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ComputerBackupPolicyState::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["disabled",
+                                    "enabled",
+                                    "default",
+                                    "other"];
+        deserializer.deserialize_struct("ComputerBackupPolicyState", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for ComputerBackupPolicyState {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            ComputerBackupPolicyState::Disabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ComputerBackupPolicyState", 1)?;
+                s.serialize_field(".tag", "disabled")?;
+                s.end()
+            }
+            ComputerBackupPolicyState::Enabled => {
+                // unit
+                let mut s = serializer.serialize_struct("ComputerBackupPolicyState", 1)?;
+                s.serialize_field(".tag", "enabled")?;
+                s.end()
+            }
+            ComputerBackupPolicyState::Default => {
+                // unit
+                let mut s = serializer.serialize_struct("ComputerBackupPolicyState", 1)?;
+                s.serialize_field(".tag", "default")?;
+                s.end()
+            }
+            ComputerBackupPolicyState::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug)]
 pub enum EmmState {
     /// Emm token is disabled.
     Disabled,
