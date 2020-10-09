@@ -4,8 +4,8 @@ use std::io::{self, Read};
 use std::str;
 
 use crate::Error;
-use crate::client_trait::{Endpoint, Style, HttpClient, HttpRequestResultRaw, ParamsType,
-    TeamAuthClient, TeamSelect, UserAuthClient};
+use crate::client_trait::{Endpoint, Style, HttpClient, HttpRequestResultRaw, NoauthClient,
+    ParamsType, TeamAuthClient, TeamSelect, UserAuthClient};
 use hyper::{self, Url};
 use hyper::header::Headers;
 use hyper::header::{
@@ -42,6 +42,8 @@ pub struct NoauthHyperClient {
 impl HttpClient for NoauthHyperClient {
     forward_request! { self, client: self.inner, token: None, team_select: None }
 }
+
+impl NoauthClient for NoauthHyperClient {}
 
 // User auth client:
 
