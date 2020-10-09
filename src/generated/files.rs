@@ -107,12 +107,8 @@ pub fn copy_batch_v2(
         None)
 }
 
-/// Copy multiple files or folders to different locations at once in the user's Dropbox. If
-/// [`RelocationBatchArg::allow_shared_folder`](RelocationBatchArg) is false, this route is atomic.
-/// If one entry fails, the whole transaction will abort. If
-/// [`RelocationBatchArg::allow_shared_folder`](RelocationBatchArg) is true, atomicity is not
-/// guaranteed, but it allows you to copy the contents of shared folders to new locations. This
-/// route will return job ID immediately and do the async copy job in background. Please use
+/// Copy multiple files or folders to different locations at once in the user's Dropbox. This route
+/// will return job ID immediately and do the async copy job in background. Please use
 /// [`copy_batch_check()`](copy_batch_check) to check the job status.
 pub fn copy_batch(
     client: &impl crate::client_trait::UserAuthClient,
@@ -779,7 +775,9 @@ pub fn move_batch_check(
 }
 
 /// Permanently delete the file or folder at a given path (see https://www.dropbox.com/en/help/40).
-/// Note: This endpoint is only available for Dropbox Business apps.
+/// If the given file or folder is not yet deleted, this route will first delete it. It is possible
+/// for this route to successfully delete, then fail to permanently delete. Note: This endpoint is
+/// only available for Dropbox Business apps.
 pub fn permanently_delete(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteArg,
@@ -11601,10 +11599,7 @@ pub struct RelocationArg {
     pub from_path: WritePathOrId,
     /// Path in the user's Dropbox that is the destination.
     pub to_path: WritePathOrId,
-    /// If true, [`copy()`](copy) will copy contents in shared folder, otherwise
-    /// [`RelocationError::CantCopySharedFolder`](RelocationError::CantCopySharedFolder) will be
-    /// returned if `from_path` contains shared folder. This field is always true for
-    /// [`do_move()`](do_move).
+    /// This flag has no effect.
     pub allow_shared_folder: bool,
     /// If there's a conflict, have the Dropbox server try to autorename the file to avoid the
     /// conflict.
@@ -11764,10 +11759,7 @@ pub struct RelocationBatchArg {
     /// If there's a conflict with any file, have the Dropbox server try to autorename that file to
     /// avoid the conflict.
     pub autorename: bool,
-    /// If true, [`copy_batch()`](copy_batch) will copy contents in shared folder, otherwise
-    /// [`RelocationError::CantCopySharedFolder`](RelocationError::CantCopySharedFolder) will be
-    /// returned if [`RelocationPath::from_path`](RelocationPath) contains shared folder. This field
-    /// is always true for [`move_batch()`](move_batch).
+    /// This flag has no effect.
     pub allow_shared_folder: bool,
     /// Allow moves by owner even if it would result in an ownership transfer for the content being
     /// moved. This does not apply to copies.
