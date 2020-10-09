@@ -22,12 +22,14 @@ macro_rules! forward_request {
     }
 }
 
+/// Default HTTP client using User authorization.
 pub struct UserAuthDefaultClient {
     inner: UreqClient,
     token: String,
 }
 
 impl UserAuthDefaultClient {
+    /// Create a new client using the given OAuth2 token.
     pub fn new(token: String) -> Self {
         Self {
             inner: UreqClient::default(),
@@ -42,6 +44,7 @@ impl HttpClient for UserAuthDefaultClient {
 
 impl UserAuthClient for UserAuthDefaultClient {}
 
+/// Default HTTP client using Team authorization.
 pub struct TeamAuthDefaultClient {
     inner: UreqClient,
     token: String,
@@ -49,6 +52,16 @@ pub struct TeamAuthDefaultClient {
 }
 
 impl TeamAuthDefaultClient {
+    /// Create a new client using the given OAuth2 token, with no user/admin context selected.
+    pub fn new(token: String) -> Self {
+        Self {
+            inner: UreqClient::default(),
+            token,
+            team_select: None,
+        }
+    }
+
+    /// Select a user or team context to operate in.
     pub fn select(&mut self, team_select: Option<TeamSelect>) {
         self.team_select = team_select;
     }
@@ -60,6 +73,7 @@ impl HttpClient for TeamAuthDefaultClient {
 
 impl TeamAuthClient for TeamAuthDefaultClient {}
 
+/// Default HTTP client for unauthenticated API calls.
 #[derive(Debug, Default)]
 pub struct NoauthDefaultClient {
     inner: UreqClient,
@@ -190,6 +204,7 @@ impl UreqClient {
     }
 }
 
+/// Errors from the HTTP client encountered in the course of making a request.
 #[derive(thiserror::Error, Debug)]
 #[allow(clippy::large_enum_variant)] // it's always boxed
 pub enum DefaultClientError {
@@ -217,11 +232,15 @@ wrap_error!(std::io::Error);
 wrap_error!(std::string::FromUtf8Error);
 wrap_error!(RequestError);
 
-// ureq returns errors via "synthetic" responses, which contain an error inside them. However,
-// ureq::Error isn't Clone, so we can't copy it out to return it. So instead, we wrap up the entire
-// synthetic response, and forward relevant trait impls to the error inside it.
-// When https://github.com/algesten/ureq/issues/126 is fixed we can remove these shenanigans.
+/// Something went wrong making the request, or the server returned a response we didn't expect.
+/// Use the `Display` or `Debug` impls to see more details.
+/// Note that this type is intentionally vague about the details beyond these string
+/// representations, to allow implementation changes in the future.
 pub struct RequestError {
+    // ureq returns errors via "synthetic" responses, which contain an error inside them. However,
+    // ureq::Error isn't Clone, so we can't copy it out to return it. So instead, we wrap up the
+    // entire synthetic response, and forward relevant trait impls to the error inside it.
+    // When https://github.com/algesten/ureq/issues/126 is fixed we can remove these shenanigans.
     inner: ureq::Response,
 }
 
