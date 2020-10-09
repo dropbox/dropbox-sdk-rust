@@ -41,13 +41,13 @@ located at `dropbox_sdk::client_trait::HttpClient`. Implement this trait and
 pass it as the client argument.
 
 If you don't want to implement your own, this SDK comes with an optional
-default client that uses Hyper and your system's native TLS library.  To use
-it, build with the `hyper_client` feature flag, and then there will be a
-set of clents in the `dropbox_sdk::hyper_client` module that you can use,
+default client that uses `ureq` and your system's native TLS library.  To use
+it, build with the `default_client` feature flag, and then there will be a
+set of clents in the `dropbox_sdk::default_client` module that you can use,
 corresponding to each of the authentication types Dropbox uses (see below). The
-default Hyper client needs a Dropbox API token; how you get one is up to you
-and your program. See the programs under [examples/](examples/) for examples,
-and see the helper code in the [oauth2](src/oauth2.rs) module.
+default client needs a Dropbox API token; how you get one is up to you and your
+program. See the programs under [examples/](examples/) for examples, and see
+the helper code in the [oauth2](src/oauth2.rs) module.
 
 ## Authentication Types
 
@@ -57,7 +57,7 @@ The authentication type is designated by implementing a marker trait in
 addition to the base `HttpClient` trait: one of `NoauthClient`,
 `UserAuthClient`, `TeamAuthClient`, or `AppAuthClient`.
 
-The default Hyper client has implementations of all of these (except for
+The default client has implementations of all of these (except for
 `AppAuthClient` currently). They all share a common implementation and differ
 only in which HTTP headers they add to the request.
 
@@ -121,9 +121,6 @@ Some implementation notes, limitations, and TODOs:
    support async I/O, which will require making incompatible changes to the
    types returned by routes. This should probably wait until the futures
    ecosystem and async/await have stabilized some more.
- * The `hyper` crate being used is the 0.10 branch, which is out of date. The
-   reason for using this old version is that 0.10 is the last non-async Hyper
-   implementation.
  * This code does not use `serde_derive` and instead uses manually-emitted
    serialization code. Previous work on this crate did attempt to use
    `serde_derive`, but the way the Dropbox API serializes unions containing
