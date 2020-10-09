@@ -15,7 +15,7 @@ pub type FileRequestValidationError = Option<String>;
 /// Returns the total number of file requests owned by this user. Includes both open and closed file
 /// requests.
 pub fn count(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<CountFileRequestsResult, CountFileRequestsError>> {
     crate::client_helpers::request(
         client,
@@ -28,7 +28,7 @@ pub fn count(
 
 /// Creates a file request for this user.
 pub fn create(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateFileRequestArgs,
 ) -> crate::Result<Result<FileRequest, CreateFileRequestError>> {
     crate::client_helpers::request(
@@ -42,7 +42,7 @@ pub fn create(
 
 /// Delete a batch of closed file requests.
 pub fn delete(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteFileRequestArgs,
 ) -> crate::Result<Result<DeleteFileRequestsResult, DeleteFileRequestError>> {
     crate::client_helpers::request(
@@ -56,7 +56,7 @@ pub fn delete(
 
 /// Delete all closed file requests owned by this user.
 pub fn delete_all_closed(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<DeleteAllClosedFileRequestsResult, DeleteAllClosedFileRequestsError>> {
     crate::client_helpers::request(
         client,
@@ -69,7 +69,7 @@ pub fn delete_all_closed(
 
 /// Returns the specified file request.
 pub fn get(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &GetFileRequestArgs,
 ) -> crate::Result<Result<FileRequest, GetFileRequestError>> {
     crate::client_helpers::request(
@@ -84,7 +84,7 @@ pub fn get(
 /// Returns a list of file requests owned by this user. For apps with the app folder permission,
 /// this will only return file requests with destinations in the app folder.
 pub fn list_v2(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileRequestsArg,
 ) -> crate::Result<Result<ListFileRequestsV2Result, ListFileRequestsError>> {
     crate::client_helpers::request(
@@ -99,7 +99,7 @@ pub fn list_v2(
 /// Returns a list of file requests owned by this user. For apps with the app folder permission,
 /// this will only return file requests with destinations in the app folder.
 pub fn list(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<ListFileRequestsResult, ListFileRequestsError>> {
     crate::client_helpers::request(
         client,
@@ -114,7 +114,7 @@ pub fn list(
 /// file requests. The cursor must come from a previous call to [`list_v2()`](list_v2) or
 /// [`list_continue()`](list_continue).
 pub fn list_continue(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFileRequestsContinueArg,
 ) -> crate::Result<Result<ListFileRequestsV2Result, ListFileRequestsContinueError>> {
     crate::client_helpers::request(
@@ -128,7 +128,7 @@ pub fn list_continue(
 
 /// Update a file request.
 pub fn update(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &UpdateFileRequestArgs,
 ) -> crate::Result<Result<FileRequest, UpdateFileRequestError>> {
     crate::client_helpers::request(

@@ -4,19 +4,97 @@ use std::io::{self, Read};
 use std::str;
 
 use crate::Error;
-use crate::client_trait::{Endpoint, Style, HttpClient, HttpRequestResultRaw};
+use crate::client_trait::{Endpoint, Style, HttpClient, HttpRequestResultRaw, ParamsType,
+    TeamAuthClient, TeamSelect, UserAuthClient};
 use hyper::{self, Url};
 use hyper::header::Headers;
 use hyper::header::{
     Authorization, Bearer, ByteRangeSpec, Connection, ContentLength, ContentType, Range};
-use url::form_urlencoded::Serializer as UrlEncoder;
 
 const USER_AGENT: &str = concat!("Dropbox-APIv2-Rust/", env!("CARGO_PKG_VERSION"));
 
-pub struct HyperClient {
-    client: hyper::client::Client,
+macro_rules! forward_request {
+    { $self:ident, client: $client:expr, token: $token:expr, team_select: $team_select:expr } => {
+        fn request(
+            &$self,
+            endpoint: Endpoint,
+            style: Style,
+            function: &str,
+            params: String,
+            params_type: ParamsType,
+            body: Option<&[u8]>,
+            range_start: Option<u64>,
+            range_end: Option<u64>,
+        ) -> crate::Result<HttpRequestResultRaw> {
+            $client.request(endpoint, style, function, params, params_type, body, range_start,
+                range_end, $token, $team_select)
+        }
+    }
+}
+
+// Noauth client:
+
+#[derive(Default)]
+pub struct NoauthHyperClient {
+    inner: HyperClient,
+}
+
+impl HttpClient for NoauthHyperClient {
+    forward_request! { self, client: self.inner, token: None, team_select: None }
+}
+
+// User auth client:
+
+pub struct UserAuthHyperClient {
+    inner: HyperClient,
     token: String,
 }
+
+impl UserAuthHyperClient {
+    pub fn new(token: String) -> Self {
+        Self {
+            inner: HyperClient::default(),
+            token,
+        }
+    }
+}
+
+impl HttpClient for UserAuthHyperClient {
+    forward_request! { self, client: self.inner, token: Some(&self.token), team_select: None }
+}
+
+impl UserAuthClient for UserAuthHyperClient {}
+
+// Team auth client:
+
+pub struct TeamAuthHyperClient {
+    inner: HyperClient,
+    token: String,
+    team_select: Option<TeamSelect>,
+}
+
+impl TeamAuthHyperClient {
+    pub fn new(token: String) -> Self {
+        Self {
+            inner: HyperClient::default(),
+            token,
+            team_select: None,
+        }
+    }
+
+    pub fn select(&mut self, team_select: Option<TeamSelect>) {
+        self.team_select = team_select;
+    }
+}
+
+impl HttpClient for TeamAuthHyperClient {
+    forward_request! { self, client: self.inner, token: Some(&self.token),
+        team_select: self.team_select.as_ref() }
+}
+
+impl TeamAuthClient for TeamAuthHyperClient {}
+
+// Errors:
 
 #[derive(thiserror::Error, Debug)]
 pub enum HyperClientError {
@@ -47,95 +125,43 @@ hyper_error!(std::io::Error);
 hyper_error!(std::string::FromUtf8Error);
 hyper_error!(hyper::Error);
 
-impl HyperClient {
-    pub fn new(token: String) -> HyperClient {
-        HyperClient {
-            client: Self::http_client(),
-            token,
+// Common HTTP client:
+
+fn http_client() -> hyper::client::Client {
+    let tls = hyper_native_tls::NativeTlsClient::new().unwrap();
+    let https_connector = hyper::net::HttpsConnector::new(tls);
+    let pool_connector = hyper::client::pool::Pool::with_connector(
+        hyper::client::pool::Config { max_idle: 1 },
+        https_connector);
+    hyper::client::Client::with_connector(pool_connector)
+}
+
+struct HyperClient {
+    client: hyper::client::Client,
+}
+
+impl Default for HyperClient {
+    fn default() -> Self {
+        Self {
+            client: http_client(),
         }
-    }
-
-    /// Given an authorization code, request an OAuth2 token from Dropbox API.
-    /// Requires the App ID and secret, as well as the redirect URI used in the prior authorize
-    /// request, if there was one.
-    pub fn oauth2_token_from_authorization_code(
-        client_id: &str,
-        client_secret: &str,
-        authorization_code: &str,
-        redirect_uri: Option<&str>,
-    ) -> crate::Result<String> {
-
-        let client = Self::http_client();
-        let url = Url::parse("https://api.dropboxapi.com/oauth2/token").unwrap();
-
-        let mut headers = Headers::new();
-        headers.set(UserAgent(USER_AGENT));
-
-        // This endpoint wants parameters using URL-encoding instead of JSON.
-        headers.set(ContentType("application/x-www-form-urlencoded".parse().unwrap()));
-        let mut params = UrlEncoder::new(String::new());
-        params.append_pair("code", authorization_code);
-        params.append_pair("grant_type", "authorization_code");
-        params.append_pair("client_id", client_id);
-        params.append_pair("client_secret", client_secret);
-        if let Some(value) = redirect_uri {
-            params.append_pair("redirect_uri", value);
-        }
-        let body = params.finish();
-
-        match client.post(url).headers(headers).body(body.as_bytes()).send() {
-            Ok(mut resp) => {
-                if !resp.status.is_success() {
-                    let hyper::http::RawStatus(code, status) = resp.status_raw().clone();
-                    let mut body = String::new();
-                    resp.read_to_string(&mut body)?;
-                    debug!("error body: {}", body);
-                    Err(Error::UnexpectedHttpError {
-                        code,
-                        status: status.into_owned(),
-                        json: body,
-                    })
-                } else {
-                    let body = serde_json::from_reader(resp)?;
-                    debug!("response: {:?}", body);
-                    match body {
-                        serde_json::Value::Object(mut map) => {
-                            match map.remove("access_token") {
-                                Some(serde_json::Value::String(token)) => Ok(token),
-                                _ => Err(Error::UnexpectedResponse("no access token in response!")),
-                            }
-                        },
-                        _ => Err(Error::UnexpectedResponse("response is not a JSON object")),
-                    }
-                }
-            },
-            Err(e) => {
-                error!("error getting OAuth2 token: {}", e);
-                Err(e.into())
-            }
-        }
-    }
-
-    fn http_client() -> hyper::client::Client {
-        let tls = hyper_native_tls::NativeTlsClient::new().unwrap();
-        let https_connector = hyper::net::HttpsConnector::new(tls);
-        let pool_connector = hyper::client::pool::Pool::with_connector(
-            hyper::client::pool::Config { max_idle: 1 },
-            https_connector);
-        hyper::client::Client::with_connector(pool_connector)
     }
 }
 
-impl HttpClient for HyperClient {
-    fn request(
+impl HyperClient {
+    #[allow(clippy::too_many_arguments)]
+    pub fn request(
         &self,
         endpoint: Endpoint,
         style: Style,
         function: &str,
-        params_json: String,
+        params: String,
+        params_type: ParamsType,
         body: Option<&[u8]>,
         range_start: Option<u64>,
         range_end: Option<u64>,
+        token: Option<&str>,
+        team_select: Option<&TeamSelect>,
     ) -> crate::Result<HttpRequestResultRaw> {
 
         let url = Url::parse(endpoint.url()).unwrap().join(function).expect("invalid request URL");
@@ -146,7 +172,16 @@ impl HttpClient for HyperClient {
 
             let mut headers = Headers::new();
             headers.set(UserAgent(USER_AGENT));
-            headers.set(Authorization(Bearer { token: self.token.clone() }));
+            if let Some(token) = token {
+                headers.set(Authorization(Bearer { token: token.to_owned() }));
+            }
+            if let Some(team_select) = team_select {
+                let value = match team_select {
+                    TeamSelect::User(id) => id,
+                    TeamSelect::Admin(id) => id,
+                };
+                headers.set_raw(team_select.header_name(), vec![value.to_owned().into_bytes()]);
+            }
             headers.set(Connection::keep_alive());
 
             if let Some(start) = range_start {
@@ -159,18 +194,21 @@ impl HttpClient for HyperClient {
                 headers.set(Range::Bytes(vec![ByteRangeSpec::Last(end)]));
             }
 
-            // If the params are totally empt, don't send any arg header or body.
-            if !params_json.is_empty() {
+            // If the params are totally empty, don't send any arg header or body.
+            if !params.is_empty() {
                 match style {
                     Style::Rpc => {
                         // Send params in the body.
-                        headers.set(ContentType::json());
-                        builder = builder.body(params_json.as_bytes());
+                        match params_type {
+                            ParamsType::Json => headers.set(ContentType::json()),
+                            ParamsType::Form => headers.set(ContentType::form_url_encoded()),
+                        };
+                        builder = builder.body(params.as_bytes());
                         assert_eq!(None, body);
                     },
                     Style::Upload | Style::Download => {
                         // Send params in a header.
-                        headers.set_raw("Dropbox-API-Arg", vec![params_json.clone().into_bytes()]);
+                        headers.set_raw("Dropbox-API-Arg", vec![params.clone().into_bytes()]);
                         if style == Style::Upload {
                             headers.set(
                                 ContentType(
@@ -228,7 +266,8 @@ impl HttpClient for HyperClient {
                             String::from_utf8(values[0].clone())?
                         },
                         None => {
-                            return Err(Error::UnexpectedResponse("missing Dropbox-API-Result header"));
+                            return Err(Error::UnexpectedResponse(
+                                "missing Dropbox-API-Result header"));
                         }
                     };
 
@@ -243,124 +282,6 @@ impl HttpClient for HyperClient {
             }
 
         }
-    }
-}
-
-/// Builds a URL that can be given to the user to visit to have Dropbox authorize your app.
-#[derive(Debug)]
-pub struct Oauth2AuthorizeUrlBuilder<'a> {
-    client_id: &'a str,
-    response_type: &'a str,
-    force_reapprove: bool,
-    force_reauthentication: bool,
-    disable_signup: bool,
-    redirect_uri: Option<&'a str>,
-    state: Option<&'a str>,
-    require_role: Option<&'a str>,
-    locale: Option<&'a str>,
-}
-
-/// Which type of OAuth2 flow to use.
-#[derive(Debug, Copy, Clone)]
-pub enum Oauth2Type {
-    /// Authorization yields a temporary authorization code which must be turned into an OAuth2
-    /// token by making another call. This can be used without a redirect URI, where the user inputs
-    /// the code directly into the program.
-    AuthorizationCode,
-
-    /// Authorization directly returns an OAuth2 token. This can only be used with a redirect URI
-    /// where the Dropbox server redirects the user's web browser to the program.
-    ImplicitGrant,
-}
-
-impl Oauth2Type {
-    pub fn as_str(self) -> &'static str {
-        match self {
-            Oauth2Type::AuthorizationCode => "code",
-            Oauth2Type::ImplicitGrant => "token",
-        }
-    }
-}
-
-impl<'a> Oauth2AuthorizeUrlBuilder<'a> {
-    pub fn new(client_id: &'a str, oauth2_type: Oauth2Type) -> Self {
-        Self {
-            client_id,
-            response_type: oauth2_type.as_str(),
-            force_reapprove: false,
-            force_reauthentication: false,
-            disable_signup: false,
-            redirect_uri: None,
-            state: None,
-            require_role: None,
-            locale: None,
-        }
-    }
-
-    pub fn force_reapprove(mut self, value: bool) -> Self {
-        self.force_reapprove = value;
-        self
-    }
-
-    pub fn force_reauthentication(mut self, value: bool) -> Self {
-        self.force_reauthentication = value;
-        self
-    }
-
-    pub fn disable_signup(mut self, value: bool) -> Self {
-        self.disable_signup = value;
-        self
-    }
-
-    pub fn redirect_uri(mut self, value: &'a str) -> Self {
-        self.redirect_uri = Some(value);
-        self
-    }
-
-    pub fn state(mut self, value: &'a str) -> Self {
-        self.state = Some(value);
-        self
-    }
-
-    pub fn require_role(mut self, value: &'a str) -> Self {
-        self.require_role = Some(value);
-        self
-    }
-
-    pub fn locale(mut self, value: &'a str) -> Self {
-        self.locale = Some(value);
-        self
-    }
-
-    pub fn build(self) -> Url {
-        let mut url = Url::parse("https://www.dropbox.com/oauth2/authorize").unwrap();
-        {
-            let mut params = url.query_pairs_mut();
-            params.append_pair("response_type", self.response_type);
-            params.append_pair("client_id", self.client_id);
-            if self.force_reapprove {
-                params.append_pair("force_reapprove", "true");
-            }
-            if self.force_reauthentication {
-                params.append_pair("force_reauthentication", "true");
-            }
-            if self.disable_signup {
-                params.append_pair("disable_signup", "true");
-            }
-            if let Some(value) = self.redirect_uri {
-                params.append_pair("redirect_uri", value);
-            }
-            if let Some(value) = self.state {
-                params.append_pair("state", value);
-            }
-            if let Some(value) = self.require_role {
-                params.append_pair("require_role", value);
-            }
-            if let Some(value) = self.locale {
-                params.append_pair("locale", value);
-            }
-        }
-        url
     }
 }
 

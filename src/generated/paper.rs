@@ -23,7 +23,7 @@ pub type PaperDocId = String;
 /// Migration Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for more
 /// information.
 pub fn docs_archive(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
 ) -> crate::Result<Result<(), DocLookupError>> {
     crate::client_helpers::request(
@@ -43,7 +43,7 @@ pub fn docs_archive(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for more
 /// information.
 pub fn docs_create(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperDocCreateArgs,
     body: &[u8],
 ) -> crate::Result<Result<PaperDocCreateUpdateResult, PaperDocCreateError>> {
@@ -63,7 +63,7 @@ pub fn docs_create(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn docs_download(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperDocExport,
     range_start: Option<u64>,
     range_end: Option<u64>,
@@ -88,7 +88,7 @@ pub fn docs_download(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn docs_folder_users_list(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnFolderArgs,
 ) -> crate::Result<Result<ListUsersOnFolderResponse, DocLookupError>> {
     crate::client_helpers::request(
@@ -108,7 +108,7 @@ pub fn docs_folder_users_list(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn docs_folder_users_list_continue(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnFolderContinueArgs,
 ) -> crate::Result<Result<ListUsersOnFolderResponse, ListUsersCursorError>> {
     crate::client_helpers::request(
@@ -132,7 +132,7 @@ pub fn docs_folder_users_list_continue(
 /// Migration Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for
 /// migration information.
 pub fn docs_get_folder_info(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
 ) -> crate::Result<Result<FoldersContainingPaperDoc, DocLookupError>> {
     crate::client_helpers::request(
@@ -153,7 +153,7 @@ pub fn docs_get_folder_info(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn docs_list(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &ListPaperDocsArgs,
 ) -> crate::Result<Result<ListPaperDocsResponse, ()>> {
     crate::client_helpers::request(
@@ -173,7 +173,7 @@ pub fn docs_list(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn docs_list_continue(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &ListPaperDocsContinueArgs,
 ) -> crate::Result<Result<ListPaperDocsResponse, ListDocsCursorError>> {
     crate::client_helpers::request(
@@ -193,7 +193,7 @@ pub fn docs_list_continue(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn docs_permanently_delete(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
 ) -> crate::Result<Result<(), DocLookupError>> {
     crate::client_helpers::request(
@@ -212,7 +212,7 @@ pub fn docs_permanently_delete(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn docs_sharing_policy_get(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
 ) -> crate::Result<Result<SharingPolicy, DocLookupError>> {
     crate::client_helpers::request(
@@ -234,7 +234,7 @@ pub fn docs_sharing_policy_get(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn docs_sharing_policy_set(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperDocSharingPolicy,
 ) -> crate::Result<Result<(), DocLookupError>> {
     crate::client_helpers::request(
@@ -254,7 +254,7 @@ pub fn docs_sharing_policy_set(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for more
 /// information.
 pub fn docs_update(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperDocUpdateArgs,
     body: &[u8],
 ) -> crate::Result<Result<PaperDocCreateUpdateResult, PaperDocUpdateError>> {
@@ -276,7 +276,7 @@ pub fn docs_update(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn docs_users_add(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &AddPaperDocUser,
 ) -> crate::Result<Result<Vec<AddPaperDocUserMemberResult>, DocLookupError>> {
     crate::client_helpers::request(
@@ -298,7 +298,7 @@ pub fn docs_users_add(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn docs_users_list(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnPaperDocArgs,
 ) -> crate::Result<Result<ListUsersOnPaperDocResponse, DocLookupError>> {
     crate::client_helpers::request(
@@ -318,7 +318,7 @@ pub fn docs_users_list(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn docs_users_list_continue(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnPaperDocContinueArgs,
 ) -> crate::Result<Result<ListUsersOnPaperDocResponse, ListUsersCursorError>> {
     crate::client_helpers::request(
@@ -338,7 +338,7 @@ pub fn docs_users_list_continue(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn docs_users_remove(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &RemovePaperDocUser,
 ) -> crate::Result<Result<(), DocLookupError>> {
     crate::client_helpers::request(
@@ -357,7 +357,7 @@ pub fn docs_users_remove(
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
 pub fn folders_create(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperFolderCreateArg,
 ) -> crate::Result<Result<PaperFolderCreateResult, PaperFolderCreateError>> {
     crate::client_helpers::request(

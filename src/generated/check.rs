@@ -13,7 +13,7 @@
 /// indicates at least part of the Dropbox API infrastructure is working and that the app key and
 /// secret valid.
 pub fn app(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::AppAuthClient,
     arg: &EchoArg,
 ) -> crate::Result<Result<EchoResult, ()>> {
     crate::client_helpers::request(
@@ -30,7 +30,7 @@ pub fn app(
 /// other effect. If you receive an HTTP 200 response with the supplied query, it indicates at least
 /// part of the Dropbox API infrastructure is working and that the access token is valid.
 pub fn user(
-    client: &dyn crate::client_trait::HttpClient,
+    client: &impl crate::client_trait::UserAuthClient,
     arg: &EchoArg,
 ) -> crate::Result<Result<EchoResult, ()>> {
     crate::client_helpers::request(

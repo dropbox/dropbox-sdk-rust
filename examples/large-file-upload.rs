@@ -1,7 +1,9 @@
 #![deny(rust_2018_idioms)]
 
-use dropbox_sdk::{HyperClient, Oauth2AuthorizeUrlBuilder, Oauth2Type};
+use dropbox_sdk::oauth2::{oauth2_token_from_authorization_code, Oauth2AuthorizeUrlBuilder,
+    Oauth2Type};
 use dropbox_sdk::files;
+use dropbox_sdk::hyper_client::{NoauthHyperClient, UserAuthHyperClient};
 
 use std::fs::File;
 use std::path::PathBuf;
@@ -159,8 +161,8 @@ fn main() {
         let auth_code = prompt("Then paste the code here");
 
         eprintln!("requesting OAuth2 token");
-        match HyperClient::oauth2_token_from_authorization_code(
-            &client_id, &client_secret, auth_code.trim(), None)
+        match oauth2_token_from_authorization_code(
+            NoauthHyperClient::default(), &client_id, &client_secret, auth_code.trim(), None)
         {
             Ok(token) => {
                 eprintln!("got token: {}", token);
@@ -173,7 +175,7 @@ fn main() {
         }
     });
 
-    let client = HyperClient::new(token);
+    let client = UserAuthHyperClient::new(token);
 
     // Figure out if destination is a folder or not and change the destination path accordingly.
     let dest_path = match files::get_metadata(

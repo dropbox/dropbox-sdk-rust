@@ -21,7 +21,7 @@ This SDK is not yet official. What does this mean?
 However, that said,
 * The SDK is usable!
 * We are happy to get feedback and/or pull requests from the community! See
-[CONTRIBUTING.md][contributing] for more information.
+[contributing](CONTRIBUTING.md) for more information.
 
 ## A Note on Semver
 
@@ -36,16 +36,32 @@ version targeted, which is most easily done by looking at what revision the
 ## HTTP Client
 
 To actually use the API calls, you need a HTTP client -- all functions take a
-`&HttpClient` as their first argument.  This trait is located at
-`dropbox_sdk::client_trait::HttpClient`. Implement this trait and pass it as
-the client argument.
+type that implements `HttpClient` as their first argument.  This trait is
+located at `dropbox_sdk::client_trait::HttpClient`. Implement this trait and
+pass it as the client argument.
 
 If you don't want to implement your own, this SDK comes with an optional
 default client that uses Hyper and your system's native TLS library.  To use
 it, build with the `hyper_client` feature flag, and then there will be a
-`dropbox_sdk::hyper_client::HyperClient` type that you can use.  The default
-Hyper client needs a Dropbox API token; how you get one is up to you and your
-program.
+set of clents in the `dropbox_sdk::hyper_client` module that you can use,
+corresponding to each of the authentication types Dropbox uses (see below). The
+default Hyper client needs a Dropbox API token; how you get one is up to you
+and your program. See the programs under [examples/](examples/) for examples,
+and see the helper code in the [oauth2](src/oauth2.rs) module.
+
+## Authentication Types
+
+The Dropbox API has a number of different [authentication types]. Each route
+requires a HTTP client compatible with the specific authentication type needed.
+The authentication type is designated by implementing a marker trait in
+addition to the base `HttpClient` trait: one of `NoauthClient`,
+`UserAuthClient`, `TeamAuthClient`, or `AppAuthClient`.
+
+The default Hyper client has implementations of all of these (except for
+`AppAuthClient` currently). They all share a common implementation and differ
+only in which HTTP headers they add to the request.
+
+[authentication types]: https://www.dropbox.com/developers/reference/auth-types
 
 ## Feature Flags
 
@@ -124,5 +140,3 @@ Some implementation notes, limitations, and TODOs:
    tests for all variants.
 
 ## Happy Dropboxing!
-
-[contributing]: https://github.com/dropbox/dropbox-sdk-rust/blob/master/CONTRIBUTING.md
