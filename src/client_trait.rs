@@ -104,7 +104,7 @@ impl ParamsType {
     /// The value for the HTTP Content-Type header for the given params format.
     pub fn content_type(self) -> &'static str {
         match self {
-            ParamsType::Json => "text/json",
+            ParamsType::Json => "application/json",
             ParamsType::Form => "application/x-www-form-urlencoded",
         }
     }
