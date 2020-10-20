@@ -14146,7 +14146,7 @@ impl MemberAddArg {
             member_external_id: field_member_external_id,
             member_persistent_id: field_member_persistent_id,
             send_welcome_email: field_send_welcome_email.unwrap_or(true),
-            role: field_role.unwrap_or_else(|| AdminTier::MemberOnly),
+            role: field_role.unwrap_or(AdminTier::MemberOnly),
             is_directory_restricted: field_is_directory_restricted,
         };
         Ok(Some(result))

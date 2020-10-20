@@ -1562,7 +1562,7 @@ impl CommitInfo {
         }
         let result = CommitInfo {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            mode: field_mode.unwrap_or_else(|| WriteMode::Add),
+            mode: field_mode.unwrap_or(WriteMode::Add),
             autorename: field_autorename.unwrap_or(false),
             client_modified: field_client_modified,
             mute: field_mute.unwrap_or(false),
@@ -1773,7 +1773,7 @@ impl CommitInfoWithProperties {
         }
         let result = CommitInfoWithProperties {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            mode: field_mode.unwrap_or_else(|| WriteMode::Add),
+            mode: field_mode.unwrap_or(WriteMode::Add),
             autorename: field_autorename.unwrap_or(false),
             client_modified: field_client_modified,
             mute: field_mute.unwrap_or(false),
@@ -9328,7 +9328,7 @@ impl ListRevisionsArg {
         }
         let result = ListRevisionsArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            mode: field_mode.unwrap_or_else(|| ListRevisionsMode::Path),
+            mode: field_mode.unwrap_or(ListRevisionsMode::Path),
             limit: field_limit.unwrap_or(10),
         };
         Ok(Some(result))
@@ -14429,7 +14429,7 @@ impl SearchArg {
             query: field_query.ok_or_else(|| ::serde::de::Error::missing_field("query"))?,
             start: field_start.unwrap_or(0),
             max_results: field_max_results.unwrap_or(100),
-            mode: field_mode.unwrap_or_else(|| SearchMode::Filename),
+            mode: field_mode.unwrap_or(SearchMode::Filename),
         };
         Ok(Some(result))
     }
@@ -15117,7 +15117,7 @@ impl SearchOptions {
         let result = SearchOptions {
             path: field_path,
             max_results: field_max_results.unwrap_or(100),
-            file_status: field_file_status.unwrap_or_else(|| FileStatus::Active),
+            file_status: field_file_status.unwrap_or(FileStatus::Active),
             filename_only: field_filename_only.unwrap_or(false),
             file_extensions: field_file_extensions,
             file_categories: field_file_categories,
@@ -16544,9 +16544,9 @@ impl ThumbnailArg {
         }
         let result = ThumbnailArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
-            format: field_format.unwrap_or_else(|| ThumbnailFormat::Jpeg),
-            size: field_size.unwrap_or_else(|| ThumbnailSize::W64h64),
-            mode: field_mode.unwrap_or_else(|| ThumbnailMode::Strict),
+            format: field_format.unwrap_or(ThumbnailFormat::Jpeg),
+            size: field_size.unwrap_or(ThumbnailSize::W64h64),
+            mode: field_mode.unwrap_or(ThumbnailMode::Strict),
         };
         Ok(Some(result))
     }
@@ -17086,9 +17086,9 @@ impl ThumbnailV2Arg {
         }
         let result = ThumbnailV2Arg {
             resource: field_resource.ok_or_else(|| ::serde::de::Error::missing_field("resource"))?,
-            format: field_format.unwrap_or_else(|| ThumbnailFormat::Jpeg),
-            size: field_size.unwrap_or_else(|| ThumbnailSize::W64h64),
-            mode: field_mode.unwrap_or_else(|| ThumbnailMode::Strict),
+            format: field_format.unwrap_or(ThumbnailFormat::Jpeg),
+            size: field_size.unwrap_or(ThumbnailSize::W64h64),
+            mode: field_mode.unwrap_or(ThumbnailMode::Strict),
         };
         Ok(Some(result))
     }

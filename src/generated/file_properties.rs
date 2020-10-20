@@ -1913,7 +1913,7 @@ impl PropertiesSearchArg {
         }
         let result = PropertiesSearchArg {
             queries: field_queries.ok_or_else(|| ::serde::de::Error::missing_field("queries"))?,
-            template_filter: field_template_filter.unwrap_or_else(|| TemplateFilter::FilterNone),
+            template_filter: field_template_filter.unwrap_or(TemplateFilter::FilterNone),
         };
         Ok(Some(result))
     }
@@ -2464,7 +2464,7 @@ impl PropertiesSearchQuery {
         let result = PropertiesSearchQuery {
             query: field_query.ok_or_else(|| ::serde::de::Error::missing_field("query"))?,
             mode: field_mode.ok_or_else(|| ::serde::de::Error::missing_field("mode"))?,
-            logical_operator: field_logical_operator.unwrap_or_else(|| LogicalOperator::OrOperator),
+            logical_operator: field_logical_operator.unwrap_or(LogicalOperator::OrOperator),
         };
         Ok(Some(result))
     }

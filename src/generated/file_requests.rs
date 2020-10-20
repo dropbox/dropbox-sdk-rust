@@ -2807,7 +2807,7 @@ impl UpdateFileRequestArgs {
             id: field_id.ok_or_else(|| ::serde::de::Error::missing_field("id"))?,
             title: field_title,
             destination: field_destination,
-            deadline: field_deadline.unwrap_or_else(|| UpdateFileRequestDeadline::NoUpdate),
+            deadline: field_deadline.unwrap_or(UpdateFileRequestDeadline::NoUpdate),
             open: field_open,
             description: field_description,
         };
