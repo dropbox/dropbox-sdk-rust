@@ -1,68 +1,32 @@
 // Copyright (c) 2019-2020 Dropbox, Inc.
 
 use std::fmt::Debug;
-use std::marker::PhantomData;
 use crate::Error;
 use crate::client_trait::*;
-use serde::de::{self, Deserialize, DeserializeOwned, Deserializer, MapAccess, Visitor};
+use serde::{Deserialize};
+use serde::de::DeserializeOwned;
 use serde::ser::Serialize;
 
-// When Dropbox returns an error with HTTP 409, it uses an implicit JSON object with the following
-// structure, which contains the acutal error as a field.
-#[derive(Debug)]
+// When Dropbox returns an error with HTTP 409 or 429, it uses an implicit JSON object with the
+// following structure, which contains the acutal error as a field.
+#[derive(Debug, Deserialize)]
 struct TopLevelError<T> {
     pub error_summary: String,
     pub user_message: Option<String>,
     pub error: T,
 }
 
-impl<'de, T: DeserializeOwned> Deserialize<'de> for TopLevelError<T> {
-    fn deserialize<D: Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
-        struct StructVisitor<T> {
-            phantom: PhantomData<T>,
-        }
-        impl<'de, T: DeserializeOwned> Visitor<'de> for StructVisitor<T> {
-            type Value = TopLevelError<T>;
-            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a top-level error struct")
-            }
-            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
-                let mut error_summary = None;
-                let mut user_message = None;
-                let mut error = None;
-                while let Some(key) = map.next_key()? {
-                    match key {
-                        "error_summary" => {
-                            if error_summary.is_some() {
-                                return Err(de::Error::duplicate_field("error_summary"));
-                            }
-                            error_summary = Some(map.next_value()?);
-                        }
-                        "user_message" => {
-                            if user_message.is_some() {
-                                return Err(de::Error::duplicate_field("user_message"));
-                            }
-                            user_message = Some(map.next_value()?);
-                        }
-                        "error" => {
-                            if error.is_some() {
-                                return Err(de::Error::duplicate_field("error"));
-                            }
-                            error = Some(map.next_value()?);
-                        }
-                        _ => return Err(de::Error::unknown_field(key, FIELDS))
-                    }
-                }
-                Ok(TopLevelError {
-                    error_summary: error_summary.ok_or_else(|| de::Error::missing_field("error_summary"))?,
-                    user_message,
-                    error: error.ok_or_else(|| de::Error::missing_field("error"))?,
-                })
-            }
-        }
-        const FIELDS: &[&str] = &["error_summary", "user_message", "error"];
-        deserializer.deserialize_struct("<top level error>", FIELDS, StructVisitor { phantom: PhantomData })
-    }
+#[derive(Debug, Deserialize)]
+struct RateLimitedError {
+    pub reason: RateLimitedReason,
+    pub retry_after: u32,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(tag = ".tag", rename_all = "snake_case")]
+enum RateLimitedReason {
+    TooManyRequests,
+    TooManyWriteOperations,
 }
 
 /// Does the request and returns a two-level result. The outer result has an error if something
@@ -126,7 +90,19 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
                         }
                     },
                     429 => {
-                        Err(Error::RateLimited(response))
+                        match serde_json::from_str::<TopLevelError<RateLimitedError>>(&response) {
+                            Ok(deserialized) => {
+                                error!("API Rate-Limited: {:?}", deserialized);
+                                Err(Error::RateLimited {
+                                    reason: format!("{:?}", deserialized.error.reason),
+                                    retry_after_seconds: deserialized.error.retry_after,
+                                })
+                            }
+                            Err(de_error) => {
+                                error!("Failed to deserialize JSON from API error: {}", de_error);
+                                Err(Error::Json(de_error))
+                            }
+                        }
                     },
                     500 ..= 599 => {
                         Err(Error::ServerError(response))
