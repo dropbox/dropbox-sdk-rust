@@ -435,7 +435,7 @@ impl AddMember {
         }
         let result = AddMember {
             member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
-            permission_level: field_permission_level.unwrap_or_else(|| PaperDocPermissionLevel::Edit),
+            permission_level: field_permission_level.unwrap_or(PaperDocPermissionLevel::Edit),
         };
         Ok(Some(result))
     }
@@ -1910,9 +1910,9 @@ impl ListPaperDocsArgs {
             }
         }
         let result = ListPaperDocsArgs {
-            filter_by: field_filter_by.unwrap_or_else(|| ListPaperDocsFilterBy::DocsAccessed),
-            sort_by: field_sort_by.unwrap_or_else(|| ListPaperDocsSortBy::Accessed),
-            sort_order: field_sort_order.unwrap_or_else(|| ListPaperDocsSortOrder::Ascending),
+            filter_by: field_filter_by.unwrap_or(ListPaperDocsFilterBy::DocsAccessed),
+            sort_by: field_sort_by.unwrap_or(ListPaperDocsSortBy::Accessed),
+            sort_order: field_sort_order.unwrap_or(ListPaperDocsSortOrder::Ascending),
             limit: field_limit.unwrap_or(1000),
         };
         Ok(result)
@@ -2936,7 +2936,7 @@ impl ListUsersOnPaperDocArgs {
         let result = ListUsersOnPaperDocArgs {
             doc_id: field_doc_id.ok_or_else(|| ::serde::de::Error::missing_field("doc_id"))?,
             limit: field_limit.unwrap_or(1000),
-            filter_by: field_filter_by.unwrap_or_else(|| UserOnPaperDocFilter::Shared),
+            filter_by: field_filter_by.unwrap_or(UserOnPaperDocFilter::Shared),
         };
         Ok(Some(result))
     }

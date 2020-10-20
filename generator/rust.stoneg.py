@@ -354,20 +354,26 @@ class RustBackend(RustHelperBackend):
                             if isinstance(field.data_type, ir.Nullable):
                                 self.emit(u'{}: field_{},'.format(field_name, field_name))
                             elif field.has_default:
+                                default_value = self._default_value(field)
                                 if isinstance(field.data_type, ir.String) \
                                         and not field.default:
                                     self.emit(u'{}: field_{}.unwrap_or_else(String::new),'
                                               .format(field_name, field_name))
-                                elif ir.is_primitive_type(ir.unwrap_aliases(field.data_type)[0]):
+                                elif (ir.is_primitive_type(ir.unwrap_aliases(field.data_type)[0])
+                                        # Also, as a rough but effective heuristic, consider values
+                                        # that have no parentheses in them to be "trivial", and
+                                        # don't enclose them in a closure. This avoids running
+                                        # afoul of the clippy::unnecessary_lazy_evaluations lint.
+                                        or not "(" in default_value):
                                     self.emit(u'{}: field_{}.unwrap_or({}),'
                                               .format(field_name,
                                                       field_name,
-                                                      self._default_value(field)))
+                                                      default_value))
                                 else:
                                     self.emit(u'{}: field_{}.unwrap_or_else(|| {}),'
                                               .format(field_name,
                                                       field_name,
-                                                      self._default_value(field)))
+                                                      default_value))
                             else:
                                 self.emit(u'{}: field_{}.ok_or_else(|| '
                                           u'::serde::de::Error::missing_field("{}"))?,'

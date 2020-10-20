@@ -1061,7 +1061,7 @@ impl AddFileMemberArgs {
             members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
             custom_message: field_custom_message,
             quiet: field_quiet.unwrap_or(false),
-            access_level: field_access_level.unwrap_or_else(|| AccessLevel::Viewer),
+            access_level: field_access_level.unwrap_or(AccessLevel::Viewer),
             add_message_as_comment: field_add_message_as_comment.unwrap_or(false),
         };
         Ok(Some(result))
@@ -1678,7 +1678,7 @@ impl AddMember {
         }
         let result = AddMember {
             member: field_member.ok_or_else(|| ::serde::de::Error::missing_field("member"))?,
-            access_level: field_access_level.unwrap_or_else(|| AccessLevel::Viewer),
+            access_level: field_access_level.unwrap_or(AccessLevel::Viewer),
         };
         Ok(Some(result))
     }
@@ -13463,7 +13463,7 @@ impl SetAccessInheritanceArg {
         }
         let result = SetAccessInheritanceArg {
             shared_folder_id: field_shared_folder_id.ok_or_else(|| ::serde::de::Error::missing_field("shared_folder_id"))?,
-            access_inheritance: field_access_inheritance.unwrap_or_else(|| AccessInheritance::Inherit),
+            access_inheritance: field_access_inheritance.unwrap_or(AccessInheritance::Inherit),
         };
         Ok(Some(result))
     }
@@ -13779,7 +13779,7 @@ impl ShareFolderArg {
             member_policy: field_member_policy,
             shared_link_policy: field_shared_link_policy,
             viewer_info_policy: field_viewer_info_policy,
-            access_inheritance: field_access_inheritance.unwrap_or_else(|| AccessInheritance::Inherit),
+            access_inheritance: field_access_inheritance.unwrap_or(AccessInheritance::Inherit),
             actions: field_actions,
             link_settings: field_link_settings,
         };
@@ -13983,7 +13983,7 @@ impl ShareFolderArgBase {
             member_policy: field_member_policy,
             shared_link_policy: field_shared_link_policy,
             viewer_info_policy: field_viewer_info_policy,
-            access_inheritance: field_access_inheritance.unwrap_or_else(|| AccessInheritance::Inherit),
+            access_inheritance: field_access_inheritance.unwrap_or(AccessInheritance::Inherit),
         };
         Ok(Some(result))
     }
@@ -16189,7 +16189,7 @@ impl SharedFolderMetadata {
             parent_folder_name: field_parent_folder_name,
             link_metadata: field_link_metadata,
             permissions: field_permissions,
-            access_inheritance: field_access_inheritance.unwrap_or_else(|| AccessInheritance::Inherit),
+            access_inheritance: field_access_inheritance.unwrap_or(AccessInheritance::Inherit),
         };
         Ok(Some(result))
     }
