@@ -8,6 +8,7 @@ yyyy-mm-dd
   users of custom HTTP clients don't have to reinvent the wheel for OAuth2.
   * The `oauth2_token_from_authorization_code` now is in a different module, and takes a HTTP
     client implementation as a new first argument.
+* Changed the Error::RateLimited variant to include the requested backoff time.
 * very small API update
 
 # v0.6.0

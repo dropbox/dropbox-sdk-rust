@@ -23,8 +23,9 @@ pub enum Error {
     #[error("Dropbox API indicated that the access token is bad: {0}")]
     InvalidToken(String),
 
-    #[error("Dropbox API declined the request due to rate-limiting: {0}")]
-    RateLimited(String),
+    #[error("Dropbox API declined the request due to rate-limiting ({reason}), \
+        retry after {retry_after_seconds}s")]
+    RateLimited { reason: String, retry_after_seconds: u32 },
 
     #[error("Dropbox API had an internal server error: {0}")]
     ServerError(String),
