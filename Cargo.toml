@@ -9,7 +9,7 @@ license = "Apache-2.0"
 readme = "README.md"
 
 [dependencies]
-hyper = { version = "0.10", optional = true }
+hyper = { version = "0.13", optional = true }
 hyper-native-tls = { version = "0.3", optional = true }
 log = "0.4"
 serde = { version = "1.0", features = ["derive"] }
