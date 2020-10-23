@@ -9,12 +9,11 @@ license = "Apache-2.0"
 readme = "README.md"
 
 [dependencies]
-hyper = { version = "0.10", optional = true }
-hyper-native-tls = { version = "0.3", optional = true }
 log = "0.4"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 thiserror = "1.0"
+ureq = { version = "1.4", optional = true, default-features = false, features = ["native-tls"] }
 url = "2.1"
 
 [dev-dependencies]
@@ -24,11 +23,11 @@ threadpool = "1.8"
 
 [[example]]
 name = "demo"
-required-features = ["dbx_files", "hyper_client"]
+required-features = ["dbx_files", "default_client"]
 
 [[example]]
 name = "large-file-upload"
-required-features = ["dbx_files", "hyper_client"]
+required-features = ["dbx_files", "default_client"]
 
 [features]
 # dbx_* features each correspond to one Stone spec file.
@@ -54,7 +53,7 @@ dbx_team_policies = []
 dbx_users = ["dbx_common", "dbx_team_common", "dbx_team_policies", "dbx_users_common"]
 dbx_users_common = ["dbx_common"]
 
-hyper_client = ["hyper", "hyper-native-tls"]
+default_client = ["ureq"]
 
 # Include everything by default.
 default = [
@@ -78,5 +77,5 @@ default = [
     "dbx_team_policies",
     "dbx_users",
     "dbx_users_common",
-    "hyper_client",
+    "default_client",
     ]

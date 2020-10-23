@@ -40,7 +40,7 @@ pub enum Error {
 
 pub type Result<T> = std::result::Result<T, Error>;
 
-#[cfg(feature = "hyper_client")] pub mod hyper_client;
+#[cfg(feature = "default_client")] pub mod default_client;
 
 pub mod client_trait;
 pub use client_trait::{AppAuthClient, NoauthClient, UserAuthClient, TeamAuthClient};

@@ -3,7 +3,7 @@
 use dropbox_sdk::{files, UserAuthClient};
 use dropbox_sdk::oauth2::{oauth2_token_from_authorization_code, Oauth2AuthorizeUrlBuilder,
     Oauth2Type};
-use dropbox_sdk::hyper_client::{NoauthHyperClient, UserAuthHyperClient};
+use dropbox_sdk::default_client::{NoauthDefaultClient, UserAuthDefaultClient};
 
 use std::collections::VecDeque;
 use std::env;
@@ -69,7 +69,7 @@ fn main() {
 
         eprintln!("requesting OAuth2 token");
         match oauth2_token_from_authorization_code(
-            NoauthHyperClient::default(), &client_id, &client_secret, auth_code.trim(), None)
+            NoauthDefaultClient::default(), &client_id, &client_secret, auth_code.trim(), None)
         {
             Ok(token) => {
                 eprintln!("got token: {}", token);
@@ -86,7 +86,7 @@ fn main() {
         }
     });
 
-    let client = UserAuthHyperClient::new(token);
+    let client = UserAuthDefaultClient::new(token);
 
     if let Some(path) = download_path {
         eprintln!("downloading file {}", path);

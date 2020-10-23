@@ -9,6 +9,17 @@ yyyy-mm-dd
   * The `oauth2_token_from_authorization_code` now is in a different module, and takes a HTTP
     client implementation as a new first argument.
 * Changed the Error::RateLimited variant to include the requested backoff time.
+* Replaced default HTTP client's hyper 0.10 implementation with one based on `ureq`.
+  * Hyper 0.10 is out of date and unsupported, but we're not ready to transition to async style,
+    which rules out upgrading to newer Hyper versions.
+  * `ureq` as a small, synchronous HTTP client that is actively maintained.
+  * There are some name changes, generally replacing "hyper" with "default", so that the
+    implementation can be changed in the future without renaming things again:
+    * `hyper_client` module -> `default_client`
+    * `hyper_client` Cargo feature -> `default_client`
+    * `UserAuthHyperClient` -> `UserAuthDefaultClient`
+    * `TeamAuthHyperClient` -> `TeamAuthDefaultClient`
+    * ... etc.
 * very small API update
 
 # v0.6.0
