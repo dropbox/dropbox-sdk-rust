@@ -14838,10 +14838,110 @@ impl ::serde::ser::Serialize for SearchMatchType {
     }
 }
 
+/// Indicates what type of match was found for a given item.
+#[derive(Debug)]
+pub enum SearchMatchTypeV2 {
+    /// This item was matched on its file or folder name.
+    Filename,
+    /// This item was matched based on its file contents.
+    FileContent,
+    /// This item was matched based on both its contents and its file name.
+    FilenameAndContent,
+    /// This item was matched on image content.
+    ImageContent,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchMatchTypeV2 {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SearchMatchTypeV2;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SearchMatchTypeV2 structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "filename" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SearchMatchTypeV2::Filename)
+                    }
+                    "file_content" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SearchMatchTypeV2::FileContent)
+                    }
+                    "filename_and_content" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SearchMatchTypeV2::FilenameAndContent)
+                    }
+                    "image_content" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SearchMatchTypeV2::ImageContent)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SearchMatchTypeV2::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["filename",
+                                    "file_content",
+                                    "filename_and_content",
+                                    "image_content",
+                                    "other"];
+        deserializer.deserialize_struct("SearchMatchTypeV2", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchMatchTypeV2 {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SearchMatchTypeV2::Filename => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchMatchTypeV2", 1)?;
+                s.serialize_field(".tag", "filename")?;
+                s.end()
+            }
+            SearchMatchTypeV2::FileContent => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchMatchTypeV2", 1)?;
+                s.serialize_field(".tag", "file_content")?;
+                s.end()
+            }
+            SearchMatchTypeV2::FilenameAndContent => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchMatchTypeV2", 1)?;
+                s.serialize_field(".tag", "filename_and_content")?;
+                s.end()
+            }
+            SearchMatchTypeV2::ImageContent => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchMatchTypeV2", 1)?;
+                s.serialize_field(".tag", "image_content")?;
+                s.end()
+            }
+            SearchMatchTypeV2::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
 #[derive(Debug)]
 pub struct SearchMatchV2 {
     /// The metadata for the matched file or folder.
     pub metadata: MetadataV2,
+    /// The type of the match.
+    pub match_type: Option<SearchMatchTypeV2>,
     /// The list of HighlightSpan determines which parts of the file title should be highlighted.
     pub highlight_spans: Option<Vec<HighlightSpan>>,
 }
@@ -14850,8 +14950,14 @@ impl SearchMatchV2 {
     pub fn new(metadata: MetadataV2) -> Self {
         SearchMatchV2 {
             metadata,
+            match_type: None,
             highlight_spans: None,
         }
+    }
+
+    pub fn with_match_type(mut self, value: Option<SearchMatchTypeV2>) -> Self {
+        self.match_type = value;
+        self
     }
 
     pub fn with_highlight_spans(mut self, value: Option<Vec<HighlightSpan>>) -> Self {
@@ -14862,6 +14968,7 @@ impl SearchMatchV2 {
 }
 
 const SEARCH_MATCH_V2_FIELDS: &[&str] = &["metadata",
+                                          "match_type",
                                           "highlight_spans"];
 impl SearchMatchV2 {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
@@ -14875,6 +14982,7 @@ impl SearchMatchV2 {
         optional: bool,
     ) -> Result<Option<SearchMatchV2>, V::Error> {
         let mut field_metadata = None;
+        let mut field_match_type = None;
         let mut field_highlight_spans = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
@@ -14885,6 +14993,12 @@ impl SearchMatchV2 {
                         return Err(::serde::de::Error::duplicate_field("metadata"));
                     }
                     field_metadata = Some(map.next_value()?);
+                }
+                "match_type" => {
+                    if field_match_type.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("match_type"));
+                    }
+                    field_match_type = Some(map.next_value()?);
                 }
                 "highlight_spans" => {
                     if field_highlight_spans.is_some() {
@@ -14903,6 +15017,7 @@ impl SearchMatchV2 {
         }
         let result = SearchMatchV2 {
             metadata: field_metadata.ok_or_else(|| ::serde::de::Error::missing_field("metadata"))?,
+            match_type: field_match_type,
             highlight_spans: field_highlight_spans,
         };
         Ok(Some(result))
@@ -14914,6 +15029,7 @@ impl SearchMatchV2 {
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
         s.serialize_field("metadata", &self.metadata)?;
+        s.serialize_field("match_type", &self.match_type)?;
         s.serialize_field("highlight_spans", &self.highlight_spans)
     }
 }
@@ -14940,7 +15056,7 @@ impl ::serde::ser::Serialize for SearchMatchV2 {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SearchMatchV2", 2)?;
+        let mut s = serializer.serialize_struct("SearchMatchV2", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -15029,6 +15145,9 @@ pub struct SearchOptions {
     pub path: Option<PathROrId>,
     /// The maximum number of search results to return.
     pub max_results: u64,
+    /// Specified property of the order of search results. By default, results are sorted by
+    /// relevance.
+    pub order_by: Option<SearchOrderBy>,
     /// Restricts search to the given file status.
     pub file_status: FileStatus,
     /// Restricts search to only match on filenames.
@@ -15045,6 +15164,7 @@ impl Default for SearchOptions {
         SearchOptions {
             path: None,
             max_results: 100,
+            order_by: None,
             file_status: FileStatus::Active,
             filename_only: false,
             file_extensions: None,
@@ -15055,6 +15175,7 @@ impl Default for SearchOptions {
 
 const SEARCH_OPTIONS_FIELDS: &[&str] = &["path",
                                          "max_results",
+                                         "order_by",
                                          "file_status",
                                          "filename_only",
                                          "file_extensions",
@@ -15066,6 +15187,7 @@ impl SearchOptions {
     ) -> Result<SearchOptions, V::Error> {
         let mut field_path = None;
         let mut field_max_results = None;
+        let mut field_order_by = None;
         let mut field_file_status = None;
         let mut field_filename_only = None;
         let mut field_file_extensions = None;
@@ -15083,6 +15205,12 @@ impl SearchOptions {
                         return Err(::serde::de::Error::duplicate_field("max_results"));
                     }
                     field_max_results = Some(map.next_value()?);
+                }
+                "order_by" => {
+                    if field_order_by.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("order_by"));
+                    }
+                    field_order_by = Some(map.next_value()?);
                 }
                 "file_status" => {
                     if field_file_status.is_some() {
@@ -15117,6 +15245,7 @@ impl SearchOptions {
         let result = SearchOptions {
             path: field_path,
             max_results: field_max_results.unwrap_or(100),
+            order_by: field_order_by,
             file_status: field_file_status.unwrap_or(FileStatus::Active),
             filename_only: field_filename_only.unwrap_or(false),
             file_extensions: field_file_extensions,
@@ -15132,6 +15261,7 @@ impl SearchOptions {
         use serde::ser::SerializeStruct;
         s.serialize_field("path", &self.path)?;
         s.serialize_field("max_results", &self.max_results)?;
+        s.serialize_field("order_by", &self.order_by)?;
         s.serialize_field("file_status", &self.file_status)?;
         s.serialize_field("filename_only", &self.filename_only)?;
         s.serialize_field("file_extensions", &self.file_extensions)?;
@@ -15161,9 +15291,78 @@ impl ::serde::ser::Serialize for SearchOptions {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("SearchOptions", 6)?;
+        let mut s = serializer.serialize_struct("SearchOptions", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum SearchOrderBy {
+    Relevance,
+    LastModifiedTime,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for SearchOrderBy {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = SearchOrderBy;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a SearchOrderBy structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "relevance" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SearchOrderBy::Relevance)
+                    }
+                    "last_modified_time" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SearchOrderBy::LastModifiedTime)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(SearchOrderBy::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["relevance",
+                                    "last_modified_time",
+                                    "other"];
+        deserializer.deserialize_struct("SearchOrderBy", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for SearchOrderBy {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            SearchOrderBy::Relevance => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchOrderBy", 1)?;
+                s.serialize_field(".tag", "relevance")?;
+                s.end()
+            }
+            SearchOrderBy::LastModifiedTime => {
+                // unit
+                let mut s = serializer.serialize_struct("SearchOrderBy", 1)?;
+                s.serialize_field(".tag", "last_modified_time")?;
+                s.end()
+            }
+            SearchOrderBy::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 
@@ -15295,7 +15494,7 @@ pub struct SearchV2Arg {
     /// Options for search results match fields.
     pub match_field_options: Option<SearchMatchFieldOptions>,
     /// Deprecated and moved this option to SearchMatchFieldOptions.
-    pub include_highlights: bool,
+    pub include_highlights: Option<bool>,
 }
 
 impl SearchV2Arg {
@@ -15304,7 +15503,7 @@ impl SearchV2Arg {
             query,
             options: None,
             match_field_options: None,
-            include_highlights: false,
+            include_highlights: None,
         }
     }
 
@@ -15318,7 +15517,7 @@ impl SearchV2Arg {
         self
     }
 
-    pub fn with_include_highlights(mut self, value: bool) -> Self {
+    pub fn with_include_highlights(mut self, value: Option<bool>) -> Self {
         self.include_highlights = value;
         self
     }
@@ -15385,7 +15584,7 @@ impl SearchV2Arg {
             query: field_query.ok_or_else(|| ::serde::de::Error::missing_field("query"))?,
             options: field_options,
             match_field_options: field_match_field_options,
-            include_highlights: field_include_highlights.unwrap_or(false),
+            include_highlights: field_include_highlights,
         };
         Ok(Some(result))
     }

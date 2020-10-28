@@ -35,7 +35,7 @@ required-features = ["dbx_files", "default_client"]
 dbx_account = ["dbx_common"]
 dbx_async = []
 dbx_auth = ["dbx_common"]
-dbx_check = []
+dbx_check = ["dbx_common"]
 dbx_common = []
 dbx_contacts = ["dbx_common"]
 dbx_file_properties = []
@@ -45,7 +45,6 @@ dbx_paper = ["dbx_common", "dbx_sharing"]
 dbx_secondary_emails = ["dbx_common"]
 dbx_seen_state = []
 dbx_sharing = ["dbx_async", "dbx_common", "dbx_files", "dbx_seen_state", "dbx_team_common", "dbx_users", "dbx_users_common"]
-dbx_stone_fixtures = []
 dbx_team = ["dbx_account", "dbx_async", "dbx_common", "dbx_file_properties", "dbx_files", "dbx_secondary_emails", "dbx_team_common", "dbx_team_policies", "dbx_users", "dbx_users_common"]
 dbx_team_common = ["dbx_common"]
 dbx_team_log = ["dbx_async", "dbx_common", "dbx_file_requests", "dbx_files", "dbx_sharing", "dbx_team", "dbx_team_common", "dbx_team_policies", "dbx_users_common"]
@@ -70,7 +69,6 @@ default = [
     "dbx_secondary_emails",
     "dbx_seen_state",
     "dbx_sharing",
-    "dbx_stone_fixtures",
     "dbx_team",
     "dbx_team_common",
     "dbx_team_log",
