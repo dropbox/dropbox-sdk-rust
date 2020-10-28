@@ -20,11 +20,14 @@ yyyy-mm-dd
     * `UserAuthHyperClient` -> `UserAuthDefaultClient`
     * `TeamAuthHyperClient` -> `TeamAuthDefaultClient`
     * ... etc.
-* very small API update
+* API spec updates
+  * 2020-10-28
+  * 2020-10-15
+  * 2020-10-09
 
 # v0.6.0
 2020-09-24
-* API update
+* API update 2020-09-17
   * notably, the `cloud_docs` namespace has been removed.
 * add Dropbox-standard meta files
 * enabled Dependabot
