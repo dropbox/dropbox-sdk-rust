@@ -1,5 +1,5 @@
 # v0.7.0
-yyyy-mm-dd
+2020-10-28
 * Implemented support for different authentication types.
   * `HyperClient` is now `UserAuthHyperClient`.
   * API methods now take a different type of client for their first argument, depending on the auth
