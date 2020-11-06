@@ -27,6 +27,8 @@ class RustBackend(RustHelperBackend):
     def _generate_mod_file(self):
         with self.output_to_relative_path('mod.rs'):
             self._emit_header()
+            self.emit(u'#![allow(missing_docs)]')
+            self.emit()
             for module in self._modules:
                 self.emit(u'if_feature! {{ "dbx_{}", pub mod {}; }}'.format(
                     module, self.namespace_name_raw(module)))

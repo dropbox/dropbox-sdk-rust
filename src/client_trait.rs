@@ -6,6 +6,7 @@ use std::io::Read;
 
 /// The base HTTP client trait.
 pub trait HttpClient {
+    /// Make a HTTP request.
     #[allow(clippy::too_many_arguments)]
     fn request(
         &self,
@@ -40,29 +41,51 @@ pub trait AppAuthClient: HttpClient {}
 /// The raw response from the server, containing the result from either a header or the body, as
 /// appropriate to the request style, and a body stream if it is from a Download style request.
 pub struct HttpRequestResultRaw {
+    /// The response body JSON string.
     pub result_json: String,
+
+    /// The value of the `Content-Length` header in the response, if any. Only expected to not be
+    /// `None` if `body` is also not `None`.
     pub content_length: Option<u64>,
+
+    /// The response body stream, if any. Only expected to not be `None` for [`Style::Download`]
+    /// endpoints.
     pub body: Option<Box<dyn Read>>,
 }
 
 /// The response from the server, parsed into a given type, including a body stream if it is from
 /// a Download style request.
 pub struct HttpRequestResult<T> {
+    /// The API result, parsed into the given type.
     pub result: T,
+
+    /// The value of the `Content-Length` header in the response, if any. Only expected to not be
+    /// `None` if `body` is also not `None`.
     pub content_length: Option<u64>,
+
+    /// The response body stream, if any. Only expected to not be `None` for [`Style::Download`]
+    /// endpoints.
     pub body: Option<Box<dyn Read>>,
 }
 
 /// The API base endpoint for a request. Determines which hostname the request should go to.
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum Endpoint {
+    /// The endpoint used for most API calls.
     Api,
+
+    /// The endpoint primarily used for upload and download calls.
     Content,
+
+    /// The endpoint primarily used for longpolling calls.
     Notify,
+
+    /// The endpoint used for OAuth2 token requests.
     OAuth2,
 }
 
 impl Endpoint {
+    /// The base URL for API calls using the given endpoint.
     pub fn url(self) -> &'static str {
         match self {
             Endpoint::Api => "https://api.dropboxapi.com/2/",
