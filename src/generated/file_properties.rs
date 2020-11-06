@@ -11,18 +11,17 @@
 //!
 //! These endpoints enable you to tag arbitrary key/value data to Dropbox files.
 //!
-//! The most basic unit in this namespace is the [`PropertyField`](file_properties::PropertyField).
-//! These fields encapsulate the actual key/value data.
+//! The most basic unit in this namespace is the [`PropertyField`](PropertyField). These fields
+//! encapsulate the actual key/value data.
 //!
-//! Fields are added to a Dropbox file using a [`PropertyGroup`](file_properties::PropertyGroup).
-//! Property groups contain a reference to a Dropbox file and a
-//! [`PropertyGroupTemplate`](file_properties::PropertyGroupTemplate). Property groups are uniquely
-//! identified by the combination of their associated Dropbox file and template.
+//! Fields are added to a Dropbox file using a [`PropertyGroup`](PropertyGroup). Property groups
+//! contain a reference to a Dropbox file and a [`PropertyGroupTemplate`](PropertyGroupTemplate).
+//! Property groups are uniquely identified by the combination of their associated Dropbox file and
+//! template.
 //!
-//! The [`PropertyGroupTemplate`](file_properties::PropertyGroupTemplate) is a way of restricting
-//! the possible key names and value types of the data within a property group. The possible key
-//! names and value types are explicitly enumerated using
-//! [`PropertyFieldTemplate`](file_properties::PropertyFieldTemplate) objects.
+//! The [`PropertyGroupTemplate`](PropertyGroupTemplate) is a way of restricting the possible key
+//! names and value types of the data within a property group. The possible key names and value
+//! types are explicitly enumerated using [`PropertyFieldTemplate`](PropertyFieldTemplate) objects.
 //!
 //! You can think of a property group template as a class definition for a particular key/value
 //! metadata object, and the property groups themselves as the instantiations of these objects.
