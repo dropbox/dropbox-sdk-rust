@@ -1,3 +1,16 @@
+// Copyright (c) 2020 Dropbox, Inc.
+
+//! The default HTTP client.
+//!
+//! Use this client if you're not particularly picky about implementation details, as the specific
+//! implementation is not exposed, and may be changed in the future.
+//!
+//! If you have a need for a specific HTTP client implementation, or your program is already using
+//! some HTTP client crate, you probably want to have this Dropbox SDK crate use it as well. To do
+//! that, you should implement the traits in `crate::client_trait` for it and use it instead.
+//!
+//! This code (and its dependencies) are only built if you use the `default_client` Cargo feature.
+
 use crate::Error;
 use crate::client_trait::*;
 
@@ -208,12 +221,15 @@ impl UreqClient {
 #[derive(thiserror::Error, Debug)]
 #[allow(clippy::large_enum_variant)] // it's always boxed
 pub enum DefaultClientError {
+    /// The HTTP client encountered invalid UTF-8 data.
     #[error("invalid UTF-8 string")]
     Utf8(#[from] std::string::FromUtf8Error),
 
+    /// The HTTP client encountered some I/O error.
     #[error("I/O error: {0}")]
     IO(#[from] std::io::Error),
 
+    /// Some other error from the HTTP client implementation.
     #[error(transparent)]
     Request(#[from] RequestError),
 }

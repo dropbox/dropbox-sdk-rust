@@ -2,6 +2,7 @@
 
 #![deny(
     broken_intra_doc_links,
+    missing_docs,
     rust_2018_idioms,
 )]
 
@@ -29,42 +30,63 @@ macro_rules! if_feature {
     }
 }
 
-use thiserror::Error;
 #[macro_use] extern crate log;
 
-#[derive(Error, Debug)]
+/// An error occurred in the process of making an API call.
+/// This is different from the case where your call succeeded, but the operation returned an error.
+#[derive(thiserror::Error, Debug)]
 pub enum Error {
 
+    /// Some error from the internals of the HTTP client.
     #[error("error from HTTP client: {0}")]
     HttpClient(Box<dyn std::error::Error + Send + Sync + 'static>),
 
+    /// Something went wrong in the process of transforming your arguments into a JSON string.
     #[error("JSON serialization error: {0}")]
     Json(#[from] serde_json::Error),
 
+    /// The Dropbox API response was unexpected or malformed in some way.
     #[error("Dropbox API returned something unexpected: {0}")]
     UnexpectedResponse(&'static str),
 
+    /// The Dropbox API indicated that your request was malformed in some way.
     #[error("Dropbox API indicated that the request was malformed: {0}")]
     BadRequest(String),
 
+    /// Your access token is invalid.
     #[error("Dropbox API indicated that the access token is bad: {0}")]
     InvalidToken(String),
 
+    /// Your request was rejected due to rate-limiting. You can retry it later.
     #[error("Dropbox API declined the request due to rate-limiting ({reason}), \
         retry after {retry_after_seconds}s")]
-    RateLimited { reason: String, retry_after_seconds: u32 },
+    RateLimited {
+        /// The server-given reason for the rate-limiting.
+        reason: String,
 
+        /// You can retry this request after this many seconds.
+        retry_after_seconds: u32,
+    },
+
+    /// The Dropbox API server had an internal error.
     #[error("Dropbox API had an internal server error: {0}")]
     ServerError(String),
 
+    /// The Dropbox API returned an unexpected HTTP response code.
     #[error("Dropbox API returned HTTP {code} {status} - {json}")]
     UnexpectedHttpError {
+        /// HTTP status code returned.
         code: u16,
+
+        /// The HTTP status string.
         status: String,
+
+        /// The response body.
         json: String,
     },
 }
 
+/// Shorthand for a Result where the error type is this crate's [`Error`] type.
 pub type Result<T> = std::result::Result<T, Error>;
 
 if_feature! { "default_client", pub mod default_client; }

@@ -1,5 +1,7 @@
 // Copyright (c) 2019-2020 Dropbox, Inc.
 
+//! Helpers for requesting OAuth2 tokens.
+
 use crate::Error;
 use crate::client_trait::*;
 use url::form_urlencoded::Serializer as UrlEncoder;
@@ -9,7 +11,7 @@ use url::Url;
 /// Requires the App ID and secret, as well as the redirect URI used in the prior authorize
 /// request, if there was one.
 pub fn oauth2_token_from_authorization_code(
-    client: impl HttpClient,
+    client: impl NoauthClient,
     client_id: &str,
     client_secret: &str,
     authorization_code: &str,
@@ -79,6 +81,7 @@ pub enum Oauth2Type {
 }
 
 impl Oauth2Type {
+    /// The value to put in the "response_type" parameter to request the given token type.
     pub fn as_str(self) -> &'static str {
         match self {
             Oauth2Type::AuthorizationCode => "code",
@@ -88,6 +91,7 @@ impl Oauth2Type {
 }
 
 impl<'a> Oauth2AuthorizeUrlBuilder<'a> {
+    /// Return a new empty builder for the given client ID and OAuth2 token type.
     pub fn new(client_id: &'a str, oauth2_type: Oauth2Type) -> Self {
         Self {
             client_id,
@@ -102,41 +106,51 @@ impl<'a> Oauth2AuthorizeUrlBuilder<'a> {
         }
     }
 
+    /// Set whether the user should be prompted to approve the request regardless of whether they
+    /// have approved it before.
     pub fn force_reapprove(mut self, value: bool) -> Self {
         self.force_reapprove = value;
         self
     }
 
+    /// Set whether the user should have to re-login when approving the request.
     pub fn force_reauthentication(mut self, value: bool) -> Self {
         self.force_reauthentication = value;
         self
     }
 
+    /// Set whether new user signups should be allowed or not while appproving the request.
     pub fn disable_signup(mut self, value: bool) -> Self {
         self.disable_signup = value;
         self
     }
 
+    /// Set the URI the approve request should redirect the user to when completed.
     pub fn redirect_uri(mut self, value: &'a str) -> Self {
         self.redirect_uri = Some(value);
         self
     }
 
+    /// Set some opaque value to be passed along to the redirect URI when completing the request.
     pub fn state(mut self, value: &'a str) -> Self {
         self.state = Some(value);
         self
     }
 
+    /// Set a given role to require for the request.
     pub fn require_role(mut self, value: &'a str) -> Self {
         self.require_role = Some(value);
         self
     }
 
+    /// Force a specific locale when prompting the user, instead of the locale indicated by their
+    /// browser.
     pub fn locale(mut self, value: &'a str) -> Self {
         self.locale = Some(value);
         self
     }
 
+    /// Build the OAuth2 authorization URL from the previously given parameters.
     pub fn build(self) -> Url {
         let mut url = Url::parse("https://www.dropbox.com/oauth2/authorize").unwrap();
         {
