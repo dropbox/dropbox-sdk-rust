@@ -1,3 +1,7 @@
+# v0.7.1
+2020-11-05
+* Documentation updates only.
+
 # v0.7.0
 2020-10-28
 * Implemented support for different authentication types.
