@@ -77,3 +77,7 @@ default = [
     "dbx_users_common",
     "default_client",
     ]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
