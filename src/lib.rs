@@ -1,6 +1,9 @@
 // Copyright (c) 2019-2020 Dropbox, Inc.
 
-#![deny(rust_2018_idioms)]
+#![deny(
+    broken_intra_doc_links,
+    rust_2018_idioms,
+)]
 
 use thiserror::Error;
 #[macro_use] extern crate log;
