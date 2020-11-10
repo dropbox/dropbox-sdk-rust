@@ -500,8 +500,8 @@ impl AddPaperDocUser {
         }
     }
 
-    pub fn with_custom_message(mut self, value: Option<String>) -> Self {
-        self.custom_message = value;
+    pub fn with_custom_message(mut self, value: String) -> Self {
+        self.custom_message = Some(value);
         self
     }
 
@@ -880,8 +880,8 @@ impl Cursor {
         }
     }
 
-    pub fn with_expiration(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.expiration = value;
+    pub fn with_expiration(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.expiration = Some(value);
         self
     }
 }
@@ -1496,16 +1496,13 @@ impl Default for FoldersContainingPaperDoc {
 }
 
 impl FoldersContainingPaperDoc {
-    pub fn with_folder_sharing_policy_type(
-        mut self,
-        value: Option<FolderSharingPolicyType>,
-    ) -> Self {
-        self.folder_sharing_policy_type = value;
+    pub fn with_folder_sharing_policy_type(mut self, value: FolderSharingPolicyType) -> Self {
+        self.folder_sharing_policy_type = Some(value);
         self
     }
 
-    pub fn with_folders(mut self, value: Option<Vec<Folder>>) -> Self {
-        self.folders = value;
+    pub fn with_folders(mut self, value: Vec<Folder>) -> Self {
+        self.folders = Some(value);
         self
     }
 }
@@ -3461,8 +3458,8 @@ impl PaperDocCreateArgs {
         }
     }
 
-    pub fn with_parent_folder_id(mut self, value: Option<String>) -> Self {
-        self.parent_folder_id = value;
+    pub fn with_parent_folder_id(mut self, value: String) -> Self {
+        self.parent_folder_id = Some(value);
         self
     }
 }
@@ -4603,13 +4600,13 @@ impl PaperFolderCreateArg {
         }
     }
 
-    pub fn with_parent_folder_id(mut self, value: Option<String>) -> Self {
-        self.parent_folder_id = value;
+    pub fn with_parent_folder_id(mut self, value: String) -> Self {
+        self.parent_folder_id = Some(value);
         self
     }
 
-    pub fn with_is_team_folder(mut self, value: Option<bool>) -> Self {
-        self.is_team_folder = value;
+    pub fn with_is_team_folder(mut self, value: bool) -> Self {
+        self.is_team_folder = Some(value);
         self
     }
 }
@@ -5108,13 +5105,13 @@ impl Default for SharingPolicy {
 }
 
 impl SharingPolicy {
-    pub fn with_public_sharing_policy(mut self, value: Option<SharingPublicPolicyType>) -> Self {
-        self.public_sharing_policy = value;
+    pub fn with_public_sharing_policy(mut self, value: SharingPublicPolicyType) -> Self {
+        self.public_sharing_policy = Some(value);
         self
     }
 
-    pub fn with_team_sharing_policy(mut self, value: Option<SharingTeamPolicyType>) -> Self {
-        self.team_sharing_policy = value;
+    pub fn with_team_sharing_policy(mut self, value: SharingTeamPolicyType) -> Self {
+        self.team_sharing_policy = Some(value);
         self
     }
 }

@@ -51,7 +51,7 @@ fn list_folder_recursive() {
         client.as_ref(),
         &files::ListFolderArg::new(FOLDER.to_owned())
             .with_recursive(true)
-            .with_limit(Some(10)))
+            .with_limit(10))
     {
         Ok(Ok(files::ListFolderResult { entries, cursor, has_more })) => {
             println!("{} entries", entries.len());

@@ -127,13 +127,13 @@ impl GroupSummary {
         }
     }
 
-    pub fn with_group_external_id(mut self, value: Option<GroupExternalId>) -> Self {
-        self.group_external_id = value;
+    pub fn with_group_external_id(mut self, value: GroupExternalId) -> Self {
+        self.group_external_id = Some(value);
         self
     }
 
-    pub fn with_member_count(mut self, value: Option<u32>) -> Self {
-        self.member_count = value;
+    pub fn with_member_count(mut self, value: u32) -> Self {
+        self.member_count = Some(value);
         self
     }
 }
@@ -432,13 +432,13 @@ impl Default for TimeRange {
 }
 
 impl TimeRange {
-    pub fn with_start_time(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.start_time = value;
+    pub fn with_start_time(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.start_time = Some(value);
         self
     }
 
-    pub fn with_end_time(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.end_time = value;
+    pub fn with_end_time(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.end_time = Some(value);
         self
     }
 }

@@ -1182,17 +1182,17 @@ impl AlphaGetMetadataArg {
 
     pub fn with_include_property_groups(
         mut self,
-        value: Option<super::file_properties::TemplateFilterBase>,
+        value: super::file_properties::TemplateFilterBase,
     ) -> Self {
-        self.include_property_groups = value;
+        self.include_property_groups = Some(value);
         self
     }
 
     pub fn with_include_property_templates(
         mut self,
-        value: Option<Vec<super::file_properties::TemplateId>>,
+        value: Vec<super::file_properties::TemplateId>,
     ) -> Self {
-        self.include_property_templates = value;
+        self.include_property_templates = Some(value);
         self
     }
 }
@@ -1454,8 +1454,8 @@ impl CommitInfo {
         self
     }
 
-    pub fn with_client_modified(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.client_modified = value;
+    pub fn with_client_modified(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.client_modified = Some(value);
         self
     }
 
@@ -1466,9 +1466,9 @@ impl CommitInfo {
 
     pub fn with_property_groups(
         mut self,
-        value: Option<Vec<super::file_properties::PropertyGroup>>,
+        value: Vec<super::file_properties::PropertyGroup>,
     ) -> Self {
-        self.property_groups = value;
+        self.property_groups = Some(value);
         self
     }
 
@@ -1664,8 +1664,8 @@ impl CommitInfoWithProperties {
         self
     }
 
-    pub fn with_client_modified(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.client_modified = value;
+    pub fn with_client_modified(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.client_modified = Some(value);
         self
     }
 
@@ -1676,9 +1676,9 @@ impl CommitInfoWithProperties {
 
     pub fn with_property_groups(
         mut self,
-        value: Option<Vec<super::file_properties::PropertyGroup>>,
+        value: Vec<super::file_properties::PropertyGroup>,
     ) -> Self {
-        self.property_groups = value;
+        self.property_groups = Some(value);
         self
     }
 
@@ -2979,8 +2979,8 @@ impl DeleteArg {
         }
     }
 
-    pub fn with_parent_rev(mut self, value: Option<Rev>) -> Self {
-        self.parent_rev = value;
+    pub fn with_parent_rev(mut self, value: Rev) -> Self {
+        self.parent_rev = Some(value);
         self
     }
 }
@@ -3867,21 +3867,18 @@ impl DeletedMetadata {
         }
     }
 
-    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
-        self.path_lower = value;
+    pub fn with_path_lower(mut self, value: String) -> Self {
+        self.path_lower = Some(value);
         self
     }
 
-    pub fn with_path_display(mut self, value: Option<String>) -> Self {
-        self.path_display = value;
+    pub fn with_path_display(mut self, value: String) -> Self {
+        self.path_display = Some(value);
         self
     }
 
-    pub fn with_parent_shared_folder_id(
-        mut self,
-        value: Option<super::common::SharedFolderId>,
-    ) -> Self {
-        self.parent_shared_folder_id = value;
+    pub fn with_parent_shared_folder_id(mut self, value: super::common::SharedFolderId) -> Self {
+        self.parent_shared_folder_id = Some(value);
         self
     }
 }
@@ -4110,8 +4107,8 @@ impl DownloadArg {
         }
     }
 
-    pub fn with_rev(mut self, value: Option<Rev>) -> Self {
-        self.rev = value;
+    pub fn with_rev(mut self, value: Rev) -> Self {
+        self.rev = Some(value);
         self
     }
 }
@@ -4767,8 +4764,8 @@ impl Default for ExportInfo {
 }
 
 impl ExportInfo {
-    pub fn with_export_as(mut self, value: Option<String>) -> Self {
-        self.export_as = value;
+    pub fn with_export_as(mut self, value: String) -> Self {
+        self.export_as = Some(value);
         self
     }
 }
@@ -4858,8 +4855,8 @@ impl ExportMetadata {
         }
     }
 
-    pub fn with_export_hash(mut self, value: Option<Sha256HexHash>) -> Self {
-        self.export_hash = value;
+    pub fn with_export_hash(mut self, value: Sha256HexHash) -> Self {
+        self.export_hash = Some(value);
         self
     }
 }
@@ -5418,26 +5415,23 @@ impl Default for FileLockMetadata {
 }
 
 impl FileLockMetadata {
-    pub fn with_is_lockholder(mut self, value: Option<bool>) -> Self {
-        self.is_lockholder = value;
+    pub fn with_is_lockholder(mut self, value: bool) -> Self {
+        self.is_lockholder = Some(value);
         self
     }
 
-    pub fn with_lockholder_name(mut self, value: Option<String>) -> Self {
-        self.lockholder_name = value;
+    pub fn with_lockholder_name(mut self, value: String) -> Self {
+        self.lockholder_name = Some(value);
         self
     }
 
-    pub fn with_lockholder_account_id(
-        mut self,
-        value: Option<super::users_common::AccountId>,
-    ) -> Self {
-        self.lockholder_account_id = value;
+    pub fn with_lockholder_account_id(mut self, value: super::users_common::AccountId) -> Self {
+        self.lockholder_account_id = Some(value);
         self
     }
 
-    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.created = value;
+    pub fn with_created(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.created = Some(value);
         self
     }
 }
@@ -5629,36 +5623,33 @@ impl FileMetadata {
         }
     }
 
-    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
-        self.path_lower = value;
+    pub fn with_path_lower(mut self, value: String) -> Self {
+        self.path_lower = Some(value);
         self
     }
 
-    pub fn with_path_display(mut self, value: Option<String>) -> Self {
-        self.path_display = value;
+    pub fn with_path_display(mut self, value: String) -> Self {
+        self.path_display = Some(value);
         self
     }
 
-    pub fn with_parent_shared_folder_id(
-        mut self,
-        value: Option<super::common::SharedFolderId>,
-    ) -> Self {
-        self.parent_shared_folder_id = value;
+    pub fn with_parent_shared_folder_id(mut self, value: super::common::SharedFolderId) -> Self {
+        self.parent_shared_folder_id = Some(value);
         self
     }
 
-    pub fn with_media_info(mut self, value: Option<MediaInfo>) -> Self {
-        self.media_info = value;
+    pub fn with_media_info(mut self, value: MediaInfo) -> Self {
+        self.media_info = Some(value);
         self
     }
 
-    pub fn with_symlink_info(mut self, value: Option<SymlinkInfo>) -> Self {
-        self.symlink_info = value;
+    pub fn with_symlink_info(mut self, value: SymlinkInfo) -> Self {
+        self.symlink_info = Some(value);
         self
     }
 
-    pub fn with_sharing_info(mut self, value: Option<FileSharingInfo>) -> Self {
-        self.sharing_info = value;
+    pub fn with_sharing_info(mut self, value: FileSharingInfo) -> Self {
+        self.sharing_info = Some(value);
         self
     }
 
@@ -5667,31 +5658,31 @@ impl FileMetadata {
         self
     }
 
-    pub fn with_export_info(mut self, value: Option<ExportInfo>) -> Self {
-        self.export_info = value;
+    pub fn with_export_info(mut self, value: ExportInfo) -> Self {
+        self.export_info = Some(value);
         self
     }
 
     pub fn with_property_groups(
         mut self,
-        value: Option<Vec<super::file_properties::PropertyGroup>>,
+        value: Vec<super::file_properties::PropertyGroup>,
     ) -> Self {
-        self.property_groups = value;
+        self.property_groups = Some(value);
         self
     }
 
-    pub fn with_has_explicit_shared_members(mut self, value: Option<bool>) -> Self {
-        self.has_explicit_shared_members = value;
+    pub fn with_has_explicit_shared_members(mut self, value: bool) -> Self {
+        self.has_explicit_shared_members = Some(value);
         self
     }
 
-    pub fn with_content_hash(mut self, value: Option<Sha256HexHash>) -> Self {
-        self.content_hash = value;
+    pub fn with_content_hash(mut self, value: Sha256HexHash) -> Self {
+        self.content_hash = Some(value);
         self
     }
 
-    pub fn with_file_lock_info(mut self, value: Option<FileLockMetadata>) -> Self {
-        self.file_lock_info = value;
+    pub fn with_file_lock_info(mut self, value: FileLockMetadata) -> Self {
+        self.file_lock_info = Some(value);
         self
     }
 }
@@ -6011,8 +6002,8 @@ impl FileSharingInfo {
         }
     }
 
-    pub fn with_modified_by(mut self, value: Option<super::users_common::AccountId>) -> Self {
-        self.modified_by = value;
+    pub fn with_modified_by(mut self, value: super::users_common::AccountId) -> Self {
+        self.modified_by = Some(value);
         self
     }
 }
@@ -6224,39 +6215,36 @@ impl FolderMetadata {
         }
     }
 
-    pub fn with_path_lower(mut self, value: Option<String>) -> Self {
-        self.path_lower = value;
+    pub fn with_path_lower(mut self, value: String) -> Self {
+        self.path_lower = Some(value);
         self
     }
 
-    pub fn with_path_display(mut self, value: Option<String>) -> Self {
-        self.path_display = value;
+    pub fn with_path_display(mut self, value: String) -> Self {
+        self.path_display = Some(value);
         self
     }
 
-    pub fn with_parent_shared_folder_id(
-        mut self,
-        value: Option<super::common::SharedFolderId>,
-    ) -> Self {
-        self.parent_shared_folder_id = value;
+    pub fn with_parent_shared_folder_id(mut self, value: super::common::SharedFolderId) -> Self {
+        self.parent_shared_folder_id = Some(value);
         self
     }
 
-    pub fn with_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
-        self.shared_folder_id = value;
+    pub fn with_shared_folder_id(mut self, value: super::common::SharedFolderId) -> Self {
+        self.shared_folder_id = Some(value);
         self
     }
 
-    pub fn with_sharing_info(mut self, value: Option<FolderSharingInfo>) -> Self {
-        self.sharing_info = value;
+    pub fn with_sharing_info(mut self, value: FolderSharingInfo) -> Self {
+        self.sharing_info = Some(value);
         self
     }
 
     pub fn with_property_groups(
         mut self,
-        value: Option<Vec<super::file_properties::PropertyGroup>>,
+        value: Vec<super::file_properties::PropertyGroup>,
     ) -> Self {
-        self.property_groups = value;
+        self.property_groups = Some(value);
         self
     }
 }
@@ -6436,16 +6424,13 @@ impl FolderSharingInfo {
         }
     }
 
-    pub fn with_parent_shared_folder_id(
-        mut self,
-        value: Option<super::common::SharedFolderId>,
-    ) -> Self {
-        self.parent_shared_folder_id = value;
+    pub fn with_parent_shared_folder_id(mut self, value: super::common::SharedFolderId) -> Self {
+        self.parent_shared_folder_id = Some(value);
         self
     }
 
-    pub fn with_shared_folder_id(mut self, value: Option<super::common::SharedFolderId>) -> Self {
-        self.shared_folder_id = value;
+    pub fn with_shared_folder_id(mut self, value: super::common::SharedFolderId) -> Self {
+        self.shared_folder_id = Some(value);
         self
     }
 
@@ -6902,9 +6887,9 @@ impl GetMetadataArg {
 
     pub fn with_include_property_groups(
         mut self,
-        value: Option<super::file_properties::TemplateFilterBase>,
+        value: super::file_properties::TemplateFilterBase,
     ) -> Self {
-        self.include_property_groups = value;
+        self.include_property_groups = Some(value);
         self
     }
 }
@@ -8280,21 +8265,21 @@ impl ListFolderArg {
         self
     }
 
-    pub fn with_limit(mut self, value: Option<u32>) -> Self {
-        self.limit = value;
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = Some(value);
         self
     }
 
-    pub fn with_shared_link(mut self, value: Option<SharedLink>) -> Self {
-        self.shared_link = value;
+    pub fn with_shared_link(mut self, value: SharedLink) -> Self {
+        self.shared_link = Some(value);
         self
     }
 
     pub fn with_include_property_groups(
         mut self,
-        value: Option<super::file_properties::TemplateFilterBase>,
+        value: super::file_properties::TemplateFilterBase,
     ) -> Self {
-        self.include_property_groups = value;
+        self.include_property_groups = Some(value);
         self
     }
 
@@ -9025,8 +9010,8 @@ impl ListFolderLongpollResult {
         }
     }
 
-    pub fn with_backoff(mut self, value: Option<u64>) -> Self {
-        self.backoff = value;
+    pub fn with_backoff(mut self, value: u64) -> Self {
+        self.backoff = Some(value);
         self
     }
 }
@@ -9523,8 +9508,8 @@ impl ListRevisionsResult {
         }
     }
 
-    pub fn with_server_deleted(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.server_deleted = value;
+    pub fn with_server_deleted(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.server_deleted = Some(value);
         self
     }
 }
@@ -10775,13 +10760,13 @@ impl MinimalFileLinkMetadata {
         }
     }
 
-    pub fn with_id(mut self, value: Option<Id>) -> Self {
-        self.id = value;
+    pub fn with_id(mut self, value: Id) -> Self {
+        self.id = Some(value);
         self
     }
 
-    pub fn with_path(mut self, value: Option<String>) -> Self {
-        self.path = value;
+    pub fn with_path(mut self, value: String) -> Self {
+        self.path = Some(value);
         self
     }
 }
@@ -11181,18 +11166,18 @@ impl Default for PhotoMetadata {
 }
 
 impl PhotoMetadata {
-    pub fn with_dimensions(mut self, value: Option<Dimensions>) -> Self {
-        self.dimensions = value;
+    pub fn with_dimensions(mut self, value: Dimensions) -> Self {
+        self.dimensions = Some(value);
         self
     }
 
-    pub fn with_location(mut self, value: Option<GpsCoordinates>) -> Self {
-        self.location = value;
+    pub fn with_location(mut self, value: GpsCoordinates) -> Self {
+        self.location = Some(value);
         self
     }
 
-    pub fn with_time_taken(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.time_taken = value;
+    pub fn with_time_taken(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.time_taken = Some(value);
         self
     }
 }
@@ -11297,8 +11282,8 @@ impl PreviewArg {
         }
     }
 
-    pub fn with_rev(mut self, value: Option<Rev>) -> Self {
-        self.rev = value;
+    pub fn with_rev(mut self, value: Rev) -> Self {
+        self.rev = Some(value);
         self
     }
 }
@@ -11513,13 +11498,13 @@ impl Default for PreviewResult {
 }
 
 impl PreviewResult {
-    pub fn with_file_metadata(mut self, value: Option<FileMetadata>) -> Self {
-        self.file_metadata = value;
+    pub fn with_file_metadata(mut self, value: FileMetadata) -> Self {
+        self.file_metadata = Some(value);
         self
     }
 
-    pub fn with_link_metadata(mut self, value: Option<MinimalFileLinkMetadata>) -> Self {
-        self.link_metadata = value;
+    pub fn with_link_metadata(mut self, value: MinimalFileLinkMetadata) -> Self {
+        self.link_metadata = Some(value);
         self
     }
 }
@@ -14953,13 +14938,13 @@ impl SearchMatchV2 {
         }
     }
 
-    pub fn with_match_type(mut self, value: Option<SearchMatchTypeV2>) -> Self {
-        self.match_type = value;
+    pub fn with_match_type(mut self, value: SearchMatchTypeV2) -> Self {
+        self.match_type = Some(value);
         self
     }
 
-    pub fn with_highlight_spans(mut self, value: Option<Vec<HighlightSpan>>) -> Self {
-        self.highlight_spans = value;
+    pub fn with_highlight_spans(mut self, value: Vec<HighlightSpan>) -> Self {
+        self.highlight_spans = Some(value);
         self
     }
 }
@@ -15171,8 +15156,8 @@ impl Default for SearchOptions {
 }
 
 impl SearchOptions {
-    pub fn with_path(mut self, value: Option<PathROrId>) -> Self {
-        self.path = value;
+    pub fn with_path(mut self, value: PathROrId) -> Self {
+        self.path = Some(value);
         self
     }
 
@@ -15181,8 +15166,8 @@ impl SearchOptions {
         self
     }
 
-    pub fn with_order_by(mut self, value: Option<SearchOrderBy>) -> Self {
-        self.order_by = value;
+    pub fn with_order_by(mut self, value: SearchOrderBy) -> Self {
+        self.order_by = Some(value);
         self
     }
 
@@ -15196,13 +15181,13 @@ impl SearchOptions {
         self
     }
 
-    pub fn with_file_extensions(mut self, value: Option<Vec<String>>) -> Self {
-        self.file_extensions = value;
+    pub fn with_file_extensions(mut self, value: Vec<String>) -> Self {
+        self.file_extensions = Some(value);
         self
     }
 
-    pub fn with_file_categories(mut self, value: Option<Vec<FileCategory>>) -> Self {
-        self.file_categories = value;
+    pub fn with_file_categories(mut self, value: Vec<FileCategory>) -> Self {
+        self.file_categories = Some(value);
         self
     }
 }
@@ -15540,18 +15525,18 @@ impl SearchV2Arg {
         }
     }
 
-    pub fn with_options(mut self, value: Option<SearchOptions>) -> Self {
-        self.options = value;
+    pub fn with_options(mut self, value: SearchOptions) -> Self {
+        self.options = Some(value);
         self
     }
 
-    pub fn with_match_field_options(mut self, value: Option<SearchMatchFieldOptions>) -> Self {
-        self.match_field_options = value;
+    pub fn with_match_field_options(mut self, value: SearchMatchFieldOptions) -> Self {
+        self.match_field_options = Some(value);
         self
     }
 
-    pub fn with_include_highlights(mut self, value: Option<bool>) -> Self {
-        self.include_highlights = value;
+    pub fn with_include_highlights(mut self, value: bool) -> Self {
+        self.include_highlights = Some(value);
         self
     }
 }
@@ -15772,8 +15757,8 @@ impl SearchV2Result {
         }
     }
 
-    pub fn with_cursor(mut self, value: Option<SearchV2Cursor>) -> Self {
-        self.cursor = value;
+    pub fn with_cursor(mut self, value: SearchV2Cursor) -> Self {
+        self.cursor = Some(value);
         self
     }
 }
@@ -15889,8 +15874,8 @@ impl SharedLink {
         }
     }
 
-    pub fn with_password(mut self, value: Option<String>) -> Self {
-        self.password = value;
+    pub fn with_password(mut self, value: String) -> Self {
+        self.password = Some(value);
         self
     }
 }
@@ -16003,13 +15988,13 @@ impl SharedLinkFileInfo {
         }
     }
 
-    pub fn with_path(mut self, value: Option<String>) -> Self {
-        self.path = value;
+    pub fn with_path(mut self, value: String) -> Self {
+        self.path = Some(value);
         self
     }
 
-    pub fn with_password(mut self, value: Option<String>) -> Self {
-        self.password = value;
+    pub fn with_password(mut self, value: String) -> Self {
+        self.password = Some(value);
         self
     }
 }
@@ -16221,8 +16206,8 @@ impl SingleUserLock {
         }
     }
 
-    pub fn with_lock_holder_team_id(mut self, value: Option<String>) -> Self {
-        self.lock_holder_team_id = value;
+    pub fn with_lock_holder_team_id(mut self, value: String) -> Self {
+        self.lock_holder_team_id = Some(value);
         self
     }
 }
@@ -19179,23 +19164,23 @@ impl Default for VideoMetadata {
 }
 
 impl VideoMetadata {
-    pub fn with_dimensions(mut self, value: Option<Dimensions>) -> Self {
-        self.dimensions = value;
+    pub fn with_dimensions(mut self, value: Dimensions) -> Self {
+        self.dimensions = Some(value);
         self
     }
 
-    pub fn with_location(mut self, value: Option<GpsCoordinates>) -> Self {
-        self.location = value;
+    pub fn with_location(mut self, value: GpsCoordinates) -> Self {
+        self.location = Some(value);
         self
     }
 
-    pub fn with_time_taken(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.time_taken = value;
+    pub fn with_time_taken(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.time_taken = Some(value);
         self
     }
 
-    pub fn with_duration(mut self, value: Option<u64>) -> Self {
-        self.duration = value;
+    pub fn with_duration(mut self, value: u64) -> Self {
+        self.duration = Some(value);
         self
     }
 }

@@ -116,8 +116,8 @@ impl Account {
         }
     }
 
-    pub fn with_profile_photo_url(mut self, value: Option<String>) -> Self {
-        self.profile_photo_url = value;
+    pub fn with_profile_photo_url(mut self, value: String) -> Self {
+        self.profile_photo_url = Some(value);
         self
     }
 }
@@ -292,13 +292,13 @@ impl BasicAccount {
         }
     }
 
-    pub fn with_profile_photo_url(mut self, value: Option<String>) -> Self {
-        self.profile_photo_url = value;
+    pub fn with_profile_photo_url(mut self, value: String) -> Self {
+        self.profile_photo_url = Some(value);
         self
     }
 
-    pub fn with_team_member_id(mut self, value: Option<String>) -> Self {
-        self.team_member_id = value;
+    pub fn with_team_member_id(mut self, value: String) -> Self {
+        self.team_member_id = Some(value);
         self
     }
 }
@@ -581,23 +581,23 @@ impl FullAccount {
         }
     }
 
-    pub fn with_profile_photo_url(mut self, value: Option<String>) -> Self {
-        self.profile_photo_url = value;
+    pub fn with_profile_photo_url(mut self, value: String) -> Self {
+        self.profile_photo_url = Some(value);
         self
     }
 
-    pub fn with_country(mut self, value: Option<String>) -> Self {
-        self.country = value;
+    pub fn with_country(mut self, value: String) -> Self {
+        self.country = Some(value);
         self
     }
 
-    pub fn with_team(mut self, value: Option<FullTeam>) -> Self {
-        self.team = value;
+    pub fn with_team(mut self, value: FullTeam) -> Self {
+        self.team = Some(value);
         self
     }
 
-    pub fn with_team_member_id(mut self, value: Option<String>) -> Self {
-        self.team_member_id = value;
+    pub fn with_team_member_id(mut self, value: String) -> Self {
+        self.team_member_id = Some(value);
         self
     }
 }

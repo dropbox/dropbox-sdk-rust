@@ -2513,8 +2513,8 @@ impl PropertiesSearchResult {
         }
     }
 
-    pub fn with_cursor(mut self, value: Option<PropertiesSearchCursor>) -> Self {
-        self.cursor = value;
+    pub fn with_cursor(mut self, value: PropertiesSearchCursor) -> Self {
+        self.cursor = Some(value);
         self
     }
 }
@@ -3071,13 +3071,13 @@ impl PropertyGroupUpdate {
         }
     }
 
-    pub fn with_add_or_update_fields(mut self, value: Option<Vec<PropertyField>>) -> Self {
-        self.add_or_update_fields = value;
+    pub fn with_add_or_update_fields(mut self, value: Vec<PropertyField>) -> Self {
+        self.add_or_update_fields = Some(value);
         self
     }
 
-    pub fn with_remove_fields(mut self, value: Option<Vec<String>>) -> Self {
-        self.remove_fields = value;
+    pub fn with_remove_fields(mut self, value: Vec<String>) -> Self {
+        self.remove_fields = Some(value);
         self
     }
 }
@@ -4157,18 +4157,18 @@ impl UpdateTemplateArg {
         }
     }
 
-    pub fn with_name(mut self, value: Option<String>) -> Self {
-        self.name = value;
+    pub fn with_name(mut self, value: String) -> Self {
+        self.name = Some(value);
         self
     }
 
-    pub fn with_description(mut self, value: Option<String>) -> Self {
-        self.description = value;
+    pub fn with_description(mut self, value: String) -> Self {
+        self.description = Some(value);
         self
     }
 
-    pub fn with_add_fields(mut self, value: Option<Vec<PropertyFieldTemplate>>) -> Self {
-        self.add_fields = value;
+    pub fn with_add_fields(mut self, value: Vec<PropertyFieldTemplate>) -> Self {
+        self.add_fields = Some(value);
         self
     }
 }

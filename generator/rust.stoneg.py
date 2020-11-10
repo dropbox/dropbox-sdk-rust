@@ -830,12 +830,22 @@ class RustBackend(RustHelperBackend):
                 self.emit()
 
             field_name = self.field_name(field)
+            if isinstance(field.data_type, ir.Nullable):
+                # If it's a nullable type, the default is always None. Change the argument type to
+                # the inner type, because if the user is using builder methods it means they don't
+                # want the default, so making them type 'Some(...)' is redundant.
+                field_type = field.data_type.data_type
+                value = u'Some(value)'
+            else:
+                field_type = field.data_type
+                value = u'value'
+
             with self.emit_rust_function_def(
                     u'with_{}'.format(field_name),
-                    [u'mut self', u'value: {}'.format(self._rust_type(field.data_type))],
+                    [u'mut self', u'value: {}'.format(self._rust_type(field_type))],
                     u'Self',
                     access=u'pub'):
-                self.emit(u'self.{} = value;'.format(field_name))
+                self.emit(u'self.{} = {};'.format(field_name, value))
                 self.emit(u'self')
 
     def _default_value(self, field):

@@ -330,8 +330,8 @@ impl CreateFileRequestArgs {
         }
     }
 
-    pub fn with_deadline(mut self, value: Option<FileRequestDeadline>) -> Self {
-        self.deadline = value;
+    pub fn with_deadline(mut self, value: FileRequestDeadline) -> Self {
+        self.deadline = Some(value);
         self
     }
 
@@ -340,8 +340,8 @@ impl CreateFileRequestArgs {
         self
     }
 
-    pub fn with_description(mut self, value: Option<String>) -> Self {
-        self.description = value;
+    pub fn with_description(mut self, value: String) -> Self {
+        self.description = Some(value);
         self
     }
 }
@@ -1279,18 +1279,18 @@ impl FileRequest {
         }
     }
 
-    pub fn with_destination(mut self, value: Option<super::files::Path>) -> Self {
-        self.destination = value;
+    pub fn with_destination(mut self, value: super::files::Path) -> Self {
+        self.destination = Some(value);
         self
     }
 
-    pub fn with_deadline(mut self, value: Option<FileRequestDeadline>) -> Self {
-        self.deadline = value;
+    pub fn with_deadline(mut self, value: FileRequestDeadline) -> Self {
+        self.deadline = Some(value);
         self
     }
 
-    pub fn with_description(mut self, value: Option<String>) -> Self {
-        self.description = value;
+    pub fn with_description(mut self, value: String) -> Self {
+        self.description = Some(value);
         self
     }
 }
@@ -1467,8 +1467,8 @@ impl FileRequestDeadline {
         }
     }
 
-    pub fn with_allow_late_uploads(mut self, value: Option<GracePeriod>) -> Self {
-        self.allow_late_uploads = value;
+    pub fn with_allow_late_uploads(mut self, value: GracePeriod) -> Self {
+        self.allow_late_uploads = Some(value);
         self
     }
 }
@@ -2700,13 +2700,13 @@ impl UpdateFileRequestArgs {
         }
     }
 
-    pub fn with_title(mut self, value: Option<String>) -> Self {
-        self.title = value;
+    pub fn with_title(mut self, value: String) -> Self {
+        self.title = Some(value);
         self
     }
 
-    pub fn with_destination(mut self, value: Option<super::files::Path>) -> Self {
-        self.destination = value;
+    pub fn with_destination(mut self, value: super::files::Path) -> Self {
+        self.destination = Some(value);
         self
     }
 
@@ -2715,13 +2715,13 @@ impl UpdateFileRequestArgs {
         self
     }
 
-    pub fn with_open(mut self, value: Option<bool>) -> Self {
-        self.open = value;
+    pub fn with_open(mut self, value: bool) -> Self {
+        self.open = Some(value);
         self
     }
 
-    pub fn with_description(mut self, value: Option<String>) -> Self {
-        self.description = value;
+    pub fn with_description(mut self, value: String) -> Self {
+        self.description = Some(value);
         self
     }
 }
