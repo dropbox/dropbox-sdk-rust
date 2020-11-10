@@ -1118,12 +1118,30 @@ pub fn upload_session_finish_batch_check(
 /// return a [`UploadSessionLookupError::NotFound`](UploadSessionLookupError::NotFound). Calls to
 /// this endpoint will count as data transport calls for any Dropbox Business teams with a limit on
 /// the number of data transport calls allowed per month. For more information, see the [Data
-/// transport limit page](https://www.dropbox.com/developers/reference/data-transport-limit).
+/// transport limit page](https://www.dropbox.com/developers/reference/data-transport-limit). By
+/// default, upload sessions require you to send content of the file in sequential order via
+/// consecutive [`upload_session_start()`](upload_session_start),
+/// [`upload_session_append_v2()`](upload_session_append_v2),
+/// [`upload_session_finish()`](upload_session_finish) calls. For better performance, you can
+/// instead optionally use a [`UploadSessionType::Concurrent`](UploadSessionType::Concurrent) upload
+/// session. To start a new concurrent session, set
+/// [`UploadSessionStartArg::session_type`](UploadSessionStartArg) to
+/// [`UploadSessionType::Concurrent`](UploadSessionType::Concurrent). After that, you can send file
+/// data in concurrent [`upload_session_append_v2()`](upload_session_append_v2) requests. Finally
+/// finish the session with [`upload_session_finish()`](upload_session_finish). There are couple of
+/// constraints with concurrent sessions to make them work. You can not send data with
+/// [`upload_session_start()`](upload_session_start) or
+/// [`upload_session_finish()`](upload_session_finish) call, only with
+/// [`upload_session_append_v2()`](upload_session_append_v2) call. Also data uploaded in
+/// [`upload_session_append_v2()`](upload_session_append_v2) call must be multiple of 4194304 bytes
+/// (except for last [`upload_session_append_v2()`](upload_session_append_v2) with
+/// [`UploadSessionStartArg::close`](UploadSessionStartArg) to `true`, that may contain any
+/// remaining data).
 pub fn upload_session_start(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionStartArg,
     body: &[u8],
-) -> crate::Result<Result<UploadSessionStartResult, ()>> {
+) -> crate::Result<Result<UploadSessionStartResult, UploadSessionStartError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Content,
@@ -18523,6 +18541,12 @@ pub enum UploadSessionFinishError {
     /// There are too many write operations happening in the user's Dropbox. You should retry
     /// uploading this file.
     TooManyWriteOperations,
+    /// Uploading data not allowed when finishing concurrent upload session.
+    ConcurrentSessionDataNotAllowed,
+    /// Concurrent upload sessions need to be closed before finishing.
+    ConcurrentSessionNotClosed,
+    /// Not all pieces of data were uploaded before trying to finish the session.
+    ConcurrentSessionMissingData,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -18573,6 +18597,18 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionFinishError::TooManyWriteOperations)
                     }
+                    "concurrent_session_data_not_allowed" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UploadSessionFinishError::ConcurrentSessionDataNotAllowed)
+                    }
+                    "concurrent_session_not_closed" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UploadSessionFinishError::ConcurrentSessionNotClosed)
+                    }
+                    "concurrent_session_missing_data" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UploadSessionFinishError::ConcurrentSessionMissingData)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionFinishError::Other)
@@ -18585,6 +18621,9 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                                     "properties_error",
                                     "too_many_shared_folder_targets",
                                     "too_many_write_operations",
+                                    "concurrent_session_data_not_allowed",
+                                    "concurrent_session_not_closed",
+                                    "concurrent_session_missing_data",
                                     "other"];
         deserializer.deserialize_struct("UploadSessionFinishError", VARIANTS, EnumVisitor)
     }
@@ -18628,6 +18667,24 @@ impl ::serde::ser::Serialize for UploadSessionFinishError {
                 s.serialize_field(".tag", "too_many_write_operations")?;
                 s.end()
             }
+            UploadSessionFinishError::ConcurrentSessionDataNotAllowed => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionFinishError", 1)?;
+                s.serialize_field(".tag", "concurrent_session_data_not_allowed")?;
+                s.end()
+            }
+            UploadSessionFinishError::ConcurrentSessionNotClosed => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionFinishError", 1)?;
+                s.serialize_field(".tag", "concurrent_session_not_closed")?;
+                s.end()
+            }
+            UploadSessionFinishError::ConcurrentSessionMissingData => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionFinishError", 1)?;
+                s.serialize_field(".tag", "concurrent_session_missing_data")?;
+                s.end()
+            }
             UploadSessionFinishError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
@@ -18661,6 +18718,11 @@ pub enum UploadSessionLookupError {
     /// You can not append to the upload session because the size of a file should not reach the max
     /// file size limit (i.e. 350GB).
     TooLarge,
+    /// For concurrent upload sessions, offset needs to be multiple of 4194304 bytes.
+    ConcurrentSessionInvalidOffset,
+    /// For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be
+    /// uploaded.
+    ConcurrentSessionInvalidDataSize,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -18699,6 +18761,14 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionLookupError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionLookupError::TooLarge)
                     }
+                    "concurrent_session_invalid_offset" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UploadSessionLookupError::ConcurrentSessionInvalidOffset)
+                    }
+                    "concurrent_session_invalid_data_size" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UploadSessionLookupError::ConcurrentSessionInvalidDataSize)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(UploadSessionLookupError::Other)
@@ -18711,6 +18781,8 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionLookupError {
                                     "closed",
                                     "not_closed",
                                     "too_large",
+                                    "concurrent_session_invalid_offset",
+                                    "concurrent_session_invalid_data_size",
                                     "other"];
         deserializer.deserialize_struct("UploadSessionLookupError", VARIANTS, EnumVisitor)
     }
@@ -18750,6 +18822,18 @@ impl ::serde::ser::Serialize for UploadSessionLookupError {
                 // unit
                 let mut s = serializer.serialize_struct("UploadSessionLookupError", 1)?;
                 s.serialize_field(".tag", "too_large")?;
+                s.end()
+            }
+            UploadSessionLookupError::ConcurrentSessionInvalidOffset => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionLookupError", 1)?;
+                s.serialize_field(".tag", "concurrent_session_invalid_offset")?;
+                s.end()
+            }
+            UploadSessionLookupError::ConcurrentSessionInvalidDataSize => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionLookupError", 1)?;
+                s.serialize_field(".tag", "concurrent_session_invalid_data_size")?;
                 s.end()
             }
             UploadSessionLookupError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -18863,12 +18947,16 @@ pub struct UploadSessionStartArg {
     /// If true, the current session will be closed, at which point you won't be able to call
     /// [`upload_session_append_v2()`](upload_session_append_v2) anymore with the current session.
     pub close: bool,
+    /// Type of upload session you want to start. If not specified, default is
+    /// [`UploadSessionType::Sequential`](UploadSessionType::Sequential).
+    pub session_type: Option<UploadSessionType>,
 }
 
 impl Default for UploadSessionStartArg {
     fn default() -> Self {
         UploadSessionStartArg {
             close: false,
+            session_type: None,
         }
     }
 }
@@ -18878,15 +18966,22 @@ impl UploadSessionStartArg {
         self.close = value;
         self
     }
+
+    pub fn with_session_type(mut self, value: UploadSessionType) -> Self {
+        self.session_type = Some(value);
+        self
+    }
 }
 
-const UPLOAD_SESSION_START_ARG_FIELDS: &[&str] = &["close"];
+const UPLOAD_SESSION_START_ARG_FIELDS: &[&str] = &["close",
+                                                   "session_type"];
 impl UploadSessionStartArg {
     // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<UploadSessionStartArg, V::Error> {
         let mut field_close = None;
+        let mut field_session_type = None;
         while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "close" => {
@@ -18894,6 +18989,12 @@ impl UploadSessionStartArg {
                         return Err(::serde::de::Error::duplicate_field("close"));
                     }
                     field_close = Some(map.next_value()?);
+                }
+                "session_type" => {
+                    if field_session_type.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("session_type"));
+                    }
+                    field_session_type = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -18903,6 +19004,7 @@ impl UploadSessionStartArg {
         }
         let result = UploadSessionStartArg {
             close: field_close.unwrap_or(false),
+            session_type: field_session_type,
         };
         Ok(result)
     }
@@ -18912,7 +19014,8 @@ impl UploadSessionStartArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("close", &self.close)
+        s.serialize_field("close", &self.close)?;
+        s.serialize_field("session_type", &self.session_type)
     }
 }
 
@@ -18938,9 +19041,92 @@ impl ::serde::ser::Serialize for UploadSessionStartArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("UploadSessionStartArg", 1)?;
+        let mut s = serializer.serialize_struct("UploadSessionStartArg", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum UploadSessionStartError {
+    /// Uploading data not allowed when starting concurrent upload session.
+    ConcurrentSessionDataNotAllowed,
+    /// Can not start a closed concurrent upload session.
+    ConcurrentSessionCloseNotAllowed,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionStartError {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UploadSessionStartError;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionStartError structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "concurrent_session_data_not_allowed" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UploadSessionStartError::ConcurrentSessionDataNotAllowed)
+                    }
+                    "concurrent_session_close_not_allowed" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UploadSessionStartError::ConcurrentSessionCloseNotAllowed)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UploadSessionStartError::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["concurrent_session_data_not_allowed",
+                                    "concurrent_session_close_not_allowed",
+                                    "other"];
+        deserializer.deserialize_struct("UploadSessionStartError", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionStartError {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            UploadSessionStartError::ConcurrentSessionDataNotAllowed => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionStartError", 1)?;
+                s.serialize_field(".tag", "concurrent_session_data_not_allowed")?;
+                s.end()
+            }
+            UploadSessionStartError::ConcurrentSessionCloseNotAllowed => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionStartError", 1)?;
+                s.serialize_field(".tag", "concurrent_session_close_not_allowed")?;
+                s.end()
+            }
+            UploadSessionStartError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for UploadSessionStartError {
+    fn description(&self) -> &str {
+        "UploadSessionStartError"
+    }
+}
+
+impl ::std::fmt::Display for UploadSessionStartError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
     }
 }
 
@@ -19032,6 +19218,77 @@ impl ::serde::ser::Serialize for UploadSessionStartResult {
         let mut s = serializer.serialize_struct("UploadSessionStartResult", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+#[derive(Debug)]
+pub enum UploadSessionType {
+    /// Pieces of content are uploaded sequentially one after another. This is the default behavior.
+    Sequential,
+    /// Pieces of data can be uploaded in concurrent RPCs in any order.
+    Concurrent,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for UploadSessionType {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = UploadSessionType;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a UploadSessionType structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                match tag {
+                    "sequential" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UploadSessionType::Sequential)
+                    }
+                    "concurrent" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UploadSessionType::Concurrent)
+                    }
+                    _ => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(UploadSessionType::Other)
+                    }
+                }
+            }
+        }
+        const VARIANTS: &[&str] = &["sequential",
+                                    "concurrent",
+                                    "other"];
+        deserializer.deserialize_struct("UploadSessionType", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for UploadSessionType {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            UploadSessionType::Sequential => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionType", 1)?;
+                s.serialize_field(".tag", "sequential")?;
+                s.end()
+            }
+            UploadSessionType::Concurrent => {
+                // unit
+                let mut s = serializer.serialize_struct("UploadSessionType", 1)?;
+                s.serialize_field(".tag", "concurrent")?;
+                s.end()
+            }
+            UploadSessionType::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
     }
 }
 
