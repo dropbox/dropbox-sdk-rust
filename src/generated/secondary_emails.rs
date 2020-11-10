@@ -22,7 +22,6 @@ impl SecondaryEmail {
             is_verified,
         }
     }
-
 }
 
 const SECONDARY_EMAIL_FIELDS: &[&str] = &["email",

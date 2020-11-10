@@ -224,7 +224,6 @@ impl CountFileRequestsResult {
             file_request_count,
         }
     }
-
 }
 
 const COUNT_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_request_count"];
@@ -345,7 +344,6 @@ impl CreateFileRequestArgs {
         self.description = value;
         self
     }
-
 }
 
 const CREATE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["title",
@@ -809,7 +807,6 @@ impl DeleteAllClosedFileRequestsResult {
             file_requests,
         }
     }
-
 }
 
 const DELETE_ALL_CLOSED_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_requests"];
@@ -900,7 +897,6 @@ impl DeleteFileRequestArgs {
             ids,
         }
     }
-
 }
 
 const DELETE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["ids"];
@@ -1157,7 +1153,6 @@ impl DeleteFileRequestsResult {
             file_requests,
         }
     }
-
 }
 
 const DELETE_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_requests"];
@@ -1298,7 +1293,6 @@ impl FileRequest {
         self.description = value;
         self
     }
-
 }
 
 const FILE_REQUEST_FIELDS: &[&str] = &["id",
@@ -1477,7 +1471,6 @@ impl FileRequestDeadline {
         self.allow_late_uploads = value;
         self
     }
-
 }
 
 const FILE_REQUEST_DEADLINE_FIELDS: &[&str] = &["deadline",
@@ -1802,7 +1795,6 @@ impl GetFileRequestArgs {
             id,
         }
     }
-
 }
 
 const GET_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["id"];
@@ -2153,6 +2145,13 @@ impl Default for ListFileRequestsArg {
     }
 }
 
+impl ListFileRequestsArg {
+    pub fn with_limit(mut self, value: u64) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
 const LIST_FILE_REQUESTS_ARG_FIELDS: &[&str] = &["limit"];
 impl ListFileRequestsArg {
     // no _opt deserializer
@@ -2229,7 +2228,6 @@ impl ListFileRequestsContinueArg {
             cursor,
         }
     }
-
 }
 
 const LIST_FILE_REQUESTS_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -2476,7 +2474,6 @@ impl ListFileRequestsResult {
             file_requests,
         }
     }
-
 }
 
 const LIST_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_requests"];
@@ -2575,7 +2572,6 @@ impl ListFileRequestsV2Result {
             has_more,
         }
     }
-
 }
 
 const LIST_FILE_REQUESTS_V2_RESULT_FIELDS: &[&str] = &["file_requests",
@@ -2728,7 +2724,6 @@ impl UpdateFileRequestArgs {
         self.description = value;
         self
     }
-
 }
 
 const UPDATE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["id",

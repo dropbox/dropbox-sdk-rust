@@ -293,7 +293,6 @@ impl TeamRootInfo {
             home_path,
         }
     }
-
 }
 
 const TEAM_ROOT_INFO_FIELDS: &[&str] = &["root_namespace_id",
@@ -410,7 +409,6 @@ impl UserRootInfo {
             home_namespace_id,
         }
     }
-
 }
 
 const USER_ROOT_INFO_FIELDS: &[&str] = &["root_namespace_id",

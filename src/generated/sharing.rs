@@ -981,7 +981,6 @@ impl AddFileMemberArgs {
         self.add_message_as_comment = value;
         self
     }
-
 }
 
 const ADD_FILE_MEMBER_ARGS_FIELDS: &[&str] = &["file",
@@ -1257,7 +1256,6 @@ impl AddFolderMemberArg {
         self.custom_message = value;
         self
     }
-
 }
 
 const ADD_FOLDER_MEMBER_ARG_FIELDS: &[&str] = &["shared_folder_id",
@@ -1633,7 +1631,6 @@ impl AddMember {
         self.access_level = value;
         self
     }
-
 }
 
 const ADD_MEMBER_FIELDS: &[&str] = &["member",
@@ -1883,7 +1880,6 @@ impl AudienceExceptionContentInfo {
             name,
         }
     }
-
 }
 
 const AUDIENCE_EXCEPTION_CONTENT_INFO_FIELDS: &[&str] = &["name"];
@@ -1979,7 +1975,6 @@ impl AudienceExceptions {
             exceptions,
         }
     }
-
 }
 
 const AUDIENCE_EXCEPTIONS_FIELDS: &[&str] = &["count",
@@ -2091,7 +2086,6 @@ impl AudienceRestrictingSharedFolder {
             audience,
         }
     }
-
 }
 
 const AUDIENCE_RESTRICTING_SHARED_FOLDER_FIELDS: &[&str] = &["shared_folder_id",
@@ -2208,7 +2202,6 @@ impl ChangeFileMemberAccessArgs {
             access_level,
         }
     }
-
 }
 
 const CHANGE_FILE_MEMBER_ACCESS_ARGS_FIELDS: &[&str] = &["file",
@@ -2330,7 +2323,6 @@ impl CollectionLinkMetadata {
         self.expires = value;
         self
     }
-
 }
 
 const COLLECTION_LINK_METADATA_FIELDS: &[&str] = &["url",
@@ -2459,7 +2451,6 @@ impl CreateSharedLinkArg {
         self.pending_upload = value;
         self
     }
-
 }
 
 const CREATE_SHARED_LINK_ARG_FIELDS: &[&str] = &["path",
@@ -2650,7 +2641,6 @@ impl CreateSharedLinkWithSettingsArg {
         self.settings = value;
         self
     }
-
 }
 
 const CREATE_SHARED_LINK_WITH_SETTINGS_ARG_FIELDS: &[&str] = &["path",
@@ -2925,7 +2915,6 @@ impl ExpectedSharedContentLinkMetadata {
         self.expiry = value;
         self
     }
-
 }
 
 const EXPECTED_SHARED_CONTENT_LINK_METADATA_FIELDS: &[&str] = &["audience_options",
@@ -3448,7 +3437,6 @@ impl FileLinkMetadata {
         self.content_owner_team_info = value;
         self
     }
-
 }
 
 const FILE_LINK_METADATA_FIELDS: &[&str] = &["url",
@@ -3838,7 +3826,6 @@ impl FileMemberActionResult {
             result,
         }
     }
-
 }
 
 const FILE_MEMBER_ACTION_RESULT_FIELDS: &[&str] = &["member",
@@ -4023,7 +4010,6 @@ impl FilePermission {
         self.reason = value;
         self
     }
-
 }
 
 const FILE_PERMISSION_FIELDS: &[&str] = &["action",
@@ -4412,7 +4398,6 @@ impl FolderLinkMetadata {
         self.content_owner_team_info = value;
         self
     }
-
 }
 
 const FOLDER_LINK_METADATA_FIELDS: &[&str] = &["url",
@@ -4585,7 +4570,6 @@ impl FolderPermission {
         self.reason = value;
         self
     }
-
 }
 
 const FOLDER_PERMISSION_FIELDS: &[&str] = &["action",
@@ -4727,7 +4711,6 @@ impl FolderPolicy {
         self.viewer_info_policy = value;
         self
     }
-
 }
 
 const FOLDER_POLICY_FIELDS: &[&str] = &["acl_update_policy",
@@ -4868,7 +4851,6 @@ impl GetFileMetadataArg {
         self.actions = value;
         self
     }
-
 }
 
 const GET_FILE_METADATA_ARG_FIELDS: &[&str] = &["file",
@@ -4979,7 +4961,6 @@ impl GetFileMetadataBatchArg {
         self.actions = value;
         self
     }
-
 }
 
 const GET_FILE_METADATA_BATCH_ARG_FIELDS: &[&str] = &["files",
@@ -5084,7 +5065,6 @@ impl GetFileMetadataBatchResult {
             result,
         }
     }
-
 }
 
 const GET_FILE_METADATA_BATCH_RESULT_FIELDS: &[&str] = &["file",
@@ -5357,7 +5337,6 @@ impl GetMetadataArgs {
         self.actions = value;
         self
     }
-
 }
 
 const GET_METADATA_ARGS_FIELDS: &[&str] = &["shared_folder_id",
@@ -5583,7 +5562,6 @@ impl GetSharedLinkMetadataArg {
         self.link_password = value;
         self
     }
-
 }
 
 const GET_SHARED_LINK_METADATA_ARG_FIELDS: &[&str] = &["url",
@@ -5692,6 +5670,13 @@ impl Default for GetSharedLinksArg {
         GetSharedLinksArg {
             path: None,
         }
+    }
+}
+
+impl GetSharedLinksArg {
+    pub fn with_path(mut self, value: Option<String>) -> Self {
+        self.path = value;
+        self
     }
 }
 
@@ -5847,7 +5832,6 @@ impl GetSharedLinksResult {
             links,
         }
     }
-
 }
 
 const GET_SHARED_LINKS_RESULT_FIELDS: &[&str] = &["links"];
@@ -5982,7 +5966,6 @@ impl GroupInfo {
         self.member_count = value;
         self
     }
-
 }
 
 const GROUP_INFO_FIELDS: &[&str] = &["group_name",
@@ -6182,7 +6165,6 @@ impl GroupMembershipInfo {
         self.is_inherited = value;
         self
     }
-
 }
 
 const GROUP_MEMBERSHIP_INFO_FIELDS: &[&str] = &["access_type",
@@ -6321,7 +6303,6 @@ impl InsufficientPlan {
         self.upsell_url = value;
         self
     }
-
 }
 
 const INSUFFICIENT_PLAN_FIELDS: &[&str] = &["message",
@@ -6427,7 +6408,6 @@ impl InsufficientQuotaAmounts {
             space_left,
         }
     }
-
 }
 
 const INSUFFICIENT_QUOTA_AMOUNTS_FIELDS: &[&str] = &["space_needed",
@@ -6638,7 +6618,6 @@ impl InviteeMembershipInfo {
         self.user = value;
         self
     }
-
 }
 
 const INVITEE_MEMBERSHIP_INFO_FIELDS: &[&str] = &["access_type",
@@ -7502,7 +7481,6 @@ impl LinkPermission {
         self.reason = value;
         self
     }
-
 }
 
 const LINK_PERMISSION_FIELDS: &[&str] = &["action",
@@ -7669,7 +7647,6 @@ impl LinkPermissions {
         self.link_access_level = value;
         self
     }
-
 }
 
 const LINK_PERMISSIONS_FIELDS: &[&str] = &["can_revoke",
@@ -7822,6 +7799,28 @@ impl Default for LinkSettings {
     }
 }
 
+impl LinkSettings {
+    pub fn with_access_level(mut self, value: Option<AccessLevel>) -> Self {
+        self.access_level = value;
+        self
+    }
+
+    pub fn with_audience(mut self, value: Option<LinkAudience>) -> Self {
+        self.audience = value;
+        self
+    }
+
+    pub fn with_expiry(mut self, value: Option<LinkExpiry>) -> Self {
+        self.expiry = value;
+        self
+    }
+
+    pub fn with_password(mut self, value: Option<LinkPassword>) -> Self {
+        self.password = value;
+        self
+    }
+}
+
 const LINK_SETTINGS_FIELDS: &[&str] = &["access_level",
                                         "audience",
                                         "expiry",
@@ -7953,7 +7952,6 @@ impl ListFileMembersArg {
         self.limit = value;
         self
     }
-
 }
 
 const LIST_FILE_MEMBERS_ARG_FIELDS: &[&str] = &["file",
@@ -8082,7 +8080,6 @@ impl ListFileMembersBatchArg {
         self.limit = value;
         self
     }
-
 }
 
 const LIST_FILE_MEMBERS_BATCH_ARG_FIELDS: &[&str] = &["files",
@@ -8186,7 +8183,6 @@ impl ListFileMembersBatchResult {
             result,
         }
     }
-
 }
 
 const LIST_FILE_MEMBERS_BATCH_RESULT_FIELDS: &[&str] = &["file",
@@ -8289,7 +8285,6 @@ impl ListFileMembersContinueArg {
             cursor,
         }
     }
-
 }
 
 const LIST_FILE_MEMBERS_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -8485,7 +8480,6 @@ impl ListFileMembersCountResult {
             member_count,
         }
     }
-
 }
 
 const LIST_FILE_MEMBERS_COUNT_RESULT_FIELDS: &[&str] = &["members",
@@ -8756,6 +8750,18 @@ impl Default for ListFilesArg {
     }
 }
 
+impl ListFilesArg {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+
+    pub fn with_actions(mut self, value: Option<Vec<FileAction>>) -> Self {
+        self.actions = value;
+        self
+    }
+}
+
 const LIST_FILES_ARG_FIELDS: &[&str] = &["limit",
                                          "actions"];
 impl ListFilesArg {
@@ -8843,7 +8849,6 @@ impl ListFilesContinueArg {
             cursor,
         }
     }
-
 }
 
 const LIST_FILES_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -9030,7 +9035,6 @@ impl ListFilesResult {
         self.cursor = value;
         self
     }
-
 }
 
 const LIST_FILES_RESULT_FIELDS: &[&str] = &["entries",
@@ -9149,7 +9153,6 @@ impl ListFolderMembersArgs {
         self.limit = value;
         self
     }
-
 }
 
 const LIST_FOLDER_MEMBERS_ARGS_FIELDS: &[&str] = &["shared_folder_id",
@@ -9260,7 +9263,6 @@ impl ListFolderMembersContinueArg {
             cursor,
         }
     }
-
 }
 
 const LIST_FOLDER_MEMBERS_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -9444,6 +9446,18 @@ impl Default for ListFolderMembersCursorArg {
     }
 }
 
+impl ListFolderMembersCursorArg {
+    pub fn with_actions(mut self, value: Option<Vec<MemberAction>>) -> Self {
+        self.actions = value;
+        self
+    }
+
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
 const LIST_FOLDER_MEMBERS_CURSOR_ARG_FIELDS: &[&str] = &["actions",
                                                          "limit"];
 impl ListFolderMembersCursorArg {
@@ -9537,6 +9551,18 @@ impl Default for ListFoldersArgs {
     }
 }
 
+impl ListFoldersArgs {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+
+    pub fn with_actions(mut self, value: Option<Vec<FolderAction>>) -> Self {
+        self.actions = value;
+        self
+    }
+}
+
 const LIST_FOLDERS_ARGS_FIELDS: &[&str] = &["limit",
                                             "actions"];
 impl ListFoldersArgs {
@@ -9623,7 +9649,6 @@ impl ListFoldersContinueArg {
             cursor,
         }
     }
-
 }
 
 const LIST_FOLDERS_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -9799,7 +9824,6 @@ impl ListFoldersResult {
         self.cursor = value;
         self
     }
-
 }
 
 const LIST_FOLDERS_RESULT_FIELDS: &[&str] = &["entries",
@@ -9904,6 +9928,23 @@ impl Default for ListSharedLinksArg {
             cursor: None,
             direct_only: None,
         }
+    }
+}
+
+impl ListSharedLinksArg {
+    pub fn with_path(mut self, value: Option<ReadPath>) -> Self {
+        self.path = value;
+        self
+    }
+
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
+        self.cursor = value;
+        self
+    }
+
+    pub fn with_direct_only(mut self, value: Option<bool>) -> Self {
+        self.direct_only = value;
+        self
     }
 }
 
@@ -10103,7 +10144,6 @@ impl ListSharedLinksResult {
         self.cursor = value;
         self
     }
-
 }
 
 const LIST_SHARED_LINKS_RESULT_FIELDS: &[&str] = &["links",
@@ -10221,6 +10261,23 @@ impl Default for MemberAccessLevelResult {
             warning: None,
             access_details: None,
         }
+    }
+}
+
+impl MemberAccessLevelResult {
+    pub fn with_access_level(mut self, value: Option<AccessLevel>) -> Self {
+        self.access_level = value;
+        self
+    }
+
+    pub fn with_warning(mut self, value: Option<String>) -> Self {
+        self.warning = value;
+        self
+    }
+
+    pub fn with_access_details(mut self, value: Option<Vec<ParentFolderAccessInfo>>) -> Self {
+        self.access_details = value;
+        self
     }
 }
 
@@ -10456,7 +10513,6 @@ impl MemberPermission {
         self.reason = value;
         self
     }
-
 }
 
 const MEMBER_PERMISSION_FIELDS: &[&str] = &["action",
@@ -10746,7 +10802,6 @@ impl MembershipInfo {
         self.is_inherited = value;
         self
     }
-
 }
 
 const MEMBERSHIP_INFO_FIELDS: &[&str] = &["access_type",
@@ -10877,7 +10932,6 @@ impl ModifySharedLinkSettingsArgs {
         self.remove_expiration = value;
         self
     }
-
 }
 
 const MODIFY_SHARED_LINK_SETTINGS_ARGS_FIELDS: &[&str] = &["url",
@@ -11115,7 +11169,6 @@ impl MountFolderArg {
             shared_folder_id,
         }
     }
-
 }
 
 const MOUNT_FOLDER_ARG_FIELDS: &[&str] = &["shared_folder_id"];
@@ -11357,7 +11410,6 @@ impl ParentFolderAccessInfo {
             path,
         }
     }
-
 }
 
 const PARENT_FOLDER_ACCESS_INFO_FIELDS: &[&str] = &["folder_name",
@@ -11492,7 +11544,6 @@ impl PathLinkMetadata {
         self.expires = value;
         self
     }
-
 }
 
 const PATH_LINK_METADATA_FIELDS: &[&str] = &["url",
@@ -11914,7 +11965,6 @@ impl RelinquishFileMembershipArg {
             file,
         }
     }
-
 }
 
 const RELINQUISH_FILE_MEMBERSHIP_ARG_FIELDS: &[&str] = &["file"];
@@ -12112,7 +12162,6 @@ impl RelinquishFolderMembershipArg {
         self.leave_a_copy = value;
         self
     }
-
 }
 
 const RELINQUISH_FOLDER_MEMBERSHIP_ARG_FIELDS: &[&str] = &["shared_folder_id",
@@ -12373,7 +12422,6 @@ impl RemoveFileMemberArg {
             member,
         }
     }
-
 }
 
 const REMOVE_FILE_MEMBER_ARG_FIELDS: &[&str] = &["file",
@@ -12587,7 +12635,6 @@ impl RemoveFolderMemberArg {
             leave_a_copy,
         }
     }
-
 }
 
 const REMOVE_FOLDER_MEMBER_ARG_FIELDS: &[&str] = &["shared_folder_id",
@@ -13211,7 +13258,6 @@ impl RevokeSharedLinkArg {
             url,
         }
     }
-
 }
 
 const REVOKE_SHARED_LINK_ARG_FIELDS: &[&str] = &["url"];
@@ -13418,7 +13464,6 @@ impl SetAccessInheritanceArg {
         self.access_inheritance = value;
         self
     }
-
 }
 
 const SET_ACCESS_INHERITANCE_ARG_FIELDS: &[&str] = &["shared_folder_id",
@@ -13673,7 +13718,6 @@ impl ShareFolderArg {
         self.link_settings = value;
         self
     }
-
 }
 
 const SHARE_FOLDER_ARG_FIELDS: &[&str] = &["path",
@@ -13893,7 +13937,6 @@ impl ShareFolderArgBase {
         self.access_inheritance = value;
         self
     }
-
 }
 
 const SHARE_FOLDER_ARG_BASE_FIELDS: &[&str] = &["path",
@@ -14728,7 +14771,6 @@ impl SharedContentLinkMetadata {
         self.audience_exceptions = value;
         self
     }
-
 }
 
 const SHARED_CONTENT_LINK_METADATA_FIELDS: &[&str] = &["audience_options",
@@ -14943,7 +14985,6 @@ impl SharedContentLinkMetadataBase {
         self.expiry = value;
         self
     }
-
 }
 
 const SHARED_CONTENT_LINK_METADATA_BASE_FIELDS: &[&str] = &["audience_options",
@@ -15117,7 +15158,6 @@ impl SharedFileMembers {
         self.cursor = value;
         self
     }
-
 }
 
 const SHARED_FILE_MEMBERS_FIELDS: &[&str] = &["users",
@@ -15349,7 +15389,6 @@ impl SharedFileMetadata {
         self.time_invited = value;
         self
     }
-
 }
 
 const SHARED_FILE_METADATA_FIELDS: &[&str] = &["id",
@@ -15794,7 +15833,6 @@ impl SharedFolderMembers {
         self.cursor = value;
         self
     }
-
 }
 
 const SHARED_FOLDER_MEMBERS_FIELDS: &[&str] = &["users",
@@ -16018,7 +16056,6 @@ impl SharedFolderMetadata {
         self.access_inheritance = value;
         self
     }
-
 }
 
 const SHARED_FOLDER_METADATA_FIELDS: &[&str] = &["access_type",
@@ -16316,7 +16353,6 @@ impl SharedFolderMetadataBase {
         self.parent_folder_name = value;
         self
     }
-
 }
 
 const SHARED_FOLDER_METADATA_BASE_FIELDS: &[&str] = &["access_type",
@@ -16930,6 +16966,33 @@ impl Default for SharedLinkSettings {
     }
 }
 
+impl SharedLinkSettings {
+    pub fn with_requested_visibility(mut self, value: Option<RequestedVisibility>) -> Self {
+        self.requested_visibility = value;
+        self
+    }
+
+    pub fn with_link_password(mut self, value: Option<String>) -> Self {
+        self.link_password = value;
+        self
+    }
+
+    pub fn with_expires(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.expires = value;
+        self
+    }
+
+    pub fn with_audience(mut self, value: Option<LinkAudience>) -> Self {
+        self.audience = value;
+        self
+    }
+
+    pub fn with_access(mut self, value: Option<RequestedLinkAccessLevel>) -> Self {
+        self.access = value;
+        self
+    }
+}
+
 const SHARED_LINK_SETTINGS_FIELDS: &[&str] = &["requested_visibility",
                                                "link_password",
                                                "expires",
@@ -17337,7 +17400,6 @@ impl TeamMemberInfo {
         self.member_id = value;
         self
     }
-
 }
 
 const TEAM_MEMBER_INFO_FIELDS: &[&str] = &["team_info",
@@ -17450,7 +17512,6 @@ impl TransferFolderArg {
             to_dropbox_id,
         }
     }
-
 }
 
 const TRANSFER_FOLDER_ARG_FIELDS: &[&str] = &["shared_folder_id",
@@ -17703,7 +17764,6 @@ impl UnmountFolderArg {
             shared_folder_id,
         }
     }
-
 }
 
 const UNMOUNT_FOLDER_ARG_FIELDS: &[&str] = &["shared_folder_id"];
@@ -17894,7 +17954,6 @@ impl UnshareFileArg {
             file,
         }
     }
-
 }
 
 const UNSHARE_FILE_ARG_FIELDS: &[&str] = &["file"];
@@ -18084,7 +18143,6 @@ impl UnshareFolderArg {
         self.leave_a_copy = value;
         self
     }
-
 }
 
 const UNSHARE_FOLDER_ARG_FIELDS: &[&str] = &["shared_folder_id",
@@ -18303,7 +18361,6 @@ impl UpdateFileMemberArgs {
             access_level,
         }
     }
-
 }
 
 const UPDATE_FILE_MEMBER_ARGS_FIELDS: &[&str] = &["file",
@@ -18424,7 +18481,6 @@ impl UpdateFolderMemberArg {
             access_level,
         }
     }
-
 }
 
 const UPDATE_FOLDER_MEMBER_ARG_FIELDS: &[&str] = &["shared_folder_id",
@@ -18722,7 +18778,6 @@ impl UpdateFolderPolicyArg {
         self.actions = value;
         self
     }
-
 }
 
 const UPDATE_FOLDER_POLICY_ARG_FIELDS: &[&str] = &["shared_folder_id",
@@ -19058,7 +19113,6 @@ impl UserFileMembershipInfo {
         self.platform_type = value;
         self
     }
-
 }
 
 const USER_FILE_MEMBERSHIP_INFO_FIELDS: &[&str] = &["access_type",
@@ -19233,7 +19287,6 @@ impl UserInfo {
         self.team_member_id = value;
         self
     }
-
 }
 
 const USER_INFO_FIELDS: &[&str] = &["account_id",
@@ -19393,7 +19446,6 @@ impl UserMembershipInfo {
         self.is_inherited = value;
         self
     }
-
 }
 
 const USER_MEMBERSHIP_INFO_FIELDS: &[&str] = &["access_type",

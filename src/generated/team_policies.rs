@@ -1755,7 +1755,6 @@ impl TeamMemberPolicies {
             suggest_members_policy,
         }
     }
-
 }
 
 const TEAM_MEMBER_POLICIES_FIELDS: &[&str] = &["sharing",
@@ -1886,7 +1885,6 @@ impl TeamSharingPolicies {
             shared_link_create_policy,
         }
     }
-
 }
 
 const TEAM_SHARING_POLICIES_FIELDS: &[&str] = &["shared_folder_member_policy",

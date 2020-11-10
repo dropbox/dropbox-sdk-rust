@@ -136,7 +136,6 @@ impl GroupSummary {
         self.member_count = value;
         self
     }
-
 }
 
 const GROUP_SUMMARY_FIELDS: &[&str] = &["group_name",
@@ -429,6 +428,18 @@ impl Default for TimeRange {
             start_time: None,
             end_time: None,
         }
+    }
+}
+
+impl TimeRange {
+    pub fn with_start_time(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.start_time = value;
+        self
+    }
+
+    pub fn with_end_time(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.end_time = value;
+        self
     }
 }
 

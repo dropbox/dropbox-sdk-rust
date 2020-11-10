@@ -1195,7 +1195,6 @@ impl AlphaGetMetadataArg {
         self.include_property_templates = value;
         self
     }
-
 }
 
 const ALPHA_GET_METADATA_ARG_FIELDS: &[&str] = &["path",
@@ -1477,7 +1476,6 @@ impl CommitInfo {
         self.strict_conflict = value;
         self
     }
-
 }
 
 const COMMIT_INFO_FIELDS: &[&str] = &["path",
@@ -1688,7 +1686,6 @@ impl CommitInfoWithProperties {
         self.strict_conflict = value;
         self
     }
-
 }
 
 const COMMIT_INFO_WITH_PROPERTIES_FIELDS: &[&str] = &["path",
@@ -1841,7 +1838,6 @@ impl ContentSyncSetting {
             sync_setting,
         }
     }
-
 }
 
 const CONTENT_SYNC_SETTING_FIELDS: &[&str] = &["id",
@@ -1944,7 +1940,6 @@ impl ContentSyncSettingArg {
             sync_setting,
         }
     }
-
 }
 
 const CONTENT_SYNC_SETTING_ARG_FIELDS: &[&str] = &["id",
@@ -2053,7 +2048,6 @@ impl CreateFolderArg {
         self.autorename = value;
         self
     }
-
 }
 
 const CREATE_FOLDER_ARG_FIELDS: &[&str] = &["path",
@@ -2171,7 +2165,6 @@ impl CreateFolderBatchArg {
         self.force_async = value;
         self
     }
-
 }
 
 const CREATE_FOLDER_BATCH_ARG_FIELDS: &[&str] = &["paths",
@@ -2513,7 +2506,6 @@ impl CreateFolderBatchResult {
             entries,
         }
     }
-
 }
 
 const CREATE_FOLDER_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
@@ -2739,7 +2731,6 @@ impl CreateFolderEntryResult {
             metadata,
         }
     }
-
 }
 
 const CREATE_FOLDER_ENTRY_RESULT_FIELDS: &[&str] = &["metadata"];
@@ -2894,7 +2885,6 @@ impl CreateFolderResult {
             metadata,
         }
     }
-
 }
 
 const CREATE_FOLDER_RESULT_FIELDS: &[&str] = &["metadata"];
@@ -2993,7 +2983,6 @@ impl DeleteArg {
         self.parent_rev = value;
         self
     }
-
 }
 
 const DELETE_ARG_FIELDS: &[&str] = &["path",
@@ -3092,7 +3081,6 @@ impl DeleteBatchArg {
             entries,
         }
     }
-
 }
 
 const DELETE_BATCH_ARG_FIELDS: &[&str] = &["entries"];
@@ -3416,7 +3404,6 @@ impl DeleteBatchResult {
             entries,
         }
     }
-
 }
 
 const DELETE_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
@@ -3506,7 +3493,6 @@ impl DeleteBatchResultData {
             metadata,
         }
     }
-
 }
 
 const DELETE_BATCH_RESULT_DATA_FIELDS: &[&str] = &["metadata"];
@@ -3774,7 +3760,6 @@ impl DeleteResult {
             metadata,
         }
     }
-
 }
 
 const DELETE_RESULT_FIELDS: &[&str] = &["metadata"];
@@ -3899,7 +3884,6 @@ impl DeletedMetadata {
         self.parent_shared_folder_id = value;
         self
     }
-
 }
 
 const DELETED_METADATA_FIELDS: &[&str] = &["name",
@@ -4023,7 +4007,6 @@ impl Dimensions {
             width,
         }
     }
-
 }
 
 const DIMENSIONS_FIELDS: &[&str] = &["height",
@@ -4131,7 +4114,6 @@ impl DownloadArg {
         self.rev = value;
         self
     }
-
 }
 
 const DOWNLOAD_ARG_FIELDS: &[&str] = &["path",
@@ -4317,7 +4299,6 @@ impl DownloadZipArg {
             path,
         }
     }
-
 }
 
 const DOWNLOAD_ZIP_ARG_FIELDS: &[&str] = &["path"];
@@ -4505,7 +4486,6 @@ impl DownloadZipResult {
             metadata,
         }
     }
-
 }
 
 const DOWNLOAD_ZIP_RESULT_FIELDS: &[&str] = &["metadata"];
@@ -4595,7 +4575,6 @@ impl ExportArg {
             path,
         }
     }
-
 }
 
 const EXPORT_ARG_FIELDS: &[&str] = &["path"];
@@ -4787,6 +4766,13 @@ impl Default for ExportInfo {
     }
 }
 
+impl ExportInfo {
+    pub fn with_export_as(mut self, value: Option<String>) -> Self {
+        self.export_as = value;
+        self
+    }
+}
+
 const EXPORT_INFO_FIELDS: &[&str] = &["export_as"];
 impl ExportInfo {
     // no _opt deserializer
@@ -4876,7 +4862,6 @@ impl ExportMetadata {
         self.export_hash = value;
         self
     }
-
 }
 
 const EXPORT_METADATA_FIELDS: &[&str] = &["name",
@@ -4989,7 +4974,6 @@ impl ExportResult {
             file_metadata,
         }
     }
-
 }
 
 const EXPORT_RESULT_FIELDS: &[&str] = &["export_metadata",
@@ -5264,7 +5248,6 @@ impl FileLock {
             content,
         }
     }
-
 }
 
 const FILE_LOCK_FIELDS: &[&str] = &["content"];
@@ -5431,6 +5414,31 @@ impl Default for FileLockMetadata {
             lockholder_account_id: None,
             created: None,
         }
+    }
+}
+
+impl FileLockMetadata {
+    pub fn with_is_lockholder(mut self, value: Option<bool>) -> Self {
+        self.is_lockholder = value;
+        self
+    }
+
+    pub fn with_lockholder_name(mut self, value: Option<String>) -> Self {
+        self.lockholder_name = value;
+        self
+    }
+
+    pub fn with_lockholder_account_id(
+        mut self,
+        value: Option<super::users_common::AccountId>,
+    ) -> Self {
+        self.lockholder_account_id = value;
+        self
+    }
+
+    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.created = value;
+        self
     }
 }
 
@@ -5686,7 +5694,6 @@ impl FileMetadata {
         self.file_lock_info = value;
         self
     }
-
 }
 
 const FILE_METADATA_FIELDS: &[&str] = &["name",
@@ -6008,7 +6015,6 @@ impl FileSharingInfo {
         self.modified_by = value;
         self
     }
-
 }
 
 const FILE_SHARING_INFO_FIELDS: &[&str] = &["read_only",
@@ -6253,7 +6259,6 @@ impl FolderMetadata {
         self.property_groups = value;
         self
     }
-
 }
 
 const FOLDER_METADATA_FIELDS: &[&str] = &["name",
@@ -6453,7 +6458,6 @@ impl FolderSharingInfo {
         self.no_access = value;
         self
     }
-
 }
 
 const FOLDER_SHARING_INFO_FIELDS: &[&str] = &["read_only",
@@ -6583,7 +6587,6 @@ impl GetCopyReferenceArg {
             path,
         }
     }
-
 }
 
 const GET_COPY_REFERENCE_ARG_FIELDS: &[&str] = &["path"];
@@ -6757,7 +6760,6 @@ impl GetCopyReferenceResult {
             expires,
         }
     }
-
 }
 
 const GET_COPY_REFERENCE_RESULT_FIELDS: &[&str] = &["metadata",
@@ -6905,7 +6907,6 @@ impl GetMetadataArg {
         self.include_property_groups = value;
         self
     }
-
 }
 
 const GET_METADATA_ARG_FIELDS: &[&str] = &["path",
@@ -7100,7 +7101,6 @@ impl GetTemporaryLinkArg {
             path,
         }
     }
-
 }
 
 const GET_TEMPORARY_LINK_ARG_FIELDS: &[&str] = &["path"];
@@ -7294,7 +7294,6 @@ impl GetTemporaryLinkResult {
             link,
         }
     }
-
 }
 
 const GET_TEMPORARY_LINK_RESULT_FIELDS: &[&str] = &["metadata",
@@ -7404,7 +7403,6 @@ impl GetTemporaryUploadLinkArg {
         self.duration = value;
         self
     }
-
 }
 
 const GET_TEMPORARY_UPLOAD_LINK_ARG_FIELDS: &[&str] = &["commit_info",
@@ -7504,7 +7502,6 @@ impl GetTemporaryUploadLinkResult {
             link,
         }
     }
-
 }
 
 const GET_TEMPORARY_UPLOAD_LINK_RESULT_FIELDS: &[&str] = &["link"];
@@ -7595,7 +7592,6 @@ impl GetThumbnailBatchArg {
             entries,
         }
     }
-
 }
 
 const GET_THUMBNAIL_BATCH_ARG_FIELDS: &[&str] = &["entries"];
@@ -7755,7 +7751,6 @@ impl GetThumbnailBatchResult {
             entries,
         }
     }
-
 }
 
 const GET_THUMBNAIL_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
@@ -7847,7 +7842,6 @@ impl GetThumbnailBatchResultData {
             thumbnail,
         }
     }
-
 }
 
 const GET_THUMBNAIL_BATCH_RESULT_DATA_FIELDS: &[&str] = &["metadata",
@@ -8023,7 +8017,6 @@ impl GpsCoordinates {
             longitude,
         }
     }
-
 }
 
 const GPS_COORDINATES_FIELDS: &[&str] = &["latitude",
@@ -8126,7 +8119,6 @@ impl HighlightSpan {
             is_highlighted,
         }
     }
-
 }
 
 const HIGHLIGHT_SPAN_FIELDS: &[&str] = &["highlight_str",
@@ -8310,7 +8302,6 @@ impl ListFolderArg {
         self.include_non_downloadable_files = value;
         self
     }
-
 }
 
 const LIST_FOLDER_ARG_FIELDS: &[&str] = &["path",
@@ -8491,7 +8482,6 @@ impl ListFolderContinueArg {
             cursor,
         }
     }
-
 }
 
 const LIST_FOLDER_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -8758,7 +8748,6 @@ impl ListFolderGetLatestCursorResult {
             cursor,
         }
     }
-
 }
 
 const LIST_FOLDER_GET_LATEST_CURSOR_RESULT_FIELDS: &[&str] = &["cursor"];
@@ -8860,7 +8849,6 @@ impl ListFolderLongpollArg {
         self.timeout = value;
         self
     }
-
 }
 
 const LIST_FOLDER_LONGPOLL_ARG_FIELDS: &[&str] = &["cursor",
@@ -9041,7 +9029,6 @@ impl ListFolderLongpollResult {
         self.backoff = value;
         self
     }
-
 }
 
 const LIST_FOLDER_LONGPOLL_RESULT_FIELDS: &[&str] = &["changes",
@@ -9149,7 +9136,6 @@ impl ListFolderResult {
             has_more,
         }
     }
-
 }
 
 const LIST_FOLDER_RESULT_FIELDS: &[&str] = &["entries",
@@ -9275,7 +9261,6 @@ impl ListRevisionsArg {
         self.limit = value;
         self
     }
-
 }
 
 const LIST_REVISIONS_ARG_FIELDS: &[&str] = &["path",
@@ -9542,7 +9527,6 @@ impl ListRevisionsResult {
         self.server_deleted = value;
         self
     }
-
 }
 
 const LIST_REVISIONS_RESULT_FIELDS: &[&str] = &["is_deleted",
@@ -9652,7 +9636,6 @@ impl LockConflictError {
             lock,
         }
     }
-
 }
 
 const LOCK_CONFLICT_ERROR_FIELDS: &[&str] = &["lock"];
@@ -9742,7 +9725,6 @@ impl LockFileArg {
             path,
         }
     }
-
 }
 
 const LOCK_FILE_ARG_FIELDS: &[&str] = &["path"];
@@ -9833,7 +9815,6 @@ impl LockFileBatchArg {
             entries,
         }
     }
-
 }
 
 const LOCK_FILE_BATCH_ARG_FIELDS: &[&str] = &["entries"];
@@ -9924,7 +9905,6 @@ impl LockFileBatchResult {
             entries,
         }
     }
-
 }
 
 const LOCK_FILE_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
@@ -10181,7 +10161,6 @@ impl LockFileResult {
             lock,
         }
     }
-
 }
 
 const LOCK_FILE_RESULT_FIELDS: &[&str] = &["metadata",
@@ -10805,7 +10784,6 @@ impl MinimalFileLinkMetadata {
         self.path = value;
         self
     }
-
 }
 
 const MINIMAL_FILE_LINK_METADATA_FIELDS: &[&str] = &["url",
@@ -10943,7 +10921,6 @@ impl MoveBatchArg {
         self.allow_ownership_transfer = value;
         self
     }
-
 }
 
 const MOVE_BATCH_ARG_FIELDS: &[&str] = &["entries",
@@ -11203,6 +11180,23 @@ impl Default for PhotoMetadata {
     }
 }
 
+impl PhotoMetadata {
+    pub fn with_dimensions(mut self, value: Option<Dimensions>) -> Self {
+        self.dimensions = value;
+        self
+    }
+
+    pub fn with_location(mut self, value: Option<GpsCoordinates>) -> Self {
+        self.location = value;
+        self
+    }
+
+    pub fn with_time_taken(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.time_taken = value;
+        self
+    }
+}
+
 const PHOTO_METADATA_FIELDS: &[&str] = &["dimensions",
                                          "location",
                                          "time_taken"];
@@ -11307,7 +11301,6 @@ impl PreviewArg {
         self.rev = value;
         self
     }
-
 }
 
 const PREVIEW_ARG_FIELDS: &[&str] = &["path",
@@ -11519,6 +11512,18 @@ impl Default for PreviewResult {
     }
 }
 
+impl PreviewResult {
+    pub fn with_file_metadata(mut self, value: Option<FileMetadata>) -> Self {
+        self.file_metadata = value;
+        self
+    }
+
+    pub fn with_link_metadata(mut self, value: Option<MinimalFileLinkMetadata>) -> Self {
+        self.link_metadata = value;
+        self
+    }
+}
+
 const PREVIEW_RESULT_FIELDS: &[&str] = &["file_metadata",
                                          "link_metadata"];
 impl PreviewResult {
@@ -11634,7 +11639,6 @@ impl RelocationArg {
         self.allow_ownership_transfer = value;
         self
     }
-
 }
 
 const RELOCATION_ARG_FIELDS: &[&str] = &["from_path",
@@ -11790,7 +11794,6 @@ impl RelocationBatchArg {
         self.allow_ownership_transfer = value;
         self
     }
-
 }
 
 const RELOCATION_BATCH_ARG_FIELDS: &[&str] = &["entries",
@@ -11919,7 +11922,6 @@ impl RelocationBatchArgBase {
         self.autorename = value;
         self
     }
-
 }
 
 const RELOCATION_BATCH_ARG_BASE_FIELDS: &[&str] = &["entries",
@@ -12515,7 +12517,6 @@ impl RelocationBatchResult {
             entries,
         }
     }
-
 }
 
 const RELOCATION_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
@@ -12605,7 +12606,6 @@ impl RelocationBatchResultData {
             metadata,
         }
     }
-
 }
 
 const RELOCATION_BATCH_RESULT_DATA_FIELDS: &[&str] = &["metadata"];
@@ -12904,7 +12904,6 @@ impl RelocationBatchV2Result {
             entries,
         }
     }
-
 }
 
 const RELOCATION_BATCH_V2_RESULT_FIELDS: &[&str] = &["entries"];
@@ -13239,7 +13238,6 @@ impl RelocationPath {
             to_path,
         }
     }
-
 }
 
 const RELOCATION_PATH_FIELDS: &[&str] = &["from_path",
@@ -13339,7 +13337,6 @@ impl RelocationResult {
             metadata,
         }
     }
-
 }
 
 const RELOCATION_RESULT_FIELDS: &[&str] = &["metadata"];
@@ -13432,7 +13429,6 @@ impl RestoreArg {
             rev,
         }
     }
-
 }
 
 const RESTORE_ARG_FIELDS: &[&str] = &["path",
@@ -13652,7 +13648,6 @@ impl SaveCopyReferenceArg {
             path,
         }
     }
-
 }
 
 const SAVE_COPY_REFERENCE_ARG_FIELDS: &[&str] = &["copy_reference",
@@ -13878,7 +13873,6 @@ impl SaveCopyReferenceResult {
             metadata,
         }
     }
-
 }
 
 const SAVE_COPY_REFERENCE_RESULT_FIELDS: &[&str] = &["metadata"];
@@ -13971,7 +13965,6 @@ impl SaveUrlArg {
             url,
         }
     }
-
 }
 
 const SAVE_URL_ARG_FIELDS: &[&str] = &["path",
@@ -14357,7 +14350,6 @@ impl SearchArg {
         self.mode = value;
         self
     }
-
 }
 
 const SEARCH_ARG_FIELDS: &[&str] = &["path",
@@ -14595,7 +14587,6 @@ impl SearchMatch {
             metadata,
         }
     }
-
 }
 
 const SEARCH_MATCH_FIELDS: &[&str] = &["match_type",
@@ -14694,6 +14685,13 @@ impl Default for SearchMatchFieldOptions {
         SearchMatchFieldOptions {
             include_highlights: false,
         }
+    }
+}
+
+impl SearchMatchFieldOptions {
+    pub fn with_include_highlights(mut self, value: bool) -> Self {
+        self.include_highlights = value;
+        self
     }
 }
 
@@ -14964,7 +14962,6 @@ impl SearchMatchV2 {
         self.highlight_spans = value;
         self
     }
-
 }
 
 const SEARCH_MATCH_V2_FIELDS: &[&str] = &["metadata",
@@ -15170,6 +15167,43 @@ impl Default for SearchOptions {
             file_extensions: None,
             file_categories: None,
         }
+    }
+}
+
+impl SearchOptions {
+    pub fn with_path(mut self, value: Option<PathROrId>) -> Self {
+        self.path = value;
+        self
+    }
+
+    pub fn with_max_results(mut self, value: u64) -> Self {
+        self.max_results = value;
+        self
+    }
+
+    pub fn with_order_by(mut self, value: Option<SearchOrderBy>) -> Self {
+        self.order_by = value;
+        self
+    }
+
+    pub fn with_file_status(mut self, value: FileStatus) -> Self {
+        self.file_status = value;
+        self
+    }
+
+    pub fn with_filename_only(mut self, value: bool) -> Self {
+        self.filename_only = value;
+        self
+    }
+
+    pub fn with_file_extensions(mut self, value: Option<Vec<String>>) -> Self {
+        self.file_extensions = value;
+        self
+    }
+
+    pub fn with_file_categories(mut self, value: Option<Vec<FileCategory>>) -> Self {
+        self.file_categories = value;
+        self
     }
 }
 
@@ -15386,7 +15420,6 @@ impl SearchResult {
             start,
         }
     }
-
 }
 
 const SEARCH_RESULT_FIELDS: &[&str] = &["matches",
@@ -15521,7 +15554,6 @@ impl SearchV2Arg {
         self.include_highlights = value;
         self
     }
-
 }
 
 const SEARCH_V2_ARG_FIELDS: &[&str] = &["query",
@@ -15642,7 +15674,6 @@ impl SearchV2ContinueArg {
             cursor,
         }
     }
-
 }
 
 const SEARCH_V2_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -15745,7 +15776,6 @@ impl SearchV2Result {
         self.cursor = value;
         self
     }
-
 }
 
 const SEARCH_V2_RESULT_FIELDS: &[&str] = &["matches",
@@ -15863,7 +15893,6 @@ impl SharedLink {
         self.password = value;
         self
     }
-
 }
 
 const SHARED_LINK_FIELDS: &[&str] = &["url",
@@ -15983,7 +16012,6 @@ impl SharedLinkFileInfo {
         self.password = value;
         self
     }
-
 }
 
 const SHARED_LINK_FILE_INFO_FIELDS: &[&str] = &["url",
@@ -16094,7 +16122,6 @@ impl SharingInfo {
             read_only,
         }
     }
-
 }
 
 const SHARING_INFO_FIELDS: &[&str] = &["read_only"];
@@ -16198,7 +16225,6 @@ impl SingleUserLock {
         self.lock_holder_team_id = value;
         self
     }
-
 }
 
 const SINGLE_USER_LOCK_FIELDS: &[&str] = &["created",
@@ -16308,7 +16334,6 @@ impl SymlinkInfo {
             target,
         }
     }
-
 }
 
 const SYMLINK_INFO_FIELDS: &[&str] = &["target"];
@@ -16682,7 +16707,6 @@ impl ThumbnailArg {
         self.mode = value;
         self
     }
-
 }
 
 const THUMBNAIL_ARG_FIELDS: &[&str] = &["path",
@@ -17224,7 +17248,6 @@ impl ThumbnailV2Arg {
         self.mode = value;
         self
     }
-
 }
 
 const THUMBNAIL_V2_ARG_FIELDS: &[&str] = &["resource",
@@ -17483,7 +17506,6 @@ impl UnlockFileArg {
             path,
         }
     }
-
 }
 
 const UNLOCK_FILE_ARG_FIELDS: &[&str] = &["path"];
@@ -17574,7 +17596,6 @@ impl UnlockFileBatchArg {
             entries,
         }
     }
-
 }
 
 const UNLOCK_FILE_BATCH_ARG_FIELDS: &[&str] = &["entries"];
@@ -17831,7 +17852,6 @@ impl UploadSessionAppendArg {
         self.close = value;
         self
     }
-
 }
 
 const UPLOAD_SESSION_APPEND_ARG_FIELDS: &[&str] = &["cursor",
@@ -17935,7 +17955,6 @@ impl UploadSessionCursor {
             offset,
         }
     }
-
 }
 
 const UPLOAD_SESSION_CURSOR_FIELDS: &[&str] = &["session_id",
@@ -18038,7 +18057,6 @@ impl UploadSessionFinishArg {
             commit,
         }
     }
-
 }
 
 const UPLOAD_SESSION_FINISH_ARG_FIELDS: &[&str] = &["cursor",
@@ -18138,7 +18156,6 @@ impl UploadSessionFinishBatchArg {
             entries,
         }
     }
-
 }
 
 const UPLOAD_SESSION_FINISH_BATCH_ARG_FIELDS: &[&str] = &["entries"];
@@ -18366,7 +18383,6 @@ impl UploadSessionFinishBatchResult {
             entries,
         }
     }
-
 }
 
 const UPLOAD_SESSION_FINISH_BATCH_RESULT_FIELDS: &[&str] = &["entries"];
@@ -18780,7 +18796,6 @@ impl UploadSessionOffsetError {
             correct_offset,
         }
     }
-
 }
 
 const UPLOAD_SESSION_OFFSET_ERROR_FIELDS: &[&str] = &["correct_offset"];
@@ -18873,6 +18888,13 @@ impl Default for UploadSessionStartArg {
     }
 }
 
+impl UploadSessionStartArg {
+    pub fn with_close(mut self, value: bool) -> Self {
+        self.close = value;
+        self
+    }
+}
+
 const UPLOAD_SESSION_START_ARG_FIELDS: &[&str] = &["close"];
 impl UploadSessionStartArg {
     // no _opt deserializer
@@ -18951,7 +18973,6 @@ impl UploadSessionStartResult {
             session_id,
         }
     }
-
 }
 
 const UPLOAD_SESSION_START_RESULT_FIELDS: &[&str] = &["session_id"];
@@ -19046,7 +19067,6 @@ impl UploadWriteFailed {
             upload_session_id,
         }
     }
-
 }
 
 const UPLOAD_WRITE_FAILED_FIELDS: &[&str] = &["reason",
@@ -19155,6 +19175,28 @@ impl Default for VideoMetadata {
             time_taken: None,
             duration: None,
         }
+    }
+}
+
+impl VideoMetadata {
+    pub fn with_dimensions(mut self, value: Option<Dimensions>) -> Self {
+        self.dimensions = value;
+        self
+    }
+
+    pub fn with_location(mut self, value: Option<GpsCoordinates>) -> Self {
+        self.location = value;
+        self
+    }
+
+    pub fn with_time_taken(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
+        self.time_taken = value;
+        self
+    }
+
+    pub fn with_duration(mut self, value: Option<u64>) -> Self {
+        self.duration = value;
+        self
     }
 }
 

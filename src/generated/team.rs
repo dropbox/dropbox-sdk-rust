@@ -1260,7 +1260,6 @@ impl ActiveWebSession {
         self.expires = value;
         self
     }
-
 }
 
 const ACTIVE_WEB_SESSION_FIELDS: &[&str] = &["session_id",
@@ -1625,7 +1624,6 @@ impl AddSecondaryEmailsArg {
             new_secondary_emails,
         }
     }
-
 }
 
 const ADD_SECONDARY_EMAILS_ARG_FIELDS: &[&str] = &["new_secondary_emails"];
@@ -1799,7 +1797,6 @@ impl AddSecondaryEmailsResult {
             results,
         }
     }
-
 }
 
 const ADD_SECONDARY_EMAILS_RESULT_FIELDS: &[&str] = &["results"];
@@ -2010,7 +2007,6 @@ impl ApiApp {
         self.linked = value;
         self
     }
-
 }
 
 const API_APP_FIELDS: &[&str] = &["app_id",
@@ -2151,7 +2147,6 @@ impl BaseDfbReport {
             start_date,
         }
     }
-
 }
 
 const BASE_DFB_REPORT_FIELDS: &[&str] = &["start_date"];
@@ -2492,7 +2487,6 @@ impl CustomQuotaUsersArg {
             users,
         }
     }
-
 }
 
 const CUSTOM_QUOTA_USERS_ARG_FIELDS: &[&str] = &["users"];
@@ -2586,6 +2580,18 @@ impl Default for DateRange {
             start_date: None,
             end_date: None,
         }
+    }
+}
+
+impl DateRange {
+    pub fn with_start_date(mut self, value: Option<super::common::Date>) -> Self {
+        self.start_date = value;
+        self
+    }
+
+    pub fn with_end_date(mut self, value: Option<super::common::Date>) -> Self {
+        self.end_date = value;
+        self
     }
 }
 
@@ -2828,7 +2834,6 @@ impl DeleteSecondaryEmailsArg {
             emails_to_delete,
         }
     }
-
 }
 
 const DELETE_SECONDARY_EMAILS_ARG_FIELDS: &[&str] = &["emails_to_delete"];
@@ -2917,7 +2922,6 @@ impl DeleteSecondaryEmailsResult {
             results,
         }
     }
-
 }
 
 const DELETE_SECONDARY_EMAILS_RESULT_FIELDS: &[&str] = &["results"];
@@ -3062,7 +3066,6 @@ impl DesktopClientSession {
         self.updated = value;
         self
     }
-
 }
 
 const DESKTOP_CLIENT_SESSION_FIELDS: &[&str] = &["session_id",
@@ -3358,7 +3361,6 @@ impl DeviceSession {
         self.updated = value;
         self
     }
-
 }
 
 const DEVICE_SESSION_FIELDS: &[&str] = &["session_id",
@@ -3491,7 +3493,6 @@ impl DeviceSessionArg {
             team_member_id,
         }
     }
-
 }
 
 const DEVICE_SESSION_ARG_FIELDS: &[&str] = &["session_id",
@@ -3620,7 +3621,6 @@ impl DevicesActive {
             total,
         }
     }
-
 }
 
 const DEVICES_ACTIVE_FIELDS: &[&str] = &["windows",
@@ -3773,6 +3773,13 @@ impl Default for ExcludedUsersListArg {
     }
 }
 
+impl ExcludedUsersListArg {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
 const EXCLUDED_USERS_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl ExcludedUsersListArg {
     // no _opt deserializer
@@ -3850,7 +3857,6 @@ impl ExcludedUsersListContinueArg {
             cursor,
         }
     }
-
 }
 
 const EXCLUDED_USERS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -4098,7 +4104,6 @@ impl ExcludedUsersListResult {
         self.cursor = value;
         self
     }
-
 }
 
 const EXCLUDED_USERS_LIST_RESULT_FIELDS: &[&str] = &["users",
@@ -4209,6 +4214,13 @@ impl Default for ExcludedUsersUpdateArg {
         ExcludedUsersUpdateArg {
             users: None,
         }
+    }
+}
+
+impl ExcludedUsersUpdateArg {
+    pub fn with_users(mut self, value: Option<Vec<UserSelectorArg>>) -> Self {
+        self.users = value;
+        self
     }
 }
 
@@ -4373,7 +4385,6 @@ impl ExcludedUsersUpdateResult {
             status,
         }
     }
-
 }
 
 const EXCLUDED_USERS_UPDATE_RESULT_FIELDS: &[&str] = &["status"];
@@ -4732,7 +4743,6 @@ impl FeaturesGetValuesBatchArg {
             features,
         }
     }
-
 }
 
 const FEATURES_GET_VALUES_BATCH_ARG_FIELDS: &[&str] = &["features"];
@@ -4892,7 +4902,6 @@ impl FeaturesGetValuesBatchResult {
             values,
         }
     }
-
 }
 
 const FEATURES_GET_VALUES_BATCH_RESULT_FIELDS: &[&str] = &["values"];
@@ -5044,7 +5053,6 @@ impl GetActivityReport {
             shared_links_viewed_total,
         }
     }
-
 }
 
 const GET_ACTIVITY_REPORT_FIELDS: &[&str] = &["start_date",
@@ -5291,7 +5299,6 @@ impl GetDevicesReport {
             active_28_day,
         }
     }
-
 }
 
 const GET_DEVICES_REPORT_FIELDS: &[&str] = &["start_date",
@@ -5435,7 +5442,6 @@ impl GetMembershipReport {
             licenses,
         }
     }
-
 }
 
 const GET_MEMBERSHIP_REPORT_FIELDS: &[&str] = &["start_date",
@@ -5602,7 +5608,6 @@ impl GetStorageReport {
             member_storage_map,
         }
     }
-
 }
 
 const GET_STORAGE_REPORT_FIELDS: &[&str] = &["start_date",
@@ -5836,7 +5841,6 @@ impl GroupCreateArg {
         self.group_management_type = value;
         self
     }
-
 }
 
 const GROUP_CREATE_ARG_FIELDS: &[&str] = &["group_name",
@@ -6201,7 +6205,6 @@ impl GroupFullInfo {
         self.members = value;
         self
     }
-
 }
 
 const GROUP_FULL_INFO_FIELDS: &[&str] = &["group_name",
@@ -6355,7 +6358,6 @@ impl GroupMemberInfo {
             access_type,
         }
     }
-
 }
 
 const GROUP_MEMBER_INFO_FIELDS: &[&str] = &["profile",
@@ -6459,7 +6461,6 @@ impl GroupMemberSelector {
             user,
         }
     }
-
 }
 
 const GROUP_MEMBER_SELECTOR_FIELDS: &[&str] = &["group",
@@ -6779,7 +6780,6 @@ impl GroupMembersAddArg {
         self.return_members = value;
         self
     }
-
 }
 
 const GROUP_MEMBERS_ADD_ARG_FIELDS: &[&str] = &["group",
@@ -7073,7 +7073,6 @@ impl GroupMembersChangeResult {
             async_job_id,
         }
     }
-
 }
 
 const GROUP_MEMBERS_CHANGE_RESULT_FIELDS: &[&str] = &["group_info",
@@ -7186,7 +7185,6 @@ impl GroupMembersRemoveArg {
         self.return_members = value;
         self
     }
-
 }
 
 const GROUP_MEMBERS_REMOVE_ARG_FIELDS: &[&str] = &["group",
@@ -7444,7 +7442,6 @@ impl GroupMembersSelector {
             users,
         }
     }
-
 }
 
 const GROUP_MEMBERS_SELECTOR_FIELDS: &[&str] = &["group",
@@ -7658,7 +7655,6 @@ impl GroupMembersSetAccessTypeArg {
         self.return_members = value;
         self
     }
-
 }
 
 const GROUP_MEMBERS_SET_ACCESS_TYPE_ARG_FIELDS: &[&str] = &["group",
@@ -8047,7 +8043,6 @@ impl GroupUpdateArgs {
         self.new_group_management_type = value;
         self
     }
-
 }
 
 const GROUP_UPDATE_ARGS_FIELDS: &[&str] = &["group",
@@ -8438,6 +8433,13 @@ impl Default for GroupsListArg {
     }
 }
 
+impl GroupsListArg {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
 const GROUPS_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl GroupsListArg {
     // no _opt deserializer
@@ -8514,7 +8516,6 @@ impl GroupsListContinueArg {
             cursor,
         }
     }
-
 }
 
 const GROUPS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -8685,7 +8686,6 @@ impl GroupsListResult {
             has_more,
         }
     }
-
 }
 
 const GROUPS_LIST_RESULT_FIELDS: &[&str] = &["groups",
@@ -8803,7 +8803,6 @@ impl GroupsMembersListArg {
         self.limit = value;
         self
     }
-
 }
 
 const GROUPS_MEMBERS_LIST_ARG_FIELDS: &[&str] = &["group",
@@ -8903,7 +8902,6 @@ impl GroupsMembersListContinueArg {
             cursor,
         }
     }
-
 }
 
 const GROUPS_MEMBERS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -9070,7 +9068,6 @@ impl GroupsMembersListResult {
             has_more,
         }
     }
-
 }
 
 const GROUPS_MEMBERS_LIST_RESULT_FIELDS: &[&str] = &["members",
@@ -9542,6 +9539,13 @@ impl Default for IncludeMembersArg {
     }
 }
 
+impl IncludeMembersArg {
+    pub fn with_return_members(mut self, value: bool) -> Self {
+        self.return_members = value;
+        self
+    }
+}
+
 const INCLUDE_MEMBERS_ARG_FIELDS: &[&str] = &["return_members"];
 impl IncludeMembersArg {
     // no _opt deserializer
@@ -9658,7 +9662,6 @@ impl LegalHoldHeldRevisionMetadata {
             content_hash,
         }
     }
-
 }
 
 const LEGAL_HOLD_HELD_REVISION_METADATA_FIELDS: &[&str] = &["new_filename",
@@ -9880,7 +9883,6 @@ impl LegalHoldPolicy {
         self.end_date = value;
         self
     }
-
 }
 
 const LEGAL_HOLD_POLICY_FIELDS: &[&str] = &["id",
@@ -10246,7 +10248,6 @@ impl LegalHoldsGetPolicyArg {
             id,
         }
     }
-
 }
 
 const LEGAL_HOLDS_GET_POLICY_ARG_FIELDS: &[&str] = &["id"];
@@ -10446,7 +10447,6 @@ impl LegalHoldsListHeldRevisionResult {
         self.cursor = value;
         self
     }
-
 }
 
 const LEGAL_HOLDS_LIST_HELD_REVISION_RESULT_FIELDS: &[&str] = &["entries",
@@ -10556,7 +10556,6 @@ impl LegalHoldsListHeldRevisionsArg {
             id,
         }
     }
-
 }
 
 const LEGAL_HOLDS_LIST_HELD_REVISIONS_ARG_FIELDS: &[&str] = &["id"];
@@ -10655,7 +10654,6 @@ impl LegalHoldsListHeldRevisionsContinueArg {
         self.cursor = value;
         self
     }
-
 }
 
 const LEGAL_HOLDS_LIST_HELD_REVISIONS_CONTINUE_ARG_FIELDS: &[&str] = &["id",
@@ -10977,6 +10975,13 @@ impl Default for LegalHoldsListPoliciesArg {
     }
 }
 
+impl LegalHoldsListPoliciesArg {
+    pub fn with_include_released(mut self, value: bool) -> Self {
+        self.include_released = value;
+        self
+    }
+}
+
 const LEGAL_HOLDS_LIST_POLICIES_ARG_FIELDS: &[&str] = &["include_released"];
 impl LegalHoldsListPoliciesArg {
     // no _opt deserializer
@@ -11148,7 +11153,6 @@ impl LegalHoldsListPoliciesResult {
             policies,
         }
     }
-
 }
 
 const LEGAL_HOLDS_LIST_POLICIES_RESULT_FIELDS: &[&str] = &["policies"];
@@ -11265,7 +11269,6 @@ impl LegalHoldsPolicyCreateArg {
         self.end_date = value;
         self
     }
-
 }
 
 const LEGAL_HOLDS_POLICY_CREATE_ARG_FIELDS: &[&str] = &["name",
@@ -11582,7 +11585,6 @@ impl LegalHoldsPolicyReleaseArg {
             id,
         }
     }
-
 }
 
 const LEGAL_HOLDS_POLICY_RELEASE_ARG_FIELDS: &[&str] = &["id"];
@@ -11819,7 +11821,6 @@ impl LegalHoldsPolicyUpdateArg {
         self.members = value;
         self
     }
-
 }
 
 const LEGAL_HOLDS_POLICY_UPDATE_ARG_FIELDS: &[&str] = &["id",
@@ -12114,7 +12115,6 @@ impl ListMemberAppsArg {
             team_member_id,
         }
     }
-
 }
 
 const LIST_MEMBER_APPS_ARG_FIELDS: &[&str] = &["team_member_id"];
@@ -12276,7 +12276,6 @@ impl ListMemberAppsResult {
             linked_api_apps,
         }
     }
-
 }
 
 const LIST_MEMBER_APPS_RESULT_FIELDS: &[&str] = &["linked_api_apps"];
@@ -12390,7 +12389,6 @@ impl ListMemberDevicesArg {
         self.include_mobile_clients = value;
         self
     }
-
 }
 
 const LIST_MEMBER_DEVICES_ARG_FIELDS: &[&str] = &["team_member_id",
@@ -12588,6 +12586,26 @@ impl Default for ListMemberDevicesResult {
     }
 }
 
+impl ListMemberDevicesResult {
+    pub fn with_active_web_sessions(mut self, value: Option<Vec<ActiveWebSession>>) -> Self {
+        self.active_web_sessions = value;
+        self
+    }
+
+    pub fn with_desktop_client_sessions(
+        mut self,
+        value: Option<Vec<DesktopClientSession>>,
+    ) -> Self {
+        self.desktop_client_sessions = value;
+        self
+    }
+
+    pub fn with_mobile_client_sessions(mut self, value: Option<Vec<MobileClientSession>>) -> Self {
+        self.mobile_client_sessions = value;
+        self
+    }
+}
+
 const LIST_MEMBER_DEVICES_RESULT_FIELDS: &[&str] = &["active_web_sessions",
                                                      "desktop_client_sessions",
                                                      "mobile_client_sessions"];
@@ -12688,6 +12706,13 @@ impl Default for ListMembersAppsArg {
         ListMembersAppsArg {
             cursor: None,
         }
+    }
+}
+
+impl ListMembersAppsArg {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
+        self.cursor = value;
+        self
     }
 }
 
@@ -12858,7 +12883,6 @@ impl ListMembersAppsResult {
         self.cursor = value;
         self
     }
-
 }
 
 const LIST_MEMBERS_APPS_RESULT_FIELDS: &[&str] = &["apps",
@@ -12979,6 +13003,28 @@ impl Default for ListMembersDevicesArg {
             include_desktop_clients: true,
             include_mobile_clients: true,
         }
+    }
+}
+
+impl ListMembersDevicesArg {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
+        self.cursor = value;
+        self
+    }
+
+    pub fn with_include_web_sessions(mut self, value: bool) -> Self {
+        self.include_web_sessions = value;
+        self
+    }
+
+    pub fn with_include_desktop_clients(mut self, value: bool) -> Self {
+        self.include_desktop_clients = value;
+        self
+    }
+
+    pub fn with_include_mobile_clients(mut self, value: bool) -> Self {
+        self.include_mobile_clients = value;
+        self
     }
 }
 
@@ -13173,7 +13219,6 @@ impl ListMembersDevicesResult {
         self.cursor = value;
         self
     }
-
 }
 
 const LIST_MEMBERS_DEVICES_RESULT_FIELDS: &[&str] = &["devices",
@@ -13287,6 +13332,13 @@ impl Default for ListTeamAppsArg {
         ListTeamAppsArg {
             cursor: None,
         }
+    }
+}
+
+impl ListTeamAppsArg {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
+        self.cursor = value;
+        self
     }
 }
 
@@ -13456,7 +13508,6 @@ impl ListTeamAppsResult {
         self.cursor = value;
         self
     }
-
 }
 
 const LIST_TEAM_APPS_RESULT_FIELDS: &[&str] = &["apps",
@@ -13577,6 +13628,28 @@ impl Default for ListTeamDevicesArg {
             include_desktop_clients: true,
             include_mobile_clients: true,
         }
+    }
+}
+
+impl ListTeamDevicesArg {
+    pub fn with_cursor(mut self, value: Option<String>) -> Self {
+        self.cursor = value;
+        self
+    }
+
+    pub fn with_include_web_sessions(mut self, value: bool) -> Self {
+        self.include_web_sessions = value;
+        self
+    }
+
+    pub fn with_include_desktop_clients(mut self, value: bool) -> Self {
+        self.include_desktop_clients = value;
+        self
+    }
+
+    pub fn with_include_mobile_clients(mut self, value: bool) -> Self {
+        self.include_mobile_clients = value;
+        self
     }
 }
 
@@ -13771,7 +13844,6 @@ impl ListTeamDevicesResult {
         self.cursor = value;
         self
     }
-
 }
 
 const LIST_TEAM_DEVICES_RESULT_FIELDS: &[&str] = &["devices",
@@ -13885,7 +13957,6 @@ impl MemberAccess {
             access_type,
         }
     }
-
 }
 
 const MEMBER_ACCESS_FIELDS: &[&str] = &["user",
@@ -14048,7 +14119,6 @@ impl MemberAddArg {
         self.is_directory_restricted = value;
         self
     }
-
 }
 
 const MEMBER_ADD_ARG_FIELDS: &[&str] = &["member_email",
@@ -14459,7 +14529,6 @@ impl MemberDevices {
         self.mobile_clients = value;
         self
     }
-
 }
 
 const MEMBER_DEVICES_FIELDS: &[&str] = &["team_member_id",
@@ -14583,7 +14652,6 @@ impl MemberLinkedApps {
             linked_api_apps,
         }
     }
-
 }
 
 const MEMBER_LINKED_APPS_FIELDS: &[&str] = &["team_member_id",
@@ -14786,7 +14854,6 @@ impl MemberProfile {
         self.profile_photo_url = value;
         self
     }
-
 }
 
 const MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
@@ -15100,7 +15167,6 @@ impl MembersAddArg {
         self.force_async = value;
         self
     }
-
 }
 
 const MEMBERS_ADD_ARG_FIELDS: &[&str] = &["new_members",
@@ -15367,7 +15433,6 @@ impl MembersDataTransferArg {
             transfer_admin_id,
         }
     }
-
 }
 
 const MEMBERS_DATA_TRANSFER_ARG_FIELDS: &[&str] = &["user",
@@ -15485,7 +15550,6 @@ impl MembersDeactivateArg {
         self.wipe_data = value;
         self
     }
-
 }
 
 const MEMBERS_DEACTIVATE_ARG_FIELDS: &[&str] = &["user",
@@ -15587,7 +15651,6 @@ impl MembersDeactivateBaseArg {
             user,
         }
     }
-
 }
 
 const MEMBERS_DEACTIVATE_BASE_ARG_FIELDS: &[&str] = &["user"];
@@ -15761,7 +15824,6 @@ impl MembersDeleteProfilePhotoArg {
             user,
         }
     }
-
 }
 
 const MEMBERS_DELETE_PROFILE_PHOTO_ARG_FIELDS: &[&str] = &["user"];
@@ -15948,7 +16010,6 @@ impl MembersGetInfoArgs {
             members,
         }
     }
-
 }
 
 const MEMBERS_GET_INFO_ARGS_FIELDS: &[&str] = &["members"];
@@ -16167,7 +16228,6 @@ impl MembersInfo {
             permanently_deleted_users,
         }
     }
-
 }
 
 const MEMBERS_INFO_FIELDS: &[&str] = &["team_member_ids",
@@ -16272,6 +16332,18 @@ impl Default for MembersListArg {
     }
 }
 
+impl MembersListArg {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+
+    pub fn with_include_removed(mut self, value: bool) -> Self {
+        self.include_removed = value;
+        self
+    }
+}
+
 const MEMBERS_LIST_ARG_FIELDS: &[&str] = &["limit",
                                            "include_removed"];
 impl MembersListArg {
@@ -16358,7 +16430,6 @@ impl MembersListContinueArg {
             cursor,
         }
     }
-
 }
 
 const MEMBERS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -16580,7 +16651,6 @@ impl MembersListResult {
             has_more,
         }
     }
-
 }
 
 const MEMBERS_LIST_RESULT_FIELDS: &[&str] = &["members",
@@ -16692,7 +16762,6 @@ impl MembersRecoverArg {
             user,
         }
     }
-
 }
 
 const MEMBERS_RECOVER_ARG_FIELDS: &[&str] = &["user"];
@@ -16939,7 +17008,6 @@ impl MembersRemoveArg {
         self.retain_team_shares = value;
         self
     }
-
 }
 
 const MEMBERS_REMOVE_ARG_FIELDS: &[&str] = &["user",
@@ -17519,7 +17587,6 @@ impl MembersSetPermissionsArg {
             new_role,
         }
     }
-
 }
 
 const MEMBERS_SET_PERMISSIONS_ARG_FIELDS: &[&str] = &["user",
@@ -17745,7 +17812,6 @@ impl MembersSetPermissionsResult {
             role,
         }
     }
-
 }
 
 const MEMBERS_SET_PERMISSIONS_RESULT_FIELDS: &[&str] = &["team_member_id",
@@ -17900,7 +17966,6 @@ impl MembersSetProfileArg {
         self.new_is_directory_restricted = value;
         self
     }
-
 }
 
 const MEMBERS_SET_PROFILE_ARG_FIELDS: &[&str] = &["user",
@@ -18255,7 +18320,6 @@ impl MembersSetProfilePhotoArg {
             photo,
         }
     }
-
 }
 
 const MEMBERS_SET_PROFILE_PHOTO_ARG_FIELDS: &[&str] = &["user",
@@ -19047,7 +19111,6 @@ impl MembersUnsuspendArg {
             user,
         }
     }
-
 }
 
 const MEMBERS_UNSUSPEND_ARG_FIELDS: &[&str] = &["user"];
@@ -19424,7 +19487,6 @@ impl MobileClientSession {
         self.last_carrier = value;
         self
     }
-
 }
 
 const MOBILE_CLIENT_SESSION_FIELDS: &[&str] = &["session_id",
@@ -19624,7 +19686,6 @@ impl NamespaceMetadata {
         self.team_member_id = value;
         self
     }
-
 }
 
 const NAMESPACE_METADATA_FIELDS: &[&str] = &["name",
@@ -19924,7 +19985,6 @@ impl RemovedStatus {
             is_disconnected,
         }
     }
-
 }
 
 const REMOVED_STATUS_FIELDS: &[&str] = &["is_recoverable",
@@ -20123,7 +20183,6 @@ impl ResendVerificationEmailArg {
             emails_to_resend,
         }
     }
-
 }
 
 const RESEND_VERIFICATION_EMAIL_ARG_FIELDS: &[&str] = &["emails_to_resend"];
@@ -20213,7 +20272,6 @@ impl ResendVerificationEmailResult {
             results,
         }
     }
-
 }
 
 const RESEND_VERIFICATION_EMAIL_RESULT_FIELDS: &[&str] = &["results"];
@@ -20315,7 +20373,6 @@ impl RevokeDesktopClientArg {
         self.delete_on_unlink = value;
         self
     }
-
 }
 
 const REVOKE_DESKTOP_CLIENT_ARG_FIELDS: &[&str] = &["session_id",
@@ -20494,7 +20551,6 @@ impl RevokeDeviceSessionBatchArg {
             revoke_devices,
         }
     }
-
 }
 
 const REVOKE_DEVICE_SESSION_BATCH_ARG_FIELDS: &[&str] = &["revoke_devices"];
@@ -20637,7 +20693,6 @@ impl RevokeDeviceSessionBatchResult {
             revoke_devices_status,
         }
     }
-
 }
 
 const REVOKE_DEVICE_SESSION_BATCH_RESULT_FIELDS: &[&str] = &["revoke_devices_status"];
@@ -20818,7 +20873,6 @@ impl RevokeDeviceSessionStatus {
         self.error_type = value;
         self
     }
-
 }
 
 const REVOKE_DEVICE_SESSION_STATUS_FIELDS: &[&str] = &["success",
@@ -20930,7 +20984,6 @@ impl RevokeLinkedApiAppArg {
         self.keep_app_folder = value;
         self
     }
-
 }
 
 const REVOKE_LINKED_API_APP_ARG_FIELDS: &[&str] = &["app_id",
@@ -21039,7 +21092,6 @@ impl RevokeLinkedApiAppBatchArg {
             revoke_linked_app,
         }
     }
-
 }
 
 const REVOKE_LINKED_API_APP_BATCH_ARG_FIELDS: &[&str] = &["revoke_linked_app"];
@@ -21183,7 +21235,6 @@ impl RevokeLinkedAppBatchResult {
             revoke_linked_app_status,
         }
     }
-
 }
 
 const REVOKE_LINKED_APP_BATCH_RESULT_FIELDS: &[&str] = &["revoke_linked_app_status"];
@@ -21378,7 +21429,6 @@ impl RevokeLinkedAppStatus {
         self.error_type = value;
         self
     }
-
 }
 
 const REVOKE_LINKED_APP_STATUS_FIELDS: &[&str] = &["success",
@@ -21478,7 +21528,6 @@ impl SetCustomQuotaArg {
             users_and_quotas,
         }
     }
-
 }
 
 const SET_CUSTOM_QUOTA_ARG_FIELDS: &[&str] = &["users_and_quotas"];
@@ -21657,7 +21706,6 @@ impl StorageBucket {
             users,
         }
     }
-
 }
 
 const STORAGE_BUCKET_FIELDS: &[&str] = &["bucket",
@@ -21954,7 +22002,6 @@ impl TeamFolderArchiveArg {
         self.force_async_off = value;
         self
     }
-
 }
 
 const TEAM_FOLDER_ARCHIVE_ARG_FIELDS: &[&str] = &["team_folder_id",
@@ -22313,7 +22360,6 @@ impl TeamFolderCreateArg {
         self.sync_setting = value;
         self
     }
-
 }
 
 const TEAM_FOLDER_CREATE_ARG_FIELDS: &[&str] = &["name",
@@ -22592,7 +22638,6 @@ impl TeamFolderIdArg {
             team_folder_id,
         }
     }
-
 }
 
 const TEAM_FOLDER_ID_ARG_FIELDS: &[&str] = &["team_folder_id"];
@@ -22682,7 +22727,6 @@ impl TeamFolderIdListArg {
             team_folder_ids,
         }
     }
-
 }
 
 const TEAM_FOLDER_ID_LIST_ARG_FIELDS: &[&str] = &["team_folder_ids"];
@@ -22870,6 +22914,13 @@ impl Default for TeamFolderListArg {
     }
 }
 
+impl TeamFolderListArg {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
 const TEAM_FOLDER_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl TeamFolderListArg {
     // no _opt deserializer
@@ -22946,7 +22997,6 @@ impl TeamFolderListContinueArg {
             cursor,
         }
     }
-
 }
 
 const TEAM_FOLDER_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -23105,7 +23155,6 @@ impl TeamFolderListError {
             access_error,
         }
     }
-
 }
 
 const TEAM_FOLDER_LIST_ERROR_FIELDS: &[&str] = &["access_error"];
@@ -23205,7 +23254,6 @@ impl TeamFolderListResult {
             has_more,
         }
     }
-
 }
 
 const TEAM_FOLDER_LIST_RESULT_FIELDS: &[&str] = &["team_folders",
@@ -23338,7 +23386,6 @@ impl TeamFolderMetadata {
             content_sync_settings,
         }
     }
-
 }
 
 const TEAM_FOLDER_METADATA_FIELDS: &[&str] = &["team_folder_id",
@@ -23587,7 +23634,6 @@ impl TeamFolderRenameArg {
             name,
         }
     }
-
 }
 
 const TEAM_FOLDER_RENAME_ARG_FIELDS: &[&str] = &["team_folder_id",
@@ -24005,7 +24051,6 @@ impl TeamFolderUpdateSyncSettingsArg {
         self.content_sync_settings = value;
         self
     }
-
 }
 
 const TEAM_FOLDER_UPDATE_SYNC_SETTINGS_ARG_FIELDS: &[&str] = &["team_folder_id",
@@ -24254,7 +24299,6 @@ impl TeamGetInfoResult {
             policies,
         }
     }
-
 }
 
 const TEAM_GET_INFO_RESULT_FIELDS: &[&str] = &["name",
@@ -24388,7 +24432,6 @@ impl TeamMemberInfo {
             role,
         }
     }
-
 }
 
 const TEAM_MEMBER_INFO_FIELDS: &[&str] = &["profile",
@@ -24599,7 +24642,6 @@ impl TeamMemberProfile {
         self.profile_photo_url = value;
         self
     }
-
 }
 
 const TEAM_MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
@@ -25005,6 +25047,13 @@ impl Default for TeamNamespacesListArg {
     }
 }
 
+impl TeamNamespacesListArg {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
 const TEAM_NAMESPACES_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl TeamNamespacesListArg {
     // no _opt deserializer
@@ -25081,7 +25130,6 @@ impl TeamNamespacesListContinueArg {
             cursor,
         }
     }
-
 }
 
 const TEAM_NAMESPACES_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -25332,7 +25380,6 @@ impl TeamNamespacesListResult {
             has_more,
         }
     }
-
 }
 
 const TEAM_NAMESPACES_LIST_RESULT_FIELDS: &[&str] = &["namespaces",
@@ -25616,7 +25663,6 @@ impl TokenGetAuthenticatedAdminResult {
             admin_profile,
         }
     }
-
 }
 
 const TOKEN_GET_AUTHENTICATED_ADMIN_RESULT_FIELDS: &[&str] = &["admin_profile"];
@@ -25895,7 +25941,6 @@ impl UserCustomQuotaArg {
             quota_gb,
         }
     }
-
 }
 
 const USER_CUSTOM_QUOTA_ARG_FIELDS: &[&str] = &["user",
@@ -26003,7 +26048,6 @@ impl UserCustomQuotaResult {
         self.quota_gb = value;
         self
     }
-
 }
 
 const USER_CUSTOM_QUOTA_RESULT_FIELDS: &[&str] = &["user",
@@ -26104,7 +26148,6 @@ impl UserDeleteEmailsResult {
             results,
         }
     }
-
 }
 
 const USER_DELETE_EMAILS_RESULT_FIELDS: &[&str] = &["user",
@@ -26281,7 +26324,6 @@ impl UserResendEmailsResult {
             results,
         }
     }
-
 }
 
 const USER_RESEND_EMAILS_RESULT_FIELDS: &[&str] = &["user",
@@ -26459,7 +26501,6 @@ impl UserSecondaryEmailsArg {
             secondary_emails,
         }
     }
-
 }
 
 const USER_SECONDARY_EMAILS_ARG_FIELDS: &[&str] = &["user",
@@ -26560,7 +26601,6 @@ impl UserSecondaryEmailsResult {
             results,
         }
     }
-
 }
 
 const USER_SECONDARY_EMAILS_RESULT_FIELDS: &[&str] = &["user",

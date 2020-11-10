@@ -57,6 +57,13 @@ impl Default for EchoArg {
     }
 }
 
+impl EchoArg {
+    pub fn with_query(mut self, value: String) -> Self {
+        self.query = value;
+        self
+    }
+}
+
 const ECHO_ARG_FIELDS: &[&str] = &["query"];
 impl EchoArg {
     // no _opt deserializer
@@ -133,6 +140,13 @@ impl Default for EchoResult {
         EchoResult {
             result: String::new(),
         }
+    }
+}
+
+impl EchoResult {
+    pub fn with_result(mut self, value: String) -> Self {
+        self.result = value;
+        self
     }
 }
 

@@ -102,11 +102,9 @@ class RustBackend(RustHelperBackend):
             self._impl_default_for_struct(struct)
             self.emit()
 
-        if struct.all_required_fields:
+        if struct.all_required_fields or struct.all_optional_fields:
             with self._impl_struct(struct):
-                if struct.all_required_fields:
-                    self._emit_new_for_struct(struct)
-                self.emit()
+                self._emit_new_for_struct(struct)
             self.emit()
 
         self._impl_serde_for_struct(struct)
@@ -806,23 +804,31 @@ class RustBackend(RustHelperBackend):
 
     def _emit_new_for_struct(self, struct):
         struct_name = self.struct_name(struct)
-        with self.emit_rust_function_def(
-                u'new',
-                [u'{}: {}'.format(self.field_name(field), self._rust_type(field.data_type))
-                    for field in struct.all_required_fields],
-                u'Self',
-                access=u'pub'):
-            with self.block(struct_name):
-                for field in struct.all_required_fields:
-                    # shorthand assignment
-                    self.emit(u'{},'.format(self.field_name(field)))
-                for field in struct.all_optional_fields:
-                    self.emit(u'{}: {},'.format(
-                        self.field_name(field),
-                        self._default_value(field)))
+        first = True
+
+        if struct.all_required_fields:
+            with self.emit_rust_function_def(
+                    u'new',
+                    [u'{}: {}'.format(self.field_name(field), self._rust_type(field.data_type))
+                        for field in struct.all_required_fields],
+                    u'Self',
+                    access=u'pub'):
+                with self.block(struct_name):
+                    for field in struct.all_required_fields:
+                        # shorthand assignment
+                        self.emit(u'{},'.format(self.field_name(field)))
+                    for field in struct.all_optional_fields:
+                        self.emit(u'{}: {},'.format(
+                            self.field_name(field),
+                            self._default_value(field)))
+            first = False
 
         for field in struct.all_optional_fields:
-            self.emit()
+            if first:
+                first = False
+            else:
+                self.emit()
+
             field_name = self.field_name(field)
             with self.emit_rust_function_def(
                     u'with_{}'.format(field_name),

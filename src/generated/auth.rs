@@ -460,7 +460,6 @@ impl RateLimitError {
         self.retry_after = value;
         self
     }
-
 }
 
 const RATE_LIMIT_ERROR_FIELDS: &[&str] = &["reason",
@@ -634,7 +633,6 @@ impl TokenFromOAuth1Arg {
             oauth1_token_secret,
         }
     }
-
 }
 
 const TOKEN_FROM_O_AUTH1_ARG_FIELDS: &[&str] = &["oauth1_token",
@@ -817,7 +815,6 @@ impl TokenFromOAuth1Result {
             oauth2_token,
         }
     }
-
 }
 
 const TOKEN_FROM_O_AUTH1_RESULT_FIELDS: &[&str] = &["oauth2_token"];
@@ -907,7 +904,6 @@ impl TokenScopeError {
             required_scope,
         }
     }
-
 }
 
 const TOKEN_SCOPE_ERROR_FIELDS: &[&str] = &["required_scope"];

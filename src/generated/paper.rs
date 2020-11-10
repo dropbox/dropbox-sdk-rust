@@ -390,7 +390,6 @@ impl AddMember {
         self.permission_level = value;
         self
     }
-
 }
 
 const ADD_MEMBER_FIELDS: &[&str] = &["member",
@@ -510,7 +509,6 @@ impl AddPaperDocUser {
         self.quiet = value;
         self
     }
-
 }
 
 const ADD_PAPER_DOC_USER_FIELDS: &[&str] = &["doc_id",
@@ -634,7 +632,6 @@ impl AddPaperDocUserMemberResult {
             result,
         }
     }
-
 }
 
 const ADD_PAPER_DOC_USER_MEMBER_RESULT_FIELDS: &[&str] = &["member",
@@ -887,7 +884,6 @@ impl Cursor {
         self.expiration = value;
         self
     }
-
 }
 
 const CURSOR_FIELDS: &[&str] = &["value",
@@ -1239,7 +1235,6 @@ impl Folder {
             name,
         }
     }
-
 }
 
 const FOLDER_FIELDS: &[&str] = &["id",
@@ -1500,6 +1495,21 @@ impl Default for FoldersContainingPaperDoc {
     }
 }
 
+impl FoldersContainingPaperDoc {
+    pub fn with_folder_sharing_policy_type(
+        mut self,
+        value: Option<FolderSharingPolicyType>,
+    ) -> Self {
+        self.folder_sharing_policy_type = value;
+        self
+    }
+
+    pub fn with_folders(mut self, value: Option<Vec<Folder>>) -> Self {
+        self.folders = value;
+        self
+    }
+}
+
 const FOLDERS_CONTAINING_PAPER_DOC_FIELDS: &[&str] = &["folder_sharing_policy_type",
                                                        "folders"];
 impl FoldersContainingPaperDoc {
@@ -1679,7 +1689,6 @@ impl InviteeInfoWithPermissionLevel {
             permission_level,
         }
     }
-
 }
 
 const INVITEE_INFO_WITH_PERMISSION_LEVEL_FIELDS: &[&str] = &["invitee",
@@ -1864,6 +1873,28 @@ impl Default for ListPaperDocsArgs {
     }
 }
 
+impl ListPaperDocsArgs {
+    pub fn with_filter_by(mut self, value: ListPaperDocsFilterBy) -> Self {
+        self.filter_by = value;
+        self
+    }
+
+    pub fn with_sort_by(mut self, value: ListPaperDocsSortBy) -> Self {
+        self.sort_by = value;
+        self
+    }
+
+    pub fn with_sort_order(mut self, value: ListPaperDocsSortOrder) -> Self {
+        self.sort_order = value;
+        self
+    }
+
+    pub fn with_limit(mut self, value: i32) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
 const LIST_PAPER_DOCS_ARGS_FIELDS: &[&str] = &["filter_by",
                                                "sort_by",
                                                "sort_order",
@@ -1971,7 +2002,6 @@ impl ListPaperDocsContinueArgs {
             cursor,
         }
     }
-
 }
 
 const LIST_PAPER_DOCS_CONTINUE_ARGS_FIELDS: &[&str] = &["cursor"];
@@ -2145,7 +2175,6 @@ impl ListPaperDocsResponse {
             has_more,
         }
     }
-
 }
 
 const LIST_PAPER_DOCS_RESPONSE_FIELDS: &[&str] = &["doc_ids",
@@ -2521,7 +2550,6 @@ impl ListUsersOnFolderArgs {
         self.limit = value;
         self
     }
-
 }
 
 const LIST_USERS_ON_FOLDER_ARGS_FIELDS: &[&str] = &["doc_id",
@@ -2626,7 +2654,6 @@ impl ListUsersOnFolderContinueArgs {
             cursor,
         }
     }
-
 }
 
 const LIST_USERS_ON_FOLDER_CONTINUE_ARGS_FIELDS: &[&str] = &["doc_id",
@@ -2745,7 +2772,6 @@ impl ListUsersOnFolderResponse {
             has_more,
         }
     }
-
 }
 
 const LIST_USERS_ON_FOLDER_RESPONSE_FIELDS: &[&str] = &["invitees",
@@ -2882,7 +2908,6 @@ impl ListUsersOnPaperDocArgs {
         self.filter_by = value;
         self
     }
-
 }
 
 const LIST_USERS_ON_PAPER_DOC_ARGS_FIELDS: &[&str] = &["doc_id",
@@ -2996,7 +3021,6 @@ impl ListUsersOnPaperDocContinueArgs {
             cursor,
         }
     }
-
 }
 
 const LIST_USERS_ON_PAPER_DOC_CONTINUE_ARGS_FIELDS: &[&str] = &["doc_id",
@@ -3120,7 +3144,6 @@ impl ListUsersOnPaperDocResponse {
             has_more,
         }
     }
-
 }
 
 const LIST_USERS_ON_PAPER_DOC_RESPONSE_FIELDS: &[&str] = &["invitees",
@@ -3442,7 +3465,6 @@ impl PaperDocCreateArgs {
         self.parent_folder_id = value;
         self
     }
-
 }
 
 const PAPER_DOC_CREATE_ARGS_FIELDS: &[&str] = &["import_format",
@@ -3674,7 +3696,6 @@ impl PaperDocCreateUpdateResult {
             title,
         }
     }
-
 }
 
 const PAPER_DOC_CREATE_UPDATE_RESULT_FIELDS: &[&str] = &["doc_id",
@@ -3786,7 +3807,6 @@ impl PaperDocExport {
             export_format,
         }
     }
-
 }
 
 const PAPER_DOC_EXPORT_FIELDS: &[&str] = &["doc_id",
@@ -3896,7 +3916,6 @@ impl PaperDocExportResult {
             mime_type,
         }
     }
-
 }
 
 const PAPER_DOC_EXPORT_RESULT_FIELDS: &[&str] = &["owner",
@@ -4090,7 +4109,6 @@ impl PaperDocSharingPolicy {
             sharing_policy,
         }
     }
-
 }
 
 const PAPER_DOC_SHARING_POLICY_FIELDS: &[&str] = &["doc_id",
@@ -4205,7 +4223,6 @@ impl PaperDocUpdateArgs {
             import_format,
         }
     }
-
 }
 
 const PAPER_DOC_UPDATE_ARGS_FIELDS: &[&str] = &["doc_id",
@@ -4595,7 +4612,6 @@ impl PaperFolderCreateArg {
         self.is_team_folder = value;
         self
     }
-
 }
 
 const PAPER_FOLDER_CREATE_ARG_FIELDS: &[&str] = &["name",
@@ -4804,7 +4820,6 @@ impl PaperFolderCreateResult {
             folder_id,
         }
     }
-
 }
 
 const PAPER_FOLDER_CREATE_RESULT_FIELDS: &[&str] = &["folder_id"];
@@ -4894,7 +4909,6 @@ impl RefPaperDoc {
             doc_id,
         }
     }
-
 }
 
 const REF_PAPER_DOC_FIELDS: &[&str] = &["doc_id"];
@@ -4988,7 +5002,6 @@ impl RemovePaperDocUser {
             member,
         }
     }
-
 }
 
 const REMOVE_PAPER_DOC_USER_FIELDS: &[&str] = &["doc_id",
@@ -5091,6 +5104,18 @@ impl Default for SharingPolicy {
             public_sharing_policy: None,
             team_sharing_policy: None,
         }
+    }
+}
+
+impl SharingPolicy {
+    pub fn with_public_sharing_policy(mut self, value: Option<SharingPublicPolicyType>) -> Self {
+        self.public_sharing_policy = value;
+        self
+    }
+
+    pub fn with_team_sharing_policy(mut self, value: Option<SharingTeamPolicyType>) -> Self {
+        self.team_sharing_policy = value;
+        self
     }
 }
 
@@ -5349,7 +5374,6 @@ impl UserInfoWithPermissionLevel {
             permission_level,
         }
     }
-
 }
 
 const USER_INFO_WITH_PERMISSION_LEVEL_FIELDS: &[&str] = &["user",

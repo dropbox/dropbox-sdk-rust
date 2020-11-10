@@ -152,7 +152,6 @@ impl PollArg {
             async_job_id,
         }
     }
-
 }
 
 const POLL_ARG_FIELDS: &[&str] = &["async_job_id"];

@@ -120,7 +120,6 @@ impl Account {
         self.profile_photo_url = value;
         self
     }
-
 }
 
 const ACCOUNT_FIELDS: &[&str] = &["account_id",
@@ -302,7 +301,6 @@ impl BasicAccount {
         self.team_member_id = value;
         self
     }
-
 }
 
 const BASIC_ACCOUNT_FIELDS: &[&str] = &["account_id",
@@ -602,7 +600,6 @@ impl FullAccount {
         self.team_member_id = value;
         self
     }
-
 }
 
 const FULL_ACCOUNT_FIELDS: &[&str] = &["account_id",
@@ -837,7 +834,6 @@ impl FullTeam {
             office_addin_policy,
         }
     }
-
 }
 
 const FULL_TEAM_FIELDS: &[&str] = &["id",
@@ -957,7 +953,6 @@ impl GetAccountArg {
             account_id,
         }
     }
-
 }
 
 const GET_ACCOUNT_ARG_FIELDS: &[&str] = &["account_id"];
@@ -1047,7 +1042,6 @@ impl GetAccountBatchArg {
             account_ids,
         }
     }
-
 }
 
 const GET_ACCOUNT_BATCH_ARG_FIELDS: &[&str] = &["account_ids"];
@@ -1282,7 +1276,6 @@ impl IndividualSpaceAllocation {
             allocated,
         }
     }
-
 }
 
 const INDIVIDUAL_SPACE_ALLOCATION_FIELDS: &[&str] = &["allocated"];
@@ -1392,7 +1385,6 @@ impl Name {
             abbreviated_name,
         }
     }
-
 }
 
 const NAME_FIELDS: &[&str] = &["given_name",
@@ -1660,7 +1652,6 @@ impl SpaceUsage {
             allocation,
         }
     }
-
 }
 
 const SPACE_USAGE_FIELDS: &[&str] = &["used",
@@ -1764,7 +1755,6 @@ impl Team {
             name,
         }
     }
-
 }
 
 const TEAM_FIELDS: &[&str] = &["id",
@@ -1883,7 +1873,6 @@ impl TeamSpaceAllocation {
             user_within_team_space_used_cached,
         }
     }
-
 }
 
 const TEAM_SPACE_ALLOCATION_FIELDS: &[&str] = &["used",
@@ -2164,7 +2153,6 @@ impl UserFeaturesGetValuesBatchArg {
             features,
         }
     }
-
 }
 
 const USER_FEATURES_GET_VALUES_BATCH_ARG_FIELDS: &[&str] = &["features"];
@@ -2324,7 +2312,6 @@ impl UserFeaturesGetValuesBatchResult {
             values,
         }
     }
-
 }
 
 const USER_FEATURES_GET_VALUES_BATCH_RESULT_FIELDS: &[&str] = &["values"];
