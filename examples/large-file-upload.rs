@@ -225,13 +225,13 @@ fn main() {
     let session_id = match args.resume {
         Some(ref resume) => resume.session_id.clone(),
         None => {
+            // TODO(wfraser) upload chunks in parallel
             match files::upload_session_start(
                 &client, &files::UploadSessionStartArg::default(), &[])
             {
                 Ok(Ok(result)) => result.session_id,
-                Ok(Err(())) => panic!(),
-                Err(e) => {
-                    eprintln!("Starting upload session failed: {}", e);
+                error => {
+                    eprintln!("Starting upload session failed: {:?}", error);
                     std::process::exit(2);
                 }
             }

@@ -5,6 +5,8 @@ xxxx-yy-zz
     missing.
   * Change builder methods for `Optional<T>` fields to take the inner type `T` as the argument
     directly. Users will need to remove `Some( ... )` from the current argument for these methods.
+* API spec update 2020-11-06
+  * Adds parallel chunked uploads!
 
 # v0.7.1
 2020-11-05
