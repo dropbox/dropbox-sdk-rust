@@ -127,16 +127,15 @@ impl GroupSummary {
         }
     }
 
-    pub fn with_group_external_id(mut self, value: Option<GroupExternalId>) -> Self {
-        self.group_external_id = value;
+    pub fn with_group_external_id(mut self, value: GroupExternalId) -> Self {
+        self.group_external_id = Some(value);
         self
     }
 
-    pub fn with_member_count(mut self, value: Option<u32>) -> Self {
-        self.member_count = value;
+    pub fn with_member_count(mut self, value: u32) -> Self {
+        self.member_count = Some(value);
         self
     }
-
 }
 
 const GROUP_SUMMARY_FIELDS: &[&str] = &["group_name",
@@ -429,6 +428,18 @@ impl Default for TimeRange {
             start_time: None,
             end_time: None,
         }
+    }
+}
+
+impl TimeRange {
+    pub fn with_start_time(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.start_time = Some(value);
+        self
+    }
+
+    pub fn with_end_time(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.end_time = Some(value);
+        self
     }
 }
 

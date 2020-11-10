@@ -339,7 +339,7 @@ fn main() {
         let finish = files::UploadSessionFinishArg::new(
             append_arg.cursor,
             files::CommitInfo::new(dest_path)
-                .with_client_modified(Some(iso8601(source_mtime))));
+                .with_client_modified(iso8601(source_mtime)));
 
         let mut retry = 0;
         succeeded = false;

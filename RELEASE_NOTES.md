@@ -1,3 +1,11 @@
+# v0.8.0
+xxxx-yy-zz
+* Improvements to builder methods on structs (the `fn with_fieldname(self, ...) -> Self` methods)
+  * Generate builder methods for structs which have only optional fields. These were erroneously
+    missing.
+  * Change builder methods for `Optional<T>` fields to take the inner type `T` as the argument
+    directly. Users will need to remove `Some( ... )` from the current argument for these methods.
+
 # v0.7.1
 2020-11-05
 * Documentation updates only.

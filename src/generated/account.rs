@@ -95,7 +95,6 @@ impl SetProfilePhotoArg {
             photo,
         }
     }
-
 }
 
 const SET_PROFILE_PHOTO_ARG_FIELDS: &[&str] = &["photo"];
@@ -307,7 +306,6 @@ impl SetProfilePhotoResult {
             profile_photo_url,
         }
     }
-
 }
 
 const SET_PROFILE_PHOTO_RESULT_FIELDS: &[&str] = &["profile_photo_url"];

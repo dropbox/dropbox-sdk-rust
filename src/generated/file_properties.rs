@@ -311,7 +311,6 @@ impl AddPropertiesArg {
             property_groups,
         }
     }
-
 }
 
 const ADD_PROPERTIES_ARG_FIELDS: &[&str] = &["path",
@@ -586,7 +585,6 @@ impl AddTemplateArg {
             fields,
         }
     }
-
 }
 
 const ADD_TEMPLATE_ARG_FIELDS: &[&str] = &["name",
@@ -698,7 +696,6 @@ impl AddTemplateResult {
             template_id,
         }
     }
-
 }
 
 const ADD_TEMPLATE_RESULT_FIELDS: &[&str] = &["template_id"];
@@ -790,7 +787,6 @@ impl GetTemplateArg {
             template_id,
         }
     }
-
 }
 
 const GET_TEMPLATE_ARG_FIELDS: &[&str] = &["template_id"];
@@ -887,7 +883,6 @@ impl GetTemplateResult {
             fields,
         }
     }
-
 }
 
 const GET_TEMPLATE_RESULT_FIELDS: &[&str] = &["name",
@@ -1154,7 +1149,6 @@ impl ListTemplateResult {
             template_ids,
         }
     }
-
 }
 
 const LIST_TEMPLATE_RESULT_FIELDS: &[&str] = &["template_ids"];
@@ -1643,7 +1637,6 @@ impl OverwritePropertyGroupArg {
             property_groups,
         }
     }
-
 }
 
 const OVERWRITE_PROPERTY_GROUP_ARG_FIELDS: &[&str] = &["path",
@@ -1867,7 +1860,6 @@ impl PropertiesSearchArg {
         self.template_filter = value;
         self
     }
-
 }
 
 const PROPERTIES_SEARCH_ARG_FIELDS: &[&str] = &["queries",
@@ -1968,7 +1960,6 @@ impl PropertiesSearchContinueArg {
             cursor,
         }
     }
-
 }
 
 const PROPERTIES_SEARCH_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -2216,7 +2207,6 @@ impl PropertiesSearchMatch {
             property_groups,
         }
     }
-
 }
 
 const PROPERTIES_SEARCH_MATCH_FIELDS: &[&str] = &["id",
@@ -2409,7 +2399,6 @@ impl PropertiesSearchQuery {
         self.logical_operator = value;
         self
     }
-
 }
 
 const PROPERTIES_SEARCH_QUERY_FIELDS: &[&str] = &["query",
@@ -2524,11 +2513,10 @@ impl PropertiesSearchResult {
         }
     }
 
-    pub fn with_cursor(mut self, value: Option<PropertiesSearchCursor>) -> Self {
-        self.cursor = value;
+    pub fn with_cursor(mut self, value: PropertiesSearchCursor) -> Self {
+        self.cursor = Some(value);
         self
     }
-
 }
 
 const PROPERTIES_SEARCH_RESULT_FIELDS: &[&str] = &["matches",
@@ -2634,7 +2622,6 @@ impl PropertyField {
             value,
         }
     }
-
 }
 
 const PROPERTY_FIELD_FIELDS: &[&str] = &["name",
@@ -2743,7 +2730,6 @@ impl PropertyFieldTemplate {
             type_field,
         }
     }
-
 }
 
 const PROPERTY_FIELD_TEMPLATE_FIELDS: &[&str] = &["name",
@@ -2861,7 +2847,6 @@ impl PropertyGroup {
             fields,
         }
     }
-
 }
 
 const PROPERTY_GROUP_FIELDS: &[&str] = &["template_id",
@@ -2969,7 +2954,6 @@ impl PropertyGroupTemplate {
             fields,
         }
     }
-
 }
 
 const PROPERTY_GROUP_TEMPLATE_FIELDS: &[&str] = &["name",
@@ -3087,16 +3071,15 @@ impl PropertyGroupUpdate {
         }
     }
 
-    pub fn with_add_or_update_fields(mut self, value: Option<Vec<PropertyField>>) -> Self {
-        self.add_or_update_fields = value;
+    pub fn with_add_or_update_fields(mut self, value: Vec<PropertyField>) -> Self {
+        self.add_or_update_fields = Some(value);
         self
     }
 
-    pub fn with_remove_fields(mut self, value: Option<Vec<String>>) -> Self {
-        self.remove_fields = value;
+    pub fn with_remove_fields(mut self, value: Vec<String>) -> Self {
+        self.remove_fields = Some(value);
         self
     }
-
 }
 
 const PROPERTY_GROUP_UPDATE_FIELDS: &[&str] = &["template_id",
@@ -3270,7 +3253,6 @@ impl RemovePropertiesArg {
             property_template_ids,
         }
     }
-
 }
 
 const REMOVE_PROPERTIES_ARG_FIELDS: &[&str] = &["path",
@@ -3503,7 +3485,6 @@ impl RemoveTemplateArg {
             template_id,
         }
     }
-
 }
 
 const REMOVE_TEMPLATE_ARG_FIELDS: &[&str] = &["template_id"];
@@ -3893,7 +3874,6 @@ impl UpdatePropertiesArg {
             update_property_groups,
         }
     }
-
 }
 
 const UPDATE_PROPERTIES_ARG_FIELDS: &[&str] = &["path",
@@ -4177,21 +4157,20 @@ impl UpdateTemplateArg {
         }
     }
 
-    pub fn with_name(mut self, value: Option<String>) -> Self {
-        self.name = value;
+    pub fn with_name(mut self, value: String) -> Self {
+        self.name = Some(value);
         self
     }
 
-    pub fn with_description(mut self, value: Option<String>) -> Self {
-        self.description = value;
+    pub fn with_description(mut self, value: String) -> Self {
+        self.description = Some(value);
         self
     }
 
-    pub fn with_add_fields(mut self, value: Option<Vec<PropertyFieldTemplate>>) -> Self {
-        self.add_fields = value;
+    pub fn with_add_fields(mut self, value: Vec<PropertyFieldTemplate>) -> Self {
+        self.add_fields = Some(value);
         self
     }
-
 }
 
 const UPDATE_TEMPLATE_ARG_FIELDS: &[&str] = &["template_id",
@@ -4313,7 +4292,6 @@ impl UpdateTemplateResult {
             template_id,
         }
     }
-
 }
 
 const UPDATE_TEMPLATE_RESULT_FIELDS: &[&str] = &["template_id"];

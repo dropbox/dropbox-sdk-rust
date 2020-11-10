@@ -1236,31 +1236,30 @@ impl ActiveWebSession {
         }
     }
 
-    pub fn with_ip_address(mut self, value: Option<String>) -> Self {
-        self.ip_address = value;
+    pub fn with_ip_address(mut self, value: String) -> Self {
+        self.ip_address = Some(value);
         self
     }
 
-    pub fn with_country(mut self, value: Option<String>) -> Self {
-        self.country = value;
+    pub fn with_country(mut self, value: String) -> Self {
+        self.country = Some(value);
         self
     }
 
-    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.created = value;
+    pub fn with_created(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.created = Some(value);
         self
     }
 
-    pub fn with_updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.updated = value;
+    pub fn with_updated(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.updated = Some(value);
         self
     }
 
-    pub fn with_expires(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.expires = value;
+    pub fn with_expires(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.expires = Some(value);
         self
     }
-
 }
 
 const ACTIVE_WEB_SESSION_FIELDS: &[&str] = &["session_id",
@@ -1625,7 +1624,6 @@ impl AddSecondaryEmailsArg {
             new_secondary_emails,
         }
     }
-
 }
 
 const ADD_SECONDARY_EMAILS_ARG_FIELDS: &[&str] = &["new_secondary_emails"];
@@ -1799,7 +1797,6 @@ impl AddSecondaryEmailsResult {
             results,
         }
     }
-
 }
 
 const ADD_SECONDARY_EMAILS_RESULT_FIELDS: &[&str] = &["results"];
@@ -1996,21 +1993,20 @@ impl ApiApp {
         }
     }
 
-    pub fn with_publisher(mut self, value: Option<String>) -> Self {
-        self.publisher = value;
+    pub fn with_publisher(mut self, value: String) -> Self {
+        self.publisher = Some(value);
         self
     }
 
-    pub fn with_publisher_url(mut self, value: Option<String>) -> Self {
-        self.publisher_url = value;
+    pub fn with_publisher_url(mut self, value: String) -> Self {
+        self.publisher_url = Some(value);
         self
     }
 
-    pub fn with_linked(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.linked = value;
+    pub fn with_linked(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.linked = Some(value);
         self
     }
-
 }
 
 const API_APP_FIELDS: &[&str] = &["app_id",
@@ -2151,7 +2147,6 @@ impl BaseDfbReport {
             start_date,
         }
     }
-
 }
 
 const BASE_DFB_REPORT_FIELDS: &[&str] = &["start_date"];
@@ -2492,7 +2487,6 @@ impl CustomQuotaUsersArg {
             users,
         }
     }
-
 }
 
 const CUSTOM_QUOTA_USERS_ARG_FIELDS: &[&str] = &["users"];
@@ -2586,6 +2580,18 @@ impl Default for DateRange {
             start_date: None,
             end_date: None,
         }
+    }
+}
+
+impl DateRange {
+    pub fn with_start_date(mut self, value: super::common::Date) -> Self {
+        self.start_date = Some(value);
+        self
+    }
+
+    pub fn with_end_date(mut self, value: super::common::Date) -> Self {
+        self.end_date = Some(value);
+        self
     }
 }
 
@@ -2828,7 +2834,6 @@ impl DeleteSecondaryEmailsArg {
             emails_to_delete,
         }
     }
-
 }
 
 const DELETE_SECONDARY_EMAILS_ARG_FIELDS: &[&str] = &["emails_to_delete"];
@@ -2917,7 +2922,6 @@ impl DeleteSecondaryEmailsResult {
             results,
         }
     }
-
 }
 
 const DELETE_SECONDARY_EMAILS_RESULT_FIELDS: &[&str] = &["results"];
@@ -3043,26 +3047,25 @@ impl DesktopClientSession {
         }
     }
 
-    pub fn with_ip_address(mut self, value: Option<String>) -> Self {
-        self.ip_address = value;
+    pub fn with_ip_address(mut self, value: String) -> Self {
+        self.ip_address = Some(value);
         self
     }
 
-    pub fn with_country(mut self, value: Option<String>) -> Self {
-        self.country = value;
+    pub fn with_country(mut self, value: String) -> Self {
+        self.country = Some(value);
         self
     }
 
-    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.created = value;
+    pub fn with_created(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.created = Some(value);
         self
     }
 
-    pub fn with_updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.updated = value;
+    pub fn with_updated(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.updated = Some(value);
         self
     }
-
 }
 
 const DESKTOP_CLIENT_SESSION_FIELDS: &[&str] = &["session_id",
@@ -3339,26 +3342,25 @@ impl DeviceSession {
         }
     }
 
-    pub fn with_ip_address(mut self, value: Option<String>) -> Self {
-        self.ip_address = value;
+    pub fn with_ip_address(mut self, value: String) -> Self {
+        self.ip_address = Some(value);
         self
     }
 
-    pub fn with_country(mut self, value: Option<String>) -> Self {
-        self.country = value;
+    pub fn with_country(mut self, value: String) -> Self {
+        self.country = Some(value);
         self
     }
 
-    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.created = value;
+    pub fn with_created(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.created = Some(value);
         self
     }
 
-    pub fn with_updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.updated = value;
+    pub fn with_updated(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.updated = Some(value);
         self
     }
-
 }
 
 const DEVICE_SESSION_FIELDS: &[&str] = &["session_id",
@@ -3491,7 +3493,6 @@ impl DeviceSessionArg {
             team_member_id,
         }
     }
-
 }
 
 const DEVICE_SESSION_ARG_FIELDS: &[&str] = &["session_id",
@@ -3620,7 +3621,6 @@ impl DevicesActive {
             total,
         }
     }
-
 }
 
 const DEVICES_ACTIVE_FIELDS: &[&str] = &["windows",
@@ -3773,6 +3773,13 @@ impl Default for ExcludedUsersListArg {
     }
 }
 
+impl ExcludedUsersListArg {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
 const EXCLUDED_USERS_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl ExcludedUsersListArg {
     // no _opt deserializer
@@ -3850,7 +3857,6 @@ impl ExcludedUsersListContinueArg {
             cursor,
         }
     }
-
 }
 
 const EXCLUDED_USERS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -4094,11 +4100,10 @@ impl ExcludedUsersListResult {
         }
     }
 
-    pub fn with_cursor(mut self, value: Option<String>) -> Self {
-        self.cursor = value;
+    pub fn with_cursor(mut self, value: String) -> Self {
+        self.cursor = Some(value);
         self
     }
-
 }
 
 const EXCLUDED_USERS_LIST_RESULT_FIELDS: &[&str] = &["users",
@@ -4209,6 +4214,13 @@ impl Default for ExcludedUsersUpdateArg {
         ExcludedUsersUpdateArg {
             users: None,
         }
+    }
+}
+
+impl ExcludedUsersUpdateArg {
+    pub fn with_users(mut self, value: Vec<UserSelectorArg>) -> Self {
+        self.users = Some(value);
+        self
     }
 }
 
@@ -4373,7 +4385,6 @@ impl ExcludedUsersUpdateResult {
             status,
         }
     }
-
 }
 
 const EXCLUDED_USERS_UPDATE_RESULT_FIELDS: &[&str] = &["status"];
@@ -4732,7 +4743,6 @@ impl FeaturesGetValuesBatchArg {
             features,
         }
     }
-
 }
 
 const FEATURES_GET_VALUES_BATCH_ARG_FIELDS: &[&str] = &["features"];
@@ -4892,7 +4902,6 @@ impl FeaturesGetValuesBatchResult {
             values,
         }
     }
-
 }
 
 const FEATURES_GET_VALUES_BATCH_RESULT_FIELDS: &[&str] = &["values"];
@@ -5044,7 +5053,6 @@ impl GetActivityReport {
             shared_links_viewed_total,
         }
     }
-
 }
 
 const GET_ACTIVITY_REPORT_FIELDS: &[&str] = &["start_date",
@@ -5291,7 +5299,6 @@ impl GetDevicesReport {
             active_28_day,
         }
     }
-
 }
 
 const GET_DEVICES_REPORT_FIELDS: &[&str] = &["start_date",
@@ -5435,7 +5442,6 @@ impl GetMembershipReport {
             licenses,
         }
     }
-
 }
 
 const GET_MEMBERSHIP_REPORT_FIELDS: &[&str] = &["start_date",
@@ -5602,7 +5608,6 @@ impl GetStorageReport {
             member_storage_map,
         }
     }
-
 }
 
 const GET_STORAGE_REPORT_FIELDS: &[&str] = &["start_date",
@@ -5821,22 +5826,18 @@ impl GroupCreateArg {
         self
     }
 
-    pub fn with_group_external_id(
-        mut self,
-        value: Option<super::team_common::GroupExternalId>,
-    ) -> Self {
-        self.group_external_id = value;
+    pub fn with_group_external_id(mut self, value: super::team_common::GroupExternalId) -> Self {
+        self.group_external_id = Some(value);
         self
     }
 
     pub fn with_group_management_type(
         mut self,
-        value: Option<super::team_common::GroupManagementType>,
+        value: super::team_common::GroupManagementType,
     ) -> Self {
-        self.group_management_type = value;
+        self.group_management_type = Some(value);
         self
     }
-
 }
 
 const GROUP_CREATE_ARG_FIELDS: &[&str] = &["group_name",
@@ -6184,24 +6185,20 @@ impl GroupFullInfo {
         }
     }
 
-    pub fn with_group_external_id(
-        mut self,
-        value: Option<super::team_common::GroupExternalId>,
-    ) -> Self {
-        self.group_external_id = value;
+    pub fn with_group_external_id(mut self, value: super::team_common::GroupExternalId) -> Self {
+        self.group_external_id = Some(value);
         self
     }
 
-    pub fn with_member_count(mut self, value: Option<u32>) -> Self {
-        self.member_count = value;
+    pub fn with_member_count(mut self, value: u32) -> Self {
+        self.member_count = Some(value);
         self
     }
 
-    pub fn with_members(mut self, value: Option<Vec<GroupMemberInfo>>) -> Self {
-        self.members = value;
+    pub fn with_members(mut self, value: Vec<GroupMemberInfo>) -> Self {
+        self.members = Some(value);
         self
     }
-
 }
 
 const GROUP_FULL_INFO_FIELDS: &[&str] = &["group_name",
@@ -6355,7 +6352,6 @@ impl GroupMemberInfo {
             access_type,
         }
     }
-
 }
 
 const GROUP_MEMBER_INFO_FIELDS: &[&str] = &["profile",
@@ -6459,7 +6455,6 @@ impl GroupMemberSelector {
             user,
         }
     }
-
 }
 
 const GROUP_MEMBER_SELECTOR_FIELDS: &[&str] = &["group",
@@ -6779,7 +6774,6 @@ impl GroupMembersAddArg {
         self.return_members = value;
         self
     }
-
 }
 
 const GROUP_MEMBERS_ADD_ARG_FIELDS: &[&str] = &["group",
@@ -7073,7 +7067,6 @@ impl GroupMembersChangeResult {
             async_job_id,
         }
     }
-
 }
 
 const GROUP_MEMBERS_CHANGE_RESULT_FIELDS: &[&str] = &["group_info",
@@ -7186,7 +7179,6 @@ impl GroupMembersRemoveArg {
         self.return_members = value;
         self
     }
-
 }
 
 const GROUP_MEMBERS_REMOVE_ARG_FIELDS: &[&str] = &["group",
@@ -7444,7 +7436,6 @@ impl GroupMembersSelector {
             users,
         }
     }
-
 }
 
 const GROUP_MEMBERS_SELECTOR_FIELDS: &[&str] = &["group",
@@ -7658,7 +7649,6 @@ impl GroupMembersSetAccessTypeArg {
         self.return_members = value;
         self
     }
-
 }
 
 const GROUP_MEMBERS_SET_ACCESS_TYPE_ARG_FIELDS: &[&str] = &["group",
@@ -8027,27 +8017,26 @@ impl GroupUpdateArgs {
         self
     }
 
-    pub fn with_new_group_name(mut self, value: Option<String>) -> Self {
-        self.new_group_name = value;
+    pub fn with_new_group_name(mut self, value: String) -> Self {
+        self.new_group_name = Some(value);
         self
     }
 
     pub fn with_new_group_external_id(
         mut self,
-        value: Option<super::team_common::GroupExternalId>,
+        value: super::team_common::GroupExternalId,
     ) -> Self {
-        self.new_group_external_id = value;
+        self.new_group_external_id = Some(value);
         self
     }
 
     pub fn with_new_group_management_type(
         mut self,
-        value: Option<super::team_common::GroupManagementType>,
+        value: super::team_common::GroupManagementType,
     ) -> Self {
-        self.new_group_management_type = value;
+        self.new_group_management_type = Some(value);
         self
     }
-
 }
 
 const GROUP_UPDATE_ARGS_FIELDS: &[&str] = &["group",
@@ -8438,6 +8427,13 @@ impl Default for GroupsListArg {
     }
 }
 
+impl GroupsListArg {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
 const GROUPS_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl GroupsListArg {
     // no _opt deserializer
@@ -8514,7 +8510,6 @@ impl GroupsListContinueArg {
             cursor,
         }
     }
-
 }
 
 const GROUPS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -8685,7 +8680,6 @@ impl GroupsListResult {
             has_more,
         }
     }
-
 }
 
 const GROUPS_LIST_RESULT_FIELDS: &[&str] = &["groups",
@@ -8803,7 +8797,6 @@ impl GroupsMembersListArg {
         self.limit = value;
         self
     }
-
 }
 
 const GROUPS_MEMBERS_LIST_ARG_FIELDS: &[&str] = &["group",
@@ -8903,7 +8896,6 @@ impl GroupsMembersListContinueArg {
             cursor,
         }
     }
-
 }
 
 const GROUPS_MEMBERS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -9070,7 +9062,6 @@ impl GroupsMembersListResult {
             has_more,
         }
     }
-
 }
 
 const GROUPS_MEMBERS_LIST_RESULT_FIELDS: &[&str] = &["members",
@@ -9542,6 +9533,13 @@ impl Default for IncludeMembersArg {
     }
 }
 
+impl IncludeMembersArg {
+    pub fn with_return_members(mut self, value: bool) -> Self {
+        self.return_members = value;
+        self
+    }
+}
+
 const INCLUDE_MEMBERS_ARG_FIELDS: &[&str] = &["return_members"];
 impl IncludeMembersArg {
     // no _opt deserializer
@@ -9658,7 +9656,6 @@ impl LegalHoldHeldRevisionMetadata {
             content_hash,
         }
     }
-
 }
 
 const LEGAL_HOLD_HELD_REVISION_METADATA_FIELDS: &[&str] = &["new_filename",
@@ -9866,21 +9863,20 @@ impl LegalHoldPolicy {
         }
     }
 
-    pub fn with_description(mut self, value: Option<LegalHoldPolicyDescription>) -> Self {
-        self.description = value;
+    pub fn with_description(mut self, value: LegalHoldPolicyDescription) -> Self {
+        self.description = Some(value);
         self
     }
 
-    pub fn with_activation_time(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.activation_time = value;
+    pub fn with_activation_time(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.activation_time = Some(value);
         self
     }
 
-    pub fn with_end_date(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.end_date = value;
+    pub fn with_end_date(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.end_date = Some(value);
         self
     }
-
 }
 
 const LEGAL_HOLD_POLICY_FIELDS: &[&str] = &["id",
@@ -10246,7 +10242,6 @@ impl LegalHoldsGetPolicyArg {
             id,
         }
     }
-
 }
 
 const LEGAL_HOLDS_GET_POLICY_ARG_FIELDS: &[&str] = &["id"];
@@ -10442,11 +10437,10 @@ impl LegalHoldsListHeldRevisionResult {
         }
     }
 
-    pub fn with_cursor(mut self, value: Option<ListHeldRevisionCursor>) -> Self {
-        self.cursor = value;
+    pub fn with_cursor(mut self, value: ListHeldRevisionCursor) -> Self {
+        self.cursor = Some(value);
         self
     }
-
 }
 
 const LEGAL_HOLDS_LIST_HELD_REVISION_RESULT_FIELDS: &[&str] = &["entries",
@@ -10556,7 +10550,6 @@ impl LegalHoldsListHeldRevisionsArg {
             id,
         }
     }
-
 }
 
 const LEGAL_HOLDS_LIST_HELD_REVISIONS_ARG_FIELDS: &[&str] = &["id"];
@@ -10651,11 +10644,10 @@ impl LegalHoldsListHeldRevisionsContinueArg {
         }
     }
 
-    pub fn with_cursor(mut self, value: Option<ListHeldRevisionCursor>) -> Self {
-        self.cursor = value;
+    pub fn with_cursor(mut self, value: ListHeldRevisionCursor) -> Self {
+        self.cursor = Some(value);
         self
     }
-
 }
 
 const LEGAL_HOLDS_LIST_HELD_REVISIONS_CONTINUE_ARG_FIELDS: &[&str] = &["id",
@@ -10977,6 +10969,13 @@ impl Default for LegalHoldsListPoliciesArg {
     }
 }
 
+impl LegalHoldsListPoliciesArg {
+    pub fn with_include_released(mut self, value: bool) -> Self {
+        self.include_released = value;
+        self
+    }
+}
+
 const LEGAL_HOLDS_LIST_POLICIES_ARG_FIELDS: &[&str] = &["include_released"];
 impl LegalHoldsListPoliciesArg {
     // no _opt deserializer
@@ -11148,7 +11147,6 @@ impl LegalHoldsListPoliciesResult {
             policies,
         }
     }
-
 }
 
 const LEGAL_HOLDS_LIST_POLICIES_RESULT_FIELDS: &[&str] = &["policies"];
@@ -11251,21 +11249,20 @@ impl LegalHoldsPolicyCreateArg {
         }
     }
 
-    pub fn with_description(mut self, value: Option<LegalHoldPolicyDescription>) -> Self {
-        self.description = value;
+    pub fn with_description(mut self, value: LegalHoldPolicyDescription) -> Self {
+        self.description = Some(value);
         self
     }
 
-    pub fn with_start_date(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.start_date = value;
+    pub fn with_start_date(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.start_date = Some(value);
         self
     }
 
-    pub fn with_end_date(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.end_date = value;
+    pub fn with_end_date(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.end_date = Some(value);
         self
     }
-
 }
 
 const LEGAL_HOLDS_POLICY_CREATE_ARG_FIELDS: &[&str] = &["name",
@@ -11582,7 +11579,6 @@ impl LegalHoldsPolicyReleaseArg {
             id,
         }
     }
-
 }
 
 const LEGAL_HOLDS_POLICY_RELEASE_ARG_FIELDS: &[&str] = &["id"];
@@ -11805,21 +11801,20 @@ impl LegalHoldsPolicyUpdateArg {
         }
     }
 
-    pub fn with_name(mut self, value: Option<LegalHoldPolicyName>) -> Self {
-        self.name = value;
+    pub fn with_name(mut self, value: LegalHoldPolicyName) -> Self {
+        self.name = Some(value);
         self
     }
 
-    pub fn with_description(mut self, value: Option<LegalHoldPolicyDescription>) -> Self {
-        self.description = value;
+    pub fn with_description(mut self, value: LegalHoldPolicyDescription) -> Self {
+        self.description = Some(value);
         self
     }
 
-    pub fn with_members(mut self, value: Option<Vec<super::team_common::TeamMemberId>>) -> Self {
-        self.members = value;
+    pub fn with_members(mut self, value: Vec<super::team_common::TeamMemberId>) -> Self {
+        self.members = Some(value);
         self
     }
-
 }
 
 const LEGAL_HOLDS_POLICY_UPDATE_ARG_FIELDS: &[&str] = &["id",
@@ -12114,7 +12109,6 @@ impl ListMemberAppsArg {
             team_member_id,
         }
     }
-
 }
 
 const LIST_MEMBER_APPS_ARG_FIELDS: &[&str] = &["team_member_id"];
@@ -12276,7 +12270,6 @@ impl ListMemberAppsResult {
             linked_api_apps,
         }
     }
-
 }
 
 const LIST_MEMBER_APPS_RESULT_FIELDS: &[&str] = &["linked_api_apps"];
@@ -12390,7 +12383,6 @@ impl ListMemberDevicesArg {
         self.include_mobile_clients = value;
         self
     }
-
 }
 
 const LIST_MEMBER_DEVICES_ARG_FIELDS: &[&str] = &["team_member_id",
@@ -12588,6 +12580,23 @@ impl Default for ListMemberDevicesResult {
     }
 }
 
+impl ListMemberDevicesResult {
+    pub fn with_active_web_sessions(mut self, value: Vec<ActiveWebSession>) -> Self {
+        self.active_web_sessions = Some(value);
+        self
+    }
+
+    pub fn with_desktop_client_sessions(mut self, value: Vec<DesktopClientSession>) -> Self {
+        self.desktop_client_sessions = Some(value);
+        self
+    }
+
+    pub fn with_mobile_client_sessions(mut self, value: Vec<MobileClientSession>) -> Self {
+        self.mobile_client_sessions = Some(value);
+        self
+    }
+}
+
 const LIST_MEMBER_DEVICES_RESULT_FIELDS: &[&str] = &["active_web_sessions",
                                                      "desktop_client_sessions",
                                                      "mobile_client_sessions"];
@@ -12688,6 +12697,13 @@ impl Default for ListMembersAppsArg {
         ListMembersAppsArg {
             cursor: None,
         }
+    }
+}
+
+impl ListMembersAppsArg {
+    pub fn with_cursor(mut self, value: String) -> Self {
+        self.cursor = Some(value);
+        self
     }
 }
 
@@ -12854,11 +12870,10 @@ impl ListMembersAppsResult {
         }
     }
 
-    pub fn with_cursor(mut self, value: Option<String>) -> Self {
-        self.cursor = value;
+    pub fn with_cursor(mut self, value: String) -> Self {
+        self.cursor = Some(value);
         self
     }
-
 }
 
 const LIST_MEMBERS_APPS_RESULT_FIELDS: &[&str] = &["apps",
@@ -12979,6 +12994,28 @@ impl Default for ListMembersDevicesArg {
             include_desktop_clients: true,
             include_mobile_clients: true,
         }
+    }
+}
+
+impl ListMembersDevicesArg {
+    pub fn with_cursor(mut self, value: String) -> Self {
+        self.cursor = Some(value);
+        self
+    }
+
+    pub fn with_include_web_sessions(mut self, value: bool) -> Self {
+        self.include_web_sessions = value;
+        self
+    }
+
+    pub fn with_include_desktop_clients(mut self, value: bool) -> Self {
+        self.include_desktop_clients = value;
+        self
+    }
+
+    pub fn with_include_mobile_clients(mut self, value: bool) -> Self {
+        self.include_mobile_clients = value;
+        self
     }
 }
 
@@ -13169,11 +13206,10 @@ impl ListMembersDevicesResult {
         }
     }
 
-    pub fn with_cursor(mut self, value: Option<String>) -> Self {
-        self.cursor = value;
+    pub fn with_cursor(mut self, value: String) -> Self {
+        self.cursor = Some(value);
         self
     }
-
 }
 
 const LIST_MEMBERS_DEVICES_RESULT_FIELDS: &[&str] = &["devices",
@@ -13287,6 +13323,13 @@ impl Default for ListTeamAppsArg {
         ListTeamAppsArg {
             cursor: None,
         }
+    }
+}
+
+impl ListTeamAppsArg {
+    pub fn with_cursor(mut self, value: String) -> Self {
+        self.cursor = Some(value);
+        self
     }
 }
 
@@ -13452,11 +13495,10 @@ impl ListTeamAppsResult {
         }
     }
 
-    pub fn with_cursor(mut self, value: Option<String>) -> Self {
-        self.cursor = value;
+    pub fn with_cursor(mut self, value: String) -> Self {
+        self.cursor = Some(value);
         self
     }
-
 }
 
 const LIST_TEAM_APPS_RESULT_FIELDS: &[&str] = &["apps",
@@ -13577,6 +13619,28 @@ impl Default for ListTeamDevicesArg {
             include_desktop_clients: true,
             include_mobile_clients: true,
         }
+    }
+}
+
+impl ListTeamDevicesArg {
+    pub fn with_cursor(mut self, value: String) -> Self {
+        self.cursor = Some(value);
+        self
+    }
+
+    pub fn with_include_web_sessions(mut self, value: bool) -> Self {
+        self.include_web_sessions = value;
+        self
+    }
+
+    pub fn with_include_desktop_clients(mut self, value: bool) -> Self {
+        self.include_desktop_clients = value;
+        self
+    }
+
+    pub fn with_include_mobile_clients(mut self, value: bool) -> Self {
+        self.include_mobile_clients = value;
+        self
     }
 }
 
@@ -13767,11 +13831,10 @@ impl ListTeamDevicesResult {
         }
     }
 
-    pub fn with_cursor(mut self, value: Option<String>) -> Self {
-        self.cursor = value;
+    pub fn with_cursor(mut self, value: String) -> Self {
+        self.cursor = Some(value);
         self
     }
-
 }
 
 const LIST_TEAM_DEVICES_RESULT_FIELDS: &[&str] = &["devices",
@@ -13885,7 +13948,6 @@ impl MemberAccess {
             access_type,
         }
     }
-
 }
 
 const MEMBER_ACCESS_FIELDS: &[&str] = &["user",
@@ -14008,29 +14070,23 @@ impl MemberAddArg {
         }
     }
 
-    pub fn with_member_given_name(
-        mut self,
-        value: Option<super::common::OptionalNamePart>,
-    ) -> Self {
-        self.member_given_name = value;
+    pub fn with_member_given_name(mut self, value: super::common::OptionalNamePart) -> Self {
+        self.member_given_name = Some(value);
         self
     }
 
-    pub fn with_member_surname(mut self, value: Option<super::common::OptionalNamePart>) -> Self {
-        self.member_surname = value;
+    pub fn with_member_surname(mut self, value: super::common::OptionalNamePart) -> Self {
+        self.member_surname = Some(value);
         self
     }
 
-    pub fn with_member_external_id(
-        mut self,
-        value: Option<super::team_common::MemberExternalId>,
-    ) -> Self {
-        self.member_external_id = value;
+    pub fn with_member_external_id(mut self, value: super::team_common::MemberExternalId) -> Self {
+        self.member_external_id = Some(value);
         self
     }
 
-    pub fn with_member_persistent_id(mut self, value: Option<String>) -> Self {
-        self.member_persistent_id = value;
+    pub fn with_member_persistent_id(mut self, value: String) -> Self {
+        self.member_persistent_id = Some(value);
         self
     }
 
@@ -14044,11 +14100,10 @@ impl MemberAddArg {
         self
     }
 
-    pub fn with_is_directory_restricted(mut self, value: Option<bool>) -> Self {
-        self.is_directory_restricted = value;
+    pub fn with_is_directory_restricted(mut self, value: bool) -> Self {
+        self.is_directory_restricted = Some(value);
         self
     }
-
 }
 
 const MEMBER_ADD_ARG_FIELDS: &[&str] = &["member_email",
@@ -14445,21 +14500,20 @@ impl MemberDevices {
         }
     }
 
-    pub fn with_web_sessions(mut self, value: Option<Vec<ActiveWebSession>>) -> Self {
-        self.web_sessions = value;
+    pub fn with_web_sessions(mut self, value: Vec<ActiveWebSession>) -> Self {
+        self.web_sessions = Some(value);
         self
     }
 
-    pub fn with_desktop_clients(mut self, value: Option<Vec<DesktopClientSession>>) -> Self {
-        self.desktop_clients = value;
+    pub fn with_desktop_clients(mut self, value: Vec<DesktopClientSession>) -> Self {
+        self.desktop_clients = Some(value);
         self
     }
 
-    pub fn with_mobile_clients(mut self, value: Option<Vec<MobileClientSession>>) -> Self {
-        self.mobile_clients = value;
+    pub fn with_mobile_clients(mut self, value: Vec<MobileClientSession>) -> Self {
+        self.mobile_clients = Some(value);
         self
     }
-
 }
 
 const MEMBER_DEVICES_FIELDS: &[&str] = &["team_member_id",
@@ -14583,7 +14637,6 @@ impl MemberLinkedApps {
             linked_api_apps,
         }
     }
-
 }
 
 const MEMBER_LINKED_APPS_FIELDS: &[&str] = &["team_member_id",
@@ -14739,54 +14792,53 @@ impl MemberProfile {
         }
     }
 
-    pub fn with_external_id(mut self, value: Option<String>) -> Self {
-        self.external_id = value;
+    pub fn with_external_id(mut self, value: String) -> Self {
+        self.external_id = Some(value);
         self
     }
 
-    pub fn with_account_id(mut self, value: Option<super::users_common::AccountId>) -> Self {
-        self.account_id = value;
+    pub fn with_account_id(mut self, value: super::users_common::AccountId) -> Self {
+        self.account_id = Some(value);
         self
     }
 
     pub fn with_secondary_emails(
         mut self,
-        value: Option<Vec<super::secondary_emails::SecondaryEmail>>,
+        value: Vec<super::secondary_emails::SecondaryEmail>,
     ) -> Self {
-        self.secondary_emails = value;
+        self.secondary_emails = Some(value);
         self
     }
 
-    pub fn with_invited_on(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.invited_on = value;
+    pub fn with_invited_on(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.invited_on = Some(value);
         self
     }
 
-    pub fn with_joined_on(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.joined_on = value;
+    pub fn with_joined_on(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.joined_on = Some(value);
         self
     }
 
-    pub fn with_suspended_on(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.suspended_on = value;
+    pub fn with_suspended_on(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.suspended_on = Some(value);
         self
     }
 
-    pub fn with_persistent_id(mut self, value: Option<String>) -> Self {
-        self.persistent_id = value;
+    pub fn with_persistent_id(mut self, value: String) -> Self {
+        self.persistent_id = Some(value);
         self
     }
 
-    pub fn with_is_directory_restricted(mut self, value: Option<bool>) -> Self {
-        self.is_directory_restricted = value;
+    pub fn with_is_directory_restricted(mut self, value: bool) -> Self {
+        self.is_directory_restricted = Some(value);
         self
     }
 
-    pub fn with_profile_photo_url(mut self, value: Option<String>) -> Self {
-        self.profile_photo_url = value;
+    pub fn with_profile_photo_url(mut self, value: String) -> Self {
+        self.profile_photo_url = Some(value);
         self
     }
-
 }
 
 const MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
@@ -15100,7 +15152,6 @@ impl MembersAddArg {
         self.force_async = value;
         self
     }
-
 }
 
 const MEMBERS_ADD_ARG_FIELDS: &[&str] = &["new_members",
@@ -15367,7 +15418,6 @@ impl MembersDataTransferArg {
             transfer_admin_id,
         }
     }
-
 }
 
 const MEMBERS_DATA_TRANSFER_ARG_FIELDS: &[&str] = &["user",
@@ -15485,7 +15535,6 @@ impl MembersDeactivateArg {
         self.wipe_data = value;
         self
     }
-
 }
 
 const MEMBERS_DEACTIVATE_ARG_FIELDS: &[&str] = &["user",
@@ -15587,7 +15636,6 @@ impl MembersDeactivateBaseArg {
             user,
         }
     }
-
 }
 
 const MEMBERS_DEACTIVATE_BASE_ARG_FIELDS: &[&str] = &["user"];
@@ -15761,7 +15809,6 @@ impl MembersDeleteProfilePhotoArg {
             user,
         }
     }
-
 }
 
 const MEMBERS_DELETE_PROFILE_PHOTO_ARG_FIELDS: &[&str] = &["user"];
@@ -15948,7 +15995,6 @@ impl MembersGetInfoArgs {
             members,
         }
     }
-
 }
 
 const MEMBERS_GET_INFO_ARGS_FIELDS: &[&str] = &["members"];
@@ -16167,7 +16213,6 @@ impl MembersInfo {
             permanently_deleted_users,
         }
     }
-
 }
 
 const MEMBERS_INFO_FIELDS: &[&str] = &["team_member_ids",
@@ -16272,6 +16317,18 @@ impl Default for MembersListArg {
     }
 }
 
+impl MembersListArg {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+
+    pub fn with_include_removed(mut self, value: bool) -> Self {
+        self.include_removed = value;
+        self
+    }
+}
+
 const MEMBERS_LIST_ARG_FIELDS: &[&str] = &["limit",
                                            "include_removed"];
 impl MembersListArg {
@@ -16358,7 +16415,6 @@ impl MembersListContinueArg {
             cursor,
         }
     }
-
 }
 
 const MEMBERS_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -16580,7 +16636,6 @@ impl MembersListResult {
             has_more,
         }
     }
-
 }
 
 const MEMBERS_LIST_RESULT_FIELDS: &[&str] = &["members",
@@ -16692,7 +16747,6 @@ impl MembersRecoverArg {
             user,
         }
     }
-
 }
 
 const MEMBERS_RECOVER_ARG_FIELDS: &[&str] = &["user"];
@@ -16920,13 +16974,13 @@ impl MembersRemoveArg {
         self
     }
 
-    pub fn with_transfer_dest_id(mut self, value: Option<UserSelectorArg>) -> Self {
-        self.transfer_dest_id = value;
+    pub fn with_transfer_dest_id(mut self, value: UserSelectorArg) -> Self {
+        self.transfer_dest_id = Some(value);
         self
     }
 
-    pub fn with_transfer_admin_id(mut self, value: Option<UserSelectorArg>) -> Self {
-        self.transfer_admin_id = value;
+    pub fn with_transfer_admin_id(mut self, value: UserSelectorArg) -> Self {
+        self.transfer_admin_id = Some(value);
         self
     }
 
@@ -16939,7 +16993,6 @@ impl MembersRemoveArg {
         self.retain_team_shares = value;
         self
     }
-
 }
 
 const MEMBERS_REMOVE_ARG_FIELDS: &[&str] = &["user",
@@ -17519,7 +17572,6 @@ impl MembersSetPermissionsArg {
             new_role,
         }
     }
-
 }
 
 const MEMBERS_SET_PERMISSIONS_ARG_FIELDS: &[&str] = &["user",
@@ -17745,7 +17797,6 @@ impl MembersSetPermissionsResult {
             role,
         }
     }
-
 }
 
 const MEMBERS_SET_PERMISSIONS_RESULT_FIELDS: &[&str] = &["team_member_id",
@@ -17868,39 +17919,35 @@ impl MembersSetProfileArg {
         }
     }
 
-    pub fn with_new_email(mut self, value: Option<super::common::EmailAddress>) -> Self {
-        self.new_email = value;
+    pub fn with_new_email(mut self, value: super::common::EmailAddress) -> Self {
+        self.new_email = Some(value);
         self
     }
 
-    pub fn with_new_external_id(
-        mut self,
-        value: Option<super::team_common::MemberExternalId>,
-    ) -> Self {
-        self.new_external_id = value;
+    pub fn with_new_external_id(mut self, value: super::team_common::MemberExternalId) -> Self {
+        self.new_external_id = Some(value);
         self
     }
 
-    pub fn with_new_given_name(mut self, value: Option<super::common::OptionalNamePart>) -> Self {
-        self.new_given_name = value;
+    pub fn with_new_given_name(mut self, value: super::common::OptionalNamePart) -> Self {
+        self.new_given_name = Some(value);
         self
     }
 
-    pub fn with_new_surname(mut self, value: Option<super::common::OptionalNamePart>) -> Self {
-        self.new_surname = value;
+    pub fn with_new_surname(mut self, value: super::common::OptionalNamePart) -> Self {
+        self.new_surname = Some(value);
         self
     }
 
-    pub fn with_new_persistent_id(mut self, value: Option<String>) -> Self {
-        self.new_persistent_id = value;
+    pub fn with_new_persistent_id(mut self, value: String) -> Self {
+        self.new_persistent_id = Some(value);
         self
     }
 
-    pub fn with_new_is_directory_restricted(mut self, value: Option<bool>) -> Self {
-        self.new_is_directory_restricted = value;
+    pub fn with_new_is_directory_restricted(mut self, value: bool) -> Self {
+        self.new_is_directory_restricted = Some(value);
         self
     }
-
 }
 
 const MEMBERS_SET_PROFILE_ARG_FIELDS: &[&str] = &["user",
@@ -18255,7 +18302,6 @@ impl MembersSetProfilePhotoArg {
             photo,
         }
     }
-
 }
 
 const MEMBERS_SET_PROFILE_PHOTO_ARG_FIELDS: &[&str] = &["user",
@@ -19047,7 +19093,6 @@ impl MembersUnsuspendArg {
             user,
         }
     }
-
 }
 
 const MEMBERS_UNSUSPEND_ARG_FIELDS: &[&str] = &["user"];
@@ -19390,41 +19435,40 @@ impl MobileClientSession {
         }
     }
 
-    pub fn with_ip_address(mut self, value: Option<String>) -> Self {
-        self.ip_address = value;
+    pub fn with_ip_address(mut self, value: String) -> Self {
+        self.ip_address = Some(value);
         self
     }
 
-    pub fn with_country(mut self, value: Option<String>) -> Self {
-        self.country = value;
+    pub fn with_country(mut self, value: String) -> Self {
+        self.country = Some(value);
         self
     }
 
-    pub fn with_created(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.created = value;
+    pub fn with_created(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.created = Some(value);
         self
     }
 
-    pub fn with_updated(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.updated = value;
+    pub fn with_updated(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.updated = Some(value);
         self
     }
 
-    pub fn with_client_version(mut self, value: Option<String>) -> Self {
-        self.client_version = value;
+    pub fn with_client_version(mut self, value: String) -> Self {
+        self.client_version = Some(value);
         self
     }
 
-    pub fn with_os_version(mut self, value: Option<String>) -> Self {
-        self.os_version = value;
+    pub fn with_os_version(mut self, value: String) -> Self {
+        self.os_version = Some(value);
         self
     }
 
-    pub fn with_last_carrier(mut self, value: Option<String>) -> Self {
-        self.last_carrier = value;
+    pub fn with_last_carrier(mut self, value: String) -> Self {
+        self.last_carrier = Some(value);
         self
     }
-
 }
 
 const MOBILE_CLIENT_SESSION_FIELDS: &[&str] = &["session_id",
@@ -19620,11 +19664,10 @@ impl NamespaceMetadata {
         }
     }
 
-    pub fn with_team_member_id(mut self, value: Option<super::team_common::TeamMemberId>) -> Self {
-        self.team_member_id = value;
+    pub fn with_team_member_id(mut self, value: super::team_common::TeamMemberId) -> Self {
+        self.team_member_id = Some(value);
         self
     }
-
 }
 
 const NAMESPACE_METADATA_FIELDS: &[&str] = &["name",
@@ -19924,7 +19967,6 @@ impl RemovedStatus {
             is_disconnected,
         }
     }
-
 }
 
 const REMOVED_STATUS_FIELDS: &[&str] = &["is_recoverable",
@@ -20123,7 +20165,6 @@ impl ResendVerificationEmailArg {
             emails_to_resend,
         }
     }
-
 }
 
 const RESEND_VERIFICATION_EMAIL_ARG_FIELDS: &[&str] = &["emails_to_resend"];
@@ -20213,7 +20254,6 @@ impl ResendVerificationEmailResult {
             results,
         }
     }
-
 }
 
 const RESEND_VERIFICATION_EMAIL_RESULT_FIELDS: &[&str] = &["results"];
@@ -20315,7 +20355,6 @@ impl RevokeDesktopClientArg {
         self.delete_on_unlink = value;
         self
     }
-
 }
 
 const REVOKE_DESKTOP_CLIENT_ARG_FIELDS: &[&str] = &["session_id",
@@ -20494,7 +20533,6 @@ impl RevokeDeviceSessionBatchArg {
             revoke_devices,
         }
     }
-
 }
 
 const REVOKE_DEVICE_SESSION_BATCH_ARG_FIELDS: &[&str] = &["revoke_devices"];
@@ -20637,7 +20675,6 @@ impl RevokeDeviceSessionBatchResult {
             revoke_devices_status,
         }
     }
-
 }
 
 const REVOKE_DEVICE_SESSION_BATCH_RESULT_FIELDS: &[&str] = &["revoke_devices_status"];
@@ -20814,11 +20851,10 @@ impl RevokeDeviceSessionStatus {
         }
     }
 
-    pub fn with_error_type(mut self, value: Option<RevokeDeviceSessionError>) -> Self {
-        self.error_type = value;
+    pub fn with_error_type(mut self, value: RevokeDeviceSessionError) -> Self {
+        self.error_type = Some(value);
         self
     }
-
 }
 
 const REVOKE_DEVICE_SESSION_STATUS_FIELDS: &[&str] = &["success",
@@ -20930,7 +20966,6 @@ impl RevokeLinkedApiAppArg {
         self.keep_app_folder = value;
         self
     }
-
 }
 
 const REVOKE_LINKED_API_APP_ARG_FIELDS: &[&str] = &["app_id",
@@ -21039,7 +21074,6 @@ impl RevokeLinkedApiAppBatchArg {
             revoke_linked_app,
         }
     }
-
 }
 
 const REVOKE_LINKED_API_APP_BATCH_ARG_FIELDS: &[&str] = &["revoke_linked_app"];
@@ -21183,7 +21217,6 @@ impl RevokeLinkedAppBatchResult {
             revoke_linked_app_status,
         }
     }
-
 }
 
 const REVOKE_LINKED_APP_BATCH_RESULT_FIELDS: &[&str] = &["revoke_linked_app_status"];
@@ -21374,11 +21407,10 @@ impl RevokeLinkedAppStatus {
         }
     }
 
-    pub fn with_error_type(mut self, value: Option<RevokeLinkedAppError>) -> Self {
-        self.error_type = value;
+    pub fn with_error_type(mut self, value: RevokeLinkedAppError) -> Self {
+        self.error_type = Some(value);
         self
     }
-
 }
 
 const REVOKE_LINKED_APP_STATUS_FIELDS: &[&str] = &["success",
@@ -21478,7 +21510,6 @@ impl SetCustomQuotaArg {
             users_and_quotas,
         }
     }
-
 }
 
 const SET_CUSTOM_QUOTA_ARG_FIELDS: &[&str] = &["users_and_quotas"];
@@ -21657,7 +21688,6 @@ impl StorageBucket {
             users,
         }
     }
-
 }
 
 const STORAGE_BUCKET_FIELDS: &[&str] = &["bucket",
@@ -21954,7 +21984,6 @@ impl TeamFolderArchiveArg {
         self.force_async_off = value;
         self
     }
-
 }
 
 const TEAM_FOLDER_ARCHIVE_ARG_FIELDS: &[&str] = &["team_folder_id",
@@ -22309,11 +22338,10 @@ impl TeamFolderCreateArg {
         }
     }
 
-    pub fn with_sync_setting(mut self, value: Option<super::files::SyncSettingArg>) -> Self {
-        self.sync_setting = value;
+    pub fn with_sync_setting(mut self, value: super::files::SyncSettingArg) -> Self {
+        self.sync_setting = Some(value);
         self
     }
-
 }
 
 const TEAM_FOLDER_CREATE_ARG_FIELDS: &[&str] = &["name",
@@ -22592,7 +22620,6 @@ impl TeamFolderIdArg {
             team_folder_id,
         }
     }
-
 }
 
 const TEAM_FOLDER_ID_ARG_FIELDS: &[&str] = &["team_folder_id"];
@@ -22682,7 +22709,6 @@ impl TeamFolderIdListArg {
             team_folder_ids,
         }
     }
-
 }
 
 const TEAM_FOLDER_ID_LIST_ARG_FIELDS: &[&str] = &["team_folder_ids"];
@@ -22870,6 +22896,13 @@ impl Default for TeamFolderListArg {
     }
 }
 
+impl TeamFolderListArg {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
 const TEAM_FOLDER_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl TeamFolderListArg {
     // no _opt deserializer
@@ -22946,7 +22979,6 @@ impl TeamFolderListContinueArg {
             cursor,
         }
     }
-
 }
 
 const TEAM_FOLDER_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -23105,7 +23137,6 @@ impl TeamFolderListError {
             access_error,
         }
     }
-
 }
 
 const TEAM_FOLDER_LIST_ERROR_FIELDS: &[&str] = &["access_error"];
@@ -23205,7 +23236,6 @@ impl TeamFolderListResult {
             has_more,
         }
     }
-
 }
 
 const TEAM_FOLDER_LIST_RESULT_FIELDS: &[&str] = &["team_folders",
@@ -23338,7 +23368,6 @@ impl TeamFolderMetadata {
             content_sync_settings,
         }
     }
-
 }
 
 const TEAM_FOLDER_METADATA_FIELDS: &[&str] = &["team_folder_id",
@@ -23587,7 +23616,6 @@ impl TeamFolderRenameArg {
             name,
         }
     }
-
 }
 
 const TEAM_FOLDER_RENAME_ARG_FIELDS: &[&str] = &["team_folder_id",
@@ -23993,19 +24021,18 @@ impl TeamFolderUpdateSyncSettingsArg {
         }
     }
 
-    pub fn with_sync_setting(mut self, value: Option<super::files::SyncSettingArg>) -> Self {
-        self.sync_setting = value;
+    pub fn with_sync_setting(mut self, value: super::files::SyncSettingArg) -> Self {
+        self.sync_setting = Some(value);
         self
     }
 
     pub fn with_content_sync_settings(
         mut self,
-        value: Option<Vec<super::files::ContentSyncSettingArg>>,
+        value: Vec<super::files::ContentSyncSettingArg>,
     ) -> Self {
-        self.content_sync_settings = value;
+        self.content_sync_settings = Some(value);
         self
     }
-
 }
 
 const TEAM_FOLDER_UPDATE_SYNC_SETTINGS_ARG_FIELDS: &[&str] = &["team_folder_id",
@@ -24254,7 +24281,6 @@ impl TeamGetInfoResult {
             policies,
         }
     }
-
 }
 
 const TEAM_GET_INFO_RESULT_FIELDS: &[&str] = &["name",
@@ -24388,7 +24414,6 @@ impl TeamMemberInfo {
             role,
         }
     }
-
 }
 
 const TEAM_MEMBER_INFO_FIELDS: &[&str] = &["profile",
@@ -24552,54 +24577,53 @@ impl TeamMemberProfile {
         }
     }
 
-    pub fn with_external_id(mut self, value: Option<String>) -> Self {
-        self.external_id = value;
+    pub fn with_external_id(mut self, value: String) -> Self {
+        self.external_id = Some(value);
         self
     }
 
-    pub fn with_account_id(mut self, value: Option<super::users_common::AccountId>) -> Self {
-        self.account_id = value;
+    pub fn with_account_id(mut self, value: super::users_common::AccountId) -> Self {
+        self.account_id = Some(value);
         self
     }
 
     pub fn with_secondary_emails(
         mut self,
-        value: Option<Vec<super::secondary_emails::SecondaryEmail>>,
+        value: Vec<super::secondary_emails::SecondaryEmail>,
     ) -> Self {
-        self.secondary_emails = value;
+        self.secondary_emails = Some(value);
         self
     }
 
-    pub fn with_invited_on(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.invited_on = value;
+    pub fn with_invited_on(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.invited_on = Some(value);
         self
     }
 
-    pub fn with_joined_on(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.joined_on = value;
+    pub fn with_joined_on(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.joined_on = Some(value);
         self
     }
 
-    pub fn with_suspended_on(mut self, value: Option<super::common::DropboxTimestamp>) -> Self {
-        self.suspended_on = value;
+    pub fn with_suspended_on(mut self, value: super::common::DropboxTimestamp) -> Self {
+        self.suspended_on = Some(value);
         self
     }
 
-    pub fn with_persistent_id(mut self, value: Option<String>) -> Self {
-        self.persistent_id = value;
+    pub fn with_persistent_id(mut self, value: String) -> Self {
+        self.persistent_id = Some(value);
         self
     }
 
-    pub fn with_is_directory_restricted(mut self, value: Option<bool>) -> Self {
-        self.is_directory_restricted = value;
+    pub fn with_is_directory_restricted(mut self, value: bool) -> Self {
+        self.is_directory_restricted = Some(value);
         self
     }
 
-    pub fn with_profile_photo_url(mut self, value: Option<String>) -> Self {
-        self.profile_photo_url = value;
+    pub fn with_profile_photo_url(mut self, value: String) -> Self {
+        self.profile_photo_url = Some(value);
         self
     }
-
 }
 
 const TEAM_MEMBER_PROFILE_FIELDS: &[&str] = &["team_member_id",
@@ -25005,6 +25029,13 @@ impl Default for TeamNamespacesListArg {
     }
 }
 
+impl TeamNamespacesListArg {
+    pub fn with_limit(mut self, value: u32) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
 const TEAM_NAMESPACES_LIST_ARG_FIELDS: &[&str] = &["limit"];
 impl TeamNamespacesListArg {
     // no _opt deserializer
@@ -25081,7 +25112,6 @@ impl TeamNamespacesListContinueArg {
             cursor,
         }
     }
-
 }
 
 const TEAM_NAMESPACES_LIST_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -25332,7 +25362,6 @@ impl TeamNamespacesListResult {
             has_more,
         }
     }
-
 }
 
 const TEAM_NAMESPACES_LIST_RESULT_FIELDS: &[&str] = &["namespaces",
@@ -25616,7 +25645,6 @@ impl TokenGetAuthenticatedAdminResult {
             admin_profile,
         }
     }
-
 }
 
 const TOKEN_GET_AUTHENTICATED_ADMIN_RESULT_FIELDS: &[&str] = &["admin_profile"];
@@ -25895,7 +25923,6 @@ impl UserCustomQuotaArg {
             quota_gb,
         }
     }
-
 }
 
 const USER_CUSTOM_QUOTA_ARG_FIELDS: &[&str] = &["user",
@@ -25999,11 +26026,10 @@ impl UserCustomQuotaResult {
         }
     }
 
-    pub fn with_quota_gb(mut self, value: Option<UserQuota>) -> Self {
-        self.quota_gb = value;
+    pub fn with_quota_gb(mut self, value: UserQuota) -> Self {
+        self.quota_gb = Some(value);
         self
     }
-
 }
 
 const USER_CUSTOM_QUOTA_RESULT_FIELDS: &[&str] = &["user",
@@ -26104,7 +26130,6 @@ impl UserDeleteEmailsResult {
             results,
         }
     }
-
 }
 
 const USER_DELETE_EMAILS_RESULT_FIELDS: &[&str] = &["user",
@@ -26281,7 +26306,6 @@ impl UserResendEmailsResult {
             results,
         }
     }
-
 }
 
 const USER_RESEND_EMAILS_RESULT_FIELDS: &[&str] = &["user",
@@ -26459,7 +26483,6 @@ impl UserSecondaryEmailsArg {
             secondary_emails,
         }
     }
-
 }
 
 const USER_SECONDARY_EMAILS_ARG_FIELDS: &[&str] = &["user",
@@ -26560,7 +26583,6 @@ impl UserSecondaryEmailsResult {
             results,
         }
     }
-
 }
 
 const USER_SECONDARY_EMAILS_RESULT_FIELDS: &[&str] = &["user",

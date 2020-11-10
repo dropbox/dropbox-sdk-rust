@@ -224,7 +224,6 @@ impl CountFileRequestsResult {
             file_request_count,
         }
     }
-
 }
 
 const COUNT_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_request_count"];
@@ -331,8 +330,8 @@ impl CreateFileRequestArgs {
         }
     }
 
-    pub fn with_deadline(mut self, value: Option<FileRequestDeadline>) -> Self {
-        self.deadline = value;
+    pub fn with_deadline(mut self, value: FileRequestDeadline) -> Self {
+        self.deadline = Some(value);
         self
     }
 
@@ -341,11 +340,10 @@ impl CreateFileRequestArgs {
         self
     }
 
-    pub fn with_description(mut self, value: Option<String>) -> Self {
-        self.description = value;
+    pub fn with_description(mut self, value: String) -> Self {
+        self.description = Some(value);
         self
     }
-
 }
 
 const CREATE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["title",
@@ -809,7 +807,6 @@ impl DeleteAllClosedFileRequestsResult {
             file_requests,
         }
     }
-
 }
 
 const DELETE_ALL_CLOSED_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_requests"];
@@ -900,7 +897,6 @@ impl DeleteFileRequestArgs {
             ids,
         }
     }
-
 }
 
 const DELETE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["ids"];
@@ -1157,7 +1153,6 @@ impl DeleteFileRequestsResult {
             file_requests,
         }
     }
-
 }
 
 const DELETE_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_requests"];
@@ -1284,21 +1279,20 @@ impl FileRequest {
         }
     }
 
-    pub fn with_destination(mut self, value: Option<super::files::Path>) -> Self {
-        self.destination = value;
+    pub fn with_destination(mut self, value: super::files::Path) -> Self {
+        self.destination = Some(value);
         self
     }
 
-    pub fn with_deadline(mut self, value: Option<FileRequestDeadline>) -> Self {
-        self.deadline = value;
+    pub fn with_deadline(mut self, value: FileRequestDeadline) -> Self {
+        self.deadline = Some(value);
         self
     }
 
-    pub fn with_description(mut self, value: Option<String>) -> Self {
-        self.description = value;
+    pub fn with_description(mut self, value: String) -> Self {
+        self.description = Some(value);
         self
     }
-
 }
 
 const FILE_REQUEST_FIELDS: &[&str] = &["id",
@@ -1473,11 +1467,10 @@ impl FileRequestDeadline {
         }
     }
 
-    pub fn with_allow_late_uploads(mut self, value: Option<GracePeriod>) -> Self {
-        self.allow_late_uploads = value;
+    pub fn with_allow_late_uploads(mut self, value: GracePeriod) -> Self {
+        self.allow_late_uploads = Some(value);
         self
     }
-
 }
 
 const FILE_REQUEST_DEADLINE_FIELDS: &[&str] = &["deadline",
@@ -1802,7 +1795,6 @@ impl GetFileRequestArgs {
             id,
         }
     }
-
 }
 
 const GET_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["id"];
@@ -2153,6 +2145,13 @@ impl Default for ListFileRequestsArg {
     }
 }
 
+impl ListFileRequestsArg {
+    pub fn with_limit(mut self, value: u64) -> Self {
+        self.limit = value;
+        self
+    }
+}
+
 const LIST_FILE_REQUESTS_ARG_FIELDS: &[&str] = &["limit"];
 impl ListFileRequestsArg {
     // no _opt deserializer
@@ -2229,7 +2228,6 @@ impl ListFileRequestsContinueArg {
             cursor,
         }
     }
-
 }
 
 const LIST_FILE_REQUESTS_CONTINUE_ARG_FIELDS: &[&str] = &["cursor"];
@@ -2476,7 +2474,6 @@ impl ListFileRequestsResult {
             file_requests,
         }
     }
-
 }
 
 const LIST_FILE_REQUESTS_RESULT_FIELDS: &[&str] = &["file_requests"];
@@ -2575,7 +2572,6 @@ impl ListFileRequestsV2Result {
             has_more,
         }
     }
-
 }
 
 const LIST_FILE_REQUESTS_V2_RESULT_FIELDS: &[&str] = &["file_requests",
@@ -2704,13 +2700,13 @@ impl UpdateFileRequestArgs {
         }
     }
 
-    pub fn with_title(mut self, value: Option<String>) -> Self {
-        self.title = value;
+    pub fn with_title(mut self, value: String) -> Self {
+        self.title = Some(value);
         self
     }
 
-    pub fn with_destination(mut self, value: Option<super::files::Path>) -> Self {
-        self.destination = value;
+    pub fn with_destination(mut self, value: super::files::Path) -> Self {
+        self.destination = Some(value);
         self
     }
 
@@ -2719,16 +2715,15 @@ impl UpdateFileRequestArgs {
         self
     }
 
-    pub fn with_open(mut self, value: Option<bool>) -> Self {
-        self.open = value;
+    pub fn with_open(mut self, value: bool) -> Self {
+        self.open = Some(value);
         self
     }
 
-    pub fn with_description(mut self, value: Option<String>) -> Self {
-        self.description = value;
+    pub fn with_description(mut self, value: String) -> Self {
+        self.description = Some(value);
         self
     }
-
 }
 
 const UPDATE_FILE_REQUEST_ARGS_FIELDS: &[&str] = &["id",

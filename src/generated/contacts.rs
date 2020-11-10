@@ -47,7 +47,6 @@ impl DeleteManualContactsArg {
             email_addresses,
         }
     }
-
 }
 
 const DELETE_MANUAL_CONTACTS_ARG_FIELDS: &[&str] = &["email_addresses"];
