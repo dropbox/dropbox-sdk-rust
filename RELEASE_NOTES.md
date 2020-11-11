@@ -1,5 +1,5 @@
 # v0.8.0
-xxxx-yy-zz
+2020-11-11
 * Improvements to builder methods on structs (the `fn with_fieldname(self, ...) -> Self` methods)
   * Generate builder methods for structs which have only optional fields. These were erroneously
     missing.
