@@ -2,7 +2,7 @@
 
 //! This example illustrates advanced usage of Dropbox's chunked file upload API to upload large
 //! files that would not fit in a single HTTP request, including allowing the user to resume
-//! interrupted uploads.
+//! interrupted uploads, and uploading blocks in parallel.
 
 use dropbox_sdk::files;
 use dropbox_sdk::default_client::{NoauthDefaultClient, UserAuthDefaultClient};
@@ -31,40 +31,9 @@ macro_rules! fatal {
     }
 }
 
-fn prompt(msg: &str) -> String {
-    eprint!("{}: ", msg);
-    io::stderr().flush().unwrap();
-    let mut input = String::new();
-    io::stdin().read_line(&mut input).unwrap();
-    input.trim().to_owned()
-}
-
-fn human_number(n: u64) -> String {
-    let mut f = n as f64;
-    let prefixes = ['k','M','G','T','E'];
-    let mut mag = 0;
-    while mag < prefixes.len() {
-        if f < 1000. {
-            break;
-        }
-        f /= 1000.;
-        mag += 1;
-    }
-    if mag == 0 {
-        format!("{} ", n)
-    } else {
-        format!("{:.02} {}", f, prefixes[mag - 1])
-    }
-}
-
-fn iso8601(t: SystemTime) -> String {
-    let timestamp: i64 = match t.duration_since(SystemTime::UNIX_EPOCH) {
-        Ok(duration) => duration.as_secs() as i64,
-        Err(e) => -(e.duration().as_secs() as i64),
-    };
-
-    chrono::NaiveDateTime::from_timestamp(timestamp, 0 /* nsecs */)
-        .format("%Y-%m-%dT%H:%M:%SZ").to_string()
+fn usage() {
+    eprintln!("usage: {} <source file path> <Dropbox path> [--resume <session ID>,<resume offset>]",
+        std::env::args().next().unwrap());
 }
 
 enum Operation {
@@ -333,6 +302,7 @@ fn get_file_mtime_and_size(f: &File) -> Result<(SystemTime, u64), String> {
     Ok((mtime, meta.len()))
 }
 
+/// This function does it all.
 fn upload_file(
     client: Arc<UserAuthDefaultClient>,
     mut source_file: File,
@@ -367,7 +337,7 @@ fn upload_file(
                     // exactly, so let's close the session.
                     append_arg.close = true;
                 }
-                let result = upload_chunk_with_retry(
+                let result = upload_block_with_retry(
                     client.as_ref(),
                     &append_arg,
                     data,
@@ -409,7 +379,10 @@ fn upload_file(
         session.session_id, session.complete_up_to()))
 }
 
-fn upload_chunk_with_retry(
+/// Upload a single block, retrying a few times if an error occurs.
+///
+/// Prints progress and upload speed, and updates the UploadSession if successful.
+fn upload_block_with_retry(
     client: &UserAuthDefaultClient,
     arg: &files::UploadSessionAppendArg,
     buf: &[u8],
@@ -460,13 +433,49 @@ fn upload_chunk_with_retry(
     Ok(())
 }
 
+fn prompt(msg: &str) -> String {
+    eprint!("{}: ", msg);
+    io::stderr().flush().unwrap();
+    let mut input = String::new();
+    io::stdin().read_line(&mut input).unwrap();
+    input.trim().to_owned()
+}
+
+fn human_number(n: u64) -> String {
+    let mut f = n as f64;
+    let prefixes = ['k','M','G','T','E'];
+    let mut mag = 0;
+    while mag < prefixes.len() {
+        if f < 1000. {
+            break;
+        }
+        f /= 1000.;
+        mag += 1;
+    }
+    if mag == 0 {
+        format!("{} ", n)
+    } else {
+        format!("{:.02} {}", f, prefixes[mag - 1])
+    }
+}
+
+fn iso8601(t: SystemTime) -> String {
+    let timestamp: i64 = match t.duration_since(SystemTime::UNIX_EPOCH) {
+        Ok(duration) => duration.as_secs() as i64,
+        Err(e) => -(e.duration().as_secs() as i64),
+    };
+
+    chrono::NaiveDateTime::from_timestamp(timestamp, 0 /* nsecs */)
+        .format("%Y-%m-%dT%H:%M:%SZ").to_string()
+}
+
 fn main() {
     env_logger::init();
 
     let args = match parse_args() {
         Operation::Usage => {
-            fatal!("usage: {} <source> <Dropbox destination> [--resume <session ID>,<resume offset>]",
-                      std::env::args().next().unwrap());
+            usage();
+            exit(1);
         }
         Operation::Upload(args) => args,
     };
