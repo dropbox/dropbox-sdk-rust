@@ -11,10 +11,18 @@ use dropbox_sdk::oauth2::{oauth2_token_from_authorization_code, Oauth2AuthorizeU
 
 use std::fs::File;
 use std::path::{Path, PathBuf};
-use std::io::{self, Read, Write, Seek, SeekFrom};
+use std::io::{self, Write, Seek, SeekFrom};
 use std::process::exit;
+use std::sync::Arc;
+use std::sync::atomic::{AtomicU64, Ordering::SeqCst};
 use std::thread::sleep;
 use std::time::{Duration, Instant, SystemTime};
+
+/// How many blocks to upload in parallel.
+const PARALLELISM: usize = 20;
+
+/// The size of a block. This is a Dropbox constant, not adjustable.
+const BLOCK_SIZE: usize = 4 * 1024 * 1024;
 
 macro_rules! fatal {
     ($($arg:tt)*) => {
@@ -117,28 +125,6 @@ fn parse_args() -> Operation {
     }
 }
 
-/// Similar to Read::read_exact except that this will partially fill the buffer on EOF instead of
-/// returning an error.
-/// The main reason this is needed is for reading from a stdin pipe, where normal Read::read may
-/// stop after it reads only a few kbytes, but where we really want a much larger buffer to upload.
-fn large_read(source: &mut impl Read, buffer: &mut [u8]) -> io::Result<usize> {
-    let mut nread = 0;
-    loop {
-        match source.read(&mut buffer[nread ..]) {
-            Ok(0) => {
-                return Ok(nread);
-            }
-            Ok(n) => {
-                nread += n;
-            }
-            Err(ref e) if e.kind() == io::ErrorKind::Interrupted => (),
-            Err(e) => {
-                return Err(e);
-            }
-        }
-    }
-}
-
 fn get_oauth2_token() -> String {
     std::env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
         let client_id = prompt("Give me a Dropbox API app key");
@@ -211,7 +197,7 @@ fn get_destination_path(client: &UserAuthDefaultClient, given_path: &str, source
 }
 
 fn upload_file(
-    client: &UserAuthDefaultClient,
+    client: Arc<UserAuthDefaultClient>,
     mut source_file: File,
     dest_path: String,
     resume: Option<Resume>,
@@ -229,10 +215,10 @@ fn upload_file(
             .map_err(|e| format!("Seek error: {}", e))?;
         files::UploadSessionCursor::new(resume.session_id, resume.start_offset)
     } else {
-        // TODO(wfraser) upload chunks in parallel
         let sesid = match files::upload_session_start(
-            client,
-            &files::UploadSessionStartArg::default(),
+            client.as_ref(),
+            &files::UploadSessionStartArg::default()
+                .with_session_type(files::UploadSessionType::Concurrent),
             &[])
         {
             Ok(Ok(result)) => result.session_id,
@@ -246,13 +232,41 @@ fn upload_file(
 
     eprintln!("upload session ID is {}", cursor.session_id);
 
-    // Let's upload in 4 MiB chunks.
-    let mut buf = vec![0; 4 * 1024 * 1024];
+    let overall_start = Instant::now();
+    let bytes_sofar = Arc::new(AtomicU64::new(0));
 
-    let cursor = loop_with_progress(
-        cursor,
-        source_len,
-        move |append_arg| upload_chunk(client, &mut source_file, append_arg, &mut buf))?;
+    {
+        let client = client.clone();
+        let session_id = Arc::new(cursor.session_id.clone());
+        let start_offset = cursor.offset;
+        if let Err(e) = parallel_reader::read_stream_and_process_chunks_in_parallel(
+            &mut source_file,
+            BLOCK_SIZE,
+            PARALLELISM,
+            Arc::new(move |block_offset, data: &[u8]| -> Result<(), String> {
+                let cursor = files::UploadSessionCursor::new(
+                    (*session_id).clone(),
+                    start_offset + block_offset);
+                let mut append_arg = files::UploadSessionAppendArg::new(cursor);
+                if data.len() != BLOCK_SIZE {
+                    // This must be the last block. Only the last one is allowed to be not 4 MiB
+                    // exactly, so let's close the session.
+                    append_arg.close = true;
+                }
+                upload_chunk_with_retry(
+                    client.as_ref(),
+                    &append_arg,
+                    data,
+                    overall_start,
+                    bytes_sofar.as_ref(),
+                    source_len - start_offset,
+                    PARALLELISM as u64,
+                )
+            }))
+        {
+            return Err(e.to_string());
+        }
+    }
 
     eprintln!("committing...");
     let finish = files::UploadSessionFinishArg::new(
@@ -262,7 +276,7 @@ fn upload_file(
 
     let mut retry = 0;
     while retry < 3 {
-        match files::upload_session_finish(client, &finish, &[]) {
+        match files::upload_session_finish(client.as_ref(), &finish, &[]) {
             Ok(Ok(file_metadata)) => {
                 println!("Upload succeeded!");
                 println!("{:#?}", file_metadata);
@@ -279,73 +293,49 @@ fn upload_file(
     Err("Upload failed.".to_owned())
 }
 
-fn upload_chunk(
+fn upload_chunk_with_retry(
     client: &UserAuthDefaultClient,
-    file: &mut impl Read,
-    append_arg: &mut files::UploadSessionAppendArg,
-    buf: &mut [u8],
-) -> Result<u64, String> {
-
-    let nread = large_read(file, buf)
-        .map_err(|e| format!("Read error: {}", e))?;
-
-    if nread == 0 {
-        append_arg.close = true;
-    }
-
-    match files::upload_session_append_v2(client, append_arg, &buf[0..nread]) {
-        Ok(Ok(())) => Ok(nread as u64),
-        error => Err(format!("error calling upload_session_append: {:?}", error)),
-    }
-}
-
-fn loop_with_progress(
-    cursor: files::UploadSessionCursor,
+    arg: &files::UploadSessionAppendArg,
+    buf: &[u8],
+    overall_start: Instant,
+    bytes_sofar: &AtomicU64,
     total_bytes: u64,
-    mut f: impl FnMut(&mut files::UploadSessionAppendArg) -> Result<u64, String>,
-) -> Result<files::UploadSessionCursor, String> {
-
-    let mut append_arg = files::UploadSessionAppendArg::new(cursor);
-
-    let start_time = Instant::now();
-    let mut iter_start = start_time;
-    let mut consecutive_errors = 0;
-    while consecutive_errors < 3 {
-        let num_bytes = match f(&mut append_arg) {
-            Ok(n) => {
-                consecutive_errors = 0;
-                n
+    parallelism: u64,
+) -> Result<(), String> {
+    let chunk_start = Instant::now();
+    let mut errors = 0;
+    loop {
+        match files::upload_session_append_v2(client, arg, buf) {
+            Ok(Ok(())) => {
+                break;
             }
-            Err(e) => {
-                eprintln!("{}", e);
-                consecutive_errors += 1;
-                sleep(Duration::from_secs(1));
-                continue;
+            error => {
+                errors += 1;
+                let msg = format!("Error calling upload_session_append: {:?}", error);
+                if errors == 3 {
+                    return Err(msg);
+                } else {
+                    eprintln!("{}; retrying...", msg);
+                }
             }
-        };
-
-        append_arg.cursor.offset += num_bytes;
-
-        if append_arg.close {
-            return Ok(append_arg.cursor);
         }
-
-        let now = Instant::now();
-        let iter_time = now.duration_since(iter_start);
-        let total_time = now.duration_since(start_time);
-        iter_start = now;
-
-        eprintln!("{:.01}%: {}Bytes uploaded, {}Bytes per second, {}Bytes per second average",
-            append_arg.cursor.offset as f64 / total_bytes as f64 * 100.,
-            human_number(append_arg.cursor.offset),
-            human_number((num_bytes as f64 / iter_time.as_secs_f64()) as u64),
-            human_number((append_arg.cursor.offset as f64 / total_time.as_secs_f64()) as u64));
     }
 
-    Err(format!("Too many consecutive errors.\n\
-        {} bytes uploaded before failure.\n\
-        Session ID is {} if you wish to attempt to resume.",
-        append_arg.cursor.offset, append_arg.cursor.session_id))
+    let now = Instant::now();
+    let chunk_time = now.duration_since(chunk_start);
+    let overall_time = now.duration_since(overall_start);
+
+    let chunk_bytes = buf.len() as u64;
+    let bytes_sofar = bytes_sofar.fetch_add(chunk_bytes, SeqCst) + chunk_bytes;
+
+    eprintln!("{:.01}%: {}Bytes uploaded, {}Bytes per second, {}Bytes per second average",
+        bytes_sofar as f64 / total_bytes as f64 * 100.,
+        human_number(bytes_sofar),
+        human_number((chunk_bytes as f64 / chunk_time.as_secs_f64() * parallelism as f64) as u64),
+        human_number((bytes_sofar as f64 / overall_time.as_secs_f64()) as u64),
+        );
+
+    Ok(())
 }
 
 fn main() {
@@ -364,9 +354,9 @@ fn main() {
             fatal!("Source file {:?} not found: {}", args.source_path, e);
         });
 
-    let client = UserAuthDefaultClient::new(get_oauth2_token());
+    let client = Arc::new(UserAuthDefaultClient::new(get_oauth2_token()));
 
-    let dest_path = get_destination_path(&client, &args.dest_path, &args.source_path)
+    let dest_path = get_destination_path(client.as_ref(), &args.dest_path, &args.source_path)
         .unwrap_or_else(|e| {
             fatal!("Error: {}", e);
         });
@@ -374,7 +364,7 @@ fn main() {
     eprintln!("source = {:?}", args.source_path);
     eprintln!("dest   = {:?}", dest_path);
 
-    upload_file(&client, source_file, dest_path, args.resume)
+    upload_file(client, source_file, dest_path, args.resume)
         .unwrap_or_else(|e| {
             fatal!("{}", e);
         });
