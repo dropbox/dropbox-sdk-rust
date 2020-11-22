@@ -8,12 +8,12 @@ use dropbox_sdk::files;
 use dropbox_sdk::default_client::{NoauthDefaultClient, UserAuthDefaultClient};
 use dropbox_sdk::oauth2::{oauth2_token_from_authorization_code, Oauth2AuthorizeUrlBuilder,
     Oauth2Type};
-
+use std::collections::HashMap;
 use std::fs::File;
 use std::path::{Path, PathBuf};
 use std::io::{self, Write, Seek, SeekFrom};
 use std::process::exit;
-use std::sync::Arc;
+use std::sync::{Arc, Mutex};
 use std::sync::atomic::{AtomicU64, Ordering::SeqCst};
 use std::thread::sleep;
 use std::time::{Duration, Instant, SystemTime};
@@ -85,6 +85,17 @@ struct Resume {
     session_id: String,
 }
 
+impl std::str::FromStr for Resume {
+    type Err = &'static str;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut parts = s.rsplitn(2, ',');
+        let offset_str = parts.next().ok_or("missing session ID and file offset")?;
+        let session_id = parts.next().ok_or("missing file offset")?.to_owned();
+        let start_offset = offset_str.parse().map_err(|_| "invalid file offset")?;
+        Ok(Self { start_offset, session_id })
+    }
+}
+
 fn parse_args() -> Operation {
     let mut a = std::env::args().skip(1);
     match (a.next(), a.next()) {
@@ -92,22 +103,20 @@ fn parse_args() -> Operation {
             Operation::Usage
         }
         (Some(src), Some(dest)) => {
-            let resume = match (a.next(), a.next()) {
-                (Some(start_offset_str), Some(session_id)) => {
-                    match start_offset_str.parse::<u64>() {
-                        Ok(start_offset) => Some(Resume { start_offset, session_id }),
+            let resume = match (a.next().as_deref(), a.next()) {
+                (Some("--resume"), Some(resume_str)) => {
+                    match resume_str.parse() {
+                        Ok(resume) => Some(resume),
                         Err(e) => {
-                            eprintln!("Invalid start offset: {}", e);
-                            eprintln!("Usage: <source> <dest> <start offset> <session ID>");
-                            None
+                            eprintln!("Invalid --resume argument: {}", e);
+                            return Operation::Usage;
                         }
                     }
                 }
-                (Some(_), None) => {
-                    eprintln!("Usage: <source> <dest> <start offset> <session ID>");
-                    None
+                (None, _) => None,
+                _ => {
+                    return Operation::Usage;
                 }
-                _ => None,
             };
             Operation::Upload(Args {
                 source_path: PathBuf::from(src),
@@ -196,6 +205,134 @@ fn get_destination_path(client: &UserAuthDefaultClient, given_path: &str, source
     }
 }
 
+/// Keep track of some shared state accessed / updated by various parts of the uploading process.
+struct UploadSession {
+    session_id: String,
+    start_offset: u64,
+    file_size: u64,
+    bytes_transferred: AtomicU64,
+    completion: Mutex<CompletionTracker>,
+}
+
+impl UploadSession {
+    /// Make a new upload session.
+    pub fn new(client: &UserAuthDefaultClient, file_size: u64) -> Result<Self, String> {
+        let session_id = match files::upload_session_start(
+            client,
+            &files::UploadSessionStartArg::default()
+                .with_session_type(files::UploadSessionType::Concurrent),
+            &[],
+        ) {
+            Ok(Ok(result)) => result.session_id,
+            error => return Err(format!("Starting upload session failed: {:?}", error)),
+        };
+
+        Ok(Self {
+            session_id,
+            start_offset: 0,
+            file_size,
+            bytes_transferred: AtomicU64::new(0),
+            completion: Mutex::new(CompletionTracker::default()),
+        })
+    }
+
+    /// Resume a pre-existing (i.e. interrupted) upload session.
+    pub fn resume(resume: Resume, file_size: u64) -> Self {
+        Self {
+            session_id: resume.session_id,
+            start_offset: resume.start_offset,
+            file_size,
+            bytes_transferred: AtomicU64::new(0),
+            completion: Mutex::new(CompletionTracker::resume_from(resume.start_offset)),
+        }
+    }
+
+    /// Generate the argument to append a block at the given offset.
+    pub fn append_arg(&self, block_offset: u64) -> files::UploadSessionAppendArg {
+        files::UploadSessionAppendArg::new(
+            files::UploadSessionCursor::new(
+                self.session_id.clone(),
+                self.start_offset + block_offset))
+    }
+
+    /// Generate the argument to commit the upload at the given path with the given modification
+    /// time.
+    pub fn commit_arg(&self, dest_path: String, source_mtime: SystemTime)
+        -> files::UploadSessionFinishArg
+    {
+        files::UploadSessionFinishArg::new(
+            files::UploadSessionCursor::new(
+                self.session_id.clone(),
+                self.file_size),
+            files::CommitInfo::new(dest_path)
+                .with_client_modified(iso8601(source_mtime)))
+    }
+
+    /// Mark a block as uploaded.
+    pub fn mark_block_uploaded(&self, block_offset: u64, block_len: u64) {
+        let mut completion = self.completion.lock().unwrap();
+        completion.complete_block(block_offset, block_len);
+    }
+
+    /// Return the offset up to which the file is completely uploaded. It can be resumed from this
+    /// position if something goes wrong.
+    pub fn complete_up_to(&self) -> u64 {
+        let completion = self.completion.lock().unwrap();
+        completion.complete_up_to
+    }
+}
+
+/// Because blocks can be uploaded out of order, if an error is encountered when uploading a given
+/// block, that is not necessarily the correct place to resume uploading from next time: there may
+/// be gaps before that block.
+///
+/// This struct is for keeping track of what offset the file has been completely uploaded to.
+///
+/// When a block is finished uploading, call `complete_block` with the offset and length.
+#[derive(Default)]
+struct CompletionTracker {
+    complete_up_to: u64,
+    uploaded_blocks: HashMap<u64, u64>,
+}
+
+impl CompletionTracker {
+    /// Make a new CompletionTracker that assumes everything up to the given offset is complete. Use
+    /// this if resuming a previously interrupted session.
+    pub fn resume_from(complete_up_to: u64) -> Self {
+        Self {
+            complete_up_to,
+            uploaded_blocks: HashMap::new(),
+        }
+    }
+
+    /// Mark a block as completely uploaded.
+    pub fn complete_block(&mut self, block_offset: u64, block_len: u64) {
+        if block_offset == self.complete_up_to {
+            // Advance the cursor.
+            self.complete_up_to += block_len;
+
+            // Also look if we can advance it further still.
+            loop {
+                let key = self.complete_up_to;
+                if let Some(len) = self.uploaded_blocks.remove(&key) {
+                    self.complete_up_to += len;
+                } else {
+                    break;
+                }
+            }
+        } else {
+            // This block isn't at the low-water mark; there's a gap behind it. Save it for later.
+            self.uploaded_blocks.insert(block_offset, block_len);
+        }
+    }
+}
+
+fn get_file_mtime_and_size(f: &File) -> Result<(SystemTime, u64), String> {
+    let meta = f.metadata().map_err(|e| format!("Error getting source file metadata: {}", e))?;
+    let mtime = meta.modified().map_err(|e| format!("Error getting source file mtime: {}", e))?;
+    Ok((mtime, meta.len()))
+}
+
 fn upload_file(
     client: Arc<UserAuthDefaultClient>,
     mut source_file: File,
@@ -203,76 +340,54 @@ fn upload_file(
     resume: Option<Resume>,
 ) -> Result<(), String> {
 
-    let (source_mtime, source_len) = source_file.metadata()
-        .and_then(|meta| meta.modified().map(|mtime| (mtime, meta.len())))
-        .map_err(|e| {
-            format!("Error getting source file metadata: {}", e)
-        })?;
+    let (source_mtime, source_len) = get_file_mtime_and_size(&source_file)?;
 
-    let cursor = if let Some(resume) = resume {
-        eprintln!("Resuming upload: {:?}", resume);
+    let session = Arc::new(if let Some(resume) = resume {
         source_file.seek(SeekFrom::Start(resume.start_offset))
             .map_err(|e| format!("Seek error: {}", e))?;
-        files::UploadSessionCursor::new(resume.session_id, resume.start_offset)
+        UploadSession::resume(resume, source_len)
     } else {
-        let sesid = match files::upload_session_start(
-            client.as_ref(),
-            &files::UploadSessionStartArg::default()
-                .with_session_type(files::UploadSessionType::Concurrent),
-            &[])
-        {
-            Ok(Ok(result)) => result.session_id,
-            error => {
-                return Err(format!("Starting upload session failed: {:?}", error));
-            }
-        };
+        UploadSession::new(client.as_ref(), source_len)?
+    });
 
-        files::UploadSessionCursor::new(sesid, 0)
-    };
+    eprintln!("upload session ID is {}", session.session_id);
 
-    eprintln!("upload session ID is {}", cursor.session_id);
-
-    let overall_start = Instant::now();
-    let bytes_sofar = Arc::new(AtomicU64::new(0));
-
-    {
+    let start_time = Instant::now();
+    let upload_result = {
         let client = client.clone();
-        let session_id = Arc::new(cursor.session_id.clone());
-        let start_offset = cursor.offset;
-        if let Err(e) = parallel_reader::read_stream_and_process_chunks_in_parallel(
+        let session = session.clone();
+        parallel_reader::read_stream_and_process_chunks_in_parallel(
             &mut source_file,
             BLOCK_SIZE,
             PARALLELISM,
             Arc::new(move |block_offset, data: &[u8]| -> Result<(), String> {
-                let cursor = files::UploadSessionCursor::new(
-                    (*session_id).clone(),
-                    start_offset + block_offset);
-                let mut append_arg = files::UploadSessionAppendArg::new(cursor);
+                let mut append_arg = session.append_arg(block_offset);
                 if data.len() != BLOCK_SIZE {
                     // This must be the last block. Only the last one is allowed to be not 4 MiB
                     // exactly, so let's close the session.
                     append_arg.close = true;
                 }
-                upload_chunk_with_retry(
+                let result = upload_chunk_with_retry(
                     client.as_ref(),
                     &append_arg,
                     data,
-                    overall_start,
-                    bytes_sofar.as_ref(),
-                    source_len - start_offset,
-                    PARALLELISM as u64,
-                )
+                    start_time,
+                    session.as_ref(),
+                );
+                if result.is_ok() {
+                    session.mark_block_uploaded(block_offset, data.len() as u64);
+                }
+                result
             }))
-        {
-            return Err(e.to_string());
-        }
+    };
+
+    if let Err(e) = upload_result {
+        return Err(format!("{}. To resume, use --resume {},{}",
+            e, session.session_id, session.complete_up_to()));
     }
 
     eprintln!("committing...");
-    let finish = files::UploadSessionFinishArg::new(
-        cursor,
-        files::CommitInfo::new(dest_path)
-            .with_client_modified(iso8601(source_mtime)));
+    let finish = session.commit_arg(dest_path, source_mtime);
 
     let mut retry = 0;
     while retry < 3 {
@@ -290,19 +405,18 @@ fn upload_file(
         }
     }
 
-    Err("Upload failed.".to_owned())
+    Err(format!("Upload failed. To retry, use --resume {},{}",
+        session.session_id, session.complete_up_to()))
 }
 
 fn upload_chunk_with_retry(
     client: &UserAuthDefaultClient,
     arg: &files::UploadSessionAppendArg,
     buf: &[u8],
-    overall_start: Instant,
-    bytes_sofar: &AtomicU64,
-    total_bytes: u64,
-    parallelism: u64,
+    start_time: Instant,
+    session: &UploadSession,
 ) -> Result<(), String> {
-    let chunk_start = Instant::now();
+    let block_start_time = Instant::now();
     let mut errors = 0;
     loop {
         match files::upload_session_append_v2(client, arg, buf) {
@@ -322,17 +436,25 @@ fn upload_chunk_with_retry(
     }
 
     let now = Instant::now();
-    let chunk_time = now.duration_since(chunk_start);
-    let overall_time = now.duration_since(overall_start);
+    let block_dur = now.duration_since(block_start_time);
+    let overall_dur = now.duration_since(start_time);
 
-    let chunk_bytes = buf.len() as u64;
-    let bytes_sofar = bytes_sofar.fetch_add(chunk_bytes, SeqCst) + chunk_bytes;
+    let block_bytes = buf.len() as u64;
+    let bytes_sofar = session.bytes_transferred.fetch_add(block_bytes, SeqCst) + block_bytes;
+
+    let percent = bytes_sofar as f64 / session.file_size as f64 * 100.;
+
+    // This assumes that we have `PARALLELISM` uploads going at the same time and at roughly the
+    // same upload speed:
+    let block_rate = block_bytes as f64 / block_dur.as_secs_f64() * PARALLELISM as f64;
+
+    let overall_rate = bytes_sofar as f64 / overall_dur.as_secs_f64();
 
     eprintln!("{:.01}%: {}Bytes uploaded, {}Bytes per second, {}Bytes per second average",
-        bytes_sofar as f64 / total_bytes as f64 * 100.,
+        percent,
         human_number(bytes_sofar),
-        human_number((chunk_bytes as f64 / chunk_time.as_secs_f64() * parallelism as f64) as u64),
-        human_number((bytes_sofar as f64 / overall_time.as_secs_f64()) as u64),
+        human_number(block_rate as u64),
+        human_number(overall_rate as u64),
         );
 
     Ok(())
@@ -343,7 +465,7 @@ fn main() {
 
     let args = match parse_args() {
         Operation::Usage => {
-            fatal!("usage: {} <source> <Dropbox destination> [<resume offset> <resume session ID>]",
+            fatal!("usage: {} <source> <Dropbox destination> [--resume <session ID>,<resume offset>]",
                       std::env::args().next().unwrap());
         }
         Operation::Upload(args) => args,
