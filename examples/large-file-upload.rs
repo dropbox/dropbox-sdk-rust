@@ -1,14 +1,437 @@
 #![deny(rust_2018_idioms)]
 
-use dropbox_sdk::oauth2::{oauth2_token_from_authorization_code, Oauth2AuthorizeUrlBuilder,
-    Oauth2Type};
+//! This example illustrates advanced usage of Dropbox's chunked file upload API to upload large
+//! files that would not fit in a single HTTP request, including allowing the user to resume
+//! interrupted uploads, and uploading blocks in parallel.
+
 use dropbox_sdk::files;
 use dropbox_sdk::default_client::{NoauthDefaultClient, UserAuthDefaultClient};
-
+use dropbox_sdk::oauth2::{oauth2_token_from_authorization_code, Oauth2AuthorizeUrlBuilder,
+    Oauth2Type};
+use std::collections::HashMap;
 use std::fs::File;
-use std::path::PathBuf;
-use std::io::{self, Read, Write, Seek, SeekFrom};
+use std::path::{Path, PathBuf};
+use std::io::{self, Write, Seek, SeekFrom};
+use std::process::exit;
+use std::sync::{Arc, Mutex};
+use std::sync::atomic::{AtomicU64, Ordering::SeqCst};
+use std::thread::sleep;
 use std::time::{Duration, Instant, SystemTime};
+
+/// How many blocks to upload in parallel.
+const PARALLELISM: usize = 20;
+
+/// The size of a block. This is a Dropbox constant, not adjustable.
+const BLOCK_SIZE: usize = 4 * 1024 * 1024;
+
+macro_rules! fatal {
+    ($($arg:tt)*) => {
+        eprintln!($($arg)*);
+        exit(2);
+    }
+}
+
+fn usage() {
+    eprintln!("usage: {} <source file path> <Dropbox path> [--resume <session ID>,<resume offset>]",
+        std::env::args().next().unwrap());
+}
+
+enum Operation {
+    Usage,
+    Upload(Args),
+}
+
+#[derive(Debug)]
+struct Args {
+    source_path: PathBuf,
+    dest_path: String,
+    resume: Option<Resume>,
+}
+
+#[derive(Debug)]
+struct Resume {
+    start_offset: u64,
+    session_id: String,
+}
+
+impl std::str::FromStr for Resume {
+    type Err = &'static str;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut parts = s.rsplitn(2, ',');
+        let offset_str = parts.next().ok_or("missing session ID and file offset")?;
+        let session_id = parts.next().ok_or("missing file offset")?.to_owned();
+        let start_offset = offset_str.parse().map_err(|_| "invalid file offset")?;
+        Ok(Self { start_offset, session_id })
+    }
+}
+
+fn parse_args() -> Operation {
+    let mut a = std::env::args().skip(1);
+    match (a.next(), a.next()) {
+        (Some(ref arg), _) if arg == "--help" || arg == "-h" => {
+            Operation::Usage
+        }
+        (Some(src), Some(dest)) => {
+            let resume = match (a.next().as_deref(), a.next()) {
+                (Some("--resume"), Some(resume_str)) => {
+                    match resume_str.parse() {
+                        Ok(resume) => Some(resume),
+                        Err(e) => {
+                            eprintln!("Invalid --resume argument: {}", e);
+                            return Operation::Usage;
+                        }
+                    }
+                }
+                (None, _) => None,
+                _ => {
+                    return Operation::Usage;
+                }
+            };
+            Operation::Upload(Args {
+                source_path: PathBuf::from(src),
+                dest_path: dest,
+                resume,
+            })
+        }
+        (Some(_), None) => {
+            eprintln!("missing destination path");
+            Operation::Usage
+        }
+        (None, _) => {
+            Operation::Usage
+        }
+    }
+}
+
+fn get_oauth2_token() -> String {
+    std::env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
+        let client_id = prompt("Give me a Dropbox API app key");
+        let client_secret = prompt("Give me a Dropbox API app secret");
+
+        let url = Oauth2AuthorizeUrlBuilder::new(&client_id, Oauth2Type::AuthorizationCode).build();
+        eprintln!("Open this URL in your browser:");
+        eprintln!("{}", url);
+        eprintln!();
+        let auth_code = prompt("Then paste the code here");
+
+        eprintln!("requesting OAuth2 token");
+        match oauth2_token_from_authorization_code(
+            NoauthDefaultClient::default(), &client_id, &client_secret, auth_code.trim(), None)
+        {
+            Ok(token) => {
+                eprintln!("got token: {}", token);
+                token
+            }
+            Err(e) => {
+                fatal!("Error getting OAuth2 token: {}", e);
+            }
+        }
+    })
+}
+
+/// Figure out if destination is a folder or not and change the destination path accordingly.
+fn get_destination_path(client: &UserAuthDefaultClient, given_path: &str, source_path: &Path)
+    -> Result<String, String>
+{
+    let filename = source_path.file_name()
+        .ok_or_else(|| format!("invalid source path {:?} has no filename", source_path))?
+        .to_string_lossy();
+
+    // Special-case: we can't get metadata for the root, so just use the source path filename.
+    if given_path == "/" {
+        let mut path = "/".to_owned();
+        path.push_str(&filename);
+        return Ok(path);
+    }
+
+    let meta_result = files::get_metadata(
+        client, &files::GetMetadataArg::new(given_path.to_owned()))
+        .map_err(|e| format!("Request error while looking up destination: {}", e))?;
+
+    match meta_result {
+        Ok(files::Metadata::File(_)) => {
+            // We're not going to allow overwriting existing files.
+            Err(format!("Path {} already exists in Dropbox", given_path))
+        }
+        Ok(files::Metadata::Folder(_)) => {
+            // Given destination path points to a folder, so append the source path's filename and
+            // use that as the actual destination.
+
+            let mut path = given_path.to_owned();
+            path.push('/');
+            path.push_str(&filename);
+
+            Ok(path)
+        }
+        Ok(files::Metadata::Deleted(_)) => panic!("unexpected deleted metadata received"),
+        Err(files::GetMetadataError::Path(files::LookupError::NotFound)) => {
+            // Given destination path doesn't exist, which is just fine. Use the given path as-is.
+            // Note that it's fine if the path's parents don't exist either; folders will be
+            // automatically created as needed.
+            Ok(given_path.to_owned())
+        }
+        Err(e) => Err(format!("Error looking up destination: {}", e))
+    }
+}
+
+/// Keep track of some shared state accessed / updated by various parts of the uploading process.
+struct UploadSession {
+    session_id: String,
+    start_offset: u64,
+    file_size: u64,
+    bytes_transferred: AtomicU64,
+    completion: Mutex<CompletionTracker>,
+}
+
+impl UploadSession {
+    /// Make a new upload session.
+    pub fn new(client: &UserAuthDefaultClient, file_size: u64) -> Result<Self, String> {
+        let session_id = match files::upload_session_start(
+            client,
+            &files::UploadSessionStartArg::default()
+                .with_session_type(files::UploadSessionType::Concurrent),
+            &[],
+        ) {
+            Ok(Ok(result)) => result.session_id,
+            error => return Err(format!("Starting upload session failed: {:?}", error)),
+        };
+
+        Ok(Self {
+            session_id,
+            start_offset: 0,
+            file_size,
+            bytes_transferred: AtomicU64::new(0),
+            completion: Mutex::new(CompletionTracker::default()),
+        })
+    }
+
+    /// Resume a pre-existing (i.e. interrupted) upload session.
+    pub fn resume(resume: Resume, file_size: u64) -> Self {
+        Self {
+            session_id: resume.session_id,
+            start_offset: resume.start_offset,
+            file_size,
+            bytes_transferred: AtomicU64::new(0),
+            completion: Mutex::new(CompletionTracker::resume_from(resume.start_offset)),
+        }
+    }
+
+    /// Generate the argument to append a block at the given offset.
+    pub fn append_arg(&self, block_offset: u64) -> files::UploadSessionAppendArg {
+        files::UploadSessionAppendArg::new(
+            files::UploadSessionCursor::new(
+                self.session_id.clone(),
+                self.start_offset + block_offset))
+    }
+
+    /// Generate the argument to commit the upload at the given path with the given modification
+    /// time.
+    pub fn commit_arg(&self, dest_path: String, source_mtime: SystemTime)
+        -> files::UploadSessionFinishArg
+    {
+        files::UploadSessionFinishArg::new(
+            files::UploadSessionCursor::new(
+                self.session_id.clone(),
+                self.file_size),
+            files::CommitInfo::new(dest_path)
+                .with_client_modified(iso8601(source_mtime)))
+    }
+
+    /// Mark a block as uploaded.
+    pub fn mark_block_uploaded(&self, block_offset: u64, block_len: u64) {
+        let mut completion = self.completion.lock().unwrap();
+        completion.complete_block(block_offset, block_len);
+    }
+
+    /// Return the offset up to which the file is completely uploaded. It can be resumed from this
+    /// position if something goes wrong.
+    pub fn complete_up_to(&self) -> u64 {
+        let completion = self.completion.lock().unwrap();
+        completion.complete_up_to
+    }
+}
+
+/// Because blocks can be uploaded out of order, if an error is encountered when uploading a given
+/// block, that is not necessarily the correct place to resume uploading from next time: there may
+/// be gaps before that block.
+///
+/// This struct is for keeping track of what offset the file has been completely uploaded to.
+///
+/// When a block is finished uploading, call `complete_block` with the offset and length.
+#[derive(Default)]
+struct CompletionTracker {
+    complete_up_to: u64,
+    uploaded_blocks: HashMap<u64, u64>,
+}
+
+impl CompletionTracker {
+    /// Make a new CompletionTracker that assumes everything up to the given offset is complete. Use
+    /// this if resuming a previously interrupted session.
+    pub fn resume_from(complete_up_to: u64) -> Self {
+        Self {
+            complete_up_to,
+            uploaded_blocks: HashMap::new(),
+        }
+    }
+
+    /// Mark a block as completely uploaded.
+    pub fn complete_block(&mut self, block_offset: u64, block_len: u64) {
+        if block_offset == self.complete_up_to {
+            // Advance the cursor.
+            self.complete_up_to += block_len;
+
+            // Also look if we can advance it further still.
+            loop {
+                let key = self.complete_up_to;
+                if let Some(len) = self.uploaded_blocks.remove(&key) {
+                    self.complete_up_to += len;
+                } else {
+                    break;
+                }
+            }
+        } else {
+            // This block isn't at the low-water mark; there's a gap behind it. Save it for later.
+            self.uploaded_blocks.insert(block_offset, block_len);
+        }
+    }
+}
+
+fn get_file_mtime_and_size(f: &File) -> Result<(SystemTime, u64), String> {
+    let meta = f.metadata().map_err(|e| format!("Error getting source file metadata: {}", e))?;
+    let mtime = meta.modified().map_err(|e| format!("Error getting source file mtime: {}", e))?;
+    Ok((mtime, meta.len()))
+}
+
+/// This function does it all.
+fn upload_file(
+    client: Arc<UserAuthDefaultClient>,
+    mut source_file: File,
+    dest_path: String,
+    resume: Option<Resume>,
+) -> Result<(), String> {
+
+    let (source_mtime, source_len) = get_file_mtime_and_size(&source_file)?;
+
+    let session = Arc::new(if let Some(resume) = resume {
+        source_file.seek(SeekFrom::Start(resume.start_offset))
+            .map_err(|e| format!("Seek error: {}", e))?;
+        UploadSession::resume(resume, source_len)
+    } else {
+        UploadSession::new(client.as_ref(), source_len)?
+    });
+
+    eprintln!("upload session ID is {}", session.session_id);
+
+    let start_time = Instant::now();
+    let upload_result = {
+        let client = client.clone();
+        let session = session.clone();
+        parallel_reader::read_stream_and_process_chunks_in_parallel(
+            &mut source_file,
+            BLOCK_SIZE,
+            PARALLELISM,
+            Arc::new(move |block_offset, data: &[u8]| -> Result<(), String> {
+                let mut append_arg = session.append_arg(block_offset);
+                if data.len() != BLOCK_SIZE {
+                    // This must be the last block. Only the last one is allowed to be not 4 MiB
+                    // exactly, so let's close the session.
+                    append_arg.close = true;
+                }
+                let result = upload_block_with_retry(
+                    client.as_ref(),
+                    &append_arg,
+                    data,
+                    start_time,
+                    session.as_ref(),
+                );
+                if result.is_ok() {
+                    session.mark_block_uploaded(block_offset, data.len() as u64);
+                }
+                result
+            }))
+    };
+
+    if let Err(e) = upload_result {
+        return Err(format!("{}. To resume, use --resume {},{}",
+            e, session.session_id, session.complete_up_to()));
+    }
+
+    eprintln!("committing...");
+    let finish = session.commit_arg(dest_path, source_mtime);
+
+    let mut retry = 0;
+    while retry < 3 {
+        match files::upload_session_finish(client.as_ref(), &finish, &[]) {
+            Ok(Ok(file_metadata)) => {
+                println!("Upload succeeded!");
+                println!("{:#?}", file_metadata);
+                return Ok(());
+            }
+            error => {
+                eprintln!("Error finishing upload: {:?}", error);
+                retry += 1;
+                sleep(Duration::from_secs(1));
+            }
+        }
+    }
+
+    Err(format!("Upload failed. To retry, use --resume {},{}",
+        session.session_id, session.complete_up_to()))
+}
+
+/// Upload a single block, retrying a few times if an error occurs.
+///
+/// Prints progress and upload speed, and updates the UploadSession if successful.
+fn upload_block_with_retry(
+    client: &UserAuthDefaultClient,
+    arg: &files::UploadSessionAppendArg,
+    buf: &[u8],
+    start_time: Instant,
+    session: &UploadSession,
+) -> Result<(), String> {
+    let block_start_time = Instant::now();
+    let mut errors = 0;
+    loop {
+        match files::upload_session_append_v2(client, arg, buf) {
+            Ok(Ok(())) => {
+                break;
+            }
+            error => {
+                errors += 1;
+                let msg = format!("Error calling upload_session_append: {:?}", error);
+                if errors == 3 {
+                    return Err(msg);
+                } else {
+                    eprintln!("{}; retrying...", msg);
+                }
+            }
+        }
+    }
+
+    let now = Instant::now();
+    let block_dur = now.duration_since(block_start_time);
+    let overall_dur = now.duration_since(start_time);
+
+    let block_bytes = buf.len() as u64;
+    let bytes_sofar = session.bytes_transferred.fetch_add(block_bytes, SeqCst) + block_bytes;
+
+    let percent = bytes_sofar as f64 / session.file_size as f64 * 100.;
+
+    // This assumes that we have `PARALLELISM` uploads going at the same time and at roughly the
+    // same upload speed:
+    let block_rate = block_bytes as f64 / block_dur.as_secs_f64() * PARALLELISM as f64;
+
+    let overall_rate = bytes_sofar as f64 / overall_dur.as_secs_f64();
+
+    eprintln!("{:.01}%: {}Bytes uploaded, {}Bytes per second, {}Bytes per second average",
+        percent,
+        human_number(bytes_sofar),
+        human_number(block_rate as u64),
+        human_number(overall_rate as u64),
+        );
+
+    Ok(())
+}
 
 fn prompt(msg: &str) -> String {
     eprint!("{}: ", msg);
@@ -46,328 +469,34 @@ fn iso8601(t: SystemTime) -> String {
         .format("%Y-%m-%dT%H:%M:%SZ").to_string()
 }
 
-enum Operation {
-    Usage,
-    Upload(Args),
-}
-
-#[derive(Debug)]
-struct Args {
-    source_path: PathBuf,
-    dest_path: String,
-    resume: Option<Resume>,
-}
-
-#[derive(Debug)]
-struct Resume {
-    start_offset: u64,
-    session_id: String,
-}
-
-fn parse_args() -> Operation {
-    let mut a = std::env::args().skip(1);
-    match (a.next(), a.next()) {
-        (Some(ref arg), _) if arg == "--help" || arg == "-h" => {
-            Operation::Usage
-        }
-        (Some(src), Some(dest)) => {
-            let resume = match (a.next(), a.next()) {
-                (Some(start_offset_str), Some(session_id)) => {
-                    match start_offset_str.parse::<u64>() {
-                        Ok(start_offset) => Some(Resume { start_offset, session_id }),
-                        Err(e) => {
-                            eprintln!("Invalid start offset: {}", e);
-                            eprintln!("Usage: <source> <dest> <start offset> <session ID>");
-                            None
-                        }
-                    }
-                }
-                (Some(_), None) => {
-                    eprintln!("Usage: <source> <dest> <start offset> <session ID>");
-                    None
-                }
-                _ => None,
-            };
-            Operation::Upload(Args {
-                source_path: PathBuf::from(src),
-                dest_path: dest,
-                resume,
-            })
-        }
-        (Some(_), None) => {
-            eprintln!("missing destination path");
-            Operation::Usage
-        }
-        (None, _) => {
-            Operation::Usage
-        }
-    }
-}
-
-/// Similar to Read::read_exact except that this will partially fill the buffer on EOF instead of
-/// returning an error.
-/// The main reason this is needed is for reading from a stdin pipe, where normal Read::read may
-/// stop after it reads only a few kbytes, but where we really want a much larger buffer to upload.
-fn large_read(source: &mut impl Read, buffer: &mut [u8]) -> io::Result<usize> {
-    let mut nread = 0;
-    loop {
-        match source.read(&mut buffer[nread ..]) {
-            Ok(0) => {
-                return Ok(nread);
-            }
-            Ok(n) => {
-                nread += n;
-            }
-            Err(ref e) if e.kind() == io::ErrorKind::Interrupted => (),
-            Err(e) => {
-                return Err(e);
-            }
-        }
-    }
-}
-
 fn main() {
     env_logger::init();
 
-    let mut args = match parse_args() {
+    let args = match parse_args() {
         Operation::Usage => {
-            eprintln!("usage: {} <source> <Dropbox destination> [<resume offset> <resume session ID>]",
-                      std::env::args().next().unwrap());
-            std::process::exit(1);
+            usage();
+            exit(1);
         }
         Operation::Upload(args) => args,
     };
 
-    let mut source_file = File::open(&args.source_path)
+    let source_file = File::open(&args.source_path)
         .unwrap_or_else(|e| {
-            eprintln!("Source file {:?} not found: {}", args.source_path, e);
-            std::process::exit(2);
-        });
-    let (source_mtime, source_len) = source_file.metadata()
-        .and_then(|meta| meta.modified().map(|mtime| (mtime, meta.len())))
-        .unwrap_or_else(|e| {
-            eprintln!("Error getting source file {:?} metadata: {}", args.source_path, e);
-            std::process::exit(2);
+            fatal!("Source file {:?} not found: {}", args.source_path, e);
         });
 
-    let token = std::env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
-        let client_id = prompt("Give me a Dropbox API app key");
-        let client_secret = prompt("Give me a Dropbox API app secret");
+    let client = Arc::new(UserAuthDefaultClient::new(get_oauth2_token()));
 
-        let url = Oauth2AuthorizeUrlBuilder::new(&client_id, Oauth2Type::AuthorizationCode).build();
-        eprintln!("Open this URL in your browser:");
-        eprintln!("{}", url);
-        eprintln!();
-        let auth_code = prompt("Then paste the code here");
-
-        eprintln!("requesting OAuth2 token");
-        match oauth2_token_from_authorization_code(
-            NoauthDefaultClient::default(), &client_id, &client_secret, auth_code.trim(), None)
-        {
-            Ok(token) => {
-                eprintln!("got token: {}", token);
-                token
-            }
-            Err(e) => {
-                eprintln!("Error getting OAuth2 token: {}", e);
-                std::process::exit(2);
-            }
-        }
-    });
-
-    let client = UserAuthDefaultClient::new(token);
-
-    // Figure out if destination is a folder or not and change the destination path accordingly.
-    let dest_path = match files::get_metadata(
-        &client,
-        &files::GetMetadataArg::new(args.dest_path.clone()))
-    {
-        Ok(Ok(files::Metadata::File(_meta))) => {
-            eprintln!("Error: \"{}\" already exists in Dropbox", args.dest_path);
-            std::process::exit(2);
-        }
-        Ok(Ok(files::Metadata::Folder(_meta))) => {
-            eprintln!("Destination is a folder; appending filename.");
-            let mut path = args.dest_path.split_off(0);
-            path.push('/');
-            path.push_str(
-                &args.source_path.file_name()
-                    .unwrap_or_else(|| {
-                        eprintln!("Invalid source path {:?}", args.source_path);
-                        std::process::exit(2);
-                    })
-                    .to_string_lossy());
-            path
-
-            // TODO: check for this file as well
-        }
-        Ok(Ok(files::Metadata::Deleted(_))) => {
-            panic!("unexpected deleted metadata received");
-        }
-        Ok(Err(files::GetMetadataError::Path(files::LookupError::NotFound))) => {
-            // File not found; totally okay.
-            // TODO: make it not log to the console when this happens
-            args.dest_path.split_off(0)
-        }
-        Ok(Err(files::GetMetadataError::Path(e))) => {
-            eprintln!("Error looking up destination: {}", e);
-            std::process::exit(2);
-        }
-        Err(e) => {
-            eprintln!("Request error while looking up destination: {}", e);
-            std::process::exit(2);
-        }
-    };
+    let dest_path = get_destination_path(client.as_ref(), &args.dest_path, &args.source_path)
+        .unwrap_or_else(|e| {
+            fatal!("Error: {}", e);
+        });
 
     eprintln!("source = {:?}", args.source_path);
     eprintln!("dest   = {:?}", dest_path);
 
-    let session_id = match args.resume {
-        Some(ref resume) => resume.session_id.clone(),
-        None => {
-            // TODO(wfraser) upload chunks in parallel
-            match files::upload_session_start(
-                &client, &files::UploadSessionStartArg::default(), &[])
-            {
-                Ok(Ok(result)) => result.session_id,
-                error => {
-                    eprintln!("Starting upload session failed: {:?}", error);
-                    std::process::exit(2);
-                }
-            }
-        }
-    };
-
-    eprintln!("upload session ID is {}", session_id);
-
-    let mut append_arg = files::UploadSessionAppendArg::new(
-        files::UploadSessionCursor::new(session_id.clone(), 0));
-
-    // Upload this many bytes in each request. The smaller this is, the more HTTP request overhead
-    // there will be. But the larger it is, the more bandwidth that is potentially wasted on
-    // network errors.
-    const BUF_SIZE: usize = 32 * 1024 * 1024;
-
-    // if the buffer is small we can stack-allocate it:
-    //let mut buf = [0u8; BUF_SIZE];
-    // otherwise it has to be heap-allocated:
-    let mut buf = vec![0; BUF_SIZE];
-
-    let start_time = Instant::now();
-    let mut last_time = Instant::now();
-    let mut bytes_out = 0u64;
-    let mut succeeded = false;
-
-    if let Some(resume) = args.resume {
-        eprintln!("Resuming upload: {:?}", resume);
-        source_file.seek(SeekFrom::Start(resume.start_offset)).unwrap_or_else(|e| {
-            eprintln!("Seek error: {}", e);
-            std::process::exit(2);
+    upload_file(client, source_file, dest_path, args.resume)
+        .unwrap_or_else(|e| {
+            fatal!("{}", e);
         });
-        bytes_out = resume.start_offset;
-        append_arg.cursor.offset = resume.start_offset;
-    }
-
-    loop {
-        let nread = large_read(&mut source_file, &mut buf)
-            .unwrap_or_else(|e| {
-                eprintln!("Read error: {}", e);
-                std::process::exit(2);
-            });
-        if bytes_out < source_len && bytes_out + nread as u64 > source_len {
-            eprintln!("WARNING: read past the initial end of the file");
-            eprintln!("({} bytes vs {} expected)", bytes_out + nread as u64, source_len);
-        }
-        if nread == 0 {
-            if bytes_out < source_len {
-                eprintln!("WARNING: read short of the initial end of the file");
-                eprintln!("({} bytes vs {} expected)", bytes_out, source_len);
-            }
-            break;
-        }
-
-        succeeded = false;
-        let mut consecutive_errors = 0;
-        while consecutive_errors < 3 {
-            match files::upload_session_append_v2(&client, &append_arg, &buf[0..nread]) {
-                Ok(Ok(())) => {}
-                Ok(Err(e)) => {
-                    eprintln!("Error appending data: {}", e);
-                    consecutive_errors += 1;
-                    std::thread::sleep(Duration::from_secs(1));
-                    continue;
-                }
-                Err(e) => {
-                    eprintln!("Error appending data: {}", e);
-                    consecutive_errors += 1;
-                    std::thread::sleep(Duration::from_secs(1));
-                    continue;
-                }
-            }
-
-            succeeded = true;
-            break;
-        }
-
-        if !succeeded {
-            break;
-        }
-
-        bytes_out += nread as u64;
-        append_arg.cursor.offset += nread as u64;
-
-        let now = Instant::now();
-        let time = now.duration_since(last_time);
-        let total_time = now.duration_since(start_time);
-        let millis = time.as_secs() * 1000 + u64::from(time.subsec_millis());
-        let total_millis = total_time.as_secs() * 1000 + u64::from(total_time.subsec_millis());
-        last_time = now;
-
-        eprintln!("{:.01}%: {}Bytes uploaded, {}Bytes per second, {}Bytes per second average",
-                  bytes_out as f64 / source_len as f64 * 100.,
-                  human_number(bytes_out),
-                  human_number(nread as u64 * 1000 / millis),
-                  human_number(bytes_out * 1000 / total_millis));
-    }
-
-    if !succeeded {
-        println!("Upload failed!");
-        println!("{} bytes uploaded before failure.", bytes_out);
-        println!("Session ID is {} if you wish to attempt to resume.", session_id);
-    } else {
-        eprintln!("committing...");
-        let finish = files::UploadSessionFinishArg::new(
-            append_arg.cursor,
-            files::CommitInfo::new(dest_path)
-                .with_client_modified(iso8601(source_mtime)));
-
-        let mut retry = 0;
-        succeeded = false;
-        while retry < 3 {
-            match files::upload_session_finish(&client, &finish, &[]) {
-                Ok(Ok(filemetadata)) => {
-                    println!("Upload succeeded!");
-                    println!("{:#?}", filemetadata);
-                }
-                Ok(Err(e)) => {
-                    eprintln!("Error finishing upload: {}", e);
-                    retry += 1;
-                    std::thread::sleep(Duration::from_secs(1));
-                    continue;
-                }
-                Err(e) => {
-                    eprintln!("Error finishing upload: {}", e);
-                    retry += 1;
-                    std::thread::sleep(Duration::from_secs(1));
-                    continue;
-                }
-            }
-            succeeded = true;
-            break;
-        }
-    }
-
-    if !succeeded {
-        std::process::exit(2);
-    }
 }

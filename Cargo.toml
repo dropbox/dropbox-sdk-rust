@@ -21,6 +21,7 @@ url = "2.1"
 [dev-dependencies]
 env_logger = "0.8"
 chrono = "0.4"
+parallel_reader = "0.1"
 threadpool = "1.8"
 
 [[example]]

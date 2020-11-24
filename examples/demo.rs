@@ -1,5 +1,8 @@
 #![deny(rust_2018_idioms)]
 
+//! This example illustrates a few basic Dropbox API operations: getting an OAuth2 token, listing
+//! the contents of a folder recursively, and fetching a file given its path.
+
 use dropbox_sdk::{files, UserAuthClient};
 use dropbox_sdk::oauth2::{oauth2_token_from_authorization_code, Oauth2AuthorizeUrlBuilder,
     Oauth2Type};
@@ -36,28 +39,9 @@ fn prompt(msg: &str) -> String {
     input.trim().to_owned()
 }
 
-fn main() {
-    env_logger::init();
-
-    let download_path = match parse_args() {
-        Operation::Usage => {
-            eprintln!("usage: {} [option]", std::env::args().next().unwrap());
-            eprintln!("    options:");
-            eprintln!("        --help | -h      view this text");
-            eprintln!("        --list           list all files in your Dropbox");
-            eprintln!("        <path>           print the file at the given path to stdout");
-            eprintln!();
-            eprintln!("    If a Dropbox OAuth token is given in the environment variable");
-            eprintln!("    DBX_OAUTH_TOKEN, it will be used, otherwise you will be prompted for");
-            eprintln!("    authentication interactively.");
-            std::process::exit(1);
-        },
-        Operation::List => None,
-        Operation::Download { path } => Some(path),
-    };
-
-    // Let the user pass the token in an environment variable, or prompt them if that's not found.
-    let token = env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
+/// Let the user pass the token in an environment variable, or prompt them if that's not found.
+fn get_oauth2_token() -> String {
+    env::var("DBX_OAUTH_TOKEN").unwrap_or_else(|_| {
         let client_id = prompt("Give me a Dropbox API app key");
         let client_secret = prompt("Give me a Dropbox API app secret");
 
@@ -84,9 +68,30 @@ fn main() {
                 std::process::exit(1);
             }
         }
-    });
+    })
+}
 
-    let client = UserAuthDefaultClient::new(token);
+fn main() {
+    env_logger::init();
+
+    let download_path = match parse_args() {
+        Operation::Usage => {
+            eprintln!("usage: {} [option]", std::env::args().next().unwrap());
+            eprintln!("    options:");
+            eprintln!("        --help | -h      view this text");
+            eprintln!("        --list           list all files in your Dropbox");
+            eprintln!("        <path>           print the file at the given path to stdout");
+            eprintln!();
+            eprintln!("    If a Dropbox OAuth token is given in the environment variable");
+            eprintln!("    DBX_OAUTH_TOKEN, it will be used, otherwise you will be prompted for");
+            eprintln!("    authentication interactively.");
+            std::process::exit(1);
+        },
+        Operation::List => None,
+        Operation::Download { path } => Some(path),
+    };
+
+    let client = UserAuthDefaultClient::new(get_oauth2_token());
 
     if let Some(path) = download_path {
         eprintln!("downloading file {}", path);
