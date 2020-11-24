@@ -189,7 +189,7 @@ class RustBackend(RustHelperBackend):
                 auth_trait = u'crate::client_trait::NoauthClient'
             else:
                 raise Exception('route {}/{}: unsupported auth type(s): {}'.format(
-                    ns, name_with_version, auths_str))
+                    ns, route_name, auths_str))
 
         # This is the name of the HTTP route. Almost the same as the 'route_name', but without any
         # mangling to avoid Rust keywords and such.
@@ -482,7 +482,7 @@ class RustBackend(RustHelperBackend):
                         else:
                             self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(
-                list(u'"{}"'.format(subtype.name)
+                list(u'"{}"'.format(field.name)
                      for field in struct.get_enumerated_subtypes()),
                 before='const VARIANTS: &[&str] = &',
                 after=';',

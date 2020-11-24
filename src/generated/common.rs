@@ -237,7 +237,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RootInfo {
                 }
             }
         }
-        const VARIANTS: &[&str] = &["user",
+        const VARIANTS: &[&str] = &["team",
                                     "user"];
         deserializer.deserialize_struct("RootInfo", VARIANTS, EnumVisitor)
     }

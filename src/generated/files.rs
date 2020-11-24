@@ -10568,7 +10568,7 @@ impl<'de> ::serde::de::Deserialize<'de> for MediaMetadata {
                 }
             }
         }
-        const VARIANTS: &[&str] = &["video",
+        const VARIANTS: &[&str] = &["photo",
                                     "video"];
         deserializer.deserialize_struct("MediaMetadata", VARIANTS, EnumVisitor)
     }
@@ -10631,8 +10631,8 @@ impl<'de> ::serde::de::Deserialize<'de> for Metadata {
                 }
             }
         }
-        const VARIANTS: &[&str] = &["deleted",
-                                    "deleted",
+        const VARIANTS: &[&str] = &["file",
+                                    "folder",
                                     "deleted"];
         deserializer.deserialize_struct("Metadata", VARIANTS, EnumVisitor)
     }

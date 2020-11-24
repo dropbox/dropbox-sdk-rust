@@ -7349,7 +7349,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkMetadata {
                 }
             }
         }
-        const VARIANTS: &[&str] = &["collection",
+        const VARIANTS: &[&str] = &["path",
                                     "collection"];
         deserializer.deserialize_struct("LinkMetadata", VARIANTS, EnumVisitor)
     }
@@ -16788,7 +16788,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkMetadata {
                 }
             }
         }
-        const VARIANTS: &[&str] = &["folder",
+        const VARIANTS: &[&str] = &["file",
                                     "folder"];
         deserializer.deserialize_struct("SharedLinkMetadata", VARIANTS, EnumVisitor)
     }
