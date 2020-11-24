@@ -10,9 +10,9 @@ and `dropbox-api-spec` submodules, respectively. Use `git submodule init` and
 `git submodule update` to fetch them.
 
 The generated code is checked in under `src/generated` in order to simplify
-building. To regenrate or update it, run `./generate.sh dropbox-api-spec`.
-Doing so requires a working Python environment and some dependencies. See the
-Stone documentation for details.
+building. To regenerate or update it, run `python generate.py`.  Doing so
+requires a working Python environment and some dependencies. See the Stone
+documentation for details.
 
 ## Status of this SDK
 
@@ -101,8 +101,8 @@ stack, while still handling errors returned by the server.
 ## Tests
 
 The tests are auto-generated from the spec as well, but unlike the main code,
-are not checked in. Run `./generate.sh` to generate the tests, and `cargo test`
-to run them.
+are not checked in. Run `python generate.py` to generate the tests, and `cargo
+test` to run them.
 
 The test generator starts by generating a reference Python SDK and loading that
 code. It then generates an instance of every type in the SDK and uses the

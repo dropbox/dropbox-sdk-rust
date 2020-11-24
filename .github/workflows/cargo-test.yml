@@ -23,7 +23,7 @@ jobs:
           pip install ply six
 
       - name: Run the generator
-        run: ./generate.sh dropbox-api-spec
+        run: python generate.py
 
       - name: Check generated files against repo
         run: if [[ ! -z `git status --porcelain=v1` ]]; then echo "::error::Workspace is dirty after running generator. Did you remember to check in the generated files?"; exit 1; fi
