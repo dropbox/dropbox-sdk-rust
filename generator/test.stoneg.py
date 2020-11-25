@@ -88,6 +88,16 @@ class TestBackend(RustHelperBackend):
                             self.reference_impls[ns.name].__dict__[pyname + '_validator'],
                             test_value.value,
                             Permissions())
+
+                        # "other" is a hardcoded, special-cased tag used by Stone for the catch-all
+                        # variant of open unions. Let's rewrite it to something else, to test that
+                        # the unknown variant logic actually works. Unfortunately this requires
+                        # mega-hax of rewriting the JSON text, because the Python serializer won't
+                        # let us give an arbitrary variant name.
+                        json = json.replace(
+                                '{".tag": "other"',
+                                '{".tag": "dropbox-sdk-rust-bogus-test-variant"')
+
                         with self._test_fn(type_name + test_value.test_suffix()):
                             self.emit(u'let json = r#"{}"#;'.format(json))
                             self.emit(u'let x = ::serde_json::from_str::<::dropbox_sdk::{}::{}>(json).unwrap();'
