@@ -400,6 +400,7 @@ impl ::serde::ser::Serialize for AddPropertiesArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum AddPropertiesError {
     /// Template does not exist for the given identifier.
     TemplateNotFound(TemplateId),
@@ -986,6 +987,7 @@ impl ::serde::ser::Serialize for GetTemplateResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum InvalidPropertyGroupError {
     /// Template does not exist for the given identifier.
     TemplateNotFound(TemplateId),
@@ -1234,6 +1236,7 @@ impl ::serde::ser::Serialize for ListTemplateResult {
 
 /// Logical operator to join search queries together.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LogicalOperator {
     /// Append a query with an "or" operator.
     OrOperator,
@@ -1292,6 +1295,7 @@ impl ::serde::ser::Serialize for LogicalOperator {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LookUpPropertiesError {
     /// No property group was found.
     PropertyGroupNotFound,
@@ -1362,6 +1366,7 @@ impl ::std::fmt::Display for LookUpPropertiesError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LookupError {
     MalformedPath(String),
     /// There is nothing at the given path.
@@ -1488,6 +1493,7 @@ impl ::std::fmt::Display for LookupError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ModifyTemplateError {
     /// Template does not exist for the given identifier.
     TemplateNotFound(TemplateId),
@@ -1732,6 +1738,7 @@ impl ::serde::ser::Serialize for OverwritePropertyGroupArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PropertiesError {
     /// Template does not exist for the given identifier.
     TemplateNotFound(TemplateId),
@@ -2047,6 +2054,7 @@ impl ::serde::ser::Serialize for PropertiesSearchContinueArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PropertiesSearchContinueError {
     /// Indicates that the cursor has been invalidated. Call
     /// [`properties_search()`](properties_search) to obtain a new cursor.
@@ -2118,6 +2126,7 @@ impl ::std::fmt::Display for PropertiesSearchContinueError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PropertiesSearchError {
     PropertyGroupLookup(LookUpPropertiesError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -2325,6 +2334,7 @@ impl ::serde::ser::Serialize for PropertiesSearchMatch {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PropertiesSearchMode {
     /// Search for a value associated with this field name.
     FieldName(String),
@@ -3196,6 +3206,7 @@ impl ::serde::ser::Serialize for PropertyGroupUpdate {
 
 /// Data type of the given property field added.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PropertyType {
     /// The associated property field will be of type string. Unicode is supported.
     String,
@@ -3359,6 +3370,7 @@ impl ::serde::ser::Serialize for RemovePropertiesArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RemovePropertiesError {
     /// Template does not exist for the given identifier.
     TemplateNotFound(TemplateId),
@@ -3582,6 +3594,7 @@ impl ::serde::ser::Serialize for RemoveTemplateArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TemplateError {
     /// Template does not exist for the given identifier.
     TemplateNotFound(TemplateId),
@@ -3669,6 +3682,7 @@ impl ::std::fmt::Display for TemplateError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TemplateFilter {
     /// Only templates with an ID in the supplied list will be returned (a subset of templates will
     /// be returned).
@@ -3745,6 +3759,7 @@ impl ::serde::ser::Serialize for TemplateFilter {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TemplateFilterBase {
     /// Only templates with an ID in the supplied list will be returned (a subset of templates will
     /// be returned).
@@ -3808,6 +3823,7 @@ impl ::serde::ser::Serialize for TemplateFilterBase {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TemplateOwnerType {
     /// Template will be associated with a user.
     User,
@@ -3982,6 +3998,7 @@ impl ::serde::ser::Serialize for UpdatePropertiesArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UpdatePropertiesError {
     /// Template does not exist for the given identifier.
     TemplateNotFound(TemplateId),

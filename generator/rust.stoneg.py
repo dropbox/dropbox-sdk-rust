@@ -114,6 +114,8 @@ class RustBackend(RustHelperBackend):
         enum_name = self.enum_name(struct)
         self._emit_doc(struct.doc)
         self.emit(u'#[derive(Debug)]')
+        if struct.is_catch_all():
+            self.emit(u'#[non_exhaustive] // variants may be added in the future')
         with self.block(u'pub enum {}'.format(enum_name)):
             for subtype in struct.get_enumerated_subtypes():
                 self.emit(u'{}({}),'.format(
@@ -129,6 +131,8 @@ class RustBackend(RustHelperBackend):
         enum_name = self.enum_name(union)
         self._emit_doc(union.doc)
         self.emit(u'#[derive(Debug)]')
+        if not union.closed:
+            self.emit(u'#[non_exhaustive] // variants may be added in the future')
         with self.block(u'pub enum {}'.format(enum_name)):
             for field in union.all_fields:
                 if field.catch_all:

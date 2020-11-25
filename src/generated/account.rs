@@ -22,6 +22,7 @@ pub fn set_profile_photo(
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PhotoSourceArg {
     /// Image data in base64-encoded bytes.
     Base64Data(String),
@@ -174,6 +175,7 @@ impl ::serde::ser::Serialize for SetProfilePhotoArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SetProfilePhotoError {
     /// File cannot be set as profile photo.
     FileTypeError,

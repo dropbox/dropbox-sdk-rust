@@ -271,8 +271,8 @@ class TestUnion(TestValue):
             raise RuntimeError(u'Error generating value for {}.{}: {}'
                                .format(self._stone_type.name, variant_name, e))
 
-    def is_open(self):
-        return len(self._stone_type.all_fields) > 1
+    def has_other_variants(self):
+        return len(self._stone_type.all_fields) > 1 or not self._stone_type.closed
 
     def emit_asserts(self, codegen, expression_path):
         if expression_path[0] == '(' and expression_path[-1] == ')':
@@ -296,7 +296,7 @@ class TestUnion(TestValue):
                         self._rust_variant_name)):
                     self._inner_value.emit_assert(codegen, '(*v)')
 
-            if self.is_open():
+            if self.has_other_variants():
                 codegen.emit(u'_ => panic!("wrong variant")')
 
     def is_serializable(self):
@@ -310,8 +310,9 @@ class TestPolymorphicStruct(TestUnion):
     def get_from_inner_value(self, variant_name, generated_field):
         return generated_field.value
 
-    def is_open(self):
-        return len(self._stone_type.get_enumerated_subtypes()) > 1
+    def has_other_variants(self):
+        return len(self._stone_type.get_enumerated_subtypes()) > 1 \
+                or self._stone_type.is_catch_all()
 
 
 class TestList(TestValue):

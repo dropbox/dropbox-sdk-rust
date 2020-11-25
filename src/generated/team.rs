@@ -1422,6 +1422,7 @@ impl ::serde::ser::Serialize for ActiveWebSession {
 /// a secondary email was successfully added to a user. The other values explain the type of error
 /// that occurred, and include the email for which the error occured.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum AddSecondaryEmailResult {
     /// Describes a secondary email that was successfully added to a user.
     Success(SecondaryEmail),
@@ -1705,6 +1706,7 @@ impl ::serde::ser::Serialize for AddSecondaryEmailsArg {
 
 /// Error returned when adding secondary emails fails.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum AddSecondaryEmailsError {
     /// Secondary emails are disabled for the team.
     SecondaryEmailsDisabled,
@@ -2231,6 +2233,7 @@ impl ::serde::ser::Serialize for BaseDfbReport {
 
 /// Base error that all errors for existing team folders should extend.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum BaseTeamFolderError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
@@ -2337,6 +2340,7 @@ impl ::std::fmt::Display for BaseTeamFolderError {
 
 /// Error returned when getting member custom quota.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum CustomQuotaError {
     /// A maximum of 1000 users can be set for a single call.
     TooManyUsers,
@@ -2408,6 +2412,7 @@ impl ::std::fmt::Display for CustomQuotaError {
 
 /// User custom quota.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum CustomQuotaResult {
     /// User's custom quota.
     Success(UserCustomQuotaResult),
@@ -2678,6 +2683,7 @@ impl ::serde::ser::Serialize for DateRange {
 
 /// Errors that can originate from problems in input arguments to reports.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum DateRangeError {
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -2734,6 +2740,7 @@ impl ::std::fmt::Display for DateRangeError {
 /// that a secondary email was successfully deleted. The other values explain the type of error that
 /// occurred, and include the email for which the error occured.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum DeleteSecondaryEmailResult {
     /// The secondary email was successfully deleted.
     Success(super::common::EmailAddress),
@@ -3244,6 +3251,7 @@ impl ::serde::ser::Serialize for DesktopClientSession {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum DesktopPlatform {
     /// Official Windows Dropbox desktop client.
     Windows,
@@ -3951,6 +3959,7 @@ impl ::serde::ser::Serialize for ExcludedUsersListContinueArg {
 
 /// Excluded users list continue error.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ExcludedUsersListContinueError {
     /// The cursor is invalid.
     InvalidCursor,
@@ -4022,6 +4031,7 @@ impl ::std::fmt::Display for ExcludedUsersListContinueError {
 
 /// Excluded users list error.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ExcludedUsersListError {
     /// An error occurred.
     ListError,
@@ -4307,6 +4317,7 @@ impl ::serde::ser::Serialize for ExcludedUsersUpdateArg {
 
 /// Excluded users update error.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ExcludedUsersUpdateError {
     /// At least one of the users is not part of your team.
     UsersNotInTeam,
@@ -4482,6 +4493,7 @@ impl ::serde::ser::Serialize for ExcludedUsersUpdateResult {
 
 /// Excluded users update operation status.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ExcludedUsersUpdateStatus {
     /// Update successful.
     Success,
@@ -4541,6 +4553,7 @@ impl ::serde::ser::Serialize for ExcludedUsersUpdateStatus {
 
 /// A set of features that a Dropbox Business account may support.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum Feature {
     /// The number of upload API calls allowed per month.
     UploadApiRateLimit,
@@ -4640,6 +4653,7 @@ impl ::serde::ser::Serialize for Feature {
 /// The values correspond to entries in [`Feature`](Feature). You may get different value according
 /// to your Dropbox Business plan.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum FeatureValue {
     UploadApiRateLimit(UploadApiRateLimitValue),
     HasTeamSharedDropbox(HasTeamSharedDropboxValue),
@@ -4840,6 +4854,7 @@ impl ::serde::ser::Serialize for FeaturesGetValuesBatchArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum FeaturesGetValuesBatchError {
     /// At least one [`Feature`](Feature) must be included in the
     /// [`FeaturesGetValuesBatchArg`](FeaturesGetValuesBatchArg).features list.
@@ -5971,6 +5986,7 @@ impl ::serde::ser::Serialize for GroupCreateArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupCreateError {
     /// The requested group name is already being used by another group.
     GroupNameAlreadyUsed,
@@ -6080,6 +6096,7 @@ impl ::std::fmt::Display for GroupCreateError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupDeleteError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
@@ -6573,6 +6590,7 @@ impl ::serde::ser::Serialize for GroupMemberSelector {
 /// Error that can be raised when [`GroupMemberSelector`](GroupMemberSelector) is used, and the user
 /// is required to be a member of the specified group.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupMemberSelectorError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
@@ -6669,6 +6687,7 @@ impl ::std::fmt::Display for GroupMemberSelectorError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupMemberSetAccessTypeError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
@@ -6901,6 +6920,7 @@ impl ::serde::ser::Serialize for GroupMembersAddArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupMembersAddError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
@@ -7308,6 +7328,7 @@ impl ::serde::ser::Serialize for GroupMembersRemoveArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupMembersRemoveError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
@@ -7558,6 +7579,7 @@ impl ::serde::ser::Serialize for GroupMembersSelector {
 /// Error that can be raised when [`GroupMembersSelector`](GroupMembersSelector) is used, and the
 /// users are required to be members of the specified group.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupMembersSelectorError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
@@ -7863,6 +7885,7 @@ impl ::serde::ser::Serialize for GroupSelector {
 
 /// Error that can be raised when [`GroupSelector`](GroupSelector) is used.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupSelectorError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
@@ -7935,6 +7958,7 @@ impl ::std::fmt::Display for GroupSelectorError {
 /// Error that can be raised when [`GroupSelector`](GroupSelector) is used and team groups are
 /// disallowed from being used.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupSelectorWithTeamGroupError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
@@ -8189,6 +8213,7 @@ impl ::serde::ser::Serialize for GroupUpdateArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupUpdateError {
     /// No matching group found. No groups match the specified group ID.
     GroupNotFound,
@@ -8311,6 +8336,7 @@ impl ::std::fmt::Display for GroupUpdateError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupsGetInfoError {
     /// The group is not on your team.
     GroupNotOnTeam,
@@ -8624,6 +8650,7 @@ impl ::serde::ser::Serialize for GroupsListContinueArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupsListContinueError {
     /// The cursor is invalid.
     InvalidCursor,
@@ -9013,6 +9040,7 @@ impl ::serde::ser::Serialize for GroupsMembersListContinueArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupsMembersListContinueError {
     /// The cursor is invalid.
     InvalidCursor,
@@ -9200,6 +9228,7 @@ impl ::serde::ser::Serialize for GroupsMembersListResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GroupsPollError {
     /// The job ID is invalid.
     InvalidAsyncJobId,
@@ -9370,6 +9399,7 @@ impl ::serde::ser::Serialize for GroupsSelector {
 
 /// The value for [`Feature::HasTeamFileEvents`](Feature::HasTeamFileEvents).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum HasTeamFileEventsValue {
     /// Does this team have file events.
     Enabled(bool),
@@ -9433,6 +9463,7 @@ impl ::serde::ser::Serialize for HasTeamFileEventsValue {
 
 /// The value for [`Feature::HasTeamSelectiveSync`](Feature::HasTeamSelectiveSync).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum HasTeamSelectiveSyncValue {
     /// Does this team have team selective sync enabled.
     HasTeamSelectiveSync(bool),
@@ -9496,6 +9527,7 @@ impl ::serde::ser::Serialize for HasTeamSelectiveSyncValue {
 
 /// The value for [`Feature::HasTeamSharedDropbox`](Feature::HasTeamSharedDropbox).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum HasTeamSharedDropboxValue {
     /// Does this team have a shared team root.
     HasTeamSharedDropbox(bool),
@@ -10068,6 +10100,7 @@ impl ::serde::ser::Serialize for LegalHoldPolicy {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LegalHoldStatus {
     /// The legal hold policy is active.
     Active,
@@ -10191,6 +10224,7 @@ impl ::serde::ser::Serialize for LegalHoldStatus {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LegalHoldsError {
     /// There has been an unknown legal hold error.
     UnknownLegalHoldError,
@@ -10364,6 +10398,7 @@ impl ::serde::ser::Serialize for LegalHoldsGetPolicyArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LegalHoldsGetPolicyError {
     /// There has been an unknown legal hold error.
     UnknownLegalHoldError,
@@ -10783,6 +10818,7 @@ impl ::serde::ser::Serialize for LegalHoldsListHeldRevisionsContinueArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LegalHoldsListHeldRevisionsContinueError {
     /// There has been an unknown legal hold error.
     UnknownLegalHoldError,
@@ -10881,6 +10917,7 @@ impl ::std::fmt::Display for LegalHoldsListHeldRevisionsContinueError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LegalHoldsListHeldRevisionsError {
     /// There has been an unknown legal hold error.
     UnknownLegalHoldError,
@@ -11089,6 +11126,7 @@ impl ::serde::ser::Serialize for LegalHoldsListPoliciesArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LegalHoldsListPoliciesError {
     /// There has been an unknown legal hold error.
     UnknownLegalHoldError,
@@ -11431,6 +11469,7 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyCreateArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LegalHoldsPolicyCreateError {
     /// There has been an unknown legal hold error.
     UnknownLegalHoldError,
@@ -11708,6 +11747,7 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyReleaseArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LegalHoldsPolicyReleaseError {
     /// There has been an unknown legal hold error.
     UnknownLegalHoldError,
@@ -11975,6 +12015,7 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyUpdateArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LegalHoldsPolicyUpdateError {
     /// There has been an unknown legal hold error.
     UnknownLegalHoldError,
@@ -12242,6 +12283,7 @@ impl ::serde::ser::Serialize for ListMemberAppsArg {
 /// Error returned by
 /// [`linked_apps_list_member_linked_apps()`](linked_apps_list_member_linked_apps).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListMemberAppsError {
     /// Member not found.
     MemberNotFound,
@@ -12546,6 +12588,7 @@ impl ::serde::ser::Serialize for ListMemberDevicesArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListMemberDevicesError {
     /// Member not found.
     MemberNotFound,
@@ -12831,6 +12874,7 @@ impl ::serde::ser::Serialize for ListMembersAppsArg {
 /// Error returned by
 /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListMembersAppsError {
     /// Indicates that the cursor has been invalidated. Call
     /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps) again with
@@ -13173,6 +13217,7 @@ impl ::serde::ser::Serialize for ListMembersDevicesArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListMembersDevicesError {
     /// Indicates that the cursor has been invalidated. Call
     /// [`devices_list_members_devices()`](devices_list_members_devices) again with an empty cursor
@@ -13460,6 +13505,7 @@ impl ::serde::ser::Serialize for ListTeamAppsArg {
 
 /// Error returned by [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListTeamAppsError {
     /// Indicates that the cursor has been invalidated. Call
     /// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps) again with an
@@ -13802,6 +13848,7 @@ impl ::serde::ser::Serialize for ListTeamDevicesArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListTeamDevicesError {
     /// Indicates that the cursor has been invalidated. Call
     /// [`devices_list_team_devices()`](devices_list_team_devices) again with an empty cursor to
@@ -15787,6 +15834,7 @@ impl ::serde::ser::Serialize for MembersDeactivateBaseArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersDeactivateError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on
     /// this team.
@@ -15961,6 +16009,7 @@ impl ::serde::ser::Serialize for MembersDeleteProfilePhotoArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersDeleteProfilePhotoError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on
     /// this team.
@@ -16149,6 +16198,7 @@ impl ::serde::ser::Serialize for MembersGetInfoArgs {
 
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersGetInfoError {
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -16571,6 +16621,7 @@ impl ::serde::ser::Serialize for MembersListContinueArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersListContinueError {
     /// The cursor is invalid.
     InvalidCursor,
@@ -16642,6 +16693,7 @@ impl ::std::fmt::Display for MembersListContinueError {
 
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersListError {
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -16905,6 +16957,7 @@ impl ::serde::ser::Serialize for MembersRecoverArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersRecoverError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on
     /// this team.
@@ -17202,6 +17255,7 @@ impl ::serde::ser::Serialize for MembersRemoveArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersRemoveError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on
     /// this team.
@@ -17553,6 +17607,7 @@ impl ::std::fmt::Display for MembersRemoveError {
 
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersSendWelcomeError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on
     /// this team.
@@ -17742,6 +17797,7 @@ impl ::serde::ser::Serialize for MembersSetPermissionsArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersSetPermissionsError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on
     /// this team.
@@ -18170,6 +18226,7 @@ impl ::serde::ser::Serialize for MembersSetProfileArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersSetProfileError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on
     /// this team.
@@ -18475,6 +18532,7 @@ impl ::serde::ser::Serialize for MembersSetProfilePhotoArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersSetProfilePhotoError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on
     /// this team.
@@ -18588,6 +18646,7 @@ impl ::std::fmt::Display for MembersSetProfilePhotoError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersSuspendError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on
     /// this team.
@@ -18711,6 +18770,7 @@ impl ::std::fmt::Display for MembersSuspendError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersTransferFilesError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on
     /// this team.
@@ -18912,6 +18972,7 @@ impl ::std::fmt::Display for MembersTransferFilesError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersTransferFormerMembersFilesError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on
     /// this team.
@@ -19257,6 +19318,7 @@ impl ::serde::ser::Serialize for MembersUnsuspendArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MembersUnsuspendError {
     /// No matching user found. The provided team_member_id, email, or external_id does not exist on
     /// this team.
@@ -19367,6 +19429,7 @@ impl ::std::fmt::Display for MembersUnsuspendError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MobileClientPlatform {
     /// Official Dropbox iPhone client.
     Iphone,
@@ -19864,6 +19927,7 @@ impl ::serde::ser::Serialize for NamespaceMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum NamespaceType {
     /// App sandbox folder.
     AppFolder,
@@ -19962,6 +20026,7 @@ impl ::serde::ser::Serialize for NamespaceType {
 
 /// User result for setting member custom quota.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RemoveCustomQuotaResult {
     /// Successfully removed user.
     Success(UserSelectorArg),
@@ -20147,6 +20212,7 @@ impl ::serde::ser::Serialize for RemovedStatus {
 /// only value indicating that a verification email was successfully sent. The other values explain
 /// the type of error that occurred, and include the email for which the error occured.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ResendSecondaryEmailResult {
     /// A verification email was successfully sent to the secondary email address.
     Success(super::common::EmailAddress),
@@ -20705,6 +20771,7 @@ impl ::serde::ser::Serialize for RevokeDeviceSessionBatchArg {
 
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RevokeDeviceSessionBatchError {
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -20847,6 +20914,7 @@ impl ::serde::ser::Serialize for RevokeDeviceSessionBatchResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RevokeDeviceSessionError {
     /// Device session not found.
     DeviceSessionNotFound,
@@ -21251,6 +21319,7 @@ impl ::serde::ser::Serialize for RevokeLinkedApiAppBatchArg {
 /// Error returned by
 /// [`linked_apps_revoke_linked_app_batch()`](linked_apps_revoke_linked_app_batch).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RevokeLinkedAppBatchError {
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
@@ -21394,6 +21463,7 @@ impl ::serde::ser::Serialize for RevokeLinkedAppBatchResult {
 
 /// Error returned by [`linked_apps_revoke_linked_app()`](linked_apps_revoke_linked_app).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RevokeLinkedAppError {
     /// Application not found.
     AppNotFound,
@@ -21689,6 +21759,7 @@ impl ::serde::ser::Serialize for SetCustomQuotaArg {
 
 /// Error returned when setting member custom quota.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SetCustomQuotaError {
     /// A maximum of 1000 users can be set for a single call.
     TooManyUsers,
@@ -21877,6 +21948,7 @@ impl ::serde::ser::Serialize for StorageBucket {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderAccessError {
     /// The team folder ID is invalid.
     InvalidTeamFolderId,
@@ -21961,6 +22033,7 @@ impl ::std::fmt::Display for TeamFolderAccessError {
 
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderActivateError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
@@ -22175,6 +22248,7 @@ impl ::serde::ser::Serialize for TeamFolderArchiveArg {
 
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderArchiveError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
@@ -22533,6 +22607,7 @@ impl ::serde::ser::Serialize for TeamFolderCreateArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderCreateError {
     /// The provided name cannot be used.
     InvalidFolderName,
@@ -22892,6 +22967,7 @@ impl ::serde::ser::Serialize for TeamFolderIdListArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderInvalidStatusError {
     /// The folder is active and the operation did not succeed.
     Active,
@@ -23164,6 +23240,7 @@ impl ::serde::ser::Serialize for TeamFolderListContinueArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderListContinueError {
     /// The cursor is invalid.
     InvalidCursor,
@@ -23607,6 +23684,7 @@ impl ::serde::ser::Serialize for TeamFolderMetadata {
 
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderPermanentlyDeleteError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
@@ -23815,6 +23893,7 @@ impl ::serde::ser::Serialize for TeamFolderRenameArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderRenameError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
@@ -23959,6 +24038,7 @@ impl ::std::fmt::Display for TeamFolderRenameError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderStatus {
     /// The team folder and sub-folders are available to all members.
     Active,
@@ -24043,6 +24123,7 @@ impl ::serde::ser::Serialize for TeamFolderStatus {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderTeamSharedDropboxError {
     /// This action is not allowed for a shared team root.
     Disallowed,
@@ -24243,6 +24324,7 @@ impl ::serde::ser::Serialize for TeamFolderUpdateSyncSettingsArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamFolderUpdateSyncSettingsError {
     AccessError(TeamFolderAccessError),
     StatusError(TeamFolderInvalidStatusError),
@@ -25307,6 +25389,7 @@ impl ::serde::ser::Serialize for TeamNamespacesListContinueArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamNamespacesListContinueError {
     /// Argument passed in is invalid.
     InvalidArg,
@@ -25390,6 +25473,7 @@ impl ::std::fmt::Display for TeamNamespacesListContinueError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamNamespacesListError {
     /// Argument passed in is invalid.
     InvalidArg,
@@ -25578,6 +25662,7 @@ impl ::serde::ser::Serialize for TeamNamespacesListResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TeamReportFailureReason {
     /// We couldn't create the report, but we think this was a fluke. Everything should work if you
     /// try it again.
@@ -25665,6 +25750,7 @@ impl ::serde::ser::Serialize for TeamReportFailureReason {
 
 /// Error returned by [`token_get_authenticated_admin()`](token_get_authenticated_admin).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TokenGetAuthenticatedAdminError {
     /// The current token is not associated with a team admin, because mappings were not recorded
     /// when the token was created. Consider re-authorizing a new access token to record its
@@ -25843,6 +25929,7 @@ impl ::serde::ser::Serialize for TokenGetAuthenticatedAdminResult {
 
 /// The value for [`Feature::UploadApiRateLimit`](Feature::UploadApiRateLimit).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UploadApiRateLimitValue {
     /// This team has unlimited upload API quota. So far both server version account and legacy
     /// account type have unlimited monthly upload api quota.
@@ -25922,6 +26009,7 @@ impl ::serde::ser::Serialize for UploadApiRateLimitValue {
 /// a user was successfully retrieved for adding secondary emails. The other values explain the type
 /// of error that occurred, and include the user for which the error occured.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UserAddResult {
     /// Describes a user and the results for each attempt to add a secondary email.
     Success(UserSecondaryEmailsResult),
@@ -26343,6 +26431,7 @@ impl ::serde::ser::Serialize for UserDeleteEmailsResult {
 /// that a user was successfully retrieved for deleting secondary emails. The other values explain
 /// the type of error that occurred, and include the user for which the error occured.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UserDeleteResult {
     /// Describes a user and the results for each attempt to delete a secondary email.
     Success(UserDeleteEmailsResult),
@@ -26520,6 +26609,7 @@ impl ::serde::ser::Serialize for UserResendEmailsResult {
 /// that a user was successfully retrieved for sending verification emails. The other values explain
 /// the type of error that occurred, and include the user for which the error occured.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UserResendResult {
     /// Describes a user and the results for each attempt to resend verification emails.
     Success(UserResendEmailsResult),

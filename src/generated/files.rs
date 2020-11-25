@@ -2288,6 +2288,7 @@ impl ::serde::ser::Serialize for CreateFolderBatchArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum CreateFolderBatchError {
     /// The operation would involve too many files or folders.
     TooManyFiles,
@@ -2358,6 +2359,7 @@ impl ::std::fmt::Display for CreateFolderBatchError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum CreateFolderBatchJobStatus {
     /// The asynchronous job is still in progress.
     InProgress,
@@ -2446,6 +2448,7 @@ impl ::serde::ser::Serialize for CreateFolderBatchJobStatus {
 /// Result returned by [`create_folder_batch()`](create_folder_batch) that may either launch an
 /// asynchronous job or complete synchronously.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum CreateFolderBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
@@ -2673,6 +2676,7 @@ impl ::serde::ser::Serialize for CreateFolderBatchResultEntry {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum CreateFolderEntryError {
     Path(WriteError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -3189,6 +3193,7 @@ impl ::serde::ser::Serialize for DeleteBatchArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum DeleteBatchError {
     /// Use [`DeleteError::TooManyWriteOperations`](DeleteError::TooManyWriteOperations).
     /// [`delete_batch()`](delete_batch) now provides smaller granularity about which entry has
@@ -3261,6 +3266,7 @@ impl ::std::fmt::Display for DeleteBatchError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum DeleteBatchJobStatus {
     /// The asynchronous job is still in progress.
     InProgress,
@@ -3349,6 +3355,7 @@ impl ::serde::ser::Serialize for DeleteBatchJobStatus {
 /// Result returned by [`delete_batch()`](delete_batch) that may either launch an asynchronous job
 /// or complete synchronously.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum DeleteBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
@@ -3666,6 +3673,7 @@ impl ::serde::ser::Serialize for DeleteBatchResultEntry {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum DeleteError {
     PathLookup(LookupError),
     PathWrite(WriteError),
@@ -4235,6 +4243,7 @@ impl ::serde::ser::Serialize for DownloadArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum DownloadError {
     Path(LookupError),
     /// This file type cannot be downloaded directly; use [`export()`](export) instead.
@@ -4411,6 +4420,7 @@ impl ::serde::ser::Serialize for DownloadZipArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum DownloadZipError {
     Path(LookupError),
     /// The folder or a file is too large to download.
@@ -4689,6 +4699,7 @@ impl ::serde::ser::Serialize for ExportArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ExportError {
     Path(LookupError),
     /// This file type cannot be exported. Use [`download()`](download) instead.
@@ -5101,6 +5112,7 @@ impl ::serde::ser::Serialize for ExportResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum FileCategory {
     /// jpg, png, gif, and more.
     Image,
@@ -5366,6 +5378,7 @@ impl ::serde::ser::Serialize for FileLock {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum FileLockContent {
     /// Empty type to indicate no lock.
     Unlocked,
@@ -6151,6 +6164,7 @@ impl ::serde::ser::Serialize for FileSharingInfo {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum FileStatus {
     Active,
     Deleted,
@@ -6700,6 +6714,7 @@ impl ::serde::ser::Serialize for GetCopyReferenceArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GetCopyReferenceError {
     Path(LookupError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -7217,6 +7232,7 @@ impl ::serde::ser::Serialize for GetTemporaryLinkArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GetTemporaryLinkError {
     Path(LookupError),
     /// This user's email address is not verified. This functionality is only available on accounts
@@ -7712,6 +7728,7 @@ impl ::serde::ser::Serialize for GetThumbnailBatchArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GetThumbnailBatchError {
     /// The operation involves more than 25 files.
     TooManyFiles,
@@ -7974,6 +7991,7 @@ impl ::serde::ser::Serialize for GetThumbnailBatchResultData {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GetThumbnailBatchResultEntry {
     Success(GetThumbnailBatchResultData),
     /// The result for this file if it was an error.
@@ -8608,6 +8626,7 @@ impl ::serde::ser::Serialize for ListFolderContinueArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListFolderContinueError {
     Path(LookupError),
     /// Indicates that the cursor has been invalidated. Call [`list_folder()`](list_folder) to
@@ -8695,6 +8714,7 @@ impl ::std::fmt::Display for ListFolderContinueError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListFolderError {
     Path(LookupError),
     TemplateError(super::file_properties::TemplateError),
@@ -8987,6 +9007,7 @@ impl ::serde::ser::Serialize for ListFolderLongpollArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListFolderLongpollError {
     /// Indicates that the cursor has been invalidated. Call [`list_folder()`](list_folder) to
     /// obtain a new cursor.
@@ -9412,6 +9433,7 @@ impl ::serde::ser::Serialize for ListRevisionsArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListRevisionsError {
     Path(LookupError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -9485,6 +9507,7 @@ impl ::std::fmt::Display for ListRevisionsError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListRevisionsMode {
     /// Returns revisions with the same file path as identified by the latest file entry at the
     /// given file path or id.
@@ -10041,6 +10064,7 @@ impl ::serde::ser::Serialize for LockFileBatchResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LockFileError {
     /// Could not find the specified resource.
     PathLookup(LookupError),
@@ -10371,6 +10395,7 @@ impl ::serde::ser::Serialize for LockFileResultEntry {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LookupError {
     /// The given path does not satisfy the required path format. Please refer to the [Path formats
     /// documentation](https://www.dropbox.com/developers/documentation/http/documentation#path-formats)
@@ -10750,6 +10775,7 @@ impl ::serde::ser::Serialize for Metadata {
 
 /// Metadata for a file, folder or other resource types.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MetadataV2 {
     Metadata(Metadata),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -11080,6 +11106,7 @@ impl ::serde::ser::Serialize for MoveBatchArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MoveIntoVaultError {
     /// Moving shared folder into Vault is not allowed.
     IsSharedFolder,
@@ -11150,6 +11177,7 @@ impl ::std::fmt::Display for MoveIntoVaultError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PathOrLink {
     Path(ReadPath),
     Link(SharedLinkFileInfo),
@@ -12077,6 +12105,7 @@ impl ::serde::ser::Serialize for RelocationBatchArgBase {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RelocationBatchError {
     FromLookup(LookupError),
     FromWrite(WriteError),
@@ -12332,6 +12361,7 @@ impl ::std::fmt::Display for RelocationBatchError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RelocationBatchErrorEntry {
     /// User errors that retry won't help.
     RelocationError(RelocationError),
@@ -12501,6 +12531,7 @@ impl ::serde::ser::Serialize for RelocationBatchJobStatus {
 /// Result returned by [`copy_batch()`](copy_batch) or [`move_batch()`](move_batch) that may either
 /// launch an asynchronous job or complete synchronously.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RelocationBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
@@ -12753,6 +12784,7 @@ impl ::serde::ser::Serialize for RelocationBatchResultData {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RelocationBatchResultEntry {
     Success(Metadata),
     Failure(RelocationBatchErrorEntry),
@@ -13052,6 +13084,7 @@ impl ::serde::ser::Serialize for RelocationBatchV2Result {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RelocationError {
     FromLookup(LookupError),
     FromWrite(WriteError),
@@ -13590,6 +13623,7 @@ impl ::serde::ser::Serialize for RestoreArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RestoreError {
     /// An error occurs when downloading metadata for the file.
     PathLookup(LookupError),
@@ -13810,6 +13844,7 @@ impl ::serde::ser::Serialize for SaveCopyReferenceArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SaveCopyReferenceError {
     Path(WriteError),
     /// The copy reference is invalid.
@@ -14129,6 +14164,7 @@ impl ::serde::ser::Serialize for SaveUrlArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SaveUrlError {
     Path(WriteError),
     /// Failed downloading the given URL. The URL may be  password-protected and the password
@@ -14545,6 +14581,7 @@ impl ::serde::ser::Serialize for SearchArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SearchError {
     Path(LookupError),
     InvalidArgument(Option<String>),
@@ -14917,6 +14954,7 @@ impl ::serde::ser::Serialize for SearchMatchType {
 
 /// Indicates what type of match was found for a given item.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SearchMatchTypeV2 {
     /// This item was matched on its file or folder name.
     Filename,
@@ -15413,6 +15451,7 @@ impl ::serde::ser::Serialize for SearchOptions {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SearchOrderBy {
     Relevance,
     LastModifiedTime,
@@ -16502,6 +16541,7 @@ impl ::serde::ser::Serialize for SymlinkInfo {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SyncSetting {
     /// On first sync to members' computers, the specified folder will follow its parent folder's
     /// setting or otherwise follow default sync behavior.
@@ -16589,6 +16629,7 @@ impl ::serde::ser::Serialize for SyncSetting {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SyncSettingArg {
     /// On first sync to members' computers, the specified folder will follow its parent folder's
     /// setting or otherwise follow default sync behavior.
@@ -16662,6 +16703,7 @@ impl ::serde::ser::Serialize for SyncSettingArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SyncSettingsError {
     Path(LookupError),
     /// Setting this combination of sync settings simultaneously is not supported.
@@ -17448,6 +17490,7 @@ impl ::serde::ser::Serialize for ThumbnailV2Arg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ThumbnailV2Error {
     /// An error occurred when downloading metadata for the image.
     Path(LookupError),
@@ -17768,6 +17811,7 @@ impl ::serde::ser::Serialize for UnlockFileBatchArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UploadError {
     /// Unable to save the uploaded contents to a file.
     Path(UploadWriteFailed),
@@ -17853,6 +17897,7 @@ impl ::std::fmt::Display for UploadError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UploadErrorWithProperties {
     /// Unable to save the uploaded contents to a file.
     Path(UploadWriteFailed),
@@ -18395,6 +18440,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchJobStatus {
 /// Result returned by [`upload_session_finish_batch()`](upload_session_finish_batch) that may
 /// either launch an asynchronous job or complete synchronously.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionFinishBatchLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
@@ -18623,6 +18669,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchResultEntry {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionFinishError {
     /// The session arguments are incorrect; the value explains the reason.
     LookupFailed(UploadSessionLookupError),
@@ -18799,6 +18846,7 @@ impl ::std::fmt::Display for UploadSessionFinishError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionLookupError {
     /// The upload session ID was not found or has expired. Upload sessions are valid for 48 hours.
     NotFound,
@@ -19146,6 +19194,7 @@ impl ::serde::ser::Serialize for UploadSessionStartArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionStartError {
     /// Uploading data not allowed when starting concurrent upload session.
     ConcurrentSessionDataNotAllowed,
@@ -19321,6 +19370,7 @@ impl ::serde::ser::Serialize for UploadSessionStartResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionType {
     /// Pieces of content are uploaded sequentially one after another. This is the default behavior.
     Sequential,
@@ -19638,6 +19688,7 @@ impl ::serde::ser::Serialize for VideoMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum WriteConflictError {
     /// There's a file in the way.
     File,
@@ -19734,6 +19785,7 @@ impl ::std::fmt::Display for WriteConflictError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum WriteError {
     /// The given path does not satisfy the required path format. Please refer to the [Path formats
     /// documentation](https://www.dropbox.com/developers/documentation/http/documentation#path-formats)

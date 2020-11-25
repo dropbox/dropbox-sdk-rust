@@ -297,6 +297,7 @@ impl ::serde::ser::Serialize for PollEmptyResult {
 
 /// Error returned by methods for polling the status of asynchronous job.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PollError {
     /// The job ID is invalid.
     InvalidAsyncJobId,

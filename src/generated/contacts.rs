@@ -126,6 +126,7 @@ impl ::serde::ser::Serialize for DeleteManualContactsArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum DeleteManualContactsError {
     /// Can't delete contacts from this list. Make sure the list only has manually added contacts.
     /// The deletion was cancelled.

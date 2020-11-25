@@ -452,6 +452,7 @@ impl ::serde::ser::Serialize for BasicAccount {
 
 /// The value for [`UserFeature::FileLocking`](UserFeature::FileLocking).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum FileLockingValue {
     /// When this value is True, the user can lock files in shared directories. When the value is
     /// False the user can unlock the files they have locked or request to unlock files locked by
@@ -1126,6 +1127,7 @@ impl ::serde::ser::Serialize for GetAccountBatchArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GetAccountBatchError {
     /// The value is an account ID specified in
     /// [`GetAccountBatchArg::account_ids`](GetAccountBatchArg) that does not exist.
@@ -1201,6 +1203,7 @@ impl ::std::fmt::Display for GetAccountBatchError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GetAccountError {
     /// The specified [`GetAccountArg::account_id`](GetAccountArg) does not exist.
     NoAccount,
@@ -1512,6 +1515,7 @@ impl ::serde::ser::Serialize for Name {
 
 /// The value for [`UserFeature::PaperAsFiles`](UserFeature::PaperAsFiles).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PaperAsFilesValue {
     /// When this value is true, the user's Paper docs are accessible in Dropbox with the .paper
     /// extension and must be accessed via the /files endpoints.  When this value is false, the
@@ -1578,6 +1582,7 @@ impl ::serde::ser::Serialize for PaperAsFilesValue {
 
 /// Space is allocated differently based on the type of account.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SpaceAllocation {
     /// The user's space allocation applies only to their individual account.
     Individual(IndividualSpaceAllocation),
@@ -2003,6 +2008,7 @@ impl ::serde::ser::Serialize for TeamSpaceAllocation {
 
 /// A set of features that a Dropbox User account may have configured.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UserFeature {
     /// This feature contains information about how the user's Paper files are stored.
     PaperAsFiles,
@@ -2075,6 +2081,7 @@ impl ::serde::ser::Serialize for UserFeature {
 
 /// Values that correspond to entries in [`UserFeature`](UserFeature).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UserFeatureValue {
     PaperAsFiles(PaperAsFilesValue),
     FileLocking(FileLockingValue),
@@ -2243,6 +2250,7 @@ impl ::serde::ser::Serialize for UserFeaturesGetValuesBatchArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UserFeaturesGetValuesBatchError {
     /// At least one [`UserFeature`](UserFeature) must be included in the
     /// [`UserFeaturesGetValuesBatchArg`](UserFeaturesGetValuesBatchArg).features list.

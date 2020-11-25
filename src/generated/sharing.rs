@@ -689,6 +689,7 @@ pub fn update_folder_policy(
 
 /// Information about the inheritance policy of a shared folder.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum AccessInheritance {
     /// The shared folder inherits its members from the parent folder.
     Inherit,
@@ -761,6 +762,7 @@ impl ::serde::ser::Serialize for AccessInheritance {
 
 /// Defines the access levels for collaborators.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum AccessLevel {
     /// The collaborator is the owner of the shared folder. Owners can view and edit the shared
     /// folder as well as set the folder's policies using
@@ -862,6 +864,7 @@ impl ::serde::ser::Serialize for AccessLevel {
 /// Who can change a shared folder's access control list (ACL). In other words, who can add, remove,
 /// or change the privileges of members.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum AclUpdatePolicy {
     /// Only the owner can update the ACL.
     Owner,
@@ -1111,6 +1114,7 @@ impl ::serde::ser::Serialize for AddFileMemberArgs {
 
 /// Errors for [`add_file_member()`](add_file_member).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum AddFileMemberError {
     UserError(SharingUserError),
     AccessError(SharingFileAccessError),
@@ -1366,6 +1370,7 @@ impl ::serde::ser::Serialize for AddFolderMemberArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum AddFolderMemberError {
     /// Unable to access shared folder.
     AccessError(SharedFolderAccessError),
@@ -1722,6 +1727,7 @@ impl ::serde::ser::Serialize for AddMember {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum AddMemberSelectorError {
     /// Automatically created groups can only be added to team folders.
     AutomaticGroup,
@@ -2558,6 +2564,7 @@ impl ::serde::ser::Serialize for CreateSharedLinkArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum CreateSharedLinkError {
     Path(super::files::LookupError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -3065,6 +3072,7 @@ impl ::serde::ser::Serialize for ExpectedSharedContentLinkMetadata {
 
 /// Sharing actions that may be taken on files.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum FileAction {
     /// Disable viewer information on the file.
     DisableViewerInfo,
@@ -3266,6 +3274,7 @@ impl ::serde::ser::Serialize for FileAction {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum FileErrorResult {
     /// File specified by id was not found.
     FileNotFoundError(super::files::Id),
@@ -3637,6 +3646,7 @@ impl ::serde::ser::Serialize for FileLinkMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum FileMemberActionError {
     /// Specified member was not found.
     InvalidMember,
@@ -3927,6 +3937,7 @@ impl ::serde::ser::Serialize for FileMemberActionResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum FileMemberRemoveActionResult {
     /// Member was successfully removed from this file.
     Success(MemberAccessLevelResult),
@@ -4123,6 +4134,7 @@ impl ::serde::ser::Serialize for FilePermission {
 
 /// Actions that may be taken on shared folders.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum FolderAction {
     /// Change folder options, such as who can be invited to join the folder.
     ChangeOptions,
@@ -5174,6 +5186,7 @@ impl ::serde::ser::Serialize for GetFileMetadataBatchResult {
 
 /// Error result for [`get_file_metadata()`](get_file_metadata).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GetFileMetadataError {
     UserError(SharingUserError),
     AccessError(SharingFileAccessError),
@@ -5263,6 +5276,7 @@ impl ::std::fmt::Display for GetFileMetadataError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GetFileMetadataIndividualResult {
     /// The result for this file if it was successful.
     Metadata(SharedFileMetadata),
@@ -5446,6 +5460,7 @@ impl ::serde::ser::Serialize for GetMetadataArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GetSharedLinkFileError {
     /// The shared link wasn't found.
     SharedLinkNotFound,
@@ -5768,6 +5783,7 @@ impl ::serde::ser::Serialize for GetSharedLinksArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum GetSharedLinksError {
     Path(super::files::MalformedPathError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -6532,6 +6548,7 @@ impl ::serde::ser::Serialize for InsufficientQuotaAmounts {
 
 /// Information about the recipient of a shared content invitation.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum InviteeInfo {
     /// Email address of invited user.
     Email(super::common::EmailAddress),
@@ -6774,6 +6791,7 @@ impl ::serde::ser::Serialize for InviteeMembershipInfo {
 /// Error occurred while performing an asynchronous job from [`unshare_folder()`](unshare_folder) or
 /// [`remove_folder_member()`](remove_folder_member).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum JobError {
     /// Error occurred while performing [`unshare_folder()`](unshare_folder) action.
     UnshareFolderError(UnshareFolderError),
@@ -6963,6 +6981,7 @@ impl ::serde::ser::Serialize for JobStatus {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LinkAccessLevel {
     /// Users who use the link can view and comment on the content.
     Viewer,
@@ -7035,6 +7054,7 @@ impl ::serde::ser::Serialize for LinkAccessLevel {
 
 /// Actions that can be performed on a link.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LinkAction {
     /// Change the access level of the link.
     ChangeAccessLevel,
@@ -7158,6 +7178,7 @@ impl ::serde::ser::Serialize for LinkAction {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LinkAudience {
     /// Link is accessible by anyone.
     Public,
@@ -7270,6 +7291,7 @@ impl ::serde::ser::Serialize for LinkAudience {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LinkExpiry {
     /// Remove the currently set expiry for the link.
     RemoveExpiry,
@@ -7347,6 +7369,7 @@ impl ::serde::ser::Serialize for LinkExpiry {
 /// Metadata for a shared link. This can be either a [`PathLinkMetadata`](PathLinkMetadata) or
 /// [`CollectionLinkMetadata`](CollectionLinkMetadata).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LinkMetadata {
     Path(PathLinkMetadata),
     Collection(CollectionLinkMetadata),
@@ -7412,6 +7435,7 @@ impl ::serde::ser::Serialize for LinkMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum LinkPassword {
     /// Remove the currently set password for the link.
     RemovePassword,
@@ -8394,6 +8418,7 @@ impl ::serde::ser::Serialize for ListFileMembersContinueArg {
 
 /// Error for [`list_file_members_continue()`](list_file_members_continue).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListFileMembersContinueError {
     UserError(SharingUserError),
     AccessError(SharingFileAccessError),
@@ -8600,6 +8625,7 @@ impl ::serde::ser::Serialize for ListFileMembersCountResult {
 
 /// Error for [`list_file_members()`](list_file_members).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListFileMembersError {
     UserError(SharingUserError),
     AccessError(SharingFileAccessError),
@@ -8689,6 +8715,7 @@ impl ::std::fmt::Display for ListFileMembersError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListFileMembersIndividualResult {
     /// The results of the query for this file if it was successful.
     Result(ListFileMembersCountResult),
@@ -8961,6 +8988,7 @@ impl ::serde::ser::Serialize for ListFilesContinueArg {
 
 /// Error results for [`list_received_files_continue()`](list_received_files_continue).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListFilesContinueError {
     /// User account had a problem.
     UserError(SharingUserError),
@@ -9377,6 +9405,7 @@ impl ::serde::ser::Serialize for ListFolderMembersContinueArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListFolderMembersContinueError {
     AccessError(SharedFolderAccessError),
     /// [`ListFolderMembersContinueArg::cursor`](ListFolderMembersContinueArg) is invalid.
@@ -9766,6 +9795,7 @@ impl ::serde::ser::Serialize for ListFoldersContinueArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListFoldersContinueError {
     /// [`ListFoldersContinueArg::cursor`](ListFoldersContinueArg) is invalid.
     InvalidCursor,
@@ -10074,6 +10104,7 @@ impl ::serde::ser::Serialize for ListSharedLinksArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListSharedLinksError {
     Path(super::files::LookupError),
     /// Indicates that the cursor has been invalidated. Call
@@ -10410,6 +10441,7 @@ impl ::serde::ser::Serialize for MemberAccessLevelResult {
 
 /// Actions that may be taken on members of a shared folder.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MemberAction {
     /// Allow the member to keep a copy of the folder when removing.
     LeaveACopy,
@@ -10657,6 +10689,7 @@ impl ::serde::ser::Serialize for MemberPermission {
 /// Policy governing who can be a member of a shared folder. Only applicable to folders owned by a
 /// user on a team.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MemberPolicy {
     /// Only a teammate can become a member.
     Team,
@@ -10729,6 +10762,7 @@ impl ::serde::ser::Serialize for MemberPolicy {
 
 /// Includes different ways to identify a member of a shared folder.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MemberSelector {
     /// Dropbox account, team member, or group ID of member.
     DropboxId(DropboxId),
@@ -11076,6 +11110,7 @@ impl ::serde::ser::Serialize for ModifySharedLinkSettingsArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ModifySharedLinkSettingsError {
     /// The shared link wasn't found.
     SharedLinkNotFound,
@@ -11294,6 +11329,7 @@ impl ::serde::ser::Serialize for MountFolderArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum MountFolderError {
     AccessError(SharedFolderAccessError),
     /// Mounting would cause a shared folder to be inside another, which is disallowed.
@@ -11766,6 +11802,7 @@ impl ::serde::ser::Serialize for PendingUploadMode {
 
 /// Possible reasons the user is denied a permission.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PermissionDeniedReason {
     /// User is not on the same team as the folder owner.
     UserNotSameTeamAsOwner,
@@ -12093,6 +12130,7 @@ impl ::serde::ser::Serialize for RelinquishFileMembershipArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RelinquishFileMembershipError {
     AccessError(SharingFileAccessError),
     /// The current user has access to the shared file via a group.  You can't relinquish membership
@@ -12301,6 +12339,7 @@ impl ::serde::ser::Serialize for RelinquishFolderMembershipArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RelinquishFolderMembershipError {
     AccessError(SharedFolderAccessError),
     /// The current user is the owner of the shared folder. Owners cannot relinquish membership to
@@ -12563,6 +12602,7 @@ impl ::serde::ser::Serialize for RemoveFileMemberArg {
 
 /// Errors for [`remove_file_member_2()`](remove_file_member_2).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RemoveFileMemberError {
     UserError(SharingUserError),
     AccessError(SharingFileAccessError),
@@ -12786,6 +12826,7 @@ impl ::serde::ser::Serialize for RemoveFolderMemberArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RemoveFolderMemberError {
     AccessError(SharedFolderAccessError),
     MemberError(SharedFolderMemberError),
@@ -13020,6 +13061,7 @@ impl ::serde::ser::Serialize for RemoveMemberJobStatus {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RequestedLinkAccessLevel {
     /// Users who use the link can view and comment on the content.
     Viewer,
@@ -13188,6 +13230,7 @@ impl ::serde::ser::Serialize for RequestedVisibility {
 /// and the team and shared folder settings. Check the [`RequestedVisibility`](RequestedVisibility)
 /// for more info on the possible visibility values that can be set by the shared link's owner.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ResolvedVisibility {
     /// Anyone who has received the link can access it. No login required.
     Public,
@@ -13390,6 +13433,7 @@ impl ::serde::ser::Serialize for RevokeSharedLinkArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RevokeSharedLinkError {
     /// The shared link wasn't found.
     SharedLinkNotFound,
@@ -13607,6 +13651,7 @@ impl ::serde::ser::Serialize for SetAccessInheritanceArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SetAccessInheritanceError {
     /// Unable to access shared folder.
     AccessError(SharedFolderAccessError),
@@ -14132,6 +14177,7 @@ impl ::serde::ser::Serialize for ShareFolderArgBase {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ShareFolderError {
     /// This user's email address is not verified. This functionality is only available on accounts
     /// with a verified email address. Users can verify their email address
@@ -14261,6 +14307,7 @@ impl ::std::fmt::Display for ShareFolderError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ShareFolderErrorBase {
     /// This user's email address is not verified. This functionality is only available on accounts
     /// with a verified email address. Users can verify their email address
@@ -14507,6 +14554,7 @@ impl ::serde::ser::Serialize for ShareFolderLaunch {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SharePathError {
     /// A file is at the specified path.
     IsFile,
@@ -15656,6 +15704,7 @@ impl ::serde::ser::Serialize for SharedFileMetadata {
 
 /// There is an error accessing the shared folder.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SharedFolderAccessError {
     /// This shared folder ID is invalid.
     InvalidId,
@@ -15765,6 +15814,7 @@ impl ::std::fmt::Display for SharedFolderAccessError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SharedFolderMemberError {
     /// The target dropbox_id is invalid.
     InvalidDropboxId,
@@ -16556,6 +16606,7 @@ impl ::serde::ser::Serialize for SharedFolderMetadataBase {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SharedLinkAccessFailureReason {
     /// User is not logged in.
     LoginRequired,
@@ -16668,6 +16719,7 @@ impl ::serde::ser::Serialize for SharedLinkAccessFailureReason {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SharedLinkAlreadyExistsMetadata {
     /// Metadata of the shared link that already exists.
     Metadata(SharedLinkMetadata),
@@ -16730,6 +16782,7 @@ impl ::serde::ser::Serialize for SharedLinkAlreadyExistsMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SharedLinkError {
     /// The shared link wasn't found.
     SharedLinkNotFound,
@@ -16827,6 +16880,7 @@ impl ::std::fmt::Display for SharedLinkError {
 
 /// The metadata of a shared link.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SharedLinkMetadata {
     File(FileLinkMetadata),
     Folder(FolderLinkMetadata),
@@ -16906,6 +16960,7 @@ impl ::serde::ser::Serialize for SharedLinkMetadata {
 
 /// Who can view shared links in this folder.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SharedLinkPolicy {
     /// Links can be shared with anyone.
     Anyone,
@@ -17237,6 +17292,7 @@ impl ::std::fmt::Display for SharedLinkSettingsError {
 
 /// User could not access this file.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SharingFileAccessError {
     /// Current user does not have sufficient privileges to perform the desired action.
     NoPermission,
@@ -17360,6 +17416,7 @@ impl ::std::fmt::Display for SharingFileAccessError {
 
 /// User account had a problem preventing this action.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum SharingUserError {
     /// This user's email address is not verified. This functionality is only available on accounts
     /// with a verified email address. Users can verify their email address
@@ -17658,6 +17715,7 @@ impl ::serde::ser::Serialize for TransferFolderArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TransferFolderError {
     AccessError(SharedFolderAccessError),
     /// [`TransferFolderArg::to_dropbox_id`](TransferFolderArg) is invalid.
@@ -17901,6 +17959,7 @@ impl ::serde::ser::Serialize for UnmountFolderArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UnmountFolderError {
     AccessError(SharedFolderAccessError),
     /// The current user does not have permission to perform this action.
@@ -18093,6 +18152,7 @@ impl ::serde::ser::Serialize for UnshareFileArg {
 
 /// Error result for [`unshare_file()`](unshare_file).
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UnshareFileError {
     UserError(SharingUserError),
     AccessError(SharingFileAccessError),
@@ -18292,6 +18352,7 @@ impl ::serde::ser::Serialize for UnshareFolderArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UnshareFolderError {
     AccessError(SharedFolderAccessError),
     /// This action cannot be performed on a team shared folder.
@@ -18642,6 +18703,7 @@ impl ::serde::ser::Serialize for UpdateFolderMemberArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UpdateFolderMemberError {
     AccessError(SharedFolderAccessError),
     MemberError(SharedFolderMemberError),
@@ -18980,6 +19042,7 @@ impl ::serde::ser::Serialize for UpdateFolderPolicyArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UpdateFolderPolicyError {
     AccessError(SharedFolderAccessError),
     /// [`UpdateFolderPolicyArg::member_policy`](UpdateFolderPolicyArg) was set even though user is
@@ -19631,6 +19694,7 @@ impl ::serde::ser::Serialize for UserMembershipInfo {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ViewerInfoPolicy {
     /// Viewer information is available on this file.
     Enabled,
@@ -19704,6 +19768,7 @@ impl ::serde::ser::Serialize for ViewerInfoPolicy {
 /// Who can access a shared link. The most open visibility is [`Public`](Visibility::Public). The
 /// default depends on many aspects, such as team and user preferences and shared folder settings.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum Visibility {
     /// Anyone who has received the link can access it. No login required.
     Public,

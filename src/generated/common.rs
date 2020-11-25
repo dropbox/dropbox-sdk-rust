@@ -20,6 +20,7 @@ pub type SessionId = String;
 pub type SharedFolderId = NamespaceId;
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PathRoot {
     /// Paths are relative to the authenticating user's home namespace, whether or not that user
     /// belongs to a team.
@@ -117,6 +118,7 @@ impl ::serde::ser::Serialize for PathRoot {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PathRootError {
     /// The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error
     /// is use's latest root info.
@@ -206,6 +208,7 @@ impl ::std::fmt::Display for PathRootError {
 
 /// Information about current user's root.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RootInfo {
     Team(TeamRootInfo),
     User(UserRootInfo),

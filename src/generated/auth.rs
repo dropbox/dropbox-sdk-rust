@@ -36,6 +36,7 @@ pub fn token_revoke(
 
 /// Error occurred because the account doesn't have permission to access the resource.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum AccessError {
     /// Current account type cannot access the resource.
     InvalidAccountType(InvalidAccountTypeError),
@@ -128,6 +129,7 @@ impl ::std::fmt::Display for AccessError {
 
 /// Errors occurred during authentication.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum AuthError {
     /// The access token is invalid.
     InvalidAccessToken,
@@ -274,6 +276,7 @@ impl ::std::fmt::Display for AuthError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum InvalidAccountTypeError {
     /// Current account type doesn't have permission to access this route endpoint.
     Endpoint,
@@ -357,6 +360,7 @@ impl ::std::fmt::Display for InvalidAccountTypeError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PaperAccessError {
     /// Paper is disabled.
     PaperDisabled,
@@ -549,6 +553,7 @@ impl ::serde::ser::Serialize for RateLimitError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RateLimitReason {
     /// You are making too many requests in the past few minutes.
     TooManyRequests,
@@ -723,6 +728,7 @@ impl ::serde::ser::Serialize for TokenFromOAuth1Arg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum TokenFromOAuth1Error {
     /// Part or all of the OAuth 1.0 access token info is invalid.
     InvalidOauth1TokenInfo,

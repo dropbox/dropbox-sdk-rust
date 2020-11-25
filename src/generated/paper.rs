@@ -723,6 +723,7 @@ impl ::serde::ser::Serialize for AddPaperDocUserMemberResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum AddPaperDocUserResult {
     /// User was successfully added to the Paper doc.
     Success,
@@ -976,6 +977,7 @@ impl ::serde::ser::Serialize for Cursor {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum DocLookupError {
     /// Your account does not have permissions to perform this action. This may be due to it only
     /// having access to Paper as files in the Dropbox filesystem. For more information, refer to
@@ -1153,6 +1155,7 @@ impl ::serde::ser::Serialize for DocSubscriptionLevel {
 
 /// The desired export format of the Paper doc.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ExportFormat {
     /// The HTML export format.
     Html,
@@ -1589,6 +1592,7 @@ impl ::serde::ser::Serialize for FoldersContainingPaperDoc {
 
 /// The import format of the incoming data.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ImportFormat {
     /// The provided data is interpreted as standard HTML.
     Html,
@@ -1781,6 +1785,7 @@ impl ::serde::ser::Serialize for InviteeInfoWithPermissionLevel {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListDocsCursorError {
     CursorError(PaperApiCursorError),
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -2086,6 +2091,7 @@ impl ::serde::ser::Serialize for ListPaperDocsContinueArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListPaperDocsFilterBy {
     /// Fetches all Paper doc IDs that the user has ever accessed.
     DocsAccessed,
@@ -2280,6 +2286,7 @@ impl ::serde::ser::Serialize for ListPaperDocsResponse {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListPaperDocsSortBy {
     /// Sorts the Paper docs by the time they were last accessed.
     Accessed,
@@ -2364,6 +2371,7 @@ impl ::serde::ser::Serialize for ListPaperDocsSortBy {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListPaperDocsSortOrder {
     /// Sorts the search result in ascending order.
     Ascending,
@@ -2435,6 +2443,7 @@ impl ::serde::ser::Serialize for ListPaperDocsSortOrder {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum ListUsersCursorError {
     /// Your account does not have permissions to perform this action. This may be due to it only
     /// having access to Paper as files in the Dropbox filesystem. For more information, refer to
@@ -3275,6 +3284,7 @@ impl ::serde::ser::Serialize for ListUsersOnPaperDocResponse {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PaperApiBaseError {
     /// Your account does not have permissions to perform this action. This may be due to it only
     /// having access to Paper as files in the Dropbox filesystem. For more information, refer to
@@ -3348,6 +3358,7 @@ impl ::std::fmt::Display for PaperApiBaseError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PaperApiCursorError {
     /// The provided cursor is expired.
     ExpiredCursor,
@@ -3567,6 +3578,7 @@ impl ::serde::ser::Serialize for PaperDocCreateArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PaperDocCreateError {
     /// Your account does not have permissions to perform this action. This may be due to it only
     /// having access to Paper as files in the Dropbox filesystem. For more information, refer to
@@ -4041,6 +4053,7 @@ impl ::serde::ser::Serialize for PaperDocExportResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PaperDocPermissionLevel {
     /// User will be granted edit permissions.
     Edit,
@@ -4350,6 +4363,7 @@ impl ::serde::ser::Serialize for PaperDocUpdateArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PaperDocUpdateError {
     /// Your account does not have permissions to perform this action. This may be due to it only
     /// having access to Paper as files in the Dropbox filesystem. For more information, refer to
@@ -4515,6 +4529,7 @@ impl ::std::fmt::Display for PaperDocUpdateError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PaperDocUpdatePolicy {
     /// The content will be appended to the doc.
     Append,
@@ -4730,6 +4745,7 @@ impl ::serde::ser::Serialize for PaperFolderCreateArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PaperFolderCreateError {
     /// Your account does not have permissions to perform this action. This may be due to it only
     /// having access to Paper as files in the Dropbox filesystem. For more information, refer to
@@ -5487,6 +5503,7 @@ impl ::serde::ser::Serialize for UserInfoWithPermissionLevel {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum UserOnPaperDocFilter {
     /// all users who have visited the Paper doc.
     Visited,
