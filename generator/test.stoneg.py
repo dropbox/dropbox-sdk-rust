@@ -112,7 +112,7 @@ class TestBackend(RustHelperBackend):
                             else:
                                 # assert that serializing it returns an error
                                 self.emit(u'assert!(::serde_json::to_string(&x).is_err());')
-                            self.emit()
+                        self.emit()
                     # for test_value
                 # for typ
             # .rs test file
@@ -271,6 +271,11 @@ class TestUnion(TestValue):
         with codegen.block(u'match {}'.format(expression_path)):
             if ir.is_void_type(self._variant.data_type):
                 codegen.emit(u'::dropbox_sdk::{}::{}::{} => (),'.format(
+                    self._rust_namespace_name,
+                    self._rust_name,
+                    self._rust_variant_name))
+            elif codegen.is_nullary_struct(self._variant.data_type):
+                codegen.emit(u'::dropbox_sdk::{}::{}::{}(..) => (), // nullary struct'.format(
                     self._rust_namespace_name,
                     self._rust_name,
                     self._rust_variant_name))

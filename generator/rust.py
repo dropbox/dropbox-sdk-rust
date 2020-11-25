@@ -94,6 +94,9 @@ class RustHelperBackend(CodeBackend):
         return isinstance(typ, ir.Union) or \
             (isinstance(typ, ir.Struct) and typ.has_enumerated_subtypes())
 
+    def is_nullary_struct(self, typ):
+        return isinstance(typ, ir.Struct) and not typ.all_fields
+
     def namespace_name(self, ns):
         return self.namespace_name_raw(ns.name)
 
