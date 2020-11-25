@@ -934,6 +934,7 @@ impl ::serde::ser::Serialize for AclUpdatePolicy {
 
 /// Arguments for [`add_file_member()`](add_file_member).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddFileMemberArgs {
     /// File to which to add members.
     pub file: PathOrId,
@@ -1225,6 +1226,7 @@ impl ::std::fmt::Display for AddFileMemberError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddFolderMemberArg {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -1611,6 +1613,7 @@ impl ::std::fmt::Display for AddFolderMemberError {
 
 /// The member and type of access the member should have when added to a shared folder.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddMember {
     /// The member to add to the shared folder.
     pub member: MemberSelector,
@@ -1869,6 +1872,7 @@ impl ::std::fmt::Display for AddMemberSelectorError {
 
 /// Information about the content that has a link audience different than that of this folder.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct AudienceExceptionContentInfo {
     /// The name of the content, which is either a file or a folder.
     pub name: String,
@@ -1960,6 +1964,7 @@ impl ::serde::ser::Serialize for AudienceExceptionContentInfo {
 /// The total count and truncated list of information of content inside this folder that has a
 /// different audience than the link on this folder. This is only returned for folders.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct AudienceExceptions {
     pub count: u32,
     /// A truncated list of some of the content that is an exception. The length of this list could
@@ -2065,6 +2070,7 @@ impl ::serde::ser::Serialize for AudienceExceptions {
 /// Information about the shared folder that prevents the link audience for this link from being
 /// more restrictive.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct AudienceRestrictingSharedFolder {
     /// The ID of the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -2185,6 +2191,7 @@ impl ::serde::ser::Serialize for AudienceRestrictingSharedFolder {
 
 /// Arguments for [`change_file_member_access()`](change_file_member_access).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ChangeFileMemberAccessArgs {
     /// File for which we are changing a member's access.
     pub file: PathOrId,
@@ -2301,6 +2308,7 @@ impl ::serde::ser::Serialize for ChangeFileMemberAccessArgs {
 
 /// Metadata for a collection-based shared link.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct CollectionLinkMetadata {
     /// URL of the shared link.
     pub url: String,
@@ -2421,6 +2429,7 @@ impl ::serde::ser::Serialize for CollectionLinkMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateSharedLinkArg {
     /// The path to share.
     pub path: String,
@@ -2622,6 +2631,7 @@ impl ::std::fmt::Display for CreateSharedLinkError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateSharedLinkWithSettingsArg {
     /// The path to be shared by the shared link.
     pub path: ReadPath,
@@ -2859,6 +2869,7 @@ impl ::std::fmt::Display for CreateSharedLinkWithSettingsError {
 /// The expected metadata of a shared link for a file or folder when a link is first created for the
 /// content. Absent if the link already exists.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExpectedSharedContentLinkMetadata {
     /// The audience options that are available for the content. Some audience options may be
     /// unavailable. For example, team_only may be unavailable if the content is not owned by a user
@@ -3352,6 +3363,7 @@ impl ::serde::ser::Serialize for FileErrorResult {
 
 /// The metadata of a file shared link.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileLinkMetadata {
     /// URL of the shared link.
     pub url: String,
@@ -3812,6 +3824,7 @@ impl ::serde::ser::Serialize for FileMemberActionIndividualResult {
 /// Per-member result for [`add_file_member()`](add_file_member) or
 /// [`change_file_member_access()`](change_file_member_access).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileMemberActionResult {
     /// One of specified input members.
     pub member: MemberSelector,
@@ -3988,6 +4001,7 @@ impl ::serde::ser::Serialize for FileMemberRemoveActionResult {
 
 /// Whether the user is allowed to take the sharing action on the file.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FilePermission {
     /// The action that the user may wish to take on the file.
     pub action: FileAction,
@@ -4337,6 +4351,7 @@ impl ::serde::ser::Serialize for FolderAction {
 
 /// The metadata of a folder shared link.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FolderLinkMetadata {
     /// URL of the shared link.
     pub url: String,
@@ -4547,6 +4562,7 @@ impl ::serde::ser::Serialize for FolderLinkMetadata {
 
 /// Whether the user is allowed to take the action on the shared folder.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FolderPermission {
     /// The action that the user may wish to take on the folder.
     pub action: FolderAction,
@@ -4669,6 +4685,7 @@ impl ::serde::ser::Serialize for FolderPermission {
 
 /// A set of policies governing membership and privileges for a shared folder.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FolderPolicy {
     /// Who can add and remove members from this shared folder.
     pub acl_update_policy: AclUpdatePolicy,
@@ -4830,6 +4847,7 @@ impl ::serde::ser::Serialize for FolderPolicy {
 
 /// Arguments of [`get_file_metadata()`](get_file_metadata).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetFileMetadataArg {
     /// The file to query.
     pub file: PathOrId,
@@ -4940,6 +4958,7 @@ impl ::serde::ser::Serialize for GetFileMetadataArg {
 
 /// Arguments of [`get_file_metadata_batch()`](get_file_metadata_batch).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetFileMetadataBatchArg {
     /// The files to query.
     pub files: Vec<PathOrId>,
@@ -5050,6 +5069,7 @@ impl ::serde::ser::Serialize for GetFileMetadataBatchArg {
 
 /// Per file results of [`get_file_metadata_batch()`](get_file_metadata_batch).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetFileMetadataBatchResult {
     /// This is the input file identifier corresponding to one of
     /// [`GetFileMetadataBatchArg::files`](GetFileMetadataBatchArg).
@@ -5316,6 +5336,7 @@ impl ::serde::ser::Serialize for GetFileMetadataIndividualResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetMetadataArgs {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -5534,6 +5555,7 @@ impl ::std::fmt::Display for GetSharedLinkFileError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetSharedLinkMetadataArg {
     /// URL of the shared link.
     pub url: String,
@@ -5660,6 +5682,7 @@ impl ::serde::ser::Serialize for GetSharedLinkMetadataArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetSharedLinksArg {
     /// See [`get_shared_links()`](get_shared_links) description.
     pub path: Option<String>,
@@ -5821,6 +5844,7 @@ impl ::std::fmt::Display for GetSharedLinksError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetSharedLinksResult {
     /// Shared links applicable to the path argument.
     pub links: Vec<LinkMetadata>,
@@ -5912,6 +5936,7 @@ impl ::serde::ser::Serialize for GetSharedLinksResult {
 /// The information about a group. Groups is a way to manage a list of users  who need same access
 /// permission to the shared folder.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupInfo {
     pub group_name: String,
     pub group_id: super::team_common::GroupId,
@@ -6122,6 +6147,7 @@ impl ::serde::ser::Serialize for GroupInfo {
 
 /// The information about a group member of the shared content.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMembershipInfo {
     /// The access type for this member. It contains inherited access type from parent folder, and
     /// acquired access type from this folder.
@@ -6280,6 +6306,7 @@ impl ::serde::ser::Serialize for GroupMembershipInfo {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct InsufficientPlan {
     /// A message to tell the user to upgrade in order to support expected action.
     pub message: String,
@@ -6388,6 +6415,7 @@ impl ::serde::ser::Serialize for InsufficientPlan {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct InsufficientQuotaAmounts {
     /// The amount of space needed to add the item (the size of the item).
     pub space_needed: u64,
@@ -6567,6 +6595,7 @@ impl ::serde::ser::Serialize for InviteeInfo {
 
 /// Information about an invited member of a shared content.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct InviteeMembershipInfo {
     /// The access type for this member. It contains inherited access type from parent folder, and
     /// acquired access type from this folder.
@@ -7459,6 +7488,7 @@ impl ::serde::ser::Serialize for LinkPassword {
 
 /// Permissions for actions that can be performed on a link.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LinkPermission {
     pub action: LinkAction,
     pub allow: bool,
@@ -7576,6 +7606,7 @@ impl ::serde::ser::Serialize for LinkPermission {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LinkPermissions {
     /// Whether the caller can revoke the shared link.
     pub can_revoke: bool,
@@ -7770,6 +7801,7 @@ impl ::serde::ser::Serialize for LinkPermissions {
 
 /// Settings that apply to a link.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LinkSettings {
     /// The access level on the link for this file. Currently, it only accepts 'viewer' and
     /// 'viewer_no_comment'.
@@ -7911,6 +7943,7 @@ impl ::serde::ser::Serialize for LinkSettings {
 
 /// Arguments for [`list_file_members()`](list_file_members).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersArg {
     /// The file for which you want to see members.
     pub file: PathOrId,
@@ -8055,6 +8088,7 @@ impl ::serde::ser::Serialize for ListFileMembersArg {
 
 /// Arguments for [`list_file_members_batch()`](list_file_members_batch).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersBatchArg {
     /// Files for which to return members.
     pub files: Vec<PathOrId>,
@@ -8163,6 +8197,7 @@ impl ::serde::ser::Serialize for ListFileMembersBatchArg {
 
 /// Per-file result for [`list_file_members_batch()`](list_file_members_batch).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersBatchResult {
     /// This is the input file identifier, whether an ID or a path.
     pub file: PathOrId,
@@ -8266,6 +8301,7 @@ impl ::serde::ser::Serialize for ListFileMembersBatchResult {
 
 /// Arguments for [`list_file_members_continue()`](list_file_members_continue).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersContinueArg {
     /// The cursor returned by your last call to [`list_file_members()`](list_file_members),
     /// [`list_file_members_continue()`](list_file_members_continue), or
@@ -8460,6 +8496,7 @@ impl ::std::fmt::Display for ListFileMembersContinueError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileMembersCountResult {
     /// A list of members on this file.
     pub members: SharedFileMembers,
@@ -8726,6 +8763,7 @@ impl ::serde::ser::Serialize for ListFileMembersIndividualResult {
 
 /// Arguments for [`list_received_files()`](list_received_files).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFilesArg {
     /// Number of files to return max per query. Defaults to 100 if no limit is specified.
     pub limit: u32,
@@ -8832,6 +8870,7 @@ impl ::serde::ser::Serialize for ListFilesArg {
 
 /// Arguments for [`list_received_files_continue()`](list_received_files_continue).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFilesContinueArg {
     /// Cursor in [`ListFilesResult::cursor`](ListFilesResult).
     pub cursor: String,
@@ -9010,6 +9049,7 @@ impl ::std::fmt::Display for ListFilesContinueError {
 
 /// Success results for [`list_received_files()`](list_received_files).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFilesResult {
     /// Information about the files shared with current user.
     pub entries: Vec<SharedFileMetadata>,
@@ -9117,6 +9157,7 @@ impl ::serde::ser::Serialize for ListFilesResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderMembersArgs {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -9245,6 +9286,7 @@ impl ::serde::ser::Serialize for ListFolderMembersArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderMembersContinueArg {
     /// The cursor returned by your last call to [`list_folder_members()`](list_folder_members) or
     /// [`list_folder_members_continue()`](list_folder_members_continue).
@@ -9421,6 +9463,7 @@ impl ::std::fmt::Display for ListFolderMembersContinueError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderMembersCursorArg {
     /// This is a list indicating whether each returned member will include a boolean value
     /// [`MemberPermission::allow`](MemberPermission) that describes whether the current user can
@@ -9527,6 +9570,7 @@ impl ::serde::ser::Serialize for ListFolderMembersCursorArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFoldersArgs {
     /// The maximum number of results to return per request.
     pub limit: u32,
@@ -9632,6 +9676,7 @@ impl ::serde::ser::Serialize for ListFoldersArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFoldersContinueArg {
     /// The cursor returned by the previous API call specified in the endpoint description.
     pub cursor: String,
@@ -9795,6 +9840,7 @@ impl ::std::fmt::Display for ListFoldersContinueError {
 /// Unmounted shared folders can be identified by the absence of
 /// [`SharedFolderMetadata::path_lower`](SharedFolderMetadata).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFoldersResult {
     /// List of all shared folders the authenticated user has access to.
     pub entries: Vec<SharedFolderMetadata>,
@@ -9906,6 +9952,7 @@ impl ::serde::ser::Serialize for ListFoldersResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListSharedLinksArg {
     /// See [`list_shared_links()`](list_shared_links) description.
     pub path: Option<ReadPath>,
@@ -10114,6 +10161,7 @@ impl ::std::fmt::Display for ListSharedLinksError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListSharedLinksResult {
     /// Shared links applicable to the path argument.
     pub links: Vec<SharedLinkMetadata>,
@@ -10237,6 +10285,7 @@ impl ::serde::ser::Serialize for ListSharedLinksResult {
 
 /// Contains information about a member's access level to content after an operation.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberAccessLevelResult {
     /// The member still has this level of access to the content through a parent folder.
     pub access_level: Option<AccessLevel>,
@@ -10485,6 +10534,7 @@ impl ::serde::ser::Serialize for MemberAction {
 
 /// Whether the user is allowed to take the action on the associated member.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberPermission {
     /// The action that the user may wish to take on the member.
     pub action: MemberAction,
@@ -10759,6 +10809,7 @@ impl ::serde::ser::Serialize for MemberSelector {
 
 /// The information about a member of the shared content.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembershipInfo {
     /// The access type for this member. It contains inherited access type from parent folder, and
     /// acquired access type from this folder.
@@ -10904,6 +10955,7 @@ impl ::serde::ser::Serialize for MembershipInfo {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ModifySharedLinkSettingsArgs {
     /// URL of the shared link to change its settings.
     pub url: String,
@@ -11152,6 +11204,7 @@ impl ::std::fmt::Display for ModifySharedLinkSettingsError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MountFolderArg {
     /// The ID of the shared folder to mount.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -11379,6 +11432,7 @@ impl ::std::fmt::Display for MountFolderError {
 
 /// Contains information about a parent folder that a member has access to.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ParentFolderAccessInfo {
     /// Display name for the folder.
     pub folder_name: String,
@@ -11513,6 +11567,7 @@ impl ::serde::ser::Serialize for ParentFolderAccessInfo {
 
 /// Metadata for a path-based shared link.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PathLinkMetadata {
     /// URL of the shared link.
     pub url: String,
@@ -11948,6 +12003,7 @@ impl ::serde::ser::Serialize for PermissionDeniedReason {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelinquishFileMembershipArg {
     /// The path or id for the file.
     pub file: PathOrId,
@@ -12137,6 +12193,7 @@ impl ::std::fmt::Display for RelinquishFileMembershipError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelinquishFolderMembershipArg {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -12400,6 +12457,7 @@ impl ::std::fmt::Display for RelinquishFolderMembershipError {
 
 /// Arguments for [`remove_file_member_2()`](remove_file_member_2).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemoveFileMemberArg {
     /// File from which to remove members.
     pub file: PathOrId,
@@ -12606,6 +12664,7 @@ impl ::std::fmt::Display for RemoveFileMemberError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemoveFolderMemberArg {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -13241,6 +13300,7 @@ impl ::serde::ser::Serialize for ResolvedVisibility {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RevokeSharedLinkArg {
     /// URL of the shared link.
     pub url: String,
@@ -13439,6 +13499,7 @@ impl ::std::fmt::Display for RevokeSharedLinkError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SetAccessInheritanceArg {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -13633,6 +13694,7 @@ impl ::std::fmt::Display for SetAccessInheritanceError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ShareFolderArg {
     /// The path to the folder to share. If it does not exist, then a new one is created.
     pub path: super::files::WritePath,
@@ -13870,6 +13932,7 @@ impl ::serde::ser::Serialize for ShareFolderArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ShareFolderArgBase {
     /// The path to the folder to share. If it does not exist, then a new one is created.
     pub path: super::files::WritePath,
@@ -14695,6 +14758,7 @@ impl ::std::fmt::Display for SharePathError {
 
 /// Metadata of a shared link for a file or folder.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedContentLinkMetadata {
     /// The audience options that are available for the content. Some audience options may be
     /// unavailable. For example, team_only may be unavailable if the content is not owned by a user
@@ -14923,6 +14987,7 @@ impl ::serde::ser::Serialize for SharedContentLinkMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedContentLinkMetadataBase {
     /// The audience options that are available for the content. Some audience options may be
     /// unavailable. For example, team_only may be unavailable if the content is not owned by a user
@@ -15121,6 +15186,7 @@ impl ::serde::ser::Serialize for SharedContentLinkMetadataBase {
 /// [`list_file_members_continue()`](list_file_members_continue), and used as part of the results
 /// for [`list_file_members_batch()`](list_file_members_batch).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedFileMembers {
     /// The list of user members of the shared file.
     pub users: Vec<UserFileMembershipInfo>,
@@ -15261,6 +15327,7 @@ impl ::serde::ser::Serialize for SharedFileMembers {
 
 /// Properties of the shared file.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedFileMetadata {
     /// The ID of the file.
     pub id: super::files::FileId,
@@ -15793,6 +15860,7 @@ impl ::std::fmt::Display for SharedFolderMemberError {
 
 /// Shared folder user and group membership.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedFolderMembers {
     /// The list of user members of the shared folder.
     pub users: Vec<UserMembershipInfo>,
@@ -15933,6 +16001,7 @@ impl ::serde::ser::Serialize for SharedFolderMembers {
 
 /// The metadata which includes basic information about the shared folder.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedFolderMetadata {
     /// The current user's access level for this shared folder.
     pub access_type: AccessLevel,
@@ -16273,6 +16342,7 @@ impl ::serde::ser::Serialize for SharedFolderMetadata {
 
 /// Properties of the shared folder.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedFolderMetadataBase {
     /// The current user's access level for this shared folder.
     pub access_type: AccessLevel,
@@ -16920,6 +16990,7 @@ impl ::serde::ser::Serialize for SharedLinkPolicy {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedLinkSettings {
     /// The requested access for this shared link.
     pub requested_visibility: Option<RequestedVisibility>,
@@ -17362,6 +17433,7 @@ impl ::std::fmt::Display for SharingUserError {
 
 /// Information about a team member.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamMemberInfo {
     /// Information about the member's team.
     pub team_info: TeamInfo,
@@ -17483,6 +17555,7 @@ impl ::serde::ser::Serialize for TeamMemberInfo {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TransferFolderArg {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -17738,6 +17811,7 @@ impl ::std::fmt::Display for TransferFolderError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnmountFolderArg {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -17928,6 +18002,7 @@ impl ::std::fmt::Display for UnmountFolderError {
 
 /// Arguments for [`unshare_file()`](unshare_file).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnshareFileArg {
     /// The file to unshare.
     pub file: PathOrId,
@@ -18107,6 +18182,7 @@ impl ::std::fmt::Display for UnshareFileError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnshareFolderArg {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -18329,6 +18405,7 @@ impl ::std::fmt::Display for UnshareFolderError {
 
 /// Arguments for [`update_file_member()`](update_file_member).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateFileMemberArgs {
     /// File for which we are changing a member's access.
     pub file: PathOrId,
@@ -18444,6 +18521,7 @@ impl ::serde::ser::Serialize for UpdateFileMemberArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateFolderMemberArg {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -18700,6 +18778,7 @@ impl ::std::fmt::Display for UpdateFolderMemberError {
 
 /// If any of the policies are unset, then they retain their current setting.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateFolderPolicyArg {
     /// The ID for the shared folder.
     pub shared_folder_id: super::common::SharedFolderId,
@@ -19042,6 +19121,7 @@ impl ::std::fmt::Display for UpdateFolderPolicyError {
 
 /// The information about a user member of the shared content with an appended last seen timestamp.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserFileMembershipInfo {
     /// The access type for this member. It contains inherited access type from parent folder, and
     /// acquired access type from this folder.
@@ -19239,6 +19319,7 @@ impl ::serde::ser::Serialize for UserFileMembershipInfo {
 /// [`users::get_account_batch()`](super::users::get_account_batch) to obtain more detailed
 /// information.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserInfo {
     /// The account ID of the user.
     pub account_id: super::users_common::AccountId,
@@ -19391,6 +19472,7 @@ impl ::serde::ser::Serialize for UserInfo {
 
 /// The information about a user member of the shared content.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserMembershipInfo {
     /// The access type for this member. It contains inherited access type from parent folder, and
     /// acquired access type from this folder.

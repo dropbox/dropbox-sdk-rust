@@ -82,6 +82,7 @@ pub fn get_space_usage(
 /// The amount of detail revealed about an account depends on the user being queried and the user
 /// making the query.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct Account {
     /// The user's unique Dropbox ID.
     pub account_id: super::users_common::AccountId,
@@ -249,6 +250,7 @@ impl ::serde::ser::Serialize for Account {
 
 /// Basic information about any account.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct BasicAccount {
     /// The user's unique Dropbox ID.
     pub account_id: super::users_common::AccountId,
@@ -515,6 +517,7 @@ impl ::serde::ser::Serialize for FileLockingValue {
 
 /// Detailed information about the current user's account.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FullAccount {
     /// The user's unique Dropbox ID.
     pub account_id: super::users_common::AccountId,
@@ -809,6 +812,7 @@ impl ::serde::ser::Serialize for FullAccount {
 
 /// Detailed information about a team.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FullTeam {
     /// The team's unique ID.
     pub id: String,
@@ -942,6 +946,7 @@ impl ::serde::ser::Serialize for FullTeam {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetAccountArg {
     /// A user's account identifier.
     pub account_id: super::users_common::AccountId,
@@ -1031,6 +1036,7 @@ impl ::serde::ser::Serialize for GetAccountArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetAccountBatchArg {
     /// List of user account identifiers.  Should not contain any duplicate account IDs.
     pub account_ids: Vec<super::users_common::AccountId>,
@@ -1265,6 +1271,7 @@ impl ::std::fmt::Display for GetAccountError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct IndividualSpaceAllocation {
     /// The total space allocated to the user's account (bytes).
     pub allocated: u64,
@@ -1355,6 +1362,7 @@ impl ::serde::ser::Serialize for IndividualSpaceAllocation {
 
 /// Representations for a person's name to assist with internationalization.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct Name {
     /// Also known as a first name.
     pub given_name: String,
@@ -1638,6 +1646,7 @@ impl ::serde::ser::Serialize for SpaceAllocation {
 
 /// Information about a user's space usage and quota.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SpaceUsage {
     /// The user's total space usage (bytes).
     pub used: u64,
@@ -1741,6 +1750,7 @@ impl ::serde::ser::Serialize for SpaceUsage {
 
 /// Information about a team.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct Team {
     /// The team's unique ID.
     pub id: String,
@@ -1843,6 +1853,7 @@ impl ::serde::ser::Serialize for Team {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamSpaceAllocation {
     /// The total space currently used by the user's team (bytes).
     pub used: u64,
@@ -2141,6 +2152,7 @@ impl ::serde::ser::Serialize for UserFeatureValue {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserFeaturesGetValuesBatchArg {
     /// A list of features in [`UserFeature`](UserFeature). If the list is empty, this route will
     /// return [`UserFeaturesGetValuesBatchError`](UserFeaturesGetValuesBatchError).
@@ -2302,6 +2314,7 @@ impl ::std::fmt::Display for UserFeaturesGetValuesBatchError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserFeaturesGetValuesBatchResult {
     pub values: Vec<UserFeatureValue>,
 }

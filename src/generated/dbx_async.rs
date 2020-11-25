@@ -140,6 +140,7 @@ impl ::serde::ser::Serialize for LaunchResultBase {
 
 /// Arguments for methods that poll the status of an asynchronous job.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PollArg {
     /// Id of the asynchronous job. This is the value of a response returned from the method that
     /// launched the job.

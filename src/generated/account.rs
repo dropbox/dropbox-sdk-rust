@@ -84,6 +84,7 @@ impl ::serde::ser::Serialize for PhotoSourceArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SetProfilePhotoArg {
     /// Image to set as the user's new profile photo.
     pub photo: PhotoSourceArg,
@@ -295,6 +296,7 @@ impl ::std::fmt::Display for SetProfilePhotoError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SetProfilePhotoResult {
     /// URL for the photo representing the user, if one is set.
     pub profile_photo_url: String,

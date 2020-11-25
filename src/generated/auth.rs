@@ -441,6 +441,7 @@ impl ::std::fmt::Display for PaperAccessError {
 
 /// Error occurred because the app is being rate limited.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RateLimitError {
     /// The reason why the app is being rate limited.
     pub reason: RateLimitReason,
@@ -619,6 +620,7 @@ impl ::serde::ser::Serialize for RateLimitReason {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TokenFromOAuth1Arg {
     /// The supplied OAuth 1.0 access token.
     pub oauth1_token: String,
@@ -804,6 +806,7 @@ impl ::std::fmt::Display for TokenFromOAuth1Error {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TokenFromOAuth1Result {
     /// The OAuth 2.0 token generated from the supplied OAuth 1.0 token.
     pub oauth2_token: String,
@@ -893,6 +896,7 @@ impl ::serde::ser::Serialize for TokenFromOAuth1Result {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TokenScopeError {
     /// The required scope to access the route.
     pub required_scope: String,

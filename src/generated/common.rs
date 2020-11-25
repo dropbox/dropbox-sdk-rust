@@ -270,6 +270,7 @@ impl ::serde::ser::Serialize for RootInfo {
 
 /// Root info when user is member of a team with a separate root namespace ID.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamRootInfo {
     /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team
     /// root if the user is member of a team with a separate team root. Otherwise it will be same as
@@ -393,6 +394,7 @@ impl ::serde::ser::Serialize for TeamRootInfo {
 /// Root info when user is not member of a team or the user is a member of a team and the team does
 /// not have a separate root namespace.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserRootInfo {
     /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team
     /// root if the user is member of a team with a separate team root. Otherwise it will be same as

@@ -370,6 +370,7 @@ pub fn folders_create(
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddMember {
     /// User which should be added to the Paper doc. Specify only email address or Dropbox account
     /// ID.
@@ -478,6 +479,7 @@ impl ::serde::ser::Serialize for AddMember {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddPaperDocUser {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
@@ -618,6 +620,7 @@ impl ::serde::ser::Serialize for AddPaperDocUser {
 
 /// Per-member result for [`docs_users_add()`](docs_users_add).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddPaperDocUserMemberResult {
     /// One of specified input members.
     pub member: super::sharing::MemberSelector,
@@ -856,6 +859,7 @@ impl ::serde::ser::Serialize for AddPaperDocUserResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct Cursor {
     /// The actual cursor value.
     pub value: String,
@@ -1221,6 +1225,7 @@ impl ::serde::ser::Serialize for ExportFormat {
 
 /// Data structure representing a Paper folder.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct Folder {
     /// Paper folder ID. This ID uniquely identifies the folder.
     pub id: String,
@@ -1479,6 +1484,7 @@ impl ::serde::ser::Serialize for FolderSubscriptionLevel {
 
 /// Metadata about Paper folders containing the specififed Paper doc.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FoldersContainingPaperDoc {
     /// The sharing policy of the folder containing the Paper doc.
     pub folder_sharing_policy_type: Option<FolderSharingPolicyType>,
@@ -1669,6 +1675,7 @@ impl ::serde::ser::Serialize for ImportFormat {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct InviteeInfoWithPermissionLevel {
     /// Email address invited to the Paper doc.
     pub invitee: super::sharing::InviteeInfo,
@@ -1847,6 +1854,7 @@ impl ::std::fmt::Display for ListDocsCursorError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListPaperDocsArgs {
     /// Allows user to specify how the Paper docs should be filtered.
     pub filter_by: ListPaperDocsFilterBy,
@@ -1987,6 +1995,7 @@ impl ::serde::ser::Serialize for ListPaperDocsArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListPaperDocsContinueArgs {
     /// The cursor obtained from [`docs_list()`](docs_list) or
     /// [`docs_list_continue()`](docs_list_continue). Allows for pagination.
@@ -2148,6 +2157,7 @@ impl ::serde::ser::Serialize for ListPaperDocsFilterBy {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListPaperDocsResponse {
     /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to
     /// other API methods. The list is sorted in the order specified by the initial call to
@@ -2527,6 +2537,7 @@ impl ::std::fmt::Display for ListUsersCursorError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderArgs {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
@@ -2635,6 +2646,7 @@ impl ::serde::ser::Serialize for ListUsersOnFolderArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderContinueArgs {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
@@ -2739,6 +2751,7 @@ impl ::serde::ser::Serialize for ListUsersOnFolderContinueArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderResponse {
     /// List of email addresses that are invited on the Paper folder.
     pub invitees: Vec<super::sharing::InviteeInfo>,
@@ -2877,6 +2890,7 @@ impl ::serde::ser::Serialize for ListUsersOnFolderResponse {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnPaperDocArgs {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
@@ -3003,6 +3017,7 @@ impl ::serde::ser::Serialize for ListUsersOnPaperDocArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnPaperDocContinueArgs {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
@@ -3106,6 +3121,7 @@ impl ::serde::ser::Serialize for ListUsersOnPaperDocContinueArgs {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnPaperDocResponse {
     /// List of email addresses with their respective permission levels that are invited on the
     /// Paper doc.
@@ -3442,6 +3458,7 @@ impl ::std::fmt::Display for PaperApiCursorError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocCreateArgs {
     /// The format of provided data.
     pub import_format: ImportFormat,
@@ -3676,6 +3693,7 @@ impl ::std::fmt::Display for PaperDocCreateError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocCreateUpdateResult {
     /// Doc ID of the newly created doc.
     pub doc_id: String,
@@ -3791,6 +3809,7 @@ impl ::serde::ser::Serialize for PaperDocCreateUpdateResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocExport {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
@@ -3892,6 +3911,7 @@ impl ::serde::ser::Serialize for PaperDocExport {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocExportResult {
     /// The Paper doc owner's email address.
     pub owner: String,
@@ -4092,6 +4112,7 @@ impl ::serde::ser::Serialize for PaperDocPermissionLevel {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocSharingPolicy {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
@@ -4194,6 +4215,7 @@ impl ::serde::ser::Serialize for PaperDocSharingPolicy {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocUpdateArgs {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
@@ -4577,6 +4599,7 @@ impl ::serde::ser::Serialize for PaperDocUpdatePolicy {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperFolderCreateArg {
     /// The name of the new Paper folder.
     pub name: String,
@@ -4806,6 +4829,7 @@ impl ::std::fmt::Display for PaperFolderCreateError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperFolderCreateResult {
     /// Folder ID of the newly created folder.
     pub folder_id: String,
@@ -4895,6 +4919,7 @@ impl ::serde::ser::Serialize for PaperFolderCreateResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RefPaperDoc {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
@@ -4984,6 +5009,7 @@ impl ::serde::ser::Serialize for RefPaperDoc {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemovePaperDocUser {
     /// The Paper doc ID.
     pub doc_id: PaperDocId,
@@ -5088,6 +5114,7 @@ impl ::serde::ser::Serialize for RemovePaperDocUser {
 
 /// Sharing policy of Paper doc.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharingPolicy {
     /// This value applies to the non-team members.
     pub public_sharing_policy: Option<SharingPublicPolicyType>,
@@ -5357,6 +5384,7 @@ impl ::serde::ser::Serialize for SharingTeamPolicyType {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserInfoWithPermissionLevel {
     /// User shared on the Paper doc.
     pub user: super::sharing::UserInfo,

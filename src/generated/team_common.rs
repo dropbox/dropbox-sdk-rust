@@ -101,6 +101,7 @@ impl ::serde::ser::Serialize for GroupManagementType {
 
 /// Information about a group.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupSummary {
     pub group_name: String,
     pub group_id: GroupId,
@@ -415,6 +416,7 @@ impl ::serde::ser::Serialize for MemberSpaceLimitType {
 
 /// Time range.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TimeRange {
     /// Optional starting time (inclusive).
     pub start_time: Option<super::common::DropboxTimestamp>,

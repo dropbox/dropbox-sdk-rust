@@ -1200,6 +1200,7 @@ pub fn token_get_authenticated_admin(
 
 /// Information on active web sessions.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ActiveWebSession {
     /// The session id.
     pub session_id: String,
@@ -1613,6 +1614,7 @@ impl ::serde::ser::Serialize for AddSecondaryEmailResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddSecondaryEmailsArg {
     /// List of users and secondary emails to add.
     pub new_secondary_emails: Vec<UserSecondaryEmailsArg>,
@@ -1786,6 +1788,7 @@ impl ::std::fmt::Display for AddSecondaryEmailsError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddSecondaryEmailsResult {
     /// List of users and secondary email results.
     pub results: Vec<UserAddResult>,
@@ -1966,6 +1969,7 @@ impl ::serde::ser::Serialize for AdminTier {
 
 /// Information on linked third party applications.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ApiApp {
     /// The application unique id.
     pub app_id: String,
@@ -2136,6 +2140,7 @@ impl ::serde::ser::Serialize for ApiApp {
 
 /// Base report structure.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct BaseDfbReport {
     /// First date present in the results as 'YYYY-MM-DD' or None.
     pub start_date: String,
@@ -2476,6 +2481,7 @@ impl ::serde::ser::Serialize for CustomQuotaResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct CustomQuotaUsersArg {
     /// List of users.
     pub users: Vec<UserSelectorArg>,
@@ -2566,6 +2572,7 @@ impl ::serde::ser::Serialize for CustomQuotaUsersArg {
 
 /// Input arguments that can be provided for most reports.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DateRange {
     /// Optional starting date (inclusive). If start_date is None or too long ago, this field will
     /// be set to 6 months ago.
@@ -2823,6 +2830,7 @@ impl ::serde::ser::Serialize for DeleteSecondaryEmailResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteSecondaryEmailsArg {
     /// List of users and their secondary emails to delete.
     pub emails_to_delete: Vec<UserSecondaryEmailsArg>,
@@ -2912,6 +2920,7 @@ impl ::serde::ser::Serialize for DeleteSecondaryEmailsArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteSecondaryEmailsResult {
     pub results: Vec<UserDeleteResult>,
 }
@@ -3001,6 +3010,7 @@ impl ::serde::ser::Serialize for DeleteSecondaryEmailsResult {
 
 /// Information about linked Dropbox desktop client sessions.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DesktopClientSession {
     /// The session id.
     pub session_id: String,
@@ -3318,6 +3328,7 @@ impl ::serde::ser::Serialize for DesktopPlatform {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeviceSession {
     /// The session id.
     pub session_id: String,
@@ -3479,6 +3490,7 @@ impl ::serde::ser::Serialize for DeviceSession {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeviceSessionArg {
     /// The session id.
     pub session_id: String,
@@ -3584,6 +3596,7 @@ impl ::serde::ser::Serialize for DeviceSessionArg {
 /// active within a time window, ending with that day. If there is no data for a day, then the value
 /// will be None.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DevicesActive {
     /// Array of number of linked windows (desktop) clients with activity.
     pub windows: NumberPerDay,
@@ -3760,6 +3773,7 @@ impl ::serde::ser::Serialize for DevicesActive {
 
 /// Excluded users list argument.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExcludedUsersListArg {
     /// Number of results to return per call.
     pub limit: u32,
@@ -3846,6 +3860,7 @@ impl ::serde::ser::Serialize for ExcludedUsersListArg {
 
 /// Excluded users list continue argument.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExcludedUsersListContinueArg {
     /// Indicates from what point to get the next set of users.
     pub cursor: String,
@@ -4078,6 +4093,7 @@ impl ::std::fmt::Display for ExcludedUsersListError {
 
 /// Excluded users list result.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExcludedUsersListResult {
     pub users: Vec<MemberProfile>,
     /// Is true if there are additional excluded users that have not been returned yet. An
@@ -4204,6 +4220,7 @@ impl ::serde::ser::Serialize for ExcludedUsersListResult {
 /// Argument of excluded users update operation. Should include a list of users to add/remove
 /// (according to endpoint), Maximum size of the list is 1000 users.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExcludedUsersUpdateArg {
     /// List of users to be added/removed.
     pub users: Option<Vec<UserSelectorArg>>,
@@ -4374,6 +4391,7 @@ impl ::std::fmt::Display for ExcludedUsersUpdateError {
 
 /// Excluded users update result.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExcludedUsersUpdateResult {
     /// Update status.
     pub status: ExcludedUsersUpdateStatus,
@@ -4731,6 +4749,7 @@ impl ::serde::ser::Serialize for FeatureValue {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FeaturesGetValuesBatchArg {
     /// A list of features in [`Feature`](Feature). If the list is empty, this route will return
     /// [`FeaturesGetValuesBatchError`](FeaturesGetValuesBatchError).
@@ -4892,6 +4911,7 @@ impl ::std::fmt::Display for FeaturesGetValuesBatchError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FeaturesGetValuesBatchResult {
     pub values: Vec<FeatureValue>,
 }
@@ -4982,6 +5002,7 @@ impl ::serde::ser::Serialize for FeaturesGetValuesBatchResult {
 /// Activity Report Result. Each of the items in the storage report is an array of values, one value
 /// per day. If there is no data for a day, then the value will be None.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetActivityReport {
     /// First date present in the results as 'YYYY-MM-DD' or None.
     pub start_date: String,
@@ -5274,6 +5295,7 @@ impl ::serde::ser::Serialize for GetActivityReport {
 /// items in each subsection of the storage report is an array of values, one value per day. If
 /// there is no data for a day, then the value will be None.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetDevicesReport {
     /// First date present in the results as 'YYYY-MM-DD' or None.
     pub start_date: String,
@@ -5409,6 +5431,7 @@ impl ::serde::ser::Serialize for GetDevicesReport {
 /// Membership Report Result. Each of the items in the storage report is an array of values, one
 /// value per day. If there is no data for a day, then the value will be None.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetMembershipReport {
     /// First date present in the results as 'YYYY-MM-DD' or None.
     pub start_date: String,
@@ -5572,6 +5595,7 @@ impl ::serde::ser::Serialize for GetMembershipReport {
 /// Storage Report Result. Each of the items in the storage report is an array of values, one value
 /// per day. If there is no data for a day, then the value will be None.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetStorageReport {
     /// First date present in the results as 'YYYY-MM-DD' or None.
     pub start_date: String,
@@ -5800,6 +5824,7 @@ impl ::serde::ser::Serialize for GroupAccessType {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupCreateArg {
     /// Group name.
     pub group_name: String,
@@ -6152,6 +6177,7 @@ impl ::std::fmt::Display for GroupDeleteError {
 
 /// Full description of a group.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupFullInfo {
     pub group_name: String,
     pub group_id: super::team_common::GroupId,
@@ -6338,6 +6364,7 @@ impl ::serde::ser::Serialize for GroupFullInfo {
 
 /// Profile of group member, and role in group.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMemberInfo {
     /// Profile of group member.
     pub profile: MemberProfile,
@@ -6441,6 +6468,7 @@ impl ::serde::ser::Serialize for GroupMemberInfo {
 
 /// Argument for selecting a group and a single user.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMemberSelector {
     /// Specify a group.
     pub group: GroupSelector,
@@ -6750,6 +6778,7 @@ impl ::std::fmt::Display for GroupMemberSetAccessTypeError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMembersAddArg {
     /// Group to which users will be added.
     pub group: GroupSelector,
@@ -7051,6 +7080,7 @@ impl ::std::fmt::Display for GroupMembersAddError {
 /// Result returned by [`groups_members_add()`](groups_members_add) and
 /// [`groups_members_remove()`](groups_members_remove).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMembersChangeResult {
     /// The group info after member change operation has been performed.
     pub group_info: GroupFullInfo,
@@ -7155,6 +7185,7 @@ impl ::serde::ser::Serialize for GroupMembersChangeResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMembersRemoveArg {
     /// Group from which users will be removed.
     pub group: GroupSelector,
@@ -7422,6 +7453,7 @@ impl ::std::fmt::Display for GroupMembersRemoveError {
 
 /// Argument for selecting a group and a list of users.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMembersSelector {
     /// Specify a group.
     pub group: GroupSelector,
@@ -7622,6 +7654,7 @@ impl ::std::fmt::Display for GroupMembersSelectorError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupMembersSetAccessTypeArg {
     /// Specify a group.
     pub group: GroupSelector,
@@ -7985,6 +8018,7 @@ impl ::std::fmt::Display for GroupSelectorWithTeamGroupError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupUpdateArgs {
     /// Specify a group.
     pub group: GroupSelector,
@@ -8414,6 +8448,7 @@ impl ::serde::ser::Serialize for GroupsGetInfoItem {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupsListArg {
     /// Number of results to return per call.
     pub limit: u32,
@@ -8499,6 +8534,7 @@ impl ::serde::ser::Serialize for GroupsListArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupsListContinueArg {
     /// Indicates from what point to get the next set of groups.
     pub cursor: String,
@@ -8658,6 +8694,7 @@ impl ::std::fmt::Display for GroupsListContinueError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupsListResult {
     pub groups: Vec<super::team_common::GroupSummary>,
     /// Pass the cursor into [`groups_list_continue()`](groups_list_continue) to obtain the
@@ -8778,6 +8815,7 @@ impl ::serde::ser::Serialize for GroupsListResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupsMembersListArg {
     /// The group whose members are to be listed.
     pub group: GroupSelector,
@@ -8885,6 +8923,7 @@ impl ::serde::ser::Serialize for GroupsMembersListArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupsMembersListContinueArg {
     /// Indicates from what point to get the next set of groups.
     pub cursor: String,
@@ -9044,6 +9083,7 @@ impl ::std::fmt::Display for GroupsMembersListContinueError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupsMembersListResult {
     pub members: Vec<GroupMemberInfo>,
     /// Pass the cursor into [`groups_members_list_continue()`](groups_members_list_continue) to
@@ -9518,6 +9558,7 @@ impl ::serde::ser::Serialize for HasTeamSharedDropboxValue {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct IncludeMembersArg {
     /// Whether to return the list of members in the group.  Note that the default value will cause
     /// all the group members  to be returned in the response. This may take a long time for large
@@ -9605,6 +9646,7 @@ impl ::serde::ser::Serialize for IncludeMembersArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldHeldRevisionMetadata {
     /// The held revision filename.
     pub new_filename: String,
@@ -9824,6 +9866,7 @@ impl ::serde::ser::Serialize for LegalHoldHeldRevisionMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldPolicy {
     /// The legal hold id.
     pub id: LegalHoldId,
@@ -10231,6 +10274,7 @@ impl ::std::fmt::Display for LegalHoldsError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsGetPolicyArg {
     /// The legal hold Id.
     pub id: LegalHoldId,
@@ -10416,6 +10460,7 @@ impl ::std::fmt::Display for LegalHoldsGetPolicyError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsListHeldRevisionResult {
     /// List of file entries that under the hold.
     pub entries: Vec<LegalHoldHeldRevisionMetadata>,
@@ -10539,6 +10584,7 @@ impl ::serde::ser::Serialize for LegalHoldsListHeldRevisionResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsListHeldRevisionsArg {
     /// The legal hold Id.
     pub id: LegalHoldId,
@@ -10628,6 +10674,7 @@ impl ::serde::ser::Serialize for LegalHoldsListHeldRevisionsArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsListHeldRevisionsContinueArg {
     /// The legal hold Id.
     pub id: LegalHoldId,
@@ -10956,6 +11003,7 @@ impl ::std::fmt::Display for LegalHoldsListHeldRevisionsError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsListPoliciesArg {
     /// Whether to return holds that were released.
     pub include_released: bool,
@@ -11137,6 +11185,7 @@ impl ::std::fmt::Display for LegalHoldsListPoliciesError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsListPoliciesResult {
     pub policies: Vec<LegalHoldPolicy>,
 }
@@ -11225,6 +11274,7 @@ impl ::serde::ser::Serialize for LegalHoldsListPoliciesResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsPolicyCreateArg {
     /// Policy name.
     pub name: LegalHoldPolicyName,
@@ -11568,6 +11618,7 @@ impl ::std::fmt::Display for LegalHoldsPolicyCreateError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsPolicyReleaseArg {
     /// The legal hold Id.
     pub id: LegalHoldId,
@@ -11780,6 +11831,7 @@ impl ::std::fmt::Display for LegalHoldsPolicyReleaseError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LegalHoldsPolicyUpdateArg {
     /// The legal hold Id.
     pub id: LegalHoldId,
@@ -12098,6 +12150,7 @@ impl ::std::fmt::Display for LegalHoldsPolicyUpdateError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMemberAppsArg {
     /// The team member id.
     pub team_member_id: String,
@@ -12259,6 +12312,7 @@ impl ::std::fmt::Display for ListMemberAppsError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMemberAppsResult {
     /// List of third party applications linked by this team member.
     pub linked_api_apps: Vec<ApiApp>,
@@ -12348,6 +12402,7 @@ impl ::serde::ser::Serialize for ListMemberAppsResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMemberDevicesArg {
     /// The team's member id.
     pub team_member_id: String,
@@ -12561,6 +12616,7 @@ impl ::std::fmt::Display for ListMemberDevicesError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMemberDevicesResult {
     /// List of web sessions made by this team member.
     pub active_web_sessions: Option<Vec<ActiveWebSession>>,
@@ -12683,6 +12739,7 @@ impl ::serde::ser::Serialize for ListMemberDevicesResult {
 
 /// Arguments for [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMembersAppsArg {
     /// At the first call to the
     /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps) the cursor
@@ -12848,6 +12905,7 @@ impl ::std::fmt::Display for ListMembersAppsError {
 /// Information returned by
 /// [`linked_apps_list_members_linked_apps()`](linked_apps_list_members_linked_apps).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMembersAppsResult {
     /// The linked applications of each member of the team.
     pub apps: Vec<MemberLinkedApps>,
@@ -12972,6 +13030,7 @@ impl ::serde::ser::Serialize for ListMembersAppsResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMembersDevicesArg {
     /// At the first call to the [`devices_list_members_devices()`](devices_list_members_devices)
     /// the cursor shouldn't be passed. Then, if the result of the call includes a cursor, the
@@ -13186,6 +13245,7 @@ impl ::std::fmt::Display for ListMembersDevicesError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListMembersDevicesResult {
     /// The devices of each member of the team.
     pub devices: Vec<MemberDevices>,
@@ -13309,6 +13369,7 @@ impl ::serde::ser::Serialize for ListMembersDevicesResult {
 
 /// Arguments for [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListTeamAppsArg {
     /// At the first call to the
     /// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps) the cursor
@@ -13473,6 +13534,7 @@ impl ::std::fmt::Display for ListTeamAppsError {
 /// Information returned by
 /// [`linked_apps_list_team_linked_apps()`](linked_apps_list_team_linked_apps).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListTeamAppsResult {
     /// The linked applications of each member of the team.
     pub apps: Vec<MemberLinkedApps>,
@@ -13597,6 +13659,7 @@ impl ::serde::ser::Serialize for ListTeamAppsResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListTeamDevicesArg {
     /// At the first call to the [`devices_list_team_devices()`](devices_list_team_devices) the
     /// cursor shouldn't be passed. Then, if the result of the call includes a cursor, the following
@@ -13811,6 +13874,7 @@ impl ::std::fmt::Display for ListTeamDevicesError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListTeamDevicesResult {
     /// The devices of each member of the team.
     pub devices: Vec<MemberDevices>,
@@ -13934,6 +13998,7 @@ impl ::serde::ser::Serialize for ListTeamDevicesResult {
 
 /// Specify access type a member should have when joined to a group.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberAccess {
     /// Identity of a user.
     pub user: UserSelectorArg,
@@ -14036,6 +14101,7 @@ impl ::serde::ser::Serialize for MemberAccess {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberAddArg {
     pub member_email: super::common::EmailAddress,
     /// Member's first name.
@@ -14479,6 +14545,7 @@ impl ::serde::ser::Serialize for MemberAddResult {
 
 /// Information on devices of a team's member.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberDevices {
     /// The member unique Id.
     pub team_member_id: String,
@@ -14623,6 +14690,7 @@ impl ::serde::ser::Serialize for MemberDevices {
 
 /// Information on linked applications of a team member.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberLinkedApps {
     /// The member unique Id.
     pub team_member_id: String,
@@ -14726,6 +14794,7 @@ impl ::serde::ser::Serialize for MemberLinkedApps {
 
 /// Basic member profile.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MemberProfile {
     /// ID of user as a member of a team.
     pub team_member_id: super::team_common::TeamMemberId,
@@ -15133,6 +15202,7 @@ impl ::std::fmt::Display for MemberSelectorError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersAddArg {
     /// Details of new members to be added to the team.
     pub new_members: Vec<MemberAddArg>,
@@ -15397,6 +15467,7 @@ impl ::serde::ser::Serialize for MembersAddLaunch {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersDataTransferArg {
     /// Identity of user to remove/suspend/have their files moved.
     pub user: UserSelectorArg,
@@ -15516,6 +15587,7 @@ impl ::serde::ser::Serialize for MembersDataTransferArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersDeactivateArg {
     /// Identity of user to remove/suspend/have their files moved.
     pub user: UserSelectorArg,
@@ -15625,6 +15697,7 @@ impl ::serde::ser::Serialize for MembersDeactivateArg {
 /// Exactly one of team_member_id, email, or external_id must be provided to identify the user
 /// account.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersDeactivateBaseArg {
     /// Identity of user to remove/suspend/have their files moved.
     pub user: UserSelectorArg,
@@ -15798,6 +15871,7 @@ impl ::std::fmt::Display for MembersDeactivateError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersDeleteProfilePhotoArg {
     /// Identity of the user whose profile photo will be deleted.
     pub user: UserSelectorArg,
@@ -15984,6 +16058,7 @@ impl ::std::fmt::Display for MembersDeleteProfilePhotoError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersGetInfoArgs {
     /// List of team members.
     pub members: Vec<UserSelectorArg>,
@@ -16196,6 +16271,7 @@ impl ::serde::ser::Serialize for MembersGetInfoItem {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersInfo {
     /// Team member IDs of the users under this hold.
     pub team_member_ids: Vec<super::team_common::TeamMemberId>,
@@ -16301,6 +16377,7 @@ impl ::serde::ser::Serialize for MembersInfo {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersListArg {
     /// Number of results to return per call.
     pub limit: u32,
@@ -16404,6 +16481,7 @@ impl ::serde::ser::Serialize for MembersListArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersListContinueArg {
     /// Indicates from what point to get the next set of members.
     pub cursor: String,
@@ -16617,6 +16695,7 @@ impl ::std::fmt::Display for MembersListError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersListResult {
     /// List of team members.
     pub members: Vec<TeamMemberInfo>,
@@ -16736,6 +16815,7 @@ impl ::serde::ser::Serialize for MembersListResult {
 /// Exactly one of team_member_id, email, or external_id must be provided to identify the user
 /// account.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersRecoverArg {
     /// Identity of user to recover.
     pub user: UserSelectorArg,
@@ -16935,6 +17015,7 @@ impl ::std::fmt::Display for MembersRecoverError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersRemoveArg {
     /// Identity of user to remove/suspend/have their files moved.
     pub user: UserSelectorArg,
@@ -17558,6 +17639,7 @@ impl ::std::fmt::Display for MembersSendWelcomeError {
 /// Exactly one of team_member_id, email, or external_id must be provided to identify the user
 /// account.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersSetPermissionsArg {
     /// Identity of user whose role will be set.
     pub user: UserSelectorArg,
@@ -17783,6 +17865,7 @@ impl ::std::fmt::Display for MembersSetPermissionsError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersSetPermissionsResult {
     /// The member ID of the user to which the change was applied.
     pub team_member_id: super::team_common::TeamMemberId,
@@ -17888,6 +17971,7 @@ impl ::serde::ser::Serialize for MembersSetPermissionsResult {
 /// account. At least one of new_email, new_external_id, new_given_name, and/or new_surname must be
 /// provided.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersSetProfileArg {
     /// Identity of user whose profile will be set.
     pub user: UserSelectorArg,
@@ -18288,6 +18372,7 @@ impl ::std::fmt::Display for MembersSetProfileError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersSetProfilePhotoArg {
     /// Identity of the user whose profile photo will be set.
     pub user: UserSelectorArg,
@@ -19082,6 +19167,7 @@ impl ::std::fmt::Display for MembersTransferFormerMembersFilesError {
 /// Exactly one of team_member_id, email, or external_id must be provided to identify the user
 /// account.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersUnsuspendArg {
     /// Identity of user to unsuspend.
     pub user: UserSelectorArg,
@@ -19392,6 +19478,7 @@ impl ::serde::ser::Serialize for MobileClientPlatform {
 
 /// Information about linked Dropbox mobile client sessions.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MobileClientSession {
     /// The session id.
     pub session_id: String,
@@ -19638,6 +19725,7 @@ impl ::serde::ser::Serialize for MobileClientSession {
 
 /// Properties of a namespace.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct NamespaceMetadata {
     /// The name of this namespace.
     pub name: String,
@@ -19953,6 +20041,7 @@ impl ::serde::ser::Serialize for RemoveCustomQuotaResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemovedStatus {
     /// True if the removed team member is recoverable.
     pub is_recoverable: bool,
@@ -20154,6 +20243,7 @@ impl ::serde::ser::Serialize for ResendSecondaryEmailResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ResendVerificationEmailArg {
     /// List of users and secondary emails to resend verification emails to.
     pub emails_to_resend: Vec<UserSecondaryEmailsArg>,
@@ -20244,6 +20334,7 @@ impl ::serde::ser::Serialize for ResendVerificationEmailArg {
 
 /// List of users and resend results.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ResendVerificationEmailResult {
     pub results: Vec<UserResendResult>,
 }
@@ -20332,6 +20423,7 @@ impl ::serde::ser::Serialize for ResendVerificationEmailResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RevokeDesktopClientArg {
     /// The session id.
     pub session_id: String,
@@ -20523,6 +20615,7 @@ impl ::serde::ser::Serialize for RevokeDeviceSessionArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RevokeDeviceSessionBatchArg {
     pub revoke_devices: Vec<RevokeDeviceSessionArg>,
 }
@@ -20665,6 +20758,7 @@ impl ::std::fmt::Display for RevokeDeviceSessionBatchError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RevokeDeviceSessionBatchResult {
     pub revoke_devices_status: Vec<RevokeDeviceSessionStatus>,
 }
@@ -20836,6 +20930,7 @@ impl ::std::fmt::Display for RevokeDeviceSessionError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RevokeDeviceSessionStatus {
     /// Result of the revoking request.
     pub success: bool,
@@ -20943,6 +21038,7 @@ impl ::serde::ser::Serialize for RevokeDeviceSessionStatus {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RevokeLinkedApiAppArg {
     /// The application's unique id.
     pub app_id: String,
@@ -21064,6 +21160,7 @@ impl ::serde::ser::Serialize for RevokeLinkedApiAppArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RevokeLinkedApiAppBatchArg {
     pub revoke_linked_app: Vec<RevokeLinkedApiAppArg>,
 }
@@ -21207,6 +21304,7 @@ impl ::std::fmt::Display for RevokeLinkedAppBatchError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RevokeLinkedAppBatchResult {
     pub revoke_linked_app_status: Vec<RevokeLinkedAppStatus>,
 }
@@ -21392,6 +21490,7 @@ impl ::std::fmt::Display for RevokeLinkedAppError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RevokeLinkedAppStatus {
     /// Result of the revoking request.
     pub success: bool,
@@ -21499,6 +21598,7 @@ impl ::serde::ser::Serialize for RevokeLinkedAppStatus {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SetCustomQuotaArg {
     /// List of users and their custom quotas.
     pub users_and_quotas: Vec<UserCustomQuotaArg>,
@@ -21673,6 +21773,7 @@ impl ::std::fmt::Display for SetCustomQuotaError {
 
 /// Describes the number of users in a specific storage bucket.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct StorageBucket {
     /// The name of the storage bucket. For example, '1G' is a bucket of users with storage size up
     /// to 1 Giga.
@@ -21965,6 +22066,7 @@ impl ::std::fmt::Display for TeamFolderActivateError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderArchiveArg {
     /// The ID of the team folder.
     pub team_folder_id: super::common::SharedFolderId,
@@ -22322,6 +22424,7 @@ impl ::serde::ser::Serialize for TeamFolderArchiveLaunch {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderCreateArg {
     /// Name for the new team folder.
     pub name: String,
@@ -22609,6 +22712,7 @@ impl ::serde::ser::Serialize for TeamFolderGetInfoItem {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderIdArg {
     /// The ID of the team folder.
     pub team_folder_id: super::common::SharedFolderId,
@@ -22698,6 +22802,7 @@ impl ::serde::ser::Serialize for TeamFolderIdArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderIdListArg {
     /// The list of team folder IDs.
     pub team_folder_ids: Vec<super::common::SharedFolderId>,
@@ -22883,6 +22988,7 @@ impl ::std::fmt::Display for TeamFolderInvalidStatusError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderListArg {
     /// The maximum number of results to return per request.
     pub limit: u32,
@@ -22968,6 +23074,7 @@ impl ::serde::ser::Serialize for TeamFolderListArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderListContinueArg {
     /// Indicates from what point to get the next set of team folders.
     pub cursor: String,
@@ -23127,6 +23234,7 @@ impl ::std::fmt::Display for TeamFolderListContinueError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderListError {
     pub access_error: TeamFolderAccessError,
 }
@@ -23217,6 +23325,7 @@ impl ::serde::ser::Serialize for TeamFolderListError {
 /// Result for [`team_folder_list()`](team_folder_list) and
 /// [`team_folder_list_continue()`](team_folder_list_continue).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderListResult {
     /// List of all team folders in the authenticated team.
     pub team_folders: Vec<TeamFolderMetadata>,
@@ -23335,6 +23444,7 @@ impl ::serde::ser::Serialize for TeamFolderListResult {
 
 /// Properties of a team folder.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderMetadata {
     /// The ID of the team folder.
     pub team_folder_id: super::common::SharedFolderId,
@@ -23602,6 +23712,7 @@ impl ::std::fmt::Display for TeamFolderPermanentlyDeleteError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderRenameArg {
     /// The ID of the team folder.
     pub team_folder_id: super::common::SharedFolderId,
@@ -24002,6 +24113,7 @@ impl ::std::fmt::Display for TeamFolderTeamSharedDropboxError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamFolderUpdateSyncSettingsArg {
     /// The ID of the team folder.
     pub team_folder_id: super::common::SharedFolderId,
@@ -24253,6 +24365,7 @@ impl ::std::fmt::Display for TeamFolderUpdateSyncSettingsError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamGetInfoResult {
     /// The name of the team.
     pub name: String,
@@ -24400,6 +24513,7 @@ impl ::serde::ser::Serialize for TeamGetInfoResult {
 
 /// Information about a team member.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamMemberInfo {
     /// Profile of a user as a member of a team.
     pub profile: TeamMemberProfile,
@@ -24503,6 +24617,7 @@ impl ::serde::ser::Serialize for TeamMemberInfo {
 
 /// Profile of a user as a member of a team.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamMemberProfile {
     /// ID of user as a member of a team.
     pub team_member_id: super::team_common::TeamMemberId,
@@ -25016,6 +25131,7 @@ impl ::serde::ser::Serialize for TeamMembershipType {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamNamespacesListArg {
     /// Specifying a value here has no effect.
     pub limit: u32,
@@ -25101,6 +25217,7 @@ impl ::serde::ser::Serialize for TeamNamespacesListArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamNamespacesListContinueArg {
     /// Indicates from what point to get the next set of team-accessible namespaces.
     pub cursor: String,
@@ -25344,6 +25461,7 @@ impl ::std::fmt::Display for TeamNamespacesListError {
 
 /// Result for [`namespaces_list()`](namespaces_list).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamNamespacesListResult {
     /// List of all namespaces the team can access.
     pub namespaces: Vec<NamespaceMetadata>,
@@ -25634,6 +25752,7 @@ impl ::std::fmt::Display for TokenGetAuthenticatedAdminError {
 
 /// Results for [`token_get_authenticated_admin()`](token_get_authenticated_admin).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TokenGetAuthenticatedAdminResult {
     /// The admin who authorized the token.
     pub admin_profile: TeamMemberProfile,
@@ -25911,6 +26030,7 @@ impl ::serde::ser::Serialize for UserAddResult {
 
 /// User and their required custom quota in GB (1 TB = 1024 GB).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserCustomQuotaArg {
     pub user: UserSelectorArg,
     pub quota_gb: UserQuota,
@@ -26013,6 +26133,7 @@ impl ::serde::ser::Serialize for UserCustomQuotaArg {
 /// User and their custom quota in GB (1 TB = 1024 GB).  No quota returns if the user has no custom
 /// quota set.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserCustomQuotaResult {
     pub user: UserSelectorArg,
     pub quota_gb: Option<UserQuota>,
@@ -26118,6 +26239,7 @@ impl ::serde::ser::Serialize for UserCustomQuotaResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserDeleteEmailsResult {
     pub user: UserSelectorArg,
     pub results: Vec<DeleteSecondaryEmailResult>,
@@ -26294,6 +26416,7 @@ impl ::serde::ser::Serialize for UserDeleteResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserResendEmailsResult {
     pub user: UserSelectorArg,
     pub results: Vec<ResendSecondaryEmailResult>,
@@ -26471,6 +26594,7 @@ impl ::serde::ser::Serialize for UserResendResult {
 
 /// User and a list of secondary emails.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserSecondaryEmailsArg {
     pub user: UserSelectorArg,
     pub secondary_emails: Vec<super::common::EmailAddress>,
@@ -26571,6 +26695,7 @@ impl ::serde::ser::Serialize for UserSecondaryEmailsArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserSecondaryEmailsResult {
     pub user: UserSelectorArg,
     pub results: Vec<AddSecondaryEmailResult>,

@@ -1152,6 +1152,7 @@ pub fn upload_session_start(
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct AlphaGetMetadataArg {
     /// The path of a file or folder on Dropbox.
     pub path: ReadPath,
@@ -1422,6 +1423,7 @@ impl ::std::fmt::Display for AlphaGetMetadataError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct CommitInfo {
     /// Path in the user's Dropbox to save the file.
     pub path: WritePathOrId,
@@ -1632,6 +1634,7 @@ impl ::serde::ser::Serialize for CommitInfo {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct CommitInfoWithProperties {
     /// Path in the user's Dropbox to save the file.
     pub path: WritePathOrId,
@@ -1842,6 +1845,7 @@ impl ::serde::ser::Serialize for CommitInfoWithProperties {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ContentSyncSetting {
     /// Id of the item this setting is applied to.
     pub id: FileId,
@@ -1944,6 +1948,7 @@ impl ::serde::ser::Serialize for ContentSyncSetting {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ContentSyncSettingArg {
     /// Id of the item this setting is applied to.
     pub id: FileId,
@@ -2046,6 +2051,7 @@ impl ::serde::ser::Serialize for ContentSyncSettingArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFolderArg {
     /// Path in the user's Dropbox to create.
     pub path: WritePath,
@@ -2154,6 +2160,7 @@ impl ::serde::ser::Serialize for CreateFolderArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFolderBatchArg {
     /// List of paths to be created in the user's Dropbox. Duplicate path arguments in the batch are
     /// considered only once.
@@ -2512,6 +2519,7 @@ impl ::serde::ser::Serialize for CreateFolderBatchLaunch {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFolderBatchResult {
     /// Each entry in [`CreateFolderBatchArg::paths`](CreateFolderBatchArg) will appear at the same
     /// position inside [`CreateFolderBatchResult::entries`](CreateFolderBatchResult).
@@ -2738,6 +2746,7 @@ impl ::std::fmt::Display for CreateFolderEntryError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFolderEntryResult {
     /// Metadata of the created folder.
     pub metadata: FolderMetadata,
@@ -2892,6 +2901,7 @@ impl ::std::fmt::Display for CreateFolderError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFolderResult {
     /// Metadata of the created folder.
     pub metadata: FolderMetadata,
@@ -2981,6 +2991,7 @@ impl ::serde::ser::Serialize for CreateFolderResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteArg {
     /// Path in the user's Dropbox to delete.
     pub path: WritePathOrId,
@@ -3089,6 +3100,7 @@ impl ::serde::ser::Serialize for DeleteArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteBatchArg {
     pub entries: Vec<DeleteArg>,
 }
@@ -3410,6 +3422,7 @@ impl ::serde::ser::Serialize for DeleteBatchLaunch {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteBatchResult {
     /// Each entry in [`DeleteBatchArg::entries`](DeleteBatchArg) will appear at the same position
     /// inside [`DeleteBatchResult::entries`](DeleteBatchResult).
@@ -3500,6 +3513,7 @@ impl ::serde::ser::Serialize for DeleteBatchResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteBatchResultData {
     /// Metadata of the deleted object.
     pub metadata: Metadata,
@@ -3767,6 +3781,7 @@ impl ::std::fmt::Display for DeleteError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteResult {
     /// Metadata of the deleted object.
     pub metadata: Metadata,
@@ -3857,6 +3872,7 @@ impl ::serde::ser::Serialize for DeleteResult {
 
 /// Indicates that there used to be a file or folder at this path, but it no longer exists.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeletedMetadata {
     /// The last component of the path (including extension). This never contains a slash.
     pub name: String,
@@ -4008,6 +4024,7 @@ impl ::serde::ser::Serialize for DeletedMetadata {
 
 /// Dimensions for a photo or video.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct Dimensions {
     /// Height of the photo/video.
     pub height: u64,
@@ -4110,6 +4127,7 @@ impl ::serde::ser::Serialize for Dimensions {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DownloadArg {
     /// The path of the file to download.
     pub path: ReadPath,
@@ -4303,6 +4321,7 @@ impl ::std::fmt::Display for DownloadError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DownloadZipArg {
     /// The path of the folder to download.
     pub path: ReadPath,
@@ -4491,6 +4510,7 @@ impl ::std::fmt::Display for DownloadZipError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DownloadZipResult {
     pub metadata: FolderMetadata,
 }
@@ -4579,6 +4599,7 @@ impl ::serde::ser::Serialize for DownloadZipResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExportArg {
     /// The path of the file to be exported.
     pub path: ReadPath,
@@ -4768,6 +4789,7 @@ impl ::std::fmt::Display for ExportError {
 
 /// Export information for a file.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExportInfo {
     /// Format to which the file can be exported to.
     pub export_as: Option<String>,
@@ -4853,6 +4875,7 @@ impl ::serde::ser::Serialize for ExportInfo {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExportMetadata {
     /// The last component of the path (including extension). This never contains a slash.
     pub name: String,
@@ -4975,6 +4998,7 @@ impl ::serde::ser::Serialize for ExportMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ExportResult {
     /// Metadata for the exported version of the file.
     pub export_metadata: ExportMetadata,
@@ -5252,6 +5276,7 @@ impl ::serde::ser::Serialize for FileCategory {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileLock {
     /// The lock description.
     pub content: FileLockContent,
@@ -5410,6 +5435,7 @@ impl ::serde::ser::Serialize for FileLockContent {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileLockMetadata {
     /// True if caller holds the file lock.
     pub is_lockholder: Option<bool>,
@@ -5549,6 +5575,7 @@ impl ::serde::ser::Serialize for FileLockMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileMetadata {
     /// The last component of the path (including extension). This never contains a slash.
     pub name: String,
@@ -5951,6 +5978,7 @@ impl ::serde::ser::Serialize for FileMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileOpsResult {
 }
 
@@ -6001,6 +6029,7 @@ impl ::serde::ser::Serialize for FileOpsResult {
 
 /// Sharing info for a file which is contained by a shared folder.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileSharingInfo {
     /// True if the file or folder is inside a read-only shared folder.
     pub read_only: bool,
@@ -6191,6 +6220,7 @@ impl ::serde::ser::Serialize for FileStatus {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FolderMetadata {
     /// The last component of the path (including extension). This never contains a slash.
     pub name: String,
@@ -6415,6 +6445,7 @@ impl ::serde::ser::Serialize for FolderMetadata {
 /// Sharing info for a folder which is contained in a shared folder or is a shared folder mount
 /// point.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct FolderSharingInfo {
     /// True if the file or folder is inside a read-only shared folder.
     pub read_only: bool,
@@ -6579,6 +6610,7 @@ impl ::serde::ser::Serialize for FolderSharingInfo {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetCopyReferenceArg {
     /// The path to the file or folder you want to get a copy reference to.
     pub path: ReadPath,
@@ -6741,6 +6773,7 @@ impl ::std::fmt::Display for GetCopyReferenceError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetCopyReferenceResult {
     /// Metadata of the file or folder.
     pub metadata: Metadata,
@@ -6861,6 +6894,7 @@ impl ::serde::ser::Serialize for GetCopyReferenceResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetMetadataArg {
     /// The path of a file or folder on Dropbox.
     pub path: ReadPath,
@@ -7093,6 +7127,7 @@ impl ::std::fmt::Display for GetMetadataError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTemporaryLinkArg {
     /// The path to the file you want a temporary link to.
     pub path: ReadPath,
@@ -7283,6 +7318,7 @@ impl ::std::fmt::Display for GetTemporaryLinkError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTemporaryLinkResult {
     /// Metadata of the file.
     pub metadata: FileMetadata,
@@ -7385,6 +7421,7 @@ impl ::serde::ser::Serialize for GetTemporaryLinkResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTemporaryUploadLinkArg {
     /// Contains the path and other optional modifiers for the future upload commit. Equivalent to
     /// the parameters provided to [`upload()`](upload).
@@ -7494,6 +7531,7 @@ impl ::serde::ser::Serialize for GetTemporaryUploadLinkArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetTemporaryUploadLinkResult {
     /// The temporary link which can be used to stream a file to a Dropbox location.
     pub link: String,
@@ -7584,6 +7622,7 @@ impl ::serde::ser::Serialize for GetTemporaryUploadLinkResult {
 
 /// Arguments for [`get_thumbnail_batch()`](get_thumbnail_batch).
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetThumbnailBatchArg {
     /// List of files to get thumbnails.
     pub entries: Vec<ThumbnailArg>,
@@ -7743,6 +7782,7 @@ impl ::std::fmt::Display for GetThumbnailBatchError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetThumbnailBatchResult {
     /// List of files and their thumbnails.
     pub entries: Vec<GetThumbnailBatchResultEntry>,
@@ -7832,6 +7872,7 @@ impl ::serde::ser::Serialize for GetThumbnailBatchResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetThumbnailBatchResultData {
     pub metadata: FileMetadata,
     /// A string containing the base64-encoded thumbnail data for this file.
@@ -8006,6 +8047,7 @@ impl ::serde::ser::Serialize for GetThumbnailBatchResultEntry {
 
 /// GPS coordinates for a photo or video.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct GpsCoordinates {
     /// Latitude of the GPS coordinates.
     pub latitude: f64,
@@ -8108,6 +8150,7 @@ impl ::serde::ser::Serialize for GpsCoordinates {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct HighlightSpan {
     /// String to be determined whether it should be highlighted or not.
     pub highlight_str: String,
@@ -8210,6 +8253,7 @@ impl ::serde::ser::Serialize for HighlightSpan {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderArg {
     /// A unique identifier for the file.
     pub path: PathROrId,
@@ -8473,6 +8517,7 @@ impl ::serde::ser::Serialize for ListFolderArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderContinueArg {
     /// The cursor returned by your last call to [`list_folder()`](list_folder) or
     /// [`list_folder_continue()`](list_folder_continue).
@@ -8739,6 +8784,7 @@ impl ::std::fmt::Display for ListFolderError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderGetLatestCursorResult {
     /// Pass the cursor into [`list_folder_continue()`](list_folder_continue) to see what's changed
     /// in the folder since your previous query.
@@ -8829,6 +8875,7 @@ impl ::serde::ser::Serialize for ListFolderGetLatestCursorResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderLongpollArg {
     /// A cursor as returned by [`list_folder()`](list_folder) or
     /// [`list_folder_continue()`](list_folder_continue). Cursors retrieved by setting
@@ -9011,6 +9058,7 @@ impl ::std::fmt::Display for ListFolderLongpollError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderLongpollResult {
     /// Indicates whether new changes are available. If true, call
     /// [`list_folder_continue()`](list_folder_continue) to retrieve the changes.
@@ -9120,6 +9168,7 @@ impl ::serde::ser::Serialize for ListFolderLongpollResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFolderResult {
     /// The files and (direct) subfolders in the folder.
     pub entries: Vec<Metadata>,
@@ -9237,6 +9286,7 @@ impl ::serde::ser::Serialize for ListFolderResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListRevisionsArg {
     /// The path to the file you want to see the revisions of.
     pub path: PathOrId,
@@ -9508,6 +9558,7 @@ impl ::serde::ser::Serialize for ListRevisionsMode {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListRevisionsResult {
     /// If the file identified by the latest revision in the response is either deleted or moved.
     pub is_deleted: bool,
@@ -9628,6 +9679,7 @@ impl ::serde::ser::Serialize for ListRevisionsResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LockConflictError {
     /// The lock that caused the conflict.
     pub lock: FileLock,
@@ -9717,6 +9769,7 @@ impl ::serde::ser::Serialize for LockConflictError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LockFileArg {
     /// Path in the user's Dropbox to a file.
     pub path: WritePathOrId,
@@ -9806,6 +9859,7 @@ impl ::serde::ser::Serialize for LockFileArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LockFileBatchArg {
     /// List of 'entries'. Each 'entry' contains a path of the file which will be locked or queried.
     /// Duplicate path arguments in the batch are considered only once.
@@ -9896,6 +9950,7 @@ impl ::serde::ser::Serialize for LockFileBatchArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LockFileBatchResult {
     /// Each Entry in the 'entries' will have '.tag' with the operation status (e.g. success), the
     /// metadata for the file and the lock state after the operation.
@@ -10150,6 +10205,7 @@ impl ::std::fmt::Display for LockFileError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct LockFileResult {
     /// Metadata of the file.
     pub metadata: Metadata,
@@ -10755,6 +10811,7 @@ impl ::serde::ser::Serialize for MetadataV2 {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MinimalFileLinkMetadata {
     /// URL of the shared link.
     pub url: String,
@@ -10895,6 +10952,7 @@ impl ::serde::ser::Serialize for MinimalFileLinkMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct MoveBatchArg {
     /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
     pub entries: Vec<RelocationPath>,
@@ -11164,6 +11222,7 @@ impl ::serde::ser::Serialize for PathOrLink {
 
 /// Metadata for a photo.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PhotoMetadata {
     /// Dimension of the photo/video.
     pub dimensions: Option<Dimensions>,
@@ -11285,6 +11344,7 @@ impl ::serde::ser::Serialize for PhotoMetadata {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PreviewArg {
     /// The path of the file to preview.
     pub path: ReadPath,
@@ -11497,6 +11557,7 @@ impl ::std::fmt::Display for PreviewError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct PreviewResult {
     /// Metadata corresponding to the file received as an argument. Will be populated if the
     /// endpoint is called with a path (ReadPath).
@@ -11602,6 +11663,7 @@ impl ::serde::ser::Serialize for PreviewResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationArg {
     /// Path in the user's Dropbox to be copied or moved.
     pub from_path: WritePathOrId,
@@ -11760,6 +11822,7 @@ impl ::serde::ser::Serialize for RelocationArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchArg {
     /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
     pub entries: Vec<RelocationPath>,
@@ -11905,6 +11968,7 @@ impl ::serde::ser::Serialize for RelocationBatchArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchArgBase {
     /// List of entries to be moved or copied. Each entry is [`RelocationPath`](RelocationPath).
     pub entries: Vec<RelocationPath>,
@@ -12510,6 +12574,7 @@ impl ::serde::ser::Serialize for RelocationBatchLaunch {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchResult {
     pub entries: Vec<RelocationBatchResultData>,
 }
@@ -12598,6 +12663,7 @@ impl ::serde::ser::Serialize for RelocationBatchResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchResultData {
     /// Metadata of the relocated object.
     pub metadata: Metadata,
@@ -12895,6 +12961,7 @@ impl ::serde::ser::Serialize for RelocationBatchV2Launch {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationBatchV2Result {
     /// Each entry in CopyBatchArg.entries or [`MoveBatchArg::entries`](MoveBatchArg) will appear at
     /// the same position inside [`RelocationBatchV2Result::entries`](RelocationBatchV2Result).
@@ -13227,6 +13294,7 @@ impl ::std::fmt::Display for RelocationError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationPath {
     /// Path in the user's Dropbox to be copied or moved.
     pub from_path: WritePathOrId,
@@ -13329,6 +13397,7 @@ impl ::serde::ser::Serialize for RelocationPath {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RelocationResult {
     /// Metadata of the relocated object.
     pub metadata: Metadata,
@@ -13418,6 +13487,7 @@ impl ::serde::ser::Serialize for RelocationResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct RestoreArg {
     /// The path to save the restored file.
     pub path: WritePath,
@@ -13637,6 +13707,7 @@ impl ::std::fmt::Display for RestoreError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SaveCopyReferenceArg {
     /// A copy reference returned by [`copy_reference_get()`](copy_reference_get).
     pub copy_reference: String,
@@ -13865,6 +13936,7 @@ impl ::std::fmt::Display for SaveCopyReferenceError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SaveCopyReferenceResult {
     /// The metadata of the saved file or folder in the user's Dropbox.
     pub metadata: Metadata,
@@ -13954,6 +14026,7 @@ impl ::serde::ser::Serialize for SaveCopyReferenceResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SaveUrlArg {
     /// The path in Dropbox where the URL will be saved to.
     pub path: Path,
@@ -14312,6 +14385,7 @@ impl ::serde::ser::Serialize for SaveUrlResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchArg {
     /// The path in the user's Dropbox to search. Should probably be a folder.
     pub path: PathROrId,
@@ -14576,6 +14650,7 @@ impl ::std::fmt::Display for SearchError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchMatch {
     /// The type of the match.
     pub match_type: SearchMatchType,
@@ -14678,6 +14753,7 @@ impl ::serde::ser::Serialize for SearchMatch {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchMatchFieldOptions {
     /// Whether to include highlight span from file title.
     pub include_highlights: bool,
@@ -14938,6 +15014,7 @@ impl ::serde::ser::Serialize for SearchMatchTypeV2 {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchMatchV2 {
     /// The metadata for the matched file or folder.
     pub metadata: MetadataV2,
@@ -15139,6 +15216,7 @@ impl ::serde::ser::Serialize for SearchMode {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchOptions {
     /// Scopes the search to a path in the user's Dropbox. Searches the entire Dropbox if not
     /// specified.
@@ -15404,6 +15482,7 @@ impl ::serde::ser::Serialize for SearchOrderBy {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchResult {
     /// A list (possibly empty) of matches for the query.
     pub matches: Vec<SearchMatch>,
@@ -15521,6 +15600,7 @@ impl ::serde::ser::Serialize for SearchResult {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchV2Arg {
     /// The string to search for. May match across multiple fields based on the request arguments.
     /// Query string may be rewritten to improve relevance of results.
@@ -15665,6 +15745,7 @@ impl ::serde::ser::Serialize for SearchV2Arg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchV2ContinueArg {
     /// The cursor returned by your last call to [`search_v2()`](search_v2). Used to fetch the next
     /// page of results.
@@ -15755,6 +15836,7 @@ impl ::serde::ser::Serialize for SearchV2ContinueArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchV2Result {
     /// A list (possibly empty) of matches for the query.
     pub matches: Vec<SearchMatchV2>,
@@ -15877,6 +15959,7 @@ impl ::serde::ser::Serialize for SearchV2Result {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedLink {
     /// Shared link url.
     pub url: SharedLinkUrl,
@@ -15984,6 +16067,7 @@ impl ::serde::ser::Serialize for SharedLink {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharedLinkFileInfo {
     /// The shared link corresponding to either a file or shared link to a folder. If it is for a
     /// folder shared link, we use the path param to determine for which file in the folder the view
@@ -16114,6 +16198,7 @@ impl ::serde::ser::Serialize for SharedLinkFileInfo {
 
 /// Sharing info for a file or folder.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharingInfo {
     /// True if the file or folder is inside a read-only shared folder.
     pub read_only: bool,
@@ -16203,6 +16288,7 @@ impl ::serde::ser::Serialize for SharingInfo {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SingleUserLock {
     /// The time the lock was created.
     pub created: super::common::DropboxTimestamp,
@@ -16326,6 +16412,7 @@ impl ::serde::ser::Serialize for SingleUserLock {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SymlinkInfo {
     /// The target this symlink points to.
     pub target: String,
@@ -16674,6 +16761,7 @@ impl ::std::fmt::Display for SyncSettingsError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ThumbnailArg {
     /// The path to the image file you want to thumbnail.
     pub path: ReadPath,
@@ -17214,6 +17302,7 @@ impl ::serde::ser::Serialize for ThumbnailSize {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct ThumbnailV2Arg {
     /// Information specifying which file to preview. This could be a path to a file, a shared link
     /// pointing to a file, or a shared link pointing to a folder, with a relative path.
@@ -17498,6 +17587,7 @@ impl ::std::fmt::Display for ThumbnailV2Error {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnlockFileArg {
     /// Path in the user's Dropbox to a file.
     pub path: WritePathOrId,
@@ -17587,6 +17677,7 @@ impl ::serde::ser::Serialize for UnlockFileArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UnlockFileBatchArg {
     /// List of 'entries'. Each 'entry' contains a path of the file which will be unlocked.
     /// Duplicate path arguments in the batch are considered only once.
@@ -17835,6 +17926,7 @@ impl ::serde::ser::Serialize for UploadErrorWithProperties {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionAppendArg {
     /// Contains the upload session ID and the offset.
     pub cursor: UploadSessionCursor,
@@ -17943,6 +18035,7 @@ impl ::serde::ser::Serialize for UploadSessionAppendArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionCursor {
     /// The upload session ID (returned by [`upload_session_start()`](upload_session_start)).
     pub session_id: String,
@@ -18046,6 +18139,7 @@ impl ::serde::ser::Serialize for UploadSessionCursor {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionFinishArg {
     /// Contains the upload session ID and the offset.
     pub cursor: UploadSessionCursor,
@@ -18148,6 +18242,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishArg {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionFinishBatchArg {
     /// Commit information for each file in the batch.
     pub entries: Vec<UploadSessionFinishArg>,
@@ -18373,6 +18468,7 @@ impl ::serde::ser::Serialize for UploadSessionFinishBatchLaunch {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionFinishBatchResult {
     /// Each entry in [`UploadSessionFinishBatchArg::entries`](UploadSessionFinishBatchArg) will
     /// appear at the same position inside
@@ -18854,6 +18950,7 @@ impl ::std::fmt::Display for UploadSessionLookupError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionOffsetError {
     /// The offset up to which data has been collected.
     pub correct_offset: u64,
@@ -18943,6 +19040,7 @@ impl ::serde::ser::Serialize for UploadSessionOffsetError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionStartArg {
     /// If true, the current session will be closed, at which point you won't be able to call
     /// [`upload_session_append_v2()`](upload_session_append_v2) anymore with the current session.
@@ -19131,6 +19229,7 @@ impl ::std::fmt::Display for UploadSessionStartError {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionStartResult {
     /// A unique identifier for the upload session. Pass this to
     /// [`upload_session_append_v2()`](upload_session_append_v2) and
@@ -19293,6 +19392,7 @@ impl ::serde::ser::Serialize for UploadSessionType {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadWriteFailed {
     /// The reason why the file couldn't be saved.
     pub reason: WriteError,
@@ -19398,6 +19498,7 @@ impl ::serde::ser::Serialize for UploadWriteFailed {
 
 /// Metadata for a video.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct VideoMetadata {
     /// Dimension of the photo/video.
     pub dimensions: Option<Dimensions>,

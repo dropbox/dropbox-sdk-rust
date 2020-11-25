@@ -36,6 +36,7 @@ pub fn delete_manual_contacts_batch(
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteManualContactsArg {
     /// List of manually added contacts to be deleted.
     pub email_addresses: Vec<super::common::EmailAddress>,

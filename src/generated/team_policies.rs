@@ -1725,6 +1725,7 @@ impl ::serde::ser::Serialize for SuggestMembersPolicy {
 
 /// Policies governing team members.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamMemberPolicies {
     /// Policies governing sharing.
     pub sharing: TeamSharingPolicies,
@@ -1864,6 +1865,7 @@ impl ::serde::ser::Serialize for TeamMemberPolicies {
 
 /// Policies governing sharing within and outside of the team.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamSharingPolicies {
     /// Who can join folders shared by team members.
     pub shared_folder_member_policy: SharedFolderMemberPolicy,

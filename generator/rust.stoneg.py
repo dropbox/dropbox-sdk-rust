@@ -90,6 +90,7 @@ class RustBackend(RustHelperBackend):
         struct_name = self.struct_name(struct)
         self._emit_doc(struct.doc)
         self.emit(u'#[derive(Debug)]')
+        self.emit(u'#[non_exhaustive] // structs may have more fields added in the future.')
         with self.block(u'pub struct {}'.format(struct_name)):
             for field in struct.all_fields:
                 self._emit_doc(field.doc)
