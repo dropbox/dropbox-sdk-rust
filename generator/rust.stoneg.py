@@ -122,7 +122,7 @@ class RustBackend(RustHelperBackend):
                     self.enum_variant_name(subtype),
                     self._rust_type(subtype.data_type)))
             if struct.is_catch_all():
-                self.emit(u'_Unknown')
+                self._emit_other_variant()
         self.emit()
 
         self._impl_serde_for_polymorphic_struct(struct)
@@ -145,12 +145,7 @@ class RustBackend(RustHelperBackend):
                 else:
                     self.emit(u'{}({}),'.format(variant_name, self._rust_type(field.data_type)))
             if not union.closed:
-                self.emit_wrapped_text(
-                        u'Catch-all used for unrecognized values returned from the server.'
-                        u' Encountering this value typically indicates that this SDK version is'
-                        u' out of date.',
-                        prefix=u'/// ', width=100)
-                self.emit(u'Other,')
+                self._emit_other_variant()
         self.emit()
 
         self._impl_serde_for_union(union)
@@ -273,6 +268,14 @@ class RustBackend(RustHelperBackend):
     def _emit_alias(self, alias):
         alias_name = self.alias_name(alias)
         self.emit(u'pub type {} = {};'.format(alias_name, self._rust_type(alias.data_type)))
+
+    def _emit_other_variant(self):
+        self.emit_wrapped_text(
+                u'Catch-all used for unrecognized values returned from the server.'
+                u' Encountering this value typically indicates that this SDK version is'
+                u' out of date.',
+                prefix=u'/// ', width=100)
+        self.emit(u'Other,')
 
     # Serialization
 
@@ -480,10 +483,10 @@ class RustBackend(RustHelperBackend):
                             with self.block(u'_ =>'):
                                 # TODO(wfraser): it'd be cool to grab any fields in the parent,
                                 # which are common to all variants, and stick them in the
-                                # '_Unknown' enum vaiant.
+                                # 'Other' enum vaiant.
                                 # For now, just consume them and return a nullary variant.
                                 self.emit(u'crate::eat_json_fields(&mut map)?;')
-                                self.emit(u'Ok({}::_Unknown)'.format(type_name))
+                                self.emit(u'Ok({}::Other)'.format(type_name))
                         else:
                             self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(
@@ -511,7 +514,7 @@ class RustBackend(RustHelperBackend):
                                               self.field_name(field)))
                         self.emit(u's.end()')
                 if struct.is_catch_all():
-                    self.emit(u'{}::_Unknown => Err(::serde::ser::Error::custom("cannot serialize '
+                    self.emit(u'{}::Other => Err(::serde::ser::Error::custom("cannot serialize '
                               u'unknown variant"))'.format(
                                     type_name))
         self.emit()

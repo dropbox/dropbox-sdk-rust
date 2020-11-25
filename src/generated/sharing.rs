@@ -7373,7 +7373,9 @@ impl ::serde::ser::Serialize for LinkExpiry {
 pub enum LinkMetadata {
     Path(PathLinkMetadata),
     Collection(CollectionLinkMetadata),
-    _Unknown
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for LinkMetadata {
@@ -7396,7 +7398,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkMetadata {
                     "collection" => Ok(LinkMetadata::Collection(CollectionLinkMetadata::internal_deserialize(map)?)),
                     _ => {
                         crate::eat_json_fields(&mut map)?;
-                        Ok(LinkMetadata::_Unknown)
+                        Ok(LinkMetadata::Other)
                     }
                 }
             }
@@ -7429,7 +7431,7 @@ impl ::serde::ser::Serialize for LinkMetadata {
                 s.serialize_field("expires", &x.expires)?;
                 s.end()
             }
-            LinkMetadata::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            LinkMetadata::Other => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
         }
     }
 }
@@ -16884,7 +16886,9 @@ impl ::std::fmt::Display for SharedLinkError {
 pub enum SharedLinkMetadata {
     File(FileLinkMetadata),
     Folder(FolderLinkMetadata),
-    _Unknown
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for SharedLinkMetadata {
@@ -16907,7 +16911,7 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkMetadata {
                     "folder" => Ok(SharedLinkMetadata::Folder(FolderLinkMetadata::internal_deserialize(map)?)),
                     _ => {
                         crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkMetadata::_Unknown)
+                        Ok(SharedLinkMetadata::Other)
                     }
                 }
             }
@@ -16953,7 +16957,7 @@ impl ::serde::ser::Serialize for SharedLinkMetadata {
                 s.serialize_field("content_owner_team_info", &x.content_owner_team_info)?;
                 s.end()
             }
-            SharedLinkMetadata::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            SharedLinkMetadata::Other => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
         }
     }
 }

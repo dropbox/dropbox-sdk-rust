@@ -77,7 +77,7 @@ fn test_open_polymorphic_struct() {
         "home_namespace_id": "67890"
     }"#;
     let x = serde_json::from_str::<dropbox_sdk::common::RootInfo>(json).unwrap();
-    if let dropbox_sdk::common::RootInfo::_Unknown = x {
+    if let dropbox_sdk::common::RootInfo::Other = x {
         // yay
     } else {
         panic!("wrong variant");

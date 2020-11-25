@@ -212,7 +212,9 @@ impl ::std::fmt::Display for PathRootError {
 pub enum RootInfo {
     Team(TeamRootInfo),
     User(UserRootInfo),
-    _Unknown
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for RootInfo {
@@ -235,7 +237,7 @@ impl<'de> ::serde::de::Deserialize<'de> for RootInfo {
                     "user" => Ok(RootInfo::User(UserRootInfo::internal_deserialize(map)?)),
                     _ => {
                         crate::eat_json_fields(&mut map)?;
-                        Ok(RootInfo::_Unknown)
+                        Ok(RootInfo::Other)
                     }
                 }
             }
@@ -266,7 +268,7 @@ impl ::serde::ser::Serialize for RootInfo {
                 s.serialize_field("home_namespace_id", &x.home_namespace_id)?;
                 s.end()
             }
-            RootInfo::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            RootInfo::Other => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
         }
     }
 }
