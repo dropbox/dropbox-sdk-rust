@@ -6,7 +6,8 @@ Thank you for your pull request. Please provide a description below.
 
 **General Contributing**
 <!-- Change [ ] to [x] if you have: -->
-- [ ] Have you read the Code of Conduct and signed the [CLA](https://opensource.dropbox.com/cla/)?
+- [ ] I have read the Code of Conduct and signed the [CLA](https://opensource.dropbox.com/cla/).
+- [ ] I have added an entry to the `RELEASE_NOTES.md` file, or believe it's not necessary for this change.
 
 **Validation**
 <!-- Describe which tests cover the changes you've made, and any additional manual validation you

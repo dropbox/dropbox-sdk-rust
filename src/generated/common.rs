@@ -20,6 +20,7 @@ pub type SessionId = String;
 pub type SharedFolderId = NamespaceId;
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PathRoot {
     /// Paths are relative to the authenticating user's home namespace, whether or not that user
     /// belongs to a team.
@@ -117,6 +118,7 @@ impl ::serde::ser::Serialize for PathRoot {
 }
 
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum PathRootError {
     /// The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error
     /// is use's latest root info.
@@ -206,10 +208,13 @@ impl ::std::fmt::Display for PathRootError {
 
 /// Information about current user's root.
 #[derive(Debug)]
+#[non_exhaustive] // variants may be added in the future
 pub enum RootInfo {
     Team(TeamRootInfo),
     User(UserRootInfo),
-    _Unknown
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for RootInfo {
@@ -232,12 +237,12 @@ impl<'de> ::serde::de::Deserialize<'de> for RootInfo {
                     "user" => Ok(RootInfo::User(UserRootInfo::internal_deserialize(map)?)),
                     _ => {
                         crate::eat_json_fields(&mut map)?;
-                        Ok(RootInfo::_Unknown)
+                        Ok(RootInfo::Other)
                     }
                 }
             }
         }
-        const VARIANTS: &[&str] = &["user",
+        const VARIANTS: &[&str] = &["team",
                                     "user"];
         deserializer.deserialize_struct("RootInfo", VARIANTS, EnumVisitor)
     }
@@ -263,13 +268,14 @@ impl ::serde::ser::Serialize for RootInfo {
                 s.serialize_field("home_namespace_id", &x.home_namespace_id)?;
                 s.end()
             }
-            RootInfo::_Unknown => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
+            RootInfo::Other => Err(::serde::ser::Error::custom("cannot serialize unknown variant"))
         }
     }
 }
 
 /// Root info when user is member of a team with a separate root namespace ID.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct TeamRootInfo {
     /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team
     /// root if the user is member of a team with a separate team root. Otherwise it will be same as
@@ -393,6 +399,7 @@ impl ::serde::ser::Serialize for TeamRootInfo {
 /// Root info when user is not member of a team or the user is a member of a team and the team does
 /// not have a separate root namespace.
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserRootInfo {
     /// The namespace ID for user's root namespace. It will be the namespace ID of the shared team
     /// root if the user is member of a team with a separate team root. Otherwise it will be same as

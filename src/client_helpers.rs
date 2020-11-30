@@ -30,9 +30,9 @@ enum RateLimitedReason {
 }
 
 /// Does the request and returns a two-level result. The outer result has an error if something
-/// went horribly wrong (I/O errors, parse errors, server 500 errors, etc.). The inner result has
-/// an error if the server returned one for the request, otherwise it has the deserialized JSON
-/// response and the body stream (if any).
+/// went wrong in the process of making the request (I/O errors, parse errors, server 500 errors,
+/// etc.). The inner result has an error if the server returned one for the request, otherwise it
+/// has the deserialized JSON response and the body stream (if any).
 #[allow(clippy::too_many_arguments)]
 pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
     client: &impl HttpClient,

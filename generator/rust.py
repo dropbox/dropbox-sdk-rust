@@ -94,6 +94,22 @@ class RustHelperBackend(CodeBackend):
         return isinstance(typ, ir.Union) or \
             (isinstance(typ, ir.Struct) and typ.has_enumerated_subtypes())
 
+    def is_nullary_struct(self, typ):
+        return isinstance(typ, ir.Struct) and not typ.all_fields
+
+    def is_closed_union(self, typ):
+        return (isinstance(typ, ir.Union) and typ.closed) \
+            or (isinstance(typ, ir.Struct) \
+                and typ.has_enumerated_subtypes() and not typ.is_catch_all())
+
+    def get_union_variants(self, typ):
+        if isinstance(typ, ir.Union):
+            return typ.all_fields
+        elif isinstance(typ, ir.Struct) and typ.has_enumerated_subtypes():
+            return typ.get_enumerated_subtypes()
+        else:
+            return []
+
     def namespace_name(self, ns):
         return self.namespace_name_raw(ns.name)
 

@@ -90,6 +90,7 @@ class RustBackend(RustHelperBackend):
         struct_name = self.struct_name(struct)
         self._emit_doc(struct.doc)
         self.emit(u'#[derive(Debug)]')
+        self.emit(u'#[non_exhaustive] // structs may have more fields added in the future.')
         with self.block(u'pub struct {}'.format(struct_name)):
             for field in struct.all_fields:
                 self._emit_doc(field.doc)
@@ -113,13 +114,15 @@ class RustBackend(RustHelperBackend):
         enum_name = self.enum_name(struct)
         self._emit_doc(struct.doc)
         self.emit(u'#[derive(Debug)]')
+        if struct.is_catch_all():
+            self.emit(u'#[non_exhaustive] // variants may be added in the future')
         with self.block(u'pub enum {}'.format(enum_name)):
             for subtype in struct.get_enumerated_subtypes():
                 self.emit(u'{}({}),'.format(
                     self.enum_variant_name(subtype),
                     self._rust_type(subtype.data_type)))
             if struct.is_catch_all():
-                self.emit(u'_Unknown')
+                self._emit_other_variant()
         self.emit()
 
         self._impl_serde_for_polymorphic_struct(struct)
@@ -128,6 +131,8 @@ class RustBackend(RustHelperBackend):
         enum_name = self.enum_name(union)
         self._emit_doc(union.doc)
         self.emit(u'#[derive(Debug)]')
+        if not union.closed:
+            self.emit(u'#[non_exhaustive] // variants may be added in the future')
         with self.block(u'pub enum {}'.format(enum_name)):
             for field in union.all_fields:
                 if field.catch_all:
@@ -140,12 +145,7 @@ class RustBackend(RustHelperBackend):
                 else:
                     self.emit(u'{}({}),'.format(variant_name, self._rust_type(field.data_type)))
             if not union.closed:
-                self.emit_wrapped_text(
-                        u'Catch-all used for unrecognized values returned from the server.'
-                        u' Encountering this value typically indicates that this SDK version is'
-                        u' out of date.',
-                        prefix=u'/// ', width=100)
-                self.emit(u'Other,')
+                self._emit_other_variant()
         self.emit()
 
         self._impl_serde_for_union(union)
@@ -189,7 +189,7 @@ class RustBackend(RustHelperBackend):
                 auth_trait = u'crate::client_trait::NoauthClient'
             else:
                 raise Exception('route {}/{}: unsupported auth type(s): {}'.format(
-                    ns, name_with_version, auths_str))
+                    ns, route_name, auths_str))
 
         # This is the name of the HTTP route. Almost the same as the 'route_name', but without any
         # mangling to avoid Rust keywords and such.
@@ -268,6 +268,14 @@ class RustBackend(RustHelperBackend):
     def _emit_alias(self, alias):
         alias_name = self.alias_name(alias)
         self.emit(u'pub type {} = {};'.format(alias_name, self._rust_type(alias.data_type)))
+
+    def _emit_other_variant(self):
+        self.emit_wrapped_text(
+                u'Catch-all used for unrecognized values returned from the server.'
+                u' Encountering this value typically indicates that this SDK version is'
+                u' out of date.',
+                prefix=u'/// ', width=100)
+        self.emit(u'Other,')
 
     # Serialization
 
@@ -475,14 +483,14 @@ class RustBackend(RustHelperBackend):
                             with self.block(u'_ =>'):
                                 # TODO(wfraser): it'd be cool to grab any fields in the parent,
                                 # which are common to all variants, and stick them in the
-                                # '_Unknown' enum vaiant.
+                                # 'Other' enum vaiant.
                                 # For now, just consume them and return a nullary variant.
                                 self.emit(u'crate::eat_json_fields(&mut map)?;')
-                                self.emit(u'Ok({}::_Unknown)'.format(type_name))
+                                self.emit(u'Ok({}::Other)'.format(type_name))
                         else:
                             self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
             self.generate_multiline_list(
-                list(u'"{}"'.format(subtype.name)
+                list(u'"{}"'.format(field.name)
                      for field in struct.get_enumerated_subtypes()),
                 before='const VARIANTS: &[&str] = &',
                 after=';',
@@ -506,7 +514,7 @@ class RustBackend(RustHelperBackend):
                                               self.field_name(field)))
                         self.emit(u's.end()')
                 if struct.is_catch_all():
-                    self.emit(u'{}::_Unknown => Err(::serde::ser::Error::custom("cannot serialize '
+                    self.emit(u'{}::Other => Err(::serde::ser::Error::custom("cannot serialize '
                               u'unknown variant"))'.format(
                                     type_name))
         self.emit()

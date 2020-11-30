@@ -53,7 +53,7 @@ fn list_folder_recursive() {
             .with_recursive(true)
             .with_limit(10))
     {
-        Ok(Ok(files::ListFolderResult { entries, cursor, has_more })) => {
+        Ok(Ok(files::ListFolderResult { entries, cursor, has_more, .. })) => {
             println!("{} entries", entries.len());
             process_entries(entries);
             assert!(has_more, "expected has_more from list_folder");
@@ -67,7 +67,7 @@ fn list_folder_recursive() {
         let next = match files::list_folder_continue(
             client.as_ref(), &files::ListFolderContinueArg::new(cursor.clone()))
         {
-            Ok(Ok(files::ListFolderResult { entries, cursor, has_more })) => {
+            Ok(Ok(files::ListFolderResult { entries, cursor, has_more, .. })) => {
                 println!("{} entries", entries.len());
                 process_entries(entries);
                 (cursor, has_more)

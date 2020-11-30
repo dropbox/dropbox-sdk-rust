@@ -32,6 +32,20 @@ class TestBackend(RustHelperBackend):
         self.reference = PythonTypesBackend(self.ref_path, args + ["--package", "reference"])
         self.reference_impls = {}
 
+    def make_test_value(self, typ):
+        if ir.is_struct_type(typ):
+            if typ.has_enumerated_subtypes():
+                return [TestPolymorphicStruct(self, typ, self.reference_impls, variant)
+                    for variant in typ.get_enumerated_subtypes()]
+            else:
+                return [TestStruct(self, typ, self.reference_impls)]
+        elif ir.is_union_type(typ):
+            return [TestUnion(self, typ, self.reference_impls, variant)
+                for variant in typ.all_fields]
+        else:
+            raise RuntimeError(u'ERROR: type {} is neither struct nor union'
+                                .format(typ))
+
     def generate(self, api):
         print(u'Generating Python reference code')
         self.reference.generate(api)
@@ -56,86 +70,10 @@ class TestBackend(RustHelperBackend):
             with self.output_to_relative_path(ns_name + '.rs'):
                 self._emit_header()
                 for typ in ns.data_types:
-                    type_name = self.struct_name(typ)
+                    self._emit_tests(ns, typ, json_encode)
 
-                    # the general idea here is to instantiate each type using
-                    # the reference Python code, put some random data in the
-                    # fields, serialize it to JSON, emit the JSON into the Rust
-                    # test, have Rust deserialize it, and emit assertions that
-                    # the fields match. Then have Rust re-serialize to JSON and
-                    # desereialize it again, then check the fields of the
-                    # newly-deserialized struct. This verifies Rust's
-                    # serializer.
-
-                    is_serializable = True
-                    test_value = None
-                    if ir.is_struct_type(typ):
-                        if typ.has_enumerated_subtypes():
-                            # TODO: generate tests for all variants
-                            # for now, just pick the first variant
-                            variant = typ.get_enumerated_subtypes()[0]
-                            test_value = TestPolymorphicStruct(
-                                self, typ, self.reference_impls, variant)
-                        else:
-                            test_value = TestStruct(self, typ, self.reference_impls)
-                    elif ir.is_union_type(typ):
-                        # TODO: generate tests for all variants
-                        # for now, just pick the first variant
-
-                        # prefer choosing from this type and not the parent if we can
-                        variants = [field for field in typ.fields if not field.catch_all]
-                        if len(variants) == 0:
-                            # fall back to parent type's variants
-                            variants = [field for field in typ.all_fields if not field.catch_all]
-
-                        if not variants:
-                            # Rust code will refuse to serialize a type with no variants (or only
-                            # the catch-all variant), so don't bother testing that
-                            is_serializable = False
-                            variant = typ.all_fields[0]  # this assumes there's at least one
-                        else:
-                            variant = variants[0]
-
-                        test_value = TestUnion(self, typ, self.reference_impls, variant)
-                    else:
-                        raise RuntimeError(u'ERROR: type {} is neither struct nor union'
-                                           .format(typ))
-
-                    pyname = fmt_py_class(typ.name)
-
-                    json = json_encode(
-                        self.reference_impls[ns.name].__dict__[pyname + '_validator'],
-                        test_value.value,
-                        Permissions())
-                    with self._test_fn(type_name):
-                        self.emit(u'let json = r#"{}"#;'.format(json))
-                        self.emit(u'let x = ::serde_json::from_str::<::dropbox_sdk::{}::{}>(json).unwrap();'
-                                  .format(ns_name,
-                                          self.struct_name(typ)))
-                        test_value.emit_asserts(self, 'x')
-
-                        if is_serializable:
-                            # now serialize it back to JSON, deserialize it again, and test
-                            # it again.
-                            self.emit()
-                            self.emit(u'let json2 = ::serde_json::to_string(&x).unwrap();')
-                            de = u'::serde_json::from_str::<::dropbox_sdk::{}::{}>(&json2).unwrap()' \
-                                 .format(ns_name,
-                                         self.struct_name(typ))
-
-                            if typ.all_fields:
-                                self.emit(u'let x2 = {};'.format(de))
-                                test_value.emit_asserts(self, 'x2')
-                            else:
-                                self.emit(u'{};'.format(de))
-                        else:
-                            # assert that serializing it returns an error
-                            self.emit(u'assert!(::serde_json::to_string(&x).is_err());')
-                        self.emit()
-
-                # for typ
-            # .rs test file
-        # for ns
+                    if self.is_closed_union(typ):
+                        self._emit_closed_union_test(ns, typ)
 
         with self.output_to_relative_path('mod.rs'):
             self._emit_header()
@@ -146,7 +84,7 @@ class TestBackend(RustHelperBackend):
 
     def _emit_header(self):
         self.emit(u'// DO NOT EDIT')
-        self.emit(u'// This file was generated by Stone')
+        self.emit(u'// This file was @generated by Stone')
         self.emit()
         self.emit(u'#![allow(bad_style)]')
         self.emit()
@@ -155,6 +93,88 @@ class TestBackend(RustHelperBackend):
         self.emit(u'    clippy::unreadable_literal,')
         self.emit(u'    clippy::cognitive_complexity,')
         self.emit(u')]')
+        self.emit()
+
+    def _emit_tests(self, ns, typ, json_encode):
+        ns_name = self.namespace_name(ns)
+        type_name = self.struct_name(typ)
+
+        # The general idea here is to instantiate each type using the reference
+        # Python code, put some random data in the fields, serialize it to
+        # JSON, emit the JSON into the Rust test, have Rust deserialize it, and
+        # emit assertions that the fields match. Then have Rust re-serialize to
+        # JSON and desereialize it again, then check the fields of the
+        # newly-deserialized struct. This verifies Rust's serializer.
+
+        for test_value in self.make_test_value(typ):
+            pyname = fmt_py_class(typ.name)
+
+            json = json_encode(
+                self.reference_impls[ns.name].__dict__[pyname + '_validator'],
+                test_value.value,
+                Permissions())
+
+            # "other" is a hardcoded, special-cased tag used by Stone for the
+            # catch-all variant of open unions. Let's rewrite it to something
+            # else, to test that the unknown variant logic actually works.
+            # Unfortunately this requires mega-hax of rewriting the JSON text,
+            # because the Python serializer won't let us give an arbitrary
+            # variant name.
+            json = json.replace(
+                    '{".tag": "other"',
+                    '{".tag": "dropbox-sdk-rust-bogus-test-variant"')
+
+            with self._test_fn(type_name + test_value.test_suffix()):
+                self.emit(u'let json = r#"{}"#;'.format(json))
+                self.emit(u'let x = ::serde_json::from_str::<::dropbox_sdk::{}::{}>(json).unwrap();'
+                        .format(ns_name,
+                                self.struct_name(typ)))
+                test_value.emit_asserts(self, 'x')
+
+                if test_value.is_serializable():
+                    # now serialize it back to JSON, deserialize it again, and
+                    # test it again.
+                    self.emit()
+                    self.emit(u'let json2 = ::serde_json::to_string(&x).unwrap();')
+                    de = u'::serde_json::from_str::<::dropbox_sdk::{}::{}>(&json2).unwrap()' \
+                        .format(ns_name,
+                                self.struct_name(typ))
+
+                    if typ.all_fields:
+                        self.emit(u'let x2 = {};'.format(de))
+                        test_value.emit_asserts(self, 'x2')
+                    else:
+                        self.emit(u'{};'.format(de))
+                else:
+                    # assert that serializing it returns an error
+                    self.emit(u'assert!(::serde_json::to_string(&x).is_err());')
+            self.emit()
+
+    def _emit_closed_union_test(self, ns, typ):
+        ns_name = self.namespace_name(ns)
+        type_name = self.struct_name(typ)
+        with self._test_fn("ClosedUnion_" + type_name):
+            self.emit(u'// This test ensures that an exhaustive match compiles.')
+            self.emit(u'let x: Option<::dropbox_sdk::{}::{}> = None;'.format(
+                ns_name, self.enum_name(typ)))
+            self.emit(u'match x {')
+            with self.indent():
+                var_exps = []
+                for variant in self.get_union_variants(typ):
+                    v_name = self.enum_variant_name(variant)
+                    var_exp = u'::dropbox_sdk::{}::{}::{}'.format(
+                        ns_name, type_name, v_name)
+                    if not ir.is_void_type(variant.data_type):
+                        var_exp += u'(_)'
+                    var_exps += [var_exp]
+
+                self.generate_multiline_list(
+                    [u'None'] + [u'Some({})'.format(exp) for exp in var_exps],
+                    sep=' | ',
+                    skip_last_sep=True,
+                    delim=('', ''),
+                    after=' => ()')
+            self.emit(u'}')
         self.emit()
 
     def _test_fn(self, name):
@@ -208,6 +228,13 @@ class TestValue(object):
     def emit_asserts(self, codegen, expression_path):
         raise NotImplementedError('you\'re supposed to implement TestValue.emit_asserts')
 
+    def is_serializable(self):
+        # Not all types can round-trip back from Rust to JSON.
+        return True
+
+    def test_suffix(self):
+        return ""
+
 
 class TestStruct(TestValue):
     def __init__(self, rust_generator, stone_type, reference_impls):
@@ -250,10 +277,13 @@ class TestUnion(TestValue):
         self._rust_name = rust_generator.enum_name(stone_type)
         self._rust_variant_name = rust_generator.enum_variant_name_raw(variant.name)
         self._rust_namespace_name = rust_generator.namespace_name(stone_type.namespace)
-        self._variant_type = variant.data_type
+        self._variant = variant
+
+        # We can't serialize the catch-all variant.
+        self._is_serializable = not variant.catch_all
 
         self._inner_value = make_test_field(
-            None, self._variant_type, rust_generator, reference_impls)
+            None, self._variant.data_type, rust_generator, reference_impls)
 
         if self._inner_value is None:
             raise RuntimeError(u'Error generating union variant value for {}.{}'
@@ -270,16 +300,21 @@ class TestUnion(TestValue):
             raise RuntimeError(u'Error generating value for {}.{}: {}'
                                .format(self._stone_type.name, variant_name, e))
 
-    def is_open(self):
-        return len(self._stone_type.all_fields) > 1
+    def has_other_variants(self):
+        return len(self._stone_type.all_fields) > 1 or not self._stone_type.closed
 
     def emit_asserts(self, codegen, expression_path):
         if expression_path[0] == '(' and expression_path[-1] == ')':
                 expression_path = expression_path[1:-1]  # strip off superfluous parens
 
         with codegen.block(u'match {}'.format(expression_path)):
-            if ir.is_void_type(self._variant_type):
+            if ir.is_void_type(self._variant.data_type):
                 codegen.emit(u'::dropbox_sdk::{}::{}::{} => (),'.format(
+                    self._rust_namespace_name,
+                    self._rust_name,
+                    self._rust_variant_name))
+            elif codegen.is_nullary_struct(self._variant.data_type):
+                codegen.emit(u'::dropbox_sdk::{}::{}::{}(..) => (), // nullary struct'.format(
                     self._rust_namespace_name,
                     self._rust_name,
                     self._rust_variant_name))
@@ -290,16 +325,23 @@ class TestUnion(TestValue):
                         self._rust_variant_name)):
                     self._inner_value.emit_assert(codegen, '(*v)')
 
-            if self.is_open():
+            if self.has_other_variants():
                 codegen.emit(u'_ => panic!("wrong variant")')
+
+    def is_serializable(self):
+        return not self._variant.catch_all
+
+    def test_suffix(self):
+        return "_" + self._rust_variant_name
 
 
 class TestPolymorphicStruct(TestUnion):
     def get_from_inner_value(self, variant_name, generated_field):
         return generated_field.value
 
-    def is_open(self):
-        return len(self._stone_type.get_enumerated_subtypes()) > 1
+    def has_other_variants(self):
+        return len(self._stone_type.get_enumerated_subtypes()) > 1 \
+                or self._stone_type.is_catch_all()
 
 
 class TestList(TestValue):
@@ -348,8 +390,9 @@ def make_test_field(field_name, stone_type, rust_generator, reference_impls):
             inner = TestStruct(rust_generator, typ, reference_impls)
         value = inner.value
     elif ir.is_union_type(typ):
-        # pick the first tag
-        # TODO(wfraser) generate tests for them ALL!
+        # Pick the first tag.
+        # We could generate tests for them all, but it would lead to a huge explosion of tests, and
+        # the types themselves are tested elsewhere.
         if len(typ.fields) == 0:
             # there must be a parent type; go for it
             variant = typ.all_fields[0]

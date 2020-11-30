@@ -8,6 +8,7 @@
 )]
 
 #[derive(Debug)]
+#[non_exhaustive] // structs may have more fields added in the future.
 pub struct SecondaryEmail {
     /// Secondary email address.
     pub email: super::common::EmailAddress,
