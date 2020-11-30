@@ -5,6 +5,9 @@ from stone import ir
 from stone.backends.helpers import split_words
 
 
+DERIVE_TRAITS = u'Debug, Clone, PartialEq'
+
+
 def fmt_shouting_snake(name):
     return '_'.join([word.upper() for word in split_words(name)])
 
@@ -89,7 +92,7 @@ class RustBackend(RustHelperBackend):
     def _emit_struct(self, struct):
         struct_name = self.struct_name(struct)
         self._emit_doc(struct.doc)
-        self.emit(u'#[derive(Debug)]')
+        self.emit(u'#[derive({})]'.format(DERIVE_TRAITS))
         self.emit(u'#[non_exhaustive] // structs may have more fields added in the future.')
         with self.block(u'pub struct {}'.format(struct_name)):
             for field in struct.all_fields:
@@ -113,7 +116,7 @@ class RustBackend(RustHelperBackend):
     def _emit_polymorphic_struct(self, struct):
         enum_name = self.enum_name(struct)
         self._emit_doc(struct.doc)
-        self.emit(u'#[derive(Debug)]')
+        self.emit(u'#[derive({})]'.format(DERIVE_TRAITS))
         if struct.is_catch_all():
             self.emit(u'#[non_exhaustive] // variants may be added in the future')
         with self.block(u'pub enum {}'.format(enum_name)):
@@ -130,7 +133,7 @@ class RustBackend(RustHelperBackend):
     def _emit_union(self, union):
         enum_name = self.enum_name(union)
         self._emit_doc(union.doc)
-        self.emit(u'#[derive(Debug)]')
+        self.emit(u'#[derive({})]'.format(DERIVE_TRAITS))
         if not union.closed:
             self.emit(u'#[non_exhaustive] // variants may be added in the future')
         with self.block(u'pub enum {}'.format(enum_name)):

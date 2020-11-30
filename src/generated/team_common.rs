@@ -15,7 +15,7 @@ pub type TeamId = String;
 pub type TeamMemberId = String;
 
 /// The group type determines how a group is managed.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupManagementType {
     /// A group which is managed by selected users.
@@ -101,7 +101,7 @@ impl ::serde::ser::Serialize for GroupManagementType {
 }
 
 /// Information about a group.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GroupSummary {
     pub group_name: String,
@@ -256,7 +256,7 @@ impl ::serde::ser::Serialize for GroupSummary {
 }
 
 /// The group type determines how a group is created and managed.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GroupType {
     /// A group to which team members are automatically added. Applicable to [team
@@ -330,7 +330,7 @@ impl ::serde::ser::Serialize for GroupType {
 }
 
 /// The type of the space limit imposed on a team member.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum MemberSpaceLimitType {
     /// The team member does not have imposed space limit.
@@ -418,7 +418,7 @@ impl ::serde::ser::Serialize for MemberSpaceLimitType {
 }
 
 /// Time range.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct TimeRange {
     /// Optional starting time (inclusive).

@@ -141,7 +141,7 @@ pub fn update(
 }
 
 /// There was an error counting the file requests.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum CountFileRequestsError {
     /// This user's Dropbox Business team doesn't allow file requests.
@@ -213,7 +213,7 @@ impl ::std::fmt::Display for CountFileRequestsError {
 }
 
 /// Result for [`count()`](count).
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CountFileRequestsResult {
     /// The number file requests owner by this user.
@@ -304,7 +304,7 @@ impl ::serde::ser::Serialize for CountFileRequestsResult {
 }
 
 /// Arguments for [`create()`](create).
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct CreateFileRequestArgs {
     /// The title of the file request. Must not be empty.
@@ -465,7 +465,7 @@ impl ::serde::ser::Serialize for CreateFileRequestArgs {
 }
 
 /// There was an error creating the file request.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum CreateFileRequestError {
     /// This user's Dropbox Business team doesn't allow file requests.
@@ -646,7 +646,7 @@ impl ::std::fmt::Display for CreateFileRequestError {
 }
 
 /// There was an error deleting all closed file requests.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DeleteAllClosedFileRequestsError {
     /// This user's Dropbox Business team doesn't allow file requests.
@@ -800,7 +800,7 @@ impl ::std::fmt::Display for DeleteAllClosedFileRequestsError {
 }
 
 /// Result for [`delete_all_closed()`](delete_all_closed).
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteAllClosedFileRequestsResult {
     /// The file requests deleted for this user.
@@ -891,7 +891,7 @@ impl ::serde::ser::Serialize for DeleteAllClosedFileRequestsResult {
 }
 
 /// Arguments for [`delete()`](delete).
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteFileRequestArgs {
     /// List IDs of the file requests to delete.
@@ -982,7 +982,7 @@ impl ::serde::ser::Serialize for DeleteFileRequestArgs {
 }
 
 /// There was an error deleting these file requests.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DeleteFileRequestError {
     /// This user's Dropbox Business team doesn't allow file requests.
@@ -1149,7 +1149,7 @@ impl ::std::fmt::Display for DeleteFileRequestError {
 }
 
 /// Result for [`delete()`](delete).
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct DeleteFileRequestsResult {
     /// The file requests deleted by the request.
@@ -1241,7 +1241,7 @@ impl ::serde::ser::Serialize for DeleteFileRequestsResult {
 
 /// A [file request](https://www.dropbox.com/help/9090) for receiving files into the user's Dropbox
 /// account.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileRequest {
     /// The ID of the file request.
@@ -1460,7 +1460,7 @@ impl ::serde::ser::Serialize for FileRequest {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FileRequestDeadline {
     /// The deadline for this file request.
@@ -1570,7 +1570,7 @@ impl ::serde::ser::Serialize for FileRequestDeadline {
 }
 
 /// There is an error with the file request.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum FileRequestError {
     /// This user's Dropbox Business team doesn't allow file requests.
@@ -1724,7 +1724,7 @@ impl ::std::fmt::Display for FileRequestError {
 }
 
 /// There is an error accessing the file requests functionality.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GeneralFileRequestsError {
     /// This user's Dropbox Business team doesn't allow file requests.
@@ -1796,7 +1796,7 @@ impl ::std::fmt::Display for GeneralFileRequestsError {
 }
 
 /// Arguments for [`get()`](get).
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct GetFileRequestArgs {
     /// The ID of the file request to retrieve.
@@ -1887,7 +1887,7 @@ impl ::serde::ser::Serialize for GetFileRequestArgs {
 }
 
 /// There was an error retrieving the specified file request.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GetFileRequestError {
     /// This user's Dropbox Business team doesn't allow file requests.
@@ -2040,7 +2040,7 @@ impl ::std::fmt::Display for GetFileRequestError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum GracePeriod {
     OneDay,
@@ -2147,7 +2147,7 @@ impl ::serde::ser::Serialize for GracePeriod {
 }
 
 /// Arguments for [`list_v2()`](list_v2).
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileRequestsArg {
     /// The maximum number of file requests that should be returned per request.
@@ -2233,7 +2233,7 @@ impl ::serde::ser::Serialize for ListFileRequestsArg {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileRequestsContinueArg {
     /// The cursor returned by the previous API call specified in the endpoint description.
@@ -2324,7 +2324,7 @@ impl ::serde::ser::Serialize for ListFileRequestsContinueArg {
 }
 
 /// There was an error retrieving the file requests.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFileRequestsContinueError {
     /// This user's Dropbox Business team doesn't allow file requests.
@@ -2409,7 +2409,7 @@ impl ::std::fmt::Display for ListFileRequestsContinueError {
 }
 
 /// There was an error retrieving the file requests.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListFileRequestsError {
     /// This user's Dropbox Business team doesn't allow file requests.
@@ -2481,7 +2481,7 @@ impl ::std::fmt::Display for ListFileRequestsError {
 }
 
 /// Result for [`list()`](list).
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileRequestsResult {
     /// The file requests owned by this user. Apps with the app folder permission will only see file
@@ -2573,7 +2573,7 @@ impl ::serde::ser::Serialize for ListFileRequestsResult {
 }
 
 /// Result for [`list_v2()`](list_v2) and [`list_continue()`](list_continue).
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListFileRequestsV2Result {
     /// The file requests owned by this user. Apps with the app folder permission will only see file
@@ -2692,7 +2692,7 @@ impl ::serde::ser::Serialize for ListFileRequestsV2Result {
 }
 
 /// Arguments for [`update()`](update).
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UpdateFileRequestArgs {
     /// The ID of the file request to update.
@@ -2874,7 +2874,7 @@ impl ::serde::ser::Serialize for UpdateFileRequestArgs {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UpdateFileRequestDeadline {
     /// Do not change the file request's deadline.
@@ -2948,7 +2948,7 @@ impl ::serde::ser::Serialize for UpdateFileRequestDeadline {
 }
 
 /// There is an error updating the file request.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UpdateFileRequestError {
     /// This user's Dropbox Business team doesn't allow file requests.

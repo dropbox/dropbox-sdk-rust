@@ -21,7 +21,7 @@ pub fn set_profile_photo(
         None)
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PhotoSourceArg {
     /// Image data in base64-encoded bytes.
@@ -84,7 +84,7 @@ impl ::serde::ser::Serialize for PhotoSourceArg {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SetProfilePhotoArg {
     /// Image to set as the user's new profile photo.
@@ -174,7 +174,7 @@ impl ::serde::ser::Serialize for SetProfilePhotoArg {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum SetProfilePhotoError {
     /// File cannot be set as profile photo.
@@ -297,7 +297,7 @@ impl ::std::fmt::Display for SetProfilePhotoError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SetProfilePhotoResult {
     /// URL for the photo representing the user, if one is set.

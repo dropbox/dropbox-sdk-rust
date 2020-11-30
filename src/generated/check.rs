@@ -43,7 +43,7 @@ pub fn user(
 }
 
 /// EchoArg contains the arguments to be sent to the Dropbox servers.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct EchoArg {
     /// The string that you'd like to be echoed back to you.
@@ -130,7 +130,7 @@ impl ::serde::ser::Serialize for EchoArg {
 }
 
 /// EchoResult contains the result returned from the Dropbox servers.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct EchoResult {
     /// If everything worked correctly, this would be the same as query.

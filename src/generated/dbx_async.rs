@@ -11,7 +11,7 @@ pub type AsyncJobId = String;
 
 /// Result returned by methods that may either launch an asynchronous job or complete synchronously.
 /// Upon synchronous completion of the job, no additional information is returned.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum LaunchEmptyResult {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
@@ -83,7 +83,7 @@ impl ::serde::ser::Serialize for LaunchEmptyResult {
 /// asynchronous job, or complete the request synchronously, can use this union by extending it, and
 /// adding a 'complete' field with the type of the synchronous response. See
 /// [`LaunchEmptyResult`](LaunchEmptyResult) for an example.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum LaunchResultBase {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
@@ -139,7 +139,7 @@ impl ::serde::ser::Serialize for LaunchResultBase {
 }
 
 /// Arguments for methods that poll the status of an asynchronous job.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PollArg {
     /// Id of the asynchronous job. This is the value of a response returned from the method that
@@ -232,7 +232,7 @@ impl ::serde::ser::Serialize for PollArg {
 
 /// Result returned by methods that poll for the status of an asynchronous job. Upon completion of
 /// the job, no additional information is returned.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum PollEmptyResult {
     /// The asynchronous job is still in progress.
     InProgress,
@@ -296,7 +296,7 @@ impl ::serde::ser::Serialize for PollEmptyResult {
 }
 
 /// Error returned by methods for polling the status of asynchronous job.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PollError {
     /// The job ID is invalid.
@@ -384,7 +384,7 @@ impl ::std::fmt::Display for PollError {
 /// Result returned by methods that poll for the status of an asynchronous job. Unions that extend
 /// this union should add a 'complete' field with a type of the information returned upon job
 /// completion. See [`PollEmptyResult`](PollEmptyResult) for an example.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum PollResultBase {
     /// The asynchronous job is still in progress.
     InProgress,

@@ -369,7 +369,7 @@ pub fn folders_create(
         None)
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddMember {
     /// User which should be added to the Paper doc. Specify only email address or Dropbox account
@@ -478,7 +478,7 @@ impl ::serde::ser::Serialize for AddMember {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddPaperDocUser {
     /// The Paper doc ID.
@@ -619,7 +619,7 @@ impl ::serde::ser::Serialize for AddPaperDocUser {
 }
 
 /// Per-member result for [`docs_users_add()`](docs_users_add).
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct AddPaperDocUserMemberResult {
     /// One of specified input members.
@@ -722,7 +722,7 @@ impl ::serde::ser::Serialize for AddPaperDocUserMemberResult {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum AddPaperDocUserResult {
     /// User was successfully added to the Paper doc.
@@ -859,7 +859,7 @@ impl ::serde::ser::Serialize for AddPaperDocUserResult {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct Cursor {
     /// The actual cursor value.
@@ -976,7 +976,7 @@ impl ::serde::ser::Serialize for Cursor {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum DocLookupError {
     /// Your account does not have permissions to perform this action. This may be due to it only
@@ -1064,7 +1064,7 @@ impl ::std::fmt::Display for DocLookupError {
 }
 
 /// The subscription level of a Paper doc.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum DocSubscriptionLevel {
     /// No change email messages unless you're the creator.
     Default,
@@ -1154,7 +1154,7 @@ impl ::serde::ser::Serialize for DocSubscriptionLevel {
 }
 
 /// The desired export format of the Paper doc.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ExportFormat {
     /// The HTML export format.
@@ -1227,7 +1227,7 @@ impl ::serde::ser::Serialize for ExportFormat {
 }
 
 /// Data structure representing a Paper folder.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct Folder {
     /// Paper folder ID. This ID uniquely identifies the folder.
@@ -1332,7 +1332,7 @@ impl ::serde::ser::Serialize for Folder {
 
 /// The sharing policy of a Paper folder. The sharing policy of subfolders is inherited from the
 /// root folder.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum FolderSharingPolicyType {
     /// Everyone in your team and anyone directly invited can access this folder.
     Team,
@@ -1396,7 +1396,7 @@ impl ::serde::ser::Serialize for FolderSharingPolicyType {
 }
 
 /// The subscription level of a Paper folder.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum FolderSubscriptionLevel {
     /// Not shown in activity, no email messages.
     None,
@@ -1486,7 +1486,7 @@ impl ::serde::ser::Serialize for FolderSubscriptionLevel {
 }
 
 /// Metadata about Paper folders containing the specififed Paper doc.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct FoldersContainingPaperDoc {
     /// The sharing policy of the folder containing the Paper doc.
@@ -1591,7 +1591,7 @@ impl ::serde::ser::Serialize for FoldersContainingPaperDoc {
 }
 
 /// The import format of the incoming data.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ImportFormat {
     /// The provided data is interpreted as standard HTML.
@@ -1678,7 +1678,7 @@ impl ::serde::ser::Serialize for ImportFormat {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct InviteeInfoWithPermissionLevel {
     /// Email address invited to the Paper doc.
@@ -1784,7 +1784,7 @@ impl ::serde::ser::Serialize for InviteeInfoWithPermissionLevel {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListDocsCursorError {
     CursorError(PaperApiCursorError),
@@ -1858,7 +1858,7 @@ impl ::std::fmt::Display for ListDocsCursorError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListPaperDocsArgs {
     /// Allows user to specify how the Paper docs should be filtered.
@@ -1999,7 +1999,7 @@ impl ::serde::ser::Serialize for ListPaperDocsArgs {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListPaperDocsContinueArgs {
     /// The cursor obtained from [`docs_list()`](docs_list) or
@@ -2090,7 +2090,7 @@ impl ::serde::ser::Serialize for ListPaperDocsContinueArgs {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListPaperDocsFilterBy {
     /// Fetches all Paper doc IDs that the user has ever accessed.
@@ -2162,7 +2162,7 @@ impl ::serde::ser::Serialize for ListPaperDocsFilterBy {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListPaperDocsResponse {
     /// The list of Paper doc IDs that can be used to access the given Paper docs or supplied to
@@ -2285,7 +2285,7 @@ impl ::serde::ser::Serialize for ListPaperDocsResponse {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListPaperDocsSortBy {
     /// Sorts the Paper docs by the time they were last accessed.
@@ -2370,7 +2370,7 @@ impl ::serde::ser::Serialize for ListPaperDocsSortBy {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListPaperDocsSortOrder {
     /// Sorts the search result in ascending order.
@@ -2442,7 +2442,7 @@ impl ::serde::ser::Serialize for ListPaperDocsSortOrder {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum ListUsersCursorError {
     /// Your account does not have permissions to perform this action. This may be due to it only
@@ -2545,7 +2545,7 @@ impl ::std::fmt::Display for ListUsersCursorError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderArgs {
     /// The Paper doc ID.
@@ -2654,7 +2654,7 @@ impl ::serde::ser::Serialize for ListUsersOnFolderArgs {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderContinueArgs {
     /// The Paper doc ID.
@@ -2759,7 +2759,7 @@ impl ::serde::ser::Serialize for ListUsersOnFolderContinueArgs {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnFolderResponse {
     /// List of email addresses that are invited on the Paper folder.
@@ -2898,7 +2898,7 @@ impl ::serde::ser::Serialize for ListUsersOnFolderResponse {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnPaperDocArgs {
     /// The Paper doc ID.
@@ -3025,7 +3025,7 @@ impl ::serde::ser::Serialize for ListUsersOnPaperDocArgs {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnPaperDocContinueArgs {
     /// The Paper doc ID.
@@ -3129,7 +3129,7 @@ impl ::serde::ser::Serialize for ListUsersOnPaperDocContinueArgs {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct ListUsersOnPaperDocResponse {
     /// List of email addresses with their respective permission levels that are invited on the
@@ -3283,7 +3283,7 @@ impl ::serde::ser::Serialize for ListUsersOnPaperDocResponse {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperApiBaseError {
     /// Your account does not have permissions to perform this action. This may be due to it only
@@ -3357,7 +3357,7 @@ impl ::std::fmt::Display for PaperApiBaseError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperApiCursorError {
     /// The provided cursor is expired.
@@ -3468,7 +3468,7 @@ impl ::std::fmt::Display for PaperApiCursorError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocCreateArgs {
     /// The format of provided data.
@@ -3577,7 +3577,7 @@ impl ::serde::ser::Serialize for PaperDocCreateArgs {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperDocCreateError {
     /// Your account does not have permissions to perform this action. This may be due to it only
@@ -3704,7 +3704,7 @@ impl ::std::fmt::Display for PaperDocCreateError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocCreateUpdateResult {
     /// Doc ID of the newly created doc.
@@ -3820,7 +3820,7 @@ impl ::serde::ser::Serialize for PaperDocCreateUpdateResult {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocExport {
     /// The Paper doc ID.
@@ -3922,7 +3922,7 @@ impl ::serde::ser::Serialize for PaperDocExport {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocExportResult {
     /// The Paper doc owner's email address.
@@ -4052,7 +4052,7 @@ impl ::serde::ser::Serialize for PaperDocExportResult {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperDocPermissionLevel {
     /// User will be granted edit permissions.
@@ -4124,7 +4124,7 @@ impl ::serde::ser::Serialize for PaperDocPermissionLevel {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocSharingPolicy {
     /// The Paper doc ID.
@@ -4227,7 +4227,7 @@ impl ::serde::ser::Serialize for PaperDocSharingPolicy {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperDocUpdateArgs {
     /// The Paper doc ID.
@@ -4362,7 +4362,7 @@ impl ::serde::ser::Serialize for PaperDocUpdateArgs {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperDocUpdateError {
     /// Your account does not have permissions to perform this action. This may be due to it only
@@ -4528,7 +4528,7 @@ impl ::std::fmt::Display for PaperDocUpdateError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperDocUpdatePolicy {
     /// The content will be appended to the doc.
@@ -4613,7 +4613,7 @@ impl ::serde::ser::Serialize for PaperDocUpdatePolicy {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperFolderCreateArg {
     /// The name of the new Paper folder.
@@ -4744,7 +4744,7 @@ impl ::serde::ser::Serialize for PaperFolderCreateArg {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum PaperFolderCreateError {
     /// Your account does not have permissions to perform this action. This may be due to it only
@@ -4844,7 +4844,7 @@ impl ::std::fmt::Display for PaperFolderCreateError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct PaperFolderCreateResult {
     /// Folder ID of the newly created folder.
@@ -4934,7 +4934,7 @@ impl ::serde::ser::Serialize for PaperFolderCreateResult {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RefPaperDoc {
     /// The Paper doc ID.
@@ -5024,7 +5024,7 @@ impl ::serde::ser::Serialize for RefPaperDoc {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct RemovePaperDocUser {
     /// The Paper doc ID.
@@ -5129,7 +5129,7 @@ impl ::serde::ser::Serialize for RemovePaperDocUser {
 }
 
 /// Sharing policy of Paper doc.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SharingPolicy {
     /// This value applies to the non-team members.
@@ -5233,7 +5233,7 @@ impl ::serde::ser::Serialize for SharingPolicy {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum SharingPublicPolicyType {
     /// Users who have a link to this doc can edit it.
     PeopleWithLinkCanEdit,
@@ -5323,7 +5323,7 @@ impl ::serde::ser::Serialize for SharingPublicPolicyType {
 }
 
 /// The sharing policy type of the Paper doc.
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum SharingTeamPolicyType {
     /// Users who have a link to this doc can edit it.
     PeopleWithLinkCanEdit,
@@ -5399,7 +5399,7 @@ impl ::serde::ser::Serialize for SharingTeamPolicyType {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UserInfoWithPermissionLevel {
     /// User shared on the Paper doc.
@@ -5502,7 +5502,7 @@ impl ::serde::ser::Serialize for UserInfoWithPermissionLevel {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UserOnPaperDocFilter {
     /// all users who have visited the Paper doc.
