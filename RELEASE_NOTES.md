@@ -1,3 +1,21 @@
+# v0.9.0
+xxxx-yy-zz
+* All structs and enums except ones marked `union_closed` in the spec are now marked with
+  `#[non_exhaustive]`. This means destructuring of structs must use `..` to indicate that other
+  fields may be present, and matches on enums must include a `_` case to indicate that other
+  variants may exist. This is because Stone explicitly reserves the right to add new fields and
+  variants unless the type is a `union_closed`, so adding this attribute means future updates won't
+  break existing code.
+* Renamed the `_Unknown` catch-all enum variant to `Other` in all cases. Going along with the above,
+  your match statement should always have an `Other | _ => { ... }` case at the end. `Other`
+  protects you against server-side changes, whereas `_` protects you against client-side code
+  changes.
+* `generate.sh` shell script replaced with python code, `generate.py`.
+* added `update_spec.py` which updates the Stone API spec and tells you whether the update is semver
+  compatible or not.
+* Test improvements: all enum variants now have generated test cases. This increases the number of
+  tests by roughly a factor of 4.
+
 # v0.8.0
 2020-11-11
 * Improvements to builder methods on structs (the `fn with_fieldname(self, ...) -> Self` methods)
