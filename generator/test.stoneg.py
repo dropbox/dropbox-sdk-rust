@@ -130,6 +130,7 @@ class TestBackend(RustHelperBackend):
                         .format(ns_name,
                                 self.struct_name(typ)))
                 test_value.emit_asserts(self, 'x')
+                self.emit(u'assert_eq!(x, x.clone());')
 
                 if test_value.is_serializable():
                     # now serialize it back to JSON, deserialize it again, and
@@ -143,6 +144,7 @@ class TestBackend(RustHelperBackend):
                     if typ.all_fields:
                         self.emit(u'let x2 = {};'.format(de))
                         test_value.emit_asserts(self, 'x2')
+                        self.emit(u'assert_eq!(x, x2);')
                     else:
                         self.emit(u'{};'.format(de))
                 else:
