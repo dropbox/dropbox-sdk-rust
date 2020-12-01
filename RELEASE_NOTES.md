@@ -6,6 +6,8 @@ xxxx-yy-zz
   variants may exist. This is because Stone explicitly reserves the right to add new fields and
   variants unless the type is a `union_closed`, so adding this attribute means future updates won't
   break existing code.
+* All structs and enums now implement the `PartialEq` and `Clone` traits, in addition to `Debug`
+  which was already implemented.
 * Renamed the `_Unknown` catch-all enum variant to `Other` in all cases. Going along with the above,
   your match statement should always have an `Other | _ => { ... }` case at the end. `Other`
   protects you against server-side changes, whereas `_` protects you against client-side code
