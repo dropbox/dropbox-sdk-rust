@@ -1,5 +1,5 @@
 # v0.9.0
-xxxx-yy-zz
+2020-11-30
 * All structs and enums except ones marked `union_closed` in the spec are now marked with
   `#[non_exhaustive]`. This means destructuring of structs must use `..` to indicate that other
   fields may be present, and matches on enums must include a `_` case to indicate that other
