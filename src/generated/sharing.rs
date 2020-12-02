@@ -1230,6 +1230,8 @@ impl ::std::error::Error for AddFileMemberError {
 impl ::std::fmt::Display for AddFileMemberError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            AddFileMemberError::UserError(inner) => write!(f, "{}", inner),
+            AddFileMemberError::AccessError(inner) => write!(f, "{}", inner),
             AddFileMemberError::RateLimit => f.write_str("The user has reached the rate limit for invitations."),
             AddFileMemberError::InvalidComment => f.write_str("The custom message did not pass comment permissions checks."),
             _ => write!(f, "{:?}", *self),
@@ -1627,6 +1629,7 @@ impl ::std::fmt::Display for AddFolderMemberError {
         match self {
             AddFolderMemberError::AccessError(inner) => write!(f, "Unable to access shared folder: {}", inner),
             AddFolderMemberError::BannedMember => f.write_str("The current user has been banned."),
+            AddFolderMemberError::BadMember(inner) => write!(f, "{}", inner),
             AddFolderMemberError::CantShareOutsideTeam => f.write_str("Your team policy does not allow sharing outside of the team."),
             AddFolderMemberError::TooManyMembers(inner) => write!(f, "The value is the member limit that was reached: {:?}", inner),
             AddFolderMemberError::TooManyPendingInvites(inner) => write!(f, "The value is the pending invite limit that was reached: {:?}", inner),
@@ -2665,7 +2668,10 @@ impl ::std::error::Error for CreateSharedLinkError {
 
 impl ::std::fmt::Display for CreateSharedLinkError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            CreateSharedLinkError::Path(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -2906,6 +2912,8 @@ impl ::std::error::Error for CreateSharedLinkWithSettingsError {
 impl ::std::fmt::Display for CreateSharedLinkWithSettingsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            CreateSharedLinkWithSettingsError::Path(inner) => write!(f, "{}", inner),
+            CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(inner) => write!(f, "{:?}", inner),
             CreateSharedLinkWithSettingsError::SettingsError(inner) => write!(f, "There is an error with the given settings: {}", inner),
             CreateSharedLinkWithSettingsError::AccessDenied => f.write_str("Access to the requested path is forbidden."),
             _ => write!(f, "{:?}", *self),
@@ -5324,7 +5332,11 @@ impl ::std::error::Error for GetFileMetadataError {
 
 impl ::std::fmt::Display for GetFileMetadataError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GetFileMetadataError::UserError(inner) => write!(f, "{}", inner),
+            GetFileMetadataError::AccessError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -5907,7 +5919,10 @@ impl ::std::error::Error for GetSharedLinksError {
 
 impl ::std::fmt::Display for GetSharedLinksError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GetSharedLinksError::Path(inner) => write!(f, "{:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -6953,7 +6968,12 @@ impl ::std::error::Error for JobError {
 
 impl ::std::fmt::Display for JobError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            JobError::UnshareFolderError(inner) => write!(f, "{}", inner),
+            JobError::RemoveFolderMemberError(inner) => write!(f, "{}", inner),
+            JobError::RelinquishFolderMembershipError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -8579,7 +8599,11 @@ impl ::std::error::Error for ListFileMembersContinueError {
 
 impl ::std::fmt::Display for ListFileMembersContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListFileMembersContinueError::UserError(inner) => write!(f, "{}", inner),
+            ListFileMembersContinueError::AccessError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -8777,7 +8801,11 @@ impl ::std::error::Error for ListFileMembersError {
 
 impl ::std::fmt::Display for ListFileMembersError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListFileMembersError::UserError(inner) => write!(f, "{}", inner),
+            ListFileMembersError::AccessError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -9563,7 +9591,10 @@ impl ::std::error::Error for ListFolderMembersContinueError {
 
 impl ::std::fmt::Display for ListFolderMembersContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListFolderMembersContinueError::AccessError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -10263,7 +10294,10 @@ impl ::std::error::Error for ListSharedLinksError {
 
 impl ::std::fmt::Display for ListSharedLinksError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListSharedLinksError::Path(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -11550,6 +11584,7 @@ impl ::std::error::Error for MountFolderError {
 impl ::std::fmt::Display for MountFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            MountFolderError::AccessError(inner) => write!(f, "{}", inner),
             MountFolderError::InsideSharedFolder => f.write_str("Mounting would cause a shared folder to be inside another, which is disallowed."),
             MountFolderError::InsufficientQuota(inner) => write!(f, "The current user does not have enough space to mount the shared folder: {:?}", inner),
             MountFolderError::AlreadyMounted => f.write_str("The shared folder is already mounted."),
@@ -12324,6 +12359,7 @@ impl ::std::error::Error for RelinquishFileMembershipError {
 impl ::std::fmt::Display for RelinquishFileMembershipError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            RelinquishFileMembershipError::AccessError(inner) => write!(f, "{}", inner),
             RelinquishFileMembershipError::GroupAccess => f.write_str("The current user has access to the shared file via a group.  You can't relinquish membership to a file shared via groups."),
             RelinquishFileMembershipError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
             _ => write!(f, "{:?}", *self),
@@ -12595,6 +12631,7 @@ impl ::std::error::Error for RelinquishFolderMembershipError {
 impl ::std::fmt::Display for RelinquishFolderMembershipError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            RelinquishFolderMembershipError::AccessError(inner) => write!(f, "{}", inner),
             RelinquishFolderMembershipError::FolderOwner => f.write_str("The current user is the owner of the shared folder. Owners cannot relinquish membership to their own folders. Try unsharing or transferring ownership first."),
             RelinquishFolderMembershipError::Mounted => f.write_str("The shared folder is currently mounted.  Unmount the shared folder before relinquishing membership."),
             RelinquishFolderMembershipError::GroupAccess => f.write_str("The current user has access to the shared folder via a group.  You can't relinquish membership to folders shared via groups."),
@@ -12816,6 +12853,8 @@ impl ::std::error::Error for RemoveFileMemberError {
 impl ::std::fmt::Display for RemoveFileMemberError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            RemoveFileMemberError::UserError(inner) => write!(f, "{}", inner),
+            RemoveFileMemberError::AccessError(inner) => write!(f, "{}", inner),
             RemoveFileMemberError::NoExplicitAccess(inner) => write!(f, "This member does not have explicit access to the file and therefore cannot be removed. The return value is the access that a user might have to the file from a parent folder: {:?}", inner),
             _ => write!(f, "{:?}", *self),
         }
@@ -13102,6 +13141,8 @@ impl ::std::error::Error for RemoveFolderMemberError {
 impl ::std::fmt::Display for RemoveFolderMemberError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            RemoveFolderMemberError::AccessError(inner) => write!(f, "{}", inner),
+            RemoveFolderMemberError::MemberError(inner) => write!(f, "{}", inner),
             RemoveFolderMemberError::FolderOwner => f.write_str("The target user is the owner of the shared folder. You can't remove this user until ownership has been transferred to another member."),
             RemoveFolderMemberError::GroupAccess => f.write_str("The target user has access to the shared folder via a group."),
             RemoveFolderMemberError::TeamFolder => f.write_str("This action cannot be performed on a team shared folder."),
@@ -14445,6 +14486,7 @@ impl ::std::error::Error for ShareFolderError {
 impl ::std::fmt::Display for ShareFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            ShareFolderError::BadPath(inner) => write!(f, "{}", inner),
             ShareFolderError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
             _ => write!(f, "{:?}", *self),
         }
@@ -18033,6 +18075,7 @@ impl ::std::error::Error for TransferFolderError {
 impl ::std::fmt::Display for TransferFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            TransferFolderError::AccessError(inner) => write!(f, "{}", inner),
             TransferFolderError::NewOwnerNotAMember => f.write_str("The new designated owner is not currently a member of the shared folder."),
             TransferFolderError::NewOwnerUnmounted => f.write_str("The new designated owner has not added the folder to their Dropbox."),
             TransferFolderError::TeamFolder => f.write_str("This action cannot be performed on a team shared folder."),
@@ -18233,6 +18276,7 @@ impl ::std::error::Error for UnmountFolderError {
 impl ::std::fmt::Display for UnmountFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            UnmountFolderError::AccessError(inner) => write!(f, "{}", inner),
             UnmountFolderError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
             UnmountFolderError::NotUnmountable => f.write_str("The shared folder can't be unmounted. One example where this can occur is when the shared folder's parent folder is also a shared folder that resides in the current user's Dropbox."),
             _ => write!(f, "{:?}", *self),
@@ -18422,7 +18466,11 @@ impl ::std::error::Error for UnshareFileError {
 
 impl ::std::fmt::Display for UnshareFileError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UnshareFileError::UserError(inner) => write!(f, "{}", inner),
+            UnshareFileError::AccessError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -18649,6 +18697,7 @@ impl ::std::error::Error for UnshareFolderError {
 impl ::std::fmt::Display for UnshareFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            UnshareFolderError::AccessError(inner) => write!(f, "{}", inner),
             UnshareFolderError::TeamFolder => f.write_str("This action cannot be performed on a team shared folder."),
             UnshareFolderError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
             UnshareFolderError::TooManyFiles => f.write_str("This shared folder has too many files to be unshared."),
@@ -19033,6 +19082,8 @@ impl ::std::error::Error for UpdateFolderMemberError {
 impl ::std::fmt::Display for UpdateFolderMemberError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            UpdateFolderMemberError::AccessError(inner) => write!(f, "{}", inner),
+            UpdateFolderMemberError::MemberError(inner) => write!(f, "{}", inner),
             UpdateFolderMemberError::NoExplicitAccess(inner) => write!(f, "If updating the access type required the member to be added to the shared folder and there was an error when adding the member: {}", inner),
             UpdateFolderMemberError::InsufficientPlan => f.write_str("The current user's account doesn't support this action. An example of this is when downgrading a member from editor to viewer. This action can only be performed by users that have upgraded to a Pro or Business plan."),
             UpdateFolderMemberError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
@@ -19385,6 +19436,7 @@ impl ::std::error::Error for UpdateFolderPolicyError {
 impl ::std::fmt::Display for UpdateFolderPolicyError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            UpdateFolderPolicyError::AccessError(inner) => write!(f, "{}", inner),
             UpdateFolderPolicyError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
             UpdateFolderPolicyError::TeamFolder => f.write_str("This action cannot be performed on a team shared folder."),
             _ => write!(f, "{:?}", *self),

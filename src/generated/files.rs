@@ -1421,7 +1421,10 @@ impl ::std::error::Error for AlphaGetMetadataError {
 
 impl ::std::fmt::Display for AlphaGetMetadataError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            AlphaGetMetadataError::Path(inner) => write!(f, "{}", inner),
+            AlphaGetMetadataError::PropertiesError(inner) => write!(f, "{}", inner),
+        }
     }
 }
 
@@ -2751,7 +2754,10 @@ impl ::std::error::Error for CreateFolderEntryError {
 
 impl ::std::fmt::Display for CreateFolderEntryError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            CreateFolderEntryError::Path(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -2908,7 +2914,9 @@ impl ::std::error::Error for CreateFolderError {
 
 impl ::std::fmt::Display for CreateFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            CreateFolderError::Path(inner) => write!(f, "{}", inner),
+        }
     }
 }
 
@@ -3794,6 +3802,8 @@ impl ::std::error::Error for DeleteError {
 impl ::std::fmt::Display for DeleteError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            DeleteError::PathLookup(inner) => write!(f, "{}", inner),
+            DeleteError::PathWrite(inner) => write!(f, "{}", inner),
             DeleteError::TooManyWriteOperations => f.write_str("There are too many write operations in user's Dropbox. Please retry this request."),
             DeleteError::TooManyFiles => f.write_str("There are too many files in one request. Please retry with fewer files."),
             _ => write!(f, "{:?}", *self),
@@ -4341,7 +4351,10 @@ impl ::std::error::Error for DownloadError {
 
 impl ::std::fmt::Display for DownloadError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            DownloadError::Path(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -4535,6 +4548,7 @@ impl ::std::error::Error for DownloadZipError {
 impl ::std::fmt::Display for DownloadZipError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            DownloadZipError::Path(inner) => write!(f, "{}", inner),
             DownloadZipError::TooLarge => f.write_str("The folder or a file is too large to download."),
             DownloadZipError::TooManyFiles => f.write_str("The folder has too many files to download."),
             _ => write!(f, "{:?}", *self),
@@ -4821,6 +4835,7 @@ impl ::std::error::Error for ExportError {
 impl ::std::fmt::Display for ExportError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            ExportError::Path(inner) => write!(f, "{}", inner),
             ExportError::RetryError => f.write_str("The exportable content is not yet available. Please retry later."),
             _ => write!(f, "{:?}", *self),
         }
@@ -6815,7 +6830,10 @@ impl ::std::error::Error for GetCopyReferenceError {
 
 impl ::std::fmt::Display for GetCopyReferenceError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GetCopyReferenceError::Path(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -7171,7 +7189,9 @@ impl ::std::error::Error for GetMetadataError {
 
 impl ::std::fmt::Display for GetMetadataError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GetMetadataError::Path(inner) => write!(f, "{}", inner),
+        }
     }
 }
 
@@ -7366,7 +7386,10 @@ impl ::std::error::Error for GetTemporaryLinkError {
 
 impl ::std::fmt::Display for GetTemporaryLinkError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GetTemporaryLinkError::Path(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -8749,7 +8772,10 @@ impl ::std::error::Error for ListFolderContinueError {
 
 impl ::std::fmt::Display for ListFolderContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListFolderContinueError::Path(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -8843,7 +8869,11 @@ impl ::std::error::Error for ListFolderError {
 
 impl ::std::fmt::Display for ListFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListFolderError::Path(inner) => write!(f, "{}", inner),
+            ListFolderError::TemplateError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -9546,7 +9576,10 @@ impl ::std::error::Error for ListRevisionsError {
 
 impl ::std::fmt::Display for ListRevisionsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListRevisionsError::Path(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -10604,6 +10637,7 @@ impl ::std::error::Error for LookupError {
 impl ::std::fmt::Display for LookupError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            LookupError::MalformedPath(inner) => write!(f, "{:?}", inner),
             LookupError::NotFound => f.write_str("There is nothing at the given path."),
             LookupError::NotFile => f.write_str("We were expecting a file, but the given path refers to something that isn't a file."),
             LookupError::NotFolder => f.write_str("We were expecting a folder, but the given path refers to something that isn't a folder."),
@@ -12433,6 +12467,9 @@ impl ::std::error::Error for RelocationBatchError {
 impl ::std::fmt::Display for RelocationBatchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            RelocationBatchError::FromLookup(inner) => write!(f, "{}", inner),
+            RelocationBatchError::FromWrite(inner) => write!(f, "{}", inner),
+            RelocationBatchError::To(inner) => write!(f, "{}", inner),
             RelocationBatchError::CantCopySharedFolder => f.write_str("Shared folders can't be copied."),
             RelocationBatchError::CantNestSharedFolder => f.write_str("Your move operation would result in nested shared folders.  This is not allowed."),
             RelocationBatchError::CantMoveFolderIntoItself => f.write_str("You cannot move a folder into itself."),
@@ -13416,6 +13453,9 @@ impl ::std::error::Error for RelocationError {
 impl ::std::fmt::Display for RelocationError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            RelocationError::FromLookup(inner) => write!(f, "{}", inner),
+            RelocationError::FromWrite(inner) => write!(f, "{}", inner),
+            RelocationError::To(inner) => write!(f, "{}", inner),
             RelocationError::CantCopySharedFolder => f.write_str("Shared folders can't be copied."),
             RelocationError::CantNestSharedFolder => f.write_str("Your move operation would result in nested shared folders.  This is not allowed."),
             RelocationError::CantMoveFolderIntoItself => f.write_str("You cannot move a folder into itself."),
@@ -14083,6 +14123,7 @@ impl ::std::error::Error for SaveCopyReferenceError {
 impl ::std::fmt::Display for SaveCopyReferenceError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            SaveCopyReferenceError::Path(inner) => write!(f, "{}", inner),
             SaveCopyReferenceError::InvalidCopyReference => f.write_str("The copy reference is invalid."),
             SaveCopyReferenceError::NoPermission => f.write_str("You don't have permission to save the given copy reference. Please make sure this app is same app which created the copy reference and the source user is still linked to the app."),
             SaveCopyReferenceError::NotFound => f.write_str("The file referenced by the copy reference cannot be found."),
@@ -14399,6 +14440,7 @@ impl ::std::error::Error for SaveUrlError {
 impl ::std::fmt::Display for SaveUrlError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            SaveUrlError::Path(inner) => write!(f, "{}", inner),
             SaveUrlError::DownloadFailed => f.write_str("Failed downloading the given URL. The URL may be  password-protected and the password provided was incorrect,  or the link may be disabled."),
             SaveUrlError::InvalidUrl => f.write_str("The given URL is invalid."),
             SaveUrlError::NotFound => f.write_str("The file where the URL is saved to no longer exists."),
@@ -14816,6 +14858,8 @@ impl ::std::error::Error for SearchError {
 impl ::std::fmt::Display for SearchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            SearchError::Path(inner) => write!(f, "{}", inner),
+            SearchError::InvalidArgument(inner) => write!(f, "{:?}", inner),
             SearchError::InternalError => f.write_str("Something went wrong, please try again."),
             _ => write!(f, "{:?}", *self),
         }
@@ -16938,6 +16982,7 @@ impl ::std::error::Error for SyncSettingsError {
 impl ::std::fmt::Display for SyncSettingsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            SyncSettingsError::Path(inner) => write!(f, "{}", inner),
             SyncSettingsError::UnsupportedCombination => f.write_str("Setting this combination of sync settings simultaneously is not supported."),
             SyncSettingsError::UnsupportedConfiguration => f.write_str("The specified configuration is not supported."),
             _ => write!(f, "{:?}", *self),
@@ -20152,6 +20197,7 @@ impl ::std::error::Error for WriteError {
 impl ::std::fmt::Display for WriteError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            WriteError::MalformedPath(inner) => write!(f, "{:?}", inner),
             WriteError::Conflict(inner) => write!(f, "Couldn't write to the target path because there was something in the way: {}", inner),
             WriteError::NoWritePermission => f.write_str("The user doesn't have permissions to write to the target location."),
             WriteError::InsufficientSpace => f.write_str("The user doesn't have enough available space (bytes) to write more data."),

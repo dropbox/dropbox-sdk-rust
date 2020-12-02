@@ -1195,7 +1195,10 @@ impl ::std::error::Error for GetAccountBatchError {
 
 impl ::std::fmt::Display for GetAccountBatchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GetAccountBatchError::NoAccount(inner) => write!(f, "{:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 

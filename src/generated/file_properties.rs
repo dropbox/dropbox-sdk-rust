@@ -570,6 +570,7 @@ impl ::std::fmt::Display for AddPropertiesError {
         match self {
             AddPropertiesError::TemplateNotFound(inner) => write!(f, "Template does not exist for the given identifier: {:?}", inner),
             AddPropertiesError::RestrictedContent => f.write_str("You do not have permission to modify this template."),
+            AddPropertiesError::Path(inner) => write!(f, "{}", inner),
             AddPropertiesError::UnsupportedFolder => f.write_str("This folder cannot be tagged. Tagging folders is not supported for team-owned templates."),
             AddPropertiesError::PropertyFieldTooLarge => f.write_str("One or more of the supplied property field values is too large."),
             AddPropertiesError::DoesNotFitTemplate => f.write_str("One or more of the supplied property fields does not conform to the template specifications."),
@@ -1156,6 +1157,7 @@ impl ::std::fmt::Display for InvalidPropertyGroupError {
         match self {
             InvalidPropertyGroupError::TemplateNotFound(inner) => write!(f, "Template does not exist for the given identifier: {:?}", inner),
             InvalidPropertyGroupError::RestrictedContent => f.write_str("You do not have permission to modify this template."),
+            InvalidPropertyGroupError::Path(inner) => write!(f, "{}", inner),
             InvalidPropertyGroupError::UnsupportedFolder => f.write_str("This folder cannot be tagged. Tagging folders is not supported for team-owned templates."),
             InvalidPropertyGroupError::PropertyFieldTooLarge => f.write_str("One or more of the supplied property field values is too large."),
             InvalidPropertyGroupError::DoesNotFitTemplate => f.write_str("One or more of the supplied property fields does not conform to the template specifications."),
@@ -1509,6 +1511,7 @@ impl ::std::error::Error for LookupError {
 impl ::std::fmt::Display for LookupError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
+            LookupError::MalformedPath(inner) => write!(f, "{:?}", inner),
             LookupError::NotFound => f.write_str("There is nothing at the given path."),
             LookupError::NotFile => f.write_str("We were expecting a file, but the given path refers to something that isn't a file."),
             LookupError::NotFolder => f.write_str("We were expecting a folder, but the given path refers to something that isn't a folder."),
@@ -1887,6 +1890,7 @@ impl ::std::fmt::Display for PropertiesError {
         match self {
             PropertiesError::TemplateNotFound(inner) => write!(f, "Template does not exist for the given identifier: {:?}", inner),
             PropertiesError::RestrictedContent => f.write_str("You do not have permission to modify this template."),
+            PropertiesError::Path(inner) => write!(f, "{}", inner),
             PropertiesError::UnsupportedFolder => f.write_str("This folder cannot be tagged. Tagging folders is not supported for team-owned templates."),
             _ => write!(f, "{:?}", *self),
         }
@@ -2234,7 +2238,10 @@ impl ::std::error::Error for PropertiesSearchError {
 
 impl ::std::fmt::Display for PropertiesSearchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            PropertiesSearchError::PropertyGroupLookup(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -3544,7 +3551,9 @@ impl ::std::fmt::Display for RemovePropertiesError {
         match self {
             RemovePropertiesError::TemplateNotFound(inner) => write!(f, "Template does not exist for the given identifier: {:?}", inner),
             RemovePropertiesError::RestrictedContent => f.write_str("You do not have permission to modify this template."),
+            RemovePropertiesError::Path(inner) => write!(f, "{}", inner),
             RemovePropertiesError::UnsupportedFolder => f.write_str("This folder cannot be tagged. Tagging folders is not supported for team-owned templates."),
+            RemovePropertiesError::PropertyGroupLookup(inner) => write!(f, "{}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }
@@ -4221,10 +4230,12 @@ impl ::std::fmt::Display for UpdatePropertiesError {
         match self {
             UpdatePropertiesError::TemplateNotFound(inner) => write!(f, "Template does not exist for the given identifier: {:?}", inner),
             UpdatePropertiesError::RestrictedContent => f.write_str("You do not have permission to modify this template."),
+            UpdatePropertiesError::Path(inner) => write!(f, "{}", inner),
             UpdatePropertiesError::UnsupportedFolder => f.write_str("This folder cannot be tagged. Tagging folders is not supported for team-owned templates."),
             UpdatePropertiesError::PropertyFieldTooLarge => f.write_str("One or more of the supplied property field values is too large."),
             UpdatePropertiesError::DoesNotFitTemplate => f.write_str("One or more of the supplied property fields does not conform to the template specifications."),
             UpdatePropertiesError::DuplicatePropertyGroups => f.write_str("There are 2 or more property groups referring to the same templates in the input."),
+            UpdatePropertiesError::PropertyGroupLookup(inner) => write!(f, "{}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }

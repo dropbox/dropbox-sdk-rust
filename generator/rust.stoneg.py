@@ -923,46 +923,51 @@ class RustBackend(RustHelperBackend):
                     [u'&self', u'f: &mut ::std::fmt::Formatter<\'_>'],
                     u'::std::fmt::Result'):
 
-                # Find variants that have documentation and use the first line for the Display
-                # representation of the error.
+                # Find variants that have documentation and/or an inner value, and use that for the
+                # Display representation of the error.
                 doc_variants = []
                 for variant in variants:
+                    var_exp = u'{}::{}'.format(type_name, self.enum_variant_name(variant))
+                    msg = ''
+                    args = ''
                     if variant.doc:
-                        line = variant.doc.split('\n')[0]
+                        # Use the first line of documentation.
+                        msg = variant.doc.split('\n')[0]
+
                         # If the line has doc references, it's not going to make a good display
                         # string, so only include it if it has none:
-                        if line == self.process_doc(line, lambda tag, value: ''):
-                            doc_variants.append((variant, line))
+                        if msg != self.process_doc(msg, lambda tag, value: ''):
+                            msg = ""
+
+                    inner_fmt = ''
+                    if self._is_error_type(variant.data_type):
+                        # include the Display representation of the inner error.
+                        inner_fmt = '{}'
+                    elif not ir.is_void_type(variant.data_type):
+                        # Include the Debug representation of the inner value.
+                        inner_fmt = '{:?}'
+
+                    if inner_fmt:
+                        var_exp += u'(inner)'
+                        if msg.endswith(u'.'):
+                            msg = msg[:-1]
+                        if msg:
+                            msg += u': '
+                        msg += inner_fmt
+                        args = u'inner'
+
+                    if msg:
+                        if not args:
+                            doc_variants.append(u'{} => f.write_str("{}"),'.format(var_exp, msg))
                         else:
-                            # TODO(wfraser): don't reject it outright; see if it has an inner value.
-                            # It's pretty common to have no doc, but an inner error type that does.
-                            print("bad doc for " + type_name + "::" + variant.name)
+                            doc_variants.append(u'{} => write!(f, "{}", {}),'.format(
+                                var_exp, msg, args))
+                # for variant in variants
 
                 if doc_variants:
                     with self.block(u'match self'):
-                        for variant, line in doc_variants:
-                            var_exp = u'{}::{}'.format(type_name, self.enum_variant_name(variant))
-                            args = ""
-                            if self._is_error_type(variant.data_type):
-                                # Include the Display representation of the inner error.
-                                var_exp += u'(inner)'
-                                if line.endswith(u'.'):
-                                    line = line[:-1]
-                                line += u': {}'
-                                args = u'inner'
-                            elif not ir.is_void_type(variant.data_type):
-                                # Include the Debug representation of the inner value.
-                                var_exp += u'(inner)'
-                                if line.endswith('.'):
-                                    line = line[:-1]
-                                line += u': {:?}'
-                                args = u'inner'
-
-                            if not args:
-                                self.emit(u'{} => f.write_str("{}"),'.format(var_exp, line))
-                            else:
-                                self.emit(u'{} => write!(f, "{}", {}),'.format(
-                                    var_exp, line, args))
+                        for match_case in doc_variants:
+                            self.emit(match_case)
 
                         if not self.is_closed_union(typ) or len(doc_variants) != len(variants):
                             # fall back on the Debug representation
