@@ -194,7 +194,10 @@ impl ::std::error::Error for DeleteManualContactsError {
 
 impl ::std::fmt::Display for DeleteManualContactsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            DeleteManualContactsError::ContactsNotFound(inner) => write!(f, "Can't delete contacts from this list. Make sure the list only has manually added contacts. The deletion was cancelled: {:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 

@@ -290,7 +290,14 @@ impl ::std::error::Error for SetProfilePhotoError {
 
 impl ::std::fmt::Display for SetProfilePhotoError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            SetProfilePhotoError::FileTypeError => f.write_str("File cannot be set as profile photo."),
+            SetProfilePhotoError::FileSizeError => f.write_str("File cannot exceed 10 MB."),
+            SetProfilePhotoError::DimensionError => f.write_str("Image must be larger than 128 x 128."),
+            SetProfilePhotoError::ThumbnailError => f.write_str("Image could not be thumbnailed."),
+            SetProfilePhotoError::TransientError => f.write_str("Temporary infrastructure failure, please retry."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 

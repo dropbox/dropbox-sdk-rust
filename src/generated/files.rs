@@ -2354,7 +2354,10 @@ impl ::std::error::Error for CreateFolderBatchError {
 
 impl ::std::fmt::Display for CreateFolderBatchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            CreateFolderBatchError::TooManyFiles => f.write_str("The operation would involve too many files or folders."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -3790,7 +3793,11 @@ impl ::std::error::Error for DeleteError {
 
 impl ::std::fmt::Display for DeleteError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            DeleteError::TooManyWriteOperations => f.write_str("There are too many write operations in user's Dropbox. Please retry this request."),
+            DeleteError::TooManyFiles => f.write_str("There are too many files in one request. Please retry with fewer files."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -4527,7 +4534,11 @@ impl ::std::error::Error for DownloadZipError {
 
 impl ::std::fmt::Display for DownloadZipError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            DownloadZipError::TooLarge => f.write_str("The folder or a file is too large to download."),
+            DownloadZipError::TooManyFiles => f.write_str("The folder has too many files to download."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -4809,7 +4820,10 @@ impl ::std::error::Error for ExportError {
 
 impl ::std::fmt::Display for ExportError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ExportError::RetryError => f.write_str("The exportable content is not yet available. Please retry later."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -7814,7 +7828,10 @@ impl ::std::error::Error for GetThumbnailBatchError {
 
 impl ::std::fmt::Display for GetThumbnailBatchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GetThumbnailBatchError::TooManyFiles => f.write_str("The operation involves more than 25 files."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -10254,7 +10271,17 @@ impl ::std::error::Error for LockFileError {
 
 impl ::std::fmt::Display for LockFileError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            LockFileError::PathLookup(inner) => write!(f, "Could not find the specified resource: {}", inner),
+            LockFileError::TooManyWriteOperations => f.write_str("There are too many write operations in user's Dropbox. Please retry this request."),
+            LockFileError::TooManyFiles => f.write_str("There are too many files in one request. Please retry with fewer files."),
+            LockFileError::NoWritePermission => f.write_str("The user does not have permissions to change the lock state or access the file."),
+            LockFileError::CannotBeLocked => f.write_str("Item is a type that cannot be locked."),
+            LockFileError::FileNotShared => f.write_str("Requested file is not currently shared."),
+            LockFileError::LockConflict(inner) => write!(f, "The user action conflicts with an existing lock on the file: {:?}", inner),
+            LockFileError::InternalError => f.write_str("Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking succeeded, and if not, try again. This should happen very rarely."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -10576,7 +10603,15 @@ impl ::std::error::Error for LookupError {
 
 impl ::std::fmt::Display for LookupError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            LookupError::NotFound => f.write_str("There is nothing at the given path."),
+            LookupError::NotFile => f.write_str("We were expecting a file, but the given path refers to something that isn't a file."),
+            LookupError::NotFolder => f.write_str("We were expecting a folder, but the given path refers to something that isn't a folder."),
+            LookupError::RestrictedContent => f.write_str("The file cannot be transferred because the content is restricted.  For example, sometimes there are legal restrictions due to copyright claims."),
+            LookupError::UnsupportedContentType => f.write_str("This operation is not supported for this content type."),
+            LookupError::Locked => f.write_str("The given path is locked."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -11196,7 +11231,10 @@ impl ::std::error::Error for MoveIntoVaultError {
 
 impl ::std::fmt::Display for MoveIntoVaultError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MoveIntoVaultError::IsSharedFolder => f.write_str("Moving shared folder into Vault is not allowed."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -11607,7 +11645,12 @@ impl ::std::error::Error for PreviewError {
 
 impl ::std::fmt::Display for PreviewError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            PreviewError::Path(inner) => write!(f, "An error occurs when downloading metadata for the file: {}", inner),
+            PreviewError::InProgress => f.write_str("This preview generation is still in progress and the file is not ready  for preview yet."),
+            PreviewError::UnsupportedExtension => f.write_str("The file extension is not supported preview generation."),
+            PreviewError::UnsupportedContent => f.write_str("The file content is not supported for preview generation."),
+        }
     }
 }
 
@@ -12389,7 +12432,18 @@ impl ::std::error::Error for RelocationBatchError {
 
 impl ::std::fmt::Display for RelocationBatchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            RelocationBatchError::CantCopySharedFolder => f.write_str("Shared folders can't be copied."),
+            RelocationBatchError::CantNestSharedFolder => f.write_str("Your move operation would result in nested shared folders.  This is not allowed."),
+            RelocationBatchError::CantMoveFolderIntoItself => f.write_str("You cannot move a folder into itself."),
+            RelocationBatchError::TooManyFiles => f.write_str("The operation would involve more than 10,000 files and folders."),
+            RelocationBatchError::InsufficientQuota => f.write_str("The current user does not have enough space to move or copy the files."),
+            RelocationBatchError::InternalError => f.write_str("Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking succeeded, and if not, try again. This should happen very rarely."),
+            RelocationBatchError::CantMoveSharedFolder => f.write_str("Can't move the shared folder to the given destination."),
+            RelocationBatchError::CantMoveIntoVault(inner) => write!(f, "Some content cannot be moved into Vault under certain circumstances, see detailed error: {}", inner),
+            RelocationBatchError::TooManyWriteOperations => f.write_str("There are too many write operations in user's Dropbox. Please retry this request."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -13361,7 +13415,17 @@ impl ::std::error::Error for RelocationError {
 
 impl ::std::fmt::Display for RelocationError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            RelocationError::CantCopySharedFolder => f.write_str("Shared folders can't be copied."),
+            RelocationError::CantNestSharedFolder => f.write_str("Your move operation would result in nested shared folders.  This is not allowed."),
+            RelocationError::CantMoveFolderIntoItself => f.write_str("You cannot move a folder into itself."),
+            RelocationError::TooManyFiles => f.write_str("The operation would involve more than 10,000 files and folders."),
+            RelocationError::InsufficientQuota => f.write_str("The current user does not have enough space to move or copy the files."),
+            RelocationError::InternalError => f.write_str("Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking succeeded, and if not, try again. This should happen very rarely."),
+            RelocationError::CantMoveSharedFolder => f.write_str("Can't move the shared folder to the given destination."),
+            RelocationError::CantMoveIntoVault(inner) => write!(f, "Some content cannot be moved into Vault under certain circumstances, see detailed error: {}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -13779,7 +13843,13 @@ impl ::std::error::Error for RestoreError {
 
 impl ::std::fmt::Display for RestoreError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            RestoreError::PathLookup(inner) => write!(f, "An error occurs when downloading metadata for the file: {}", inner),
+            RestoreError::PathWrite(inner) => write!(f, "An error occurs when trying to restore the file to that path: {}", inner),
+            RestoreError::InvalidRevision => f.write_str("The revision is invalid. It may not exist or may point to a deleted file."),
+            RestoreError::InProgress => f.write_str("The restore is currently executing, but has not yet completed."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -14012,7 +14082,13 @@ impl ::std::error::Error for SaveCopyReferenceError {
 
 impl ::std::fmt::Display for SaveCopyReferenceError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            SaveCopyReferenceError::InvalidCopyReference => f.write_str("The copy reference is invalid."),
+            SaveCopyReferenceError::NoPermission => f.write_str("You don't have permission to save the given copy reference. Please make sure this app is same app which created the copy reference and the source user is still linked to the app."),
+            SaveCopyReferenceError::NotFound => f.write_str("The file referenced by the copy reference cannot be found."),
+            SaveCopyReferenceError::TooManyFiles => f.write_str("The operation would involve more than 10,000 files and folders."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -14322,7 +14398,12 @@ impl ::std::error::Error for SaveUrlError {
 
 impl ::std::fmt::Display for SaveUrlError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            SaveUrlError::DownloadFailed => f.write_str("Failed downloading the given URL. The URL may be  password-protected and the password provided was incorrect,  or the link may be disabled."),
+            SaveUrlError::InvalidUrl => f.write_str("The given URL is invalid."),
+            SaveUrlError::NotFound => f.write_str("The file where the URL is saved to no longer exists."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -14734,7 +14815,10 @@ impl ::std::error::Error for SearchError {
 
 impl ::std::fmt::Display for SearchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            SearchError::InternalError => f.write_str("Something went wrong, please try again."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -16853,7 +16937,11 @@ impl ::std::error::Error for SyncSettingsError {
 
 impl ::std::fmt::Display for SyncSettingsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            SyncSettingsError::UnsupportedCombination => f.write_str("Setting this combination of sync settings simultaneously is not supported."),
+            SyncSettingsError::UnsupportedConfiguration => f.write_str("The specified configuration is not supported."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -17106,7 +17194,12 @@ impl ::std::error::Error for ThumbnailError {
 
 impl ::std::fmt::Display for ThumbnailError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ThumbnailError::Path(inner) => write!(f, "An error occurs when downloading metadata for the image: {}", inner),
+            ThumbnailError::UnsupportedExtension => f.write_str("The file extension doesn't allow conversion to a thumbnail."),
+            ThumbnailError::UnsupportedImage => f.write_str("The image cannot be converted to a thumbnail."),
+            ThumbnailError::ConversionError => f.write_str("An error occurs during thumbnail conversion."),
+        }
     }
 }
 
@@ -17686,7 +17779,15 @@ impl ::std::error::Error for ThumbnailV2Error {
 
 impl ::std::fmt::Display for ThumbnailV2Error {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ThumbnailV2Error::Path(inner) => write!(f, "An error occurred when downloading metadata for the image: {}", inner),
+            ThumbnailV2Error::UnsupportedExtension => f.write_str("The file extension doesn't allow conversion to a thumbnail."),
+            ThumbnailV2Error::UnsupportedImage => f.write_str("The image cannot be converted to a thumbnail."),
+            ThumbnailV2Error::ConversionError => f.write_str("An error occurred during thumbnail conversion."),
+            ThumbnailV2Error::AccessDenied => f.write_str("Access to this shared link is forbidden."),
+            ThumbnailV2Error::NotFound => f.write_str("The shared link does not exist."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -17956,7 +18057,11 @@ impl ::std::error::Error for UploadError {
 
 impl ::std::fmt::Display for UploadError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UploadError::Path(inner) => write!(f, "Unable to save the uploaded contents to a file: {:?}", inner),
+            UploadError::PropertiesError(inner) => write!(f, "The supplied property group is invalid. The file has uploaded without property groups: {}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -18910,7 +19015,17 @@ impl ::std::error::Error for UploadSessionFinishError {
 
 impl ::std::fmt::Display for UploadSessionFinishError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UploadSessionFinishError::LookupFailed(inner) => write!(f, "The session arguments are incorrect; the value explains the reason: {}", inner),
+            UploadSessionFinishError::Path(inner) => write!(f, "Unable to save the uploaded contents to a file. Data has already been appended to the upload session. Please retry with empty data body and updated offset: {}", inner),
+            UploadSessionFinishError::PropertiesError(inner) => write!(f, "The supplied property group is invalid. The file has uploaded without property groups: {}", inner),
+            UploadSessionFinishError::TooManySharedFolderTargets => f.write_str("The batch request commits files into too many different shared folders. Please limit your batch request to files contained in a single shared folder."),
+            UploadSessionFinishError::TooManyWriteOperations => f.write_str("There are too many write operations happening in the user's Dropbox. You should retry uploading this file."),
+            UploadSessionFinishError::ConcurrentSessionDataNotAllowed => f.write_str("Uploading data not allowed when finishing concurrent upload session."),
+            UploadSessionFinishError::ConcurrentSessionNotClosed => f.write_str("Concurrent upload sessions need to be closed before finishing."),
+            UploadSessionFinishError::ConcurrentSessionMissingData => f.write_str("Not all pieces of data were uploaded before trying to finish the session."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -19059,7 +19174,16 @@ impl ::std::error::Error for UploadSessionLookupError {
 
 impl ::std::fmt::Display for UploadSessionLookupError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UploadSessionLookupError::NotFound => f.write_str("The upload session ID was not found or has expired. Upload sessions are valid for 48 hours."),
+            UploadSessionLookupError::IncorrectOffset(inner) => write!(f, "The specified offset was incorrect. See the value for the correct offset. This error may occur when a previous request was received and processed successfully but the client did not receive the response, e.g. due to a network error: {:?}", inner),
+            UploadSessionLookupError::Closed => f.write_str("You are attempting to append data to an upload session that has already been closed (i.e. committed)."),
+            UploadSessionLookupError::NotClosed => f.write_str("The session must be closed before calling upload_session/finish_batch."),
+            UploadSessionLookupError::TooLarge => f.write_str("You can not append to the upload session because the size of a file should not reach the max file size limit (i.e. 350GB)."),
+            UploadSessionLookupError::ConcurrentSessionInvalidOffset => f.write_str("For concurrent upload sessions, offset needs to be multiple of 4194304 bytes."),
+            UploadSessionLookupError::ConcurrentSessionInvalidDataSize => f.write_str("For concurrent upload sessions, only chunks with size multiple of 4194304 bytes can be uploaded."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -19336,7 +19460,11 @@ impl ::std::error::Error for UploadSessionStartError {
 
 impl ::std::fmt::Display for UploadSessionStartError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UploadSessionStartError::ConcurrentSessionDataNotAllowed => f.write_str("Uploading data not allowed when starting concurrent upload session."),
+            UploadSessionStartError::ConcurrentSessionCloseNotAllowed => f.write_str("Can not start a closed concurrent upload session."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -19840,7 +19968,12 @@ impl ::std::error::Error for WriteConflictError {
 
 impl ::std::fmt::Display for WriteConflictError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            WriteConflictError::File => f.write_str("There's a file in the way."),
+            WriteConflictError::Folder => f.write_str("There's a folder in the way."),
+            WriteConflictError::FileAncestor => f.write_str("There's a file at an ancestor path, so we couldn't create the required parent folders."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -20018,7 +20151,16 @@ impl ::std::error::Error for WriteError {
 
 impl ::std::fmt::Display for WriteError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            WriteError::Conflict(inner) => write!(f, "Couldn't write to the target path because there was something in the way: {}", inner),
+            WriteError::NoWritePermission => f.write_str("The user doesn't have permissions to write to the target location."),
+            WriteError::InsufficientSpace => f.write_str("The user doesn't have enough available space (bytes) to write more data."),
+            WriteError::DisallowedName => f.write_str("Dropbox will not save the file or folder because of its name."),
+            WriteError::TeamFolder => f.write_str("This endpoint cannot move or delete team folders."),
+            WriteError::OperationSuppressed => f.write_str("This file operation is not allowed at this path."),
+            WriteError::TooManyWriteOperations => f.write_str("There are too many write operations in user's Dropbox. Please retry this request."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 

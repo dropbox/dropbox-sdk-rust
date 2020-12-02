@@ -205,7 +205,10 @@ impl ::std::error::Error for CountFileRequestsError {
 
 impl ::std::fmt::Display for CountFileRequestsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            CountFileRequestsError::DisabledForTeam => f.write_str("This user's Dropbox Business team doesn't allow file requests."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -635,7 +638,17 @@ impl ::std::error::Error for CreateFileRequestError {
 
 impl ::std::fmt::Display for CreateFileRequestError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            CreateFileRequestError::DisabledForTeam => f.write_str("This user's Dropbox Business team doesn't allow file requests."),
+            CreateFileRequestError::NotFound => f.write_str("This file request ID was not found."),
+            CreateFileRequestError::NotAFolder => f.write_str("The specified path is not a folder."),
+            CreateFileRequestError::AppLacksAccess => f.write_str("This file request is not accessible to this app. Apps with the app folder permission can only access file requests in their app folder."),
+            CreateFileRequestError::NoPermission => f.write_str("This user doesn't have permission to access or modify this file request."),
+            CreateFileRequestError::ValidationError => f.write_str("There was an error validating the request. For example, the title was invalid, or there were disallowed characters in the destination path."),
+            CreateFileRequestError::InvalidLocation => f.write_str("File requests are not available on the specified folder."),
+            CreateFileRequestError::RateLimit => f.write_str("The user has reached the rate limit for creating file requests. The limit is currently 4000 file requests total."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -786,7 +799,15 @@ impl ::std::error::Error for DeleteAllClosedFileRequestsError {
 
 impl ::std::fmt::Display for DeleteAllClosedFileRequestsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            DeleteAllClosedFileRequestsError::DisabledForTeam => f.write_str("This user's Dropbox Business team doesn't allow file requests."),
+            DeleteAllClosedFileRequestsError::NotFound => f.write_str("This file request ID was not found."),
+            DeleteAllClosedFileRequestsError::NotAFolder => f.write_str("The specified path is not a folder."),
+            DeleteAllClosedFileRequestsError::AppLacksAccess => f.write_str("This file request is not accessible to this app. Apps with the app folder permission can only access file requests in their app folder."),
+            DeleteAllClosedFileRequestsError::NoPermission => f.write_str("This user doesn't have permission to access or modify this file request."),
+            DeleteAllClosedFileRequestsError::ValidationError => f.write_str("There was an error validating the request. For example, the title was invalid, or there were disallowed characters in the destination path."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -1132,7 +1153,16 @@ impl ::std::error::Error for DeleteFileRequestError {
 
 impl ::std::fmt::Display for DeleteFileRequestError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            DeleteFileRequestError::DisabledForTeam => f.write_str("This user's Dropbox Business team doesn't allow file requests."),
+            DeleteFileRequestError::NotFound => f.write_str("This file request ID was not found."),
+            DeleteFileRequestError::NotAFolder => f.write_str("The specified path is not a folder."),
+            DeleteFileRequestError::AppLacksAccess => f.write_str("This file request is not accessible to this app. Apps with the app folder permission can only access file requests in their app folder."),
+            DeleteFileRequestError::NoPermission => f.write_str("This user doesn't have permission to access or modify this file request."),
+            DeleteFileRequestError::ValidationError => f.write_str("There was an error validating the request. For example, the title was invalid, or there were disallowed characters in the destination path."),
+            DeleteFileRequestError::FileRequestOpen => f.write_str("One or more file requests currently open."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -1704,7 +1734,15 @@ impl ::std::error::Error for FileRequestError {
 
 impl ::std::fmt::Display for FileRequestError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            FileRequestError::DisabledForTeam => f.write_str("This user's Dropbox Business team doesn't allow file requests."),
+            FileRequestError::NotFound => f.write_str("This file request ID was not found."),
+            FileRequestError::NotAFolder => f.write_str("The specified path is not a folder."),
+            FileRequestError::AppLacksAccess => f.write_str("This file request is not accessible to this app. Apps with the app folder permission can only access file requests in their app folder."),
+            FileRequestError::NoPermission => f.write_str("This user doesn't have permission to access or modify this file request."),
+            FileRequestError::ValidationError => f.write_str("There was an error validating the request. For example, the title was invalid, or there were disallowed characters in the destination path."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -1773,7 +1811,10 @@ impl ::std::error::Error for GeneralFileRequestsError {
 
 impl ::std::fmt::Display for GeneralFileRequestsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GeneralFileRequestsError::DisabledForTeam => f.write_str("This user's Dropbox Business team doesn't allow file requests."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -2015,7 +2056,15 @@ impl ::std::error::Error for GetFileRequestError {
 
 impl ::std::fmt::Display for GetFileRequestError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GetFileRequestError::DisabledForTeam => f.write_str("This user's Dropbox Business team doesn't allow file requests."),
+            GetFileRequestError::NotFound => f.write_str("This file request ID was not found."),
+            GetFileRequestError::NotAFolder => f.write_str("The specified path is not a folder."),
+            GetFileRequestError::AppLacksAccess => f.write_str("This file request is not accessible to this app. Apps with the app folder permission can only access file requests in their app folder."),
+            GetFileRequestError::NoPermission => f.write_str("This user doesn't have permission to access or modify this file request."),
+            GetFileRequestError::ValidationError => f.write_str("There was an error validating the request. For example, the title was invalid, or there were disallowed characters in the destination path."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -2380,7 +2429,11 @@ impl ::std::error::Error for ListFileRequestsContinueError {
 
 impl ::std::fmt::Display for ListFileRequestsContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListFileRequestsContinueError::DisabledForTeam => f.write_str("This user's Dropbox Business team doesn't allow file requests."),
+            ListFileRequestsContinueError::InvalidCursor => f.write_str("The cursor is invalid."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -2449,7 +2502,10 @@ impl ::std::error::Error for ListFileRequestsError {
 
 impl ::std::fmt::Display for ListFileRequestsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListFileRequestsError::DisabledForTeam => f.write_str("This user's Dropbox Business team doesn't allow file requests."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -3067,7 +3123,15 @@ impl ::std::error::Error for UpdateFileRequestError {
 
 impl ::std::fmt::Display for UpdateFileRequestError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UpdateFileRequestError::DisabledForTeam => f.write_str("This user's Dropbox Business team doesn't allow file requests."),
+            UpdateFileRequestError::NotFound => f.write_str("This file request ID was not found."),
+            UpdateFileRequestError::NotAFolder => f.write_str("The specified path is not a folder."),
+            UpdateFileRequestError::AppLacksAccess => f.write_str("This file request is not accessible to this app. Apps with the app folder permission can only access file requests in their app folder."),
+            UpdateFileRequestError::NoPermission => f.write_str("This user doesn't have permission to access or modify this file request."),
+            UpdateFileRequestError::ValidationError => f.write_str("There was an error validating the request. For example, the title was invalid, or there were disallowed characters in the destination path."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
