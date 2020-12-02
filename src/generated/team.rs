@@ -23554,6 +23554,15 @@ impl ::serde::ser::Serialize for TeamFolderListError {
     }
 }
 
+impl ::std::error::Error for TeamFolderListError {
+}
+
+impl ::std::fmt::Display for TeamFolderListError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
+    }
+}
+
 /// Result for [`team_folder_list()`](team_folder_list) and
 /// [`team_folder_list_continue()`](team_folder_list_continue).
 #[derive(Debug, Clone, PartialEq)]

@@ -23,6 +23,22 @@ class RustBackend(RustHelperBackend):
     def generate(self, api):
         self._all_types = {ns.name: {typ.name: typ for typ in ns.data_types}
                            for ns in api.namespaces.values()}
+
+        # All types used as an error for any route:
+        self._error_types = set([
+            route.error_data_type
+            for ns in api.namespaces.values()
+            for route in ns.routes
+        ])
+        # Also all enum types whose names end in 'Error'. These tend to be used as errors even when
+        # not the direct error result from a route, i.e. they are inner members of other errors.
+        self._error_types.update([
+            typ
+            for ns in api.namespaces.values()
+            for typ in ns.data_types
+            if self.is_enum_type(typ) and typ.name.endswith('Error')
+        ])
+
         for namespace in api.namespaces.values():
             self._emit_namespace(namespace)
         self._generate_mod_file()
@@ -112,6 +128,9 @@ class RustBackend(RustHelperBackend):
             self.emit()
 
         self._impl_serde_for_struct(struct)
+
+        if self._is_error_type(struct):
+            self._impl_error(struct)
 
     def _emit_polymorphic_struct(self, struct):
         enum_name = self.enum_name(struct)
@@ -898,12 +917,19 @@ class RustBackend(RustHelperBackend):
                          or (isinstance(field.data_type, ir.Boolean) and not field.default))
 
     def _is_error_type(self, typ):
-        return self.is_enum_type(typ) and typ.name.endswith('Error')
+        return typ in self._error_types
+        #return self.is_enum_type(typ) and typ.name.endswith('Error')
 
     def _impl_error(self, typ):
-        assert self.is_enum_type(typ), "Only enums are appropriate as error types."
         type_name = self.enum_name(typ)
-        variants = self.get_union_variants(typ)
+
+        # N.B.: error types SHOULD always be enums, but there's at least one type used as the error
+        # return type of a route that's actually a struct, so this function needs to be able to
+        # handle those as well. Passing a struct to get_enum_variants() will result in an empty
+        # list, so this will just fall through to the end where we spit out a Debug repr for
+        # Display, which is fine.
+        variants = self.get_enum_variants(typ)
+
         with self.block(u'impl ::std::error::Error for {}'.format(type_name)):
             has_inner = list(v for v in variants if self._is_error_type(v.data_type))
             if has_inner:

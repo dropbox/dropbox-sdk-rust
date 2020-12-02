@@ -18184,6 +18184,25 @@ impl ::serde::ser::Serialize for UploadErrorWithProperties {
     }
 }
 
+impl ::std::error::Error for UploadErrorWithProperties {
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UploadErrorWithProperties::PropertiesError(inner) => Some(inner),
+            _ => None,
+        }
+    }
+}
+
+impl ::std::fmt::Display for UploadErrorWithProperties {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            UploadErrorWithProperties::Path(inner) => write!(f, "Unable to save the uploaded contents to a file: {:?}", inner),
+            UploadErrorWithProperties::PropertiesError(inner) => write!(f, "The supplied property group is invalid. The file has uploaded without property groups: {}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct UploadSessionAppendArg {
