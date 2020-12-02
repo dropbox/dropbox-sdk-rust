@@ -1191,9 +1191,6 @@ impl ::serde::ser::Serialize for GetAccountBatchError {
 }
 
 impl ::std::error::Error for GetAccountBatchError {
-    fn description(&self) -> &str {
-        "GetAccountBatchError"
-    }
 }
 
 impl ::std::fmt::Display for GetAccountBatchError {
@@ -1262,9 +1259,6 @@ impl ::serde::ser::Serialize for GetAccountError {
 }
 
 impl ::std::error::Error for GetAccountError {
-    fn description(&self) -> &str {
-        "GetAccountError"
-    }
 }
 
 impl ::std::fmt::Display for GetAccountError {
@@ -2310,9 +2304,6 @@ impl ::serde::ser::Serialize for UserFeaturesGetValuesBatchError {
 }
 
 impl ::std::error::Error for UserFeaturesGetValuesBatchError {
-    fn description(&self) -> &str {
-        "UserFeaturesGetValuesBatchError"
-    }
 }
 
 impl ::std::fmt::Display for UserFeaturesGetValuesBatchError {

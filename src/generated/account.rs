@@ -286,9 +286,6 @@ impl ::serde::ser::Serialize for SetProfilePhotoError {
 }
 
 impl ::std::error::Error for SetProfilePhotoError {
-    fn description(&self) -> &str {
-        "SetProfilePhotoError"
-    }
 }
 
 impl ::std::fmt::Display for SetProfilePhotoError {

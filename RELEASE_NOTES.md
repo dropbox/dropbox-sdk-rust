@@ -1,3 +1,11 @@
+# v0.9.1
+xxxx-yy-zz
+* Removed the deprecated `description` function from Error impl for error types.
+* Added a `cause()` method to the Error impl for error types if they have any variants which
+  contain error values.
+* Improved the `Display` impl for Error types by using the documentation strings provided,
+  including recursing into nested errors or values if present.
+
 # v0.9.0
 2020-11-30
 * All structs and enums except ones marked `union_closed` in the spec are now marked with

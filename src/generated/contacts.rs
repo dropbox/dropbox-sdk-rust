@@ -190,9 +190,6 @@ impl ::serde::ser::Serialize for DeleteManualContactsError {
 }
 
 impl ::std::error::Error for DeleteManualContactsError {
-    fn description(&self) -> &str {
-        "DeleteManualContactsError"
-    }
 }
 
 impl ::std::fmt::Display for DeleteManualContactsError {

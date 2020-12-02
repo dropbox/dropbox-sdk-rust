@@ -201,9 +201,6 @@ impl ::serde::ser::Serialize for CountFileRequestsError {
 }
 
 impl ::std::error::Error for CountFileRequestsError {
-    fn description(&self) -> &str {
-        "CountFileRequestsError"
-    }
 }
 
 impl ::std::fmt::Display for CountFileRequestsError {
@@ -634,9 +631,6 @@ impl ::serde::ser::Serialize for CreateFileRequestError {
 }
 
 impl ::std::error::Error for CreateFileRequestError {
-    fn description(&self) -> &str {
-        "CreateFileRequestError"
-    }
 }
 
 impl ::std::fmt::Display for CreateFileRequestError {
@@ -788,9 +782,6 @@ impl ::serde::ser::Serialize for DeleteAllClosedFileRequestsError {
 }
 
 impl ::std::error::Error for DeleteAllClosedFileRequestsError {
-    fn description(&self) -> &str {
-        "DeleteAllClosedFileRequestsError"
-    }
 }
 
 impl ::std::fmt::Display for DeleteAllClosedFileRequestsError {
@@ -1137,9 +1128,6 @@ impl ::serde::ser::Serialize for DeleteFileRequestError {
 }
 
 impl ::std::error::Error for DeleteFileRequestError {
-    fn description(&self) -> &str {
-        "DeleteFileRequestError"
-    }
 }
 
 impl ::std::fmt::Display for DeleteFileRequestError {
@@ -1712,9 +1700,6 @@ impl ::serde::ser::Serialize for FileRequestError {
 }
 
 impl ::std::error::Error for FileRequestError {
-    fn description(&self) -> &str {
-        "FileRequestError"
-    }
 }
 
 impl ::std::fmt::Display for FileRequestError {
@@ -1784,9 +1769,6 @@ impl ::serde::ser::Serialize for GeneralFileRequestsError {
 }
 
 impl ::std::error::Error for GeneralFileRequestsError {
-    fn description(&self) -> &str {
-        "GeneralFileRequestsError"
-    }
 }
 
 impl ::std::fmt::Display for GeneralFileRequestsError {
@@ -2029,9 +2011,6 @@ impl ::serde::ser::Serialize for GetFileRequestError {
 }
 
 impl ::std::error::Error for GetFileRequestError {
-    fn description(&self) -> &str {
-        "GetFileRequestError"
-    }
 }
 
 impl ::std::fmt::Display for GetFileRequestError {
@@ -2397,9 +2376,6 @@ impl ::serde::ser::Serialize for ListFileRequestsContinueError {
 }
 
 impl ::std::error::Error for ListFileRequestsContinueError {
-    fn description(&self) -> &str {
-        "ListFileRequestsContinueError"
-    }
 }
 
 impl ::std::fmt::Display for ListFileRequestsContinueError {
@@ -2469,9 +2445,6 @@ impl ::serde::ser::Serialize for ListFileRequestsError {
 }
 
 impl ::std::error::Error for ListFileRequestsError {
-    fn description(&self) -> &str {
-        "ListFileRequestsError"
-    }
 }
 
 impl ::std::fmt::Display for ListFileRequestsError {
@@ -3090,9 +3063,6 @@ impl ::serde::ser::Serialize for UpdateFileRequestError {
 }
 
 impl ::std::error::Error for UpdateFileRequestError {
-    fn description(&self) -> &str {
-        "UpdateFileRequestError"
-    }
 }
 
 impl ::std::fmt::Display for UpdateFileRequestError {

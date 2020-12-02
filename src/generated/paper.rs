@@ -1052,9 +1052,6 @@ impl ::serde::ser::Serialize for DocLookupError {
 }
 
 impl ::std::error::Error for DocLookupError {
-    fn description(&self) -> &str {
-        "DocLookupError"
-    }
 }
 
 impl ::std::fmt::Display for DocLookupError {
@@ -1847,8 +1844,11 @@ impl ::serde::ser::Serialize for ListDocsCursorError {
 }
 
 impl ::std::error::Error for ListDocsCursorError {
-    fn description(&self) -> &str {
-        "ListDocsCursorError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListDocsCursorError::CursorError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -2534,8 +2534,11 @@ impl ::serde::ser::Serialize for ListUsersCursorError {
 }
 
 impl ::std::error::Error for ListUsersCursorError {
-    fn description(&self) -> &str {
-        "ListUsersCursorError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListUsersCursorError::CursorError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -3346,9 +3349,6 @@ impl ::serde::ser::Serialize for PaperApiBaseError {
 }
 
 impl ::std::error::Error for PaperApiBaseError {
-    fn description(&self) -> &str {
-        "PaperApiBaseError"
-    }
 }
 
 impl ::std::fmt::Display for PaperApiBaseError {
@@ -3457,9 +3457,6 @@ impl ::serde::ser::Serialize for PaperApiCursorError {
 }
 
 impl ::std::error::Error for PaperApiCursorError {
-    fn description(&self) -> &str {
-        "PaperApiCursorError"
-    }
 }
 
 impl ::std::fmt::Display for PaperApiCursorError {
@@ -3693,9 +3690,6 @@ impl ::serde::ser::Serialize for PaperDocCreateError {
 }
 
 impl ::std::error::Error for PaperDocCreateError {
-    fn description(&self) -> &str {
-        "PaperDocCreateError"
-    }
 }
 
 impl ::std::fmt::Display for PaperDocCreateError {
@@ -4517,9 +4511,6 @@ impl ::serde::ser::Serialize for PaperDocUpdateError {
 }
 
 impl ::std::error::Error for PaperDocUpdateError {
-    fn description(&self) -> &str {
-        "PaperDocUpdateError"
-    }
 }
 
 impl ::std::fmt::Display for PaperDocUpdateError {
@@ -4833,9 +4824,6 @@ impl ::serde::ser::Serialize for PaperFolderCreateError {
 }
 
 impl ::std::error::Error for PaperFolderCreateError {
-    fn description(&self) -> &str {
-        "PaperFolderCreateError"
-    }
 }
 
 impl ::std::fmt::Display for PaperFolderCreateError {

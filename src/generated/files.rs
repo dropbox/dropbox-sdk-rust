@@ -1411,8 +1411,11 @@ impl ::serde::ser::Serialize for AlphaGetMetadataError {
 }
 
 impl ::std::error::Error for AlphaGetMetadataError {
-    fn description(&self) -> &str {
-        "AlphaGetMetadataError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            AlphaGetMetadataError::Path(inner) => Some(inner),
+            AlphaGetMetadataError::PropertiesError(inner) => Some(inner),
+        }
     }
 }
 
@@ -2347,9 +2350,6 @@ impl ::serde::ser::Serialize for CreateFolderBatchError {
 }
 
 impl ::std::error::Error for CreateFolderBatchError {
-    fn description(&self) -> &str {
-        "CreateFolderBatchError"
-    }
 }
 
 impl ::std::fmt::Display for CreateFolderBatchError {
@@ -2738,8 +2738,11 @@ impl ::serde::ser::Serialize for CreateFolderEntryError {
 }
 
 impl ::std::error::Error for CreateFolderEntryError {
-    fn description(&self) -> &str {
-        "CreateFolderEntryError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            CreateFolderEntryError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -2893,8 +2896,10 @@ impl ::serde::ser::Serialize for CreateFolderError {
 }
 
 impl ::std::error::Error for CreateFolderError {
-    fn description(&self) -> &str {
-        "CreateFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            CreateFolderError::Path(inner) => Some(inner),
+        }
     }
 }
 
@@ -3254,9 +3259,6 @@ impl ::serde::ser::Serialize for DeleteBatchError {
 }
 
 impl ::std::error::Error for DeleteBatchError {
-    fn description(&self) -> &str {
-        "DeleteBatchError"
-    }
 }
 
 impl ::std::fmt::Display for DeleteBatchError {
@@ -3777,8 +3779,12 @@ impl ::serde::ser::Serialize for DeleteError {
 }
 
 impl ::std::error::Error for DeleteError {
-    fn description(&self) -> &str {
-        "DeleteError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            DeleteError::PathLookup(inner) => Some(inner),
+            DeleteError::PathWrite(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -4318,8 +4324,11 @@ impl ::serde::ser::Serialize for DownloadError {
 }
 
 impl ::std::error::Error for DownloadError {
-    fn description(&self) -> &str {
-        "DownloadError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            DownloadError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -4508,8 +4517,11 @@ impl ::serde::ser::Serialize for DownloadZipError {
 }
 
 impl ::std::error::Error for DownloadZipError {
-    fn description(&self) -> &str {
-        "DownloadZipError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            DownloadZipError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -4787,8 +4799,11 @@ impl ::serde::ser::Serialize for ExportError {
 }
 
 impl ::std::error::Error for ExportError {
-    fn description(&self) -> &str {
-        "ExportError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ExportError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -6776,8 +6791,11 @@ impl ::serde::ser::Serialize for GetCopyReferenceError {
 }
 
 impl ::std::error::Error for GetCopyReferenceError {
-    fn description(&self) -> &str {
-        "GetCopyReferenceError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            GetCopyReferenceError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -7130,8 +7148,10 @@ impl ::serde::ser::Serialize for GetMetadataError {
 }
 
 impl ::std::error::Error for GetMetadataError {
-    fn description(&self) -> &str {
-        "GetMetadataError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            GetMetadataError::Path(inner) => Some(inner),
+        }
     }
 }
 
@@ -7322,8 +7342,11 @@ impl ::serde::ser::Serialize for GetTemporaryLinkError {
 }
 
 impl ::std::error::Error for GetTemporaryLinkError {
-    fn description(&self) -> &str {
-        "GetTemporaryLinkError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            GetTemporaryLinkError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -7787,9 +7810,6 @@ impl ::serde::ser::Serialize for GetThumbnailBatchError {
 }
 
 impl ::std::error::Error for GetThumbnailBatchError {
-    fn description(&self) -> &str {
-        "GetThumbnailBatchError"
-    }
 }
 
 impl ::std::fmt::Display for GetThumbnailBatchError {
@@ -8702,8 +8722,11 @@ impl ::serde::ser::Serialize for ListFolderContinueError {
 }
 
 impl ::std::error::Error for ListFolderContinueError {
-    fn description(&self) -> &str {
-        "ListFolderContinueError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListFolderContinueError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -8792,8 +8815,12 @@ impl ::serde::ser::Serialize for ListFolderError {
 }
 
 impl ::std::error::Error for ListFolderError {
-    fn description(&self) -> &str {
-        "ListFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListFolderError::Path(inner) => Some(inner),
+            ListFolderError::TemplateError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -9067,9 +9094,6 @@ impl ::serde::ser::Serialize for ListFolderLongpollError {
 }
 
 impl ::std::error::Error for ListFolderLongpollError {
-    fn description(&self) -> &str {
-        "ListFolderLongpollError"
-    }
 }
 
 impl ::std::fmt::Display for ListFolderLongpollError {
@@ -9495,8 +9519,11 @@ impl ::serde::ser::Serialize for ListRevisionsError {
 }
 
 impl ::std::error::Error for ListRevisionsError {
-    fn description(&self) -> &str {
-        "ListRevisionsError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListRevisionsError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -10217,8 +10244,11 @@ impl ::serde::ser::Serialize for LockFileError {
 }
 
 impl ::std::error::Error for LockFileError {
-    fn description(&self) -> &str {
-        "LockFileError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            LockFileError::PathLookup(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -10542,9 +10572,6 @@ impl ::serde::ser::Serialize for LookupError {
 }
 
 impl ::std::error::Error for LookupError {
-    fn description(&self) -> &str {
-        "LookupError"
-    }
 }
 
 impl ::std::fmt::Display for LookupError {
@@ -11165,9 +11192,6 @@ impl ::serde::ser::Serialize for MoveIntoVaultError {
 }
 
 impl ::std::error::Error for MoveIntoVaultError {
-    fn description(&self) -> &str {
-        "MoveIntoVaultError"
-    }
 }
 
 impl ::std::fmt::Display for MoveIntoVaultError {
@@ -11573,8 +11597,11 @@ impl ::serde::ser::Serialize for PreviewError {
 }
 
 impl ::std::error::Error for PreviewError {
-    fn description(&self) -> &str {
-        "PreviewError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            PreviewError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -12349,8 +12376,14 @@ impl ::serde::ser::Serialize for RelocationBatchError {
 }
 
 impl ::std::error::Error for RelocationBatchError {
-    fn description(&self) -> &str {
-        "RelocationBatchError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RelocationBatchError::FromLookup(inner) => Some(inner),
+            RelocationBatchError::FromWrite(inner) => Some(inner),
+            RelocationBatchError::To(inner) => Some(inner),
+            RelocationBatchError::CantMoveIntoVault(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -13315,8 +13348,14 @@ impl ::serde::ser::Serialize for RelocationError {
 }
 
 impl ::std::error::Error for RelocationError {
-    fn description(&self) -> &str {
-        "RelocationError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RelocationError::FromLookup(inner) => Some(inner),
+            RelocationError::FromWrite(inner) => Some(inner),
+            RelocationError::To(inner) => Some(inner),
+            RelocationError::CantMoveIntoVault(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -13729,8 +13768,12 @@ impl ::serde::ser::Serialize for RestoreError {
 }
 
 impl ::std::error::Error for RestoreError {
-    fn description(&self) -> &str {
-        "RestoreError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RestoreError::PathLookup(inner) => Some(inner),
+            RestoreError::PathWrite(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -13959,8 +14002,11 @@ impl ::serde::ser::Serialize for SaveCopyReferenceError {
 }
 
 impl ::std::error::Error for SaveCopyReferenceError {
-    fn description(&self) -> &str {
-        "SaveCopyReferenceError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            SaveCopyReferenceError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -14266,8 +14312,11 @@ impl ::serde::ser::Serialize for SaveUrlError {
 }
 
 impl ::std::error::Error for SaveUrlError {
-    fn description(&self) -> &str {
-        "SaveUrlError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            SaveUrlError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -14675,8 +14724,11 @@ impl ::serde::ser::Serialize for SearchError {
 }
 
 impl ::std::error::Error for SearchError {
-    fn description(&self) -> &str {
-        "SearchError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            SearchError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -16791,8 +16843,11 @@ impl ::serde::ser::Serialize for SyncSettingsError {
 }
 
 impl ::std::error::Error for SyncSettingsError {
-    fn description(&self) -> &str {
-        "SyncSettingsError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            SyncSettingsError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -17041,8 +17096,11 @@ impl ::serde::ser::Serialize for ThumbnailError {
 }
 
 impl ::std::error::Error for ThumbnailError {
-    fn description(&self) -> &str {
-        "ThumbnailError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ThumbnailError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -17618,8 +17676,11 @@ impl ::serde::ser::Serialize for ThumbnailV2Error {
 }
 
 impl ::std::error::Error for ThumbnailV2Error {
-    fn description(&self) -> &str {
-        "ThumbnailV2Error"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ThumbnailV2Error::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -17885,8 +17946,11 @@ impl ::serde::ser::Serialize for UploadError {
 }
 
 impl ::std::error::Error for UploadError {
-    fn description(&self) -> &str {
-        "UploadError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UploadError::PropertiesError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -18834,8 +18898,13 @@ impl ::serde::ser::Serialize for UploadSessionFinishError {
 }
 
 impl ::std::error::Error for UploadSessionFinishError {
-    fn description(&self) -> &str {
-        "UploadSessionFinishError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UploadSessionFinishError::LookupFailed(inner) => Some(inner),
+            UploadSessionFinishError::Path(inner) => Some(inner),
+            UploadSessionFinishError::PropertiesError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -18986,9 +19055,6 @@ impl ::serde::ser::Serialize for UploadSessionLookupError {
 }
 
 impl ::std::error::Error for UploadSessionLookupError {
-    fn description(&self) -> &str {
-        "UploadSessionLookupError"
-    }
 }
 
 impl ::std::fmt::Display for UploadSessionLookupError {
@@ -19266,9 +19332,6 @@ impl ::serde::ser::Serialize for UploadSessionStartError {
 }
 
 impl ::std::error::Error for UploadSessionStartError {
-    fn description(&self) -> &str {
-        "UploadSessionStartError"
-    }
 }
 
 impl ::std::fmt::Display for UploadSessionStartError {
@@ -19773,9 +19836,6 @@ impl ::serde::ser::Serialize for WriteConflictError {
 }
 
 impl ::std::error::Error for WriteConflictError {
-    fn description(&self) -> &str {
-        "WriteConflictError"
-    }
 }
 
 impl ::std::fmt::Display for WriteConflictError {
@@ -19948,8 +20008,11 @@ impl ::serde::ser::Serialize for WriteError {
 }
 
 impl ::std::error::Error for WriteError {
-    fn description(&self) -> &str {
-        "WriteError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            WriteError::Conflict(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 

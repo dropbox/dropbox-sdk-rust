@@ -557,8 +557,11 @@ impl ::serde::ser::Serialize for AddPropertiesError {
 }
 
 impl ::std::error::Error for AddPropertiesError {
-    fn description(&self) -> &str {
-        "AddPropertiesError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            AddPropertiesError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -1131,8 +1134,11 @@ impl ::serde::ser::Serialize for InvalidPropertyGroupError {
 }
 
 impl ::std::error::Error for InvalidPropertyGroupError {
-    fn description(&self) -> &str {
-        "InvalidPropertyGroupError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            InvalidPropertyGroupError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -1354,9 +1360,6 @@ impl ::serde::ser::Serialize for LookUpPropertiesError {
 }
 
 impl ::std::error::Error for LookUpPropertiesError {
-    fn description(&self) -> &str {
-        "LookUpPropertiesError"
-    }
 }
 
 impl ::std::fmt::Display for LookUpPropertiesError {
@@ -1481,9 +1484,6 @@ impl ::serde::ser::Serialize for LookupError {
 }
 
 impl ::std::error::Error for LookupError {
-    fn description(&self) -> &str {
-        "LookupError"
-    }
 }
 
 impl ::std::fmt::Display for LookupError {
@@ -1622,9 +1622,6 @@ impl ::serde::ser::Serialize for ModifyTemplateError {
 }
 
 impl ::std::error::Error for ModifyTemplateError {
-    fn description(&self) -> &str {
-        "ModifyTemplateError"
-    }
 }
 
 impl ::std::fmt::Display for ModifyTemplateError {
@@ -1843,8 +1840,11 @@ impl ::serde::ser::Serialize for PropertiesError {
 }
 
 impl ::std::error::Error for PropertiesError {
-    fn description(&self) -> &str {
-        "PropertiesError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            PropertiesError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -2114,9 +2114,6 @@ impl ::serde::ser::Serialize for PropertiesSearchContinueError {
 }
 
 impl ::std::error::Error for PropertiesSearchContinueError {
-    fn description(&self) -> &str {
-        "PropertiesSearchContinueError"
-    }
 }
 
 impl ::std::fmt::Display for PropertiesSearchContinueError {
@@ -2188,8 +2185,11 @@ impl ::serde::ser::Serialize for PropertiesSearchError {
 }
 
 impl ::std::error::Error for PropertiesSearchError {
-    fn description(&self) -> &str {
-        "PropertiesSearchError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            PropertiesSearchError::PropertyGroupLookup(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -3491,8 +3491,12 @@ impl ::serde::ser::Serialize for RemovePropertiesError {
 }
 
 impl ::std::error::Error for RemovePropertiesError {
-    fn description(&self) -> &str {
-        "RemovePropertiesError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RemovePropertiesError::Path(inner) => Some(inner),
+            RemovePropertiesError::PropertyGroupLookup(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -3670,9 +3674,6 @@ impl ::serde::ser::Serialize for TemplateError {
 }
 
 impl ::std::error::Error for TemplateError {
-    fn description(&self) -> &str {
-        "TemplateError"
-    }
 }
 
 impl ::std::fmt::Display for TemplateError {
@@ -4158,8 +4159,12 @@ impl ::serde::ser::Serialize for UpdatePropertiesError {
 }
 
 impl ::std::error::Error for UpdatePropertiesError {
-    fn description(&self) -> &str {
-        "UpdatePropertiesError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UpdatePropertiesError::Path(inner) => Some(inner),
+            UpdatePropertiesError::PropertyGroupLookup(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 

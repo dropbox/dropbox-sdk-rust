@@ -195,9 +195,6 @@ impl ::serde::ser::Serialize for PathRootError {
 }
 
 impl ::std::error::Error for PathRootError {
-    fn description(&self) -> &str {
-        "PathRootError"
-    }
 }
 
 impl ::std::fmt::Display for PathRootError {

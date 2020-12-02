@@ -116,8 +116,12 @@ impl ::serde::ser::Serialize for AccessError {
 }
 
 impl ::std::error::Error for AccessError {
-    fn description(&self) -> &str {
-        "AccessError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            AccessError::InvalidAccountType(inner) => Some(inner),
+            AccessError::PaperAccessDenied(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -264,9 +268,6 @@ impl ::serde::ser::Serialize for AuthError {
 }
 
 impl ::std::error::Error for AuthError {
-    fn description(&self) -> &str {
-        "AuthError"
-    }
 }
 
 impl ::std::fmt::Display for AuthError {
@@ -348,9 +349,6 @@ impl ::serde::ser::Serialize for InvalidAccountTypeError {
 }
 
 impl ::std::error::Error for InvalidAccountTypeError {
-    fn description(&self) -> &str {
-        "InvalidAccountTypeError"
-    }
 }
 
 impl ::std::fmt::Display for InvalidAccountTypeError {
@@ -432,9 +430,6 @@ impl ::serde::ser::Serialize for PaperAccessError {
 }
 
 impl ::std::error::Error for PaperAccessError {
-    fn description(&self) -> &str {
-        "PaperAccessError"
-    }
 }
 
 impl ::std::fmt::Display for PaperAccessError {
@@ -800,9 +795,6 @@ impl ::serde::ser::Serialize for TokenFromOAuth1Error {
 }
 
 impl ::std::error::Error for TokenFromOAuth1Error {
-    fn description(&self) -> &str {
-        "TokenFromOAuth1Error"
-    }
 }
 
 impl ::std::fmt::Display for TokenFromOAuth1Error {

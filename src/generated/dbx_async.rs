@@ -370,9 +370,6 @@ impl ::serde::ser::Serialize for PollError {
 }
 
 impl ::std::error::Error for PollError {
-    fn description(&self) -> &str {
-        "PollError"
-    }
 }
 
 impl ::std::fmt::Display for PollError {

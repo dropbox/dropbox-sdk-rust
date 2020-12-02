@@ -1218,8 +1218,12 @@ impl ::serde::ser::Serialize for AddFileMemberError {
 }
 
 impl ::std::error::Error for AddFileMemberError {
-    fn description(&self) -> &str {
-        "AddFileMemberError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            AddFileMemberError::UserError(inner) => Some(inner),
+            AddFileMemberError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -1605,8 +1609,12 @@ impl ::serde::ser::Serialize for AddFolderMemberError {
 }
 
 impl ::std::error::Error for AddFolderMemberError {
-    fn description(&self) -> &str {
-        "AddFolderMemberError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            AddFolderMemberError::AccessError(inner) => Some(inner),
+            AddFolderMemberError::BadMember(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -1865,9 +1873,6 @@ impl ::serde::ser::Serialize for AddMemberSelectorError {
 }
 
 impl ::std::error::Error for AddMemberSelectorError {
-    fn description(&self) -> &str {
-        "AddMemberSelectorError"
-    }
 }
 
 impl ::std::fmt::Display for AddMemberSelectorError {
@@ -2626,8 +2631,11 @@ impl ::serde::ser::Serialize for CreateSharedLinkError {
 }
 
 impl ::std::error::Error for CreateSharedLinkError {
-    fn description(&self) -> &str {
-        "CreateSharedLinkError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            CreateSharedLinkError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -2862,8 +2870,12 @@ impl ::serde::ser::Serialize for CreateSharedLinkWithSettingsError {
 }
 
 impl ::std::error::Error for CreateSharedLinkWithSettingsError {
-    fn description(&self) -> &str {
-        "CreateSharedLinkWithSettingsError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            CreateSharedLinkWithSettingsError::Path(inner) => Some(inner),
+            CreateSharedLinkWithSettingsError::SettingsError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -3748,8 +3760,11 @@ impl ::serde::ser::Serialize for FileMemberActionError {
 }
 
 impl ::std::error::Error for FileMemberActionError {
-    fn description(&self) -> &str {
-        "FileMemberActionError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            FileMemberActionError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -5264,8 +5279,12 @@ impl ::serde::ser::Serialize for GetFileMetadataError {
 }
 
 impl ::std::error::Error for GetFileMetadataError {
-    fn description(&self) -> &str {
-        "GetFileMetadataError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            GetFileMetadataError::UserError(inner) => Some(inner),
+            GetFileMetadataError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -5558,9 +5577,6 @@ impl ::serde::ser::Serialize for GetSharedLinkFileError {
 }
 
 impl ::std::error::Error for GetSharedLinkFileError {
-    fn description(&self) -> &str {
-        "GetSharedLinkFileError"
-    }
 }
 
 impl ::std::fmt::Display for GetSharedLinkFileError {
@@ -5848,9 +5864,6 @@ impl ::serde::ser::Serialize for GetSharedLinksError {
 }
 
 impl ::std::error::Error for GetSharedLinksError {
-    fn description(&self) -> &str {
-        "GetSharedLinksError"
-    }
 }
 
 impl ::std::fmt::Display for GetSharedLinksError {
@@ -6889,8 +6902,13 @@ impl ::serde::ser::Serialize for JobError {
 }
 
 impl ::std::error::Error for JobError {
-    fn description(&self) -> &str {
-        "JobError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            JobError::UnshareFolderError(inner) => Some(inner),
+            JobError::RemoveFolderMemberError(inner) => Some(inner),
+            JobError::RelinquishFolderMembershipError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -8511,8 +8529,12 @@ impl ::serde::ser::Serialize for ListFileMembersContinueError {
 }
 
 impl ::std::error::Error for ListFileMembersContinueError {
-    fn description(&self) -> &str {
-        "ListFileMembersContinueError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListFileMembersContinueError::UserError(inner) => Some(inner),
+            ListFileMembersContinueError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -8705,8 +8727,12 @@ impl ::serde::ser::Serialize for ListFileMembersError {
 }
 
 impl ::std::error::Error for ListFileMembersError {
-    fn description(&self) -> &str {
-        "ListFileMembersError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListFileMembersError::UserError(inner) => Some(inner),
+            ListFileMembersError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -9066,8 +9092,11 @@ impl ::serde::ser::Serialize for ListFilesContinueError {
 }
 
 impl ::std::error::Error for ListFilesContinueError {
-    fn description(&self) -> &str {
-        "ListFilesContinueError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListFilesContinueError::UserError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -9482,8 +9511,11 @@ impl ::serde::ser::Serialize for ListFolderMembersContinueError {
 }
 
 impl ::std::error::Error for ListFolderMembersContinueError {
-    fn description(&self) -> &str {
-        "ListFolderMembersContinueError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListFolderMembersContinueError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -9856,9 +9888,6 @@ impl ::serde::ser::Serialize for ListFoldersContinueError {
 }
 
 impl ::std::error::Error for ListFoldersContinueError {
-    fn description(&self) -> &str {
-        "ListFoldersContinueError"
-    }
 }
 
 impl ::std::fmt::Display for ListFoldersContinueError {
@@ -10182,8 +10211,11 @@ impl ::serde::ser::Serialize for ListSharedLinksError {
 }
 
 impl ::std::error::Error for ListSharedLinksError {
-    fn description(&self) -> &str {
-        "ListSharedLinksError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListSharedLinksError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -11229,8 +11261,11 @@ impl ::serde::ser::Serialize for ModifySharedLinkSettingsError {
 }
 
 impl ::std::error::Error for ModifySharedLinkSettingsError {
-    fn description(&self) -> &str {
-        "ModifySharedLinkSettingsError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ModifySharedLinkSettingsError::SettingsError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -11457,8 +11492,11 @@ impl ::serde::ser::Serialize for MountFolderError {
 }
 
 impl ::std::error::Error for MountFolderError {
-    fn description(&self) -> &str {
-        "MountFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            MountFolderError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -12221,8 +12259,11 @@ impl ::serde::ser::Serialize for RelinquishFileMembershipError {
 }
 
 impl ::std::error::Error for RelinquishFileMembershipError {
-    fn description(&self) -> &str {
-        "RelinquishFileMembershipError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RelinquishFileMembershipError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -12485,8 +12526,11 @@ impl ::serde::ser::Serialize for RelinquishFolderMembershipError {
 }
 
 impl ::std::error::Error for RelinquishFolderMembershipError {
-    fn description(&self) -> &str {
-        "RelinquishFolderMembershipError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RelinquishFolderMembershipError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -12694,8 +12738,12 @@ impl ::serde::ser::Serialize for RemoveFileMemberError {
 }
 
 impl ::std::error::Error for RemoveFileMemberError {
-    fn description(&self) -> &str {
-        "RemoveFileMemberError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RemoveFileMemberError::UserError(inner) => Some(inner),
+            RemoveFileMemberError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -12973,8 +13021,12 @@ impl ::serde::ser::Serialize for RemoveFolderMemberError {
 }
 
 impl ::std::error::Error for RemoveFolderMemberError {
-    fn description(&self) -> &str {
-        "RemoveFolderMemberError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RemoveFolderMemberError::AccessError(inner) => Some(inner),
+            RemoveFolderMemberError::MemberError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -13533,9 +13585,6 @@ impl ::serde::ser::Serialize for RevokeSharedLinkError {
 }
 
 impl ::std::error::Error for RevokeSharedLinkError {
-    fn description(&self) -> &str {
-        "RevokeSharedLinkError"
-    }
 }
 
 impl ::std::fmt::Display for RevokeSharedLinkError {
@@ -13729,8 +13778,11 @@ impl ::serde::ser::Serialize for SetAccessInheritanceError {
 }
 
 impl ::std::error::Error for SetAccessInheritanceError {
-    fn description(&self) -> &str {
-        "SetAccessInheritanceError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            SetAccessInheritanceError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -14297,8 +14349,11 @@ impl ::serde::ser::Serialize for ShareFolderError {
 }
 
 impl ::std::error::Error for ShareFolderError {
-    fn description(&self) -> &str {
-        "ShareFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ShareFolderError::BadPath(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -14795,9 +14850,6 @@ impl ::serde::ser::Serialize for SharePathError {
 }
 
 impl ::std::error::Error for SharePathError {
-    fn description(&self) -> &str {
-        "SharePathError"
-    }
 }
 
 impl ::std::fmt::Display for SharePathError {
@@ -15804,9 +15856,6 @@ impl ::serde::ser::Serialize for SharedFolderAccessError {
 }
 
 impl ::std::error::Error for SharedFolderAccessError {
-    fn description(&self) -> &str {
-        "SharedFolderAccessError"
-    }
 }
 
 impl ::std::fmt::Display for SharedFolderAccessError {
@@ -15899,9 +15948,6 @@ impl ::serde::ser::Serialize for SharedFolderMemberError {
 }
 
 impl ::std::error::Error for SharedFolderMemberError {
-    fn description(&self) -> &str {
-        "SharedFolderMemberError"
-    }
 }
 
 impl ::std::fmt::Display for SharedFolderMemberError {
@@ -16869,9 +16915,6 @@ impl ::serde::ser::Serialize for SharedLinkError {
 }
 
 impl ::std::error::Error for SharedLinkError {
-    fn description(&self) -> &str {
-        "SharedLinkError"
-    }
 }
 
 impl ::std::fmt::Display for SharedLinkError {
@@ -17283,9 +17326,6 @@ impl ::serde::ser::Serialize for SharedLinkSettingsError {
 }
 
 impl ::std::error::Error for SharedLinkSettingsError {
-    fn description(&self) -> &str {
-        "SharedLinkSettingsError"
-    }
 }
 
 impl ::std::fmt::Display for SharedLinkSettingsError {
@@ -17407,9 +17447,6 @@ impl ::serde::ser::Serialize for SharingFileAccessError {
 }
 
 impl ::std::error::Error for SharingFileAccessError {
-    fn description(&self) -> &str {
-        "SharingFileAccessError"
-    }
 }
 
 impl ::std::fmt::Display for SharingFileAccessError {
@@ -17481,9 +17518,6 @@ impl ::serde::ser::Serialize for SharingUserError {
 }
 
 impl ::std::error::Error for SharingUserError {
-    fn description(&self) -> &str {
-        "SharingUserError"
-    }
 }
 
 impl ::std::fmt::Display for SharingUserError {
@@ -17861,8 +17895,11 @@ impl ::serde::ser::Serialize for TransferFolderError {
 }
 
 impl ::std::error::Error for TransferFolderError {
-    fn description(&self) -> &str {
-        "TransferFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TransferFolderError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -18052,8 +18089,11 @@ impl ::serde::ser::Serialize for UnmountFolderError {
 }
 
 impl ::std::error::Error for UnmountFolderError {
-    fn description(&self) -> &str {
-        "UnmountFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UnmountFolderError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -18234,8 +18274,12 @@ impl ::serde::ser::Serialize for UnshareFileError {
 }
 
 impl ::std::error::Error for UnshareFileError {
-    fn description(&self) -> &str {
-        "UnshareFileError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UnshareFileError::UserError(inner) => Some(inner),
+            UnshareFileError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -18457,8 +18501,11 @@ impl ::serde::ser::Serialize for UnshareFolderError {
 }
 
 impl ::std::error::Error for UnshareFolderError {
-    fn description(&self) -> &str {
-        "UnshareFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UnshareFolderError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -18831,8 +18878,13 @@ impl ::serde::ser::Serialize for UpdateFolderMemberError {
 }
 
 impl ::std::error::Error for UpdateFolderMemberError {
-    fn description(&self) -> &str {
-        "UpdateFolderMemberError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UpdateFolderMemberError::AccessError(inner) => Some(inner),
+            UpdateFolderMemberError::MemberError(inner) => Some(inner),
+            UpdateFolderMemberError::NoExplicitAccess(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -19175,8 +19227,11 @@ impl ::serde::ser::Serialize for UpdateFolderPolicyError {
 }
 
 impl ::std::error::Error for UpdateFolderPolicyError {
-    fn description(&self) -> &str {
-        "UpdateFolderPolicyError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UpdateFolderPolicyError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 

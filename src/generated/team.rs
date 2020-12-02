@@ -1778,9 +1778,6 @@ impl ::serde::ser::Serialize for AddSecondaryEmailsError {
 }
 
 impl ::std::error::Error for AddSecondaryEmailsError {
-    fn description(&self) -> &str {
-        "AddSecondaryEmailsError"
-    }
 }
 
 impl ::std::fmt::Display for AddSecondaryEmailsError {
@@ -2327,8 +2324,13 @@ impl ::serde::ser::Serialize for BaseTeamFolderError {
 }
 
 impl ::std::error::Error for BaseTeamFolderError {
-    fn description(&self) -> &str {
-        "BaseTeamFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            BaseTeamFolderError::AccessError(inner) => Some(inner),
+            BaseTeamFolderError::StatusError(inner) => Some(inner),
+            BaseTeamFolderError::TeamSharedDropboxError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -2399,9 +2401,6 @@ impl ::serde::ser::Serialize for CustomQuotaError {
 }
 
 impl ::std::error::Error for CustomQuotaError {
-    fn description(&self) -> &str {
-        "CustomQuotaError"
-    }
 }
 
 impl ::std::fmt::Display for CustomQuotaError {
@@ -2725,9 +2724,6 @@ impl ::serde::ser::Serialize for DateRangeError {
 }
 
 impl ::std::error::Error for DateRangeError {
-    fn description(&self) -> &str {
-        "DateRangeError"
-    }
 }
 
 impl ::std::fmt::Display for DateRangeError {
@@ -4018,9 +4014,6 @@ impl ::serde::ser::Serialize for ExcludedUsersListContinueError {
 }
 
 impl ::std::error::Error for ExcludedUsersListContinueError {
-    fn description(&self) -> &str {
-        "ExcludedUsersListContinueError"
-    }
 }
 
 impl ::std::fmt::Display for ExcludedUsersListContinueError {
@@ -4090,9 +4083,6 @@ impl ::serde::ser::Serialize for ExcludedUsersListError {
 }
 
 impl ::std::error::Error for ExcludedUsersListError {
-    fn description(&self) -> &str {
-        "ExcludedUsersListError"
-    }
 }
 
 impl ::std::fmt::Display for ExcludedUsersListError {
@@ -4389,9 +4379,6 @@ impl ::serde::ser::Serialize for ExcludedUsersUpdateError {
 }
 
 impl ::std::error::Error for ExcludedUsersUpdateError {
-    fn description(&self) -> &str {
-        "ExcludedUsersUpdateError"
-    }
 }
 
 impl ::std::fmt::Display for ExcludedUsersUpdateError {
@@ -4914,9 +4901,6 @@ impl ::serde::ser::Serialize for FeaturesGetValuesBatchError {
 }
 
 impl ::std::error::Error for FeaturesGetValuesBatchError {
-    fn description(&self) -> &str {
-        "FeaturesGetValuesBatchError"
-    }
 }
 
 impl ::std::fmt::Display for FeaturesGetValuesBatchError {
@@ -6084,9 +6068,6 @@ impl ::serde::ser::Serialize for GroupCreateError {
 }
 
 impl ::std::error::Error for GroupCreateError {
-    fn description(&self) -> &str {
-        "GroupCreateError"
-    }
 }
 
 impl ::std::fmt::Display for GroupCreateError {
@@ -6181,9 +6162,6 @@ impl ::serde::ser::Serialize for GroupDeleteError {
 }
 
 impl ::std::error::Error for GroupDeleteError {
-    fn description(&self) -> &str {
-        "GroupDeleteError"
-    }
 }
 
 impl ::std::fmt::Display for GroupDeleteError {
@@ -6675,9 +6653,6 @@ impl ::serde::ser::Serialize for GroupMemberSelectorError {
 }
 
 impl ::std::error::Error for GroupMemberSelectorError {
-    fn description(&self) -> &str {
-        "GroupMemberSelectorError"
-    }
 }
 
 impl ::std::fmt::Display for GroupMemberSelectorError {
@@ -6785,9 +6760,6 @@ impl ::serde::ser::Serialize for GroupMemberSetAccessTypeError {
 }
 
 impl ::std::error::Error for GroupMemberSetAccessTypeError {
-    fn description(&self) -> &str {
-        "GroupMemberSetAccessTypeError"
-    }
 }
 
 impl ::std::fmt::Display for GroupMemberSetAccessTypeError {
@@ -7086,9 +7058,6 @@ impl ::serde::ser::Serialize for GroupMembersAddError {
 }
 
 impl ::std::error::Error for GroupMembersAddError {
-    fn description(&self) -> &str {
-        "GroupMembersAddError"
-    }
 }
 
 impl ::std::fmt::Display for GroupMembersAddError {
@@ -7461,9 +7430,6 @@ impl ::serde::ser::Serialize for GroupMembersRemoveError {
 }
 
 impl ::std::error::Error for GroupMembersRemoveError {
-    fn description(&self) -> &str {
-        "GroupMembersRemoveError"
-    }
 }
 
 impl ::std::fmt::Display for GroupMembersRemoveError {
@@ -7664,9 +7630,6 @@ impl ::serde::ser::Serialize for GroupMembersSelectorError {
 }
 
 impl ::std::error::Error for GroupMembersSelectorError {
-    fn description(&self) -> &str {
-        "GroupMembersSelectorError"
-    }
 }
 
 impl ::std::fmt::Display for GroupMembersSelectorError {
@@ -7944,9 +7907,6 @@ impl ::serde::ser::Serialize for GroupSelectorError {
 }
 
 impl ::std::error::Error for GroupSelectorError {
-    fn description(&self) -> &str {
-        "GroupSelectorError"
-    }
 }
 
 impl ::std::fmt::Display for GroupSelectorError {
@@ -8030,9 +7990,6 @@ impl ::serde::ser::Serialize for GroupSelectorWithTeamGroupError {
 }
 
 impl ::std::error::Error for GroupSelectorWithTeamGroupError {
-    fn description(&self) -> &str {
-        "GroupSelectorWithTeamGroupError"
-    }
 }
 
 impl ::std::fmt::Display for GroupSelectorWithTeamGroupError {
@@ -8324,9 +8281,6 @@ impl ::serde::ser::Serialize for GroupUpdateError {
 }
 
 impl ::std::error::Error for GroupUpdateError {
-    fn description(&self) -> &str {
-        "GroupUpdateError"
-    }
 }
 
 impl ::std::fmt::Display for GroupUpdateError {
@@ -8395,9 +8349,6 @@ impl ::serde::ser::Serialize for GroupsGetInfoError {
 }
 
 impl ::std::error::Error for GroupsGetInfoError {
-    fn description(&self) -> &str {
-        "GroupsGetInfoError"
-    }
 }
 
 impl ::std::fmt::Display for GroupsGetInfoError {
@@ -8709,9 +8660,6 @@ impl ::serde::ser::Serialize for GroupsListContinueError {
 }
 
 impl ::std::error::Error for GroupsListContinueError {
-    fn description(&self) -> &str {
-        "GroupsListContinueError"
-    }
 }
 
 impl ::std::fmt::Display for GroupsListContinueError {
@@ -9099,9 +9047,6 @@ impl ::serde::ser::Serialize for GroupsMembersListContinueError {
 }
 
 impl ::std::error::Error for GroupsMembersListContinueError {
-    fn description(&self) -> &str {
-        "GroupsMembersListContinueError"
-    }
 }
 
 impl ::std::fmt::Display for GroupsMembersListContinueError {
@@ -9314,9 +9259,6 @@ impl ::serde::ser::Serialize for GroupsPollError {
 }
 
 impl ::std::error::Error for GroupsPollError {
-    fn description(&self) -> &str {
-        "GroupsPollError"
-    }
 }
 
 impl ::std::fmt::Display for GroupsPollError {
@@ -10296,9 +10238,6 @@ impl ::serde::ser::Serialize for LegalHoldsError {
 }
 
 impl ::std::error::Error for LegalHoldsError {
-    fn description(&self) -> &str {
-        "LegalHoldsError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsError {
@@ -10483,9 +10422,6 @@ impl ::serde::ser::Serialize for LegalHoldsGetPolicyError {
 }
 
 impl ::std::error::Error for LegalHoldsGetPolicyError {
-    fn description(&self) -> &str {
-        "LegalHoldsGetPolicyError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsGetPolicyError {
@@ -10905,9 +10841,6 @@ impl ::serde::ser::Serialize for LegalHoldsListHeldRevisionsContinueError {
 }
 
 impl ::std::error::Error for LegalHoldsListHeldRevisionsContinueError {
-    fn description(&self) -> &str {
-        "LegalHoldsListHeldRevisionsContinueError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsListHeldRevisionsContinueError {
@@ -11028,9 +10961,6 @@ impl ::serde::ser::Serialize for LegalHoldsListHeldRevisionsError {
 }
 
 impl ::std::error::Error for LegalHoldsListHeldRevisionsError {
-    fn description(&self) -> &str {
-        "LegalHoldsListHeldRevisionsError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsListHeldRevisionsError {
@@ -11211,9 +11141,6 @@ impl ::serde::ser::Serialize for LegalHoldsListPoliciesError {
 }
 
 impl ::std::error::Error for LegalHoldsListPoliciesError {
-    fn description(&self) -> &str {
-        "LegalHoldsListPoliciesError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsListPoliciesError {
@@ -11645,9 +11572,6 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyCreateError {
 }
 
 impl ::std::error::Error for LegalHoldsPolicyCreateError {
-    fn description(&self) -> &str {
-        "LegalHoldsPolicyCreateError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsPolicyCreateError {
@@ -11859,9 +11783,6 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyReleaseError {
 }
 
 impl ::std::error::Error for LegalHoldsPolicyReleaseError {
-    fn description(&self) -> &str {
-        "LegalHoldsPolicyReleaseError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsPolicyReleaseError {
@@ -12179,9 +12100,6 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyUpdateError {
 }
 
 impl ::std::error::Error for LegalHoldsPolicyUpdateError {
-    fn description(&self) -> &str {
-        "LegalHoldsPolicyUpdateError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsPolicyUpdateError {
@@ -12342,9 +12260,6 @@ impl ::serde::ser::Serialize for ListMemberAppsError {
 }
 
 impl ::std::error::Error for ListMemberAppsError {
-    fn description(&self) -> &str {
-        "ListMemberAppsError"
-    }
 }
 
 impl ::std::fmt::Display for ListMemberAppsError {
@@ -12647,9 +12562,6 @@ impl ::serde::ser::Serialize for ListMemberDevicesError {
 }
 
 impl ::std::error::Error for ListMemberDevicesError {
-    fn description(&self) -> &str {
-        "ListMemberDevicesError"
-    }
 }
 
 impl ::std::fmt::Display for ListMemberDevicesError {
@@ -12935,9 +12847,6 @@ impl ::serde::ser::Serialize for ListMembersAppsError {
 }
 
 impl ::std::error::Error for ListMembersAppsError {
-    fn description(&self) -> &str {
-        "ListMembersAppsError"
-    }
 }
 
 impl ::std::fmt::Display for ListMembersAppsError {
@@ -13278,9 +13187,6 @@ impl ::serde::ser::Serialize for ListMembersDevicesError {
 }
 
 impl ::std::error::Error for ListMembersDevicesError {
-    fn description(&self) -> &str {
-        "ListMembersDevicesError"
-    }
 }
 
 impl ::std::fmt::Display for ListMembersDevicesError {
@@ -13566,9 +13472,6 @@ impl ::serde::ser::Serialize for ListTeamAppsError {
 }
 
 impl ::std::error::Error for ListTeamAppsError {
-    fn description(&self) -> &str {
-        "ListTeamAppsError"
-    }
 }
 
 impl ::std::fmt::Display for ListTeamAppsError {
@@ -13909,9 +13812,6 @@ impl ::serde::ser::Serialize for ListTeamDevicesError {
 }
 
 impl ::std::error::Error for ListTeamDevicesError {
-    fn description(&self) -> &str {
-        "ListTeamDevicesError"
-    }
 }
 
 impl ::std::fmt::Display for ListTeamDevicesError {
@@ -15237,9 +15137,6 @@ impl ::serde::ser::Serialize for MemberSelectorError {
 }
 
 impl ::std::error::Error for MemberSelectorError {
-    fn description(&self) -> &str {
-        "MemberSelectorError"
-    }
 }
 
 impl ::std::fmt::Display for MemberSelectorError {
@@ -15907,9 +15804,6 @@ impl ::serde::ser::Serialize for MembersDeactivateError {
 }
 
 impl ::std::error::Error for MembersDeactivateError {
-    fn description(&self) -> &str {
-        "MembersDeactivateError"
-    }
 }
 
 impl ::std::fmt::Display for MembersDeactivateError {
@@ -16095,9 +15989,6 @@ impl ::serde::ser::Serialize for MembersDeleteProfilePhotoError {
 }
 
 impl ::std::error::Error for MembersDeleteProfilePhotoError {
-    fn description(&self) -> &str {
-        "MembersDeleteProfilePhotoError"
-    }
 }
 
 impl ::std::fmt::Display for MembersDeleteProfilePhotoError {
@@ -16240,9 +16131,6 @@ impl ::serde::ser::Serialize for MembersGetInfoError {
 }
 
 impl ::std::error::Error for MembersGetInfoError {
-    fn description(&self) -> &str {
-        "MembersGetInfoError"
-    }
 }
 
 impl ::std::fmt::Display for MembersGetInfoError {
@@ -16680,9 +16568,6 @@ impl ::serde::ser::Serialize for MembersListContinueError {
 }
 
 impl ::std::error::Error for MembersListContinueError {
-    fn description(&self) -> &str {
-        "MembersListContinueError"
-    }
 }
 
 impl ::std::fmt::Display for MembersListContinueError {
@@ -16735,9 +16620,6 @@ impl ::serde::ser::Serialize for MembersListError {
 }
 
 impl ::std::error::Error for MembersListError {
-    fn description(&self) -> &str {
-        "MembersListError"
-    }
 }
 
 impl ::std::fmt::Display for MembersListError {
@@ -17056,9 +16938,6 @@ impl ::serde::ser::Serialize for MembersRecoverError {
 }
 
 impl ::std::error::Error for MembersRecoverError {
-    fn description(&self) -> &str {
-        "MembersRecoverError"
-    }
 }
 
 impl ::std::fmt::Display for MembersRecoverError {
@@ -17594,9 +17473,6 @@ impl ::serde::ser::Serialize for MembersRemoveError {
 }
 
 impl ::std::error::Error for MembersRemoveError {
-    fn description(&self) -> &str {
-        "MembersRemoveError"
-    }
 }
 
 impl ::std::fmt::Display for MembersRemoveError {
@@ -17680,9 +17556,6 @@ impl ::serde::ser::Serialize for MembersSendWelcomeError {
 }
 
 impl ::std::error::Error for MembersSendWelcomeError {
-    fn description(&self) -> &str {
-        "MembersSendWelcomeError"
-    }
 }
 
 impl ::std::fmt::Display for MembersSendWelcomeError {
@@ -17909,9 +17782,6 @@ impl ::serde::ser::Serialize for MembersSetPermissionsError {
 }
 
 impl ::std::error::Error for MembersSetPermissionsError {
-    fn description(&self) -> &str {
-        "MembersSetPermissionsError"
-    }
 }
 
 impl ::std::fmt::Display for MembersSetPermissionsError {
@@ -18417,9 +18287,6 @@ impl ::serde::ser::Serialize for MembersSetProfileError {
 }
 
 impl ::std::error::Error for MembersSetProfileError {
-    fn description(&self) -> &str {
-        "MembersSetProfileError"
-    }
 }
 
 impl ::std::fmt::Display for MembersSetProfileError {
@@ -18634,8 +18501,11 @@ impl ::serde::ser::Serialize for MembersSetProfilePhotoError {
 }
 
 impl ::std::error::Error for MembersSetProfilePhotoError {
-    fn description(&self) -> &str {
-        "MembersSetProfilePhotoError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            MembersSetProfilePhotoError::PhotoError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -18758,9 +18628,6 @@ impl ::serde::ser::Serialize for MembersSuspendError {
 }
 
 impl ::std::error::Error for MembersSuspendError {
-    fn description(&self) -> &str {
-        "MembersSuspendError"
-    }
 }
 
 impl ::std::fmt::Display for MembersSuspendError {
@@ -18960,9 +18827,6 @@ impl ::serde::ser::Serialize for MembersTransferFilesError {
 }
 
 impl ::std::error::Error for MembersTransferFilesError {
-    fn description(&self) -> &str {
-        "MembersTransferFilesError"
-    }
 }
 
 impl ::std::fmt::Display for MembersTransferFilesError {
@@ -19214,9 +19078,6 @@ impl ::serde::ser::Serialize for MembersTransferFormerMembersFilesError {
 }
 
 impl ::std::error::Error for MembersTransferFormerMembersFilesError {
-    fn description(&self) -> &str {
-        "MembersTransferFormerMembersFilesError"
-    }
 }
 
 impl ::std::fmt::Display for MembersTransferFormerMembersFilesError {
@@ -19417,9 +19278,6 @@ impl ::serde::ser::Serialize for MembersUnsuspendError {
 }
 
 impl ::std::error::Error for MembersUnsuspendError {
-    fn description(&self) -> &str {
-        "MembersUnsuspendError"
-    }
 }
 
 impl ::std::fmt::Display for MembersUnsuspendError {
@@ -20813,9 +20671,6 @@ impl ::serde::ser::Serialize for RevokeDeviceSessionBatchError {
 }
 
 impl ::std::error::Error for RevokeDeviceSessionBatchError {
-    fn description(&self) -> &str {
-        "RevokeDeviceSessionBatchError"
-    }
 }
 
 impl ::std::fmt::Display for RevokeDeviceSessionBatchError {
@@ -20986,9 +20841,6 @@ impl ::serde::ser::Serialize for RevokeDeviceSessionError {
 }
 
 impl ::std::error::Error for RevokeDeviceSessionError {
-    fn description(&self) -> &str {
-        "RevokeDeviceSessionError"
-    }
 }
 
 impl ::std::fmt::Display for RevokeDeviceSessionError {
@@ -21361,9 +21213,6 @@ impl ::serde::ser::Serialize for RevokeLinkedAppBatchError {
 }
 
 impl ::std::error::Error for RevokeLinkedAppBatchError {
-    fn description(&self) -> &str {
-        "RevokeLinkedAppBatchError"
-    }
 }
 
 impl ::std::fmt::Display for RevokeLinkedAppBatchError {
@@ -21548,9 +21397,6 @@ impl ::serde::ser::Serialize for RevokeLinkedAppError {
 }
 
 impl ::std::error::Error for RevokeLinkedAppError {
-    fn description(&self) -> &str {
-        "RevokeLinkedAppError"
-    }
 }
 
 impl ::std::fmt::Display for RevokeLinkedAppError {
@@ -21831,9 +21677,6 @@ impl ::serde::ser::Serialize for SetCustomQuotaError {
 }
 
 impl ::std::error::Error for SetCustomQuotaError {
-    fn description(&self) -> &str {
-        "SetCustomQuotaError"
-    }
 }
 
 impl ::std::fmt::Display for SetCustomQuotaError {
@@ -22020,9 +21863,6 @@ impl ::serde::ser::Serialize for TeamFolderAccessError {
 }
 
 impl ::std::error::Error for TeamFolderAccessError {
-    fn description(&self) -> &str {
-        "TeamFolderAccessError"
-    }
 }
 
 impl ::std::fmt::Display for TeamFolderAccessError {
@@ -22127,8 +21967,13 @@ impl ::serde::ser::Serialize for TeamFolderActivateError {
 }
 
 impl ::std::error::Error for TeamFolderActivateError {
-    fn description(&self) -> &str {
-        "TeamFolderActivateError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderActivateError::AccessError(inner) => Some(inner),
+            TeamFolderActivateError::StatusError(inner) => Some(inner),
+            TeamFolderActivateError::TeamSharedDropboxError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -22342,8 +22187,13 @@ impl ::serde::ser::Serialize for TeamFolderArchiveError {
 }
 
 impl ::std::error::Error for TeamFolderArchiveError {
-    fn description(&self) -> &str {
-        "TeamFolderArchiveError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderArchiveError::AccessError(inner) => Some(inner),
+            TeamFolderArchiveError::StatusError(inner) => Some(inner),
+            TeamFolderArchiveError::TeamSharedDropboxError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -22709,8 +22559,11 @@ impl ::serde::ser::Serialize for TeamFolderCreateError {
 }
 
 impl ::std::error::Error for TeamFolderCreateError {
-    fn description(&self) -> &str {
-        "TeamFolderCreateError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderCreateError::SyncSettingsError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -23052,9 +22905,6 @@ impl ::serde::ser::Serialize for TeamFolderInvalidStatusError {
 }
 
 impl ::std::error::Error for TeamFolderInvalidStatusError {
-    fn description(&self) -> &str {
-        "TeamFolderInvalidStatusError"
-    }
 }
 
 impl ::std::fmt::Display for TeamFolderInvalidStatusError {
@@ -23299,9 +23149,6 @@ impl ::serde::ser::Serialize for TeamFolderListContinueError {
 }
 
 impl ::std::error::Error for TeamFolderListContinueError {
-    fn description(&self) -> &str {
-        "TeamFolderListContinueError"
-    }
 }
 
 impl ::std::fmt::Display for TeamFolderListContinueError {
@@ -23778,8 +23625,13 @@ impl ::serde::ser::Serialize for TeamFolderPermanentlyDeleteError {
 }
 
 impl ::std::error::Error for TeamFolderPermanentlyDeleteError {
-    fn description(&self) -> &str {
-        "TeamFolderPermanentlyDeleteError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderPermanentlyDeleteError::AccessError(inner) => Some(inner),
+            TeamFolderPermanentlyDeleteError::StatusError(inner) => Some(inner),
+            TeamFolderPermanentlyDeleteError::TeamSharedDropboxError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -24026,8 +23878,13 @@ impl ::serde::ser::Serialize for TeamFolderRenameError {
 }
 
 impl ::std::error::Error for TeamFolderRenameError {
-    fn description(&self) -> &str {
-        "TeamFolderRenameError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderRenameError::AccessError(inner) => Some(inner),
+            TeamFolderRenameError::StatusError(inner) => Some(inner),
+            TeamFolderRenameError::TeamSharedDropboxError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -24182,9 +24039,6 @@ impl ::serde::ser::Serialize for TeamFolderTeamSharedDropboxError {
 }
 
 impl ::std::error::Error for TeamFolderTeamSharedDropboxError {
-    fn description(&self) -> &str {
-        "TeamFolderTeamSharedDropboxError"
-    }
 }
 
 impl ::std::fmt::Display for TeamFolderTeamSharedDropboxError {
@@ -24435,8 +24289,14 @@ impl ::serde::ser::Serialize for TeamFolderUpdateSyncSettingsError {
 }
 
 impl ::std::error::Error for TeamFolderUpdateSyncSettingsError {
-    fn description(&self) -> &str {
-        "TeamFolderUpdateSyncSettingsError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderUpdateSyncSettingsError::AccessError(inner) => Some(inner),
+            TeamFolderUpdateSyncSettingsError::StatusError(inner) => Some(inner),
+            TeamFolderUpdateSyncSettingsError::TeamSharedDropboxError(inner) => Some(inner),
+            TeamFolderUpdateSyncSettingsError::SyncSettingsError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
@@ -25461,9 +25321,6 @@ impl ::serde::ser::Serialize for TeamNamespacesListContinueError {
 }
 
 impl ::std::error::Error for TeamNamespacesListContinueError {
-    fn description(&self) -> &str {
-        "TeamNamespacesListContinueError"
-    }
 }
 
 impl ::std::fmt::Display for TeamNamespacesListContinueError {
@@ -25532,9 +25389,6 @@ impl ::serde::ser::Serialize for TeamNamespacesListError {
 }
 
 impl ::std::error::Error for TeamNamespacesListError {
-    fn description(&self) -> &str {
-        "TeamNamespacesListError"
-    }
 }
 
 impl ::std::fmt::Display for TeamNamespacesListError {
@@ -25825,9 +25679,6 @@ impl ::serde::ser::Serialize for TokenGetAuthenticatedAdminError {
 }
 
 impl ::std::error::Error for TokenGetAuthenticatedAdminError {
-    fn description(&self) -> &str {
-        "TokenGetAuthenticatedAdminError"
-    }
 }
 
 impl ::std::fmt::Display for TokenGetAuthenticatedAdminError {
@@ -27025,9 +26876,6 @@ impl ::serde::ser::Serialize for UserSelectorError {
 }
 
 impl ::std::error::Error for UserSelectorError {
-    fn description(&self) -> &str {
-        "UserSelectorError"
-    }
 }
 
 impl ::std::fmt::Display for UserSelectorError {

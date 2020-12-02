@@ -153,8 +153,8 @@ class RustBackend(RustHelperBackend):
 
         self._impl_serde_for_union(union)
 
-        if union.name.endswith('Error'):
-            self._impl_error(enum_name)
+        if self._is_error_type(union):
+            self._impl_error(union)
 
     def _emit_route(self, ns, fn, auth_trait = None):
         route_name = self.route_name(fn)
@@ -897,10 +897,25 @@ class RustBackend(RustHelperBackend):
                 and not (isinstance(field, ir.Nullable)
                          or (isinstance(field.data_type, ir.Boolean) and not field.default))
 
-    def _impl_error(self, type_name):
+    def _is_error_type(self, typ):
+        return self.is_enum_type(typ) and typ.name.endswith('Error')
+
+    def _impl_error(self, typ):
+        assert self.is_enum_type(typ), "Only enums are appropriate as error types."
+        type_name = self.enum_name(typ)
+        variants = self.get_union_variants(typ)
         with self.block(u'impl ::std::error::Error for {}'.format(type_name)):
-            with self.emit_rust_function_def(u'description', [u'&self'], u'&str'):
-                self.emit(u'"{}"'.format(type_name))
+            has_inner = list(v for v in variants if self._is_error_type(v.data_type))
+            if has_inner:
+                with self.emit_rust_function_def(
+                        u'source', [u'&self'], u'Option<&(dyn ::std::error::Error + \'static)>'):
+                    with self.block(u'match self'):
+                        for variant in has_inner:
+                            self.emit(u'{}::{}(inner) => Some(inner),'.format(
+                                type_name, self.enum_variant_name(variant)))
+                        if not self.is_closed_union(typ) or has_inner != variants:
+                            self.emit(u'_ => None,')
+
         self.emit()
         with self.block(u'impl ::std::fmt::Display for {}'.format(type_name)):
             with self.emit_rust_function_def(
