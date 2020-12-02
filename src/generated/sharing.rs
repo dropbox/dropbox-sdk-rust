@@ -315,7 +315,7 @@ pub fn list_folder_members_continue(
 pub fn list_folders(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersArgs,
-) -> crate::Result<Result<ListFoldersResult, ()>> {
+) -> crate::Result<Result<ListFoldersResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -345,7 +345,7 @@ pub fn list_folders_continue(
 pub fn list_mountable_folders(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersArgs,
-) -> crate::Result<Result<ListFoldersResult, ()>> {
+) -> crate::Result<Result<ListFoldersResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,

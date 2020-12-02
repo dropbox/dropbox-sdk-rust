@@ -24,7 +24,7 @@ pub fn token_from_oauth1(
 /// Disables the access token used to authenticate the call.
 pub fn token_revoke(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<(), ()>> {
+) -> crate::Result<Result<(), crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,

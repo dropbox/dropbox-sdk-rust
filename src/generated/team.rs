@@ -110,7 +110,7 @@ pub fn features_get_values(
 /// Retrieves information about a team.
 pub fn get_info(
     client: &impl crate::client_trait::TeamAuthClient,
-) -> crate::Result<Result<TeamGetInfoResult, ()>> {
+) -> crate::Result<Result<TeamGetInfoResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -188,7 +188,7 @@ pub fn groups_job_status_get(
 pub fn groups_list(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupsListArg,
-) -> crate::Result<Result<GroupsListResult, ()>> {
+) -> crate::Result<Result<GroupsListResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -594,7 +594,7 @@ pub fn member_space_limits_set_custom_quota(
 pub fn members_add(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersAddArg,
-) -> crate::Result<Result<MembersAddLaunch, ()>> {
+) -> crate::Result<Result<MembersAddLaunch, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -785,7 +785,7 @@ pub fn members_secondary_emails_add(
 pub fn members_secondary_emails_delete(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DeleteSecondaryEmailsArg,
-) -> crate::Result<Result<DeleteSecondaryEmailsResult, ()>> {
+) -> crate::Result<Result<DeleteSecondaryEmailsResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -799,7 +799,7 @@ pub fn members_secondary_emails_delete(
 pub fn members_secondary_emails_resend_verification_emails(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ResendVerificationEmailArg,
-) -> crate::Result<Result<ResendVerificationEmailResult, ()>> {
+) -> crate::Result<Result<ResendVerificationEmailResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1102,7 +1102,7 @@ pub fn team_folder_create(
 pub fn team_folder_get_info(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderIdListArg,
-) -> crate::Result<Result<Vec<TeamFolderGetInfoItem>, ()>> {
+) -> crate::Result<Result<Vec<TeamFolderGetInfoItem>, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,

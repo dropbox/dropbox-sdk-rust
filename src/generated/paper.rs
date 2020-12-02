@@ -155,7 +155,7 @@ pub fn docs_get_folder_info(
 pub fn docs_list(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListPaperDocsArgs,
-) -> crate::Result<Result<ListPaperDocsResponse, ()>> {
+) -> crate::Result<Result<ListPaperDocsResponse, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,

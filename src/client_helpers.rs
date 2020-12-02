@@ -1,6 +1,6 @@
 // Copyright (c) 2019-2020 Dropbox, Inc.
 
-use std::fmt::Debug;
+use std::error::Error as StdError;
 use crate::Error;
 use crate::client_trait::*;
 use serde::{Deserialize};
@@ -22,11 +22,11 @@ struct RateLimitedError {
     pub retry_after: u32,
 }
 
+// Rather than deserializing into an enum, just capture the tag value.
 #[derive(Debug, Deserialize)]
-#[serde(tag = ".tag", rename_all = "snake_case")]
-enum RateLimitedReason {
-    TooManyRequests,
-    TooManyWriteOperations,
+struct RateLimitedReason {
+    #[serde(rename = ".tag")]
+    tag: String,
 }
 
 /// Does the request and returns a two-level result. The outer result has an error if something
@@ -34,7 +34,7 @@ enum RateLimitedReason {
 /// etc.). The inner result has an error if the server returned one for the request, otherwise it
 /// has the deserialized JSON response and the body stream (if any).
 #[allow(clippy::too_many_arguments)]
-pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
+pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + StdError, P: Serialize>(
     client: &impl HttpClient,
     endpoint: Endpoint,
     style: Style,
@@ -80,7 +80,7 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
                         // error specified by type parameter E.
                         match serde_json::from_str::<TopLevelError<E>>(&response) {
                             Ok(deserialized) => {
-                                error!("API error: {:?}", deserialized);
+                                error!("API error: {}", deserialized.error);
                                 Ok(Err(deserialized.error))
                             },
                             Err(de_error) => {
@@ -92,11 +92,12 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
                     429 => {
                         match serde_json::from_str::<TopLevelError<RateLimitedError>>(&response) {
                             Ok(deserialized) => {
-                                error!("API Rate-Limited: {:?}", deserialized);
-                                Err(Error::RateLimited {
-                                    reason: format!("{:?}", deserialized.error.reason),
+                                let e = Error::RateLimited {
+                                    reason: deserialized.error.reason.tag,
                                     retry_after_seconds: deserialized.error.retry_after,
-                                })
+                                };
+                                error!("{}", e);
+                                Err(e)
                             }
                             Err(de_error) => {
                                 error!("Failed to deserialize JSON from API error: {}", de_error);
@@ -121,7 +122,7 @@ pub fn request_with_body<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Se
     }
 }
 
-pub fn request<T: DeserializeOwned, E: DeserializeOwned + Debug, P: Serialize>(
+pub fn request<T: DeserializeOwned, E: DeserializeOwned + StdError, P: Serialize>(
     client: &impl HttpClient,
     endpoint: Endpoint,
     style: Style,

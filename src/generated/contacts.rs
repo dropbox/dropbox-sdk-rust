@@ -11,7 +11,7 @@
 /// imported. New contacts will be added when you share.
 pub fn delete_manual_contacts(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<(), ()>> {
+) -> crate::Result<Result<(), crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,

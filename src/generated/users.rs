@@ -56,7 +56,7 @@ pub fn get_account_batch(
 /// Get information about the current user's account.
 pub fn get_current_account(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<FullAccount, ()>> {
+) -> crate::Result<Result<FullAccount, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -69,7 +69,7 @@ pub fn get_current_account(
 /// Get the space usage information for the current user's account.
 pub fn get_space_usage(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<SpaceUsage, ()>> {
+) -> crate::Result<Result<SpaceUsage, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,

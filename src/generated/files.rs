@@ -97,7 +97,7 @@ pub fn copy(
 pub fn copy_batch_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CopyBatchArg,
-) -> crate::Result<Result<RelocationBatchV2Launch, ()>> {
+) -> crate::Result<Result<RelocationBatchV2Launch, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -113,7 +113,7 @@ pub fn copy_batch_v2(
 pub fn copy_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationBatchArg,
-) -> crate::Result<Result<RelocationBatchLaunch, ()>> {
+) -> crate::Result<Result<RelocationBatchLaunch, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -220,7 +220,7 @@ pub fn create_folder(
 pub fn create_folder_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateFolderBatchArg,
-) -> crate::Result<Result<CreateFolderBatchLaunch, ()>> {
+) -> crate::Result<Result<CreateFolderBatchLaunch, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -287,7 +287,7 @@ pub fn delete(
 pub fn delete_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteBatchArg,
-) -> crate::Result<Result<DeleteBatchLaunch, ()>> {
+) -> crate::Result<Result<DeleteBatchLaunch, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -475,7 +475,7 @@ pub fn get_temporary_link(
 pub fn get_temporary_upload_link(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetTemporaryUploadLinkArg,
-) -> crate::Result<Result<GetTemporaryUploadLinkResult, ()>> {
+) -> crate::Result<Result<GetTemporaryUploadLinkResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -718,7 +718,7 @@ pub fn do_move(
 pub fn move_batch_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &MoveBatchArg,
-) -> crate::Result<Result<RelocationBatchV2Launch, ()>> {
+) -> crate::Result<Result<RelocationBatchV2Launch, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -734,7 +734,7 @@ pub fn move_batch_v2(
 pub fn move_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationBatchArg,
-) -> crate::Result<Result<RelocationBatchLaunch, ()>> {
+) -> crate::Result<Result<RelocationBatchLaunch, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1080,7 +1080,7 @@ pub fn upload_session_finish(
 pub fn upload_session_finish_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionFinishBatchArg,
-) -> crate::Result<Result<UploadSessionFinishBatchLaunch, ()>> {
+) -> crate::Result<Result<UploadSessionFinishBatchLaunch, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,

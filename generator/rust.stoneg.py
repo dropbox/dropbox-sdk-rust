@@ -224,6 +224,8 @@ class RustBackend(RustHelperBackend):
 
         arg_void = isinstance(fn.arg_data_type, ir.Void)
         style = fn.attrs.get('style', 'rpc')
+        error_type = u'crate::NoError' if ir.is_void_type(fn.error_data_type) \
+            else self._rust_type(fn.error_data_type)
         if style == 'rpc':
             with self.emit_rust_function_def(
                     route_name,
@@ -232,7 +234,7 @@ class RustBackend(RustHelperBackend):
                             [u'arg: &{}'.format(self._rust_type(fn.arg_data_type))]),
                     u'crate::Result<Result<{}, {}>>'.format(
                         self._rust_type(fn.result_data_type),
-                        self._rust_type(fn.error_data_type)),
+                        error_type),
                     access=u'pub'):
                 self.emit_rust_fn_call(
                     u'crate::client_helpers::request',
@@ -252,7 +254,7 @@ class RustBackend(RustHelperBackend):
                             u'range_end: Option<u64>'],
                     u'crate::Result<Result<crate::client_trait::HttpRequestResult<{}>, {}>>'.format(
                         self._rust_type(fn.result_data_type),
-                        self._rust_type(fn.error_data_type)),
+                        error_type),
                     access=u'pub'):
                 self.emit_rust_fn_call(
                     u'crate::client_helpers::request_with_body',
@@ -273,7 +275,7 @@ class RustBackend(RustHelperBackend):
                         + [u'body: &[u8]'],
                     u'crate::Result<Result<{}, {}>>'.format(
                         self._rust_type(fn.result_data_type),
-                        self._rust_type(fn.error_data_type)),
+                        error_type),
                     access=u'pub'):
                 self.emit_rust_fn_call(
                     u'crate::client_helpers::request',
