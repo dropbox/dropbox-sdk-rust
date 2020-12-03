@@ -954,6 +954,7 @@ class RustBackend(RustHelperBackend):
                 # Find variants that have documentation and/or an inner value, and use that for the
                 # Display representation of the error.
                 doc_variants = []
+                any_skipped = False
                 for variant in variants:
                     var_exp = u'{}::{}'.format(type_name, self.enum_variant_name(variant))
                     msg = ''
@@ -975,8 +976,24 @@ class RustBackend(RustHelperBackend):
                         # Include the Debug representation of the inner value.
                         inner_fmt = '{:?}'
 
+                        if not msg:
+                            # But if there's no message here already, prefix it with the name of the
+                            # variant so there's some context.
+                            msg = variant.name
+
                     if inner_fmt:
-                        var_exp += u'(inner)'
+                        # Special case: if the inner value is an Option, spit out two match cases,
+                        # one for if it's Some, and one for None.
+                        # This is to avoid printing something like "foobar: None" if we're using
+                        # the Debug repr, which looks confusing and adds nothing of value to the
+                        # message.
+                        if ir.is_nullable_type(variant.data_type):
+                            doc_variants.append(
+                                u'{}(None) => f.write_str("{}"),'.format(var_exp, msg))
+                            var_exp += u'(Some(inner))'
+                        else:
+                            var_exp += u'(inner)'
+
                         if msg.endswith(u'.'):
                             msg = msg[:-1]
                         if msg:
@@ -990,6 +1007,8 @@ class RustBackend(RustHelperBackend):
                         else:
                             doc_variants.append(u'{} => write!(f, "{}", {}),'.format(
                                 var_exp, msg, args))
+                    else:
+                        any_skipped = True
                 # for variant in variants
 
                 if doc_variants:
@@ -997,7 +1016,7 @@ class RustBackend(RustHelperBackend):
                         for match_case in doc_variants:
                             self.emit(match_case)
 
-                        if not self.is_closed_union(typ) or len(doc_variants) != len(variants):
+                        if not self.is_closed_union(typ) or any_skipped:
                             # fall back on the Debug representation
                             self.emit(u'_ => write!(f, "{:?}", *self),')
                 else:

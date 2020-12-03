@@ -7111,7 +7111,7 @@ impl ::std::fmt::Display for GroupMembersAddError {
             GroupMembersAddError::SystemManagedGroupDisallowed => f.write_str("This operation is not supported on system-managed groups."),
             GroupMembersAddError::DuplicateUser => f.write_str("You cannot add duplicate users. One or more of the members you are trying to add is already a member of the group."),
             GroupMembersAddError::GroupNotInTeam => f.write_str("Group is not in this team. You cannot add members to a group that is outside of your team."),
-            GroupMembersAddError::MembersNotInTeam(inner) => write!(f, "{:?}", inner),
+            GroupMembersAddError::MembersNotInTeam(inner) => write!(f, "members_not_in_team: {:?}", inner),
             GroupMembersAddError::UsersNotFound(inner) => write!(f, "These users were not found in Dropbox: {:?}", inner),
             GroupMembersAddError::UserCannotBeManagerOfCompanyManagedGroup(inner) => write!(f, "A company-managed group cannot be managed by a user: {:?}", inner),
             _ => write!(f, "{:?}", *self),

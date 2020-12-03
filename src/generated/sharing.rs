@@ -2913,7 +2913,8 @@ impl ::std::fmt::Display for CreateSharedLinkWithSettingsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
             CreateSharedLinkWithSettingsError::Path(inner) => write!(f, "{}", inner),
-            CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(inner) => write!(f, "{:?}", inner),
+            CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(None) => f.write_str("shared_link_already_exists"),
+            CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(Some(inner)) => write!(f, "shared_link_already_exists: {:?}", inner),
             CreateSharedLinkWithSettingsError::SettingsError(inner) => write!(f, "There is an error with the given settings: {}", inner),
             CreateSharedLinkWithSettingsError::AccessDenied => f.write_str("Access to the requested path is forbidden."),
             _ => write!(f, "{:?}", *self),
@@ -5920,7 +5921,7 @@ impl ::std::error::Error for GetSharedLinksError {
 impl ::std::fmt::Display for GetSharedLinksError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            GetSharedLinksError::Path(inner) => write!(f, "{:?}", inner),
+            GetSharedLinksError::Path(inner) => write!(f, "path: {:?}", inner),
             _ => write!(f, "{:?}", *self),
         }
     }

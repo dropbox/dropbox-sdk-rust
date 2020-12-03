@@ -10637,7 +10637,7 @@ impl ::std::error::Error for LookupError {
 impl ::std::fmt::Display for LookupError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            LookupError::MalformedPath(inner) => write!(f, "{:?}", inner),
+            LookupError::MalformedPath(inner) => write!(f, "malformed_path: {:?}", inner),
             LookupError::NotFound => f.write_str("There is nothing at the given path."),
             LookupError::NotFile => f.write_str("We were expecting a file, but the given path refers to something that isn't a file."),
             LookupError::NotFolder => f.write_str("We were expecting a folder, but the given path refers to something that isn't a folder."),
@@ -14859,7 +14859,8 @@ impl ::std::fmt::Display for SearchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
             SearchError::Path(inner) => write!(f, "{}", inner),
-            SearchError::InvalidArgument(inner) => write!(f, "{:?}", inner),
+            SearchError::InvalidArgument(None) => f.write_str("invalid_argument"),
+            SearchError::InvalidArgument(Some(inner)) => write!(f, "invalid_argument: {:?}", inner),
             SearchError::InternalError => f.write_str("Something went wrong, please try again."),
             _ => write!(f, "{:?}", *self),
         }
@@ -20216,7 +20217,7 @@ impl ::std::error::Error for WriteError {
 impl ::std::fmt::Display for WriteError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            WriteError::MalformedPath(inner) => write!(f, "{:?}", inner),
+            WriteError::MalformedPath(inner) => write!(f, "malformed_path: {:?}", inner),
             WriteError::Conflict(inner) => write!(f, "Couldn't write to the target path because there was something in the way: {}", inner),
             WriteError::NoWritePermission => f.write_str("The user doesn't have permissions to write to the target location."),
             WriteError::InsufficientSpace => f.write_str("The user doesn't have enough available space (bytes) to write more data."),

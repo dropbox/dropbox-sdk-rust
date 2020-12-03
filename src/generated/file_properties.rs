@@ -1511,7 +1511,7 @@ impl ::std::error::Error for LookupError {
 impl ::std::fmt::Display for LookupError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            LookupError::MalformedPath(inner) => write!(f, "{:?}", inner),
+            LookupError::MalformedPath(inner) => write!(f, "malformed_path: {:?}", inner),
             LookupError::NotFound => f.write_str("There is nothing at the given path."),
             LookupError::NotFile => f.write_str("We were expecting a file, but the given path refers to something that isn't a file."),
             LookupError::NotFolder => f.write_str("We were expecting a folder, but the given path refers to something that isn't a folder."),
