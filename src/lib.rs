@@ -98,27 +98,61 @@ pub mod oauth2;
 mod generated; // You need to run the Stone generator to create this module.
 pub use generated::*;
 
-/// A special error type for a method that doesn't have any defined error return. You shouldn't
-/// actually encounter this value in real life; it's here to satisfy type requirements.
-///
-/// Maybe some day this could maybe be replaced by `!`, the never-type.
-#[derive(Debug, Copy, Clone, PartialEq)]
-pub struct NoError;
+/// A special error type for a method that doesn't have any defined error return. You can't
+/// actually encounter a value of this type in real life; it's here to satisfy type requirements.
+#[derive(Copy)]
+pub enum NoError {}
 
-impl std::error::Error for NoError {}
-
-impl std::fmt::Display for NoError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.write_str("(void error: you shouldn't be seeing this!)")
+impl Clone for NoError {
+    fn clone(&self) -> NoError {
+        unreachable(*self)
     }
 }
 
+impl std::cmp::PartialEq<NoError> for NoError {
+    fn eq(&self, _: &NoError) -> bool {
+        unreachable(*self)
+    }
+}
+
+impl std::error::Error for NoError {
+    fn source(&self) -> Option<&(dyn std::error::Error + 'static)> {
+        unreachable(*self)
+    }
+
+    fn description(&self) -> &str {
+        unreachable(*self)
+    }
+
+    fn cause(&self) -> Option<&dyn std::error::Error> {
+        unreachable(*self)
+    }
+}
+
+impl std::fmt::Debug for NoError {
+    fn fmt(&self, _: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        unreachable(*self)
+    }
+}
+
+impl std::fmt::Display for NoError {
+    fn fmt(&self, _: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        unreachable(*self)
+    }
+}
+
+// This is the reason we can't just use the otherwise-identical `void` crate's Void type: we need
+// to implement this trait.
 impl<'de> serde::de::Deserialize<'de> for NoError {
-    fn deserialize<D: serde::de::Deserializer<'de>>(deserializer: D)
+    fn deserialize<D: serde::de::Deserializer<'de>>(_: D)
         -> std::result::Result<Self, D::Error>
     {
-        // Pretend we're the unit type.
-        <()>::deserialize(deserializer)?;
-        Ok(NoError {})
+        Err(serde::de::Error::custom(
+                "method has no defined error type, but an error was returned"))
     }
+}
+
+#[inline(always)]
+fn unreachable(x: NoError) -> ! {
+    match x {}
 }
