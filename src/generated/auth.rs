@@ -24,7 +24,7 @@ pub fn token_from_oauth1(
 /// Disables the access token used to authenticate the call.
 pub fn token_revoke(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<(), ()>> {
+) -> crate::Result<Result<(), crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -116,14 +116,22 @@ impl ::serde::ser::Serialize for AccessError {
 }
 
 impl ::std::error::Error for AccessError {
-    fn description(&self) -> &str {
-        "AccessError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            AccessError::InvalidAccountType(inner) => Some(inner),
+            AccessError::PaperAccessDenied(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for AccessError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            AccessError::InvalidAccountType(inner) => write!(f, "Current account type cannot access the resource: {}", inner),
+            AccessError::PaperAccessDenied(inner) => write!(f, "Current account cannot access Paper: {}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -264,14 +272,20 @@ impl ::serde::ser::Serialize for AuthError {
 }
 
 impl ::std::error::Error for AuthError {
-    fn description(&self) -> &str {
-        "AuthError"
-    }
 }
 
 impl ::std::fmt::Display for AuthError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            AuthError::InvalidAccessToken => f.write_str("The access token is invalid."),
+            AuthError::InvalidSelectUser => f.write_str("The user specified in 'Dropbox-API-Select-User' is no longer on the team."),
+            AuthError::InvalidSelectAdmin => f.write_str("The user specified in 'Dropbox-API-Select-Admin' is not a Dropbox Business team admin."),
+            AuthError::UserSuspended => f.write_str("The user has been suspended."),
+            AuthError::ExpiredAccessToken => f.write_str("The access token has expired."),
+            AuthError::MissingScope(inner) => write!(f, "The access token does not have the required scope to access the route: {:?}", inner),
+            AuthError::RouteAccessDenied => f.write_str("The route is not available to public."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -348,14 +362,15 @@ impl ::serde::ser::Serialize for InvalidAccountTypeError {
 }
 
 impl ::std::error::Error for InvalidAccountTypeError {
-    fn description(&self) -> &str {
-        "InvalidAccountTypeError"
-    }
 }
 
 impl ::std::fmt::Display for InvalidAccountTypeError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            InvalidAccountTypeError::Endpoint => f.write_str("Current account type doesn't have permission to access this route endpoint."),
+            InvalidAccountTypeError::Feature => f.write_str("Current account type doesn't have permission to access this feature."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -432,14 +447,15 @@ impl ::serde::ser::Serialize for PaperAccessError {
 }
 
 impl ::std::error::Error for PaperAccessError {
-    fn description(&self) -> &str {
-        "PaperAccessError"
-    }
 }
 
 impl ::std::fmt::Display for PaperAccessError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            PaperAccessError::PaperDisabled => f.write_str("Paper is disabled."),
+            PaperAccessError::NotPaperUser => f.write_str("The provided user has not used Paper yet."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -800,14 +816,15 @@ impl ::serde::ser::Serialize for TokenFromOAuth1Error {
 }
 
 impl ::std::error::Error for TokenFromOAuth1Error {
-    fn description(&self) -> &str {
-        "TokenFromOAuth1Error"
-    }
 }
 
 impl ::std::fmt::Display for TokenFromOAuth1Error {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TokenFromOAuth1Error::InvalidOauth1TokenInfo => f.write_str("Part or all of the OAuth 1.0 access token info is invalid."),
+            TokenFromOAuth1Error::AppIdMismatch => f.write_str("The authorized app does not match the app associated with the supplied access token."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 

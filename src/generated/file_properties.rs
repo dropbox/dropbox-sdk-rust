@@ -557,14 +557,27 @@ impl ::serde::ser::Serialize for AddPropertiesError {
 }
 
 impl ::std::error::Error for AddPropertiesError {
-    fn description(&self) -> &str {
-        "AddPropertiesError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            AddPropertiesError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for AddPropertiesError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            AddPropertiesError::TemplateNotFound(inner) => write!(f, "Template does not exist for the given identifier: {:?}", inner),
+            AddPropertiesError::RestrictedContent => f.write_str("You do not have permission to modify this template."),
+            AddPropertiesError::Path(inner) => write!(f, "{}", inner),
+            AddPropertiesError::UnsupportedFolder => f.write_str("This folder cannot be tagged. Tagging folders is not supported for team-owned templates."),
+            AddPropertiesError::PropertyFieldTooLarge => f.write_str("One or more of the supplied property field values is too large."),
+            AddPropertiesError::DoesNotFitTemplate => f.write_str("One or more of the supplied property fields does not conform to the template specifications."),
+            AddPropertiesError::DuplicatePropertyGroups => f.write_str("There are 2 or more property groups referring to the same templates in the input."),
+            AddPropertiesError::PropertyGroupAlreadyExists => f.write_str("A property group associated with this template and file already exists."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -1131,14 +1144,26 @@ impl ::serde::ser::Serialize for InvalidPropertyGroupError {
 }
 
 impl ::std::error::Error for InvalidPropertyGroupError {
-    fn description(&self) -> &str {
-        "InvalidPropertyGroupError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            InvalidPropertyGroupError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for InvalidPropertyGroupError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            InvalidPropertyGroupError::TemplateNotFound(inner) => write!(f, "Template does not exist for the given identifier: {:?}", inner),
+            InvalidPropertyGroupError::RestrictedContent => f.write_str("You do not have permission to modify this template."),
+            InvalidPropertyGroupError::Path(inner) => write!(f, "{}", inner),
+            InvalidPropertyGroupError::UnsupportedFolder => f.write_str("This folder cannot be tagged. Tagging folders is not supported for team-owned templates."),
+            InvalidPropertyGroupError::PropertyFieldTooLarge => f.write_str("One or more of the supplied property field values is too large."),
+            InvalidPropertyGroupError::DoesNotFitTemplate => f.write_str("One or more of the supplied property fields does not conform to the template specifications."),
+            InvalidPropertyGroupError::DuplicatePropertyGroups => f.write_str("There are 2 or more property groups referring to the same templates in the input."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -1354,14 +1379,14 @@ impl ::serde::ser::Serialize for LookUpPropertiesError {
 }
 
 impl ::std::error::Error for LookUpPropertiesError {
-    fn description(&self) -> &str {
-        "LookUpPropertiesError"
-    }
 }
 
 impl ::std::fmt::Display for LookUpPropertiesError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            LookUpPropertiesError::PropertyGroupNotFound => f.write_str("No property group was found."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -1481,14 +1506,18 @@ impl ::serde::ser::Serialize for LookupError {
 }
 
 impl ::std::error::Error for LookupError {
-    fn description(&self) -> &str {
-        "LookupError"
-    }
 }
 
 impl ::std::fmt::Display for LookupError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            LookupError::MalformedPath(inner) => write!(f, "malformed_path: {:?}", inner),
+            LookupError::NotFound => f.write_str("There is nothing at the given path."),
+            LookupError::NotFile => f.write_str("We were expecting a file, but the given path refers to something that isn't a file."),
+            LookupError::NotFolder => f.write_str("We were expecting a folder, but the given path refers to something that isn't a folder."),
+            LookupError::RestrictedContent => f.write_str("The file cannot be transferred because the content is restricted.  For example, sometimes there are legal restrictions due to copyright claims."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -1622,14 +1651,19 @@ impl ::serde::ser::Serialize for ModifyTemplateError {
 }
 
 impl ::std::error::Error for ModifyTemplateError {
-    fn description(&self) -> &str {
-        "ModifyTemplateError"
-    }
 }
 
 impl ::std::fmt::Display for ModifyTemplateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ModifyTemplateError::TemplateNotFound(inner) => write!(f, "Template does not exist for the given identifier: {:?}", inner),
+            ModifyTemplateError::RestrictedContent => f.write_str("You do not have permission to modify this template."),
+            ModifyTemplateError::ConflictingPropertyNames => f.write_str("A property field key with that name already exists in the template."),
+            ModifyTemplateError::TooManyProperties => f.write_str("There are too many properties in the changed template. The maximum number of properties per template is 32."),
+            ModifyTemplateError::TooManyTemplates => f.write_str("There are too many templates for the team."),
+            ModifyTemplateError::TemplateAttributeTooLarge => f.write_str("The template name, description or one or more of the property field keys is too large."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -1843,14 +1877,23 @@ impl ::serde::ser::Serialize for PropertiesError {
 }
 
 impl ::std::error::Error for PropertiesError {
-    fn description(&self) -> &str {
-        "PropertiesError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            PropertiesError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for PropertiesError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            PropertiesError::TemplateNotFound(inner) => write!(f, "Template does not exist for the given identifier: {:?}", inner),
+            PropertiesError::RestrictedContent => f.write_str("You do not have permission to modify this template."),
+            PropertiesError::Path(inner) => write!(f, "{}", inner),
+            PropertiesError::UnsupportedFolder => f.write_str("This folder cannot be tagged. Tagging folders is not supported for team-owned templates."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -2114,9 +2157,6 @@ impl ::serde::ser::Serialize for PropertiesSearchContinueError {
 }
 
 impl ::std::error::Error for PropertiesSearchContinueError {
-    fn description(&self) -> &str {
-        "PropertiesSearchContinueError"
-    }
 }
 
 impl ::std::fmt::Display for PropertiesSearchContinueError {
@@ -2188,14 +2228,20 @@ impl ::serde::ser::Serialize for PropertiesSearchError {
 }
 
 impl ::std::error::Error for PropertiesSearchError {
-    fn description(&self) -> &str {
-        "PropertiesSearchError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            PropertiesSearchError::PropertyGroupLookup(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for PropertiesSearchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            PropertiesSearchError::PropertyGroupLookup(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -3491,14 +3537,25 @@ impl ::serde::ser::Serialize for RemovePropertiesError {
 }
 
 impl ::std::error::Error for RemovePropertiesError {
-    fn description(&self) -> &str {
-        "RemovePropertiesError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RemovePropertiesError::Path(inner) => Some(inner),
+            RemovePropertiesError::PropertyGroupLookup(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for RemovePropertiesError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            RemovePropertiesError::TemplateNotFound(inner) => write!(f, "Template does not exist for the given identifier: {:?}", inner),
+            RemovePropertiesError::RestrictedContent => f.write_str("You do not have permission to modify this template."),
+            RemovePropertiesError::Path(inner) => write!(f, "{}", inner),
+            RemovePropertiesError::UnsupportedFolder => f.write_str("This folder cannot be tagged. Tagging folders is not supported for team-owned templates."),
+            RemovePropertiesError::PropertyGroupLookup(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -3670,14 +3727,15 @@ impl ::serde::ser::Serialize for TemplateError {
 }
 
 impl ::std::error::Error for TemplateError {
-    fn description(&self) -> &str {
-        "TemplateError"
-    }
 }
 
 impl ::std::fmt::Display for TemplateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TemplateError::TemplateNotFound(inner) => write!(f, "Template does not exist for the given identifier: {:?}", inner),
+            TemplateError::RestrictedContent => f.write_str("You do not have permission to modify this template."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -4158,14 +4216,28 @@ impl ::serde::ser::Serialize for UpdatePropertiesError {
 }
 
 impl ::std::error::Error for UpdatePropertiesError {
-    fn description(&self) -> &str {
-        "UpdatePropertiesError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UpdatePropertiesError::Path(inner) => Some(inner),
+            UpdatePropertiesError::PropertyGroupLookup(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for UpdatePropertiesError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UpdatePropertiesError::TemplateNotFound(inner) => write!(f, "Template does not exist for the given identifier: {:?}", inner),
+            UpdatePropertiesError::RestrictedContent => f.write_str("You do not have permission to modify this template."),
+            UpdatePropertiesError::Path(inner) => write!(f, "{}", inner),
+            UpdatePropertiesError::UnsupportedFolder => f.write_str("This folder cannot be tagged. Tagging folders is not supported for team-owned templates."),
+            UpdatePropertiesError::PropertyFieldTooLarge => f.write_str("One or more of the supplied property field values is too large."),
+            UpdatePropertiesError::DoesNotFitTemplate => f.write_str("One or more of the supplied property fields does not conform to the template specifications."),
+            UpdatePropertiesError::DuplicatePropertyGroups => f.write_str("There are 2 or more property groups referring to the same templates in the input."),
+            UpdatePropertiesError::PropertyGroupLookup(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 

@@ -110,7 +110,7 @@ pub fn features_get_values(
 /// Retrieves information about a team.
 pub fn get_info(
     client: &impl crate::client_trait::TeamAuthClient,
-) -> crate::Result<Result<TeamGetInfoResult, ()>> {
+) -> crate::Result<Result<TeamGetInfoResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -188,7 +188,7 @@ pub fn groups_job_status_get(
 pub fn groups_list(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &GroupsListArg,
-) -> crate::Result<Result<GroupsListResult, ()>> {
+) -> crate::Result<Result<GroupsListResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -594,7 +594,7 @@ pub fn member_space_limits_set_custom_quota(
 pub fn members_add(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersAddArg,
-) -> crate::Result<Result<MembersAddLaunch, ()>> {
+) -> crate::Result<Result<MembersAddLaunch, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -785,7 +785,7 @@ pub fn members_secondary_emails_add(
 pub fn members_secondary_emails_delete(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DeleteSecondaryEmailsArg,
-) -> crate::Result<Result<DeleteSecondaryEmailsResult, ()>> {
+) -> crate::Result<Result<DeleteSecondaryEmailsResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -799,7 +799,7 @@ pub fn members_secondary_emails_delete(
 pub fn members_secondary_emails_resend_verification_emails(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ResendVerificationEmailArg,
-) -> crate::Result<Result<ResendVerificationEmailResult, ()>> {
+) -> crate::Result<Result<ResendVerificationEmailResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1102,7 +1102,7 @@ pub fn team_folder_create(
 pub fn team_folder_get_info(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &TeamFolderIdListArg,
-) -> crate::Result<Result<Vec<TeamFolderGetInfoItem>, ()>> {
+) -> crate::Result<Result<Vec<TeamFolderGetInfoItem>, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1778,14 +1778,15 @@ impl ::serde::ser::Serialize for AddSecondaryEmailsError {
 }
 
 impl ::std::error::Error for AddSecondaryEmailsError {
-    fn description(&self) -> &str {
-        "AddSecondaryEmailsError"
-    }
 }
 
 impl ::std::fmt::Display for AddSecondaryEmailsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            AddSecondaryEmailsError::SecondaryEmailsDisabled => f.write_str("Secondary emails are disabled for the team."),
+            AddSecondaryEmailsError::TooManyEmails => f.write_str("A maximum of 20 secondary emails can be added in a single call."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -2327,14 +2328,24 @@ impl ::serde::ser::Serialize for BaseTeamFolderError {
 }
 
 impl ::std::error::Error for BaseTeamFolderError {
-    fn description(&self) -> &str {
-        "BaseTeamFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            BaseTeamFolderError::AccessError(inner) => Some(inner),
+            BaseTeamFolderError::StatusError(inner) => Some(inner),
+            BaseTeamFolderError::TeamSharedDropboxError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for BaseTeamFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            BaseTeamFolderError::AccessError(inner) => write!(f, "{}", inner),
+            BaseTeamFolderError::StatusError(inner) => write!(f, "{}", inner),
+            BaseTeamFolderError::TeamSharedDropboxError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -2399,14 +2410,14 @@ impl ::serde::ser::Serialize for CustomQuotaError {
 }
 
 impl ::std::error::Error for CustomQuotaError {
-    fn description(&self) -> &str {
-        "CustomQuotaError"
-    }
 }
 
 impl ::std::fmt::Display for CustomQuotaError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            CustomQuotaError::TooManyUsers => f.write_str("A maximum of 1000 users can be set for a single call."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -2725,9 +2736,6 @@ impl ::serde::ser::Serialize for DateRangeError {
 }
 
 impl ::std::error::Error for DateRangeError {
-    fn description(&self) -> &str {
-        "DateRangeError"
-    }
 }
 
 impl ::std::fmt::Display for DateRangeError {
@@ -4018,14 +4026,14 @@ impl ::serde::ser::Serialize for ExcludedUsersListContinueError {
 }
 
 impl ::std::error::Error for ExcludedUsersListContinueError {
-    fn description(&self) -> &str {
-        "ExcludedUsersListContinueError"
-    }
 }
 
 impl ::std::fmt::Display for ExcludedUsersListContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ExcludedUsersListContinueError::InvalidCursor => f.write_str("The cursor is invalid."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -4090,14 +4098,14 @@ impl ::serde::ser::Serialize for ExcludedUsersListError {
 }
 
 impl ::std::error::Error for ExcludedUsersListError {
-    fn description(&self) -> &str {
-        "ExcludedUsersListError"
-    }
 }
 
 impl ::std::fmt::Display for ExcludedUsersListError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ExcludedUsersListError::ListError => f.write_str("An error occurred."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -4389,14 +4397,15 @@ impl ::serde::ser::Serialize for ExcludedUsersUpdateError {
 }
 
 impl ::std::error::Error for ExcludedUsersUpdateError {
-    fn description(&self) -> &str {
-        "ExcludedUsersUpdateError"
-    }
 }
 
 impl ::std::fmt::Display for ExcludedUsersUpdateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ExcludedUsersUpdateError::UsersNotInTeam => f.write_str("At least one of the users is not part of your team."),
+            ExcludedUsersUpdateError::TooManyUsers => f.write_str("A maximum of 1000 users for each of addition/removal can be supplied."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -4914,9 +4923,6 @@ impl ::serde::ser::Serialize for FeaturesGetValuesBatchError {
 }
 
 impl ::std::error::Error for FeaturesGetValuesBatchError {
-    fn description(&self) -> &str {
-        "FeaturesGetValuesBatchError"
-    }
 }
 
 impl ::std::fmt::Display for FeaturesGetValuesBatchError {
@@ -6084,14 +6090,17 @@ impl ::serde::ser::Serialize for GroupCreateError {
 }
 
 impl ::std::error::Error for GroupCreateError {
-    fn description(&self) -> &str {
-        "GroupCreateError"
-    }
 }
 
 impl ::std::fmt::Display for GroupCreateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupCreateError::GroupNameAlreadyUsed => f.write_str("The requested group name is already being used by another group."),
+            GroupCreateError::GroupNameInvalid => f.write_str("Group name is empty or has invalid characters."),
+            GroupCreateError::ExternalIdAlreadyInUse => f.write_str("The requested external ID is already being used by another group."),
+            GroupCreateError::SystemManagedGroupDisallowed => f.write_str("System-managed group cannot be manually created."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -6181,14 +6190,16 @@ impl ::serde::ser::Serialize for GroupDeleteError {
 }
 
 impl ::std::error::Error for GroupDeleteError {
-    fn description(&self) -> &str {
-        "GroupDeleteError"
-    }
 }
 
 impl ::std::fmt::Display for GroupDeleteError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupDeleteError::GroupNotFound => f.write_str("No matching group found. No groups match the specified group ID."),
+            GroupDeleteError::SystemManagedGroupDisallowed => f.write_str("This operation is not supported on system-managed groups."),
+            GroupDeleteError::GroupAlreadyDeleted => f.write_str("This group has already been deleted."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -6675,14 +6686,16 @@ impl ::serde::ser::Serialize for GroupMemberSelectorError {
 }
 
 impl ::std::error::Error for GroupMemberSelectorError {
-    fn description(&self) -> &str {
-        "GroupMemberSelectorError"
-    }
 }
 
 impl ::std::fmt::Display for GroupMemberSelectorError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupMemberSelectorError::GroupNotFound => f.write_str("No matching group found. No groups match the specified group ID."),
+            GroupMemberSelectorError::SystemManagedGroupDisallowed => f.write_str("This operation is not supported on system-managed groups."),
+            GroupMemberSelectorError::MemberNotInGroup => f.write_str("The specified user is not a member of this group."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -6785,14 +6798,17 @@ impl ::serde::ser::Serialize for GroupMemberSetAccessTypeError {
 }
 
 impl ::std::error::Error for GroupMemberSetAccessTypeError {
-    fn description(&self) -> &str {
-        "GroupMemberSetAccessTypeError"
-    }
 }
 
 impl ::std::fmt::Display for GroupMemberSetAccessTypeError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupMemberSetAccessTypeError::GroupNotFound => f.write_str("No matching group found. No groups match the specified group ID."),
+            GroupMemberSetAccessTypeError::SystemManagedGroupDisallowed => f.write_str("This operation is not supported on system-managed groups."),
+            GroupMemberSetAccessTypeError::MemberNotInGroup => f.write_str("The specified user is not a member of this group."),
+            GroupMemberSetAccessTypeError::UserCannotBeManagerOfCompanyManagedGroup => f.write_str("A company managed group cannot be managed by a user."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -7086,14 +7102,20 @@ impl ::serde::ser::Serialize for GroupMembersAddError {
 }
 
 impl ::std::error::Error for GroupMembersAddError {
-    fn description(&self) -> &str {
-        "GroupMembersAddError"
-    }
 }
 
 impl ::std::fmt::Display for GroupMembersAddError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupMembersAddError::GroupNotFound => f.write_str("No matching group found. No groups match the specified group ID."),
+            GroupMembersAddError::SystemManagedGroupDisallowed => f.write_str("This operation is not supported on system-managed groups."),
+            GroupMembersAddError::DuplicateUser => f.write_str("You cannot add duplicate users. One or more of the members you are trying to add is already a member of the group."),
+            GroupMembersAddError::GroupNotInTeam => f.write_str("Group is not in this team. You cannot add members to a group that is outside of your team."),
+            GroupMembersAddError::MembersNotInTeam(inner) => write!(f, "members_not_in_team: {:?}", inner),
+            GroupMembersAddError::UsersNotFound(inner) => write!(f, "These users were not found in Dropbox: {:?}", inner),
+            GroupMembersAddError::UserCannotBeManagerOfCompanyManagedGroup(inner) => write!(f, "A company-managed group cannot be managed by a user: {:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -7461,14 +7483,19 @@ impl ::serde::ser::Serialize for GroupMembersRemoveError {
 }
 
 impl ::std::error::Error for GroupMembersRemoveError {
-    fn description(&self) -> &str {
-        "GroupMembersRemoveError"
-    }
 }
 
 impl ::std::fmt::Display for GroupMembersRemoveError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupMembersRemoveError::GroupNotFound => f.write_str("No matching group found. No groups match the specified group ID."),
+            GroupMembersRemoveError::SystemManagedGroupDisallowed => f.write_str("This operation is not supported on system-managed groups."),
+            GroupMembersRemoveError::MemberNotInGroup => f.write_str("At least one of the specified users is not a member of the group."),
+            GroupMembersRemoveError::GroupNotInTeam => f.write_str("Group is not in this team. You cannot remove members from a group that is outside of your team."),
+            GroupMembersRemoveError::MembersNotInTeam(inner) => write!(f, "These members are not part of your team: {:?}", inner),
+            GroupMembersRemoveError::UsersNotFound(inner) => write!(f, "These users were not found in Dropbox: {:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -7664,14 +7691,16 @@ impl ::serde::ser::Serialize for GroupMembersSelectorError {
 }
 
 impl ::std::error::Error for GroupMembersSelectorError {
-    fn description(&self) -> &str {
-        "GroupMembersSelectorError"
-    }
 }
 
 impl ::std::fmt::Display for GroupMembersSelectorError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupMembersSelectorError::GroupNotFound => f.write_str("No matching group found. No groups match the specified group ID."),
+            GroupMembersSelectorError::SystemManagedGroupDisallowed => f.write_str("This operation is not supported on system-managed groups."),
+            GroupMembersSelectorError::MemberNotInGroup => f.write_str("At least one of the specified users is not a member of the group."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -7944,14 +7973,14 @@ impl ::serde::ser::Serialize for GroupSelectorError {
 }
 
 impl ::std::error::Error for GroupSelectorError {
-    fn description(&self) -> &str {
-        "GroupSelectorError"
-    }
 }
 
 impl ::std::fmt::Display for GroupSelectorError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupSelectorError::GroupNotFound => f.write_str("No matching group found. No groups match the specified group ID."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -8030,14 +8059,15 @@ impl ::serde::ser::Serialize for GroupSelectorWithTeamGroupError {
 }
 
 impl ::std::error::Error for GroupSelectorWithTeamGroupError {
-    fn description(&self) -> &str {
-        "GroupSelectorWithTeamGroupError"
-    }
 }
 
 impl ::std::fmt::Display for GroupSelectorWithTeamGroupError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupSelectorWithTeamGroupError::GroupNotFound => f.write_str("No matching group found. No groups match the specified group ID."),
+            GroupSelectorWithTeamGroupError::SystemManagedGroupDisallowed => f.write_str("This operation is not supported on system-managed groups."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -8324,14 +8354,18 @@ impl ::serde::ser::Serialize for GroupUpdateError {
 }
 
 impl ::std::error::Error for GroupUpdateError {
-    fn description(&self) -> &str {
-        "GroupUpdateError"
-    }
 }
 
 impl ::std::fmt::Display for GroupUpdateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupUpdateError::GroupNotFound => f.write_str("No matching group found. No groups match the specified group ID."),
+            GroupUpdateError::SystemManagedGroupDisallowed => f.write_str("This operation is not supported on system-managed groups."),
+            GroupUpdateError::GroupNameAlreadyUsed => f.write_str("The requested group name is already being used by another group."),
+            GroupUpdateError::GroupNameInvalid => f.write_str("Group name is empty or has invalid characters."),
+            GroupUpdateError::ExternalIdAlreadyInUse => f.write_str("The requested external ID is already being used by another group."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -8395,14 +8429,14 @@ impl ::serde::ser::Serialize for GroupsGetInfoError {
 }
 
 impl ::std::error::Error for GroupsGetInfoError {
-    fn description(&self) -> &str {
-        "GroupsGetInfoError"
-    }
 }
 
 impl ::std::fmt::Display for GroupsGetInfoError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupsGetInfoError::GroupNotOnTeam => f.write_str("The group is not on your team."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -8709,14 +8743,14 @@ impl ::serde::ser::Serialize for GroupsListContinueError {
 }
 
 impl ::std::error::Error for GroupsListContinueError {
-    fn description(&self) -> &str {
-        "GroupsListContinueError"
-    }
 }
 
 impl ::std::fmt::Display for GroupsListContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupsListContinueError::InvalidCursor => f.write_str("The cursor is invalid."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -9099,14 +9133,14 @@ impl ::serde::ser::Serialize for GroupsMembersListContinueError {
 }
 
 impl ::std::error::Error for GroupsMembersListContinueError {
-    fn description(&self) -> &str {
-        "GroupsMembersListContinueError"
-    }
 }
 
 impl ::std::fmt::Display for GroupsMembersListContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupsMembersListContinueError::InvalidCursor => f.write_str("The cursor is invalid."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -9314,14 +9348,16 @@ impl ::serde::ser::Serialize for GroupsPollError {
 }
 
 impl ::std::error::Error for GroupsPollError {
-    fn description(&self) -> &str {
-        "GroupsPollError"
-    }
 }
 
 impl ::std::fmt::Display for GroupsPollError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GroupsPollError::InvalidAsyncJobId => f.write_str("The job ID is invalid."),
+            GroupsPollError::InternalError => f.write_str("Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking succeeded, and if not, try again. This should happen very rarely."),
+            GroupsPollError::AccessDenied => f.write_str("You are not allowed to poll this job."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -10296,14 +10332,15 @@ impl ::serde::ser::Serialize for LegalHoldsError {
 }
 
 impl ::std::error::Error for LegalHoldsError {
-    fn description(&self) -> &str {
-        "LegalHoldsError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            LegalHoldsError::UnknownLegalHoldError => f.write_str("There has been an unknown legal hold error."),
+            LegalHoldsError::InsufficientPermissions => f.write_str("You don't have permissions to perform this action."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -10483,14 +10520,15 @@ impl ::serde::ser::Serialize for LegalHoldsGetPolicyError {
 }
 
 impl ::std::error::Error for LegalHoldsGetPolicyError {
-    fn description(&self) -> &str {
-        "LegalHoldsGetPolicyError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsGetPolicyError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            LegalHoldsGetPolicyError::UnknownLegalHoldError => f.write_str("There has been an unknown legal hold error."),
+            LegalHoldsGetPolicyError::InsufficientPermissions => f.write_str("You don't have permissions to perform this action."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -10905,14 +10943,15 @@ impl ::serde::ser::Serialize for LegalHoldsListHeldRevisionsContinueError {
 }
 
 impl ::std::error::Error for LegalHoldsListHeldRevisionsContinueError {
-    fn description(&self) -> &str {
-        "LegalHoldsListHeldRevisionsContinueError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsListHeldRevisionsContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            LegalHoldsListHeldRevisionsContinueError::UnknownLegalHoldError => f.write_str("There has been an unknown legal hold error."),
+            LegalHoldsListHeldRevisionsContinueError::TransientError => f.write_str("Temporary infrastructure failure, please retry."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -11028,14 +11067,18 @@ impl ::serde::ser::Serialize for LegalHoldsListHeldRevisionsError {
 }
 
 impl ::std::error::Error for LegalHoldsListHeldRevisionsError {
-    fn description(&self) -> &str {
-        "LegalHoldsListHeldRevisionsError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsListHeldRevisionsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            LegalHoldsListHeldRevisionsError::UnknownLegalHoldError => f.write_str("There has been an unknown legal hold error."),
+            LegalHoldsListHeldRevisionsError::InsufficientPermissions => f.write_str("You don't have permissions to perform this action."),
+            LegalHoldsListHeldRevisionsError::TransientError => f.write_str("Temporary infrastructure failure, please retry."),
+            LegalHoldsListHeldRevisionsError::LegalHoldStillEmpty => f.write_str("The legal hold is not holding any revisions yet."),
+            LegalHoldsListHeldRevisionsError::InactiveLegalHold => f.write_str("Trying to list revisions for an inactive legal hold."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -11211,14 +11254,16 @@ impl ::serde::ser::Serialize for LegalHoldsListPoliciesError {
 }
 
 impl ::std::error::Error for LegalHoldsListPoliciesError {
-    fn description(&self) -> &str {
-        "LegalHoldsListPoliciesError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsListPoliciesError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            LegalHoldsListPoliciesError::UnknownLegalHoldError => f.write_str("There has been an unknown legal hold error."),
+            LegalHoldsListPoliciesError::InsufficientPermissions => f.write_str("You don't have permissions to perform this action."),
+            LegalHoldsListPoliciesError::TransientError => f.write_str("Temporary infrastructure failure, please retry."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -11645,14 +11690,23 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyCreateError {
 }
 
 impl ::std::error::Error for LegalHoldsPolicyCreateError {
-    fn description(&self) -> &str {
-        "LegalHoldsPolicyCreateError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsPolicyCreateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            LegalHoldsPolicyCreateError::UnknownLegalHoldError => f.write_str("There has been an unknown legal hold error."),
+            LegalHoldsPolicyCreateError::InsufficientPermissions => f.write_str("You don't have permissions to perform this action."),
+            LegalHoldsPolicyCreateError::StartDateIsLaterThanEndDate => f.write_str("Start date must be earlier than end date."),
+            LegalHoldsPolicyCreateError::EmptyMembersList => f.write_str("The users list must have at least one user."),
+            LegalHoldsPolicyCreateError::InvalidMembers => f.write_str("Some members in the members list are not valid to be placed under legal hold."),
+            LegalHoldsPolicyCreateError::NumberOfUsersOnHoldIsGreaterThanHoldLimitation => f.write_str("You cannot add more than 5 users in a legal hold."),
+            LegalHoldsPolicyCreateError::TransientError => f.write_str("Temporary infrastructure failure, please retry."),
+            LegalHoldsPolicyCreateError::NameMustBeUnique => f.write_str("The name provided is already in use by another legal hold."),
+            LegalHoldsPolicyCreateError::TeamExceededLegalHoldQuota => f.write_str("Team exceeded legal hold quota."),
+            LegalHoldsPolicyCreateError::InvalidDate => f.write_str("The provided date is invalid."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -11859,14 +11913,17 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyReleaseError {
 }
 
 impl ::std::error::Error for LegalHoldsPolicyReleaseError {
-    fn description(&self) -> &str {
-        "LegalHoldsPolicyReleaseError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsPolicyReleaseError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            LegalHoldsPolicyReleaseError::UnknownLegalHoldError => f.write_str("There has been an unknown legal hold error."),
+            LegalHoldsPolicyReleaseError::InsufficientPermissions => f.write_str("You don't have permissions to perform this action."),
+            LegalHoldsPolicyReleaseError::LegalHoldPerformingAnotherOperation => f.write_str("Legal hold is currently performing another operation."),
+            LegalHoldsPolicyReleaseError::LegalHoldAlreadyReleasing => f.write_str("Legal hold is currently performing a release or is already released."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -12179,14 +12236,21 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyUpdateError {
 }
 
 impl ::std::error::Error for LegalHoldsPolicyUpdateError {
-    fn description(&self) -> &str {
-        "LegalHoldsPolicyUpdateError"
-    }
 }
 
 impl ::std::fmt::Display for LegalHoldsPolicyUpdateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            LegalHoldsPolicyUpdateError::UnknownLegalHoldError => f.write_str("There has been an unknown legal hold error."),
+            LegalHoldsPolicyUpdateError::InsufficientPermissions => f.write_str("You don't have permissions to perform this action."),
+            LegalHoldsPolicyUpdateError::InactiveLegalHold => f.write_str("Trying to release an inactive legal hold."),
+            LegalHoldsPolicyUpdateError::LegalHoldPerformingAnotherOperation => f.write_str("Legal hold is currently performing another operation."),
+            LegalHoldsPolicyUpdateError::InvalidMembers => f.write_str("Some members in the members list are not valid to be placed under legal hold."),
+            LegalHoldsPolicyUpdateError::NumberOfUsersOnHoldIsGreaterThanHoldLimitation => f.write_str("You cannot add more than 5 users in a legal hold."),
+            LegalHoldsPolicyUpdateError::EmptyMembersList => f.write_str("The users list must have at least one user."),
+            LegalHoldsPolicyUpdateError::NameMustBeUnique => f.write_str("The name provided is already in use by another legal hold."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -12342,14 +12406,14 @@ impl ::serde::ser::Serialize for ListMemberAppsError {
 }
 
 impl ::std::error::Error for ListMemberAppsError {
-    fn description(&self) -> &str {
-        "ListMemberAppsError"
-    }
 }
 
 impl ::std::fmt::Display for ListMemberAppsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListMemberAppsError::MemberNotFound => f.write_str("Member not found."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -12647,14 +12711,14 @@ impl ::serde::ser::Serialize for ListMemberDevicesError {
 }
 
 impl ::std::error::Error for ListMemberDevicesError {
-    fn description(&self) -> &str {
-        "ListMemberDevicesError"
-    }
 }
 
 impl ::std::fmt::Display for ListMemberDevicesError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListMemberDevicesError::MemberNotFound => f.write_str("Member not found."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -12935,9 +12999,6 @@ impl ::serde::ser::Serialize for ListMembersAppsError {
 }
 
 impl ::std::error::Error for ListMembersAppsError {
-    fn description(&self) -> &str {
-        "ListMembersAppsError"
-    }
 }
 
 impl ::std::fmt::Display for ListMembersAppsError {
@@ -13278,9 +13339,6 @@ impl ::serde::ser::Serialize for ListMembersDevicesError {
 }
 
 impl ::std::error::Error for ListMembersDevicesError {
-    fn description(&self) -> &str {
-        "ListMembersDevicesError"
-    }
 }
 
 impl ::std::fmt::Display for ListMembersDevicesError {
@@ -13566,9 +13624,6 @@ impl ::serde::ser::Serialize for ListTeamAppsError {
 }
 
 impl ::std::error::Error for ListTeamAppsError {
-    fn description(&self) -> &str {
-        "ListTeamAppsError"
-    }
 }
 
 impl ::std::fmt::Display for ListTeamAppsError {
@@ -13909,9 +13964,6 @@ impl ::serde::ser::Serialize for ListTeamDevicesError {
 }
 
 impl ::std::error::Error for ListTeamDevicesError {
-    fn description(&self) -> &str {
-        "ListTeamDevicesError"
-    }
 }
 
 impl ::std::fmt::Display for ListTeamDevicesError {
@@ -15237,14 +15289,14 @@ impl ::serde::ser::Serialize for MemberSelectorError {
 }
 
 impl ::std::error::Error for MemberSelectorError {
-    fn description(&self) -> &str {
-        "MemberSelectorError"
-    }
 }
 
 impl ::std::fmt::Display for MemberSelectorError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MemberSelectorError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MemberSelectorError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+        }
     }
 }
 
@@ -15907,14 +15959,15 @@ impl ::serde::ser::Serialize for MembersDeactivateError {
 }
 
 impl ::std::error::Error for MembersDeactivateError {
-    fn description(&self) -> &str {
-        "MembersDeactivateError"
-    }
 }
 
 impl ::std::fmt::Display for MembersDeactivateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersDeactivateError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersDeactivateError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -16095,14 +16148,16 @@ impl ::serde::ser::Serialize for MembersDeleteProfilePhotoError {
 }
 
 impl ::std::error::Error for MembersDeleteProfilePhotoError {
-    fn description(&self) -> &str {
-        "MembersDeleteProfilePhotoError"
-    }
 }
 
 impl ::std::fmt::Display for MembersDeleteProfilePhotoError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersDeleteProfilePhotoError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersDeleteProfilePhotoError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersDeleteProfilePhotoError::SetProfileDisallowed => f.write_str("Modifying deleted users is not allowed."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -16240,9 +16295,6 @@ impl ::serde::ser::Serialize for MembersGetInfoError {
 }
 
 impl ::std::error::Error for MembersGetInfoError {
-    fn description(&self) -> &str {
-        "MembersGetInfoError"
-    }
 }
 
 impl ::std::fmt::Display for MembersGetInfoError {
@@ -16680,14 +16732,14 @@ impl ::serde::ser::Serialize for MembersListContinueError {
 }
 
 impl ::std::error::Error for MembersListContinueError {
-    fn description(&self) -> &str {
-        "MembersListContinueError"
-    }
 }
 
 impl ::std::fmt::Display for MembersListContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersListContinueError::InvalidCursor => f.write_str("The cursor is invalid."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -16735,9 +16787,6 @@ impl ::serde::ser::Serialize for MembersListError {
 }
 
 impl ::std::error::Error for MembersListError {
-    fn description(&self) -> &str {
-        "MembersListError"
-    }
 }
 
 impl ::std::fmt::Display for MembersListError {
@@ -17056,14 +17105,17 @@ impl ::serde::ser::Serialize for MembersRecoverError {
 }
 
 impl ::std::error::Error for MembersRecoverError {
-    fn description(&self) -> &str {
-        "MembersRecoverError"
-    }
 }
 
 impl ::std::fmt::Display for MembersRecoverError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersRecoverError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersRecoverError::UserUnrecoverable => f.write_str("The user is not recoverable."),
+            MembersRecoverError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersRecoverError::TeamLicenseLimit => f.write_str("Team is full. The organization has no available licenses."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -17594,14 +17646,32 @@ impl ::serde::ser::Serialize for MembersRemoveError {
 }
 
 impl ::std::error::Error for MembersRemoveError {
-    fn description(&self) -> &str {
-        "MembersRemoveError"
-    }
 }
 
 impl ::std::fmt::Display for MembersRemoveError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersRemoveError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersRemoveError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersRemoveError::RemovedAndTransferDestShouldDiffer => f.write_str("Expected removed user and transfer_dest user to be different."),
+            MembersRemoveError::RemovedAndTransferAdminShouldDiffer => f.write_str("Expected removed user and transfer_admin user to be different."),
+            MembersRemoveError::TransferDestUserNotFound => f.write_str("No matching user found for the argument transfer_dest_id."),
+            MembersRemoveError::TransferDestUserNotInTeam => f.write_str("The provided transfer_dest_id does not exist on this team."),
+            MembersRemoveError::TransferAdminUserNotInTeam => f.write_str("The provided transfer_admin_id does not exist on this team."),
+            MembersRemoveError::TransferAdminUserNotFound => f.write_str("No matching user found for the argument transfer_admin_id."),
+            MembersRemoveError::UnspecifiedTransferAdminId => f.write_str("The transfer_admin_id argument must be provided when file transfer is requested."),
+            MembersRemoveError::TransferAdminIsNotAdmin => f.write_str("Specified transfer_admin user is not a team admin."),
+            MembersRemoveError::RecipientNotVerified => f.write_str("The recipient user's email is not verified."),
+            MembersRemoveError::RemoveLastAdmin => f.write_str("The user is the last admin of the team, so it cannot be removed from it."),
+            MembersRemoveError::CannotKeepAccountAndTransfer => f.write_str("Cannot keep account and transfer the data to another user at the same time."),
+            MembersRemoveError::EmailAddressTooLongToBeDisabled => f.write_str("The email address of the user is too long to be disabled."),
+            MembersRemoveError::CannotKeepInvitedUserAccount => f.write_str("Cannot keep account of an invited user."),
+            MembersRemoveError::CannotRetainSharesWhenTeamExternalSharingOff => f.write_str("Externally sharing files, folders, and links must be enabled in team settings in order to retain team shares for the user."),
+            MembersRemoveError::CannotKeepAccount => f.write_str("Only a team admin, can convert this account to a Basic account."),
+            MembersRemoveError::CannotKeepAccountUnderLegalHold => f.write_str("This user content is currently being held. To convert this member's account to a Basic account, you'll first need to remove them from the hold."),
+            MembersRemoveError::CannotKeepAccountRequiredToSignTos => f.write_str("To convert this member to a Basic account, they'll first need to sign in to Dropbox and agree to the terms of service."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -17680,14 +17750,15 @@ impl ::serde::ser::Serialize for MembersSendWelcomeError {
 }
 
 impl ::std::error::Error for MembersSendWelcomeError {
-    fn description(&self) -> &str {
-        "MembersSendWelcomeError"
-    }
 }
 
 impl ::std::fmt::Display for MembersSendWelcomeError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersSendWelcomeError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersSendWelcomeError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -17909,14 +17980,18 @@ impl ::serde::ser::Serialize for MembersSetPermissionsError {
 }
 
 impl ::std::error::Error for MembersSetPermissionsError {
-    fn description(&self) -> &str {
-        "MembersSetPermissionsError"
-    }
 }
 
 impl ::std::fmt::Display for MembersSetPermissionsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersSetPermissionsError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersSetPermissionsError::LastAdmin => f.write_str("Cannot remove the admin setting of the last admin."),
+            MembersSetPermissionsError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersSetPermissionsError::CannotSetPermissions => f.write_str("Cannot remove/grant permissions."),
+            MembersSetPermissionsError::TeamLicenseLimit => f.write_str("Team is full. The organization has no available licenses."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -18417,14 +18492,24 @@ impl ::serde::ser::Serialize for MembersSetProfileError {
 }
 
 impl ::std::error::Error for MembersSetProfileError {
-    fn description(&self) -> &str {
-        "MembersSetProfileError"
-    }
 }
 
 impl ::std::fmt::Display for MembersSetProfileError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersSetProfileError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersSetProfileError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersSetProfileError::ExternalIdAndNewExternalIdUnsafe => f.write_str("It is unsafe to use both external_id and new_external_id."),
+            MembersSetProfileError::NoNewDataSpecified => f.write_str("None of new_email, new_given_name, new_surname, or new_external_id are specified."),
+            MembersSetProfileError::EmailReservedForOtherUser => f.write_str("Email is already reserved for another user."),
+            MembersSetProfileError::ExternalIdUsedByOtherUser => f.write_str("The external ID is already in use by another team member."),
+            MembersSetProfileError::SetProfileDisallowed => f.write_str("Modifying deleted users is not allowed."),
+            MembersSetProfileError::ParamCannotBeEmpty => f.write_str("Parameter new_email cannot be empty."),
+            MembersSetProfileError::PersistentIdDisabled => f.write_str("Persistent ID is only available to teams with persistent ID SAML configuration. Please contact Dropbox for more information."),
+            MembersSetProfileError::PersistentIdUsedByOtherUser => f.write_str("The persistent ID is already in use by another team member."),
+            MembersSetProfileError::DirectoryRestrictedOff => f.write_str("Directory Restrictions option is not available."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -18634,14 +18719,23 @@ impl ::serde::ser::Serialize for MembersSetProfilePhotoError {
 }
 
 impl ::std::error::Error for MembersSetProfilePhotoError {
-    fn description(&self) -> &str {
-        "MembersSetProfilePhotoError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            MembersSetProfilePhotoError::PhotoError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for MembersSetProfilePhotoError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersSetProfilePhotoError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersSetProfilePhotoError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersSetProfilePhotoError::SetProfileDisallowed => f.write_str("Modifying deleted users is not allowed."),
+            MembersSetProfilePhotoError::PhotoError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -18758,14 +18852,18 @@ impl ::serde::ser::Serialize for MembersSuspendError {
 }
 
 impl ::std::error::Error for MembersSuspendError {
-    fn description(&self) -> &str {
-        "MembersSuspendError"
-    }
 }
 
 impl ::std::fmt::Display for MembersSuspendError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersSuspendError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersSuspendError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersSuspendError::SuspendInactiveUser => f.write_str("The user is not active, so it cannot be suspended."),
+            MembersSuspendError::SuspendLastAdmin => f.write_str("The user is the last admin of the team, so it cannot be suspended."),
+            MembersSuspendError::TeamLicenseLimit => f.write_str("Team is full. The organization has no available licenses."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -18960,14 +19058,24 @@ impl ::serde::ser::Serialize for MembersTransferFilesError {
 }
 
 impl ::std::error::Error for MembersTransferFilesError {
-    fn description(&self) -> &str {
-        "MembersTransferFilesError"
-    }
 }
 
 impl ::std::fmt::Display for MembersTransferFilesError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersTransferFilesError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersTransferFilesError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersTransferFilesError::RemovedAndTransferDestShouldDiffer => f.write_str("Expected removed user and transfer_dest user to be different."),
+            MembersTransferFilesError::RemovedAndTransferAdminShouldDiffer => f.write_str("Expected removed user and transfer_admin user to be different."),
+            MembersTransferFilesError::TransferDestUserNotFound => f.write_str("No matching user found for the argument transfer_dest_id."),
+            MembersTransferFilesError::TransferDestUserNotInTeam => f.write_str("The provided transfer_dest_id does not exist on this team."),
+            MembersTransferFilesError::TransferAdminUserNotInTeam => f.write_str("The provided transfer_admin_id does not exist on this team."),
+            MembersTransferFilesError::TransferAdminUserNotFound => f.write_str("No matching user found for the argument transfer_admin_id."),
+            MembersTransferFilesError::UnspecifiedTransferAdminId => f.write_str("The transfer_admin_id argument must be provided when file transfer is requested."),
+            MembersTransferFilesError::TransferAdminIsNotAdmin => f.write_str("Specified transfer_admin user is not a team admin."),
+            MembersTransferFilesError::RecipientNotVerified => f.write_str("The recipient user's email is not verified."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -19214,14 +19322,28 @@ impl ::serde::ser::Serialize for MembersTransferFormerMembersFilesError {
 }
 
 impl ::std::error::Error for MembersTransferFormerMembersFilesError {
-    fn description(&self) -> &str {
-        "MembersTransferFormerMembersFilesError"
-    }
 }
 
 impl ::std::fmt::Display for MembersTransferFormerMembersFilesError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersTransferFormerMembersFilesError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersTransferFormerMembersFilesError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersTransferFormerMembersFilesError::RemovedAndTransferDestShouldDiffer => f.write_str("Expected removed user and transfer_dest user to be different."),
+            MembersTransferFormerMembersFilesError::RemovedAndTransferAdminShouldDiffer => f.write_str("Expected removed user and transfer_admin user to be different."),
+            MembersTransferFormerMembersFilesError::TransferDestUserNotFound => f.write_str("No matching user found for the argument transfer_dest_id."),
+            MembersTransferFormerMembersFilesError::TransferDestUserNotInTeam => f.write_str("The provided transfer_dest_id does not exist on this team."),
+            MembersTransferFormerMembersFilesError::TransferAdminUserNotInTeam => f.write_str("The provided transfer_admin_id does not exist on this team."),
+            MembersTransferFormerMembersFilesError::TransferAdminUserNotFound => f.write_str("No matching user found for the argument transfer_admin_id."),
+            MembersTransferFormerMembersFilesError::UnspecifiedTransferAdminId => f.write_str("The transfer_admin_id argument must be provided when file transfer is requested."),
+            MembersTransferFormerMembersFilesError::TransferAdminIsNotAdmin => f.write_str("Specified transfer_admin user is not a team admin."),
+            MembersTransferFormerMembersFilesError::RecipientNotVerified => f.write_str("The recipient user's email is not verified."),
+            MembersTransferFormerMembersFilesError::UserDataIsBeingTransferred => f.write_str("The user's data is being transferred. Please wait some time before retrying."),
+            MembersTransferFormerMembersFilesError::UserNotRemoved => f.write_str("No matching removed user found for the argument user."),
+            MembersTransferFormerMembersFilesError::UserDataCannotBeTransferred => f.write_str("User files aren't transferable anymore."),
+            MembersTransferFormerMembersFilesError::UserDataAlreadyTransferred => f.write_str("User's data has already been transferred to another user."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -19417,14 +19539,17 @@ impl ::serde::ser::Serialize for MembersUnsuspendError {
 }
 
 impl ::std::error::Error for MembersUnsuspendError {
-    fn description(&self) -> &str {
-        "MembersUnsuspendError"
-    }
 }
 
 impl ::std::fmt::Display for MembersUnsuspendError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MembersUnsuspendError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersUnsuspendError::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersUnsuspendError::UnsuspendNonSuspendedMember => f.write_str("The user is unsuspended, so it cannot be unsuspended again."),
+            MembersUnsuspendError::TeamLicenseLimit => f.write_str("Team is full. The organization has no available licenses."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -20813,9 +20938,6 @@ impl ::serde::ser::Serialize for RevokeDeviceSessionBatchError {
 }
 
 impl ::std::error::Error for RevokeDeviceSessionBatchError {
-    fn description(&self) -> &str {
-        "RevokeDeviceSessionBatchError"
-    }
 }
 
 impl ::std::fmt::Display for RevokeDeviceSessionBatchError {
@@ -20986,14 +21108,15 @@ impl ::serde::ser::Serialize for RevokeDeviceSessionError {
 }
 
 impl ::std::error::Error for RevokeDeviceSessionError {
-    fn description(&self) -> &str {
-        "RevokeDeviceSessionError"
-    }
 }
 
 impl ::std::fmt::Display for RevokeDeviceSessionError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            RevokeDeviceSessionError::DeviceSessionNotFound => f.write_str("Device session not found."),
+            RevokeDeviceSessionError::MemberNotFound => f.write_str("Member not found."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -21361,9 +21484,6 @@ impl ::serde::ser::Serialize for RevokeLinkedAppBatchError {
 }
 
 impl ::std::error::Error for RevokeLinkedAppBatchError {
-    fn description(&self) -> &str {
-        "RevokeLinkedAppBatchError"
-    }
 }
 
 impl ::std::fmt::Display for RevokeLinkedAppBatchError {
@@ -21548,14 +21668,16 @@ impl ::serde::ser::Serialize for RevokeLinkedAppError {
 }
 
 impl ::std::error::Error for RevokeLinkedAppError {
-    fn description(&self) -> &str {
-        "RevokeLinkedAppError"
-    }
 }
 
 impl ::std::fmt::Display for RevokeLinkedAppError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            RevokeLinkedAppError::AppNotFound => f.write_str("Application not found."),
+            RevokeLinkedAppError::MemberNotFound => f.write_str("Member not found."),
+            RevokeLinkedAppError::AppFolderRemovalNotSupported => f.write_str("App folder removal is not supported."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -21831,14 +21953,15 @@ impl ::serde::ser::Serialize for SetCustomQuotaError {
 }
 
 impl ::std::error::Error for SetCustomQuotaError {
-    fn description(&self) -> &str {
-        "SetCustomQuotaError"
-    }
 }
 
 impl ::std::fmt::Display for SetCustomQuotaError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            SetCustomQuotaError::TooManyUsers => f.write_str("A maximum of 1000 users can be set for a single call."),
+            SetCustomQuotaError::SomeUsersAreExcluded => f.write_str("Some of the users are on the excluded users list and can't have custom quota set."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -22020,14 +22143,15 @@ impl ::serde::ser::Serialize for TeamFolderAccessError {
 }
 
 impl ::std::error::Error for TeamFolderAccessError {
-    fn description(&self) -> &str {
-        "TeamFolderAccessError"
-    }
 }
 
 impl ::std::fmt::Display for TeamFolderAccessError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TeamFolderAccessError::InvalidTeamFolderId => f.write_str("The team folder ID is invalid."),
+            TeamFolderAccessError::NoAccess => f.write_str("The authenticated app does not have permission to manage that team folder."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -22127,14 +22251,24 @@ impl ::serde::ser::Serialize for TeamFolderActivateError {
 }
 
 impl ::std::error::Error for TeamFolderActivateError {
-    fn description(&self) -> &str {
-        "TeamFolderActivateError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderActivateError::AccessError(inner) => Some(inner),
+            TeamFolderActivateError::StatusError(inner) => Some(inner),
+            TeamFolderActivateError::TeamSharedDropboxError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for TeamFolderActivateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TeamFolderActivateError::AccessError(inner) => write!(f, "{}", inner),
+            TeamFolderActivateError::StatusError(inner) => write!(f, "{}", inner),
+            TeamFolderActivateError::TeamSharedDropboxError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -22342,14 +22476,24 @@ impl ::serde::ser::Serialize for TeamFolderArchiveError {
 }
 
 impl ::std::error::Error for TeamFolderArchiveError {
-    fn description(&self) -> &str {
-        "TeamFolderArchiveError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderArchiveError::AccessError(inner) => Some(inner),
+            TeamFolderArchiveError::StatusError(inner) => Some(inner),
+            TeamFolderArchiveError::TeamSharedDropboxError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for TeamFolderArchiveError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TeamFolderArchiveError::AccessError(inner) => write!(f, "{}", inner),
+            TeamFolderArchiveError::StatusError(inner) => write!(f, "{}", inner),
+            TeamFolderArchiveError::TeamSharedDropboxError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -22709,14 +22853,23 @@ impl ::serde::ser::Serialize for TeamFolderCreateError {
 }
 
 impl ::std::error::Error for TeamFolderCreateError {
-    fn description(&self) -> &str {
-        "TeamFolderCreateError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderCreateError::SyncSettingsError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for TeamFolderCreateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TeamFolderCreateError::InvalidFolderName => f.write_str("The provided name cannot be used."),
+            TeamFolderCreateError::FolderNameAlreadyUsed => f.write_str("There is already a team folder with the provided name."),
+            TeamFolderCreateError::FolderNameReserved => f.write_str("The provided name cannot be used because it is reserved."),
+            TeamFolderCreateError::SyncSettingsError(inner) => write!(f, "An error occurred setting the sync settings: {}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -23052,14 +23205,16 @@ impl ::serde::ser::Serialize for TeamFolderInvalidStatusError {
 }
 
 impl ::std::error::Error for TeamFolderInvalidStatusError {
-    fn description(&self) -> &str {
-        "TeamFolderInvalidStatusError"
-    }
 }
 
 impl ::std::fmt::Display for TeamFolderInvalidStatusError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TeamFolderInvalidStatusError::Active => f.write_str("The folder is active and the operation did not succeed."),
+            TeamFolderInvalidStatusError::Archived => f.write_str("The folder is archived and the operation did not succeed."),
+            TeamFolderInvalidStatusError::ArchiveInProgress => f.write_str("The folder is being archived and the operation did not succeed."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -23299,14 +23454,14 @@ impl ::serde::ser::Serialize for TeamFolderListContinueError {
 }
 
 impl ::std::error::Error for TeamFolderListContinueError {
-    fn description(&self) -> &str {
-        "TeamFolderListContinueError"
-    }
 }
 
 impl ::std::fmt::Display for TeamFolderListContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TeamFolderListContinueError::InvalidCursor => f.write_str("The cursor is invalid."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -23396,6 +23551,15 @@ impl ::serde::ser::Serialize for TeamFolderListError {
         let mut s = serializer.serialize_struct("TeamFolderListError", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
+    }
+}
+
+impl ::std::error::Error for TeamFolderListError {
+}
+
+impl ::std::fmt::Display for TeamFolderListError {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        write!(f, "{:?}", *self)
     }
 }
 
@@ -23778,14 +23942,24 @@ impl ::serde::ser::Serialize for TeamFolderPermanentlyDeleteError {
 }
 
 impl ::std::error::Error for TeamFolderPermanentlyDeleteError {
-    fn description(&self) -> &str {
-        "TeamFolderPermanentlyDeleteError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderPermanentlyDeleteError::AccessError(inner) => Some(inner),
+            TeamFolderPermanentlyDeleteError::StatusError(inner) => Some(inner),
+            TeamFolderPermanentlyDeleteError::TeamSharedDropboxError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for TeamFolderPermanentlyDeleteError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TeamFolderPermanentlyDeleteError::AccessError(inner) => write!(f, "{}", inner),
+            TeamFolderPermanentlyDeleteError::StatusError(inner) => write!(f, "{}", inner),
+            TeamFolderPermanentlyDeleteError::TeamSharedDropboxError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -24026,14 +24200,27 @@ impl ::serde::ser::Serialize for TeamFolderRenameError {
 }
 
 impl ::std::error::Error for TeamFolderRenameError {
-    fn description(&self) -> &str {
-        "TeamFolderRenameError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderRenameError::AccessError(inner) => Some(inner),
+            TeamFolderRenameError::StatusError(inner) => Some(inner),
+            TeamFolderRenameError::TeamSharedDropboxError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for TeamFolderRenameError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TeamFolderRenameError::AccessError(inner) => write!(f, "{}", inner),
+            TeamFolderRenameError::StatusError(inner) => write!(f, "{}", inner),
+            TeamFolderRenameError::TeamSharedDropboxError(inner) => write!(f, "{}", inner),
+            TeamFolderRenameError::InvalidFolderName => f.write_str("The provided folder name cannot be used."),
+            TeamFolderRenameError::FolderNameAlreadyUsed => f.write_str("There is already a team folder with the same name."),
+            TeamFolderRenameError::FolderNameReserved => f.write_str("The provided name cannot be used because it is reserved."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -24182,14 +24369,14 @@ impl ::serde::ser::Serialize for TeamFolderTeamSharedDropboxError {
 }
 
 impl ::std::error::Error for TeamFolderTeamSharedDropboxError {
-    fn description(&self) -> &str {
-        "TeamFolderTeamSharedDropboxError"
-    }
 }
 
 impl ::std::fmt::Display for TeamFolderTeamSharedDropboxError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TeamFolderTeamSharedDropboxError::Disallowed => f.write_str("This action is not allowed for a shared team root."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -24435,14 +24622,26 @@ impl ::serde::ser::Serialize for TeamFolderUpdateSyncSettingsError {
 }
 
 impl ::std::error::Error for TeamFolderUpdateSyncSettingsError {
-    fn description(&self) -> &str {
-        "TeamFolderUpdateSyncSettingsError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TeamFolderUpdateSyncSettingsError::AccessError(inner) => Some(inner),
+            TeamFolderUpdateSyncSettingsError::StatusError(inner) => Some(inner),
+            TeamFolderUpdateSyncSettingsError::TeamSharedDropboxError(inner) => Some(inner),
+            TeamFolderUpdateSyncSettingsError::SyncSettingsError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for TeamFolderUpdateSyncSettingsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TeamFolderUpdateSyncSettingsError::AccessError(inner) => write!(f, "{}", inner),
+            TeamFolderUpdateSyncSettingsError::StatusError(inner) => write!(f, "{}", inner),
+            TeamFolderUpdateSyncSettingsError::TeamSharedDropboxError(inner) => write!(f, "{}", inner),
+            TeamFolderUpdateSyncSettingsError::SyncSettingsError(inner) => write!(f, "An error occurred setting the sync settings: {}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -25461,14 +25660,15 @@ impl ::serde::ser::Serialize for TeamNamespacesListContinueError {
 }
 
 impl ::std::error::Error for TeamNamespacesListContinueError {
-    fn description(&self) -> &str {
-        "TeamNamespacesListContinueError"
-    }
 }
 
 impl ::std::fmt::Display for TeamNamespacesListContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TeamNamespacesListContinueError::InvalidArg => f.write_str("Argument passed in is invalid."),
+            TeamNamespacesListContinueError::InvalidCursor => f.write_str("The cursor is invalid."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -25532,14 +25732,14 @@ impl ::serde::ser::Serialize for TeamNamespacesListError {
 }
 
 impl ::std::error::Error for TeamNamespacesListError {
-    fn description(&self) -> &str {
-        "TeamNamespacesListError"
-    }
 }
 
 impl ::std::fmt::Display for TeamNamespacesListError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TeamNamespacesListError::InvalidArg => f.write_str("Argument passed in is invalid."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -25825,14 +26025,15 @@ impl ::serde::ser::Serialize for TokenGetAuthenticatedAdminError {
 }
 
 impl ::std::error::Error for TokenGetAuthenticatedAdminError {
-    fn description(&self) -> &str {
-        "TokenGetAuthenticatedAdminError"
-    }
 }
 
 impl ::std::fmt::Display for TokenGetAuthenticatedAdminError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TokenGetAuthenticatedAdminError::MappingNotFound => f.write_str("The current token is not associated with a team admin, because mappings were not recorded when the token was created. Consider re-authorizing a new access token to record its authenticating admin."),
+            TokenGetAuthenticatedAdminError::AdminNotActive => f.write_str("Either the team admin that authorized this token is no longer an active member of the team or no longer a team admin."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -27025,14 +27226,13 @@ impl ::serde::ser::Serialize for UserSelectorError {
 }
 
 impl ::std::error::Error for UserSelectorError {
-    fn description(&self) -> &str {
-        "UserSelectorError"
-    }
 }
 
 impl ::std::fmt::Display for UserSelectorError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UserSelectorError::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+        }
     }
 }
 

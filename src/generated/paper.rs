@@ -155,7 +155,7 @@ pub fn docs_get_folder_info(
 pub fn docs_list(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListPaperDocsArgs,
-) -> crate::Result<Result<ListPaperDocsResponse, ()>> {
+) -> crate::Result<Result<ListPaperDocsResponse, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1052,14 +1052,14 @@ impl ::serde::ser::Serialize for DocLookupError {
 }
 
 impl ::std::error::Error for DocLookupError {
-    fn description(&self) -> &str {
-        "DocLookupError"
-    }
 }
 
 impl ::std::fmt::Display for DocLookupError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            DocLookupError::DocNotFound => f.write_str("The required doc was not found."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -1847,14 +1847,20 @@ impl ::serde::ser::Serialize for ListDocsCursorError {
 }
 
 impl ::std::error::Error for ListDocsCursorError {
-    fn description(&self) -> &str {
-        "ListDocsCursorError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListDocsCursorError::CursorError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for ListDocsCursorError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListDocsCursorError::CursorError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -2534,14 +2540,21 @@ impl ::serde::ser::Serialize for ListUsersCursorError {
 }
 
 impl ::std::error::Error for ListUsersCursorError {
-    fn description(&self) -> &str {
-        "ListUsersCursorError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListUsersCursorError::CursorError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for ListUsersCursorError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListUsersCursorError::DocNotFound => f.write_str("The required doc was not found."),
+            ListUsersCursorError::CursorError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -3346,9 +3359,6 @@ impl ::serde::ser::Serialize for PaperApiBaseError {
 }
 
 impl ::std::error::Error for PaperApiBaseError {
-    fn description(&self) -> &str {
-        "PaperApiBaseError"
-    }
 }
 
 impl ::std::fmt::Display for PaperApiBaseError {
@@ -3457,14 +3467,17 @@ impl ::serde::ser::Serialize for PaperApiCursorError {
 }
 
 impl ::std::error::Error for PaperApiCursorError {
-    fn description(&self) -> &str {
-        "PaperApiCursorError"
-    }
 }
 
 impl ::std::fmt::Display for PaperApiCursorError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            PaperApiCursorError::ExpiredCursor => f.write_str("The provided cursor is expired."),
+            PaperApiCursorError::InvalidCursor => f.write_str("The provided cursor is invalid."),
+            PaperApiCursorError::WrongUserInCursor => f.write_str("The provided cursor contains invalid user."),
+            PaperApiCursorError::Reset => f.write_str("Indicates that the cursor has been invalidated. Call the corresponding non-continue endpoint to obtain a new cursor."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -3693,14 +3706,17 @@ impl ::serde::ser::Serialize for PaperDocCreateError {
 }
 
 impl ::std::error::Error for PaperDocCreateError {
-    fn description(&self) -> &str {
-        "PaperDocCreateError"
-    }
 }
 
 impl ::std::fmt::Display for PaperDocCreateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            PaperDocCreateError::ContentMalformed => f.write_str("The provided content was malformed and cannot be imported to Paper."),
+            PaperDocCreateError::FolderNotFound => f.write_str("The specified Paper folder is cannot be found."),
+            PaperDocCreateError::DocLengthExceeded => f.write_str("The newly created Paper doc would be too large. Please split the content into multiple docs."),
+            PaperDocCreateError::ImageSizeExceeded => f.write_str("The imported document contains an image that is too large. The current limit is 1MB. This only applies to HTML with data URI."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -4517,14 +4533,20 @@ impl ::serde::ser::Serialize for PaperDocUpdateError {
 }
 
 impl ::std::error::Error for PaperDocUpdateError {
-    fn description(&self) -> &str {
-        "PaperDocUpdateError"
-    }
 }
 
 impl ::std::fmt::Display for PaperDocUpdateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            PaperDocUpdateError::DocNotFound => f.write_str("The required doc was not found."),
+            PaperDocUpdateError::ContentMalformed => f.write_str("The provided content was malformed and cannot be imported to Paper."),
+            PaperDocUpdateError::RevisionMismatch => f.write_str("The provided revision does not match the document head."),
+            PaperDocUpdateError::DocLengthExceeded => f.write_str("The newly created Paper doc would be too large, split the content into multiple docs."),
+            PaperDocUpdateError::ImageSizeExceeded => f.write_str("The imported document contains an image that is too large. The current limit is 1MB. This only applies to HTML with data URI."),
+            PaperDocUpdateError::DocArchived => f.write_str("This operation is not allowed on archived Paper docs."),
+            PaperDocUpdateError::DocDeleted => f.write_str("This operation is not allowed on deleted Paper docs."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -4833,14 +4855,15 @@ impl ::serde::ser::Serialize for PaperFolderCreateError {
 }
 
 impl ::std::error::Error for PaperFolderCreateError {
-    fn description(&self) -> &str {
-        "PaperFolderCreateError"
-    }
 }
 
 impl ::std::fmt::Display for PaperFolderCreateError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            PaperFolderCreateError::FolderNotFound => f.write_str("The specified parent Paper folder cannot be found."),
+            PaperFolderCreateError::InvalidFolderId => f.write_str("The folder id cannot be decrypted to valid folder id."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 

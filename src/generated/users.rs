@@ -56,7 +56,7 @@ pub fn get_account_batch(
 /// Get information about the current user's account.
 pub fn get_current_account(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<FullAccount, ()>> {
+) -> crate::Result<Result<FullAccount, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -69,7 +69,7 @@ pub fn get_current_account(
 /// Get the space usage information for the current user's account.
 pub fn get_space_usage(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<SpaceUsage, ()>> {
+) -> crate::Result<Result<SpaceUsage, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1191,14 +1191,14 @@ impl ::serde::ser::Serialize for GetAccountBatchError {
 }
 
 impl ::std::error::Error for GetAccountBatchError {
-    fn description(&self) -> &str {
-        "GetAccountBatchError"
-    }
 }
 
 impl ::std::fmt::Display for GetAccountBatchError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GetAccountBatchError::NoAccount(inner) => write!(f, "no_account: {:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -1262,9 +1262,6 @@ impl ::serde::ser::Serialize for GetAccountError {
 }
 
 impl ::std::error::Error for GetAccountError {
-    fn description(&self) -> &str {
-        "GetAccountError"
-    }
 }
 
 impl ::std::fmt::Display for GetAccountError {
@@ -2310,9 +2307,6 @@ impl ::serde::ser::Serialize for UserFeaturesGetValuesBatchError {
 }
 
 impl ::std::error::Error for UserFeaturesGetValuesBatchError {
-    fn description(&self) -> &str {
-        "UserFeaturesGetValuesBatchError"
-    }
 }
 
 impl ::std::fmt::Display for UserFeaturesGetValuesBatchError {

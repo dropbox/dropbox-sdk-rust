@@ -162,7 +162,7 @@ class TestBackend(RustHelperBackend):
             self.emit(u'match x {')
             with self.indent():
                 var_exps = []
-                for variant in self.get_union_variants(typ):
+                for variant in self.get_enum_variants(typ):
                     v_name = self.enum_variant_name(variant)
                     var_exp = u'::dropbox_sdk::{}::{}::{}'.format(
                         ns_name, type_name, v_name)

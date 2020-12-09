@@ -11,7 +11,7 @@
 /// imported. New contacts will be added when you share.
 pub fn delete_manual_contacts(
     client: &impl crate::client_trait::UserAuthClient,
-) -> crate::Result<Result<(), ()>> {
+) -> crate::Result<Result<(), crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -190,14 +190,14 @@ impl ::serde::ser::Serialize for DeleteManualContactsError {
 }
 
 impl ::std::error::Error for DeleteManualContactsError {
-    fn description(&self) -> &str {
-        "DeleteManualContactsError"
-    }
 }
 
 impl ::std::fmt::Display for DeleteManualContactsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            DeleteManualContactsError::ContactsNotFound(inner) => write!(f, "Can't delete contacts from this list. Make sure the list only has manually added contacts. The deletion was cancelled: {:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 

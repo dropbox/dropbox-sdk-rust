@@ -97,3 +97,28 @@ pub mod oauth2;
 
 mod generated; // You need to run the Stone generator to create this module.
 pub use generated::*;
+
+/// A special error type for a method that doesn't have any defined error return. You shouldn't
+/// actually encounter this value in real life; it's here to satisfy type requirements.
+///
+/// Maybe some day this could maybe be replaced by `!`, the never-type.
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct NoError;
+
+impl std::error::Error for NoError {}
+
+impl std::fmt::Display for NoError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str("(void error: you shouldn't be seeing this!)")
+    }
+}
+
+impl<'de> serde::de::Deserialize<'de> for NoError {
+    fn deserialize<D: serde::de::Deserializer<'de>>(deserializer: D)
+        -> std::result::Result<Self, D::Error>
+    {
+        // Pretend we're the unit type.
+        <()>::deserialize(deserializer)?;
+        Ok(NoError {})
+    }
+}

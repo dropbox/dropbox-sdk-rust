@@ -15,7 +15,7 @@
 pub fn app(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &EchoArg,
-) -> crate::Result<Result<EchoResult, ()>> {
+) -> crate::Result<Result<EchoResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -32,7 +32,7 @@ pub fn app(
 pub fn user(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &EchoArg,
-) -> crate::Result<Result<EchoResult, ()>> {
+) -> crate::Result<Result<EchoResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,

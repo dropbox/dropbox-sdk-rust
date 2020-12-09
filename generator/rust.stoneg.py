@@ -23,6 +23,22 @@ class RustBackend(RustHelperBackend):
     def generate(self, api):
         self._all_types = {ns.name: {typ.name: typ for typ in ns.data_types}
                            for ns in api.namespaces.values()}
+
+        # All types used as an error for any route:
+        self._error_types = set([
+            route.error_data_type
+            for ns in api.namespaces.values()
+            for route in ns.routes
+        ])
+        # Also all enum types whose names end in 'Error'. These tend to be used as errors even when
+        # not the direct error result from a route, i.e. they are inner members of other errors.
+        self._error_types.update([
+            typ
+            for ns in api.namespaces.values()
+            for typ in ns.data_types
+            if self.is_enum_type(typ) and typ.name.endswith('Error')
+        ])
+
         for namespace in api.namespaces.values():
             self._emit_namespace(namespace)
         self._generate_mod_file()
@@ -113,6 +129,9 @@ class RustBackend(RustHelperBackend):
 
         self._impl_serde_for_struct(struct)
 
+        if self._is_error_type(struct):
+            self._impl_error(struct)
+
     def _emit_polymorphic_struct(self, struct):
         enum_name = self.enum_name(struct)
         self._emit_doc(struct.doc)
@@ -153,8 +172,8 @@ class RustBackend(RustHelperBackend):
 
         self._impl_serde_for_union(union)
 
-        if union.name.endswith('Error'):
-            self._impl_error(enum_name)
+        if self._is_error_type(union):
+            self._impl_error(union)
 
     def _emit_route(self, ns, fn, auth_trait = None):
         route_name = self.route_name(fn)
@@ -205,6 +224,8 @@ class RustBackend(RustHelperBackend):
 
         arg_void = isinstance(fn.arg_data_type, ir.Void)
         style = fn.attrs.get('style', 'rpc')
+        error_type = u'crate::NoError' if ir.is_void_type(fn.error_data_type) \
+            else self._rust_type(fn.error_data_type)
         if style == 'rpc':
             with self.emit_rust_function_def(
                     route_name,
@@ -213,7 +234,7 @@ class RustBackend(RustHelperBackend):
                             [u'arg: &{}'.format(self._rust_type(fn.arg_data_type))]),
                     u'crate::Result<Result<{}, {}>>'.format(
                         self._rust_type(fn.result_data_type),
-                        self._rust_type(fn.error_data_type)),
+                        error_type),
                     access=u'pub'):
                 self.emit_rust_fn_call(
                     u'crate::client_helpers::request',
@@ -233,7 +254,7 @@ class RustBackend(RustHelperBackend):
                             u'range_end: Option<u64>'],
                     u'crate::Result<Result<crate::client_trait::HttpRequestResult<{}>, {}>>'.format(
                         self._rust_type(fn.result_data_type),
-                        self._rust_type(fn.error_data_type)),
+                        error_type),
                     access=u'pub'):
                 self.emit_rust_fn_call(
                     u'crate::client_helpers::request_with_body',
@@ -254,7 +275,7 @@ class RustBackend(RustHelperBackend):
                         + [u'body: &[u8]'],
                     u'crate::Result<Result<{}, {}>>'.format(
                         self._rust_type(fn.result_data_type),
-                        self._rust_type(fn.error_data_type)),
+                        error_type),
                     access=u'pub'):
                 self.emit_rust_fn_call(
                     u'crate::client_helpers::request',
@@ -897,17 +918,110 @@ class RustBackend(RustHelperBackend):
                 and not (isinstance(field, ir.Nullable)
                          or (isinstance(field.data_type, ir.Boolean) and not field.default))
 
-    def _impl_error(self, type_name):
+    def _is_error_type(self, typ):
+        return typ in self._error_types
+        #return self.is_enum_type(typ) and typ.name.endswith('Error')
+
+    def _impl_error(self, typ):
+        type_name = self.enum_name(typ)
+
+        # N.B.: error types SHOULD always be enums, but there's at least one type used as the error
+        # return type of a route that's actually a struct, so this function needs to be able to
+        # handle those as well. Passing a struct to get_enum_variants() will result in an empty
+        # list, so this will just fall through to the end where we spit out a Debug repr for
+        # Display, which is fine.
+        variants = self.get_enum_variants(typ)
+
         with self.block(u'impl ::std::error::Error for {}'.format(type_name)):
-            with self.emit_rust_function_def(u'description', [u'&self'], u'&str'):
-                self.emit(u'"{}"'.format(type_name))
+            has_inner = list(v for v in variants if self._is_error_type(v.data_type))
+            if has_inner:
+                with self.emit_rust_function_def(
+                        u'source', [u'&self'], u'Option<&(dyn ::std::error::Error + \'static)>'):
+                    with self.block(u'match self'):
+                        for variant in has_inner:
+                            self.emit(u'{}::{}(inner) => Some(inner),'.format(
+                                type_name, self.enum_variant_name(variant)))
+                        if not self.is_closed_union(typ) or has_inner != variants:
+                            self.emit(u'_ => None,')
+
         self.emit()
         with self.block(u'impl ::std::fmt::Display for {}'.format(type_name)):
             with self.emit_rust_function_def(
                     u'fmt',
                     [u'&self', u'f: &mut ::std::fmt::Formatter<\'_>'],
                     u'::std::fmt::Result'):
-                self.emit(u'write!(f, "{:?}", *self)')
+
+                # Find variants that have documentation and/or an inner value, and use that for the
+                # Display representation of the error.
+                doc_variants = []
+                any_skipped = False
+                for variant in variants:
+                    var_exp = u'{}::{}'.format(type_name, self.enum_variant_name(variant))
+                    msg = ''
+                    args = ''
+                    if variant.doc:
+                        # Use the first line of documentation.
+                        msg = variant.doc.split('\n')[0]
+
+                        # If the line has doc references, it's not going to make a good display
+                        # string, so only include it if it has none:
+                        if msg != self.process_doc(msg, lambda tag, value: ''):
+                            msg = ""
+
+                    inner_fmt = ''
+                    if self._is_error_type(variant.data_type):
+                        # include the Display representation of the inner error.
+                        inner_fmt = '{}'
+                    elif not ir.is_void_type(variant.data_type):
+                        # Include the Debug representation of the inner value.
+                        inner_fmt = '{:?}'
+
+                        if not msg:
+                            # But if there's no message here already, prefix it with the name of the
+                            # variant so there's some context.
+                            msg = variant.name
+
+                    if inner_fmt:
+                        # Special case: if the inner value is an Option, spit out two match cases,
+                        # one for if it's Some, and one for None.
+                        # This is to avoid printing something like "foobar: None" if we're using
+                        # the Debug repr, which looks confusing and adds nothing of value to the
+                        # message.
+                        if ir.is_nullable_type(variant.data_type):
+                            doc_variants.append(
+                                u'{}(None) => f.write_str("{}"),'.format(var_exp, msg))
+                            var_exp += u'(Some(inner))'
+                        else:
+                            var_exp += u'(inner)'
+
+                        if msg.endswith(u'.'):
+                            msg = msg[:-1]
+                        if msg:
+                            msg += u': '
+                        msg += inner_fmt
+                        args = u'inner'
+
+                    if msg:
+                        if not args:
+                            doc_variants.append(u'{} => f.write_str("{}"),'.format(var_exp, msg))
+                        else:
+                            doc_variants.append(u'{} => write!(f, "{}", {}),'.format(
+                                var_exp, msg, args))
+                    else:
+                        any_skipped = True
+                # for variant in variants
+
+                if doc_variants:
+                    with self.block(u'match self'):
+                        for match_case in doc_variants:
+                            self.emit(match_case)
+
+                        if not self.is_closed_union(typ) or any_skipped:
+                            # fall back on the Debug representation
+                            self.emit(u'_ => write!(f, "{:?}", *self),')
+                else:
+                    # skip the whole match block and just use the Debug representation
+                    self.emit(u'write!(f, "{:?}", *self)')
         self.emit()
 
     # Naming Rules

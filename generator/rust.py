@@ -102,7 +102,7 @@ class RustHelperBackend(CodeBackend):
             or (isinstance(typ, ir.Struct) \
                 and typ.has_enumerated_subtypes() and not typ.is_catch_all())
 
-    def get_union_variants(self, typ):
+    def get_enum_variants(self, typ):
         if isinstance(typ, ir.Union):
             return typ.all_fields
         elif isinstance(typ, ir.Struct) and typ.has_enumerated_subtypes():

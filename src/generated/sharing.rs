@@ -315,7 +315,7 @@ pub fn list_folder_members_continue(
 pub fn list_folders(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersArgs,
-) -> crate::Result<Result<ListFoldersResult, ()>> {
+) -> crate::Result<Result<ListFoldersResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -345,7 +345,7 @@ pub fn list_folders_continue(
 pub fn list_mountable_folders(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListFoldersArgs,
-) -> crate::Result<Result<ListFoldersResult, ()>> {
+) -> crate::Result<Result<ListFoldersResult, crate::NoError>> {
     crate::client_helpers::request(
         client,
         crate::client_trait::Endpoint::Api,
@@ -1218,14 +1218,24 @@ impl ::serde::ser::Serialize for AddFileMemberError {
 }
 
 impl ::std::error::Error for AddFileMemberError {
-    fn description(&self) -> &str {
-        "AddFileMemberError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            AddFileMemberError::UserError(inner) => Some(inner),
+            AddFileMemberError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for AddFileMemberError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            AddFileMemberError::UserError(inner) => write!(f, "{}", inner),
+            AddFileMemberError::AccessError(inner) => write!(f, "{}", inner),
+            AddFileMemberError::RateLimit => f.write_str("The user has reached the rate limit for invitations."),
+            AddFileMemberError::InvalidComment => f.write_str("The custom message did not pass comment permissions checks."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -1605,14 +1615,32 @@ impl ::serde::ser::Serialize for AddFolderMemberError {
 }
 
 impl ::std::error::Error for AddFolderMemberError {
-    fn description(&self) -> &str {
-        "AddFolderMemberError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            AddFolderMemberError::AccessError(inner) => Some(inner),
+            AddFolderMemberError::BadMember(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for AddFolderMemberError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            AddFolderMemberError::AccessError(inner) => write!(f, "Unable to access shared folder: {}", inner),
+            AddFolderMemberError::BannedMember => f.write_str("The current user has been banned."),
+            AddFolderMemberError::BadMember(inner) => write!(f, "{}", inner),
+            AddFolderMemberError::CantShareOutsideTeam => f.write_str("Your team policy does not allow sharing outside of the team."),
+            AddFolderMemberError::TooManyMembers(inner) => write!(f, "The value is the member limit that was reached: {:?}", inner),
+            AddFolderMemberError::TooManyPendingInvites(inner) => write!(f, "The value is the pending invite limit that was reached: {:?}", inner),
+            AddFolderMemberError::RateLimit => f.write_str("The current user has hit the limit of invites they can send per day. Try again in 24 hours."),
+            AddFolderMemberError::TooManyInvitees => f.write_str("The current user is trying to share with too many people at once."),
+            AddFolderMemberError::InsufficientPlan => f.write_str("The current user's account doesn't support this action. An example of this is when adding a read-only member. This action can only be performed by users that have upgraded to a Pro or Business plan."),
+            AddFolderMemberError::TeamFolder => f.write_str("This action cannot be performed on a team shared folder."),
+            AddFolderMemberError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            AddFolderMemberError::InvalidSharedFolder => f.write_str("Invalid shared folder error will be returned as an access_error."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -1865,14 +1893,18 @@ impl ::serde::ser::Serialize for AddMemberSelectorError {
 }
 
 impl ::std::error::Error for AddMemberSelectorError {
-    fn description(&self) -> &str {
-        "AddMemberSelectorError"
-    }
 }
 
 impl ::std::fmt::Display for AddMemberSelectorError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            AddMemberSelectorError::AutomaticGroup => f.write_str("Automatically created groups can only be added to team folders."),
+            AddMemberSelectorError::InvalidDropboxId(inner) => write!(f, "The value is the ID that could not be identified: {:?}", inner),
+            AddMemberSelectorError::InvalidEmail(inner) => write!(f, "The value is the e-email address that is malformed: {:?}", inner),
+            AddMemberSelectorError::UnverifiedDropboxId(inner) => write!(f, "The value is the ID of the Dropbox user with an unverified email address. Invite unverified users by email address instead of by their Dropbox ID: {:?}", inner),
+            AddMemberSelectorError::GroupNotOnTeam => f.write_str("Sharing to a group that is not on the current user's team."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -2626,14 +2658,20 @@ impl ::serde::ser::Serialize for CreateSharedLinkError {
 }
 
 impl ::std::error::Error for CreateSharedLinkError {
-    fn description(&self) -> &str {
-        "CreateSharedLinkError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            CreateSharedLinkError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for CreateSharedLinkError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            CreateSharedLinkError::Path(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -2862,14 +2900,25 @@ impl ::serde::ser::Serialize for CreateSharedLinkWithSettingsError {
 }
 
 impl ::std::error::Error for CreateSharedLinkWithSettingsError {
-    fn description(&self) -> &str {
-        "CreateSharedLinkWithSettingsError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            CreateSharedLinkWithSettingsError::Path(inner) => Some(inner),
+            CreateSharedLinkWithSettingsError::SettingsError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for CreateSharedLinkWithSettingsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            CreateSharedLinkWithSettingsError::Path(inner) => write!(f, "{}", inner),
+            CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(None) => f.write_str("shared_link_already_exists"),
+            CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(Some(inner)) => write!(f, "shared_link_already_exists: {:?}", inner),
+            CreateSharedLinkWithSettingsError::SettingsError(inner) => write!(f, "There is an error with the given settings: {}", inner),
+            CreateSharedLinkWithSettingsError::AccessDenied => f.write_str("Access to the requested path is forbidden."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -3748,14 +3797,23 @@ impl ::serde::ser::Serialize for FileMemberActionError {
 }
 
 impl ::std::error::Error for FileMemberActionError {
-    fn description(&self) -> &str {
-        "FileMemberActionError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            FileMemberActionError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for FileMemberActionError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            FileMemberActionError::InvalidMember => f.write_str("Specified member was not found."),
+            FileMemberActionError::NoPermission => f.write_str("User does not have permission to perform this action on this member."),
+            FileMemberActionError::AccessError(inner) => write!(f, "Specified file was invalid or user does not have access: {}", inner),
+            FileMemberActionError::NoExplicitAccess(inner) => write!(f, "The action cannot be completed because the target member does not have explicit access to the file. The return value is the access that the member has to the file from a parent folder: {:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -5264,14 +5322,22 @@ impl ::serde::ser::Serialize for GetFileMetadataError {
 }
 
 impl ::std::error::Error for GetFileMetadataError {
-    fn description(&self) -> &str {
-        "GetFileMetadataError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            GetFileMetadataError::UserError(inner) => Some(inner),
+            GetFileMetadataError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for GetFileMetadataError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GetFileMetadataError::UserError(inner) => write!(f, "{}", inner),
+            GetFileMetadataError::AccessError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -5558,14 +5624,16 @@ impl ::serde::ser::Serialize for GetSharedLinkFileError {
 }
 
 impl ::std::error::Error for GetSharedLinkFileError {
-    fn description(&self) -> &str {
-        "GetSharedLinkFileError"
-    }
 }
 
 impl ::std::fmt::Display for GetSharedLinkFileError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GetSharedLinkFileError::SharedLinkNotFound => f.write_str("The shared link wasn't found."),
+            GetSharedLinkFileError::SharedLinkAccessDenied => f.write_str("The caller is not allowed to access this shared link."),
+            GetSharedLinkFileError::SharedLinkIsDirectory => f.write_str("Directories cannot be retrieved by this endpoint."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -5848,14 +5916,14 @@ impl ::serde::ser::Serialize for GetSharedLinksError {
 }
 
 impl ::std::error::Error for GetSharedLinksError {
-    fn description(&self) -> &str {
-        "GetSharedLinksError"
-    }
 }
 
 impl ::std::fmt::Display for GetSharedLinksError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            GetSharedLinksError::Path(inner) => write!(f, "path: {:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -6889,14 +6957,24 @@ impl ::serde::ser::Serialize for JobError {
 }
 
 impl ::std::error::Error for JobError {
-    fn description(&self) -> &str {
-        "JobError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            JobError::UnshareFolderError(inner) => Some(inner),
+            JobError::RemoveFolderMemberError(inner) => Some(inner),
+            JobError::RelinquishFolderMembershipError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for JobError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            JobError::UnshareFolderError(inner) => write!(f, "{}", inner),
+            JobError::RemoveFolderMemberError(inner) => write!(f, "{}", inner),
+            JobError::RelinquishFolderMembershipError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -8511,14 +8589,22 @@ impl ::serde::ser::Serialize for ListFileMembersContinueError {
 }
 
 impl ::std::error::Error for ListFileMembersContinueError {
-    fn description(&self) -> &str {
-        "ListFileMembersContinueError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListFileMembersContinueError::UserError(inner) => Some(inner),
+            ListFileMembersContinueError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for ListFileMembersContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListFileMembersContinueError::UserError(inner) => write!(f, "{}", inner),
+            ListFileMembersContinueError::AccessError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -8705,14 +8791,22 @@ impl ::serde::ser::Serialize for ListFileMembersError {
 }
 
 impl ::std::error::Error for ListFileMembersError {
-    fn description(&self) -> &str {
-        "ListFileMembersError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListFileMembersError::UserError(inner) => Some(inner),
+            ListFileMembersError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for ListFileMembersError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListFileMembersError::UserError(inner) => write!(f, "{}", inner),
+            ListFileMembersError::AccessError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -9066,14 +9160,20 @@ impl ::serde::ser::Serialize for ListFilesContinueError {
 }
 
 impl ::std::error::Error for ListFilesContinueError {
-    fn description(&self) -> &str {
-        "ListFilesContinueError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListFilesContinueError::UserError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for ListFilesContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListFilesContinueError::UserError(inner) => write!(f, "User account had a problem: {}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -9482,14 +9582,20 @@ impl ::serde::ser::Serialize for ListFolderMembersContinueError {
 }
 
 impl ::std::error::Error for ListFolderMembersContinueError {
-    fn description(&self) -> &str {
-        "ListFolderMembersContinueError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListFolderMembersContinueError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for ListFolderMembersContinueError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListFolderMembersContinueError::AccessError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -9856,9 +9962,6 @@ impl ::serde::ser::Serialize for ListFoldersContinueError {
 }
 
 impl ::std::error::Error for ListFoldersContinueError {
-    fn description(&self) -> &str {
-        "ListFoldersContinueError"
-    }
 }
 
 impl ::std::fmt::Display for ListFoldersContinueError {
@@ -10182,14 +10285,20 @@ impl ::serde::ser::Serialize for ListSharedLinksError {
 }
 
 impl ::std::error::Error for ListSharedLinksError {
-    fn description(&self) -> &str {
-        "ListSharedLinksError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ListSharedLinksError::Path(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for ListSharedLinksError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ListSharedLinksError::Path(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -11229,14 +11338,22 @@ impl ::serde::ser::Serialize for ModifySharedLinkSettingsError {
 }
 
 impl ::std::error::Error for ModifySharedLinkSettingsError {
-    fn description(&self) -> &str {
-        "ModifySharedLinkSettingsError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ModifySharedLinkSettingsError::SettingsError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for ModifySharedLinkSettingsError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ModifySharedLinkSettingsError::SharedLinkNotFound => f.write_str("The shared link wasn't found."),
+            ModifySharedLinkSettingsError::SharedLinkAccessDenied => f.write_str("The caller is not allowed to access this shared link."),
+            ModifySharedLinkSettingsError::SettingsError(inner) => write!(f, "There is an error with the given settings: {}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -11457,14 +11574,25 @@ impl ::serde::ser::Serialize for MountFolderError {
 }
 
 impl ::std::error::Error for MountFolderError {
-    fn description(&self) -> &str {
-        "MountFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            MountFolderError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for MountFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            MountFolderError::AccessError(inner) => write!(f, "{}", inner),
+            MountFolderError::InsideSharedFolder => f.write_str("Mounting would cause a shared folder to be inside another, which is disallowed."),
+            MountFolderError::InsufficientQuota(inner) => write!(f, "The current user does not have enough space to mount the shared folder: {:?}", inner),
+            MountFolderError::AlreadyMounted => f.write_str("The shared folder is already mounted."),
+            MountFolderError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            MountFolderError::NotMountable => f.write_str("The shared folder is not mountable. One example where this can occur is when the shared folder belongs within a team folder in the user's Dropbox."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -12221,14 +12349,22 @@ impl ::serde::ser::Serialize for RelinquishFileMembershipError {
 }
 
 impl ::std::error::Error for RelinquishFileMembershipError {
-    fn description(&self) -> &str {
-        "RelinquishFileMembershipError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RelinquishFileMembershipError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for RelinquishFileMembershipError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            RelinquishFileMembershipError::AccessError(inner) => write!(f, "{}", inner),
+            RelinquishFileMembershipError::GroupAccess => f.write_str("The current user has access to the shared file via a group.  You can't relinquish membership to a file shared via groups."),
+            RelinquishFileMembershipError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -12485,14 +12621,26 @@ impl ::serde::ser::Serialize for RelinquishFolderMembershipError {
 }
 
 impl ::std::error::Error for RelinquishFolderMembershipError {
-    fn description(&self) -> &str {
-        "RelinquishFolderMembershipError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RelinquishFolderMembershipError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for RelinquishFolderMembershipError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            RelinquishFolderMembershipError::AccessError(inner) => write!(f, "{}", inner),
+            RelinquishFolderMembershipError::FolderOwner => f.write_str("The current user is the owner of the shared folder. Owners cannot relinquish membership to their own folders. Try unsharing or transferring ownership first."),
+            RelinquishFolderMembershipError::Mounted => f.write_str("The shared folder is currently mounted.  Unmount the shared folder before relinquishing membership."),
+            RelinquishFolderMembershipError::GroupAccess => f.write_str("The current user has access to the shared folder via a group.  You can't relinquish membership to folders shared via groups."),
+            RelinquishFolderMembershipError::TeamFolder => f.write_str("This action cannot be performed on a team shared folder."),
+            RelinquishFolderMembershipError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            RelinquishFolderMembershipError::NoExplicitAccess => f.write_str("The current user only has inherited access to the shared folder.  You can't relinquish inherited membership to folders."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -12694,14 +12842,23 @@ impl ::serde::ser::Serialize for RemoveFileMemberError {
 }
 
 impl ::std::error::Error for RemoveFileMemberError {
-    fn description(&self) -> &str {
-        "RemoveFileMemberError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RemoveFileMemberError::UserError(inner) => Some(inner),
+            RemoveFileMemberError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for RemoveFileMemberError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            RemoveFileMemberError::UserError(inner) => write!(f, "{}", inner),
+            RemoveFileMemberError::AccessError(inner) => write!(f, "{}", inner),
+            RemoveFileMemberError::NoExplicitAccess(inner) => write!(f, "This member does not have explicit access to the file and therefore cannot be removed. The return value is the access that a user might have to the file from a parent folder: {:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -12973,14 +13130,27 @@ impl ::serde::ser::Serialize for RemoveFolderMemberError {
 }
 
 impl ::std::error::Error for RemoveFolderMemberError {
-    fn description(&self) -> &str {
-        "RemoveFolderMemberError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            RemoveFolderMemberError::AccessError(inner) => Some(inner),
+            RemoveFolderMemberError::MemberError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for RemoveFolderMemberError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            RemoveFolderMemberError::AccessError(inner) => write!(f, "{}", inner),
+            RemoveFolderMemberError::MemberError(inner) => write!(f, "{}", inner),
+            RemoveFolderMemberError::FolderOwner => f.write_str("The target user is the owner of the shared folder. You can't remove this user until ownership has been transferred to another member."),
+            RemoveFolderMemberError::GroupAccess => f.write_str("The target user has access to the shared folder via a group."),
+            RemoveFolderMemberError::TeamFolder => f.write_str("This action cannot be performed on a team shared folder."),
+            RemoveFolderMemberError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            RemoveFolderMemberError::TooManyFiles => f.write_str("This shared folder has too many files for leaving a copy. You can still remove this user without leaving a copy."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -13533,14 +13703,16 @@ impl ::serde::ser::Serialize for RevokeSharedLinkError {
 }
 
 impl ::std::error::Error for RevokeSharedLinkError {
-    fn description(&self) -> &str {
-        "RevokeSharedLinkError"
-    }
 }
 
 impl ::std::fmt::Display for RevokeSharedLinkError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            RevokeSharedLinkError::SharedLinkNotFound => f.write_str("The shared link wasn't found."),
+            RevokeSharedLinkError::SharedLinkAccessDenied => f.write_str("The caller is not allowed to access this shared link."),
+            RevokeSharedLinkError::SharedLinkMalformed => f.write_str("Shared link is malformed."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -13729,14 +13901,21 @@ impl ::serde::ser::Serialize for SetAccessInheritanceError {
 }
 
 impl ::std::error::Error for SetAccessInheritanceError {
-    fn description(&self) -> &str {
-        "SetAccessInheritanceError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            SetAccessInheritanceError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for SetAccessInheritanceError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            SetAccessInheritanceError::AccessError(inner) => write!(f, "Unable to access shared folder: {}", inner),
+            SetAccessInheritanceError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -14297,14 +14476,21 @@ impl ::serde::ser::Serialize for ShareFolderError {
 }
 
 impl ::std::error::Error for ShareFolderError {
-    fn description(&self) -> &str {
-        "ShareFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            ShareFolderError::BadPath(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for ShareFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            ShareFolderError::BadPath(inner) => write!(f, "{}", inner),
+            ShareFolderError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -14795,14 +14981,28 @@ impl ::serde::ser::Serialize for SharePathError {
 }
 
 impl ::std::error::Error for SharePathError {
-    fn description(&self) -> &str {
-        "SharePathError"
-    }
 }
 
 impl ::std::fmt::Display for SharePathError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            SharePathError::IsFile => f.write_str("A file is at the specified path."),
+            SharePathError::InsideSharedFolder => f.write_str("We do not support sharing a folder inside a shared folder."),
+            SharePathError::ContainsSharedFolder => f.write_str("We do not support shared folders that contain shared folders."),
+            SharePathError::ContainsAppFolder => f.write_str("We do not support shared folders that contain app folders."),
+            SharePathError::ContainsTeamFolder => f.write_str("We do not support shared folders that contain team folders."),
+            SharePathError::IsAppFolder => f.write_str("We do not support sharing an app folder."),
+            SharePathError::InsideAppFolder => f.write_str("We do not support sharing a folder inside an app folder."),
+            SharePathError::IsPublicFolder => f.write_str("A public folder can't be shared this way. Use a public link instead."),
+            SharePathError::InsidePublicFolder => f.write_str("A folder inside a public folder can't be shared this way. Use a public link instead."),
+            SharePathError::AlreadyShared(inner) => write!(f, "Folder is already shared. Contains metadata about the existing shared folder: {:?}", inner),
+            SharePathError::InvalidPath => f.write_str("Path is not valid."),
+            SharePathError::IsOsxPackage => f.write_str("We do not support sharing a Mac OS X package."),
+            SharePathError::InsideOsxPackage => f.write_str("We do not support sharing a folder inside a Mac OS X package."),
+            SharePathError::IsVault => f.write_str("We do not support sharing the Vault folder."),
+            SharePathError::IsFamily => f.write_str("We do not support sharing the Family folder."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -15804,14 +16004,17 @@ impl ::serde::ser::Serialize for SharedFolderAccessError {
 }
 
 impl ::std::error::Error for SharedFolderAccessError {
-    fn description(&self) -> &str {
-        "SharedFolderAccessError"
-    }
 }
 
 impl ::std::fmt::Display for SharedFolderAccessError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            SharedFolderAccessError::InvalidId => f.write_str("This shared folder ID is invalid."),
+            SharedFolderAccessError::NotAMember => f.write_str("The user is not a member of the shared folder thus cannot access it."),
+            SharedFolderAccessError::EmailUnverified => f.write_str("Never set."),
+            SharedFolderAccessError::Unmounted => f.write_str("The shared folder is unmounted."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -15899,14 +16102,16 @@ impl ::serde::ser::Serialize for SharedFolderMemberError {
 }
 
 impl ::std::error::Error for SharedFolderMemberError {
-    fn description(&self) -> &str {
-        "SharedFolderMemberError"
-    }
 }
 
 impl ::std::fmt::Display for SharedFolderMemberError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            SharedFolderMemberError::InvalidDropboxId => f.write_str("The target dropbox_id is invalid."),
+            SharedFolderMemberError::NotAMember => f.write_str("The target dropbox_id is not a member of the shared folder."),
+            SharedFolderMemberError::NoExplicitAccess(inner) => write!(f, "The target member only has inherited access to the shared folder: {:?}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -16869,14 +17074,15 @@ impl ::serde::ser::Serialize for SharedLinkError {
 }
 
 impl ::std::error::Error for SharedLinkError {
-    fn description(&self) -> &str {
-        "SharedLinkError"
-    }
 }
 
 impl ::std::fmt::Display for SharedLinkError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            SharedLinkError::SharedLinkNotFound => f.write_str("The shared link wasn't found."),
+            SharedLinkError::SharedLinkAccessDenied => f.write_str("The caller is not allowed to access this shared link."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -17283,9 +17489,6 @@ impl ::serde::ser::Serialize for SharedLinkSettingsError {
 }
 
 impl ::std::error::Error for SharedLinkSettingsError {
-    fn description(&self) -> &str {
-        "SharedLinkSettingsError"
-    }
 }
 
 impl ::std::fmt::Display for SharedLinkSettingsError {
@@ -17407,14 +17610,18 @@ impl ::serde::ser::Serialize for SharingFileAccessError {
 }
 
 impl ::std::error::Error for SharingFileAccessError {
-    fn description(&self) -> &str {
-        "SharingFileAccessError"
-    }
 }
 
 impl ::std::fmt::Display for SharingFileAccessError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            SharingFileAccessError::NoPermission => f.write_str("Current user does not have sufficient privileges to perform the desired action."),
+            SharingFileAccessError::InvalidFile => f.write_str("File specified was not found."),
+            SharingFileAccessError::IsFolder => f.write_str("A folder can't be shared this way. Use folder sharing or a shared link instead."),
+            SharingFileAccessError::InsidePublicFolder => f.write_str("A file inside a public folder can't be shared this way. Use a public link instead."),
+            SharingFileAccessError::InsideOsxPackage => f.write_str("A Mac OS X package can't be shared this way. Use a shared link instead."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -17481,9 +17688,6 @@ impl ::serde::ser::Serialize for SharingUserError {
 }
 
 impl ::std::error::Error for SharingUserError {
-    fn description(&self) -> &str {
-        "SharingUserError"
-    }
 }
 
 impl ::std::fmt::Display for SharingUserError {
@@ -17861,14 +18065,24 @@ impl ::serde::ser::Serialize for TransferFolderError {
 }
 
 impl ::std::error::Error for TransferFolderError {
-    fn description(&self) -> &str {
-        "TransferFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            TransferFolderError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for TransferFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            TransferFolderError::AccessError(inner) => write!(f, "{}", inner),
+            TransferFolderError::NewOwnerNotAMember => f.write_str("The new designated owner is not currently a member of the shared folder."),
+            TransferFolderError::NewOwnerUnmounted => f.write_str("The new designated owner has not added the folder to their Dropbox."),
+            TransferFolderError::TeamFolder => f.write_str("This action cannot be performed on a team shared folder."),
+            TransferFolderError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -18052,14 +18266,22 @@ impl ::serde::ser::Serialize for UnmountFolderError {
 }
 
 impl ::std::error::Error for UnmountFolderError {
-    fn description(&self) -> &str {
-        "UnmountFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UnmountFolderError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for UnmountFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UnmountFolderError::AccessError(inner) => write!(f, "{}", inner),
+            UnmountFolderError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            UnmountFolderError::NotUnmountable => f.write_str("The shared folder can't be unmounted. One example where this can occur is when the shared folder's parent folder is also a shared folder that resides in the current user's Dropbox."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -18234,14 +18456,22 @@ impl ::serde::ser::Serialize for UnshareFileError {
 }
 
 impl ::std::error::Error for UnshareFileError {
-    fn description(&self) -> &str {
-        "UnshareFileError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UnshareFileError::UserError(inner) => Some(inner),
+            UnshareFileError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for UnshareFileError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UnshareFileError::UserError(inner) => write!(f, "{}", inner),
+            UnshareFileError::AccessError(inner) => write!(f, "{}", inner),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -18457,14 +18687,23 @@ impl ::serde::ser::Serialize for UnshareFolderError {
 }
 
 impl ::std::error::Error for UnshareFolderError {
-    fn description(&self) -> &str {
-        "UnshareFolderError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UnshareFolderError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for UnshareFolderError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UnshareFolderError::AccessError(inner) => write!(f, "{}", inner),
+            UnshareFolderError::TeamFolder => f.write_str("This action cannot be performed on a team shared folder."),
+            UnshareFolderError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            UnshareFolderError::TooManyFiles => f.write_str("This shared folder has too many files to be unshared."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -18831,14 +19070,26 @@ impl ::serde::ser::Serialize for UpdateFolderMemberError {
 }
 
 impl ::std::error::Error for UpdateFolderMemberError {
-    fn description(&self) -> &str {
-        "UpdateFolderMemberError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UpdateFolderMemberError::AccessError(inner) => Some(inner),
+            UpdateFolderMemberError::MemberError(inner) => Some(inner),
+            UpdateFolderMemberError::NoExplicitAccess(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for UpdateFolderMemberError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UpdateFolderMemberError::AccessError(inner) => write!(f, "{}", inner),
+            UpdateFolderMemberError::MemberError(inner) => write!(f, "{}", inner),
+            UpdateFolderMemberError::NoExplicitAccess(inner) => write!(f, "If updating the access type required the member to be added to the shared folder and there was an error when adding the member: {}", inner),
+            UpdateFolderMemberError::InsufficientPlan => f.write_str("The current user's account doesn't support this action. An example of this is when downgrading a member from editor to viewer. This action can only be performed by users that have upgraded to a Pro or Business plan."),
+            UpdateFolderMemberError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
@@ -19175,14 +19426,22 @@ impl ::serde::ser::Serialize for UpdateFolderPolicyError {
 }
 
 impl ::std::error::Error for UpdateFolderPolicyError {
-    fn description(&self) -> &str {
-        "UpdateFolderPolicyError"
+    fn source(&self) -> Option<&(dyn ::std::error::Error + 'static)> {
+        match self {
+            UpdateFolderPolicyError::AccessError(inner) => Some(inner),
+            _ => None,
+        }
     }
 }
 
 impl ::std::fmt::Display for UpdateFolderPolicyError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            UpdateFolderPolicyError::AccessError(inner) => write!(f, "{}", inner),
+            UpdateFolderPolicyError::NoPermission => f.write_str("The current user does not have permission to perform this action."),
+            UpdateFolderPolicyError::TeamFolder => f.write_str("This action cannot be performed on a team shared folder."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 

@@ -370,14 +370,15 @@ impl ::serde::ser::Serialize for PollError {
 }
 
 impl ::std::error::Error for PollError {
-    fn description(&self) -> &str {
-        "PollError"
-    }
 }
 
 impl ::std::fmt::Display for PollError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-        write!(f, "{:?}", *self)
+        match self {
+            PollError::InvalidAsyncJobId => f.write_str("The job ID is invalid."),
+            PollError::InternalError => f.write_str("Something went wrong with the job on Dropbox's end. You'll need to verify that the action you were taking succeeded, and if not, try again. This should happen very rarely."),
+            _ => write!(f, "{:?}", *self),
+        }
     }
 }
 
