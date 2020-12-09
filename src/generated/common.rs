@@ -121,7 +121,7 @@ impl ::serde::ser::Serialize for PathRoot {
 #[non_exhaustive] // variants may be added in the future
 pub enum PathRootError {
     /// The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error
-    /// is use's latest root info.
+    /// is the user's latest root info.
     InvalidRoot(RootInfo),
     /// You don't have permission to access the namespace id in Dropbox-API-Path-Root  header.
     NoPermission,
@@ -200,7 +200,7 @@ impl ::std::error::Error for PathRootError {
 impl ::std::fmt::Display for PathRootError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            PathRootError::InvalidRoot(inner) => write!(f, "The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error is use's latest root info: {:?}", inner),
+            PathRootError::InvalidRoot(inner) => write!(f, "The root namespace id in Dropbox-API-Path-Root header is not valid. The value of this error is the user's latest root info: {:?}", inner),
             PathRootError::NoPermission => f.write_str("You don't have permission to access the namespace id in Dropbox-API-Path-Root  header."),
             _ => write!(f, "{:?}", *self),
         }

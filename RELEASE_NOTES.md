@@ -9,6 +9,9 @@ xxxx-yy-zz
   * Routes with no error type defined now return a new `NoError` type instead of `()`. This new type
     implements `Error`, so now all routes' error types are guaranteed to be `Error`, and hence,
     `Display` as well. (You should never actually see instances of this type.)
+* API spec updates
+  * 2020-12-03
+  * 2020-11-12
 
 # v0.9.0
 2020-11-30
