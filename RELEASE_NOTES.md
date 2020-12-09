@@ -1,14 +1,15 @@
-# v0.9.1
-xxxx-yy-zz
+# v0.10.0
+2020-12-11
 * Several improvements to error types:
+  * Routes with no error type defined now return a new `NoError` type instead of `()`. This new
+    type implements `Error`, so now all routes' error types are guaranteed to be `Error`, and
+    hence, `Display` as well. This type is uninhabited, meaning you can never actually see
+    instances of this type, it exists for type-checking purposes only.
   * Removed the deprecated `description` function from `Error` impl for error types.
-  * Added a `cause()` method to the Error impl for error types if they have any variants which
+  * Added a `cause()` method to the `Error` impl for error types if they have any variants which
     contain error values.
-  * Improved the `Display` impl for Error types by using the documentation strings provided,
+  * Improved the `Display` impl for `Error` types by using the documentation strings provided,
     including recursing into nested errors or values if present.
-  * Routes with no error type defined now return a new `NoError` type instead of `()`. This new type
-    implements `Error`, so now all routes' error types are guaranteed to be `Error`, and hence,
-    `Display` as well. (You should never actually see instances of this type.)
 * API spec updates
   * 2020-12-03
   * 2020-11-12
