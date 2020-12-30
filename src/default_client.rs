@@ -152,46 +152,46 @@ impl UreqClient {
         let url = endpoint.url().to_owned() + function;
         debug!("request for {:?}", url);
 
-        let mut req = ureq::post(&url);
-        req.set("User-Agent", USER_AGENT);
+        let mut req = ureq::post(&url)
+            .set("User-Agent", USER_AGENT);
 
         if let Some(token) = token {
-            req.set("Authorization", &format!("Bearer {}", token));
+            req = req.set("Authorization", &format!("Bearer {}", token));
         }
 
         if let Some(path_root) = path_root {
-            req.set("Dropbox-API-Path-Root", path_root);
+            req = req.set("Dropbox-API-Path-Root", path_root);
         }
 
         if let Some(team_select) = team_select {
-            match team_select {
-                TeamSelect::User(id) => { req.set("Dropbox-API-Select-User", id); }
-                TeamSelect::Admin(id) => { req.set("Dropbox-API-Select-Admin", id); }
-            }
+            req = match team_select {
+                TeamSelect::User(id) => req.set("Dropbox-API-Select-User", id),
+                TeamSelect::Admin(id) => req.set("Dropbox-API-Select-Admin", id),
+            };
         }
 
-        match (range_start, range_end) {
-            (Some(start), Some(end)) => { req.set("Range", &format!("bytes={}-{}", start, end)); }
-            (Some(start), None) => { req.set("Range", &format!("bytes={}-", start)); }
-            (None, Some(end)) => { req.set("Range", &format!("bytes=-{}", end)); }
-            (None, None) => (),
-        }
+        req = match (range_start, range_end) {
+            (Some(start), Some(end)) => req.set("Range", &format!("bytes={}-{}", start, end)),
+            (Some(start), None) => req.set("Range", &format!("bytes={}-", start)),
+            (None, Some(end)) => req.set("Range", &format!("bytes=-{}", end)),
+            (None, None) => req,
+        };
 
         // If the params are totally empty, don't send any arg header or body.
-        let resp = if params.is_empty() {
+        let result = if params.is_empty() {
             req.call()
         } else {
             match style {
                 Style::Rpc => {
                     // Send params in the body.
-                    req.set("Content-Type", params_type.content_type());
+                    req = req.set("Content-Type", params_type.content_type());
                     req.send_string(&params)
                 }
                 Style::Upload | Style::Download => {
                     // Send params in a header.
-                    req.set("Dropbox-API-Arg", &params);
+                    req = req.set("Dropbox-API-Arg", &params);
                     if style == Style::Upload {
-                        req.set("Content-Type", "application/octet-stream");
+                        req = req.set("Content-Type", "application/octet-stream");
                         if let Some(body) = body {
                             req.send_bytes(body)
                         } else {
@@ -205,21 +205,22 @@ impl UreqClient {
             }
         };
 
-        if let Some(ref err) = resp.synthetic_error() {
-            error!("request failed: {}", err);
-            return Err(RequestError { inner: resp }.into());
-        }
-
-        if !resp.ok() {
-            let code = resp.status();
-            let status = resp.status_text().to_owned();
-            let json = resp.into_string()?;
-            return Err(Error::UnexpectedHttpError {
-                code,
-                status,
-                json,
-            });
-        }
+        let resp = match result {
+            Ok(resp) => resp,
+            Err(e @ ureq::Error::Transport(_)) => {
+                error!("request failed: {}", e);
+                return Err(RequestError { inner: e }.into());
+            }
+            Err(ureq::Error::Status(code, resp)) => {
+                let status = resp.status_text().to_owned();
+                let json = resp.into_string()?;
+                return Err(Error::UnexpectedHttpError {
+                    code,
+                    status,
+                    json,
+                });
+            }
+        };
 
         match style {
             Style::Rpc | Style::Upload => {
@@ -289,27 +290,23 @@ wrap_error!(RequestError);
 /// Note that this type is intentionally vague about the details beyond these string
 /// representations, to allow implementation changes in the future.
 pub struct RequestError {
-    // ureq returns errors via "synthetic" responses, which contain an error inside them. However,
-    // ureq::Error isn't Clone, so we can't copy it out to return it. So instead, we wrap up the
-    // entire synthetic response, and forward relevant trait impls to the error inside it.
-    // When https://github.com/algesten/ureq/issues/126 is fixed we can remove these shenanigans.
-    inner: ureq::Response,
+    inner: ureq::Error,
 }
 
 impl std::fmt::Display for RequestError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        <ureq::Error as std::fmt::Display>::fmt(self.inner.synthetic_error().as_ref().unwrap(), f)
+        <ureq::Error as std::fmt::Display>::fmt(&self.inner, f)
     }
 }
 
 impl std::fmt::Debug for RequestError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        <ureq::Error as std::fmt::Debug>::fmt(self.inner.synthetic_error().as_ref().unwrap(), f)
+        <ureq::Error as std::fmt::Debug>::fmt(&self.inner, f)
     }
 }
 
 impl std::error::Error for RequestError {
     fn cause(&self) -> Option<&dyn std::error::Error> {
-        Some(self.inner.synthetic_error().as_ref().unwrap())
+        Some(&self.inner)
     }
 }

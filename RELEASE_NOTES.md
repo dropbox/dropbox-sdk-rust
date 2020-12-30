@@ -4,6 +4,8 @@ xxxx-yy-zz
   method which adds the `Dropbox-API-Path-Root` header, which sets what namespace paths are
   evaluated relative to. This requires that the `dbx_common` feature is enabled, as it uses the
   `PathRoot` type defined in that namespace.
+* Updated to `ureq` 2.0.0. The only changes relevant to users of this crate is that it now uses
+  `rustls` instead of system-native TLS, and that transport errors raised may be of higher quality.
 
 # v0.10.0
 2020-12-11
