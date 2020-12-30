@@ -17,7 +17,7 @@ use crate::client_trait::*;
 const USER_AGENT: &str = concat!("Dropbox-APIv2-Rust/", env!("CARGO_PKG_VERSION"));
 
 macro_rules! forward_request {
-    ($self:ident, $inner:expr, $token:expr, $team_select:expr) => {
+    ($self:ident, $inner:expr, $token:expr, $path_root:expr, $team_select:expr) => {
         fn request(
             &$self,
             endpoint: Endpoint,
@@ -30,7 +30,25 @@ macro_rules! forward_request {
             range_end: Option<u64>,
         ) -> crate::Result<HttpRequestResultRaw> {
             $inner.request(endpoint, style, function, params, params_type, body, range_start,
-                range_end, $token, $team_select)
+                range_end, $token, $path_root, $team_select)
+        }
+    }
+}
+
+macro_rules! impl_set_path_root {
+    ($self:ident) => {
+        /// Set a root which all subsequent paths are evaluated relative to.
+        ///
+        /// The default, if this function is not called, is to behave as if it was called with
+        /// [`PathRoot::Home`](crate::common::PathRoot::Home).
+        ///
+        /// See <https://www.dropbox.com/developers/reference/path-root-header-modes> for more
+        /// information.
+        #[cfg(feature = "dbx_common")]
+        pub fn set_path_root(&mut $self, path_root: &crate::common::PathRoot) {
+            // Only way this can fail is if PathRoot::Other was specified, which is a programmer
+            // error, so panic if that happens.
+            $self.path_root = Some(serde_json::to_string(path_root).expect("invalid path root"));
         }
     }
 }
@@ -39,6 +57,7 @@ macro_rules! forward_request {
 pub struct UserAuthDefaultClient {
     inner: UreqClient,
     token: String,
+    path_root: Option<String>, // a serialized PathRoot enum
 }
 
 impl UserAuthDefaultClient {
@@ -47,12 +66,15 @@ impl UserAuthDefaultClient {
         Self {
             inner: UreqClient::default(),
             token,
+            path_root: None,
         }
     }
+
+    impl_set_path_root!(self);
 }
 
 impl HttpClient for UserAuthDefaultClient {
-    forward_request! { self, self.inner, Some(&self.token), None }
+    forward_request! { self, self.inner, Some(&self.token), self.path_root.as_deref(), None }
 }
 
 impl UserAuthClient for UserAuthDefaultClient {}
@@ -61,6 +83,7 @@ impl UserAuthClient for UserAuthDefaultClient {}
 pub struct TeamAuthDefaultClient {
     inner: UreqClient,
     token: String,
+    path_root: Option<String>, // a serialized PathRoot enum
     team_select: Option<TeamSelect>,
 }
 
@@ -70,6 +93,7 @@ impl TeamAuthDefaultClient {
         Self {
             inner: UreqClient::default(),
             token,
+            path_root: None,
             team_select: None,
         }
     }
@@ -78,10 +102,12 @@ impl TeamAuthDefaultClient {
     pub fn select(&mut self, team_select: Option<TeamSelect>) {
         self.team_select = team_select;
     }
+
+    impl_set_path_root!(self);
 }
 
 impl HttpClient for TeamAuthDefaultClient {
-    forward_request! { self, self.inner, Some(&self.token), self.team_select.as_ref() }
+    forward_request! { self, self.inner, Some(&self.token), self.path_root.as_deref(), self.team_select.as_ref() }
 }
 
 impl TeamAuthClient for TeamAuthDefaultClient {}
@@ -90,10 +116,15 @@ impl TeamAuthClient for TeamAuthDefaultClient {}
 #[derive(Debug, Default)]
 pub struct NoauthDefaultClient {
     inner: UreqClient,
+    path_root: Option<String>,
+}
+
+impl NoauthDefaultClient {
+    impl_set_path_root!(self);
 }
 
 impl HttpClient for NoauthDefaultClient {
-    forward_request! { self, self.inner, None, None }
+    forward_request! { self, self.inner, None, self.path_root.as_deref(), None }
 }
 
 impl NoauthClient for NoauthDefaultClient {}
@@ -114,6 +145,7 @@ impl UreqClient {
         range_start: Option<u64>,
         range_end: Option<u64>,
         token: Option<&str>,
+        path_root: Option<&str>,
         team_select: Option<&TeamSelect>,
     ) -> crate::Result<HttpRequestResultRaw> {
 
@@ -125,6 +157,10 @@ impl UreqClient {
 
         if let Some(token) = token {
             req.set("Authorization", &format!("Bearer {}", token));
+        }
+
+        if let Some(path_root) = path_root {
+            req.set("Dropbox-API-Path-Root", path_root);
         }
 
         if let Some(team_select) = team_select {
