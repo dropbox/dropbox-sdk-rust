@@ -44,13 +44,13 @@ located at `dropbox_sdk::client_trait::HttpClient`. Implement this trait and
 pass it as the client argument.
 
 If you don't want to implement your own, this SDK comes with an optional
-default client that uses `ureq` and your system's native TLS library.  To use
-it, build with the `default_client` feature flag, and then there will be a
-set of clents in the `dropbox_sdk::default_client` module that you can use,
-corresponding to each of the authentication types Dropbox uses (see below). The
-default client needs a Dropbox API token; how you get one is up to you and your
-program. See the programs under [examples/](examples/) for examples, and see
-the helper code in the [oauth2](src/oauth2.rs) module.
+default client that uses `ureq` and `rustls`.  To use it, build with the
+`default_client` feature flag, and then there will be a set of clents in the
+`dropbox_sdk::default_client` module that you can use, corresponding to each of
+the authentication types Dropbox uses (see below). The default client needs a
+Dropbox API token; how you get one is up to you and your program. See the
+programs under [examples/](examples/) for examples, and see the helper code in
+the [oauth2](src/oauth2.rs) module.
 
 ## Authentication Types
 
