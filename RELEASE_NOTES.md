@@ -1,3 +1,10 @@
+# v0.10.1
+xxxx-yy-zz
+* Implemented path root selection for default_client. Clients now have a `.set_path_root()` 
+  method which adds the `Dropbox-API-Path-Root` header, which sets what namespace paths are
+  evaluated relative to. This requires that the `dbx_common` feature is enabled, as it uses the
+  `PathRoot` type defined in that namespace.
+
 # v0.10.0
 2020-12-11
 * Several improvements to error types:
