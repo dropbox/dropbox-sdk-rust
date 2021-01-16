@@ -15823,7 +15823,6 @@ impl ::serde::ser::Serialize for SearchResult {
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct SearchV2Arg {
     /// The string to search for. May match across multiple fields based on the request arguments.
-    /// Query string may be rewritten to improve relevance of results.
     pub query: String,
     /// Options for more targeted search results.
     pub options: Option<SearchOptions>,

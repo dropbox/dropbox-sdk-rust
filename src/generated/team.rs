@@ -12078,6 +12078,8 @@ pub enum LegalHoldsPolicyUpdateError {
     UnknownLegalHoldError,
     /// You don't have permissions to perform this action.
     InsufficientPermissions,
+    /// Temporary infrastructure failure, please retry.
+    TransientError,
     /// Trying to release an inactive legal hold.
     InactiveLegalHold,
     /// Legal hold is currently performing another operation.
@@ -12122,6 +12124,10 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyUpdateError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsPolicyUpdateError::InsufficientPermissions)
                     }
+                    "transient_error" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(LegalHoldsPolicyUpdateError::TransientError)
+                    }
                     "inactive_legal_hold" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(LegalHoldsPolicyUpdateError::InactiveLegalHold)
@@ -12160,6 +12166,7 @@ impl<'de> ::serde::de::Deserialize<'de> for LegalHoldsPolicyUpdateError {
         const VARIANTS: &[&str] = &["unknown_legal_hold_error",
                                     "insufficient_permissions",
                                     "other",
+                                    "transient_error",
                                     "inactive_legal_hold",
                                     "legal_hold_performing_another_operation",
                                     "invalid_members",
@@ -12186,6 +12193,12 @@ impl ::serde::ser::Serialize for LegalHoldsPolicyUpdateError {
                 // unit
                 let mut s = serializer.serialize_struct("LegalHoldsPolicyUpdateError", 1)?;
                 s.serialize_field(".tag", "insufficient_permissions")?;
+                s.end()
+            }
+            LegalHoldsPolicyUpdateError::TransientError => {
+                // unit
+                let mut s = serializer.serialize_struct("LegalHoldsPolicyUpdateError", 1)?;
+                s.serialize_field(".tag", "transient_error")?;
                 s.end()
             }
             LegalHoldsPolicyUpdateError::InactiveLegalHold => {
@@ -12243,6 +12256,7 @@ impl ::std::fmt::Display for LegalHoldsPolicyUpdateError {
         match self {
             LegalHoldsPolicyUpdateError::UnknownLegalHoldError => f.write_str("There has been an unknown legal hold error."),
             LegalHoldsPolicyUpdateError::InsufficientPermissions => f.write_str("You don't have permissions to perform this action."),
+            LegalHoldsPolicyUpdateError::TransientError => f.write_str("Temporary infrastructure failure, please retry."),
             LegalHoldsPolicyUpdateError::InactiveLegalHold => f.write_str("Trying to release an inactive legal hold."),
             LegalHoldsPolicyUpdateError::LegalHoldPerformingAnotherOperation => f.write_str("Legal hold is currently performing another operation."),
             LegalHoldsPolicyUpdateError::InvalidMembers => f.write_str("Some members in the members list are not valid to be placed under legal hold."),

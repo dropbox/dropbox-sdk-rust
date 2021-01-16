@@ -6,6 +6,7 @@ xxxx-yy-zz
   `PathRoot` type defined in that namespace.
 * Updated to `ureq` 2.0.0. The only changes relevant to users of this crate is that it now uses
   `rustls` instead of system-native TLS, and that transport errors raised may be of higher quality.
+* API spec update 2021-01-14
 
 # v0.10.0
 2020-12-11
