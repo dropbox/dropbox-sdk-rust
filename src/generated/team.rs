@@ -943,7 +943,7 @@ pub fn properties_template_add(
         None)
 }
 
-/// Permission : Team member file access.
+/// Permission : Team member file access. The scope for the route is files.team_metadata.write.
 pub fn properties_template_get(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &super::file_properties::GetTemplateArg,
@@ -957,7 +957,7 @@ pub fn properties_template_get(
         None)
 }
 
-/// Permission : Team member file access.
+/// Permission : Team member file access. The scope for the route is files.team_metadata.write.
 pub fn properties_template_list(
     client: &impl crate::client_trait::TeamAuthClient,
 ) -> crate::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
