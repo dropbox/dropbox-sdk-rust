@@ -1,5 +1,5 @@
 # v0.10.1
-xxxx-yy-zz
+2021-02-16
 * Implemented path root selection for default_client. Clients now have a `.set_path_root()` 
   method which adds the `Dropbox-API-Path-Root` header, which sets what namespace paths are
   evaluated relative to. This requires that the `dbx_common` feature is enabled, as it uses the
@@ -7,6 +7,7 @@ xxxx-yy-zz
 * Updated to `ureq` 2.0.0. The only changes relevant to users of this crate is that it now uses
   `rustls` instead of system-native TLS, and that transport errors raised may be of higher quality.
 * API spec update 2021-01-14
+* API spec update 2021-01-22
 
 # v0.10.0
 2020-12-11
