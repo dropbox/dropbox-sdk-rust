@@ -486,8 +486,8 @@ pub fn get_temporary_upload_link(
 }
 
 /// Get a thumbnail for an image. This method currently supports files with the following file
-/// extensions: jpg, jpeg, png, tiff, tif, gif and bmp. Photos that are larger than 20MB in size
-/// won't be converted to a thumbnail.
+/// extensions: jpg, jpeg, png, tiff, tif, gif, webp, ppm and bmp. Photos that are larger than 20MB
+/// in size won't be converted to a thumbnail.
 pub fn get_thumbnail(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ThumbnailArg,
@@ -505,7 +505,9 @@ pub fn get_thumbnail(
         range_end)
 }
 
-/// Get a thumbnail for a file.
+/// Get a thumbnail for an image. This method currently supports files with the following file
+/// extensions: jpg, jpeg, png, tiff, tif, gif, webp, ppm and bmp. Photos that are larger than 20MB
+/// in size won't be converted to a thumbnail.
 pub fn get_thumbnail_v2(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ThumbnailV2Arg,
@@ -523,7 +525,9 @@ pub fn get_thumbnail_v2(
         range_end)
 }
 
-/// Get a thumbnail for a file.
+/// Get a thumbnail for an image. This method currently supports files with the following file
+/// extensions: jpg, jpeg, png, tiff, tif, gif, webp, ppm and bmp. Photos that are larger than 20MB
+/// in size won't be converted to a thumbnail.
 pub fn get_thumbnail_v2_app_auth(
     client: &impl crate::client_trait::AppAuthClient,
     arg: &ThumbnailV2Arg,
@@ -542,8 +546,8 @@ pub fn get_thumbnail_v2_app_auth(
 }
 
 /// Get thumbnails for a list of images. We allow up to 25 thumbnails in a single batch. This method
-/// currently supports files with the following file extensions: jpg, jpeg, png, tiff, tif, gif and
-/// bmp. Photos that are larger than 20MB in size won't be converted to a thumbnail.
+/// currently supports files with the following file extensions: jpg, jpeg, png, tiff, tif, gif,
+/// webp, ppm and bmp. Photos that are larger than 20MB in size won't be converted to a thumbnail.
 pub fn get_thumbnail_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetThumbnailBatchArg,
@@ -1111,10 +1115,10 @@ pub fn upload_session_finish_batch_check(
 /// data. You can then use [`upload_session_append_v2()`](upload_session_append_v2) to add more data
 /// and [`upload_session_finish()`](upload_session_finish) to save all the data to a file in
 /// Dropbox. A single request should not upload more than 150 MB. The maximum size of a file one can
-/// upload to an upload session is 350 GB. An upload session can be used for a maximum of 48 hours.
+/// upload to an upload session is 350 GB. An upload session can be used for a maximum of 7 days.
 /// Attempting to use an [`UploadSessionStartResult::session_id`](UploadSessionStartResult) with
 /// [`upload_session_append_v2()`](upload_session_append_v2) or
-/// [`upload_session_finish()`](upload_session_finish) more than 48 hours after its creation will
+/// [`upload_session_finish()`](upload_session_finish) more than 7 days after its creation will
 /// return a [`UploadSessionLookupError::NotFound`](UploadSessionLookupError::NotFound). Calls to
 /// this endpoint will count as data transport calls for any Dropbox Business teams with a limit on
 /// the number of data transport calls allowed per month. For more information, see the [Data
@@ -4650,17 +4654,28 @@ impl ::serde::ser::Serialize for DownloadZipResult {
 pub struct ExportArg {
     /// The path of the file to be exported.
     pub path: ReadPath,
+    /// The file format to which the file should be exported. This must be one of the formats listed
+    /// in the file's export_options returned by [`get_metadata()`](get_metadata). If none is
+    /// specified, the default format (specified in export_as in file metadata) will be used.
+    pub export_format: Option<String>,
 }
 
 impl ExportArg {
     pub fn new(path: ReadPath) -> Self {
         ExportArg {
             path,
+            export_format: None,
         }
+    }
+
+    pub fn with_export_format(mut self, value: String) -> Self {
+        self.export_format = Some(value);
+        self
     }
 }
 
-const EXPORT_ARG_FIELDS: &[&str] = &["path"];
+const EXPORT_ARG_FIELDS: &[&str] = &["path",
+                                     "export_format"];
 impl ExportArg {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -4673,6 +4688,7 @@ impl ExportArg {
         optional: bool,
     ) -> Result<Option<ExportArg>, V::Error> {
         let mut field_path = None;
+        let mut field_export_format = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -4682,6 +4698,12 @@ impl ExportArg {
                         return Err(::serde::de::Error::duplicate_field("path"));
                     }
                     field_path = Some(map.next_value()?);
+                }
+                "export_format" => {
+                    if field_export_format.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("export_format"));
+                    }
+                    field_export_format = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -4694,6 +4716,7 @@ impl ExportArg {
         }
         let result = ExportArg {
             path: field_path.ok_or_else(|| ::serde::de::Error::missing_field("path"))?,
+            export_format: field_export_format,
         };
         Ok(Some(result))
     }
@@ -4703,7 +4726,8 @@ impl ExportArg {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("path", &self.path)
+        s.serialize_field("path", &self.path)?;
+        s.serialize_field("export_format", &self.export_format)
     }
 }
 
@@ -4729,7 +4753,7 @@ impl ::serde::ser::Serialize for ExportArg {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ExportArg", 1)?;
+        let mut s = serializer.serialize_struct("ExportArg", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -4741,6 +4765,8 @@ pub enum ExportError {
     Path(LookupError),
     /// This file type cannot be exported. Use [`download()`](download) instead.
     NonExportable,
+    /// The specified export format is not a valid option for this file type.
+    InvalidExportFormat,
     /// The exportable content is not yet available. Please retry later.
     RetryError,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
@@ -4775,6 +4801,10 @@ impl<'de> ::serde::de::Deserialize<'de> for ExportError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(ExportError::NonExportable)
                     }
+                    "invalid_export_format" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(ExportError::InvalidExportFormat)
+                    }
                     "retry_error" => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(ExportError::RetryError)
@@ -4788,6 +4818,7 @@ impl<'de> ::serde::de::Deserialize<'de> for ExportError {
         }
         const VARIANTS: &[&str] = &["path",
                                     "non_exportable",
+                                    "invalid_export_format",
                                     "retry_error",
                                     "other"];
         deserializer.deserialize_struct("ExportError", VARIANTS, EnumVisitor)
@@ -4810,6 +4841,12 @@ impl ::serde::ser::Serialize for ExportError {
                 // unit
                 let mut s = serializer.serialize_struct("ExportError", 1)?;
                 s.serialize_field(".tag", "non_exportable")?;
+                s.end()
+            }
+            ExportError::InvalidExportFormat => {
+                // unit
+                let mut s = serializer.serialize_struct("ExportError", 1)?;
+                s.serialize_field(".tag", "invalid_export_format")?;
                 s.end()
             }
             ExportError::RetryError => {
@@ -4836,6 +4873,7 @@ impl ::std::fmt::Display for ExportError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
             ExportError::Path(inner) => write!(f, "{}", inner),
+            ExportError::InvalidExportFormat => f.write_str("The specified export format is not a valid option for this file type."),
             ExportError::RetryError => f.write_str("The exportable content is not yet available. Please retry later."),
             _ => write!(f, "{:?}", *self),
         }
@@ -4848,12 +4886,16 @@ impl ::std::fmt::Display for ExportError {
 pub struct ExportInfo {
     /// Format to which the file can be exported to.
     pub export_as: Option<String>,
+    /// Additional formats to which the file can be exported. These values can be specified as the
+    /// export_format in /files/export.
+    pub export_options: Option<Vec<String>>,
 }
 
 impl Default for ExportInfo {
     fn default() -> Self {
         ExportInfo {
             export_as: None,
+            export_options: None,
         }
     }
 }
@@ -4863,15 +4905,22 @@ impl ExportInfo {
         self.export_as = Some(value);
         self
     }
+
+    pub fn with_export_options(mut self, value: Vec<String>) -> Self {
+        self.export_options = Some(value);
+        self
+    }
 }
 
-const EXPORT_INFO_FIELDS: &[&str] = &["export_as"];
+const EXPORT_INFO_FIELDS: &[&str] = &["export_as",
+                                      "export_options"];
 impl ExportInfo {
     // no _opt deserializer
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
     ) -> Result<ExportInfo, V::Error> {
         let mut field_export_as = None;
+        let mut field_export_options = None;
         while let Some(key) = map.next_key::<&str>()? {
             match key {
                 "export_as" => {
@@ -4879,6 +4928,12 @@ impl ExportInfo {
                         return Err(::serde::de::Error::duplicate_field("export_as"));
                     }
                     field_export_as = Some(map.next_value()?);
+                }
+                "export_options" => {
+                    if field_export_options.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("export_options"));
+                    }
+                    field_export_options = Some(map.next_value()?);
                 }
                 _ => {
                     // unknown field allowed and ignored
@@ -4888,6 +4943,7 @@ impl ExportInfo {
         }
         let result = ExportInfo {
             export_as: field_export_as,
+            export_options: field_export_options,
         };
         Ok(result)
     }
@@ -4897,7 +4953,8 @@ impl ExportInfo {
         s: &mut S::SerializeStruct,
     ) -> Result<(), S::Error> {
         use serde::ser::SerializeStruct;
-        s.serialize_field("export_as", &self.export_as)
+        s.serialize_field("export_as", &self.export_as)?;
+        s.serialize_field("export_options", &self.export_options)
     }
 }
 
@@ -4923,7 +4980,7 @@ impl ::serde::ser::Serialize for ExportInfo {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ExportInfo", 1)?;
+        let mut s = serializer.serialize_struct("ExportInfo", 2)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -4940,6 +4997,8 @@ pub struct ExportMetadata {
     /// Similar to content hash. For more information see our [Content
     /// hash](https://www.dropbox.com/developers/reference/content-hash) page.
     pub export_hash: Option<Sha256HexHash>,
+    /// If the file is a Paper doc, this gives the latest doc revision.
+    pub paper_revision: Option<i64>,
 }
 
 impl ExportMetadata {
@@ -4948,6 +5007,7 @@ impl ExportMetadata {
             name,
             size,
             export_hash: None,
+            paper_revision: None,
         }
     }
 
@@ -4955,11 +5015,17 @@ impl ExportMetadata {
         self.export_hash = Some(value);
         self
     }
+
+    pub fn with_paper_revision(mut self, value: i64) -> Self {
+        self.paper_revision = Some(value);
+        self
+    }
 }
 
 const EXPORT_METADATA_FIELDS: &[&str] = &["name",
                                           "size",
-                                          "export_hash"];
+                                          "export_hash",
+                                          "paper_revision"];
 impl ExportMetadata {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
@@ -4974,6 +5040,7 @@ impl ExportMetadata {
         let mut field_name = None;
         let mut field_size = None;
         let mut field_export_hash = None;
+        let mut field_paper_revision = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
             nothing = false;
@@ -4996,6 +5063,12 @@ impl ExportMetadata {
                     }
                     field_export_hash = Some(map.next_value()?);
                 }
+                "paper_revision" => {
+                    if field_paper_revision.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("paper_revision"));
+                    }
+                    field_paper_revision = Some(map.next_value()?);
+                }
                 _ => {
                     // unknown field allowed and ignored
                     map.next_value::<::serde_json::Value>()?;
@@ -5009,6 +5082,7 @@ impl ExportMetadata {
             name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
             size: field_size.ok_or_else(|| ::serde::de::Error::missing_field("size"))?,
             export_hash: field_export_hash,
+            paper_revision: field_paper_revision,
         };
         Ok(Some(result))
     }
@@ -5020,7 +5094,8 @@ impl ExportMetadata {
         use serde::ser::SerializeStruct;
         s.serialize_field("name", &self.name)?;
         s.serialize_field("size", &self.size)?;
-        s.serialize_field("export_hash", &self.export_hash)
+        s.serialize_field("export_hash", &self.export_hash)?;
+        s.serialize_field("paper_revision", &self.paper_revision)
     }
 }
 
@@ -5046,7 +5121,7 @@ impl ::serde::ser::Serialize for ExportMetadata {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("ExportMetadata", 3)?;
+        let mut s = serializer.serialize_struct("ExportMetadata", 4)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -7295,6 +7370,10 @@ pub enum GetTemporaryLinkError {
     EmailNotVerified,
     /// Cannot get temporary link to this file type; use [`export()`](export) instead.
     UnsupportedFile,
+    /// The user is not allowed to request a temporary link to the specified file. For example, this
+    /// can occur if the file is restricted or if the user's links are
+    /// [banned](https://help.dropbox.com/files-folders/share/banned-links).
+    NotAllowed,
     /// Catch-all used for unrecognized values returned from the server. Encountering this value
     /// typically indicates that this SDK version is out of date.
     Other,
@@ -7331,6 +7410,10 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkError {
                         crate::eat_json_fields(&mut map)?;
                         Ok(GetTemporaryLinkError::UnsupportedFile)
                     }
+                    "not_allowed" => {
+                        crate::eat_json_fields(&mut map)?;
+                        Ok(GetTemporaryLinkError::NotAllowed)
+                    }
                     _ => {
                         crate::eat_json_fields(&mut map)?;
                         Ok(GetTemporaryLinkError::Other)
@@ -7341,6 +7424,7 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkError {
         const VARIANTS: &[&str] = &["path",
                                     "email_not_verified",
                                     "unsupported_file",
+                                    "not_allowed",
                                     "other"];
         deserializer.deserialize_struct("GetTemporaryLinkError", VARIANTS, EnumVisitor)
     }
@@ -7368,6 +7452,12 @@ impl ::serde::ser::Serialize for GetTemporaryLinkError {
                 // unit
                 let mut s = serializer.serialize_struct("GetTemporaryLinkError", 1)?;
                 s.serialize_field(".tag", "unsupported_file")?;
+                s.end()
+            }
+            GetTemporaryLinkError::NotAllowed => {
+                // unit
+                let mut s = serializer.serialize_struct("GetTemporaryLinkError", 1)?;
+                s.serialize_field(".tag", "not_allowed")?;
                 s.end()
             }
             GetTemporaryLinkError::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
@@ -18317,7 +18407,7 @@ impl ::serde::ser::Serialize for UploadSessionAppendArg {
 pub struct UploadSessionCursor {
     /// The upload session ID (returned by [`upload_session_start()`](upload_session_start)).
     pub session_id: String,
-    /// The amount of data that has been uploaded so far. We use this to make sure upload data isn't
+    /// Offset in bytes at which data should be appended. We use this to make sure upload data isn't
     /// lost or duplicated in the event of a network error.
     pub offset: u64,
 }
@@ -19096,7 +19186,7 @@ impl ::std::fmt::Display for UploadSessionFinishError {
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionLookupError {
-    /// The upload session ID was not found or has expired. Upload sessions are valid for 48 hours.
+    /// The upload session ID was not found or has expired. Upload sessions are valid for 7 days.
     NotFound,
     /// The specified offset was incorrect. See the value for the correct offset. This error may
     /// occur when a previous request was received and processed successfully but the client did not
@@ -19239,7 +19329,7 @@ impl ::std::error::Error for UploadSessionLookupError {
 impl ::std::fmt::Display for UploadSessionLookupError {
     fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
         match self {
-            UploadSessionLookupError::NotFound => f.write_str("The upload session ID was not found or has expired. Upload sessions are valid for 48 hours."),
+            UploadSessionLookupError::NotFound => f.write_str("The upload session ID was not found or has expired. Upload sessions are valid for 7 days."),
             UploadSessionLookupError::IncorrectOffset(inner) => write!(f, "The specified offset was incorrect. See the value for the correct offset. This error may occur when a previous request was received and processed successfully but the client did not receive the response, e.g. due to a network error: {:?}", inner),
             UploadSessionLookupError::Closed => f.write_str("You are attempting to append data to an upload session that has already been closed (i.e. committed)."),
             UploadSessionLookupError::NotClosed => f.write_str("The session must be closed before calling upload_session/finish_batch."),
@@ -19627,7 +19717,7 @@ impl ::serde::ser::Serialize for UploadSessionStartResult {
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // variants may be added in the future
 pub enum UploadSessionType {
-    /// Pieces of content are uploaded sequentially one after another. This is the default behavior.
+    /// Pieces of data are uploaded sequentially one after another. This is the default behavior.
     Sequential,
     /// Pieces of data can be uploaded in concurrent RPCs in any order.
     Concurrent,
