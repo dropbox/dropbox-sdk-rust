@@ -1,3 +1,7 @@
+# v0.11.1
+xxxx-yy-zz
+* API spec update 2021-02-18
+
 # v0.11.0
 2021-02-16
 * Implemented path root selection for default_client. Clients now have a `.set_path_root()` 
