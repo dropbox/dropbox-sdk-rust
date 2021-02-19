@@ -984,7 +984,8 @@ pub fn properties_template_update(
         None)
 }
 
-/// Retrieves reporting data about a team's user activity.
+/// Retrieves reporting data about a team's user activity. Deprecated: Will be removed on July 1st
+/// 2021.
 pub fn reports_get_activity(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DateRange,
@@ -998,7 +999,8 @@ pub fn reports_get_activity(
         None)
 }
 
-/// Retrieves reporting data about a team's linked devices.
+/// Retrieves reporting data about a team's linked devices. Deprecated: Will be removed on July 1st
+/// 2021.
 pub fn reports_get_devices(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DateRange,
@@ -1012,7 +1014,8 @@ pub fn reports_get_devices(
         None)
 }
 
-/// Retrieves reporting data about a team's membership.
+/// Retrieves reporting data about a team's membership. Deprecated: Will be removed on July 1st
+/// 2021.
 pub fn reports_get_membership(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DateRange,
@@ -1026,7 +1029,8 @@ pub fn reports_get_membership(
         None)
 }
 
-/// Retrieves reporting data about a team's storage usage.
+/// Retrieves reporting data about a team's storage usage. Deprecated: Will be removed on July 1st
+/// 2021.
 pub fn reports_get_storage(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DateRange,
