@@ -50,6 +50,7 @@ pub fn devices_list_members_devices(
 }
 
 /// List all device sessions of a team. Permission : Team member file access.
+#[deprecated(note = "replaced by devices_list_members_devices")]
 pub fn devices_list_team_devices(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ListTeamDevicesArg,
@@ -441,6 +442,7 @@ pub fn linked_apps_list_members_linked_apps(
 
 /// List all applications linked to the team members' accounts. Note, this endpoint doesn't list any
 /// team-linked applications.
+#[deprecated(note = "replaced by linked_apps_list_members_linked_apps")]
 pub fn linked_apps_list_team_linked_apps(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &ListTeamAppsArg,
@@ -930,6 +932,7 @@ pub fn namespaces_list_continue(
 }
 
 /// Permission : Team member file access.
+#[deprecated]
 pub fn properties_template_add(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &super::file_properties::AddTemplateArg,
@@ -944,6 +947,7 @@ pub fn properties_template_add(
 }
 
 /// Permission : Team member file access. The scope for the route is files.team_metadata.write.
+#[deprecated]
 pub fn properties_template_get(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &super::file_properties::GetTemplateArg,
@@ -958,6 +962,7 @@ pub fn properties_template_get(
 }
 
 /// Permission : Team member file access. The scope for the route is files.team_metadata.write.
+#[deprecated]
 pub fn properties_template_list(
     client: &impl crate::client_trait::TeamAuthClient,
 ) -> crate::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
@@ -971,6 +976,7 @@ pub fn properties_template_list(
 }
 
 /// Permission : Team member file access.
+#[deprecated]
 pub fn properties_template_update(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &super::file_properties::UpdateTemplateArg,
@@ -986,6 +992,7 @@ pub fn properties_template_update(
 
 /// Retrieves reporting data about a team's user activity. Deprecated: Will be removed on July 1st
 /// 2021.
+#[deprecated]
 pub fn reports_get_activity(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DateRange,
@@ -1001,6 +1008,7 @@ pub fn reports_get_activity(
 
 /// Retrieves reporting data about a team's linked devices. Deprecated: Will be removed on July 1st
 /// 2021.
+#[deprecated]
 pub fn reports_get_devices(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DateRange,
@@ -1016,6 +1024,7 @@ pub fn reports_get_devices(
 
 /// Retrieves reporting data about a team's membership. Deprecated: Will be removed on July 1st
 /// 2021.
+#[deprecated]
 pub fn reports_get_membership(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DateRange,
@@ -1031,6 +1040,7 @@ pub fn reports_get_membership(
 
 /// Retrieves reporting data about a team's storage usage. Deprecated: Will be removed on July 1st
 /// 2021.
+#[deprecated]
 pub fn reports_get_storage(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &DateRange,

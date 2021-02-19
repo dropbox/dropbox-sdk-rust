@@ -28,6 +28,7 @@ pub type WritePathOrId = String;
 
 /// Returns the metadata for a file or folder. This is an alpha endpoint compatible with the
 /// properties API. Note: Metadata for the root folder is unsupported.
+#[deprecated(note = "replaced by get_metadata")]
 pub fn alpha_get_metadata(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AlphaGetMetadataArg,
@@ -45,6 +46,7 @@ pub fn alpha_get_metadata(
 /// the properties API alpha and is slightly different from [`upload()`](upload). Do not use this to
 /// upload a file larger than 150 MB. Instead, create an upload session with
 /// [`upload_session_start()`](upload_session_start).
+#[deprecated(note = "replaced by alpha_upload")]
 pub fn alpha_upload(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CommitInfoWithProperties,
@@ -76,6 +78,7 @@ pub fn copy_v2(
 
 /// Copy a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be copied.
+#[deprecated(note = "replaced by copy_v2")]
 pub fn copy(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationArg,
@@ -110,6 +113,7 @@ pub fn copy_batch_v2(
 /// Copy multiple files or folders to different locations at once in the user's Dropbox. This route
 /// will return job ID immediately and do the async copy job in background. Please use
 /// [`copy_batch_check()`](copy_batch_check) to check the job status.
+#[deprecated(note = "replaced by copy_batch_v2")]
 pub fn copy_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationBatchArg,
@@ -140,6 +144,7 @@ pub fn copy_batch_check_v2(
 
 /// Returns the status of an asynchronous job for [`copy_batch()`](copy_batch). If success, it
 /// returns list of results for each entry.
+#[deprecated(note = "replaced by copy_batch_check_v2")]
 pub fn copy_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &super::dbx_async::PollArg,
@@ -199,6 +204,7 @@ pub fn create_folder_v2(
 }
 
 /// Create a folder at a given path.
+#[deprecated(note = "replaced by create_folder_v2")]
 pub fn create_folder(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateFolderArg,
@@ -268,6 +274,7 @@ pub fn delete_v2(
 /// metadata will be the corresponding [`FileMetadata`](FileMetadata) or
 /// [`FolderMetadata`](FolderMetadata) for the item at time of deletion, and not a
 /// [`DeletedMetadata`](DeletedMetadata) object.
+#[deprecated(note = "replaced by delete_v2")]
 pub fn delete(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DeleteArg,
@@ -700,6 +707,7 @@ pub fn move_v2(
 
 /// Move a file or folder to a different location in the user's Dropbox. If the source path is a
 /// folder all its contents will be moved.
+#[deprecated(note = "replaced by move_v2")]
 pub fn do_move(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationArg,
@@ -735,6 +743,7 @@ pub fn move_batch_v2(
 /// Move multiple files or folders to different locations at once in the user's Dropbox. This route
 /// will return job ID immediately and do the async moving job in background. Please use
 /// [`move_batch_check()`](move_batch_check) to check the job status.
+#[deprecated(note = "replaced by move_batch_v2")]
 pub fn move_batch(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RelocationBatchArg,
@@ -765,6 +774,7 @@ pub fn move_batch_check_v2(
 
 /// Returns the status of an asynchronous job for [`move_batch()`](move_batch). If success, it
 /// returns list of results for each entry.
+#[deprecated(note = "replaced by move_batch_check_v2")]
 pub fn move_batch_check(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &super::dbx_async::PollArg,
@@ -825,6 +835,7 @@ pub fn permanently_delete(
         None)
 }
 
+#[deprecated]
 pub fn properties_add(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &super::file_properties::AddPropertiesArg,
@@ -838,6 +849,7 @@ pub fn properties_add(
         None)
 }
 
+#[deprecated]
 pub fn properties_overwrite(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &super::file_properties::OverwritePropertyGroupArg,
@@ -851,6 +863,7 @@ pub fn properties_overwrite(
         None)
 }
 
+#[deprecated]
 pub fn properties_remove(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &super::file_properties::RemovePropertiesArg,
@@ -864,6 +877,7 @@ pub fn properties_remove(
         None)
 }
 
+#[deprecated]
 pub fn properties_template_get(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &super::file_properties::GetTemplateArg,
@@ -877,6 +891,7 @@ pub fn properties_template_get(
         None)
 }
 
+#[deprecated]
 pub fn properties_template_list(
     client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<super::file_properties::ListTemplateResult, super::file_properties::TemplateError>> {
@@ -889,6 +904,7 @@ pub fn properties_template_list(
         None)
 }
 
+#[deprecated]
 pub fn properties_update(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &super::file_properties::UpdatePropertiesArg,
@@ -950,6 +966,7 @@ pub fn save_url_check_job_status(
 /// Searches for files and folders. Note: Recent changes will be reflected in search results within
 /// a few seconds and older revisions of existing files may still match your query for up to a few
 /// days.
+#[deprecated(note = "replaced by search_v2")]
 pub fn search(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &SearchArg,
@@ -1059,6 +1076,7 @@ pub fn upload_session_append_v2(
 /// will count as data transport calls for any Dropbox Business teams with a limit on the number of
 /// data transport calls allowed per month. For more information, see the [Data transport limit
 /// page](https://www.dropbox.com/developers/reference/data-transport-limit).
+#[deprecated(note = "replaced by upload_session_append_v2")]
 pub fn upload_session_append(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &UploadSessionCursor,
