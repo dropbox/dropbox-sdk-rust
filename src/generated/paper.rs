@@ -22,6 +22,7 @@ pub type PaperDocId = String;
 /// the new version of Paper. This endpoint will be retired in September 2020. Refer to the [Paper
 /// Migration Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for more
 /// information.
+#[deprecated]
 pub fn docs_archive(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
@@ -42,6 +43,7 @@ pub fn docs_archive(
 /// to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for more
 /// information.
+#[deprecated]
 pub fn docs_create(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperDocCreateArgs,
@@ -62,6 +64,7 @@ pub fn docs_create(
 /// enabled, then the user is running the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn docs_download(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperDocExport,
@@ -87,6 +90,7 @@ pub fn docs_download(
 /// enabled, then the user is running the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn docs_folder_users_list(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnFolderArgs,
@@ -107,6 +111,7 @@ pub fn docs_folder_users_list(
 /// user is running the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn docs_folder_users_list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnFolderContinueArgs,
@@ -131,6 +136,7 @@ pub fn docs_folder_users_list_continue(
 /// feature is enabled, then the user is running the new version of Paper. Refer to the [Paper
 /// Migration Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for
 /// migration information.
+#[deprecated]
 pub fn docs_get_folder_info(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
@@ -152,6 +158,7 @@ pub fn docs_get_folder_info(
 /// the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn docs_list(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListPaperDocsArgs,
@@ -172,6 +179,7 @@ pub fn docs_list(
 /// the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn docs_list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListPaperDocsContinueArgs,
@@ -192,6 +200,7 @@ pub fn docs_list_continue(
 /// user is running the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn docs_permanently_delete(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
@@ -211,6 +220,7 @@ pub fn docs_permanently_delete(
 /// then the user is running the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn docs_sharing_policy_get(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RefPaperDoc,
@@ -233,6 +243,7 @@ pub fn docs_sharing_policy_get(
 /// the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn docs_sharing_policy_set(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperDocSharingPolicy,
@@ -253,6 +264,7 @@ pub fn docs_sharing_policy_set(
 /// 2020. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for more
 /// information.
+#[deprecated]
 pub fn docs_update(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperDocUpdateArgs,
@@ -275,6 +287,7 @@ pub fn docs_update(
 /// the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn docs_users_add(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &AddPaperDocUser,
@@ -297,6 +310,7 @@ pub fn docs_users_add(
 /// the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn docs_users_list(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnPaperDocArgs,
@@ -317,6 +331,7 @@ pub fn docs_users_list(
 /// is running the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn docs_users_list_continue(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ListUsersOnPaperDocContinueArgs,
@@ -337,6 +352,7 @@ pub fn docs_users_list_continue(
 /// is running the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn docs_users_remove(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemovePaperDocUser,
@@ -356,6 +372,7 @@ pub fn docs_users_remove(
 /// user is running the new version of Paper. Refer to the [Paper Migration
 /// Guide](https://www.dropbox.com/lp/developers/reference/paper-migration-guide) for migration
 /// information.
+#[deprecated]
 pub fn folders_create(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &PaperFolderCreateArg,

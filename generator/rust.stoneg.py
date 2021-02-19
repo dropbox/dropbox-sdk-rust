@@ -222,6 +222,13 @@ class RustBackend(RustHelperBackend):
 
         self._emit_doc(fn.doc)
 
+        if fn.deprecated:
+            if fn.deprecated.by:
+                self.emit(u'#[deprecated(note = "replaced by {}")]'.format(
+                    self.route_name(fn.deprecated.by)))
+            else:
+                self.emit(u'#[deprecated]')
+
         arg_void = isinstance(fn.arg_data_type, ir.Void)
         style = fn.attrs.get('style', 'rpc')
         error_type = u'crate::NoError' if ir.is_void_type(fn.error_data_type) \

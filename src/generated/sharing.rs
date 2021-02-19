@@ -50,6 +50,7 @@ pub fn add_folder_member(
 }
 
 /// Identical to update_file_member but with less information returned.
+#[deprecated(note = "replaced by update_file_member")]
 pub fn change_file_member_access(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &ChangeFileMemberAccessArgs,
@@ -113,6 +114,7 @@ pub fn check_share_job_status(
 /// or folder. In the future, this will no longer be the case, so your app shouldn't rely on this
 /// behavior. Instead, if your app needs to revoke a shared link, use
 /// [`revoke_shared_link()`](revoke_shared_link).
+#[deprecated(note = "replaced by create_shared_link_with_settings")]
 pub fn create_shared_link(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &CreateSharedLinkArg,
@@ -221,6 +223,7 @@ pub fn get_shared_link_metadata(
 /// collection links, up to a maximum of 1000 links. If a non-empty path is given, returns a list of
 /// all shared links that allow access to the given path.  Collection links are never returned in
 /// this case. Note that the url field in the response is never the shortened URL.
+#[deprecated(note = "replaced by list_shared_links")]
 pub fn get_shared_links(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &GetSharedLinksArg,
@@ -489,6 +492,7 @@ pub fn relinquish_folder_membership(
 }
 
 /// Identical to remove_file_member_2 but with less information returned.
+#[deprecated(note = "replaced by remove_file_member_2")]
 pub fn remove_file_member(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &RemoveFileMemberArg,
