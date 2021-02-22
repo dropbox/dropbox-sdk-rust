@@ -1,5 +1,5 @@
 # v0.11.1
-xxxx-yy-zz
+2021-02-22
 * Routes tagged as deprecated in Stone now have the #[deprecated] attribute in Rust.
 * API spec update 2021-02-18
 
