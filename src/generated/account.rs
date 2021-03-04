@@ -46,19 +46,18 @@ impl<'de> ::serde::de::Deserialize<'de> for PhotoSourceArg {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "base64_data" => {
                         match map.next_key()? {
-                            Some("base64_data") => Ok(PhotoSourceArg::Base64Data(map.next_value()?)),
-                            None => Err(de::Error::missing_field("base64_data")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("base64_data") => PhotoSourceArg::Base64Data(map.next_value()?),
+                            None => return Err(de::Error::missing_field("base64_data")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PhotoSourceArg::Other)
-                    }
-                }
+                    _ => PhotoSourceArg::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["base64_data",
@@ -207,32 +206,16 @@ impl<'de> ::serde::de::Deserialize<'de> for SetProfilePhotoError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "file_type_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SetProfilePhotoError::FileTypeError)
-                    }
-                    "file_size_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SetProfilePhotoError::FileSizeError)
-                    }
-                    "dimension_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SetProfilePhotoError::DimensionError)
-                    }
-                    "thumbnail_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SetProfilePhotoError::ThumbnailError)
-                    }
-                    "transient_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SetProfilePhotoError::TransientError)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SetProfilePhotoError::Other)
-                    }
-                }
+                let value = match tag {
+                    "file_type_error" => SetProfilePhotoError::FileTypeError,
+                    "file_size_error" => SetProfilePhotoError::FileSizeError,
+                    "dimension_error" => SetProfilePhotoError::DimensionError,
+                    "thumbnail_error" => SetProfilePhotoError::ThumbnailError,
+                    "transient_error" => SetProfilePhotoError::TransientError,
+                    _ => SetProfilePhotoError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["file_type_error",

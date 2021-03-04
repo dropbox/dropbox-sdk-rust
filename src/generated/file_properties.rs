@@ -437,50 +437,31 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPropertiesError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "template_not_found" => {
                         match map.next_key()? {
-                            Some("template_not_found") => Ok(AddPropertiesError::TemplateNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("template_not_found") => AddPropertiesError::TemplateNotFound(map.next_value()?),
+                            None => return Err(de::Error::missing_field("template_not_found")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPropertiesError::RestrictedContent)
-                    }
+                    "restricted_content" => AddPropertiesError::RestrictedContent,
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(AddPropertiesError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => AddPropertiesError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPropertiesError::UnsupportedFolder)
-                    }
-                    "property_field_too_large" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPropertiesError::PropertyFieldTooLarge)
-                    }
-                    "does_not_fit_template" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPropertiesError::DoesNotFitTemplate)
-                    }
-                    "duplicate_property_groups" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPropertiesError::DuplicatePropertyGroups)
-                    }
-                    "property_group_already_exists" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPropertiesError::PropertyGroupAlreadyExists)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPropertiesError::Other)
-                    }
-                }
+                    "unsupported_folder" => AddPropertiesError::UnsupportedFolder,
+                    "property_field_too_large" => AddPropertiesError::PropertyFieldTooLarge,
+                    "does_not_fit_template" => AddPropertiesError::DoesNotFitTemplate,
+                    "duplicate_property_groups" => AddPropertiesError::DuplicatePropertyGroups,
+                    "property_group_already_exists" => AddPropertiesError::PropertyGroupAlreadyExists,
+                    _ => AddPropertiesError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["template_not_found",
@@ -1035,46 +1016,30 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidPropertyGroupError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "template_not_found" => {
                         match map.next_key()? {
-                            Some("template_not_found") => Ok(InvalidPropertyGroupError::TemplateNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("template_not_found") => InvalidPropertyGroupError::TemplateNotFound(map.next_value()?),
+                            None => return Err(de::Error::missing_field("template_not_found")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(InvalidPropertyGroupError::RestrictedContent)
-                    }
+                    "restricted_content" => InvalidPropertyGroupError::RestrictedContent,
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(InvalidPropertyGroupError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => InvalidPropertyGroupError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(InvalidPropertyGroupError::UnsupportedFolder)
-                    }
-                    "property_field_too_large" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(InvalidPropertyGroupError::PropertyFieldTooLarge)
-                    }
-                    "does_not_fit_template" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(InvalidPropertyGroupError::DoesNotFitTemplate)
-                    }
-                    "duplicate_property_groups" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(InvalidPropertyGroupError::DuplicatePropertyGroups)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(InvalidPropertyGroupError::Other)
-                    }
-                }
+                    "unsupported_folder" => InvalidPropertyGroupError::UnsupportedFolder,
+                    "property_field_too_large" => InvalidPropertyGroupError::PropertyFieldTooLarge,
+                    "does_not_fit_template" => InvalidPropertyGroupError::DoesNotFitTemplate,
+                    "duplicate_property_groups" => InvalidPropertyGroupError::DuplicatePropertyGroups,
+                    _ => InvalidPropertyGroupError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["template_not_found",
@@ -1285,16 +1250,12 @@ impl<'de> ::serde::de::Deserialize<'de> for LogicalOperator {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "or_operator" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LogicalOperator::OrOperator)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LogicalOperator::Other)
-                    }
-                }
+                let value = match tag {
+                    "or_operator" => LogicalOperator::OrOperator,
+                    _ => LogicalOperator::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["or_operator",
@@ -1344,16 +1305,12 @@ impl<'de> ::serde::de::Deserialize<'de> for LookUpPropertiesError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "property_group_not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookUpPropertiesError::PropertyGroupNotFound)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookUpPropertiesError::Other)
-                    }
-                }
+                let value = match tag {
+                    "property_group_not_found" => LookUpPropertiesError::PropertyGroupNotFound,
+                    _ => LookUpPropertiesError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["property_group_not_found",
@@ -1423,35 +1380,22 @@ impl<'de> ::serde::de::Deserialize<'de> for LookupError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "malformed_path" => {
                         match map.next_key()? {
-                            Some("malformed_path") => Ok(LookupError::MalformedPath(map.next_value()?)),
-                            None => Err(de::Error::missing_field("malformed_path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("malformed_path") => LookupError::MalformedPath(map.next_value()?),
+                            None => return Err(de::Error::missing_field("malformed_path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookupError::NotFound)
-                    }
-                    "not_file" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookupError::NotFile)
-                    }
-                    "not_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookupError::NotFolder)
-                    }
-                    "restricted_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookupError::RestrictedContent)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookupError::Other)
-                    }
-                }
+                    "not_found" => LookupError::NotFound,
+                    "not_file" => LookupError::NotFile,
+                    "not_folder" => LookupError::NotFolder,
+                    "restricted_content" => LookupError::RestrictedContent,
+                    _ => LookupError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["malformed_path",
@@ -1557,39 +1501,23 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifyTemplateError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "template_not_found" => {
                         match map.next_key()? {
-                            Some("template_not_found") => Ok(ModifyTemplateError::TemplateNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("template_not_found") => ModifyTemplateError::TemplateNotFound(map.next_value()?),
+                            None => return Err(de::Error::missing_field("template_not_found")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ModifyTemplateError::RestrictedContent)
-                    }
-                    "conflicting_property_names" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ModifyTemplateError::ConflictingPropertyNames)
-                    }
-                    "too_many_properties" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ModifyTemplateError::TooManyProperties)
-                    }
-                    "too_many_templates" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ModifyTemplateError::TooManyTemplates)
-                    }
-                    "template_attribute_too_large" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ModifyTemplateError::TemplateAttributeTooLarge)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ModifyTemplateError::Other)
-                    }
-                }
+                    "restricted_content" => ModifyTemplateError::RestrictedContent,
+                    "conflicting_property_names" => ModifyTemplateError::ConflictingPropertyNames,
+                    "too_many_properties" => ModifyTemplateError::TooManyProperties,
+                    "too_many_templates" => ModifyTemplateError::TooManyTemplates,
+                    "template_attribute_too_large" => ModifyTemplateError::TemplateAttributeTooLarge,
+                    _ => ModifyTemplateError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["template_not_found",
@@ -1801,34 +1729,27 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "template_not_found" => {
                         match map.next_key()? {
-                            Some("template_not_found") => Ok(PropertiesError::TemplateNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("template_not_found") => PropertiesError::TemplateNotFound(map.next_value()?),
+                            None => return Err(de::Error::missing_field("template_not_found")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PropertiesError::RestrictedContent)
-                    }
+                    "restricted_content" => PropertiesError::RestrictedContent,
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(PropertiesError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => PropertiesError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PropertiesError::UnsupportedFolder)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PropertiesError::Other)
-                    }
-                }
+                    "unsupported_folder" => PropertiesError::UnsupportedFolder,
+                    _ => PropertiesError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["template_not_found",
@@ -2122,16 +2043,12 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchContinueError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "reset" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PropertiesSearchContinueError::Reset)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PropertiesSearchContinueError::Other)
-                    }
-                }
+                let value = match tag {
+                    "reset" => PropertiesSearchContinueError::Reset,
+                    _ => PropertiesSearchContinueError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["reset",
@@ -2189,19 +2106,18 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "property_group_lookup" => {
                         match map.next_key()? {
-                            Some("property_group_lookup") => Ok(PropertiesSearchError::PropertyGroupLookup(map.next_value()?)),
-                            None => Err(de::Error::missing_field("property_group_lookup")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("property_group_lookup") => PropertiesSearchError::PropertyGroupLookup(map.next_value()?),
+                            None => return Err(de::Error::missing_field("property_group_lookup")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PropertiesSearchError::Other)
-                    }
-                }
+                    _ => PropertiesSearchError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["property_group_lookup",
@@ -2404,19 +2320,18 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertiesSearchMode {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "field_name" => {
                         match map.next_key()? {
-                            Some("field_name") => Ok(PropertiesSearchMode::FieldName(map.next_value()?)),
-                            None => Err(de::Error::missing_field("field_name")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("field_name") => PropertiesSearchMode::FieldName(map.next_value()?),
+                            None => return Err(de::Error::missing_field("field_name")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PropertiesSearchMode::Other)
-                    }
-                }
+                    _ => PropertiesSearchMode::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["field_name",
@@ -3276,16 +3191,12 @@ impl<'de> ::serde::de::Deserialize<'de> for PropertyType {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "string" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PropertyType::String)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PropertyType::Other)
-                    }
-                }
+                let value = match tag {
+                    "string" => PropertyType::String,
+                    _ => PropertyType::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["string",
@@ -3446,41 +3357,34 @@ impl<'de> ::serde::de::Deserialize<'de> for RemovePropertiesError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "template_not_found" => {
                         match map.next_key()? {
-                            Some("template_not_found") => Ok(RemovePropertiesError::TemplateNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("template_not_found") => RemovePropertiesError::TemplateNotFound(map.next_value()?),
+                            None => return Err(de::Error::missing_field("template_not_found")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RemovePropertiesError::RestrictedContent)
-                    }
+                    "restricted_content" => RemovePropertiesError::RestrictedContent,
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(RemovePropertiesError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => RemovePropertiesError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RemovePropertiesError::UnsupportedFolder)
-                    }
+                    "unsupported_folder" => RemovePropertiesError::UnsupportedFolder,
                     "property_group_lookup" => {
                         match map.next_key()? {
-                            Some("property_group_lookup") => Ok(RemovePropertiesError::PropertyGroupLookup(map.next_value()?)),
-                            None => Err(de::Error::missing_field("property_group_lookup")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("property_group_lookup") => RemovePropertiesError::PropertyGroupLookup(map.next_value()?),
+                            None => return Err(de::Error::missing_field("property_group_lookup")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RemovePropertiesError::Other)
-                    }
-                }
+                    _ => RemovePropertiesError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["template_not_found",
@@ -3677,23 +3581,19 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "template_not_found" => {
                         match map.next_key()? {
-                            Some("template_not_found") => Ok(TemplateError::TemplateNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("template_not_found") => TemplateError::TemplateNotFound(map.next_value()?),
+                            None => return Err(de::Error::missing_field("template_not_found")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TemplateError::RestrictedContent)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TemplateError::Other)
-                    }
-                }
+                    "restricted_content" => TemplateError::RestrictedContent,
+                    _ => TemplateError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["template_not_found",
@@ -3767,23 +3667,19 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateFilter {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "filter_some" => {
                         match map.next_key()? {
-                            Some("filter_some") => Ok(TemplateFilter::FilterSome(map.next_value()?)),
-                            None => Err(de::Error::missing_field("filter_some")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("filter_some") => TemplateFilter::FilterSome(map.next_value()?),
+                            None => return Err(de::Error::missing_field("filter_some")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "filter_none" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TemplateFilter::FilterNone)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TemplateFilter::Other)
-                    }
-                }
+                    "filter_none" => TemplateFilter::FilterNone,
+                    _ => TemplateFilter::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["filter_some",
@@ -3842,19 +3738,18 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateFilterBase {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "filter_some" => {
                         match map.next_key()? {
-                            Some("filter_some") => Ok(TemplateFilterBase::FilterSome(map.next_value()?)),
-                            None => Err(de::Error::missing_field("filter_some")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("filter_some") => TemplateFilterBase::FilterSome(map.next_value()?),
+                            None => return Err(de::Error::missing_field("filter_some")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TemplateFilterBase::Other)
-                    }
-                }
+                    _ => TemplateFilterBase::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["filter_some",
@@ -3907,20 +3802,13 @@ impl<'de> ::serde::de::Deserialize<'de> for TemplateOwnerType {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "user" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TemplateOwnerType::User)
-                    }
-                    "team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TemplateOwnerType::Team)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TemplateOwnerType::Other)
-                    }
-                }
+                let value = match tag {
+                    "user" => TemplateOwnerType::User,
+                    "team" => TemplateOwnerType::Team,
+                    _ => TemplateOwnerType::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["user",
@@ -4092,53 +3980,37 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdatePropertiesError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "template_not_found" => {
                         match map.next_key()? {
-                            Some("template_not_found") => Ok(UpdatePropertiesError::TemplateNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("template_not_found") => UpdatePropertiesError::TemplateNotFound(map.next_value()?),
+                            None => return Err(de::Error::missing_field("template_not_found")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "restricted_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdatePropertiesError::RestrictedContent)
-                    }
+                    "restricted_content" => UpdatePropertiesError::RestrictedContent,
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(UpdatePropertiesError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => UpdatePropertiesError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdatePropertiesError::UnsupportedFolder)
-                    }
-                    "property_field_too_large" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdatePropertiesError::PropertyFieldTooLarge)
-                    }
-                    "does_not_fit_template" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdatePropertiesError::DoesNotFitTemplate)
-                    }
-                    "duplicate_property_groups" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdatePropertiesError::DuplicatePropertyGroups)
-                    }
+                    "unsupported_folder" => UpdatePropertiesError::UnsupportedFolder,
+                    "property_field_too_large" => UpdatePropertiesError::PropertyFieldTooLarge,
+                    "does_not_fit_template" => UpdatePropertiesError::DoesNotFitTemplate,
+                    "duplicate_property_groups" => UpdatePropertiesError::DuplicatePropertyGroups,
                     "property_group_lookup" => {
                         match map.next_key()? {
-                            Some("property_group_lookup") => Ok(UpdatePropertiesError::PropertyGroupLookup(map.next_value()?)),
-                            None => Err(de::Error::missing_field("property_group_lookup")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("property_group_lookup") => UpdatePropertiesError::PropertyGroupLookup(map.next_value()?),
+                            None => return Err(de::Error::missing_field("property_group_lookup")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdatePropertiesError::Other)
-                    }
-                }
+                    _ => UpdatePropertiesError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["template_not_found",

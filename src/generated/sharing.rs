@@ -719,20 +719,13 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessInheritance {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "inherit" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AccessInheritance::Inherit)
-                    }
-                    "no_inherit" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AccessInheritance::NoInherit)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AccessInheritance::Other)
-                    }
-                }
+                let value = match tag {
+                    "inherit" => AccessInheritance::Inherit,
+                    "no_inherit" => AccessInheritance::NoInherit,
+                    _ => AccessInheritance::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["inherit",
@@ -798,28 +791,15 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessLevel {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "owner" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AccessLevel::Owner)
-                    }
-                    "editor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AccessLevel::Editor)
-                    }
-                    "viewer" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AccessLevel::Viewer)
-                    }
-                    "viewer_no_comment" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AccessLevel::ViewerNoComment)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AccessLevel::Other)
-                    }
-                }
+                let value = match tag {
+                    "owner" => AccessLevel::Owner,
+                    "editor" => AccessLevel::Editor,
+                    "viewer" => AccessLevel::Viewer,
+                    "viewer_no_comment" => AccessLevel::ViewerNoComment,
+                    _ => AccessLevel::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["owner",
@@ -894,20 +874,13 @@ impl<'de> ::serde::de::Deserialize<'de> for AclUpdatePolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "owner" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AclUpdatePolicy::Owner)
-                    }
-                    "editors" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AclUpdatePolicy::Editors)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AclUpdatePolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "owner" => AclUpdatePolicy::Owner,
+                    "editors" => AclUpdatePolicy::Editors,
+                    _ => AclUpdatePolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["owner",
@@ -1146,34 +1119,27 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFileMemberError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "user_error" => {
                         match map.next_key()? {
-                            Some("user_error") => Ok(AddFileMemberError::UserError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("user_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("user_error") => AddFileMemberError::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(AddFileMemberError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => AddFileMemberError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "rate_limit" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFileMemberError::RateLimit)
-                    }
-                    "invalid_comment" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFileMemberError::InvalidComment)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFileMemberError::Other)
-                    }
-                }
+                    "rate_limit" => AddFileMemberError::RateLimit,
+                    "invalid_comment" => AddFileMemberError::InvalidComment,
+                    _ => AddFileMemberError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["user_error",
@@ -1436,76 +1402,48 @@ impl<'de> ::serde::de::Deserialize<'de> for AddFolderMemberError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(AddFolderMemberError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => AddFolderMemberError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFolderMemberError::EmailUnverified)
-                    }
-                    "banned_member" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFolderMemberError::BannedMember)
-                    }
+                    "email_unverified" => AddFolderMemberError::EmailUnverified,
+                    "banned_member" => AddFolderMemberError::BannedMember,
                     "bad_member" => {
                         match map.next_key()? {
-                            Some("bad_member") => Ok(AddFolderMemberError::BadMember(map.next_value()?)),
-                            None => Err(de::Error::missing_field("bad_member")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("bad_member") => AddFolderMemberError::BadMember(map.next_value()?),
+                            None => return Err(de::Error::missing_field("bad_member")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "cant_share_outside_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFolderMemberError::CantShareOutsideTeam)
-                    }
+                    "cant_share_outside_team" => AddFolderMemberError::CantShareOutsideTeam,
                     "too_many_members" => {
                         match map.next_key()? {
-                            Some("too_many_members") => Ok(AddFolderMemberError::TooManyMembers(map.next_value()?)),
-                            None => Err(de::Error::missing_field("too_many_members")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("too_many_members") => AddFolderMemberError::TooManyMembers(map.next_value()?),
+                            None => return Err(de::Error::missing_field("too_many_members")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "too_many_pending_invites" => {
                         match map.next_key()? {
-                            Some("too_many_pending_invites") => Ok(AddFolderMemberError::TooManyPendingInvites(map.next_value()?)),
-                            None => Err(de::Error::missing_field("too_many_pending_invites")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("too_many_pending_invites") => AddFolderMemberError::TooManyPendingInvites(map.next_value()?),
+                            None => return Err(de::Error::missing_field("too_many_pending_invites")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "rate_limit" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFolderMemberError::RateLimit)
-                    }
-                    "too_many_invitees" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFolderMemberError::TooManyInvitees)
-                    }
-                    "insufficient_plan" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFolderMemberError::InsufficientPlan)
-                    }
-                    "team_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFolderMemberError::TeamFolder)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFolderMemberError::NoPermission)
-                    }
-                    "invalid_shared_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFolderMemberError::InvalidSharedFolder)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddFolderMemberError::Other)
-                    }
-                }
+                    "rate_limit" => AddFolderMemberError::RateLimit,
+                    "too_many_invitees" => AddFolderMemberError::TooManyInvitees,
+                    "insufficient_plan" => AddFolderMemberError::InsufficientPlan,
+                    "team_folder" => AddFolderMemberError::TeamFolder,
+                    "no_permission" => AddFolderMemberError::NoPermission,
+                    "invalid_shared_folder" => AddFolderMemberError::InvalidSharedFolder,
+                    _ => AddFolderMemberError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["access_error",
@@ -1795,45 +1733,35 @@ impl<'de> ::serde::de::Deserialize<'de> for AddMemberSelectorError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "automatic_group" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddMemberSelectorError::AutomaticGroup)
-                    }
+                let value = match tag {
+                    "automatic_group" => AddMemberSelectorError::AutomaticGroup,
                     "invalid_dropbox_id" => {
                         match map.next_key()? {
-                            Some("invalid_dropbox_id") => Ok(AddMemberSelectorError::InvalidDropboxId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("invalid_dropbox_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("invalid_dropbox_id") => AddMemberSelectorError::InvalidDropboxId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("invalid_dropbox_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "invalid_email" => {
                         match map.next_key()? {
-                            Some("invalid_email") => Ok(AddMemberSelectorError::InvalidEmail(map.next_value()?)),
-                            None => Err(de::Error::missing_field("invalid_email")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("invalid_email") => AddMemberSelectorError::InvalidEmail(map.next_value()?),
+                            None => return Err(de::Error::missing_field("invalid_email")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "unverified_dropbox_id" => {
                         match map.next_key()? {
-                            Some("unverified_dropbox_id") => Ok(AddMemberSelectorError::UnverifiedDropboxId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("unverified_dropbox_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("unverified_dropbox_id") => AddMemberSelectorError::UnverifiedDropboxId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("unverified_dropbox_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "group_deleted" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddMemberSelectorError::GroupDeleted)
-                    }
-                    "group_not_on_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddMemberSelectorError::GroupNotOnTeam)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddMemberSelectorError::Other)
-                    }
-                }
+                    "group_deleted" => AddMemberSelectorError::GroupDeleted,
+                    "group_not_on_team" => AddMemberSelectorError::GroupNotOnTeam,
+                    _ => AddMemberSelectorError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["automatic_group",
@@ -2623,19 +2551,18 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(CreateSharedLinkError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => CreateSharedLinkError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateSharedLinkError::Other)
-                    }
-                }
+                    _ => CreateSharedLinkError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -2818,38 +2745,34 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateSharedLinkWithSettingsError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(CreateSharedLinkWithSettingsError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => CreateSharedLinkWithSettingsError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "email_not_verified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateSharedLinkWithSettingsError::EmailNotVerified)
-                    }
+                    "email_not_verified" => CreateSharedLinkWithSettingsError::EmailNotVerified,
                     "shared_link_already_exists" => {
                         match map.next_key()? {
-                            Some("shared_link_already_exists") => Ok(CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(map.next_value()?)),
-                            None => Ok(CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(None)),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("shared_link_already_exists") => CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(map.next_value()?),
+                            None => CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(None),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "settings_error" => {
                         match map.next_key()? {
-                            Some("settings_error") => Ok(CreateSharedLinkWithSettingsError::SettingsError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("settings_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("settings_error") => CreateSharedLinkWithSettingsError::SettingsError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("settings_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "access_denied" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateSharedLinkWithSettingsError::AccessDenied)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    "access_denied" => CreateSharedLinkWithSettingsError::AccessDenied,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -3171,60 +3094,23 @@ impl<'de> ::serde::de::Deserialize<'de> for FileAction {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disable_viewer_info" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::DisableViewerInfo)
-                    }
-                    "edit_contents" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::EditContents)
-                    }
-                    "enable_viewer_info" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::EnableViewerInfo)
-                    }
-                    "invite_viewer" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::InviteViewer)
-                    }
-                    "invite_viewer_no_comment" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::InviteViewerNoComment)
-                    }
-                    "invite_editor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::InviteEditor)
-                    }
-                    "unshare" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::Unshare)
-                    }
-                    "relinquish_membership" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::RelinquishMembership)
-                    }
-                    "share_link" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::ShareLink)
-                    }
-                    "create_link" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::CreateLink)
-                    }
-                    "create_view_link" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::CreateViewLink)
-                    }
-                    "create_edit_link" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::CreateEditLink)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileAction::Other)
-                    }
-                }
+                let value = match tag {
+                    "disable_viewer_info" => FileAction::DisableViewerInfo,
+                    "edit_contents" => FileAction::EditContents,
+                    "enable_viewer_info" => FileAction::EnableViewerInfo,
+                    "invite_viewer" => FileAction::InviteViewer,
+                    "invite_viewer_no_comment" => FileAction::InviteViewerNoComment,
+                    "invite_editor" => FileAction::InviteEditor,
+                    "unshare" => FileAction::Unshare,
+                    "relinquish_membership" => FileAction::RelinquishMembership,
+                    "share_link" => FileAction::ShareLink,
+                    "create_link" => FileAction::CreateLink,
+                    "create_view_link" => FileAction::CreateViewLink,
+                    "create_edit_link" => FileAction::CreateEditLink,
+                    _ => FileAction::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disable_viewer_info",
@@ -3355,33 +3241,32 @@ impl<'de> ::serde::de::Deserialize<'de> for FileErrorResult {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "file_not_found_error" => {
                         match map.next_key()? {
-                            Some("file_not_found_error") => Ok(FileErrorResult::FileNotFoundError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("file_not_found_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("file_not_found_error") => FileErrorResult::FileNotFoundError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("file_not_found_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "invalid_file_action_error" => {
                         match map.next_key()? {
-                            Some("invalid_file_action_error") => Ok(FileErrorResult::InvalidFileActionError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("invalid_file_action_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("invalid_file_action_error") => FileErrorResult::InvalidFileActionError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("invalid_file_action_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "permission_denied_error" => {
                         match map.next_key()? {
-                            Some("permission_denied_error") => Ok(FileErrorResult::PermissionDeniedError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("permission_denied_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("permission_denied_error") => FileErrorResult::PermissionDeniedError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("permission_denied_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileErrorResult::Other)
-                    }
-                }
+                    _ => FileErrorResult::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["file_not_found_error",
@@ -3731,28 +3616,21 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMemberActionError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "invalid_member" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileMemberActionError::InvalidMember)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileMemberActionError::NoPermission)
-                    }
+                let value = match tag {
+                    "invalid_member" => FileMemberActionError::InvalidMember,
+                    "no_permission" => FileMemberActionError::NoPermission,
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(FileMemberActionError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => FileMemberActionError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "no_explicit_access" => Ok(FileMemberActionError::NoExplicitAccess(MemberAccessLevelResult::internal_deserialize(map)?)),
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileMemberActionError::Other)
-                    }
-                }
+                    "no_explicit_access" => FileMemberActionError::NoExplicitAccess(MemberAccessLevelResult::internal_deserialize(&mut map)?),
+                    _ => FileMemberActionError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["invalid_member",
@@ -3845,23 +3723,25 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMemberActionIndividualResult {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "success" => {
                         match map.next_key()? {
-                            Some("success") => Ok(FileMemberActionIndividualResult::Success(map.next_value()?)),
-                            None => Ok(FileMemberActionIndividualResult::Success(None)),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("success") => FileMemberActionIndividualResult::Success(map.next_value()?),
+                            None => FileMemberActionIndividualResult::Success(None),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "member_error" => {
                         match map.next_key()? {
-                            Some("member_error") => Ok(FileMemberActionIndividualResult::MemberError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("member_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("member_error") => FileMemberActionIndividualResult::MemberError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("member_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["success",
@@ -4025,20 +3905,19 @@ impl<'de> ::serde::de::Deserialize<'de> for FileMemberRemoveActionResult {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "success" => Ok(FileMemberRemoveActionResult::Success(MemberAccessLevelResult::internal_deserialize(map)?)),
+                let value = match tag {
+                    "success" => FileMemberRemoveActionResult::Success(MemberAccessLevelResult::internal_deserialize(&mut map)?),
                     "member_error" => {
                         match map.next_key()? {
-                            Some("member_error") => Ok(FileMemberRemoveActionResult::MemberError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("member_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("member_error") => FileMemberRemoveActionResult::MemberError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("member_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileMemberRemoveActionResult::Other)
-                    }
-                }
+                    _ => FileMemberRemoveActionResult::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["success",
@@ -4246,68 +4125,25 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderAction {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "change_options" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::ChangeOptions)
-                    }
-                    "disable_viewer_info" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::DisableViewerInfo)
-                    }
-                    "edit_contents" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::EditContents)
-                    }
-                    "enable_viewer_info" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::EnableViewerInfo)
-                    }
-                    "invite_editor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::InviteEditor)
-                    }
-                    "invite_viewer" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::InviteViewer)
-                    }
-                    "invite_viewer_no_comment" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::InviteViewerNoComment)
-                    }
-                    "relinquish_membership" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::RelinquishMembership)
-                    }
-                    "unmount" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::Unmount)
-                    }
-                    "unshare" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::Unshare)
-                    }
-                    "leave_a_copy" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::LeaveACopy)
-                    }
-                    "share_link" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::ShareLink)
-                    }
-                    "create_link" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::CreateLink)
-                    }
-                    "set_access_inheritance" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::SetAccessInheritance)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderAction::Other)
-                    }
-                }
+                let value = match tag {
+                    "change_options" => FolderAction::ChangeOptions,
+                    "disable_viewer_info" => FolderAction::DisableViewerInfo,
+                    "edit_contents" => FolderAction::EditContents,
+                    "enable_viewer_info" => FolderAction::EnableViewerInfo,
+                    "invite_editor" => FolderAction::InviteEditor,
+                    "invite_viewer" => FolderAction::InviteViewer,
+                    "invite_viewer_no_comment" => FolderAction::InviteViewerNoComment,
+                    "relinquish_membership" => FolderAction::RelinquishMembership,
+                    "unmount" => FolderAction::Unmount,
+                    "unshare" => FolderAction::Unshare,
+                    "leave_a_copy" => FolderAction::LeaveACopy,
+                    "share_link" => FolderAction::ShareLink,
+                    "create_link" => FolderAction::CreateLink,
+                    "set_access_inheritance" => FolderAction::SetAccessInheritance,
+                    _ => FolderAction::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["change_options",
@@ -5272,26 +5108,25 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileMetadataError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "user_error" => {
                         match map.next_key()? {
-                            Some("user_error") => Ok(GetFileMetadataError::UserError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("user_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("user_error") => GetFileMetadataError::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(GetFileMetadataError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => GetFileMetadataError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetFileMetadataError::Other)
-                    }
-                }
+                    _ => GetFileMetadataError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["user_error",
@@ -5372,20 +5207,19 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileMetadataIndividualResult {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "metadata" => Ok(GetFileMetadataIndividualResult::Metadata(SharedFileMetadata::internal_deserialize(map)?)),
+                let value = match tag {
+                    "metadata" => GetFileMetadataIndividualResult::Metadata(SharedFileMetadata::internal_deserialize(&mut map)?),
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(GetFileMetadataIndividualResult::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => GetFileMetadataIndividualResult::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetFileMetadataIndividualResult::Other)
-                    }
-                }
+                    _ => GetFileMetadataIndividualResult::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["metadata",
@@ -5560,28 +5394,15 @@ impl<'de> ::serde::de::Deserialize<'de> for GetSharedLinkFileError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "shared_link_not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetSharedLinkFileError::SharedLinkNotFound)
-                    }
-                    "shared_link_access_denied" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetSharedLinkFileError::SharedLinkAccessDenied)
-                    }
-                    "unsupported_link_type" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetSharedLinkFileError::UnsupportedLinkType)
-                    }
-                    "shared_link_is_directory" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetSharedLinkFileError::SharedLinkIsDirectory)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetSharedLinkFileError::Other)
-                    }
-                }
+                let value = match tag {
+                    "shared_link_not_found" => GetSharedLinkFileError::SharedLinkNotFound,
+                    "shared_link_access_denied" => GetSharedLinkFileError::SharedLinkAccessDenied,
+                    "unsupported_link_type" => GetSharedLinkFileError::UnsupportedLinkType,
+                    "shared_link_is_directory" => GetSharedLinkFileError::SharedLinkIsDirectory,
+                    _ => GetSharedLinkFileError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["shared_link_not_found",
@@ -5878,19 +5699,18 @@ impl<'de> ::serde::de::Deserialize<'de> for GetSharedLinksError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(GetSharedLinksError::Path(map.next_value()?)),
-                            None => Ok(GetSharedLinksError::Path(None)),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => GetSharedLinksError::Path(map.next_value()?),
+                            None => GetSharedLinksError::Path(None),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetSharedLinksError::Other)
-                    }
-                }
+                    _ => GetSharedLinksError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -6644,19 +6464,18 @@ impl<'de> ::serde::de::Deserialize<'de> for InviteeInfo {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "email" => {
                         match map.next_key()? {
-                            Some("email") => Ok(InviteeInfo::Email(map.next_value()?)),
-                            None => Err(de::Error::missing_field("email")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("email") => InviteeInfo::Email(map.next_value()?),
+                            None => return Err(de::Error::missing_field("email")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(InviteeInfo::Other)
-                    }
-                }
+                    _ => InviteeInfo::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["email",
@@ -6892,33 +6711,32 @@ impl<'de> ::serde::de::Deserialize<'de> for JobError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "unshare_folder_error" => {
                         match map.next_key()? {
-                            Some("unshare_folder_error") => Ok(JobError::UnshareFolderError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("unshare_folder_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("unshare_folder_error") => JobError::UnshareFolderError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("unshare_folder_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "remove_folder_member_error" => {
                         match map.next_key()? {
-                            Some("remove_folder_member_error") => Ok(JobError::RemoveFolderMemberError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("remove_folder_member_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("remove_folder_member_error") => JobError::RemoveFolderMemberError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("remove_folder_member_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "relinquish_folder_membership_error" => {
                         match map.next_key()? {
-                            Some("relinquish_folder_membership_error") => Ok(JobError::RelinquishFolderMembershipError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("relinquish_folder_membership_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("relinquish_folder_membership_error") => JobError::RelinquishFolderMembershipError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("relinquish_folder_membership_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(JobError::Other)
-                    }
-                }
+                    _ => JobError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["unshare_folder_error",
@@ -7007,24 +6825,20 @@ impl<'de> ::serde::de::Deserialize<'de> for JobStatus {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(JobStatus::InProgress)
-                    }
-                    "complete" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(JobStatus::Complete)
-                    }
+                let value = match tag {
+                    "in_progress" => JobStatus::InProgress,
+                    "complete" => JobStatus::Complete,
                     "failed" => {
                         match map.next_key()? {
-                            Some("failed") => Ok(JobStatus::Failed(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failed")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failed") => JobStatus::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["in_progress",
@@ -7089,20 +6903,13 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAccessLevel {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "viewer" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAccessLevel::Viewer)
-                    }
-                    "editor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAccessLevel::Editor)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAccessLevel::Other)
-                    }
-                }
+                let value = match tag {
+                    "viewer" => LinkAccessLevel::Viewer,
+                    "editor" => LinkAccessLevel::Editor,
+                    _ => LinkAccessLevel::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["viewer",
@@ -7170,36 +6977,17 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAction {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "change_access_level" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAction::ChangeAccessLevel)
-                    }
-                    "change_audience" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAction::ChangeAudience)
-                    }
-                    "remove_expiry" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAction::RemoveExpiry)
-                    }
-                    "remove_password" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAction::RemovePassword)
-                    }
-                    "set_expiry" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAction::SetExpiry)
-                    }
-                    "set_password" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAction::SetPassword)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAction::Other)
-                    }
-                }
+                let value = match tag {
+                    "change_access_level" => LinkAction::ChangeAccessLevel,
+                    "change_audience" => LinkAction::ChangeAudience,
+                    "remove_expiry" => LinkAction::RemoveExpiry,
+                    "remove_password" => LinkAction::RemovePassword,
+                    "set_expiry" => LinkAction::SetExpiry,
+                    "set_password" => LinkAction::SetPassword,
+                    _ => LinkAction::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["change_access_level",
@@ -7294,32 +7082,16 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkAudience {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "public" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAudience::Public)
-                    }
-                    "team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAudience::Team)
-                    }
-                    "no_one" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAudience::NoOne)
-                    }
-                    "password" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAudience::Password)
-                    }
-                    "members" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAudience::Members)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkAudience::Other)
-                    }
-                }
+                let value = match tag {
+                    "public" => LinkAudience::Public,
+                    "team" => LinkAudience::Team,
+                    "no_one" => LinkAudience::NoOne,
+                    "password" => LinkAudience::Password,
+                    "members" => LinkAudience::Members,
+                    _ => LinkAudience::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["public",
@@ -7399,23 +7171,19 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkExpiry {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "remove_expiry" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkExpiry::RemoveExpiry)
-                    }
+                let value = match tag {
+                    "remove_expiry" => LinkExpiry::RemoveExpiry,
                     "set_expiry" => {
                         match map.next_key()? {
-                            Some("set_expiry") => Ok(LinkExpiry::SetExpiry(map.next_value()?)),
-                            None => Err(de::Error::missing_field("set_expiry")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("set_expiry") => LinkExpiry::SetExpiry(map.next_value()?),
+                            None => return Err(de::Error::missing_field("set_expiry")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkExpiry::Other)
-                    }
-                }
+                    _ => LinkExpiry::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["remove_expiry",
@@ -7545,23 +7313,19 @@ impl<'de> ::serde::de::Deserialize<'de> for LinkPassword {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "remove_password" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkPassword::RemovePassword)
-                    }
+                let value = match tag {
+                    "remove_password" => LinkPassword::RemovePassword,
                     "set_password" => {
                         match map.next_key()? {
-                            Some("set_password") => Ok(LinkPassword::SetPassword(map.next_value()?)),
-                            None => Err(de::Error::missing_field("set_password")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("set_password") => LinkPassword::SetPassword(map.next_value()?),
+                            None => return Err(de::Error::missing_field("set_password")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LinkPassword::Other)
-                    }
-                }
+                    _ => LinkPassword::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["remove_password",
@@ -8528,30 +8292,26 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersContinueError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "user_error" => {
                         match map.next_key()? {
-                            Some("user_error") => Ok(ListFileMembersContinueError::UserError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("user_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("user_error") => ListFileMembersContinueError::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(ListFileMembersContinueError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => ListFileMembersContinueError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "invalid_cursor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFileMembersContinueError::InvalidCursor)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFileMembersContinueError::Other)
-                    }
-                }
+                    "invalid_cursor" => ListFileMembersContinueError::InvalidCursor,
+                    _ => ListFileMembersContinueError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["user_error",
@@ -8741,26 +8501,25 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "user_error" => {
                         match map.next_key()? {
-                            Some("user_error") => Ok(ListFileMembersError::UserError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("user_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("user_error") => ListFileMembersError::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(ListFileMembersError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => ListFileMembersError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFileMembersError::Other)
-                    }
-                }
+                    _ => ListFileMembersError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["user_error",
@@ -8841,20 +8600,19 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileMembersIndividualResult {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "result" => Ok(ListFileMembersIndividualResult::Result(ListFileMembersCountResult::internal_deserialize(map)?)),
+                let value = match tag {
+                    "result" => ListFileMembersIndividualResult::Result(ListFileMembersCountResult::internal_deserialize(&mut map)?),
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(ListFileMembersIndividualResult::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => ListFileMembersIndividualResult::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFileMembersIndividualResult::Other)
-                    }
-                }
+                    _ => ListFileMembersIndividualResult::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["result",
@@ -9114,23 +8872,19 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFilesContinueError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "user_error" => {
                         match map.next_key()? {
-                            Some("user_error") => Ok(ListFilesContinueError::UserError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("user_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("user_error") => ListFilesContinueError::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "invalid_cursor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFilesContinueError::InvalidCursor)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFilesContinueError::Other)
-                    }
-                }
+                    "invalid_cursor" => ListFilesContinueError::InvalidCursor,
+                    _ => ListFilesContinueError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["user_error",
@@ -9536,23 +9290,19 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderMembersContinueError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(ListFolderMembersContinueError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => ListFolderMembersContinueError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "invalid_cursor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFolderMembersContinueError::InvalidCursor)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFolderMembersContinueError::Other)
-                    }
-                }
+                    "invalid_cursor" => ListFolderMembersContinueError::InvalidCursor,
+                    _ => ListFolderMembersContinueError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["access_error",
@@ -9931,16 +9681,12 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFoldersContinueError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "invalid_cursor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFoldersContinueError::InvalidCursor)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFoldersContinueError::Other)
-                    }
-                }
+                let value = match tag {
+                    "invalid_cursor" => ListFoldersContinueError::InvalidCursor,
+                    _ => ListFoldersContinueError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["invalid_cursor",
@@ -10239,23 +9985,19 @@ impl<'de> ::serde::de::Deserialize<'de> for ListSharedLinksError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(ListSharedLinksError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => ListSharedLinksError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "reset" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListSharedLinksError::Reset)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListSharedLinksError::Other)
-                    }
-                }
+                    "reset" => ListSharedLinksError::Reset,
+                    _ => ListSharedLinksError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -10590,36 +10332,17 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberAction {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "leave_a_copy" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberAction::LeaveACopy)
-                    }
-                    "make_editor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberAction::MakeEditor)
-                    }
-                    "make_owner" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberAction::MakeOwner)
-                    }
-                    "make_viewer" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberAction::MakeViewer)
-                    }
-                    "make_viewer_no_comment" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberAction::MakeViewerNoComment)
-                    }
-                    "remove" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberAction::Remove)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberAction::Other)
-                    }
-                }
+                let value = match tag {
+                    "leave_a_copy" => MemberAction::LeaveACopy,
+                    "make_editor" => MemberAction::MakeEditor,
+                    "make_owner" => MemberAction::MakeOwner,
+                    "make_viewer" => MemberAction::MakeViewer,
+                    "make_viewer_no_comment" => MemberAction::MakeViewerNoComment,
+                    "remove" => MemberAction::Remove,
+                    _ => MemberAction::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["leave_a_copy",
@@ -10830,20 +10553,13 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberPolicy::Team)
-                    }
-                    "anyone" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberPolicy::Anyone)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "team" => MemberPolicy::Team,
+                    "anyone" => MemberPolicy::Anyone,
+                    _ => MemberPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["team",
@@ -10903,26 +10619,25 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSelector {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "dropbox_id" => {
                         match map.next_key()? {
-                            Some("dropbox_id") => Ok(MemberSelector::DropboxId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("dropbox_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("dropbox_id") => MemberSelector::DropboxId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("dropbox_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "email" => {
                         match map.next_key()? {
-                            Some("email") => Ok(MemberSelector::Email(map.next_value()?)),
-                            None => Err(de::Error::missing_field("email")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("email") => MemberSelector::Email(map.next_value()?),
+                            None => return Err(de::Error::missing_field("email")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberSelector::Other)
-                    }
-                }
+                    _ => MemberSelector::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["dropbox_id",
@@ -11259,35 +10974,22 @@ impl<'de> ::serde::de::Deserialize<'de> for ModifySharedLinkSettingsError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "shared_link_not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ModifySharedLinkSettingsError::SharedLinkNotFound)
-                    }
-                    "shared_link_access_denied" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ModifySharedLinkSettingsError::SharedLinkAccessDenied)
-                    }
-                    "unsupported_link_type" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ModifySharedLinkSettingsError::UnsupportedLinkType)
-                    }
+                let value = match tag {
+                    "shared_link_not_found" => ModifySharedLinkSettingsError::SharedLinkNotFound,
+                    "shared_link_access_denied" => ModifySharedLinkSettingsError::SharedLinkAccessDenied,
+                    "unsupported_link_type" => ModifySharedLinkSettingsError::UnsupportedLinkType,
                     "settings_error" => {
                         match map.next_key()? {
-                            Some("settings_error") => Ok(ModifySharedLinkSettingsError::SettingsError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("settings_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("settings_error") => ModifySharedLinkSettingsError::SettingsError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("settings_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "email_not_verified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ModifySharedLinkSettingsError::EmailNotVerified)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ModifySharedLinkSettingsError::Other)
-                    }
-                }
+                    "email_not_verified" => ModifySharedLinkSettingsError::EmailNotVerified,
+                    _ => ModifySharedLinkSettingsError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["shared_link_not_found",
@@ -11486,36 +11188,23 @@ impl<'de> ::serde::de::Deserialize<'de> for MountFolderError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(MountFolderError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => MountFolderError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "inside_shared_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MountFolderError::InsideSharedFolder)
-                    }
-                    "insufficient_quota" => Ok(MountFolderError::InsufficientQuota(InsufficientQuotaAmounts::internal_deserialize(map)?)),
-                    "already_mounted" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MountFolderError::AlreadyMounted)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MountFolderError::NoPermission)
-                    }
-                    "not_mountable" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MountFolderError::NotMountable)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MountFolderError::Other)
-                    }
-                }
+                    "inside_shared_folder" => MountFolderError::InsideSharedFolder,
+                    "insufficient_quota" => MountFolderError::InsufficientQuota(InsufficientQuotaAmounts::internal_deserialize(&mut map)?),
+                    "already_mounted" => MountFolderError::AlreadyMounted,
+                    "no_permission" => MountFolderError::NoPermission,
+                    "not_mountable" => MountFolderError::NotMountable,
+                    _ => MountFolderError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["access_error",
@@ -11894,17 +11583,13 @@ impl<'de> ::serde::de::Deserialize<'de> for PendingUploadMode {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "file" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PendingUploadMode::File)
-                    }
-                    "folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PendingUploadMode::Folder)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "file" => PendingUploadMode::File,
+                    "folder" => PendingUploadMode::Folder,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["file",
@@ -11987,69 +11672,26 @@ impl<'de> ::serde::de::Deserialize<'de> for PermissionDeniedReason {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "user_not_same_team_as_owner" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::UserNotSameTeamAsOwner)
-                    }
-                    "user_not_allowed_by_owner" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::UserNotAllowedByOwner)
-                    }
-                    "target_is_indirect_member" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::TargetIsIndirectMember)
-                    }
-                    "target_is_owner" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::TargetIsOwner)
-                    }
-                    "target_is_self" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::TargetIsSelf)
-                    }
-                    "target_not_active" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::TargetNotActive)
-                    }
-                    "folder_is_limited_team_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::FolderIsLimitedTeamFolder)
-                    }
-                    "owner_not_on_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::OwnerNotOnTeam)
-                    }
-                    "permission_denied" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::PermissionDenied)
-                    }
-                    "restricted_by_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::RestrictedByTeam)
-                    }
-                    "user_account_type" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::UserAccountType)
-                    }
-                    "user_not_on_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::UserNotOnTeam)
-                    }
-                    "folder_is_inside_shared_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::FolderIsInsideSharedFolder)
-                    }
-                    "restricted_by_parent_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::RestrictedByParentFolder)
-                    }
-                    "insufficient_plan" => Ok(PermissionDeniedReason::InsufficientPlan(InsufficientPlan::internal_deserialize(map)?)),
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PermissionDeniedReason::Other)
-                    }
-                }
+                let value = match tag {
+                    "user_not_same_team_as_owner" => PermissionDeniedReason::UserNotSameTeamAsOwner,
+                    "user_not_allowed_by_owner" => PermissionDeniedReason::UserNotAllowedByOwner,
+                    "target_is_indirect_member" => PermissionDeniedReason::TargetIsIndirectMember,
+                    "target_is_owner" => PermissionDeniedReason::TargetIsOwner,
+                    "target_is_self" => PermissionDeniedReason::TargetIsSelf,
+                    "target_not_active" => PermissionDeniedReason::TargetNotActive,
+                    "folder_is_limited_team_folder" => PermissionDeniedReason::FolderIsLimitedTeamFolder,
+                    "owner_not_on_team" => PermissionDeniedReason::OwnerNotOnTeam,
+                    "permission_denied" => PermissionDeniedReason::PermissionDenied,
+                    "restricted_by_team" => PermissionDeniedReason::RestrictedByTeam,
+                    "user_account_type" => PermissionDeniedReason::UserAccountType,
+                    "user_not_on_team" => PermissionDeniedReason::UserNotOnTeam,
+                    "folder_is_inside_shared_folder" => PermissionDeniedReason::FolderIsInsideSharedFolder,
+                    "restricted_by_parent_folder" => PermissionDeniedReason::RestrictedByParentFolder,
+                    "insufficient_plan" => PermissionDeniedReason::InsufficientPlan(InsufficientPlan::internal_deserialize(&mut map)?),
+                    _ => PermissionDeniedReason::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["user_not_same_team_as_owner",
@@ -12292,27 +11934,20 @@ impl<'de> ::serde::de::Deserialize<'de> for RelinquishFileMembershipError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(RelinquishFileMembershipError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => RelinquishFileMembershipError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "group_access" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelinquishFileMembershipError::GroupAccess)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelinquishFileMembershipError::NoPermission)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelinquishFileMembershipError::Other)
-                    }
-                }
+                    "group_access" => RelinquishFileMembershipError::GroupAccess,
+                    "no_permission" => RelinquishFileMembershipError::NoPermission,
+                    _ => RelinquishFileMembershipError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["access_error",
@@ -12520,43 +12155,24 @@ impl<'de> ::serde::de::Deserialize<'de> for RelinquishFolderMembershipError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(RelinquishFolderMembershipError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => RelinquishFolderMembershipError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "folder_owner" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelinquishFolderMembershipError::FolderOwner)
-                    }
-                    "mounted" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelinquishFolderMembershipError::Mounted)
-                    }
-                    "group_access" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelinquishFolderMembershipError::GroupAccess)
-                    }
-                    "team_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelinquishFolderMembershipError::TeamFolder)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelinquishFolderMembershipError::NoPermission)
-                    }
-                    "no_explicit_access" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelinquishFolderMembershipError::NoExplicitAccess)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelinquishFolderMembershipError::Other)
-                    }
-                }
+                    "folder_owner" => RelinquishFolderMembershipError::FolderOwner,
+                    "mounted" => RelinquishFolderMembershipError::Mounted,
+                    "group_access" => RelinquishFolderMembershipError::GroupAccess,
+                    "team_folder" => RelinquishFolderMembershipError::TeamFolder,
+                    "no_permission" => RelinquishFolderMembershipError::NoPermission,
+                    "no_explicit_access" => RelinquishFolderMembershipError::NoExplicitAccess,
+                    _ => RelinquishFolderMembershipError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["access_error",
@@ -12783,27 +12399,26 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveFileMemberError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "user_error" => {
                         match map.next_key()? {
-                            Some("user_error") => Ok(RemoveFileMemberError::UserError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("user_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("user_error") => RemoveFileMemberError::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(RemoveFileMemberError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => RemoveFileMemberError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "no_explicit_access" => Ok(RemoveFileMemberError::NoExplicitAccess(MemberAccessLevelResult::internal_deserialize(map)?)),
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RemoveFileMemberError::Other)
-                    }
-                }
+                    "no_explicit_access" => RemoveFileMemberError::NoExplicitAccess(MemberAccessLevelResult::internal_deserialize(&mut map)?),
+                    _ => RemoveFileMemberError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["user_error",
@@ -13025,46 +12640,30 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveFolderMemberError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(RemoveFolderMemberError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => RemoveFolderMemberError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "member_error" => {
                         match map.next_key()? {
-                            Some("member_error") => Ok(RemoveFolderMemberError::MemberError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("member_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("member_error") => RemoveFolderMemberError::MemberError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("member_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "folder_owner" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RemoveFolderMemberError::FolderOwner)
-                    }
-                    "group_access" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RemoveFolderMemberError::GroupAccess)
-                    }
-                    "team_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RemoveFolderMemberError::TeamFolder)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RemoveFolderMemberError::NoPermission)
-                    }
-                    "too_many_files" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RemoveFolderMemberError::TooManyFiles)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RemoveFolderMemberError::Other)
-                    }
-                }
+                    "folder_owner" => RemoveFolderMemberError::FolderOwner,
+                    "group_access" => RemoveFolderMemberError::GroupAccess,
+                    "team_folder" => RemoveFolderMemberError::TeamFolder,
+                    "no_permission" => RemoveFolderMemberError::NoPermission,
+                    "too_many_files" => RemoveFolderMemberError::TooManyFiles,
+                    _ => RemoveFolderMemberError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["access_error",
@@ -13183,21 +12782,20 @@ impl<'de> ::serde::de::Deserialize<'de> for RemoveMemberJobStatus {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RemoveMemberJobStatus::InProgress)
-                    }
-                    "complete" => Ok(RemoveMemberJobStatus::Complete(MemberAccessLevelResult::internal_deserialize(map)?)),
+                let value = match tag {
+                    "in_progress" => RemoveMemberJobStatus::InProgress,
+                    "complete" => RemoveMemberJobStatus::Complete(MemberAccessLevelResult::internal_deserialize(&mut map)?),
                     "failed" => {
                         match map.next_key()? {
-                            Some("failed") => Ok(RemoveMemberJobStatus::Failed(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failed")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failed") => RemoveMemberJobStatus::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["in_progress",
@@ -13266,24 +12864,14 @@ impl<'de> ::serde::de::Deserialize<'de> for RequestedLinkAccessLevel {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "viewer" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RequestedLinkAccessLevel::Viewer)
-                    }
-                    "editor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RequestedLinkAccessLevel::Editor)
-                    }
-                    "max" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RequestedLinkAccessLevel::Max)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RequestedLinkAccessLevel::Other)
-                    }
-                }
+                let value = match tag {
+                    "viewer" => RequestedLinkAccessLevel::Viewer,
+                    "editor" => RequestedLinkAccessLevel::Editor,
+                    "max" => RequestedLinkAccessLevel::Max,
+                    _ => RequestedLinkAccessLevel::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["viewer",
@@ -13351,21 +12939,14 @@ impl<'de> ::serde::de::Deserialize<'de> for RequestedVisibility {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "public" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RequestedVisibility::Public)
-                    }
-                    "team_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RequestedVisibility::TeamOnly)
-                    }
-                    "password" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RequestedVisibility::Password)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "public" => RequestedVisibility::Public,
+                    "team_only" => RequestedVisibility::TeamOnly,
+                    "password" => RequestedVisibility::Password,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["public",
@@ -13440,32 +13021,16 @@ impl<'de> ::serde::de::Deserialize<'de> for ResolvedVisibility {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "public" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ResolvedVisibility::Public)
-                    }
-                    "team_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ResolvedVisibility::TeamOnly)
-                    }
-                    "password" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ResolvedVisibility::Password)
-                    }
-                    "team_and_password" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ResolvedVisibility::TeamAndPassword)
-                    }
-                    "shared_folder_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ResolvedVisibility::SharedFolderOnly)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ResolvedVisibility::Other)
-                    }
-                }
+                let value = match tag {
+                    "public" => ResolvedVisibility::Public,
+                    "team_only" => ResolvedVisibility::TeamOnly,
+                    "password" => ResolvedVisibility::Password,
+                    "team_and_password" => ResolvedVisibility::TeamAndPassword,
+                    "shared_folder_only" => ResolvedVisibility::SharedFolderOnly,
+                    _ => ResolvedVisibility::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["public",
@@ -13639,28 +13204,15 @@ impl<'de> ::serde::de::Deserialize<'de> for RevokeSharedLinkError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "shared_link_not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RevokeSharedLinkError::SharedLinkNotFound)
-                    }
-                    "shared_link_access_denied" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RevokeSharedLinkError::SharedLinkAccessDenied)
-                    }
-                    "unsupported_link_type" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RevokeSharedLinkError::UnsupportedLinkType)
-                    }
-                    "shared_link_malformed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RevokeSharedLinkError::SharedLinkMalformed)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RevokeSharedLinkError::Other)
-                    }
-                }
+                let value = match tag {
+                    "shared_link_not_found" => RevokeSharedLinkError::SharedLinkNotFound,
+                    "shared_link_access_denied" => RevokeSharedLinkError::SharedLinkAccessDenied,
+                    "unsupported_link_type" => RevokeSharedLinkError::UnsupportedLinkType,
+                    "shared_link_malformed" => RevokeSharedLinkError::SharedLinkMalformed,
+                    _ => RevokeSharedLinkError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["shared_link_not_found",
@@ -13855,23 +13407,19 @@ impl<'de> ::serde::de::Deserialize<'de> for SetAccessInheritanceError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(SetAccessInheritanceError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => SetAccessInheritanceError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SetAccessInheritanceError::NoPermission)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SetAccessInheritanceError::Other)
-                    }
-                }
+                    "no_permission" => SetAccessInheritanceError::NoPermission,
+                    _ => SetAccessInheritanceError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["access_error",
@@ -14397,35 +13945,22 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShareFolderError::EmailUnverified)
-                    }
+                let value = match tag {
+                    "email_unverified" => ShareFolderError::EmailUnverified,
                     "bad_path" => {
                         match map.next_key()? {
-                            Some("bad_path") => Ok(ShareFolderError::BadPath(map.next_value()?)),
-                            None => Err(de::Error::missing_field("bad_path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("bad_path") => ShareFolderError::BadPath(map.next_value()?),
+                            None => return Err(de::Error::missing_field("bad_path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "team_policy_disallows_member_policy" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShareFolderError::TeamPolicyDisallowsMemberPolicy)
-                    }
-                    "disallowed_shared_link_policy" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShareFolderError::DisallowedSharedLinkPolicy)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShareFolderError::NoPermission)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShareFolderError::Other)
-                    }
-                }
+                    "team_policy_disallows_member_policy" => ShareFolderError::TeamPolicyDisallowsMemberPolicy,
+                    "disallowed_shared_link_policy" => ShareFolderError::DisallowedSharedLinkPolicy,
+                    "no_permission" => ShareFolderError::NoPermission,
+                    _ => ShareFolderError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["email_unverified",
@@ -14532,31 +14067,21 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderErrorBase {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShareFolderErrorBase::EmailUnverified)
-                    }
+                let value = match tag {
+                    "email_unverified" => ShareFolderErrorBase::EmailUnverified,
                     "bad_path" => {
                         match map.next_key()? {
-                            Some("bad_path") => Ok(ShareFolderErrorBase::BadPath(map.next_value()?)),
-                            None => Err(de::Error::missing_field("bad_path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("bad_path") => ShareFolderErrorBase::BadPath(map.next_value()?),
+                            None => return Err(de::Error::missing_field("bad_path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "team_policy_disallows_member_policy" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShareFolderErrorBase::TeamPolicyDisallowsMemberPolicy)
-                    }
-                    "disallowed_shared_link_policy" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShareFolderErrorBase::DisallowedSharedLinkPolicy)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShareFolderErrorBase::Other)
-                    }
-                }
+                    "team_policy_disallows_member_policy" => ShareFolderErrorBase::TeamPolicyDisallowsMemberPolicy,
+                    "disallowed_shared_link_policy" => ShareFolderErrorBase::DisallowedSharedLinkPolicy,
+                    _ => ShareFolderErrorBase::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["email_unverified",
@@ -14627,21 +14152,20 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderJobStatus {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShareFolderJobStatus::InProgress)
-                    }
-                    "complete" => Ok(ShareFolderJobStatus::Complete(SharedFolderMetadata::internal_deserialize(map)?)),
+                let value = match tag {
+                    "in_progress" => ShareFolderJobStatus::InProgress,
+                    "complete" => ShareFolderJobStatus::Complete(SharedFolderMetadata::internal_deserialize(&mut map)?),
                     "failed" => {
                         match map.next_key()? {
-                            Some("failed") => Ok(ShareFolderJobStatus::Failed(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failed")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failed") => ShareFolderJobStatus::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["in_progress",
@@ -14703,17 +14227,19 @@ impl<'de> ::serde::de::Deserialize<'de> for ShareFolderLaunch {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "async_job_id" => {
                         match map.next_key()? {
-                            Some("async_job_id") => Ok(ShareFolderLaunch::AsyncJobId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("async_job_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("async_job_id") => ShareFolderLaunch::AsyncJobId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("async_job_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "complete" => Ok(ShareFolderLaunch::Complete(SharedFolderMetadata::internal_deserialize(map)?)),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    "complete" => ShareFolderLaunch::Complete(SharedFolderMetadata::internal_deserialize(&mut map)?),
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["async_job_id",
@@ -14798,69 +14324,26 @@ impl<'de> ::serde::de::Deserialize<'de> for SharePathError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "is_file" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::IsFile)
-                    }
-                    "inside_shared_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::InsideSharedFolder)
-                    }
-                    "contains_shared_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::ContainsSharedFolder)
-                    }
-                    "contains_app_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::ContainsAppFolder)
-                    }
-                    "contains_team_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::ContainsTeamFolder)
-                    }
-                    "is_app_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::IsAppFolder)
-                    }
-                    "inside_app_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::InsideAppFolder)
-                    }
-                    "is_public_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::IsPublicFolder)
-                    }
-                    "inside_public_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::InsidePublicFolder)
-                    }
-                    "already_shared" => Ok(SharePathError::AlreadyShared(SharedFolderMetadata::internal_deserialize(map)?)),
-                    "invalid_path" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::InvalidPath)
-                    }
-                    "is_osx_package" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::IsOsxPackage)
-                    }
-                    "inside_osx_package" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::InsideOsxPackage)
-                    }
-                    "is_vault" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::IsVault)
-                    }
-                    "is_family" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::IsFamily)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharePathError::Other)
-                    }
-                }
+                let value = match tag {
+                    "is_file" => SharePathError::IsFile,
+                    "inside_shared_folder" => SharePathError::InsideSharedFolder,
+                    "contains_shared_folder" => SharePathError::ContainsSharedFolder,
+                    "contains_app_folder" => SharePathError::ContainsAppFolder,
+                    "contains_team_folder" => SharePathError::ContainsTeamFolder,
+                    "is_app_folder" => SharePathError::IsAppFolder,
+                    "inside_app_folder" => SharePathError::InsideAppFolder,
+                    "is_public_folder" => SharePathError::IsPublicFolder,
+                    "inside_public_folder" => SharePathError::InsidePublicFolder,
+                    "already_shared" => SharePathError::AlreadyShared(SharedFolderMetadata::internal_deserialize(&mut map)?),
+                    "invalid_path" => SharePathError::InvalidPath,
+                    "is_osx_package" => SharePathError::IsOsxPackage,
+                    "inside_osx_package" => SharePathError::InsideOsxPackage,
+                    "is_vault" => SharePathError::IsVault,
+                    "is_family" => SharePathError::IsFamily,
+                    _ => SharePathError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["is_file",
@@ -15940,28 +15423,15 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderAccessError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "invalid_id" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderAccessError::InvalidId)
-                    }
-                    "not_a_member" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderAccessError::NotAMember)
-                    }
-                    "email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderAccessError::EmailUnverified)
-                    }
-                    "unmounted" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderAccessError::Unmounted)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderAccessError::Other)
-                    }
-                }
+                let value = match tag {
+                    "invalid_id" => SharedFolderAccessError::InvalidId,
+                    "not_a_member" => SharedFolderAccessError::NotAMember,
+                    "email_unverified" => SharedFolderAccessError::EmailUnverified,
+                    "unmounted" => SharedFolderAccessError::Unmounted,
+                    _ => SharedFolderAccessError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["invalid_id",
@@ -16051,21 +15521,14 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "invalid_dropbox_id" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderMemberError::InvalidDropboxId)
-                    }
-                    "not_a_member" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderMemberError::NotAMember)
-                    }
-                    "no_explicit_access" => Ok(SharedFolderMemberError::NoExplicitAccess(MemberAccessLevelResult::internal_deserialize(map)?)),
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderMemberError::Other)
-                    }
-                }
+                let value = match tag {
+                    "invalid_dropbox_id" => SharedFolderMemberError::InvalidDropboxId,
+                    "not_a_member" => SharedFolderMemberError::NotAMember,
+                    "no_explicit_access" => SharedFolderMemberError::NoExplicitAccess(MemberAccessLevelResult::internal_deserialize(&mut map)?),
+                    _ => SharedFolderMemberError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["invalid_dropbox_id",
@@ -16851,32 +16314,16 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkAccessFailureReason {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "login_required" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkAccessFailureReason::LoginRequired)
-                    }
-                    "email_verify_required" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkAccessFailureReason::EmailVerifyRequired)
-                    }
-                    "password_required" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkAccessFailureReason::PasswordRequired)
-                    }
-                    "team_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkAccessFailureReason::TeamOnly)
-                    }
-                    "owner_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkAccessFailureReason::OwnerOnly)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkAccessFailureReason::Other)
-                    }
-                }
+                let value = match tag {
+                    "login_required" => SharedLinkAccessFailureReason::LoginRequired,
+                    "email_verify_required" => SharedLinkAccessFailureReason::EmailVerifyRequired,
+                    "password_required" => SharedLinkAccessFailureReason::PasswordRequired,
+                    "team_only" => SharedLinkAccessFailureReason::TeamOnly,
+                    "owner_only" => SharedLinkAccessFailureReason::OwnerOnly,
+                    _ => SharedLinkAccessFailureReason::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["login_required",
@@ -16954,19 +16401,18 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkAlreadyExistsMetadata {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "metadata" => {
                         match map.next_key()? {
-                            Some("metadata") => Ok(SharedLinkAlreadyExistsMetadata::Metadata(map.next_value()?)),
-                            None => Err(de::Error::missing_field("metadata")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("metadata") => SharedLinkAlreadyExistsMetadata::Metadata(map.next_value()?),
+                            None => return Err(de::Error::missing_field("metadata")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkAlreadyExistsMetadata::Other)
-                    }
-                }
+                    _ => SharedLinkAlreadyExistsMetadata::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["metadata",
@@ -17021,24 +16467,14 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "shared_link_not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkError::SharedLinkNotFound)
-                    }
-                    "shared_link_access_denied" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkError::SharedLinkAccessDenied)
-                    }
-                    "unsupported_link_type" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkError::UnsupportedLinkType)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkError::Other)
-                    }
-                }
+                let value = match tag {
+                    "shared_link_not_found" => SharedLinkError::SharedLinkNotFound,
+                    "shared_link_access_denied" => SharedLinkError::SharedLinkAccessDenied,
+                    "unsupported_link_type" => SharedLinkError::UnsupportedLinkType,
+                    _ => SharedLinkError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["shared_link_not_found",
@@ -17202,24 +16638,14 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "anyone" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkPolicy::Anyone)
-                    }
-                    "team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkPolicy::Team)
-                    }
-                    "members" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkPolicy::Members)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "anyone" => SharedLinkPolicy::Anyone,
+                    "team" => SharedLinkPolicy::Team,
+                    "members" => SharedLinkPolicy::Members,
+                    _ => SharedLinkPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["anyone",
@@ -17452,17 +16878,13 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkSettingsError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "invalid_settings" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkSettingsError::InvalidSettings)
-                    }
-                    "not_authorized" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkSettingsError::NotAuthorized)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "invalid_settings" => SharedLinkSettingsError::InvalidSettings,
+                    "not_authorized" => SharedLinkSettingsError::NotAuthorized,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["invalid_settings",
@@ -17535,32 +16957,16 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingFileAccessError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingFileAccessError::NoPermission)
-                    }
-                    "invalid_file" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingFileAccessError::InvalidFile)
-                    }
-                    "is_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingFileAccessError::IsFolder)
-                    }
-                    "inside_public_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingFileAccessError::InsidePublicFolder)
-                    }
-                    "inside_osx_package" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingFileAccessError::InsideOsxPackage)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingFileAccessError::Other)
-                    }
-                }
+                let value = match tag {
+                    "no_permission" => SharingFileAccessError::NoPermission,
+                    "invalid_file" => SharingFileAccessError::InvalidFile,
+                    "is_folder" => SharingFileAccessError::IsFolder,
+                    "inside_public_folder" => SharingFileAccessError::InsidePublicFolder,
+                    "inside_osx_package" => SharingFileAccessError::InsideOsxPackage,
+                    _ => SharingFileAccessError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["no_permission",
@@ -17657,16 +17063,12 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingUserError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingUserError::EmailUnverified)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingUserError::Other)
-                    }
-                }
+                let value = match tag {
+                    "email_unverified" => SharingUserError::EmailUnverified,
+                    _ => SharingUserError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["email_unverified",
@@ -17964,43 +17366,24 @@ impl<'de> ::serde::de::Deserialize<'de> for TransferFolderError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(TransferFolderError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => TransferFolderError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "invalid_dropbox_id" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TransferFolderError::InvalidDropboxId)
-                    }
-                    "new_owner_not_a_member" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TransferFolderError::NewOwnerNotAMember)
-                    }
-                    "new_owner_unmounted" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TransferFolderError::NewOwnerUnmounted)
-                    }
-                    "new_owner_email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TransferFolderError::NewOwnerEmailUnverified)
-                    }
-                    "team_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TransferFolderError::TeamFolder)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TransferFolderError::NoPermission)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TransferFolderError::Other)
-                    }
-                }
+                    "invalid_dropbox_id" => TransferFolderError::InvalidDropboxId,
+                    "new_owner_not_a_member" => TransferFolderError::NewOwnerNotAMember,
+                    "new_owner_unmounted" => TransferFolderError::NewOwnerUnmounted,
+                    "new_owner_email_unverified" => TransferFolderError::NewOwnerEmailUnverified,
+                    "team_folder" => TransferFolderError::TeamFolder,
+                    "no_permission" => TransferFolderError::NoPermission,
+                    _ => TransferFolderError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["access_error",
@@ -18209,27 +17592,20 @@ impl<'de> ::serde::de::Deserialize<'de> for UnmountFolderError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(UnmountFolderError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => UnmountFolderError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UnmountFolderError::NoPermission)
-                    }
-                    "not_unmountable" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UnmountFolderError::NotUnmountable)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UnmountFolderError::Other)
-                    }
-                }
+                    "no_permission" => UnmountFolderError::NoPermission,
+                    "not_unmountable" => UnmountFolderError::NotUnmountable,
+                    _ => UnmountFolderError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["access_error",
@@ -18406,26 +17782,25 @@ impl<'de> ::serde::de::Deserialize<'de> for UnshareFileError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "user_error" => {
                         match map.next_key()? {
-                            Some("user_error") => Ok(UnshareFileError::UserError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("user_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("user_error") => UnshareFileError::UserError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(UnshareFileError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => UnshareFileError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UnshareFileError::Other)
-                    }
-                }
+                    _ => UnshareFileError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["user_error",
@@ -18619,31 +17994,21 @@ impl<'de> ::serde::de::Deserialize<'de> for UnshareFolderError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(UnshareFolderError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => UnshareFolderError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "team_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UnshareFolderError::TeamFolder)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UnshareFolderError::NoPermission)
-                    }
-                    "too_many_files" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UnshareFolderError::TooManyFiles)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UnshareFolderError::Other)
-                    }
-                }
+                    "team_folder" => UnshareFolderError::TeamFolder,
+                    "no_permission" => UnshareFolderError::NoPermission,
+                    "too_many_files" => UnshareFolderError::TooManyFiles,
+                    _ => UnshareFolderError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["access_error",
@@ -18983,41 +18348,34 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFolderMemberError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(UpdateFolderMemberError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => UpdateFolderMemberError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "member_error" => {
                         match map.next_key()? {
-                            Some("member_error") => Ok(UpdateFolderMemberError::MemberError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("member_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("member_error") => UpdateFolderMemberError::MemberError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("member_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "no_explicit_access" => {
                         match map.next_key()? {
-                            Some("no_explicit_access") => Ok(UpdateFolderMemberError::NoExplicitAccess(map.next_value()?)),
-                            None => Err(de::Error::missing_field("no_explicit_access")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("no_explicit_access") => UpdateFolderMemberError::NoExplicitAccess(map.next_value()?),
+                            None => return Err(de::Error::missing_field("no_explicit_access")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "insufficient_plan" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFolderMemberError::InsufficientPlan)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFolderMemberError::NoPermission)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFolderMemberError::Other)
-                    }
-                }
+                    "insufficient_plan" => UpdateFolderMemberError::InsufficientPlan,
+                    "no_permission" => UpdateFolderMemberError::NoPermission,
+                    _ => UpdateFolderMemberError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["access_error",
@@ -19336,39 +18694,23 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFolderPolicyError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "access_error" => {
                         match map.next_key()? {
-                            Some("access_error") => Ok(UpdateFolderPolicyError::AccessError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("access_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("access_error") => UpdateFolderPolicyError::AccessError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("access_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "not_on_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFolderPolicyError::NotOnTeam)
-                    }
-                    "team_policy_disallows_member_policy" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFolderPolicyError::TeamPolicyDisallowsMemberPolicy)
-                    }
-                    "disallowed_shared_link_policy" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFolderPolicyError::DisallowedSharedLinkPolicy)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFolderPolicyError::NoPermission)
-                    }
-                    "team_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFolderPolicyError::TeamFolder)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFolderPolicyError::Other)
-                    }
-                }
+                    "not_on_team" => UpdateFolderPolicyError::NotOnTeam,
+                    "team_policy_disallows_member_policy" => UpdateFolderPolicyError::TeamPolicyDisallowsMemberPolicy,
+                    "disallowed_shared_link_policy" => UpdateFolderPolicyError::DisallowedSharedLinkPolicy,
+                    "no_permission" => UpdateFolderPolicyError::NoPermission,
+                    "team_folder" => UpdateFolderPolicyError::TeamFolder,
+                    _ => UpdateFolderPolicyError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["access_error",
@@ -19987,20 +19329,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ViewerInfoPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ViewerInfoPolicy::Enabled)
-                    }
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ViewerInfoPolicy::Disabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ViewerInfoPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "enabled" => ViewerInfoPolicy::Enabled,
+                    "disabled" => ViewerInfoPolicy::Disabled,
+                    _ => ViewerInfoPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["enabled",
@@ -20068,32 +19403,16 @@ impl<'de> ::serde::de::Deserialize<'de> for Visibility {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "public" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(Visibility::Public)
-                    }
-                    "team_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(Visibility::TeamOnly)
-                    }
-                    "password" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(Visibility::Password)
-                    }
-                    "team_and_password" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(Visibility::TeamAndPassword)
-                    }
-                    "shared_folder_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(Visibility::SharedFolderOnly)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(Visibility::Other)
-                    }
-                }
+                let value = match tag {
+                    "public" => Visibility::Public,
+                    "team_only" => Visibility::TeamOnly,
+                    "password" => Visibility::Password,
+                    "team_and_password" => Visibility::TeamAndPassword,
+                    "shared_folder_only" => Visibility::SharedFolderOnly,
+                    _ => Visibility::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["public",

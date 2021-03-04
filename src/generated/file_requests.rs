@@ -166,16 +166,12 @@ impl<'de> ::serde::de::Deserialize<'de> for CountFileRequestsError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled_for_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CountFileRequestsError::DisabledForTeam)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CountFileRequestsError::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled_for_team" => CountFileRequestsError::DisabledForTeam,
+                    _ => CountFileRequestsError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled_for_team",
@@ -511,48 +507,20 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFileRequestError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled_for_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFileRequestError::DisabledForTeam)
-                    }
-                    "not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFileRequestError::NotFound)
-                    }
-                    "not_a_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFileRequestError::NotAFolder)
-                    }
-                    "app_lacks_access" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFileRequestError::AppLacksAccess)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFileRequestError::NoPermission)
-                    }
-                    "email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFileRequestError::EmailUnverified)
-                    }
-                    "validation_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFileRequestError::ValidationError)
-                    }
-                    "invalid_location" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFileRequestError::InvalidLocation)
-                    }
-                    "rate_limit" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFileRequestError::RateLimit)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFileRequestError::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled_for_team" => CreateFileRequestError::DisabledForTeam,
+                    "not_found" => CreateFileRequestError::NotFound,
+                    "not_a_folder" => CreateFileRequestError::NotAFolder,
+                    "app_lacks_access" => CreateFileRequestError::AppLacksAccess,
+                    "no_permission" => CreateFileRequestError::NoPermission,
+                    "email_unverified" => CreateFileRequestError::EmailUnverified,
+                    "validation_error" => CreateFileRequestError::ValidationError,
+                    "invalid_location" => CreateFileRequestError::InvalidLocation,
+                    "rate_limit" => CreateFileRequestError::RateLimit,
+                    _ => CreateFileRequestError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled_for_team",
@@ -694,40 +662,18 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteAllClosedFileRequestsError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled_for_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteAllClosedFileRequestsError::DisabledForTeam)
-                    }
-                    "not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteAllClosedFileRequestsError::NotFound)
-                    }
-                    "not_a_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteAllClosedFileRequestsError::NotAFolder)
-                    }
-                    "app_lacks_access" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteAllClosedFileRequestsError::AppLacksAccess)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteAllClosedFileRequestsError::NoPermission)
-                    }
-                    "email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteAllClosedFileRequestsError::EmailUnverified)
-                    }
-                    "validation_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteAllClosedFileRequestsError::ValidationError)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteAllClosedFileRequestsError::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled_for_team" => DeleteAllClosedFileRequestsError::DisabledForTeam,
+                    "not_found" => DeleteAllClosedFileRequestsError::NotFound,
+                    "not_a_folder" => DeleteAllClosedFileRequestsError::NotAFolder,
+                    "app_lacks_access" => DeleteAllClosedFileRequestsError::AppLacksAccess,
+                    "no_permission" => DeleteAllClosedFileRequestsError::NoPermission,
+                    "email_unverified" => DeleteAllClosedFileRequestsError::EmailUnverified,
+                    "validation_error" => DeleteAllClosedFileRequestsError::ValidationError,
+                    _ => DeleteAllClosedFileRequestsError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled_for_team",
@@ -1037,44 +983,19 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteFileRequestError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled_for_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteFileRequestError::DisabledForTeam)
-                    }
-                    "not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteFileRequestError::NotFound)
-                    }
-                    "not_a_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteFileRequestError::NotAFolder)
-                    }
-                    "app_lacks_access" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteFileRequestError::AppLacksAccess)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteFileRequestError::NoPermission)
-                    }
-                    "email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteFileRequestError::EmailUnverified)
-                    }
-                    "validation_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteFileRequestError::ValidationError)
-                    }
-                    "file_request_open" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteFileRequestError::FileRequestOpen)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteFileRequestError::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled_for_team" => DeleteFileRequestError::DisabledForTeam,
+                    "not_found" => DeleteFileRequestError::NotFound,
+                    "not_a_folder" => DeleteFileRequestError::NotAFolder,
+                    "app_lacks_access" => DeleteFileRequestError::AppLacksAccess,
+                    "no_permission" => DeleteFileRequestError::NoPermission,
+                    "email_unverified" => DeleteFileRequestError::EmailUnverified,
+                    "validation_error" => DeleteFileRequestError::ValidationError,
+                    "file_request_open" => DeleteFileRequestError::FileRequestOpen,
+                    _ => DeleteFileRequestError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled_for_team",
@@ -1629,40 +1550,18 @@ impl<'de> ::serde::de::Deserialize<'de> for FileRequestError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled_for_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileRequestError::DisabledForTeam)
-                    }
-                    "not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileRequestError::NotFound)
-                    }
-                    "not_a_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileRequestError::NotAFolder)
-                    }
-                    "app_lacks_access" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileRequestError::AppLacksAccess)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileRequestError::NoPermission)
-                    }
-                    "email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileRequestError::EmailUnverified)
-                    }
-                    "validation_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileRequestError::ValidationError)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileRequestError::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled_for_team" => FileRequestError::DisabledForTeam,
+                    "not_found" => FileRequestError::NotFound,
+                    "not_a_folder" => FileRequestError::NotAFolder,
+                    "app_lacks_access" => FileRequestError::AppLacksAccess,
+                    "no_permission" => FileRequestError::NoPermission,
+                    "email_unverified" => FileRequestError::EmailUnverified,
+                    "validation_error" => FileRequestError::ValidationError,
+                    _ => FileRequestError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled_for_team",
@@ -1772,16 +1671,12 @@ impl<'de> ::serde::de::Deserialize<'de> for GeneralFileRequestsError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled_for_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GeneralFileRequestsError::DisabledForTeam)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GeneralFileRequestsError::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled_for_team" => GeneralFileRequestsError::DisabledForTeam,
+                    _ => GeneralFileRequestsError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled_for_team",
@@ -1951,40 +1846,18 @@ impl<'de> ::serde::de::Deserialize<'de> for GetFileRequestError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled_for_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetFileRequestError::DisabledForTeam)
-                    }
-                    "not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetFileRequestError::NotFound)
-                    }
-                    "not_a_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetFileRequestError::NotAFolder)
-                    }
-                    "app_lacks_access" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetFileRequestError::AppLacksAccess)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetFileRequestError::NoPermission)
-                    }
-                    "email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetFileRequestError::EmailUnverified)
-                    }
-                    "validation_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetFileRequestError::ValidationError)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetFileRequestError::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled_for_team" => GetFileRequestError::DisabledForTeam,
+                    "not_found" => GetFileRequestError::NotFound,
+                    "not_a_folder" => GetFileRequestError::NotAFolder,
+                    "app_lacks_access" => GetFileRequestError::AppLacksAccess,
+                    "no_permission" => GetFileRequestError::NoPermission,
+                    "email_unverified" => GetFileRequestError::EmailUnverified,
+                    "validation_error" => GetFileRequestError::ValidationError,
+                    _ => GetFileRequestError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled_for_team",
@@ -2096,32 +1969,16 @@ impl<'de> ::serde::de::Deserialize<'de> for GracePeriod {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "one_day" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GracePeriod::OneDay)
-                    }
-                    "two_days" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GracePeriod::TwoDays)
-                    }
-                    "seven_days" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GracePeriod::SevenDays)
-                    }
-                    "thirty_days" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GracePeriod::ThirtyDays)
-                    }
-                    "always" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GracePeriod::Always)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GracePeriod::Other)
-                    }
-                }
+                let value = match tag {
+                    "one_day" => GracePeriod::OneDay,
+                    "two_days" => GracePeriod::TwoDays,
+                    "seven_days" => GracePeriod::SevenDays,
+                    "thirty_days" => GracePeriod::ThirtyDays,
+                    "always" => GracePeriod::Always,
+                    _ => GracePeriod::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["one_day",
@@ -2379,20 +2236,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileRequestsContinueError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled_for_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFileRequestsContinueError::DisabledForTeam)
-                    }
-                    "invalid_cursor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFileRequestsContinueError::InvalidCursor)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFileRequestsContinueError::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled_for_team" => ListFileRequestsContinueError::DisabledForTeam,
+                    "invalid_cursor" => ListFileRequestsContinueError::InvalidCursor,
+                    _ => ListFileRequestsContinueError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled_for_team",
@@ -2463,16 +2313,12 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFileRequestsError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled_for_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFileRequestsError::DisabledForTeam)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFileRequestsError::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled_for_team" => ListFileRequestsError::DisabledForTeam,
+                    _ => ListFileRequestsError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled_for_team",
@@ -2930,17 +2776,13 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestDeadline {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "no_update" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFileRequestDeadline::NoUpdate)
-                    }
-                    "update" => Ok(UpdateFileRequestDeadline::Update(FileRequestDeadline::internal_deserialize_opt(map, true)?)),
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFileRequestDeadline::Other)
-                    }
-                }
+                let value = match tag {
+                    "no_update" => UpdateFileRequestDeadline::NoUpdate,
+                    "update" => UpdateFileRequestDeadline::Update(FileRequestDeadline::internal_deserialize_opt(&mut map, true)?),
+                    _ => UpdateFileRequestDeadline::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["no_update",
@@ -3018,40 +2860,18 @@ impl<'de> ::serde::de::Deserialize<'de> for UpdateFileRequestError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled_for_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFileRequestError::DisabledForTeam)
-                    }
-                    "not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFileRequestError::NotFound)
-                    }
-                    "not_a_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFileRequestError::NotAFolder)
-                    }
-                    "app_lacks_access" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFileRequestError::AppLacksAccess)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFileRequestError::NoPermission)
-                    }
-                    "email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFileRequestError::EmailUnverified)
-                    }
-                    "validation_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFileRequestError::ValidationError)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UpdateFileRequestError::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled_for_team" => UpdateFileRequestError::DisabledForTeam,
+                    "not_found" => UpdateFileRequestError::NotFound,
+                    "not_a_folder" => UpdateFileRequestError::NotAFolder,
+                    "app_lacks_access" => UpdateFileRequestError::AppLacksAccess,
+                    "no_permission" => UpdateFileRequestError::NoPermission,
+                    "email_unverified" => UpdateFileRequestError::EmailUnverified,
+                    "validation_error" => UpdateFileRequestError::ValidationError,
+                    _ => UpdateFileRequestError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled_for_team",

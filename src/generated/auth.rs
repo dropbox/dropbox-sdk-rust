@@ -64,26 +64,25 @@ impl<'de> ::serde::de::Deserialize<'de> for AccessError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "invalid_account_type" => {
                         match map.next_key()? {
-                            Some("invalid_account_type") => Ok(AccessError::InvalidAccountType(map.next_value()?)),
-                            None => Err(de::Error::missing_field("invalid_account_type")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("invalid_account_type") => AccessError::InvalidAccountType(map.next_value()?),
+                            None => return Err(de::Error::missing_field("invalid_account_type")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "paper_access_denied" => {
                         match map.next_key()? {
-                            Some("paper_access_denied") => Ok(AccessError::PaperAccessDenied(map.next_value()?)),
-                            None => Err(de::Error::missing_field("paper_access_denied")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("paper_access_denied") => AccessError::PaperAccessDenied(map.next_value()?),
+                            None => return Err(de::Error::missing_field("paper_access_denied")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AccessError::Other)
-                    }
-                }
+                    _ => AccessError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["invalid_account_type",
@@ -175,37 +174,18 @@ impl<'de> ::serde::de::Deserialize<'de> for AuthError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "invalid_access_token" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AuthError::InvalidAccessToken)
-                    }
-                    "invalid_select_user" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AuthError::InvalidSelectUser)
-                    }
-                    "invalid_select_admin" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AuthError::InvalidSelectAdmin)
-                    }
-                    "user_suspended" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AuthError::UserSuspended)
-                    }
-                    "expired_access_token" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AuthError::ExpiredAccessToken)
-                    }
-                    "missing_scope" => Ok(AuthError::MissingScope(TokenScopeError::internal_deserialize(map)?)),
-                    "route_access_denied" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AuthError::RouteAccessDenied)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AuthError::Other)
-                    }
-                }
+                let value = match tag {
+                    "invalid_access_token" => AuthError::InvalidAccessToken,
+                    "invalid_select_user" => AuthError::InvalidSelectUser,
+                    "invalid_select_admin" => AuthError::InvalidSelectAdmin,
+                    "user_suspended" => AuthError::UserSuspended,
+                    "expired_access_token" => AuthError::ExpiredAccessToken,
+                    "missing_scope" => AuthError::MissingScope(TokenScopeError::internal_deserialize(&mut map)?),
+                    "route_access_denied" => AuthError::RouteAccessDenied,
+                    _ => AuthError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["invalid_access_token",
@@ -318,20 +298,13 @@ impl<'de> ::serde::de::Deserialize<'de> for InvalidAccountTypeError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "endpoint" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(InvalidAccountTypeError::Endpoint)
-                    }
-                    "feature" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(InvalidAccountTypeError::Feature)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(InvalidAccountTypeError::Other)
-                    }
-                }
+                let value = match tag {
+                    "endpoint" => InvalidAccountTypeError::Endpoint,
+                    "feature" => InvalidAccountTypeError::Feature,
+                    _ => InvalidAccountTypeError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["endpoint",
@@ -403,20 +376,13 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperAccessError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "paper_disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperAccessError::PaperDisabled)
-                    }
-                    "not_paper_user" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperAccessError::NotPaperUser)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperAccessError::Other)
-                    }
-                }
+                let value = match tag {
+                    "paper_disabled" => PaperAccessError::PaperDisabled,
+                    "not_paper_user" => PaperAccessError::NotPaperUser,
+                    _ => PaperAccessError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["paper_disabled",
@@ -597,20 +563,13 @@ impl<'de> ::serde::de::Deserialize<'de> for RateLimitReason {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "too_many_requests" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RateLimitReason::TooManyRequests)
-                    }
-                    "too_many_write_operations" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RateLimitReason::TooManyWriteOperations)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RateLimitReason::Other)
-                    }
-                }
+                let value = match tag {
+                    "too_many_requests" => RateLimitReason::TooManyRequests,
+                    "too_many_write_operations" => RateLimitReason::TooManyWriteOperations,
+                    _ => RateLimitReason::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["too_many_requests",
@@ -772,20 +731,13 @@ impl<'de> ::serde::de::Deserialize<'de> for TokenFromOAuth1Error {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "invalid_oauth1_token_info" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TokenFromOAuth1Error::InvalidOauth1TokenInfo)
-                    }
-                    "app_id_mismatch" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TokenFromOAuth1Error::AppIdMismatch)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TokenFromOAuth1Error::Other)
-                    }
-                }
+                let value = match tag {
+                    "invalid_oauth1_token_info" => TokenFromOAuth1Error::InvalidOauth1TokenInfo,
+                    "app_id_mismatch" => TokenFromOAuth1Error::AppIdMismatch,
+                    _ => TokenFromOAuth1Error::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["invalid_oauth1_token_info",

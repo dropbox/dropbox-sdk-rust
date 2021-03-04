@@ -46,40 +46,18 @@ impl<'de> ::serde::de::Deserialize<'de> for PlatformType {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "web" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PlatformType::Web)
-                    }
-                    "desktop" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PlatformType::Desktop)
-                    }
-                    "mobile_ios" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PlatformType::MobileIos)
-                    }
-                    "mobile_android" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PlatformType::MobileAndroid)
-                    }
-                    "api" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PlatformType::Api)
-                    }
-                    "unknown" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PlatformType::Unknown)
-                    }
-                    "mobile" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PlatformType::Mobile)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PlatformType::Other)
-                    }
-                }
+                let value = match tag {
+                    "web" => PlatformType::Web,
+                    "desktop" => PlatformType::Desktop,
+                    "mobile_ios" => PlatformType::MobileIos,
+                    "mobile_android" => PlatformType::MobileAndroid,
+                    "api" => PlatformType::Api,
+                    "unknown" => PlatformType::Unknown,
+                    "mobile" => PlatformType::Mobile,
+                    _ => PlatformType::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["web",

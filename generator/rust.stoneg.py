@@ -576,7 +576,7 @@ class RustBackend(RustHelperBackend):
                         self.emit(u'crate::eat_json_fields(&mut map)?;')
                         self.emit(u'Ok({}::Other)'.format(type_name))
                     else:
-                        with self.block(u'match tag'):
+                        with self.block(u'let value = match tag', after=u';'):
                             for field in union.all_fields:
                                 if field.catch_all:
                                     # Handle the 'Other' variant at the end.
@@ -584,9 +584,8 @@ class RustBackend(RustHelperBackend):
                                 variant_name = self.enum_variant_name(field)
                                 ultimate_type = ir.unwrap(field.data_type)[0]
                                 if isinstance(field.data_type, ir.Void):
-                                    with self.block(u'"{}" =>'.format(field.name)):
-                                        self.emit(u'crate::eat_json_fields(&mut map)?;')
-                                        self.emit(u'Ok({}::{})'.format(type_name, variant_name))
+                                    self.emit(u'"{}" => {}::{},'.format(
+                                        field.name, type_name, variant_name))
                                 elif isinstance(ultimate_type, ir.Struct) \
                                         and not ultimate_type.has_enumerated_subtypes():
                                     if isinstance(ir.unwrap_aliases(field.data_type)[0], ir.Nullable):
@@ -597,14 +596,14 @@ class RustBackend(RustHelperBackend):
                                             raise RuntimeError('{}.{}: an optional struct with no'
                                                                ' required fields is ambiguous'
                                                                .format(union.name, field.name))
-                                        self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize_opt('
-                                                  u'map, true)?)),'
+                                        self.emit(u'"{}" => {}::{}({}::internal_deserialize_opt('
+                                                  u'&mut map, true)?),'
                                                   .format(field.name,
                                                           type_name,
                                                           variant_name,
                                                           self._rust_type(ultimate_type)))
                                     else:
-                                        self.emit(u'"{}" => Ok({}::{}({}::internal_deserialize(map)?)),'
+                                        self.emit(u'"{}" => {}::{}({}::internal_deserialize(&mut map)?),'
                                                   .format(field.name,
                                                           type_name,
                                                           variant_name,
@@ -612,27 +611,27 @@ class RustBackend(RustHelperBackend):
                                 else:
                                     with self.block(u'"{}" =>'.format(field.name)):
                                         with self.block(u'match map.next_key()?'):
-                                            self.emit(u'Some("{}") => Ok({}::{}(map.next_value()?)),'
+                                            self.emit(u'Some("{}") => {}::{}(map.next_value()?),'
                                                       .format(field.name,
                                                               type_name,
                                                               variant_name))
                                             if isinstance(ir.unwrap_aliases(field.data_type)[0],
                                                           ir.Nullable):
                                                 # if it's null, the field can be omitted entirely
-                                                self.emit(u'None => Ok({}::{}(None)),'
+                                                self.emit(u'None => {}::{}(None),'
                                                           .format(type_name, variant_name))
                                             else:
-                                                self.emit(u'None => Err('
+                                                self.emit(u'None => return Err('
                                                           u'de::Error::missing_field("{}")),'
                                                           .format(field.name))
-                                            self.emit(u'_ => Err(de::Error::unknown_field('
+                                            self.emit(u'_ => return Err(de::Error::unknown_field('
                                                       u'tag, VARIANTS))')
                             if not union.closed:
-                                with self.block(u'_ =>'):
-                                    self.emit(u'crate::eat_json_fields(&mut map)?;')
-                                    self.emit(u'Ok({}::Other)'.format(type_name))
+                                self.emit(u'_ => {}::Other,'.format(type_name))
                             else:
-                                self.emit(u'_ => Err(de::Error::unknown_variant(tag, VARIANTS))')
+                                self.emit(u'_ => return Err(de::Error::unknown_variant(tag, VARIANTS))')
+                        self.emit(u'crate::eat_json_fields(&mut map)?;')
+                        self.emit(u'Ok(value)')
             self.generate_multiline_list(
                     list(u'"{}"'.format(field.name) for field in union.all_fields),
                     before='const VARIANTS: &[&str] = &',
