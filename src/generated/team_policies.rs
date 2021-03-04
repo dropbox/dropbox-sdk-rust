@@ -34,20 +34,13 @@ impl<'de> ::serde::de::Deserialize<'de> for CameraUploadsPolicyState {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CameraUploadsPolicyState::Disabled)
-                    }
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CameraUploadsPolicyState::Enabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CameraUploadsPolicyState::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => CameraUploadsPolicyState::Disabled,
+                    "enabled" => CameraUploadsPolicyState::Enabled,
+                    _ => CameraUploadsPolicyState::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -108,24 +101,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ComputerBackupPolicyState {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ComputerBackupPolicyState::Disabled)
-                    }
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ComputerBackupPolicyState::Enabled)
-                    }
-                    "default" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ComputerBackupPolicyState::Default)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ComputerBackupPolicyState::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => ComputerBackupPolicyState::Disabled,
+                    "enabled" => ComputerBackupPolicyState::Enabled,
+                    "default" => ComputerBackupPolicyState::Default,
+                    _ => ComputerBackupPolicyState::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -193,24 +176,14 @@ impl<'de> ::serde::de::Deserialize<'de> for EmmState {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(EmmState::Disabled)
-                    }
-                    "optional" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(EmmState::Optional)
-                    }
-                    "required" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(EmmState::Required)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(EmmState::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => EmmState::Disabled,
+                    "optional" => EmmState::Optional,
+                    "required" => EmmState::Required,
+                    _ => EmmState::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -276,20 +249,13 @@ impl<'de> ::serde::de::Deserialize<'de> for FileLockingPolicyState {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileLockingPolicyState::Disabled)
-                    }
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileLockingPolicyState::Enabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileLockingPolicyState::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => FileLockingPolicyState::Disabled,
+                    "enabled" => FileLockingPolicyState::Enabled,
+                    _ => FileLockingPolicyState::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -344,17 +310,13 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupCreation {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "admins_and_members" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GroupCreation::AdminsAndMembers)
-                    }
-                    "admins_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GroupCreation::AdminsOnly)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "admins_and_members" => GroupCreation::AdminsAndMembers,
+                    "admins_only" => GroupCreation::AdminsOnly,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["admins_and_members",
@@ -411,20 +373,13 @@ impl<'de> ::serde::de::Deserialize<'de> for OfficeAddInPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(OfficeAddInPolicy::Disabled)
-                    }
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(OfficeAddInPolicy::Enabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(OfficeAddInPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => OfficeAddInPolicy::Disabled,
+                    "enabled" => OfficeAddInPolicy::Enabled,
+                    _ => OfficeAddInPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -483,20 +438,13 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDefaultFolderPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "everyone_in_team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDefaultFolderPolicy::EveryoneInTeam)
-                    }
-                    "invite_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDefaultFolderPolicy::InviteOnly)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDefaultFolderPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "everyone_in_team" => PaperDefaultFolderPolicy::EveryoneInTeam,
+                    "invite_only" => PaperDefaultFolderPolicy::InviteOnly,
+                    _ => PaperDefaultFolderPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["everyone_in_team",
@@ -556,20 +504,13 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDeploymentPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "full" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDeploymentPolicy::Full)
-                    }
-                    "partial" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDeploymentPolicy::Partial)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDeploymentPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "full" => PaperDeploymentPolicy::Full,
+                    "partial" => PaperDeploymentPolicy::Partial,
+                    _ => PaperDeploymentPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["full",
@@ -628,20 +569,13 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDesktopPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDesktopPolicy::Disabled)
-                    }
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDesktopPolicy::Enabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDesktopPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => PaperDesktopPolicy::Disabled,
+                    "enabled" => PaperDesktopPolicy::Enabled,
+                    _ => PaperDesktopPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -702,24 +636,14 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperEnabledPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperEnabledPolicy::Disabled)
-                    }
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperEnabledPolicy::Enabled)
-                    }
-                    "unspecified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperEnabledPolicy::Unspecified)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperEnabledPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => PaperEnabledPolicy::Disabled,
+                    "enabled" => PaperEnabledPolicy::Enabled,
+                    "unspecified" => PaperEnabledPolicy::Unspecified,
+                    _ => PaperEnabledPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -785,20 +709,13 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordControlMode {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PasswordControlMode::Disabled)
-                    }
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PasswordControlMode::Enabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PasswordControlMode::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => PasswordControlMode::Disabled,
+                    "enabled" => PasswordControlMode::Enabled,
+                    _ => PasswordControlMode::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -859,24 +776,14 @@ impl<'de> ::serde::de::Deserialize<'de> for PasswordStrengthPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "minimal_requirements" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PasswordStrengthPolicy::MinimalRequirements)
-                    }
-                    "moderate_password" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PasswordStrengthPolicy::ModeratePassword)
-                    }
-                    "strong_password" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PasswordStrengthPolicy::StrongPassword)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PasswordStrengthPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "minimal_requirements" => PasswordStrengthPolicy::MinimalRequirements,
+                    "moderate_password" => PasswordStrengthPolicy::ModeratePassword,
+                    "strong_password" => PasswordStrengthPolicy::StrongPassword,
+                    _ => PasswordStrengthPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["minimal_requirements",
@@ -940,21 +847,14 @@ impl<'de> ::serde::de::Deserialize<'de> for RolloutMethod {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "unlink_all" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RolloutMethod::UnlinkAll)
-                    }
-                    "unlink_most_inactive" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RolloutMethod::UnlinkMostInactive)
-                    }
-                    "add_member_to_exceptions" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RolloutMethod::AddMemberToExceptions)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "unlink_all" => RolloutMethod::UnlinkAll,
+                    "unlink_most_inactive" => RolloutMethod::UnlinkMostInactive,
+                    "add_member_to_exceptions" => RolloutMethod::AddMemberToExceptions,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["unlink_all",
@@ -1019,20 +919,13 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderJoinPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "from_team_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderJoinPolicy::FromTeamOnly)
-                    }
-                    "from_anyone" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderJoinPolicy::FromAnyone)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderJoinPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "from_team_only" => SharedFolderJoinPolicy::FromTeamOnly,
+                    "from_anyone" => SharedFolderJoinPolicy::FromAnyone,
+                    _ => SharedFolderJoinPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["from_team_only",
@@ -1092,20 +985,13 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedFolderMemberPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderMemberPolicy::Team)
-                    }
-                    "anyone" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderMemberPolicy::Anyone)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedFolderMemberPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "team" => SharedFolderMemberPolicy::Team,
+                    "anyone" => SharedFolderMemberPolicy::Anyone,
+                    _ => SharedFolderMemberPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["team",
@@ -1171,24 +1057,14 @@ impl<'de> ::serde::de::Deserialize<'de> for SharedLinkCreatePolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "default_public" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkCreatePolicy::DefaultPublic)
-                    }
-                    "default_team_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkCreatePolicy::DefaultTeamOnly)
-                    }
-                    "team_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkCreatePolicy::TeamOnly)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharedLinkCreatePolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "default_public" => SharedLinkCreatePolicy::DefaultPublic,
+                    "default_team_only" => SharedLinkCreatePolicy::DefaultTeamOnly,
+                    "team_only" => SharedLinkCreatePolicy::TeamOnly,
+                    _ => SharedLinkCreatePolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["default_public",
@@ -1254,20 +1130,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ShowcaseDownloadPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShowcaseDownloadPolicy::Disabled)
-                    }
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShowcaseDownloadPolicy::Enabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShowcaseDownloadPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => ShowcaseDownloadPolicy::Disabled,
+                    "enabled" => ShowcaseDownloadPolicy::Enabled,
+                    _ => ShowcaseDownloadPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -1326,20 +1195,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ShowcaseEnabledPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShowcaseEnabledPolicy::Disabled)
-                    }
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShowcaseEnabledPolicy::Enabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShowcaseEnabledPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => ShowcaseEnabledPolicy::Disabled,
+                    "enabled" => ShowcaseEnabledPolicy::Enabled,
+                    _ => ShowcaseEnabledPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -1398,20 +1260,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ShowcaseExternalSharingPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShowcaseExternalSharingPolicy::Disabled)
-                    }
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShowcaseExternalSharingPolicy::Enabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ShowcaseExternalSharingPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => ShowcaseExternalSharingPolicy::Disabled,
+                    "enabled" => ShowcaseExternalSharingPolicy::Enabled,
+                    _ => ShowcaseExternalSharingPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -1470,20 +1325,13 @@ impl<'de> ::serde::de::Deserialize<'de> for SmartSyncPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "local" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SmartSyncPolicy::Local)
-                    }
-                    "on_demand" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SmartSyncPolicy::OnDemand)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SmartSyncPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "local" => SmartSyncPolicy::Local,
+                    "on_demand" => SmartSyncPolicy::OnDemand,
+                    _ => SmartSyncPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["local",
@@ -1542,20 +1390,13 @@ impl<'de> ::serde::de::Deserialize<'de> for SmarterSmartSyncPolicyState {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SmarterSmartSyncPolicyState::Disabled)
-                    }
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SmarterSmartSyncPolicyState::Enabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SmarterSmartSyncPolicyState::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => SmarterSmartSyncPolicyState::Disabled,
+                    "enabled" => SmarterSmartSyncPolicyState::Enabled,
+                    _ => SmarterSmartSyncPolicyState::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -1616,24 +1457,14 @@ impl<'de> ::serde::de::Deserialize<'de> for SsoPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SsoPolicy::Disabled)
-                    }
-                    "optional" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SsoPolicy::Optional)
-                    }
-                    "required" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SsoPolicy::Required)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SsoPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => SsoPolicy::Disabled,
+                    "optional" => SsoPolicy::Optional,
+                    "required" => SsoPolicy::Required,
+                    _ => SsoPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -1699,20 +1530,13 @@ impl<'de> ::serde::de::Deserialize<'de> for SuggestMembersPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SuggestMembersPolicy::Disabled)
-                    }
-                    "enabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SuggestMembersPolicy::Enabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SuggestMembersPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "disabled" => SuggestMembersPolicy::Disabled,
+                    "enabled" => SuggestMembersPolicy::Enabled,
+                    _ => SuggestMembersPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["disabled",
@@ -2032,20 +1856,13 @@ impl<'de> ::serde::de::Deserialize<'de> for TwoStepVerificationPolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "require_tfa_enable" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TwoStepVerificationPolicy::RequireTfaEnable)
-                    }
-                    "require_tfa_disable" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TwoStepVerificationPolicy::RequireTfaDisable)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TwoStepVerificationPolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "require_tfa_enable" => TwoStepVerificationPolicy::RequireTfaEnable,
+                    "require_tfa_disable" => TwoStepVerificationPolicy::RequireTfaDisable,
+                    _ => TwoStepVerificationPolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["require_tfa_enable",
@@ -2106,24 +1923,14 @@ impl<'de> ::serde::de::Deserialize<'de> for TwoStepVerificationState {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "required" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TwoStepVerificationState::Required)
-                    }
-                    "optional" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TwoStepVerificationState::Optional)
-                    }
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TwoStepVerificationState::Disabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(TwoStepVerificationState::Other)
-                    }
-                }
+                let value = match tag {
+                    "required" => TwoStepVerificationState::Required,
+                    "optional" => TwoStepVerificationState::Optional,
+                    "disabled" => TwoStepVerificationState::Disabled,
+                    _ => TwoStepVerificationState::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["required",

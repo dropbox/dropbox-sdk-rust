@@ -478,19 +478,18 @@ impl<'de> ::serde::de::Deserialize<'de> for FileLockingValue {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "enabled" => {
                         match map.next_key()? {
-                            Some("enabled") => Ok(FileLockingValue::Enabled(map.next_value()?)),
-                            None => Err(de::Error::missing_field("enabled")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("enabled") => FileLockingValue::Enabled(map.next_value()?),
+                            None => return Err(de::Error::missing_field("enabled")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileLockingValue::Other)
-                    }
-                }
+                    _ => FileLockingValue::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["enabled",
@@ -1152,19 +1151,18 @@ impl<'de> ::serde::de::Deserialize<'de> for GetAccountBatchError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "no_account" => {
                         match map.next_key()? {
-                            Some("no_account") => Ok(GetAccountBatchError::NoAccount(map.next_value()?)),
-                            None => Err(de::Error::missing_field("no_account")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("no_account") => GetAccountBatchError::NoAccount(map.next_value()?),
+                            None => return Err(de::Error::missing_field("no_account")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetAccountBatchError::Other)
-                    }
-                }
+                    _ => GetAccountBatchError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["no_account",
@@ -1227,16 +1225,12 @@ impl<'de> ::serde::de::Deserialize<'de> for GetAccountError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "no_account" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetAccountError::NoAccount)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetAccountError::Other)
-                    }
-                }
+                let value = match tag {
+                    "no_account" => GetAccountError::NoAccount,
+                    _ => GetAccountError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["no_account",
@@ -1539,19 +1533,18 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperAsFilesValue {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "enabled" => {
                         match map.next_key()? {
-                            Some("enabled") => Ok(PaperAsFilesValue::Enabled(map.next_value()?)),
-                            None => Err(de::Error::missing_field("enabled")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("enabled") => PaperAsFilesValue::Enabled(map.next_value()?),
+                            None => return Err(de::Error::missing_field("enabled")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperAsFilesValue::Other)
-                    }
-                }
+                    _ => PaperAsFilesValue::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["enabled",
@@ -1605,14 +1598,13 @@ impl<'de> ::serde::de::Deserialize<'de> for SpaceAllocation {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "individual" => Ok(SpaceAllocation::Individual(IndividualSpaceAllocation::internal_deserialize(map)?)),
-                    "team" => Ok(SpaceAllocation::Team(TeamSpaceAllocation::internal_deserialize(map)?)),
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SpaceAllocation::Other)
-                    }
-                }
+                let value = match tag {
+                    "individual" => SpaceAllocation::Individual(IndividualSpaceAllocation::internal_deserialize(&mut map)?),
+                    "team" => SpaceAllocation::Team(TeamSpaceAllocation::internal_deserialize(&mut map)?),
+                    _ => SpaceAllocation::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["individual",
@@ -2031,20 +2023,13 @@ impl<'de> ::serde::de::Deserialize<'de> for UserFeature {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "paper_as_files" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UserFeature::PaperAsFiles)
-                    }
-                    "file_locking" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UserFeature::FileLocking)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UserFeature::Other)
-                    }
-                }
+                let value = match tag {
+                    "paper_as_files" => UserFeature::PaperAsFiles,
+                    "file_locking" => UserFeature::FileLocking,
+                    _ => UserFeature::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["paper_as_files",
@@ -2102,26 +2087,25 @@ impl<'de> ::serde::de::Deserialize<'de> for UserFeatureValue {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "paper_as_files" => {
                         match map.next_key()? {
-                            Some("paper_as_files") => Ok(UserFeatureValue::PaperAsFiles(map.next_value()?)),
-                            None => Err(de::Error::missing_field("paper_as_files")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("paper_as_files") => UserFeatureValue::PaperAsFiles(map.next_value()?),
+                            None => return Err(de::Error::missing_field("paper_as_files")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "file_locking" => {
                         match map.next_key()? {
-                            Some("file_locking") => Ok(UserFeatureValue::FileLocking(map.next_value()?)),
-                            None => Err(de::Error::missing_field("file_locking")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("file_locking") => UserFeatureValue::FileLocking(map.next_value()?),
+                            None => return Err(de::Error::missing_field("file_locking")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UserFeatureValue::Other)
-                    }
-                }
+                    _ => UserFeatureValue::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["paper_as_files",
@@ -2272,16 +2256,12 @@ impl<'de> ::serde::de::Deserialize<'de> for UserFeaturesGetValuesBatchError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "empty_features_list" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UserFeaturesGetValuesBatchError::EmptyFeaturesList)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UserFeaturesGetValuesBatchError::Other)
-                    }
-                }
+                let value = match tag {
+                    "empty_features_list" => UserFeaturesGetValuesBatchError::EmptyFeaturesList,
+                    _ => UserFeaturesGetValuesBatchError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["empty_features_list",

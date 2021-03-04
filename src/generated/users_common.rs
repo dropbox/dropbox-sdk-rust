@@ -37,21 +37,14 @@ impl<'de> ::serde::de::Deserialize<'de> for AccountType {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "basic" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AccountType::Basic)
-                    }
-                    "pro" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AccountType::Pro)
-                    }
-                    "business" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AccountType::Business)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "basic" => AccountType::Basic,
+                    "pro" => AccountType::Pro,
+                    "business" => AccountType::Business,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["basic",

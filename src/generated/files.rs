@@ -1415,23 +1415,25 @@ impl<'de> ::serde::de::Deserialize<'de> for AlphaGetMetadataError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(AlphaGetMetadataError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => AlphaGetMetadataError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "properties_error" => {
                         match map.next_key()? {
-                            Some("properties_error") => Ok(AlphaGetMetadataError::PropertiesError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("properties_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("properties_error") => AlphaGetMetadataError::PropertiesError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("properties_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -2371,16 +2373,12 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "too_many_files" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFolderBatchError::TooManyFiles)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFolderBatchError::Other)
-                    }
-                }
+                let value = match tag {
+                    "too_many_files" => CreateFolderBatchError::TooManyFiles,
+                    _ => CreateFolderBatchError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["too_many_files",
@@ -2446,24 +2444,20 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchJobStatus {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFolderBatchJobStatus::InProgress)
-                    }
-                    "complete" => Ok(CreateFolderBatchJobStatus::Complete(CreateFolderBatchResult::internal_deserialize(map)?)),
+                let value = match tag {
+                    "in_progress" => CreateFolderBatchJobStatus::InProgress,
+                    "complete" => CreateFolderBatchJobStatus::Complete(CreateFolderBatchResult::internal_deserialize(&mut map)?),
                     "failed" => {
                         match map.next_key()? {
-                            Some("failed") => Ok(CreateFolderBatchJobStatus::Failed(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failed")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failed") => CreateFolderBatchJobStatus::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFolderBatchJobStatus::Other)
-                    }
-                }
+                    _ => CreateFolderBatchJobStatus::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["in_progress",
@@ -2533,20 +2527,19 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchLaunch {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "async_job_id" => {
                         match map.next_key()? {
-                            Some("async_job_id") => Ok(CreateFolderBatchLaunch::AsyncJobId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("async_job_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("async_job_id") => CreateFolderBatchLaunch::AsyncJobId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("async_job_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "complete" => Ok(CreateFolderBatchLaunch::Complete(CreateFolderBatchResult::internal_deserialize(map)?)),
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFolderBatchLaunch::Other)
-                    }
-                }
+                    "complete" => CreateFolderBatchLaunch::Complete(CreateFolderBatchResult::internal_deserialize(&mut map)?),
+                    _ => CreateFolderBatchLaunch::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["async_job_id",
@@ -2692,17 +2685,19 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderBatchResultEntry {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "success" => Ok(CreateFolderBatchResultEntry::Success(CreateFolderEntryResult::internal_deserialize(map)?)),
+                let value = match tag {
+                    "success" => CreateFolderBatchResultEntry::Success(CreateFolderEntryResult::internal_deserialize(&mut map)?),
                     "failure" => {
                         match map.next_key()? {
-                            Some("failure") => Ok(CreateFolderBatchResultEntry::Failure(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failure")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failure") => CreateFolderBatchResultEntry::Failure(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failure")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["success",
@@ -2758,19 +2753,18 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderEntryError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(CreateFolderEntryError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => CreateFolderEntryError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(CreateFolderEntryError::Other)
-                    }
-                }
+                    _ => CreateFolderEntryError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -2924,16 +2918,18 @@ impl<'de> ::serde::de::Deserialize<'de> for CreateFolderError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(CreateFolderError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => CreateFolderError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path"];
@@ -3288,16 +3284,12 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "too_many_write_operations" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteBatchError::TooManyWriteOperations)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteBatchError::Other)
-                    }
-                }
+                let value = match tag {
+                    "too_many_write_operations" => DeleteBatchError::TooManyWriteOperations,
+                    _ => DeleteBatchError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["too_many_write_operations",
@@ -3360,24 +3352,20 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchJobStatus {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteBatchJobStatus::InProgress)
-                    }
-                    "complete" => Ok(DeleteBatchJobStatus::Complete(DeleteBatchResult::internal_deserialize(map)?)),
+                let value = match tag {
+                    "in_progress" => DeleteBatchJobStatus::InProgress,
+                    "complete" => DeleteBatchJobStatus::Complete(DeleteBatchResult::internal_deserialize(&mut map)?),
                     "failed" => {
                         match map.next_key()? {
-                            Some("failed") => Ok(DeleteBatchJobStatus::Failed(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failed")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failed") => DeleteBatchJobStatus::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteBatchJobStatus::Other)
-                    }
-                }
+                    _ => DeleteBatchJobStatus::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["in_progress",
@@ -3447,20 +3435,19 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchLaunch {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "async_job_id" => {
                         match map.next_key()? {
-                            Some("async_job_id") => Ok(DeleteBatchLaunch::AsyncJobId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("async_job_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("async_job_id") => DeleteBatchLaunch::AsyncJobId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("async_job_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "complete" => Ok(DeleteBatchLaunch::Complete(DeleteBatchResult::internal_deserialize(map)?)),
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteBatchLaunch::Other)
-                    }
-                }
+                    "complete" => DeleteBatchLaunch::Complete(DeleteBatchResult::internal_deserialize(&mut map)?),
+                    _ => DeleteBatchLaunch::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["async_job_id",
@@ -3696,17 +3683,19 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteBatchResultEntry {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "success" => Ok(DeleteBatchResultEntry::Success(DeleteBatchResultData::internal_deserialize(map)?)),
+                let value = match tag {
+                    "success" => DeleteBatchResultEntry::Success(DeleteBatchResultData::internal_deserialize(&mut map)?),
                     "failure" => {
                         match map.next_key()? {
-                            Some("failure") => Ok(DeleteBatchResultEntry::Failure(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failure")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failure") => DeleteBatchResultEntry::Failure(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failure")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["success",
@@ -3767,34 +3756,27 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path_lookup" => {
                         match map.next_key()? {
-                            Some("path_lookup") => Ok(DeleteError::PathLookup(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path_lookup")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path_lookup") => DeleteError::PathLookup(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path_lookup")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "path_write" => {
                         match map.next_key()? {
-                            Some("path_write") => Ok(DeleteError::PathWrite(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path_write")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path_write") => DeleteError::PathWrite(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path_write")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "too_many_write_operations" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteError::TooManyWriteOperations)
-                    }
-                    "too_many_files" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteError::TooManyFiles)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteError::Other)
-                    }
-                }
+                    "too_many_write_operations" => DeleteError::TooManyWriteOperations,
+                    "too_many_files" => DeleteError::TooManyFiles,
+                    _ => DeleteError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path_lookup",
@@ -4344,23 +4326,19 @@ impl<'de> ::serde::de::Deserialize<'de> for DownloadError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(DownloadError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => DownloadError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_file" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DownloadError::UnsupportedFile)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DownloadError::Other)
-                    }
-                }
+                    "unsupported_file" => DownloadError::UnsupportedFile,
+                    _ => DownloadError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -4529,27 +4507,20 @@ impl<'de> ::serde::de::Deserialize<'de> for DownloadZipError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(DownloadZipError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => DownloadZipError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "too_large" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DownloadZipError::TooLarge)
-                    }
-                    "too_many_files" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DownloadZipError::TooManyFiles)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DownloadZipError::Other)
-                    }
-                }
+                    "too_large" => DownloadZipError::TooLarge,
+                    "too_many_files" => DownloadZipError::TooManyFiles,
+                    _ => DownloadZipError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -4838,31 +4809,21 @@ impl<'de> ::serde::de::Deserialize<'de> for ExportError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(ExportError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => ExportError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "non_exportable" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ExportError::NonExportable)
-                    }
-                    "invalid_export_format" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ExportError::InvalidExportFormat)
-                    }
-                    "retry_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ExportError::RetryError)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ExportError::Other)
-                    }
-                }
+                    "non_exportable" => ExportError::NonExportable,
+                    "invalid_export_format" => ExportError::InvalidExportFormat,
+                    "retry_error" => ExportError::RetryError,
+                    _ => ExportError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -5323,52 +5284,21 @@ impl<'de> ::serde::de::Deserialize<'de> for FileCategory {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "image" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileCategory::Image)
-                    }
-                    "document" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileCategory::Document)
-                    }
-                    "pdf" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileCategory::Pdf)
-                    }
-                    "spreadsheet" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileCategory::Spreadsheet)
-                    }
-                    "presentation" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileCategory::Presentation)
-                    }
-                    "audio" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileCategory::Audio)
-                    }
-                    "video" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileCategory::Video)
-                    }
-                    "folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileCategory::Folder)
-                    }
-                    "paper" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileCategory::Paper)
-                    }
-                    "others" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileCategory::Others)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileCategory::Other)
-                    }
-                }
+                let value = match tag {
+                    "image" => FileCategory::Image,
+                    "document" => FileCategory::Document,
+                    "pdf" => FileCategory::Pdf,
+                    "spreadsheet" => FileCategory::Spreadsheet,
+                    "presentation" => FileCategory::Presentation,
+                    "audio" => FileCategory::Audio,
+                    "video" => FileCategory::Video,
+                    "folder" => FileCategory::Folder,
+                    "paper" => FileCategory::Paper,
+                    "others" => FileCategory::Others,
+                    _ => FileCategory::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["image",
@@ -5573,17 +5503,13 @@ impl<'de> ::serde::de::Deserialize<'de> for FileLockContent {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "unlocked" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileLockContent::Unlocked)
-                    }
-                    "single_user" => Ok(FileLockContent::SingleUser(SingleUserLock::internal_deserialize(map)?)),
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileLockContent::Other)
-                    }
-                }
+                let value = match tag {
+                    "unlocked" => FileLockContent::Unlocked,
+                    "single_user" => FileLockContent::SingleUser(SingleUserLock::internal_deserialize(&mut map)?),
+                    _ => FileLockContent::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["unlocked",
@@ -6357,20 +6283,13 @@ impl<'de> ::serde::de::Deserialize<'de> for FileStatus {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "active" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileStatus::Active)
-                    }
-                    "deleted" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileStatus::Deleted)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FileStatus::Other)
-                    }
-                }
+                let value = match tag {
+                    "active" => FileStatus::Active,
+                    "deleted" => FileStatus::Deleted,
+                    _ => FileStatus::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["active",
@@ -6906,19 +6825,18 @@ impl<'de> ::serde::de::Deserialize<'de> for GetCopyReferenceError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(GetCopyReferenceError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => GetCopyReferenceError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetCopyReferenceError::Other)
-                    }
-                }
+                    _ => GetCopyReferenceError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -7271,16 +7189,18 @@ impl<'de> ::serde::de::Deserialize<'de> for GetMetadataError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(GetMetadataError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => GetMetadataError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path"];
@@ -7444,31 +7364,21 @@ impl<'de> ::serde::de::Deserialize<'de> for GetTemporaryLinkError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(GetTemporaryLinkError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => GetTemporaryLinkError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "email_not_verified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetTemporaryLinkError::EmailNotVerified)
-                    }
-                    "unsupported_file" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetTemporaryLinkError::UnsupportedFile)
-                    }
-                    "not_allowed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetTemporaryLinkError::NotAllowed)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetTemporaryLinkError::Other)
-                    }
-                }
+                    "email_not_verified" => GetTemporaryLinkError::EmailNotVerified,
+                    "unsupported_file" => GetTemporaryLinkError::UnsupportedFile,
+                    "not_allowed" => GetTemporaryLinkError::NotAllowed,
+                    _ => GetTemporaryLinkError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -7952,16 +7862,12 @@ impl<'de> ::serde::de::Deserialize<'de> for GetThumbnailBatchError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "too_many_files" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetThumbnailBatchError::TooManyFiles)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetThumbnailBatchError::Other)
-                    }
-                }
+                let value = match tag {
+                    "too_many_files" => GetThumbnailBatchError::TooManyFiles,
+                    _ => GetThumbnailBatchError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["too_many_files",
@@ -8216,20 +8122,19 @@ impl<'de> ::serde::de::Deserialize<'de> for GetThumbnailBatchResultEntry {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "success" => Ok(GetThumbnailBatchResultEntry::Success(GetThumbnailBatchResultData::internal_deserialize(map)?)),
+                let value = match tag {
+                    "success" => GetThumbnailBatchResultEntry::Success(GetThumbnailBatchResultData::internal_deserialize(&mut map)?),
                     "failure" => {
                         match map.next_key()? {
-                            Some("failure") => Ok(GetThumbnailBatchResultEntry::Failure(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failure")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failure") => GetThumbnailBatchResultEntry::Failure(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failure")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GetThumbnailBatchResultEntry::Other)
-                    }
-                }
+                    _ => GetThumbnailBatchResultEntry::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["success",
@@ -8500,24 +8405,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ImportFormat {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "html" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ImportFormat::Html)
-                    }
-                    "markdown" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ImportFormat::Markdown)
-                    }
-                    "plain_text" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ImportFormat::PlainText)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ImportFormat::Other)
-                    }
-                }
+                let value = match tag {
+                    "html" => ImportFormat::Html,
+                    "markdown" => ImportFormat::Markdown,
+                    "plain_text" => ImportFormat::PlainText,
+                    _ => ImportFormat::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["html",
@@ -8938,23 +8833,19 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderContinueError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(ListFolderContinueError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => ListFolderContinueError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "reset" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFolderContinueError::Reset)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFolderContinueError::Other)
-                    }
-                }
+                    "reset" => ListFolderContinueError::Reset,
+                    _ => ListFolderContinueError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -9030,26 +8921,25 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(ListFolderError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => ListFolderError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "template_error" => {
                         match map.next_key()? {
-                            Some("template_error") => Ok(ListFolderError::TemplateError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("template_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("template_error") => ListFolderError::TemplateError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("template_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFolderError::Other)
-                    }
-                }
+                    _ => ListFolderError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -9332,16 +9222,12 @@ impl<'de> ::serde::de::Deserialize<'de> for ListFolderLongpollError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "reset" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFolderLongpollError::Reset)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListFolderLongpollError::Other)
-                    }
-                }
+                let value = match tag {
+                    "reset" => ListFolderLongpollError::Reset,
+                    _ => ListFolderLongpollError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["reset",
@@ -9753,19 +9639,18 @@ impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(ListRevisionsError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => ListRevisionsError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListRevisionsError::Other)
-                    }
-                }
+                    _ => ListRevisionsError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -9838,20 +9723,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ListRevisionsMode {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "path" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListRevisionsMode::Path)
-                    }
-                    "id" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListRevisionsMode::Id)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListRevisionsMode::Other)
-                    }
-                }
+                let value = match tag {
+                    "path" => ListRevisionsMode::Path,
+                    "id" => ListRevisionsMode::Id,
+                    _ => ListRevisionsMode::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -10406,44 +10284,25 @@ impl<'de> ::serde::de::Deserialize<'de> for LockFileError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path_lookup" => {
                         match map.next_key()? {
-                            Some("path_lookup") => Ok(LockFileError::PathLookup(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path_lookup")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path_lookup") => LockFileError::PathLookup(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path_lookup")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "too_many_write_operations" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LockFileError::TooManyWriteOperations)
-                    }
-                    "too_many_files" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LockFileError::TooManyFiles)
-                    }
-                    "no_write_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LockFileError::NoWritePermission)
-                    }
-                    "cannot_be_locked" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LockFileError::CannotBeLocked)
-                    }
-                    "file_not_shared" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LockFileError::FileNotShared)
-                    }
-                    "lock_conflict" => Ok(LockFileError::LockConflict(LockConflictError::internal_deserialize(map)?)),
-                    "internal_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LockFileError::InternalError)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LockFileError::Other)
-                    }
-                }
+                    "too_many_write_operations" => LockFileError::TooManyWriteOperations,
+                    "too_many_files" => LockFileError::TooManyFiles,
+                    "no_write_permission" => LockFileError::NoWritePermission,
+                    "cannot_be_locked" => LockFileError::CannotBeLocked,
+                    "file_not_shared" => LockFileError::FileNotShared,
+                    "lock_conflict" => LockFileError::LockConflict(LockConflictError::internal_deserialize(&mut map)?),
+                    "internal_error" => LockFileError::InternalError,
+                    _ => LockFileError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path_lookup",
@@ -10668,17 +10527,19 @@ impl<'de> ::serde::de::Deserialize<'de> for LockFileResultEntry {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "success" => Ok(LockFileResultEntry::Success(LockFileResult::internal_deserialize(map)?)),
+                let value = match tag {
+                    "success" => LockFileResultEntry::Success(LockFileResult::internal_deserialize(&mut map)?),
                     "failure" => {
                         match map.next_key()? {
-                            Some("failure") => Ok(LockFileResultEntry::Failure(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failure")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failure") => LockFileResultEntry::Failure(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failure")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["success",
@@ -10750,43 +10611,24 @@ impl<'de> ::serde::de::Deserialize<'de> for LookupError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "malformed_path" => {
                         match map.next_key()? {
-                            Some("malformed_path") => Ok(LookupError::MalformedPath(map.next_value()?)),
-                            None => Ok(LookupError::MalformedPath(None)),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("malformed_path") => LookupError::MalformedPath(map.next_value()?),
+                            None => LookupError::MalformedPath(None),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookupError::NotFound)
-                    }
-                    "not_file" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookupError::NotFile)
-                    }
-                    "not_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookupError::NotFolder)
-                    }
-                    "restricted_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookupError::RestrictedContent)
-                    }
-                    "unsupported_content_type" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookupError::UnsupportedContentType)
-                    }
-                    "locked" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookupError::Locked)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LookupError::Other)
-                    }
-                }
+                    "not_found" => LookupError::NotFound,
+                    "not_file" => LookupError::NotFile,
+                    "not_folder" => LookupError::NotFolder,
+                    "restricted_content" => LookupError::RestrictedContent,
+                    "unsupported_content_type" => LookupError::UnsupportedContentType,
+                    "locked" => LookupError::Locked,
+                    _ => LookupError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["malformed_path",
@@ -10898,20 +10740,19 @@ impl<'de> ::serde::de::Deserialize<'de> for MediaInfo {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "pending" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MediaInfo::Pending)
-                    }
+                let value = match tag {
+                    "pending" => MediaInfo::Pending,
                     "metadata" => {
                         match map.next_key()? {
-                            Some("metadata") => Ok(MediaInfo::Metadata(map.next_value()?)),
-                            None => Err(de::Error::missing_field("metadata")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("metadata") => MediaInfo::Metadata(map.next_value()?),
+                            None => return Err(de::Error::missing_field("metadata")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["pending",
@@ -11120,19 +10961,18 @@ impl<'de> ::serde::de::Deserialize<'de> for MetadataV2 {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "metadata" => {
                         match map.next_key()? {
-                            Some("metadata") => Ok(MetadataV2::Metadata(map.next_value()?)),
-                            None => Err(de::Error::missing_field("metadata")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("metadata") => MetadataV2::Metadata(map.next_value()?),
+                            None => return Err(de::Error::missing_field("metadata")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MetadataV2::Other)
-                    }
-                }
+                    _ => MetadataV2::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["metadata",
@@ -11452,16 +11292,12 @@ impl<'de> ::serde::de::Deserialize<'de> for MoveIntoVaultError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "is_shared_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MoveIntoVaultError::IsSharedFolder)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MoveIntoVaultError::Other)
-                    }
-                }
+                let value = match tag {
+                    "is_shared_folder" => MoveIntoVaultError::IsSharedFolder,
+                    _ => MoveIntoVaultError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["is_shared_folder",
@@ -11530,28 +11366,15 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperContentError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "insufficient_permissions" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperContentError::InsufficientPermissions)
-                    }
-                    "content_malformed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperContentError::ContentMalformed)
-                    }
-                    "doc_length_exceeded" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperContentError::DocLengthExceeded)
-                    }
-                    "image_size_exceeded" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperContentError::ImageSizeExceeded)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperContentError::Other)
-                    }
-                }
+                let value = match tag {
+                    "insufficient_permissions" => PaperContentError::InsufficientPermissions,
+                    "content_malformed" => PaperContentError::ContentMalformed,
+                    "doc_length_exceeded" => PaperContentError::DocLengthExceeded,
+                    "image_size_exceeded" => PaperContentError::ImageSizeExceeded,
+                    _ => PaperContentError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["insufficient_permissions",
@@ -11756,44 +11579,19 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperCreateError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "insufficient_permissions" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperCreateError::InsufficientPermissions)
-                    }
-                    "content_malformed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperCreateError::ContentMalformed)
-                    }
-                    "doc_length_exceeded" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperCreateError::DocLengthExceeded)
-                    }
-                    "image_size_exceeded" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperCreateError::ImageSizeExceeded)
-                    }
-                    "invalid_path" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperCreateError::InvalidPath)
-                    }
-                    "email_unverified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperCreateError::EmailUnverified)
-                    }
-                    "invalid_file_extension" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperCreateError::InvalidFileExtension)
-                    }
-                    "paper_disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperCreateError::PaperDisabled)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperCreateError::Other)
-                    }
-                }
+                let value = match tag {
+                    "insufficient_permissions" => PaperCreateError::InsufficientPermissions,
+                    "content_malformed" => PaperCreateError::ContentMalformed,
+                    "doc_length_exceeded" => PaperCreateError::DocLengthExceeded,
+                    "image_size_exceeded" => PaperCreateError::ImageSizeExceeded,
+                    "invalid_path" => PaperCreateError::InvalidPath,
+                    "email_unverified" => PaperCreateError::EmailUnverified,
+                    "invalid_file_extension" => PaperCreateError::InvalidFileExtension,
+                    "paper_disabled" => PaperCreateError::PaperDisabled,
+                    _ => PaperCreateError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["insufficient_permissions",
@@ -12047,28 +11845,15 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdatePolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "update" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdatePolicy::Update)
-                    }
-                    "overwrite" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdatePolicy::Overwrite)
-                    }
-                    "prepend" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdatePolicy::Prepend)
-                    }
-                    "append" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdatePolicy::Append)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdatePolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "update" => PaperDocUpdatePolicy::Update,
+                    "overwrite" => PaperDocUpdatePolicy::Overwrite,
+                    "prepend" => PaperDocUpdatePolicy::Prepend,
+                    "append" => PaperDocUpdatePolicy::Append,
+                    _ => PaperDocUpdatePolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["update",
@@ -12293,47 +12078,25 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperUpdateError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "insufficient_permissions" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperUpdateError::InsufficientPermissions)
-                    }
-                    "content_malformed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperUpdateError::ContentMalformed)
-                    }
-                    "doc_length_exceeded" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperUpdateError::DocLengthExceeded)
-                    }
-                    "image_size_exceeded" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperUpdateError::ImageSizeExceeded)
-                    }
+                let value = match tag {
+                    "insufficient_permissions" => PaperUpdateError::InsufficientPermissions,
+                    "content_malformed" => PaperUpdateError::ContentMalformed,
+                    "doc_length_exceeded" => PaperUpdateError::DocLengthExceeded,
+                    "image_size_exceeded" => PaperUpdateError::ImageSizeExceeded,
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(PaperUpdateError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => PaperUpdateError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "revision_mismatch" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperUpdateError::RevisionMismatch)
-                    }
-                    "doc_archived" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperUpdateError::DocArchived)
-                    }
-                    "doc_deleted" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperUpdateError::DocDeleted)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperUpdateError::Other)
-                    }
-                }
+                    "revision_mismatch" => PaperUpdateError::RevisionMismatch,
+                    "doc_archived" => PaperUpdateError::DocArchived,
+                    "doc_deleted" => PaperUpdateError::DocDeleted,
+                    _ => PaperUpdateError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["insufficient_permissions",
@@ -12548,20 +12311,19 @@ impl<'de> ::serde::de::Deserialize<'de> for PathOrLink {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(PathOrLink::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => PathOrLink::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "link" => Ok(PathOrLink::Link(SharedLinkFileInfo::internal_deserialize(map)?)),
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PathOrLink::Other)
-                    }
-                }
+                    "link" => PathOrLink::Link(SharedLinkFileInfo::internal_deserialize(&mut map)?),
+                    _ => PathOrLink::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -12853,28 +12615,21 @@ impl<'de> ::serde::de::Deserialize<'de> for PreviewError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(PreviewError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => PreviewError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PreviewError::InProgress)
-                    }
-                    "unsupported_extension" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PreviewError::UnsupportedExtension)
-                    }
-                    "unsupported_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PreviewError::UnsupportedContent)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    "in_progress" => PreviewError::InProgress,
+                    "unsupported_extension" => PreviewError::UnsupportedExtension,
+                    "unsupported_content" => PreviewError::UnsupportedContent,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -13510,80 +13265,49 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "from_lookup" => {
                         match map.next_key()? {
-                            Some("from_lookup") => Ok(RelocationBatchError::FromLookup(map.next_value()?)),
-                            None => Err(de::Error::missing_field("from_lookup")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("from_lookup") => RelocationBatchError::FromLookup(map.next_value()?),
+                            None => return Err(de::Error::missing_field("from_lookup")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "from_write" => {
                         match map.next_key()? {
-                            Some("from_write") => Ok(RelocationBatchError::FromWrite(map.next_value()?)),
-                            None => Err(de::Error::missing_field("from_write")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("from_write") => RelocationBatchError::FromWrite(map.next_value()?),
+                            None => return Err(de::Error::missing_field("from_write")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "to" => {
                         match map.next_key()? {
-                            Some("to") => Ok(RelocationBatchError::To(map.next_value()?)),
-                            None => Err(de::Error::missing_field("to")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("to") => RelocationBatchError::To(map.next_value()?),
+                            None => return Err(de::Error::missing_field("to")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "cant_copy_shared_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchError::CantCopySharedFolder)
-                    }
-                    "cant_nest_shared_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchError::CantNestSharedFolder)
-                    }
-                    "cant_move_folder_into_itself" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchError::CantMoveFolderIntoItself)
-                    }
-                    "too_many_files" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchError::TooManyFiles)
-                    }
-                    "duplicated_or_nested_paths" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchError::DuplicatedOrNestedPaths)
-                    }
-                    "cant_transfer_ownership" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchError::CantTransferOwnership)
-                    }
-                    "insufficient_quota" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchError::InsufficientQuota)
-                    }
-                    "internal_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchError::InternalError)
-                    }
-                    "cant_move_shared_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchError::CantMoveSharedFolder)
-                    }
+                    "cant_copy_shared_folder" => RelocationBatchError::CantCopySharedFolder,
+                    "cant_nest_shared_folder" => RelocationBatchError::CantNestSharedFolder,
+                    "cant_move_folder_into_itself" => RelocationBatchError::CantMoveFolderIntoItself,
+                    "too_many_files" => RelocationBatchError::TooManyFiles,
+                    "duplicated_or_nested_paths" => RelocationBatchError::DuplicatedOrNestedPaths,
+                    "cant_transfer_ownership" => RelocationBatchError::CantTransferOwnership,
+                    "insufficient_quota" => RelocationBatchError::InsufficientQuota,
+                    "internal_error" => RelocationBatchError::InternalError,
+                    "cant_move_shared_folder" => RelocationBatchError::CantMoveSharedFolder,
                     "cant_move_into_vault" => {
                         match map.next_key()? {
-                            Some("cant_move_into_vault") => Ok(RelocationBatchError::CantMoveIntoVault(map.next_value()?)),
-                            None => Err(de::Error::missing_field("cant_move_into_vault")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("cant_move_into_vault") => RelocationBatchError::CantMoveIntoVault(map.next_value()?),
+                            None => return Err(de::Error::missing_field("cant_move_into_vault")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "too_many_write_operations" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchError::TooManyWriteOperations)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchError::Other)
-                    }
-                }
+                    "too_many_write_operations" => RelocationBatchError::TooManyWriteOperations,
+                    _ => RelocationBatchError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["from_lookup",
@@ -13765,27 +13489,20 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchErrorEntry {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "relocation_error" => {
                         match map.next_key()? {
-                            Some("relocation_error") => Ok(RelocationBatchErrorEntry::RelocationError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("relocation_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("relocation_error") => RelocationBatchErrorEntry::RelocationError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("relocation_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "internal_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchErrorEntry::InternalError)
-                    }
-                    "too_many_write_operations" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchErrorEntry::TooManyWriteOperations)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchErrorEntry::Other)
-                    }
-                }
+                    "internal_error" => RelocationBatchErrorEntry::InternalError,
+                    "too_many_write_operations" => RelocationBatchErrorEntry::TooManyWriteOperations,
+                    _ => RelocationBatchErrorEntry::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["relocation_error",
@@ -13850,21 +13567,20 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchJobStatus {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchJobStatus::InProgress)
-                    }
-                    "complete" => Ok(RelocationBatchJobStatus::Complete(RelocationBatchResult::internal_deserialize(map)?)),
+                let value = match tag {
+                    "in_progress" => RelocationBatchJobStatus::InProgress,
+                    "complete" => RelocationBatchJobStatus::Complete(RelocationBatchResult::internal_deserialize(&mut map)?),
                     "failed" => {
                         match map.next_key()? {
-                            Some("failed") => Ok(RelocationBatchJobStatus::Failed(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failed")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failed") => RelocationBatchJobStatus::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["in_progress",
@@ -13932,20 +13648,19 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchLaunch {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "async_job_id" => {
                         match map.next_key()? {
-                            Some("async_job_id") => Ok(RelocationBatchLaunch::AsyncJobId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("async_job_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("async_job_id") => RelocationBatchLaunch::AsyncJobId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("async_job_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "complete" => Ok(RelocationBatchLaunch::Complete(RelocationBatchResult::internal_deserialize(map)?)),
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchLaunch::Other)
-                    }
-                }
+                    "complete" => RelocationBatchLaunch::Complete(RelocationBatchResult::internal_deserialize(&mut map)?),
+                    _ => RelocationBatchLaunch::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["async_job_id",
@@ -14183,26 +13898,25 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchResultEntry {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "success" => {
                         match map.next_key()? {
-                            Some("success") => Ok(RelocationBatchResultEntry::Success(map.next_value()?)),
-                            None => Err(de::Error::missing_field("success")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("success") => RelocationBatchResultEntry::Success(map.next_value()?),
+                            None => return Err(de::Error::missing_field("success")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "failure" => {
                         match map.next_key()? {
-                            Some("failure") => Ok(RelocationBatchResultEntry::Failure(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failure")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failure") => RelocationBatchResultEntry::Failure(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failure")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchResultEntry::Other)
-                    }
-                }
+                    _ => RelocationBatchResultEntry::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["success",
@@ -14262,14 +13976,13 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchV2JobStatus {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationBatchV2JobStatus::InProgress)
-                    }
-                    "complete" => Ok(RelocationBatchV2JobStatus::Complete(RelocationBatchV2Result::internal_deserialize(map)?)),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "in_progress" => RelocationBatchV2JobStatus::InProgress,
+                    "complete" => RelocationBatchV2JobStatus::Complete(RelocationBatchV2Result::internal_deserialize(&mut map)?),
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["in_progress",
@@ -14325,17 +14038,19 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationBatchV2Launch {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "async_job_id" => {
                         match map.next_key()? {
-                            Some("async_job_id") => Ok(RelocationBatchV2Launch::AsyncJobId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("async_job_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("async_job_id") => RelocationBatchV2Launch::AsyncJobId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("async_job_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "complete" => Ok(RelocationBatchV2Launch::Complete(RelocationBatchV2Result::internal_deserialize(map)?)),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    "complete" => RelocationBatchV2Launch::Complete(RelocationBatchV2Result::internal_deserialize(&mut map)?),
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["async_job_id",
@@ -14507,76 +14222,48 @@ impl<'de> ::serde::de::Deserialize<'de> for RelocationError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "from_lookup" => {
                         match map.next_key()? {
-                            Some("from_lookup") => Ok(RelocationError::FromLookup(map.next_value()?)),
-                            None => Err(de::Error::missing_field("from_lookup")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("from_lookup") => RelocationError::FromLookup(map.next_value()?),
+                            None => return Err(de::Error::missing_field("from_lookup")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "from_write" => {
                         match map.next_key()? {
-                            Some("from_write") => Ok(RelocationError::FromWrite(map.next_value()?)),
-                            None => Err(de::Error::missing_field("from_write")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("from_write") => RelocationError::FromWrite(map.next_value()?),
+                            None => return Err(de::Error::missing_field("from_write")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "to" => {
                         match map.next_key()? {
-                            Some("to") => Ok(RelocationError::To(map.next_value()?)),
-                            None => Err(de::Error::missing_field("to")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("to") => RelocationError::To(map.next_value()?),
+                            None => return Err(de::Error::missing_field("to")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "cant_copy_shared_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationError::CantCopySharedFolder)
-                    }
-                    "cant_nest_shared_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationError::CantNestSharedFolder)
-                    }
-                    "cant_move_folder_into_itself" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationError::CantMoveFolderIntoItself)
-                    }
-                    "too_many_files" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationError::TooManyFiles)
-                    }
-                    "duplicated_or_nested_paths" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationError::DuplicatedOrNestedPaths)
-                    }
-                    "cant_transfer_ownership" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationError::CantTransferOwnership)
-                    }
-                    "insufficient_quota" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationError::InsufficientQuota)
-                    }
-                    "internal_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationError::InternalError)
-                    }
-                    "cant_move_shared_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationError::CantMoveSharedFolder)
-                    }
+                    "cant_copy_shared_folder" => RelocationError::CantCopySharedFolder,
+                    "cant_nest_shared_folder" => RelocationError::CantNestSharedFolder,
+                    "cant_move_folder_into_itself" => RelocationError::CantMoveFolderIntoItself,
+                    "too_many_files" => RelocationError::TooManyFiles,
+                    "duplicated_or_nested_paths" => RelocationError::DuplicatedOrNestedPaths,
+                    "cant_transfer_ownership" => RelocationError::CantTransferOwnership,
+                    "insufficient_quota" => RelocationError::InsufficientQuota,
+                    "internal_error" => RelocationError::InternalError,
+                    "cant_move_shared_folder" => RelocationError::CantMoveSharedFolder,
                     "cant_move_into_vault" => {
                         match map.next_key()? {
-                            Some("cant_move_into_vault") => Ok(RelocationError::CantMoveIntoVault(map.next_value()?)),
-                            None => Err(de::Error::missing_field("cant_move_into_vault")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("cant_move_into_vault") => RelocationError::CantMoveIntoVault(map.next_value()?),
+                            None => return Err(de::Error::missing_field("cant_move_into_vault")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RelocationError::Other)
-                    }
-                }
+                    _ => RelocationError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["from_lookup",
@@ -15047,34 +14734,27 @@ impl<'de> ::serde::de::Deserialize<'de> for RestoreError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path_lookup" => {
                         match map.next_key()? {
-                            Some("path_lookup") => Ok(RestoreError::PathLookup(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path_lookup")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path_lookup") => RestoreError::PathLookup(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path_lookup")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "path_write" => {
                         match map.next_key()? {
-                            Some("path_write") => Ok(RestoreError::PathWrite(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path_write")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path_write") => RestoreError::PathWrite(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path_write")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "invalid_revision" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RestoreError::InvalidRevision)
-                    }
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RestoreError::InProgress)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(RestoreError::Other)
-                    }
-                }
+                    "invalid_revision" => RestoreError::InvalidRevision,
+                    "in_progress" => RestoreError::InProgress,
+                    _ => RestoreError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path_lookup",
@@ -15280,35 +14960,22 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveCopyReferenceError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(SaveCopyReferenceError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => SaveCopyReferenceError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "invalid_copy_reference" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SaveCopyReferenceError::InvalidCopyReference)
-                    }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SaveCopyReferenceError::NoPermission)
-                    }
-                    "not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SaveCopyReferenceError::NotFound)
-                    }
-                    "too_many_files" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SaveCopyReferenceError::TooManyFiles)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SaveCopyReferenceError::Other)
-                    }
-                }
+                    "invalid_copy_reference" => SaveCopyReferenceError::InvalidCopyReference,
+                    "no_permission" => SaveCopyReferenceError::NoPermission,
+                    "not_found" => SaveCopyReferenceError::NotFound,
+                    "too_many_files" => SaveCopyReferenceError::TooManyFiles,
+                    _ => SaveCopyReferenceError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -15608,31 +15275,21 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveUrlError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(SaveUrlError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => SaveUrlError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "download_failed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SaveUrlError::DownloadFailed)
-                    }
-                    "invalid_url" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SaveUrlError::InvalidUrl)
-                    }
-                    "not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SaveUrlError::NotFound)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SaveUrlError::Other)
-                    }
-                }
+                    "download_failed" => SaveUrlError::DownloadFailed,
+                    "invalid_url" => SaveUrlError::InvalidUrl,
+                    "not_found" => SaveUrlError::NotFound,
+                    _ => SaveUrlError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -15724,21 +15381,20 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveUrlJobStatus {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SaveUrlJobStatus::InProgress)
-                    }
-                    "complete" => Ok(SaveUrlJobStatus::Complete(FileMetadata::internal_deserialize(map)?)),
+                let value = match tag {
+                    "in_progress" => SaveUrlJobStatus::InProgress,
+                    "complete" => SaveUrlJobStatus::Complete(FileMetadata::internal_deserialize(&mut map)?),
                     "failed" => {
                         match map.next_key()? {
-                            Some("failed") => Ok(SaveUrlJobStatus::Failed(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failed")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failed") => SaveUrlJobStatus::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["in_progress",
@@ -15801,17 +15457,19 @@ impl<'de> ::serde::de::Deserialize<'de> for SaveUrlResult {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "async_job_id" => {
                         match map.next_key()? {
-                            Some("async_job_id") => Ok(SaveUrlResult::AsyncJobId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("async_job_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("async_job_id") => SaveUrlResult::AsyncJobId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("async_job_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "complete" => Ok(SaveUrlResult::Complete(FileMetadata::internal_deserialize(map)?)),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    "complete" => SaveUrlResult::Complete(FileMetadata::internal_deserialize(&mut map)?),
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["async_job_id",
@@ -16030,30 +15688,26 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(SearchError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => SearchError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "invalid_argument" => {
                         match map.next_key()? {
-                            Some("invalid_argument") => Ok(SearchError::InvalidArgument(map.next_value()?)),
-                            None => Ok(SearchError::InvalidArgument(None)),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("invalid_argument") => SearchError::InvalidArgument(map.next_value()?),
+                            None => SearchError::InvalidArgument(None),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "internal_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchError::InternalError)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchError::Other)
-                    }
-                }
+                    "internal_error" => SearchError::InternalError,
+                    _ => SearchError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -16333,21 +15987,14 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchMatchType {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "filename" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchMatchType::Filename)
-                    }
-                    "content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchMatchType::Content)
-                    }
-                    "both" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchMatchType::Both)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "filename" => SearchMatchType::Filename,
+                    "content" => SearchMatchType::Content,
+                    "both" => SearchMatchType::Both,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["filename",
@@ -16416,28 +16063,15 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchMatchTypeV2 {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "filename" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchMatchTypeV2::Filename)
-                    }
-                    "file_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchMatchTypeV2::FileContent)
-                    }
-                    "filename_and_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchMatchTypeV2::FilenameAndContent)
-                    }
-                    "image_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchMatchTypeV2::ImageContent)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchMatchTypeV2::Other)
-                    }
-                }
+                let value = match tag {
+                    "filename" => SearchMatchTypeV2::Filename,
+                    "file_content" => SearchMatchTypeV2::FileContent,
+                    "filename_and_content" => SearchMatchTypeV2::FilenameAndContent,
+                    "image_content" => SearchMatchTypeV2::ImageContent,
+                    _ => SearchMatchTypeV2::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["filename",
@@ -16634,21 +16268,14 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchMode {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "filename" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchMode::Filename)
-                    }
-                    "filename_and_content" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchMode::FilenameAndContent)
-                    }
-                    "deleted_filename" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchMode::DeletedFilename)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "filename" => SearchMode::Filename,
+                    "filename_and_content" => SearchMode::FilenameAndContent,
+                    "deleted_filename" => SearchMode::DeletedFilename,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["filename",
@@ -16907,20 +16534,13 @@ impl<'de> ::serde::de::Deserialize<'de> for SearchOrderBy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "relevance" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchOrderBy::Relevance)
-                    }
-                    "last_modified_time" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchOrderBy::LastModifiedTime)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SearchOrderBy::Other)
-                    }
-                }
+                let value = match tag {
+                    "relevance" => SearchOrderBy::Relevance,
+                    "last_modified_time" => SearchOrderBy::LastModifiedTime,
+                    _ => SearchOrderBy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["relevance",
@@ -18003,24 +17623,14 @@ impl<'de> ::serde::de::Deserialize<'de> for SyncSetting {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "default" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SyncSetting::Default)
-                    }
-                    "not_synced" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SyncSetting::NotSynced)
-                    }
-                    "not_synced_inactive" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SyncSetting::NotSyncedInactive)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SyncSetting::Other)
-                    }
-                }
+                let value = match tag {
+                    "default" => SyncSetting::Default,
+                    "not_synced" => SyncSetting::NotSynced,
+                    "not_synced_inactive" => SyncSetting::NotSyncedInactive,
+                    _ => SyncSetting::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["default",
@@ -18088,20 +17698,13 @@ impl<'de> ::serde::de::Deserialize<'de> for SyncSettingArg {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "default" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SyncSettingArg::Default)
-                    }
-                    "not_synced" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SyncSettingArg::NotSynced)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SyncSettingArg::Other)
-                    }
-                }
+                let value = match tag {
+                    "default" => SyncSettingArg::Default,
+                    "not_synced" => SyncSettingArg::NotSynced,
+                    _ => SyncSettingArg::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["default",
@@ -18161,27 +17764,20 @@ impl<'de> ::serde::de::Deserialize<'de> for SyncSettingsError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(SyncSettingsError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => SyncSettingsError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_combination" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SyncSettingsError::UnsupportedCombination)
-                    }
-                    "unsupported_configuration" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SyncSettingsError::UnsupportedConfiguration)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SyncSettingsError::Other)
-                    }
-                }
+                    "unsupported_combination" => SyncSettingsError::UnsupportedCombination,
+                    "unsupported_configuration" => SyncSettingsError::UnsupportedConfiguration,
+                    _ => SyncSettingsError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -18413,28 +18009,21 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(ThumbnailError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => ThumbnailError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_extension" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailError::UnsupportedExtension)
-                    }
-                    "unsupported_image" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailError::UnsupportedImage)
-                    }
-                    "conversion_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailError::ConversionError)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    "unsupported_extension" => ThumbnailError::UnsupportedExtension,
+                    "unsupported_image" => ThumbnailError::UnsupportedImage,
+                    "conversion_error" => ThumbnailError::ConversionError,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -18520,17 +18109,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailFormat {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "jpeg" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailFormat::Jpeg)
-                    }
-                    "png" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailFormat::Png)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "jpeg" => ThumbnailFormat::Jpeg,
+                    "png" => ThumbnailFormat::Png,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["jpeg",
@@ -18585,21 +18170,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailMode {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "strict" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailMode::Strict)
-                    }
-                    "bestfit" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailMode::Bestfit)
-                    }
-                    "fitone_bestfit" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailMode::FitoneBestfit)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "strict" => ThumbnailMode::Strict,
+                    "bestfit" => ThumbnailMode::Bestfit,
+                    "fitone_bestfit" => ThumbnailMode::FitoneBestfit,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["strict",
@@ -18673,45 +18251,20 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailSize {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "w32h32" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailSize::W32h32)
-                    }
-                    "w64h64" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailSize::W64h64)
-                    }
-                    "w128h128" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailSize::W128h128)
-                    }
-                    "w256h256" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailSize::W256h256)
-                    }
-                    "w480h320" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailSize::W480h320)
-                    }
-                    "w640h480" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailSize::W640h480)
-                    }
-                    "w960h640" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailSize::W960h640)
-                    }
-                    "w1024h768" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailSize::W1024h768)
-                    }
-                    "w2048h1536" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailSize::W2048h1536)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "w32h32" => ThumbnailSize::W32h32,
+                    "w64h64" => ThumbnailSize::W64h64,
+                    "w128h128" => ThumbnailSize::W128h128,
+                    "w256h256" => ThumbnailSize::W256h256,
+                    "w480h320" => ThumbnailSize::W480h320,
+                    "w640h480" => ThumbnailSize::W640h480,
+                    "w960h640" => ThumbnailSize::W960h640,
+                    "w1024h768" => ThumbnailSize::W1024h768,
+                    "w2048h1536" => ThumbnailSize::W2048h1536,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["w32h32",
@@ -18971,39 +18524,23 @@ impl<'de> ::serde::de::Deserialize<'de> for ThumbnailV2Error {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(ThumbnailV2Error::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => ThumbnailV2Error::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "unsupported_extension" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailV2Error::UnsupportedExtension)
-                    }
-                    "unsupported_image" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailV2Error::UnsupportedImage)
-                    }
-                    "conversion_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailV2Error::ConversionError)
-                    }
-                    "access_denied" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailV2Error::AccessDenied)
-                    }
-                    "not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailV2Error::NotFound)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ThumbnailV2Error::Other)
-                    }
-                }
+                    "unsupported_extension" => ThumbnailV2Error::UnsupportedExtension,
+                    "unsupported_image" => ThumbnailV2Error::UnsupportedImage,
+                    "conversion_error" => ThumbnailV2Error::ConversionError,
+                    "access_denied" => ThumbnailV2Error::AccessDenied,
+                    "not_found" => ThumbnailV2Error::NotFound,
+                    _ => ThumbnailV2Error::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -19295,20 +18832,19 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "path" => Ok(UploadError::Path(UploadWriteFailed::internal_deserialize(map)?)),
+                let value = match tag {
+                    "path" => UploadError::Path(UploadWriteFailed::internal_deserialize(&mut map)?),
                     "properties_error" => {
                         match map.next_key()? {
-                            Some("properties_error") => Ok(UploadError::PropertiesError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("properties_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("properties_error") => UploadError::PropertiesError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("properties_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadError::Other)
-                    }
-                }
+                    _ => UploadError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -19388,20 +18924,19 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadErrorWithProperties {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "path" => Ok(UploadErrorWithProperties::Path(UploadWriteFailed::internal_deserialize(map)?)),
+                let value = match tag {
+                    "path" => UploadErrorWithProperties::Path(UploadWriteFailed::internal_deserialize(&mut map)?),
                     "properties_error" => {
                         match map.next_key()? {
-                            Some("properties_error") => Ok(UploadErrorWithProperties::PropertiesError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("properties_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("properties_error") => UploadErrorWithProperties::PropertiesError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("properties_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadErrorWithProperties::Other)
-                    }
-                }
+                    _ => UploadErrorWithProperties::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["path",
@@ -19883,14 +19418,13 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchJobStatus {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionFinishBatchJobStatus::InProgress)
-                    }
-                    "complete" => Ok(UploadSessionFinishBatchJobStatus::Complete(UploadSessionFinishBatchResult::internal_deserialize(map)?)),
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "in_progress" => UploadSessionFinishBatchJobStatus::InProgress,
+                    "complete" => UploadSessionFinishBatchJobStatus::Complete(UploadSessionFinishBatchResult::internal_deserialize(&mut map)?),
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["in_progress",
@@ -19950,20 +19484,19 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchLaunch {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "async_job_id" => {
                         match map.next_key()? {
-                            Some("async_job_id") => Ok(UploadSessionFinishBatchLaunch::AsyncJobId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("async_job_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("async_job_id") => UploadSessionFinishBatchLaunch::AsyncJobId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("async_job_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "complete" => Ok(UploadSessionFinishBatchLaunch::Complete(UploadSessionFinishBatchResult::internal_deserialize(map)?)),
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionFinishBatchLaunch::Other)
-                    }
-                }
+                    "complete" => UploadSessionFinishBatchLaunch::Complete(UploadSessionFinishBatchResult::internal_deserialize(&mut map)?),
+                    _ => UploadSessionFinishBatchLaunch::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["async_job_id",
@@ -20110,17 +19643,19 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishBatchResultEntry 
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "success" => Ok(UploadSessionFinishBatchResultEntry::Success(FileMetadata::internal_deserialize(map)?)),
+                let value = match tag {
+                    "success" => UploadSessionFinishBatchResultEntry::Success(FileMetadata::internal_deserialize(&mut map)?),
                     "failure" => {
                         match map.next_key()? {
-                            Some("failure") => Ok(UploadSessionFinishBatchResultEntry::Failure(map.next_value()?)),
-                            None => Err(de::Error::missing_field("failure")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("failure") => UploadSessionFinishBatchResultEntry::Failure(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failure")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["success",
@@ -20194,53 +19729,37 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionFinishError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "lookup_failed" => {
                         match map.next_key()? {
-                            Some("lookup_failed") => Ok(UploadSessionFinishError::LookupFailed(map.next_value()?)),
-                            None => Err(de::Error::missing_field("lookup_failed")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("lookup_failed") => UploadSessionFinishError::LookupFailed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("lookup_failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "path" => {
                         match map.next_key()? {
-                            Some("path") => Ok(UploadSessionFinishError::Path(map.next_value()?)),
-                            None => Err(de::Error::missing_field("path")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("path") => UploadSessionFinishError::Path(map.next_value()?),
+                            None => return Err(de::Error::missing_field("path")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "properties_error" => {
                         match map.next_key()? {
-                            Some("properties_error") => Ok(UploadSessionFinishError::PropertiesError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("properties_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("properties_error") => UploadSessionFinishError::PropertiesError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("properties_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "too_many_shared_folder_targets" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionFinishError::TooManySharedFolderTargets)
-                    }
-                    "too_many_write_operations" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionFinishError::TooManyWriteOperations)
-                    }
-                    "concurrent_session_data_not_allowed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionFinishError::ConcurrentSessionDataNotAllowed)
-                    }
-                    "concurrent_session_not_closed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionFinishError::ConcurrentSessionNotClosed)
-                    }
-                    "concurrent_session_missing_data" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionFinishError::ConcurrentSessionMissingData)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionFinishError::Other)
-                    }
-                }
+                    "too_many_shared_folder_targets" => UploadSessionFinishError::TooManySharedFolderTargets,
+                    "too_many_write_operations" => UploadSessionFinishError::TooManyWriteOperations,
+                    "concurrent_session_data_not_allowed" => UploadSessionFinishError::ConcurrentSessionDataNotAllowed,
+                    "concurrent_session_not_closed" => UploadSessionFinishError::ConcurrentSessionNotClosed,
+                    "concurrent_session_missing_data" => UploadSessionFinishError::ConcurrentSessionMissingData,
+                    _ => UploadSessionFinishError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["lookup_failed",
@@ -20386,37 +19905,18 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionLookupError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionLookupError::NotFound)
-                    }
-                    "incorrect_offset" => Ok(UploadSessionLookupError::IncorrectOffset(UploadSessionOffsetError::internal_deserialize(map)?)),
-                    "closed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionLookupError::Closed)
-                    }
-                    "not_closed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionLookupError::NotClosed)
-                    }
-                    "too_large" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionLookupError::TooLarge)
-                    }
-                    "concurrent_session_invalid_offset" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionLookupError::ConcurrentSessionInvalidOffset)
-                    }
-                    "concurrent_session_invalid_data_size" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionLookupError::ConcurrentSessionInvalidDataSize)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionLookupError::Other)
-                    }
-                }
+                let value = match tag {
+                    "not_found" => UploadSessionLookupError::NotFound,
+                    "incorrect_offset" => UploadSessionLookupError::IncorrectOffset(UploadSessionOffsetError::internal_deserialize(&mut map)?),
+                    "closed" => UploadSessionLookupError::Closed,
+                    "not_closed" => UploadSessionLookupError::NotClosed,
+                    "too_large" => UploadSessionLookupError::TooLarge,
+                    "concurrent_session_invalid_offset" => UploadSessionLookupError::ConcurrentSessionInvalidOffset,
+                    "concurrent_session_invalid_data_size" => UploadSessionLookupError::ConcurrentSessionInvalidDataSize,
+                    _ => UploadSessionLookupError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["not_found",
@@ -20725,20 +20225,13 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionStartError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "concurrent_session_data_not_allowed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionStartError::ConcurrentSessionDataNotAllowed)
-                    }
-                    "concurrent_session_close_not_allowed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionStartError::ConcurrentSessionCloseNotAllowed)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionStartError::Other)
-                    }
-                }
+                let value = match tag {
+                    "concurrent_session_data_not_allowed" => UploadSessionStartError::ConcurrentSessionDataNotAllowed,
+                    "concurrent_session_close_not_allowed" => UploadSessionStartError::ConcurrentSessionCloseNotAllowed,
+                    _ => UploadSessionStartError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["concurrent_session_data_not_allowed",
@@ -20902,20 +20395,13 @@ impl<'de> ::serde::de::Deserialize<'de> for UploadSessionType {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "sequential" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionType::Sequential)
-                    }
-                    "concurrent" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionType::Concurrent)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UploadSessionType::Other)
-                    }
-                }
+                let value = match tag {
+                    "sequential" => UploadSessionType::Sequential,
+                    "concurrent" => UploadSessionType::Concurrent,
+                    _ => UploadSessionType::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["sequential",
@@ -21222,24 +20708,14 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteConflictError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "file" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteConflictError::File)
-                    }
-                    "folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteConflictError::Folder)
-                    }
-                    "file_ancestor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteConflictError::FileAncestor)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteConflictError::Other)
-                    }
-                }
+                let value = match tag {
+                    "file" => WriteConflictError::File,
+                    "folder" => WriteConflictError::Folder,
+                    "file_ancestor" => WriteConflictError::FileAncestor,
+                    _ => WriteConflictError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["file",
@@ -21333,50 +20809,31 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "malformed_path" => {
                         match map.next_key()? {
-                            Some("malformed_path") => Ok(WriteError::MalformedPath(map.next_value()?)),
-                            None => Ok(WriteError::MalformedPath(None)),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("malformed_path") => WriteError::MalformedPath(map.next_value()?),
+                            None => WriteError::MalformedPath(None),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "conflict" => {
                         match map.next_key()? {
-                            Some("conflict") => Ok(WriteError::Conflict(map.next_value()?)),
-                            None => Err(de::Error::missing_field("conflict")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("conflict") => WriteError::Conflict(map.next_value()?),
+                            None => return Err(de::Error::missing_field("conflict")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "no_write_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteError::NoWritePermission)
-                    }
-                    "insufficient_space" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteError::InsufficientSpace)
-                    }
-                    "disallowed_name" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteError::DisallowedName)
-                    }
-                    "team_folder" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteError::TeamFolder)
-                    }
-                    "operation_suppressed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteError::OperationSuppressed)
-                    }
-                    "too_many_write_operations" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteError::TooManyWriteOperations)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteError::Other)
-                    }
-                }
+                    "no_write_permission" => WriteError::NoWritePermission,
+                    "insufficient_space" => WriteError::InsufficientSpace,
+                    "disallowed_name" => WriteError::DisallowedName,
+                    "team_folder" => WriteError::TeamFolder,
+                    "operation_suppressed" => WriteError::OperationSuppressed,
+                    "too_many_write_operations" => WriteError::TooManyWriteOperations,
+                    _ => WriteError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["malformed_path",
@@ -21517,24 +20974,20 @@ impl<'de> ::serde::de::Deserialize<'de> for WriteMode {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "add" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteMode::Add)
-                    }
-                    "overwrite" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(WriteMode::Overwrite)
-                    }
+                let value = match tag {
+                    "add" => WriteMode::Add,
+                    "overwrite" => WriteMode::Overwrite,
                     "update" => {
                         match map.next_key()? {
-                            Some("update") => Ok(WriteMode::Update(map.next_value()?)),
-                            None => Err(de::Error::missing_field("update")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("update") => WriteMode::Update(map.next_value()?),
+                            None => return Err(de::Error::missing_field("update")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["add",

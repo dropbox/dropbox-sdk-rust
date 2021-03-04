@@ -44,24 +44,14 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupManagementType {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "user_managed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GroupManagementType::UserManaged)
-                    }
-                    "company_managed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GroupManagementType::CompanyManaged)
-                    }
-                    "system_managed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GroupManagementType::SystemManaged)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GroupManagementType::Other)
-                    }
-                }
+                let value = match tag {
+                    "user_managed" => GroupManagementType::UserManaged,
+                    "company_managed" => GroupManagementType::CompanyManaged,
+                    "system_managed" => GroupManagementType::SystemManaged,
+                    _ => GroupManagementType::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["user_managed",
@@ -284,20 +274,13 @@ impl<'de> ::serde::de::Deserialize<'de> for GroupType {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GroupType::Team)
-                    }
-                    "user_managed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GroupType::UserManaged)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(GroupType::Other)
-                    }
-                }
+                let value = match tag {
+                    "team" => GroupType::Team,
+                    "user_managed" => GroupType::UserManaged,
+                    _ => GroupType::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["team",
@@ -361,24 +344,14 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberSpaceLimitType {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "off" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberSpaceLimitType::Off)
-                    }
-                    "alert_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberSpaceLimitType::AlertOnly)
-                    }
-                    "stop_sync" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberSpaceLimitType::StopSync)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(MemberSpaceLimitType::Other)
-                    }
-                }
+                let value = match tag {
+                    "off" => MemberSpaceLimitType::Off,
+                    "alert_only" => MemberSpaceLimitType::AlertOnly,
+                    "stop_sync" => MemberSpaceLimitType::StopSync,
+                    _ => MemberSpaceLimitType::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["off",

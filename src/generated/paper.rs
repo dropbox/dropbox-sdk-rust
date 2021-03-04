@@ -776,40 +776,18 @@ impl<'de> ::serde::de::Deserialize<'de> for AddPaperDocUserResult {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "success" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPaperDocUserResult::Success)
-                    }
-                    "unknown_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPaperDocUserResult::UnknownError)
-                    }
-                    "sharing_outside_team_disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPaperDocUserResult::SharingOutsideTeamDisabled)
-                    }
-                    "daily_limit_reached" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPaperDocUserResult::DailyLimitReached)
-                    }
-                    "user_is_owner" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPaperDocUserResult::UserIsOwner)
-                    }
-                    "failed_user_data_retrieval" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPaperDocUserResult::FailedUserDataRetrieval)
-                    }
-                    "permission_already_granted" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPaperDocUserResult::PermissionAlreadyGranted)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(AddPaperDocUserResult::Other)
-                    }
-                }
+                let value = match tag {
+                    "success" => AddPaperDocUserResult::Success,
+                    "unknown_error" => AddPaperDocUserResult::UnknownError,
+                    "sharing_outside_team_disabled" => AddPaperDocUserResult::SharingOutsideTeamDisabled,
+                    "daily_limit_reached" => AddPaperDocUserResult::DailyLimitReached,
+                    "user_is_owner" => AddPaperDocUserResult::UserIsOwner,
+                    "failed_user_data_retrieval" => AddPaperDocUserResult::FailedUserDataRetrieval,
+                    "permission_already_granted" => AddPaperDocUserResult::PermissionAlreadyGranted,
+                    _ => AddPaperDocUserResult::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["success",
@@ -1023,20 +1001,13 @@ impl<'de> ::serde::de::Deserialize<'de> for DocLookupError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "insufficient_permissions" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DocLookupError::InsufficientPermissions)
-                    }
-                    "doc_not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DocLookupError::DocNotFound)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DocLookupError::Other)
-                    }
-                }
+                let value = match tag {
+                    "insufficient_permissions" => DocLookupError::InsufficientPermissions,
+                    "doc_not_found" => DocLookupError::DocNotFound,
+                    _ => DocLookupError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["insufficient_permissions",
@@ -1108,25 +1079,15 @@ impl<'de> ::serde::de::Deserialize<'de> for DocSubscriptionLevel {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "default" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DocSubscriptionLevel::Default)
-                    }
-                    "ignore" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DocSubscriptionLevel::Ignore)
-                    }
-                    "every" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DocSubscriptionLevel::Every)
-                    }
-                    "no_email" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DocSubscriptionLevel::NoEmail)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "default" => DocSubscriptionLevel::Default,
+                    "ignore" => DocSubscriptionLevel::Ignore,
+                    "every" => DocSubscriptionLevel::Every,
+                    "no_email" => DocSubscriptionLevel::NoEmail,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["default",
@@ -1198,20 +1159,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ExportFormat {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "html" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ExportFormat::Html)
-                    }
-                    "markdown" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ExportFormat::Markdown)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ExportFormat::Other)
-                    }
-                }
+                let value = match tag {
+                    "html" => ExportFormat::Html,
+                    "markdown" => ExportFormat::Markdown,
+                    _ => ExportFormat::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["html",
@@ -1372,17 +1326,13 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderSharingPolicyType {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "team" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderSharingPolicyType::Team)
-                    }
-                    "invite_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderSharingPolicyType::InviteOnly)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "team" => FolderSharingPolicyType::Team,
+                    "invite_only" => FolderSharingPolicyType::InviteOnly,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["team",
@@ -1440,25 +1390,15 @@ impl<'de> ::serde::de::Deserialize<'de> for FolderSubscriptionLevel {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "none" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderSubscriptionLevel::None)
-                    }
-                    "activity_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderSubscriptionLevel::ActivityOnly)
-                    }
-                    "daily_emails" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderSubscriptionLevel::DailyEmails)
-                    }
-                    "weekly_emails" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(FolderSubscriptionLevel::WeeklyEmails)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "none" => FolderSubscriptionLevel::None,
+                    "activity_only" => FolderSubscriptionLevel::ActivityOnly,
+                    "daily_emails" => FolderSubscriptionLevel::DailyEmails,
+                    "weekly_emails" => FolderSubscriptionLevel::WeeklyEmails,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["none",
@@ -1639,24 +1579,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ImportFormat {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "html" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ImportFormat::Html)
-                    }
-                    "markdown" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ImportFormat::Markdown)
-                    }
-                    "plain_text" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ImportFormat::PlainText)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ImportFormat::Other)
-                    }
-                }
+                let value = match tag {
+                    "html" => ImportFormat::Html,
+                    "markdown" => ImportFormat::Markdown,
+                    "plain_text" => ImportFormat::PlainText,
+                    _ => ImportFormat::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["html",
@@ -1825,19 +1755,18 @@ impl<'de> ::serde::de::Deserialize<'de> for ListDocsCursorError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "cursor_error" => {
                         match map.next_key()? {
-                            Some("cursor_error") => Ok(ListDocsCursorError::CursorError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("cursor_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("cursor_error") => ListDocsCursorError::CursorError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("cursor_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListDocsCursorError::Other)
-                    }
-                }
+                    _ => ListDocsCursorError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["cursor_error",
@@ -2140,20 +2069,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsFilterBy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "docs_accessed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListPaperDocsFilterBy::DocsAccessed)
-                    }
-                    "docs_created" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListPaperDocsFilterBy::DocsCreated)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListPaperDocsFilterBy::Other)
-                    }
-                }
+                let value = match tag {
+                    "docs_accessed" => ListPaperDocsFilterBy::DocsAccessed,
+                    "docs_created" => ListPaperDocsFilterBy::DocsCreated,
+                    _ => ListPaperDocsFilterBy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["docs_accessed",
@@ -2337,24 +2259,14 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsSortBy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "accessed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListPaperDocsSortBy::Accessed)
-                    }
-                    "modified" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListPaperDocsSortBy::Modified)
-                    }
-                    "created" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListPaperDocsSortBy::Created)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListPaperDocsSortBy::Other)
-                    }
-                }
+                let value = match tag {
+                    "accessed" => ListPaperDocsSortBy::Accessed,
+                    "modified" => ListPaperDocsSortBy::Modified,
+                    "created" => ListPaperDocsSortBy::Created,
+                    _ => ListPaperDocsSortBy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["accessed",
@@ -2420,20 +2332,13 @@ impl<'de> ::serde::de::Deserialize<'de> for ListPaperDocsSortOrder {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "ascending" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListPaperDocsSortOrder::Ascending)
-                    }
-                    "descending" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListPaperDocsSortOrder::Descending)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListPaperDocsSortOrder::Other)
-                    }
-                }
+                let value = match tag {
+                    "ascending" => ListPaperDocsSortOrder::Ascending,
+                    "descending" => ListPaperDocsSortOrder::Descending,
+                    _ => ListPaperDocsSortOrder::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["ascending",
@@ -2496,27 +2401,20 @@ impl<'de> ::serde::de::Deserialize<'de> for ListUsersCursorError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "insufficient_permissions" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListUsersCursorError::InsufficientPermissions)
-                    }
-                    "doc_not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListUsersCursorError::DocNotFound)
-                    }
+                let value = match tag {
+                    "insufficient_permissions" => ListUsersCursorError::InsufficientPermissions,
+                    "doc_not_found" => ListUsersCursorError::DocNotFound,
                     "cursor_error" => {
                         match map.next_key()? {
-                            Some("cursor_error") => Ok(ListUsersCursorError::CursorError(map.next_value()?)),
-                            None => Err(de::Error::missing_field("cursor_error")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("cursor_error") => ListUsersCursorError::CursorError(map.next_value()?),
+                            None => return Err(de::Error::missing_field("cursor_error")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(ListUsersCursorError::Other)
-                    }
-                }
+                    _ => ListUsersCursorError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["insufficient_permissions",
@@ -3341,16 +3239,12 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperApiBaseError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "insufficient_permissions" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperApiBaseError::InsufficientPermissions)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperApiBaseError::Other)
-                    }
-                }
+                let value = match tag {
+                    "insufficient_permissions" => PaperApiBaseError::InsufficientPermissions,
+                    _ => PaperApiBaseError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["insufficient_permissions",
@@ -3416,28 +3310,15 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperApiCursorError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "expired_cursor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperApiCursorError::ExpiredCursor)
-                    }
-                    "invalid_cursor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperApiCursorError::InvalidCursor)
-                    }
-                    "wrong_user_in_cursor" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperApiCursorError::WrongUserInCursor)
-                    }
-                    "reset" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperApiCursorError::Reset)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperApiCursorError::Other)
-                    }
-                }
+                let value = match tag {
+                    "expired_cursor" => PaperApiCursorError::ExpiredCursor,
+                    "invalid_cursor" => PaperApiCursorError::InvalidCursor,
+                    "wrong_user_in_cursor" => PaperApiCursorError::WrongUserInCursor,
+                    "reset" => PaperApiCursorError::Reset,
+                    _ => PaperApiCursorError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["expired_cursor",
@@ -3644,32 +3525,16 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocCreateError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "insufficient_permissions" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocCreateError::InsufficientPermissions)
-                    }
-                    "content_malformed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocCreateError::ContentMalformed)
-                    }
-                    "folder_not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocCreateError::FolderNotFound)
-                    }
-                    "doc_length_exceeded" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocCreateError::DocLengthExceeded)
-                    }
-                    "image_size_exceeded" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocCreateError::ImageSizeExceeded)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocCreateError::Other)
-                    }
-                }
+                let value = match tag {
+                    "insufficient_permissions" => PaperDocCreateError::InsufficientPermissions,
+                    "content_malformed" => PaperDocCreateError::ContentMalformed,
+                    "folder_not_found" => PaperDocCreateError::FolderNotFound,
+                    "doc_length_exceeded" => PaperDocCreateError::DocLengthExceeded,
+                    "image_size_exceeded" => PaperDocCreateError::ImageSizeExceeded,
+                    _ => PaperDocCreateError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["insufficient_permissions",
@@ -4112,20 +3977,13 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocPermissionLevel {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "edit" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocPermissionLevel::Edit)
-                    }
-                    "view_and_comment" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocPermissionLevel::ViewAndComment)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocPermissionLevel::Other)
-                    }
-                }
+                let value = match tag {
+                    "edit" => PaperDocPermissionLevel::Edit,
+                    "view_and_comment" => PaperDocPermissionLevel::ViewAndComment,
+                    _ => PaperDocPermissionLevel::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["edit",
@@ -4438,44 +4296,19 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdateError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "insufficient_permissions" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdateError::InsufficientPermissions)
-                    }
-                    "doc_not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdateError::DocNotFound)
-                    }
-                    "content_malformed" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdateError::ContentMalformed)
-                    }
-                    "revision_mismatch" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdateError::RevisionMismatch)
-                    }
-                    "doc_length_exceeded" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdateError::DocLengthExceeded)
-                    }
-                    "image_size_exceeded" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdateError::ImageSizeExceeded)
-                    }
-                    "doc_archived" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdateError::DocArchived)
-                    }
-                    "doc_deleted" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdateError::DocDeleted)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdateError::Other)
-                    }
-                }
+                let value = match tag {
+                    "insufficient_permissions" => PaperDocUpdateError::InsufficientPermissions,
+                    "doc_not_found" => PaperDocUpdateError::DocNotFound,
+                    "content_malformed" => PaperDocUpdateError::ContentMalformed,
+                    "revision_mismatch" => PaperDocUpdateError::RevisionMismatch,
+                    "doc_length_exceeded" => PaperDocUpdateError::DocLengthExceeded,
+                    "image_size_exceeded" => PaperDocUpdateError::ImageSizeExceeded,
+                    "doc_archived" => PaperDocUpdateError::DocArchived,
+                    "doc_deleted" => PaperDocUpdateError::DocDeleted,
+                    _ => PaperDocUpdateError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["insufficient_permissions",
@@ -4596,24 +4429,14 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperDocUpdatePolicy {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "append" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdatePolicy::Append)
-                    }
-                    "prepend" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdatePolicy::Prepend)
-                    }
-                    "overwrite_all" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdatePolicy::OverwriteAll)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperDocUpdatePolicy::Other)
-                    }
-                }
+                let value = match tag {
+                    "append" => PaperDocUpdatePolicy::Append,
+                    "prepend" => PaperDocUpdatePolicy::Prepend,
+                    "overwrite_all" => PaperDocUpdatePolicy::OverwriteAll,
+                    _ => PaperDocUpdatePolicy::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["append",
@@ -4815,24 +4638,14 @@ impl<'de> ::serde::de::Deserialize<'de> for PaperFolderCreateError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "insufficient_permissions" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperFolderCreateError::InsufficientPermissions)
-                    }
-                    "folder_not_found" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperFolderCreateError::FolderNotFound)
-                    }
-                    "invalid_folder_id" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperFolderCreateError::InvalidFolderId)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PaperFolderCreateError::Other)
-                    }
-                }
+                let value = match tag {
+                    "insufficient_permissions" => PaperFolderCreateError::InsufficientPermissions,
+                    "folder_not_found" => PaperFolderCreateError::FolderNotFound,
+                    "invalid_folder_id" => PaperFolderCreateError::InvalidFolderId,
+                    _ => PaperFolderCreateError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["insufficient_permissions",
@@ -5300,25 +5113,15 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingPublicPolicyType {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "people_with_link_can_edit" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingPublicPolicyType::PeopleWithLinkCanEdit)
-                    }
-                    "people_with_link_can_view_and_comment" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingPublicPolicyType::PeopleWithLinkCanViewAndComment)
-                    }
-                    "invite_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingPublicPolicyType::InviteOnly)
-                    }
-                    "disabled" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingPublicPolicyType::Disabled)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "people_with_link_can_edit" => SharingPublicPolicyType::PeopleWithLinkCanEdit,
+                    "people_with_link_can_view_and_comment" => SharingPublicPolicyType::PeopleWithLinkCanViewAndComment,
+                    "invite_only" => SharingPublicPolicyType::InviteOnly,
+                    "disabled" => SharingPublicPolicyType::Disabled,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["people_with_link_can_edit",
@@ -5388,21 +5191,14 @@ impl<'de> ::serde::de::Deserialize<'de> for SharingTeamPolicyType {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "people_with_link_can_edit" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingTeamPolicyType::PeopleWithLinkCanEdit)
-                    }
-                    "people_with_link_can_view_and_comment" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingTeamPolicyType::PeopleWithLinkCanViewAndComment)
-                    }
-                    "invite_only" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(SharingTeamPolicyType::InviteOnly)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "people_with_link_can_edit" => SharingTeamPolicyType::PeopleWithLinkCanEdit,
+                    "people_with_link_can_view_and_comment" => SharingTeamPolicyType::PeopleWithLinkCanViewAndComment,
+                    "invite_only" => SharingTeamPolicyType::InviteOnly,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["people_with_link_can_edit",
@@ -5570,20 +5366,13 @@ impl<'de> ::serde::de::Deserialize<'de> for UserOnPaperDocFilter {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "visited" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UserOnPaperDocFilter::Visited)
-                    }
-                    "shared" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UserOnPaperDocFilter::Shared)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(UserOnPaperDocFilter::Other)
-                    }
-                }
+                let value = match tag {
+                    "visited" => UserOnPaperDocFilter::Visited,
+                    "shared" => UserOnPaperDocFilter::Shared,
+                    _ => UserOnPaperDocFilter::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["visited",

@@ -35,20 +35,19 @@ impl<'de> ::serde::de::Deserialize<'de> for LaunchEmptyResult {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "async_job_id" => {
                         match map.next_key()? {
-                            Some("async_job_id") => Ok(LaunchEmptyResult::AsyncJobId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("async_job_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("async_job_id") => LaunchEmptyResult::AsyncJobId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("async_job_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "complete" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(LaunchEmptyResult::Complete)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    "complete" => LaunchEmptyResult::Complete,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["async_job_id",
@@ -105,16 +104,18 @@ impl<'de> ::serde::de::Deserialize<'de> for LaunchResultBase {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "async_job_id" => {
                         match map.next_key()? {
-                            Some("async_job_id") => Ok(LaunchResultBase::AsyncJobId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("async_job_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("async_job_id") => LaunchResultBase::AsyncJobId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("async_job_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["async_job_id"];
@@ -255,17 +256,13 @@ impl<'de> ::serde::de::Deserialize<'de> for PollEmptyResult {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PollEmptyResult::InProgress)
-                    }
-                    "complete" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PollEmptyResult::Complete)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "in_progress" => PollEmptyResult::InProgress,
+                    "complete" => PollEmptyResult::Complete,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["in_progress",
@@ -324,20 +321,13 @@ impl<'de> ::serde::de::Deserialize<'de> for PollError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "invalid_async_job_id" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PollError::InvalidAsyncJobId)
-                    }
-                    "internal_error" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PollError::InternalError)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PollError::Other)
-                    }
-                }
+                let value = match tag {
+                    "invalid_async_job_id" => PollError::InvalidAsyncJobId,
+                    "internal_error" => PollError::InternalError,
+                    _ => PollError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["invalid_async_job_id",
@@ -406,13 +396,12 @@ impl<'de> ::serde::de::Deserialize<'de> for PollResultBase {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "in_progress" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PollResultBase::InProgress)
-                    }
-                    _ => Err(de::Error::unknown_variant(tag, VARIANTS))
-                }
+                let value = match tag {
+                    "in_progress" => PollResultBase::InProgress,
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["in_progress"];

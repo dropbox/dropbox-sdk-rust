@@ -151,19 +151,18 @@ impl<'de> ::serde::de::Deserialize<'de> for DeleteManualContactsError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "contacts_not_found" => {
                         match map.next_key()? {
-                            Some("contacts_not_found") => Ok(DeleteManualContactsError::ContactsNotFound(map.next_value()?)),
-                            None => Err(de::Error::missing_field("contacts_not_found")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("contacts_not_found") => DeleteManualContactsError::ContactsNotFound(map.next_value()?),
+                            None => return Err(de::Error::missing_field("contacts_not_found")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(DeleteManualContactsError::Other)
-                    }
-                }
+                    _ => DeleteManualContactsError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["contacts_not_found",

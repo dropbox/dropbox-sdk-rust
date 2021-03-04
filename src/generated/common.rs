@@ -53,30 +53,26 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRoot {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
-                    "home" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PathRoot::Home)
-                    }
+                let value = match tag {
+                    "home" => PathRoot::Home,
                     "root" => {
                         match map.next_key()? {
-                            Some("root") => Ok(PathRoot::Root(map.next_value()?)),
-                            None => Err(de::Error::missing_field("root")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("root") => PathRoot::Root(map.next_value()?),
+                            None => return Err(de::Error::missing_field("root")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
                     "namespace_id" => {
                         match map.next_key()? {
-                            Some("namespace_id") => Ok(PathRoot::NamespaceId(map.next_value()?)),
-                            None => Err(de::Error::missing_field("namespace_id")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("namespace_id") => PathRoot::NamespaceId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("namespace_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PathRoot::Other)
-                    }
-                }
+                    _ => PathRoot::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["home",
@@ -145,23 +141,19 @@ impl<'de> ::serde::de::Deserialize<'de> for PathRootError {
                     Some(".tag") => map.next_value()?,
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
-                match tag {
+                let value = match tag {
                     "invalid_root" => {
                         match map.next_key()? {
-                            Some("invalid_root") => Ok(PathRootError::InvalidRoot(map.next_value()?)),
-                            None => Err(de::Error::missing_field("invalid_root")),
-                            _ => Err(de::Error::unknown_field(tag, VARIANTS))
+                            Some("invalid_root") => PathRootError::InvalidRoot(map.next_value()?),
+                            None => return Err(de::Error::missing_field("invalid_root")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
-                    "no_permission" => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PathRootError::NoPermission)
-                    }
-                    _ => {
-                        crate::eat_json_fields(&mut map)?;
-                        Ok(PathRootError::Other)
-                    }
-                }
+                    "no_permission" => PathRootError::NoPermission,
+                    _ => PathRootError::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
             }
         }
         const VARIANTS: &[&str] = &["invalid_root",
