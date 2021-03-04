@@ -1,3 +1,8 @@
+# v0.11.2
+xxxx-yy-zz
+* API spec update 2021-03-03
+  * documentation, team_log updates
+
 # v0.11.1
 2021-02-22
 * Routes tagged as deprecated in Stone now have the #[deprecated] attribute in Rust.
