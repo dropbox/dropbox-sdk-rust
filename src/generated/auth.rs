@@ -21,7 +21,9 @@ pub fn token_from_oauth1(
         None)
 }
 
-/// Disables the access token used to authenticate the call.
+/// Disables the access token used to authenticate the call. If there is a corresponding refresh
+/// token for the access token, this disables that refresh token, as well as any other access tokens
+/// for that refresh token.
 pub fn token_revoke(
     client: &impl crate::client_trait::UserAuthClient,
 ) -> crate::Result<Result<(), crate::NoError>> {

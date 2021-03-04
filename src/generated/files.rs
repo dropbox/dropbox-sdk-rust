@@ -338,8 +338,9 @@ pub fn download(
 }
 
 /// Download a folder from the user's Dropbox, as a zip file. The folder must be less than 20 GB in
-/// size and have fewer than 10,000 total files. The input cannot be a single file. Any single file
-/// must be less than 4GB in size.
+/// size and any single file within must be less than 4 GB in size. The resulting zip must have
+/// fewer than 10,000 total file and folder entries, including the top level folder. The input
+/// cannot be a single file.
 pub fn download_zip(
     client: &impl crate::client_trait::UserAuthClient,
     arg: &DownloadZipArg,
