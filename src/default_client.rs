@@ -264,6 +264,7 @@ pub enum DefaultClientError {
 
     /// The HTTP client encountered some I/O error.
     #[error("I/O error: {0}")]
+    #[allow(clippy::upper_case_acronyms)]
     IO(#[from] std::io::Error),
 
     /// Some other error from the HTTP client implementation.
