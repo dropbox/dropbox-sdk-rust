@@ -19,6 +19,8 @@ struct TopLevelError<T> {
 #[derive(Debug, Deserialize)]
 struct RateLimitedError {
     pub reason: RateLimitedReason,
+
+    #[serde(default)] // too_many_write_operations errors don't include this field; default to 0.
     pub retry_after: u32,
 }
 
