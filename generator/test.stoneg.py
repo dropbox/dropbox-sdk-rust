@@ -92,6 +92,7 @@ class TestBackend(RustHelperBackend):
         self.emit(u'    clippy::float_cmp,')
         self.emit(u'    clippy::unreadable_literal,')
         self.emit(u'    clippy::cognitive_complexity,')
+        self.emit(u'    clippy::collapsible_match,')
         self.emit(u')]')
         self.emit()
 
