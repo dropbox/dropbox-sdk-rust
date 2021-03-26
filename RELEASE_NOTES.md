@@ -3,6 +3,8 @@ xxxx-yy-zz
 * minor codegen change to make enum deserializers more concise
 * API spec update 2021-03-03
   * documentation, team_log updates
+* API spec update 2021-03-24
+  * documentation, team_log updates
 
 # v0.11.1
 2021-02-22

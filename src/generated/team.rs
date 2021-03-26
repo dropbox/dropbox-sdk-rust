@@ -1893,7 +1893,8 @@ pub enum AdminTier {
     TeamAdmin,
     /// User can do most user provisioning, de-provisioning and management.
     UserManagementAdmin,
-    /// User can do a limited set of common support tasks for existing users.
+    /// User can do a limited set of common support tasks for existing users. Note: Dropbox is
+    /// adding new types of admin roles; these may display as support_admin.
     SupportAdmin,
     /// User is not an admin of the team.
     MemberOnly,
