@@ -1,3 +1,6 @@
+# v0.11.3
+xxxx-yy-zz
+
 # v0.11.2
 2021-03-26
 * minor codegen change to make enum deserializers more concise
