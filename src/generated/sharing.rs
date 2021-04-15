@@ -2726,7 +2726,9 @@ pub enum CreateSharedLinkWithSettingsError {
     SharedLinkAlreadyExists(Option<SharedLinkAlreadyExistsMetadata>),
     /// There is an error with the given settings.
     SettingsError(SharedLinkSettingsError),
-    /// Access to the requested path is forbidden.
+    /// The user is not allowed to create a shared link to the specified file. For  example, this
+    /// can occur if the file is restricted or if the user's links are
+    /// [banned](https://help.dropbox.com/files-folders/share/banned-links).
     AccessDenied,
 }
 
@@ -2843,7 +2845,6 @@ impl ::std::fmt::Display for CreateSharedLinkWithSettingsError {
             CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(None) => f.write_str("shared_link_already_exists"),
             CreateSharedLinkWithSettingsError::SharedLinkAlreadyExists(Some(inner)) => write!(f, "shared_link_already_exists: {:?}", inner),
             CreateSharedLinkWithSettingsError::SettingsError(inner) => write!(f, "There is an error with the given settings: {}", inner),
-            CreateSharedLinkWithSettingsError::AccessDenied => f.write_str("Access to the requested path is forbidden."),
             _ => write!(f, "{:?}", *self),
         }
     }
