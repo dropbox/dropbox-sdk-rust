@@ -19,6 +19,7 @@ pub type MembersGetInfoResult = Vec<MembersGetInfoItem>;
 pub type NumberPerDay = Vec<Option<u64>>;
 pub type Path = String;
 pub type SecondaryEmail = super::secondary_emails::SecondaryEmail;
+pub type TeamMemberRoleId = String;
 pub type UserQuota = u32;
 
 /// List all device sessions of a team's member.
@@ -635,6 +636,21 @@ pub fn members_delete_profile_photo(
         None)
 }
 
+/// Get available TeamMemberRoles for the connected team. To be used with
+/// [`members_set_admin_permissions_v2()`](members_set_admin_permissions_v2). Permission : Team
+/// member management.
+pub fn members_get_available_team_member_roles(
+    client: &impl crate::client_trait::TeamAuthClient,
+) -> crate::Result<Result<MembersGetAvailableTeamMemberRolesResult, crate::NoError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/members/get_available_team_member_roles",
+        &(),
+        None)
+}
+
 /// Returns information about multiple team members. Permission : Team information This endpoint
 /// will return [`MembersGetInfoItem::IdNotFound`](MembersGetInfoItem::IdNotFound), for IDs (or
 /// emails) that cannot be matched to a valid team member.
@@ -823,6 +839,20 @@ pub fn members_send_welcome_email(
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
         "team/members/send_welcome_email",
+        arg,
+        None)
+}
+
+/// Updates a team member's permissions. Permission : Team member management.
+pub fn members_set_admin_permissions_v2(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &MembersSetPermissions2Arg,
+) -> crate::Result<Result<MembersSetPermissions2Result, MembersSetPermissions2Error>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/members/set_admin_permissions_v2",
         arg,
         None)
 }
@@ -15791,6 +15821,98 @@ impl ::std::fmt::Display for MembersDeleteProfilePhotoError {
     }
 }
 
+/// Available TeamMemberRole for the connected team. To be used with
+/// [`members_set_admin_permissions_v2()`](members_set_admin_permissions_v2).
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct MembersGetAvailableTeamMemberRolesResult {
+    /// Available roles.
+    pub roles: Vec<TeamMemberRole>,
+}
+
+impl MembersGetAvailableTeamMemberRolesResult {
+    pub fn new(roles: Vec<TeamMemberRole>) -> Self {
+        MembersGetAvailableTeamMemberRolesResult {
+            roles,
+        }
+    }
+}
+
+const MEMBERS_GET_AVAILABLE_TEAM_MEMBER_ROLES_RESULT_FIELDS: &[&str] = &["roles"];
+impl MembersGetAvailableTeamMemberRolesResult {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MembersGetAvailableTeamMemberRolesResult, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersGetAvailableTeamMemberRolesResult>, V::Error> {
+        let mut field_roles = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "roles" => {
+                    if field_roles.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("roles"));
+                    }
+                    field_roles = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersGetAvailableTeamMemberRolesResult {
+            roles: field_roles.ok_or_else(|| ::serde::de::Error::missing_field("roles"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("roles", &self.roles)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersGetAvailableTeamMemberRolesResult {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MembersGetAvailableTeamMemberRolesResult;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersGetAvailableTeamMemberRolesResult struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MembersGetAvailableTeamMemberRolesResult::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MembersGetAvailableTeamMemberRolesResult", MEMBERS_GET_AVAILABLE_TEAM_MEMBER_ROLES_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersGetAvailableTeamMemberRolesResult {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MembersGetAvailableTeamMemberRolesResult", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 #[non_exhaustive] // structs may have more fields added in the future.
 pub struct MembersGetInfoArgs {
@@ -17300,6 +17422,337 @@ impl ::std::fmt::Display for MembersSendWelcomeError {
             MembersSendWelcomeError::UserNotInTeam => f.write_str("The user is not a member of the team."),
             _ => write!(f, "{:?}", *self),
         }
+    }
+}
+
+/// Exactly one of team_member_id, email, or external_id must be provided to identify the user
+/// account.
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct MembersSetPermissions2Arg {
+    /// Identity of user whose role will be set.
+    pub user: UserSelectorArg,
+    /// The new roles for the member. Send empty list to make user member only. For now, only up to
+    /// one role is allowed.
+    pub new_roles: Option<Vec<TeamMemberRoleId>>,
+}
+
+impl MembersSetPermissions2Arg {
+    pub fn new(user: UserSelectorArg) -> Self {
+        MembersSetPermissions2Arg {
+            user,
+            new_roles: None,
+        }
+    }
+
+    pub fn with_new_roles(mut self, value: Vec<TeamMemberRoleId>) -> Self {
+        self.new_roles = Some(value);
+        self
+    }
+}
+
+const MEMBERS_SET_PERMISSIONS2_ARG_FIELDS: &[&str] = &["user",
+                                                       "new_roles"];
+impl MembersSetPermissions2Arg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MembersSetPermissions2Arg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersSetPermissions2Arg>, V::Error> {
+        let mut field_user = None;
+        let mut field_new_roles = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "user" => {
+                    if field_user.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("user"));
+                    }
+                    field_user = Some(map.next_value()?);
+                }
+                "new_roles" => {
+                    if field_new_roles.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("new_roles"));
+                    }
+                    field_new_roles = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersSetPermissions2Arg {
+            user: field_user.ok_or_else(|| ::serde::de::Error::missing_field("user"))?,
+            new_roles: field_new_roles,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("user", &self.user)?;
+        s.serialize_field("new_roles", &self.new_roles)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersSetPermissions2Arg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MembersSetPermissions2Arg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersSetPermissions2Arg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MembersSetPermissions2Arg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MembersSetPermissions2Arg", MEMBERS_SET_PERMISSIONS2_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersSetPermissions2Arg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MembersSetPermissions2Arg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum MembersSetPermissions2Error {
+    /// No matching user found. The provided team_member_id, email, or external_id does not exist on
+    /// this team.
+    UserNotFound,
+    /// Cannot remove the admin setting of the last admin.
+    LastAdmin,
+    /// The user is not a member of the team.
+    UserNotInTeam,
+    /// Cannot remove/grant permissions. This can happen if the team member is suspended.
+    CannotSetPermissions,
+    /// No matching role found. At least one of the provided new_roles does not exist on this team.
+    RoleNotFound,
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersSetPermissions2Error {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MembersSetPermissions2Error;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersSetPermissions2Error structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "user_not_found" => MembersSetPermissions2Error::UserNotFound,
+                    "last_admin" => MembersSetPermissions2Error::LastAdmin,
+                    "user_not_in_team" => MembersSetPermissions2Error::UserNotInTeam,
+                    "cannot_set_permissions" => MembersSetPermissions2Error::CannotSetPermissions,
+                    "role_not_found" => MembersSetPermissions2Error::RoleNotFound,
+                    _ => MembersSetPermissions2Error::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["user_not_found",
+                                    "last_admin",
+                                    "user_not_in_team",
+                                    "cannot_set_permissions",
+                                    "role_not_found",
+                                    "other"];
+        deserializer.deserialize_struct("MembersSetPermissions2Error", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersSetPermissions2Error {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MembersSetPermissions2Error::UserNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersSetPermissions2Error", 1)?;
+                s.serialize_field(".tag", "user_not_found")?;
+                s.end()
+            }
+            MembersSetPermissions2Error::LastAdmin => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersSetPermissions2Error", 1)?;
+                s.serialize_field(".tag", "last_admin")?;
+                s.end()
+            }
+            MembersSetPermissions2Error::UserNotInTeam => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersSetPermissions2Error", 1)?;
+                s.serialize_field(".tag", "user_not_in_team")?;
+                s.end()
+            }
+            MembersSetPermissions2Error::CannotSetPermissions => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersSetPermissions2Error", 1)?;
+                s.serialize_field(".tag", "cannot_set_permissions")?;
+                s.end()
+            }
+            MembersSetPermissions2Error::RoleNotFound => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersSetPermissions2Error", 1)?;
+                s.serialize_field(".tag", "role_not_found")?;
+                s.end()
+            }
+            MembersSetPermissions2Error::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+impl ::std::error::Error for MembersSetPermissions2Error {
+}
+
+impl ::std::fmt::Display for MembersSetPermissions2Error {
+    fn fmt(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+        match self {
+            MembersSetPermissions2Error::UserNotFound => f.write_str("No matching user found. The provided team_member_id, email, or external_id does not exist on this team."),
+            MembersSetPermissions2Error::LastAdmin => f.write_str("Cannot remove the admin setting of the last admin."),
+            MembersSetPermissions2Error::UserNotInTeam => f.write_str("The user is not a member of the team."),
+            MembersSetPermissions2Error::CannotSetPermissions => f.write_str("Cannot remove/grant permissions. This can happen if the team member is suspended."),
+            MembersSetPermissions2Error::RoleNotFound => f.write_str("No matching role found. At least one of the provided new_roles does not exist on this team."),
+            _ => write!(f, "{:?}", *self),
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct MembersSetPermissions2Result {
+    /// The member ID of the user to which the change was applied.
+    pub team_member_id: super::team_common::TeamMemberId,
+    /// The roles after the change. Empty in case the user become a non-admin.
+    pub roles: Option<Vec<TeamMemberRole>>,
+}
+
+impl MembersSetPermissions2Result {
+    pub fn new(team_member_id: super::team_common::TeamMemberId) -> Self {
+        MembersSetPermissions2Result {
+            team_member_id,
+            roles: None,
+        }
+    }
+
+    pub fn with_roles(mut self, value: Vec<TeamMemberRole>) -> Self {
+        self.roles = Some(value);
+        self
+    }
+}
+
+const MEMBERS_SET_PERMISSIONS2_RESULT_FIELDS: &[&str] = &["team_member_id",
+                                                          "roles"];
+impl MembersSetPermissions2Result {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MembersSetPermissions2Result, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersSetPermissions2Result>, V::Error> {
+        let mut field_team_member_id = None;
+        let mut field_roles = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "team_member_id" => {
+                    if field_team_member_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("team_member_id"));
+                    }
+                    field_team_member_id = Some(map.next_value()?);
+                }
+                "roles" => {
+                    if field_roles.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("roles"));
+                    }
+                    field_roles = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersSetPermissions2Result {
+            team_member_id: field_team_member_id.ok_or_else(|| ::serde::de::Error::missing_field("team_member_id"))?,
+            roles: field_roles,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("team_member_id", &self.team_member_id)?;
+        s.serialize_field("roles", &self.roles)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersSetPermissions2Result {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MembersSetPermissions2Result;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersSetPermissions2Result struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MembersSetPermissions2Result::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MembersSetPermissions2Result", MEMBERS_SET_PERMISSIONS2_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersSetPermissions2Result {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MembersSetPermissions2Result", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -24515,6 +24968,125 @@ impl ::serde::ser::Serialize for TeamMemberProfile {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("TeamMemberProfile", 17)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// A role which can be attached to a team member. This replaces AdminTier; each AdminTier
+/// corresponds to a new TeamMemberRole with a matching name.
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct TeamMemberRole {
+    /// A string containing encoded role ID. For roles defined by Dropbox, this is the same across
+    /// all teams.
+    pub role_id: TeamMemberRoleId,
+    /// The role display name.
+    pub name: String,
+    /// Role description. Describes which permissions come with this role.
+    pub description: String,
+}
+
+impl TeamMemberRole {
+    pub fn new(role_id: TeamMemberRoleId, name: String, description: String) -> Self {
+        TeamMemberRole {
+            role_id,
+            name,
+            description,
+        }
+    }
+}
+
+const TEAM_MEMBER_ROLE_FIELDS: &[&str] = &["role_id",
+                                           "name",
+                                           "description"];
+impl TeamMemberRole {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TeamMemberRole, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamMemberRole>, V::Error> {
+        let mut field_role_id = None;
+        let mut field_name = None;
+        let mut field_description = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "role_id" => {
+                    if field_role_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("role_id"));
+                    }
+                    field_role_id = Some(map.next_value()?);
+                }
+                "name" => {
+                    if field_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("name"));
+                    }
+                    field_name = Some(map.next_value()?);
+                }
+                "description" => {
+                    if field_description.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("description"));
+                    }
+                    field_description = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamMemberRole {
+            role_id: field_role_id.ok_or_else(|| ::serde::de::Error::missing_field("role_id"))?,
+            name: field_name.ok_or_else(|| ::serde::de::Error::missing_field("name"))?,
+            description: field_description.ok_or_else(|| ::serde::de::Error::missing_field("description"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("role_id", &self.role_id)?;
+        s.serialize_field("name", &self.name)?;
+        s.serialize_field("description", &self.description)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamMemberRole {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TeamMemberRole;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamMemberRole struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TeamMemberRole::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TeamMemberRole", TEAM_MEMBER_ROLE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamMemberRole {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TeamMemberRole", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
