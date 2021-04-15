@@ -26,16 +26,6 @@ However, that said,
 * We are happy to get feedback and/or pull requests from the community! See
 [contributing](CONTRIBUTING.md) for more information.
 
-## A Note on Semver
-
-This SDK is kept in sync with the current official API spec. While this spec is
-generally changed in a backwards-compatible way, sometimes significant feature
-additions are made, and sometimes backwards-incompatible changes may be
-introduced. This crate will have its minor version bumped each time the spec is
-updated. Users are encouraged to inspect the changes before updating the crate
-version targeted, which is most easily done by looking at what revision the
-`dropbox-api-spec` submodule is pinned to.
-
 ## HTTP Client
 
 To actually use the API calls, you need a HTTP client -- all functions take a
@@ -124,19 +114,16 @@ Some implementation notes, limitations, and TODOs:
    support async I/O, which will require making incompatible changes to the
    types returned by routes. This should probably wait until the futures
    ecosystem and async/await have stabilized some more.
- * This code does not use `serde_derive` and instead uses manually-emitted
-   serialization code. Previous work on this crate did attempt to use
-   `serde_derive`, but the way the Dropbox API serializes unions containing
-   structs (by collapsing their fields into the union) isn't supported by
-   `serde_derive`. It also took an extremely long time to compile (~30 minutes
-   for release build) and huge (~190MB) .rlib files. The hand-written code is
-   more versatile, compiles faster, and produces a smaller binary, at the
-   expense of making the generated source code much larger.
+ * This code does not use `serde_derive` for the most part, and instead uses
+   manually-emitted serialization code. Previous work on this crate did attempt
+   to use `serde_derive`, but the way the Dropbox API serializes unions
+   containing structs (by collapsing their fields into the union) isn't
+   supported by `serde_derive`. It also took an extremely long time to compile
+   (~30 minutes for release build) and huge (~190MB) .rlib files. The
+   hand-written code is more versatile, compiles faster, and produces a smaller
+   binary, at the expense of making the generated source code much larger.
  * Types with constraints (such as strings with patterns or min/max lengths, or
    integers with a range) do not check that the data being stored in them meets
    the constraints.
- * The generated tests are not exhaustive. For unions with more than one
-   variant, the test generator currently just picks one. Ideally it would emit
-   tests for all variants.
 
 ## Happy Dropboxing!
