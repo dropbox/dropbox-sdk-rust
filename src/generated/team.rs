@@ -594,6 +594,28 @@ pub fn member_space_limits_set_custom_quota(
 /// management apps are required to set an initial given_name and surname for a user to use in the
 /// team invitation and for 'Perform as team member' actions taken on the user before they become
 /// 'active'.
+pub fn members_add_v2(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &MembersAddV2Arg,
+) -> crate::Result<Result<MembersAddLaunchV2Result, crate::NoError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/members/add_v2",
+        arg,
+        None)
+}
+
+/// Adds members to a team. Permission : Team member management A maximum of 20 members can be
+/// specified in a single call. If no Dropbox account exists with the email address specified, a new
+/// Dropbox account will be created with the given email address, and that account will be invited
+/// to the team. If a personal Dropbox account exists with the email address specified in the call,
+/// this call will create a placeholder Dropbox account for the user on the team and send an email
+/// inviting the user to migrate their existing personal account onto the team. Team member
+/// management apps are required to set an initial given_name and surname for a user to use in the
+/// team invitation and for 'Perform as team member' actions taken on the user before they become
+/// 'active'.
 pub fn members_add(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersAddArg,
@@ -603,6 +625,21 @@ pub fn members_add(
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
         "team/members/add",
+        arg,
+        None)
+}
+
+/// Once an async_job_id is returned from [`members_add_v2()`](members_add_v2) , use this to poll
+/// the status of the asynchronous request. Permission : Team member management.
+pub fn members_add_job_status_get_v2(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &super::dbx_async::PollArg,
+) -> crate::Result<Result<MembersAddJobStatusV2Result, super::dbx_async::PollError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/members/add/job_status/get_v2",
         arg,
         None)
 }
@@ -618,6 +655,20 @@ pub fn members_add_job_status_get(
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
         "team/members/add/job_status/get",
+        arg,
+        None)
+}
+
+/// Deletes a team member's profile photo. Permission : Team member management.
+pub fn members_delete_profile_photo_v2(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &MembersDeleteProfilePhotoArg,
+) -> crate::Result<Result<TeamMemberInfoV2Result, MembersDeleteProfilePhotoError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/members/delete_profile_photo_v2",
         arg,
         None)
 }
@@ -654,6 +705,22 @@ pub fn members_get_available_team_member_roles(
 /// Returns information about multiple team members. Permission : Team information This endpoint
 /// will return [`MembersGetInfoItem::IdNotFound`](MembersGetInfoItem::IdNotFound), for IDs (or
 /// emails) that cannot be matched to a valid team member.
+pub fn members_get_info_v2(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &MembersGetInfoV2Arg,
+) -> crate::Result<Result<MembersGetInfoV2Result, MembersGetInfoError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/members/get_info_v2",
+        arg,
+        None)
+}
+
+/// Returns information about multiple team members. Permission : Team information This endpoint
+/// will return [`MembersGetInfoItem::IdNotFound`](MembersGetInfoItem::IdNotFound), for IDs (or
+/// emails) that cannot be matched to a valid team member.
 pub fn members_get_info(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersGetInfoArgs,
@@ -668,6 +735,20 @@ pub fn members_get_info(
 }
 
 /// Lists members of a team. Permission : Team information.
+pub fn members_list_v2(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &MembersListArg,
+) -> crate::Result<Result<MembersListV2Result, MembersListError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/members/list_v2",
+        arg,
+        None)
+}
+
+/// Lists members of a team. Permission : Team information.
 pub fn members_list(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersListArg,
@@ -677,6 +758,21 @@ pub fn members_list(
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
         "team/members/list",
+        arg,
+        None)
+}
+
+/// Once a cursor has been retrieved from [`members_list_v2()`](members_list_v2), use this to
+/// paginate through all team members. Permission : Team information.
+pub fn members_list_continue_v2(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &MembersListContinueArg,
+) -> crate::Result<Result<MembersListV2Result, MembersListContinueError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/members/list/continue_v2",
         arg,
         None)
 }
@@ -872,6 +968,20 @@ pub fn members_set_admin_permissions(
 }
 
 /// Updates a team member's profile. Permission : Team member management.
+pub fn members_set_profile_v2(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &MembersSetProfileArg,
+) -> crate::Result<Result<TeamMemberInfoV2Result, MembersSetProfileError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/members/set_profile_v2",
+        arg,
+        None)
+}
+
+/// Updates a team member's profile. Permission : Team member management.
 pub fn members_set_profile(
     client: &impl crate::client_trait::TeamAuthClient,
     arg: &MembersSetProfileArg,
@@ -881,6 +991,20 @@ pub fn members_set_profile(
         crate::client_trait::Endpoint::Api,
         crate::client_trait::Style::Rpc,
         "team/members/set_profile",
+        arg,
+        None)
+}
+
+/// Updates a team member's profile photo. Permission : Team member management.
+pub fn members_set_profile_photo_v2(
+    client: &impl crate::client_trait::TeamAuthClient,
+    arg: &MembersSetProfilePhotoArg,
+) -> crate::Result<Result<TeamMemberInfoV2Result, MembersSetProfilePhotoError>> {
+    crate::client_helpers::request(
+        client,
+        crate::client_trait::Endpoint::Api,
+        crate::client_trait::Style::Rpc,
+        "team/members/set_profile_photo_v2",
         arg,
         None)
 }
@@ -13894,9 +14018,9 @@ pub struct MemberAddArg {
     /// invitation will be sent to the user. This may be useful for apps using single sign-on (SSO)
     /// flows for onboarding that want to handle announcements themselves.
     pub send_welcome_email: bool,
-    pub role: AdminTier,
     /// Whether a user is directory restricted.
     pub is_directory_restricted: Option<bool>,
+    pub role: AdminTier,
 }
 
 impl MemberAddArg {
@@ -13908,7 +14032,222 @@ impl MemberAddArg {
             member_external_id: None,
             member_persistent_id: None,
             send_welcome_email: true,
+            is_directory_restricted: None,
             role: AdminTier::MemberOnly,
+        }
+    }
+
+    pub fn with_member_given_name(mut self, value: super::common::OptionalNamePart) -> Self {
+        self.member_given_name = Some(value);
+        self
+    }
+
+    pub fn with_member_surname(mut self, value: super::common::OptionalNamePart) -> Self {
+        self.member_surname = Some(value);
+        self
+    }
+
+    pub fn with_member_external_id(mut self, value: super::team_common::MemberExternalId) -> Self {
+        self.member_external_id = Some(value);
+        self
+    }
+
+    pub fn with_member_persistent_id(mut self, value: String) -> Self {
+        self.member_persistent_id = Some(value);
+        self
+    }
+
+    pub fn with_send_welcome_email(mut self, value: bool) -> Self {
+        self.send_welcome_email = value;
+        self
+    }
+
+    pub fn with_is_directory_restricted(mut self, value: bool) -> Self {
+        self.is_directory_restricted = Some(value);
+        self
+    }
+
+    pub fn with_role(mut self, value: AdminTier) -> Self {
+        self.role = value;
+        self
+    }
+}
+
+const MEMBER_ADD_ARG_FIELDS: &[&str] = &["member_email",
+                                         "member_given_name",
+                                         "member_surname",
+                                         "member_external_id",
+                                         "member_persistent_id",
+                                         "send_welcome_email",
+                                         "is_directory_restricted",
+                                         "role"];
+impl MemberAddArg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MemberAddArg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MemberAddArg>, V::Error> {
+        let mut field_member_email = None;
+        let mut field_member_given_name = None;
+        let mut field_member_surname = None;
+        let mut field_member_external_id = None;
+        let mut field_member_persistent_id = None;
+        let mut field_send_welcome_email = None;
+        let mut field_is_directory_restricted = None;
+        let mut field_role = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "member_email" => {
+                    if field_member_email.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("member_email"));
+                    }
+                    field_member_email = Some(map.next_value()?);
+                }
+                "member_given_name" => {
+                    if field_member_given_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("member_given_name"));
+                    }
+                    field_member_given_name = Some(map.next_value()?);
+                }
+                "member_surname" => {
+                    if field_member_surname.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("member_surname"));
+                    }
+                    field_member_surname = Some(map.next_value()?);
+                }
+                "member_external_id" => {
+                    if field_member_external_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("member_external_id"));
+                    }
+                    field_member_external_id = Some(map.next_value()?);
+                }
+                "member_persistent_id" => {
+                    if field_member_persistent_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("member_persistent_id"));
+                    }
+                    field_member_persistent_id = Some(map.next_value()?);
+                }
+                "send_welcome_email" => {
+                    if field_send_welcome_email.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("send_welcome_email"));
+                    }
+                    field_send_welcome_email = Some(map.next_value()?);
+                }
+                "is_directory_restricted" => {
+                    if field_is_directory_restricted.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("is_directory_restricted"));
+                    }
+                    field_is_directory_restricted = Some(map.next_value()?);
+                }
+                "role" => {
+                    if field_role.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("role"));
+                    }
+                    field_role = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MemberAddArg {
+            member_email: field_member_email.ok_or_else(|| ::serde::de::Error::missing_field("member_email"))?,
+            member_given_name: field_member_given_name,
+            member_surname: field_member_surname,
+            member_external_id: field_member_external_id,
+            member_persistent_id: field_member_persistent_id,
+            send_welcome_email: field_send_welcome_email.unwrap_or(true),
+            is_directory_restricted: field_is_directory_restricted,
+            role: field_role.unwrap_or(AdminTier::MemberOnly),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("member_email", &self.member_email)?;
+        s.serialize_field("member_given_name", &self.member_given_name)?;
+        s.serialize_field("member_surname", &self.member_surname)?;
+        s.serialize_field("member_external_id", &self.member_external_id)?;
+        s.serialize_field("member_persistent_id", &self.member_persistent_id)?;
+        s.serialize_field("send_welcome_email", &self.send_welcome_email)?;
+        s.serialize_field("is_directory_restricted", &self.is_directory_restricted)?;
+        s.serialize_field("role", &self.role)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberAddArg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberAddArg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MemberAddArg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberAddArg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberAddArg", MEMBER_ADD_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberAddArg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberAddArg", 8)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct MemberAddArgBase {
+    pub member_email: super::common::EmailAddress,
+    /// Member's first name.
+    pub member_given_name: Option<super::common::OptionalNamePart>,
+    /// Member's last name.
+    pub member_surname: Option<super::common::OptionalNamePart>,
+    /// External ID for member.
+    pub member_external_id: Option<super::team_common::MemberExternalId>,
+    /// Persistent ID for member. This field is only available to teams using persistent ID SAML
+    /// configuration.
+    pub member_persistent_id: Option<String>,
+    /// Whether to send a welcome email to the member. If send_welcome_email is false, no email
+    /// invitation will be sent to the user. This may be useful for apps using single sign-on (SSO)
+    /// flows for onboarding that want to handle announcements themselves.
+    pub send_welcome_email: bool,
+    /// Whether a user is directory restricted.
+    pub is_directory_restricted: Option<bool>,
+}
+
+impl MemberAddArgBase {
+    pub fn new(member_email: super::common::EmailAddress) -> Self {
+        MemberAddArgBase {
+            member_email,
+            member_given_name: None,
+            member_surname: None,
+            member_external_id: None,
+            member_persistent_id: None,
+            send_welcome_email: true,
             is_directory_restricted: None,
         }
     }
@@ -13938,43 +14277,36 @@ impl MemberAddArg {
         self
     }
 
-    pub fn with_role(mut self, value: AdminTier) -> Self {
-        self.role = value;
-        self
-    }
-
     pub fn with_is_directory_restricted(mut self, value: bool) -> Self {
         self.is_directory_restricted = Some(value);
         self
     }
 }
 
-const MEMBER_ADD_ARG_FIELDS: &[&str] = &["member_email",
-                                         "member_given_name",
-                                         "member_surname",
-                                         "member_external_id",
-                                         "member_persistent_id",
-                                         "send_welcome_email",
-                                         "role",
-                                         "is_directory_restricted"];
-impl MemberAddArg {
+const MEMBER_ADD_ARG_BASE_FIELDS: &[&str] = &["member_email",
+                                              "member_given_name",
+                                              "member_surname",
+                                              "member_external_id",
+                                              "member_persistent_id",
+                                              "send_welcome_email",
+                                              "is_directory_restricted"];
+impl MemberAddArgBase {
     pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
         map: V,
-    ) -> Result<MemberAddArg, V::Error> {
+    ) -> Result<MemberAddArgBase, V::Error> {
         Self::internal_deserialize_opt(map, false).map(Option::unwrap)
     }
 
     pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
         mut map: V,
         optional: bool,
-    ) -> Result<Option<MemberAddArg>, V::Error> {
+    ) -> Result<Option<MemberAddArgBase>, V::Error> {
         let mut field_member_email = None;
         let mut field_member_given_name = None;
         let mut field_member_surname = None;
         let mut field_member_external_id = None;
         let mut field_member_persistent_id = None;
         let mut field_send_welcome_email = None;
-        let mut field_role = None;
         let mut field_is_directory_restricted = None;
         let mut nothing = true;
         while let Some(key) = map.next_key::<&str>()? {
@@ -14016,12 +14348,6 @@ impl MemberAddArg {
                     }
                     field_send_welcome_email = Some(map.next_value()?);
                 }
-                "role" => {
-                    if field_role.is_some() {
-                        return Err(::serde::de::Error::duplicate_field("role"));
-                    }
-                    field_role = Some(map.next_value()?);
-                }
                 "is_directory_restricted" => {
                     if field_is_directory_restricted.is_some() {
                         return Err(::serde::de::Error::duplicate_field("is_directory_restricted"));
@@ -14037,14 +14363,13 @@ impl MemberAddArg {
         if optional && nothing {
             return Ok(None);
         }
-        let result = MemberAddArg {
+        let result = MemberAddArgBase {
             member_email: field_member_email.ok_or_else(|| ::serde::de::Error::missing_field("member_email"))?,
             member_given_name: field_member_given_name,
             member_surname: field_member_surname,
             member_external_id: field_member_external_id,
             member_persistent_id: field_member_persistent_id,
             send_welcome_email: field_send_welcome_email.unwrap_or(true),
-            role: field_role.unwrap_or(AdminTier::MemberOnly),
             is_directory_restricted: field_is_directory_restricted,
         };
         Ok(Some(result))
@@ -14061,34 +14386,33 @@ impl MemberAddArg {
         s.serialize_field("member_external_id", &self.member_external_id)?;
         s.serialize_field("member_persistent_id", &self.member_persistent_id)?;
         s.serialize_field("send_welcome_email", &self.send_welcome_email)?;
-        s.serialize_field("role", &self.role)?;
         s.serialize_field("is_directory_restricted", &self.is_directory_restricted)
     }
 }
 
-impl<'de> ::serde::de::Deserialize<'de> for MemberAddArg {
+impl<'de> ::serde::de::Deserialize<'de> for MemberAddArgBase {
     fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
         // struct deserializer
         use serde::de::{MapAccess, Visitor};
         struct StructVisitor;
         impl<'de> Visitor<'de> for StructVisitor {
-            type Value = MemberAddArg;
+            type Value = MemberAddArgBase;
             fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
-                f.write_str("a MemberAddArg struct")
+                f.write_str("a MemberAddArgBase struct")
             }
             fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
-                MemberAddArg::internal_deserialize(map)
+                MemberAddArgBase::internal_deserialize(map)
             }
         }
-        deserializer.deserialize_struct("MemberAddArg", MEMBER_ADD_ARG_FIELDS, StructVisitor)
+        deserializer.deserialize_struct("MemberAddArgBase", MEMBER_ADD_ARG_BASE_FIELDS, StructVisitor)
     }
 }
 
-impl ::serde::ser::Serialize for MemberAddArg {
+impl ::serde::ser::Serialize for MemberAddArgBase {
     fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
         // struct serializer
         use serde::ser::SerializeStruct;
-        let mut s = serializer.serialize_struct("MemberAddArg", 8)?;
+        let mut s = serializer.serialize_struct("MemberAddArgBase", 7)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -14099,8 +14423,6 @@ impl ::serde::ser::Serialize for MemberAddArg {
 /// failure that occurred, and include the email of the user for which the operation has failed.
 #[derive(Debug, Clone, PartialEq)]
 pub enum MemberAddResult {
-    /// Describes a user that was successfully added to the team.
-    Success(TeamMemberInfo),
     /// Team is already full. The organization has no available licenses.
     TeamLicenseLimit(super::common::EmailAddress),
     /// Team is already full. The free team member limit has been reached.
@@ -14126,6 +14448,8 @@ pub enum MemberAddResult {
     PersistentIdDisabled(super::common::EmailAddress),
     /// User creation has failed.
     UserCreationFailed(super::common::EmailAddress),
+    /// Describes a user that was successfully added to the team.
+    Success(TeamMemberInfo),
 }
 
 impl<'de> ::serde::de::Deserialize<'de> for MemberAddResult {
@@ -14144,7 +14468,6 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberAddResult {
                     _ => return Err(de::Error::missing_field(".tag"))
                 };
                 let value = match tag {
-                    "success" => MemberAddResult::Success(TeamMemberInfo::internal_deserialize(&mut map)?),
                     "team_license_limit" => {
                         match map.next_key()? {
                             Some("team_license_limit") => MemberAddResult::TeamLicenseLimit(map.next_value()?),
@@ -14215,14 +14538,14 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberAddResult {
                             _ => return Err(de::Error::unknown_field(tag, VARIANTS))
                         }
                     }
+                    "success" => MemberAddResult::Success(TeamMemberInfo::internal_deserialize(&mut map)?),
                     _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
                 };
                 crate::eat_json_fields(&mut map)?;
                 Ok(value)
             }
         }
-        const VARIANTS: &[&str] = &["success",
-                                    "team_license_limit",
+        const VARIANTS: &[&str] = &["team_license_limit",
                                     "free_team_member_limit_reached",
                                     "user_already_on_team",
                                     "user_on_another_team",
@@ -14231,7 +14554,8 @@ impl<'de> ::serde::de::Deserialize<'de> for MemberAddResult {
                                     "duplicate_external_member_id",
                                     "duplicate_member_persistent_id",
                                     "persistent_id_disabled",
-                                    "user_creation_failed"];
+                                    "user_creation_failed",
+                                    "success"];
         deserializer.deserialize_struct("MemberAddResult", VARIANTS, EnumVisitor)
     }
 }
@@ -14241,13 +14565,6 @@ impl ::serde::ser::Serialize for MemberAddResult {
         // union serializer
         use serde::ser::SerializeStruct;
         match *self {
-            MemberAddResult::Success(ref x) => {
-                // struct
-                let mut s = serializer.serialize_struct("MemberAddResult", 3)?;
-                s.serialize_field(".tag", "success")?;
-                x.internal_serialize::<S>(&mut s)?;
-                s.end()
-            }
             MemberAddResult::TeamLicenseLimit(ref x) => {
                 // primitive
                 let mut s = serializer.serialize_struct("MemberAddResult", 2)?;
@@ -14318,6 +14635,678 @@ impl ::serde::ser::Serialize for MemberAddResult {
                 s.serialize_field("user_creation_failed", x)?;
                 s.end()
             }
+            MemberAddResult::Success(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("MemberAddResult", 3)?;
+                s.serialize_field(".tag", "success")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum MemberAddResultBase {
+    /// Team is already full. The organization has no available licenses.
+    TeamLicenseLimit(super::common::EmailAddress),
+    /// Team is already full. The free team member limit has been reached.
+    FreeTeamMemberLimitReached(super::common::EmailAddress),
+    /// User is already on this team. The provided email address is associated with a user who is
+    /// already a member of (including in recoverable state) or invited to the team.
+    UserAlreadyOnTeam(super::common::EmailAddress),
+    /// User is already on another team. The provided email address is associated with a user that
+    /// is already a member or invited to another team.
+    UserOnAnotherTeam(super::common::EmailAddress),
+    /// User is already paired.
+    UserAlreadyPaired(super::common::EmailAddress),
+    /// User migration has failed.
+    UserMigrationFailed(super::common::EmailAddress),
+    /// A user with the given external member ID already exists on the team (including in
+    /// recoverable state).
+    DuplicateExternalMemberId(super::common::EmailAddress),
+    /// A user with the given persistent ID already exists on the team (including in recoverable
+    /// state).
+    DuplicateMemberPersistentId(super::common::EmailAddress),
+    /// Persistent ID is only available to teams with persistent ID SAML configuration. Please
+    /// contact Dropbox for more information.
+    PersistentIdDisabled(super::common::EmailAddress),
+    /// User creation has failed.
+    UserCreationFailed(super::common::EmailAddress),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberAddResultBase {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MemberAddResultBase;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MemberAddResultBase structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "team_license_limit" => {
+                        match map.next_key()? {
+                            Some("team_license_limit") => MemberAddResultBase::TeamLicenseLimit(map.next_value()?),
+                            None => return Err(de::Error::missing_field("team_license_limit")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "free_team_member_limit_reached" => {
+                        match map.next_key()? {
+                            Some("free_team_member_limit_reached") => MemberAddResultBase::FreeTeamMemberLimitReached(map.next_value()?),
+                            None => return Err(de::Error::missing_field("free_team_member_limit_reached")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_already_on_team" => {
+                        match map.next_key()? {
+                            Some("user_already_on_team") => MemberAddResultBase::UserAlreadyOnTeam(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_already_on_team")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_on_another_team" => {
+                        match map.next_key()? {
+                            Some("user_on_another_team") => MemberAddResultBase::UserOnAnotherTeam(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_on_another_team")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_already_paired" => {
+                        match map.next_key()? {
+                            Some("user_already_paired") => MemberAddResultBase::UserAlreadyPaired(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_already_paired")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_migration_failed" => {
+                        match map.next_key()? {
+                            Some("user_migration_failed") => MemberAddResultBase::UserMigrationFailed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_migration_failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "duplicate_external_member_id" => {
+                        match map.next_key()? {
+                            Some("duplicate_external_member_id") => MemberAddResultBase::DuplicateExternalMemberId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("duplicate_external_member_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "duplicate_member_persistent_id" => {
+                        match map.next_key()? {
+                            Some("duplicate_member_persistent_id") => MemberAddResultBase::DuplicateMemberPersistentId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("duplicate_member_persistent_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "persistent_id_disabled" => {
+                        match map.next_key()? {
+                            Some("persistent_id_disabled") => MemberAddResultBase::PersistentIdDisabled(map.next_value()?),
+                            None => return Err(de::Error::missing_field("persistent_id_disabled")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_creation_failed" => {
+                        match map.next_key()? {
+                            Some("user_creation_failed") => MemberAddResultBase::UserCreationFailed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_creation_failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["team_license_limit",
+                                    "free_team_member_limit_reached",
+                                    "user_already_on_team",
+                                    "user_on_another_team",
+                                    "user_already_paired",
+                                    "user_migration_failed",
+                                    "duplicate_external_member_id",
+                                    "duplicate_member_persistent_id",
+                                    "persistent_id_disabled",
+                                    "user_creation_failed"];
+        deserializer.deserialize_struct("MemberAddResultBase", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberAddResultBase {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MemberAddResultBase::TeamLicenseLimit(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddResultBase", 2)?;
+                s.serialize_field(".tag", "team_license_limit")?;
+                s.serialize_field("team_license_limit", x)?;
+                s.end()
+            }
+            MemberAddResultBase::FreeTeamMemberLimitReached(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddResultBase", 2)?;
+                s.serialize_field(".tag", "free_team_member_limit_reached")?;
+                s.serialize_field("free_team_member_limit_reached", x)?;
+                s.end()
+            }
+            MemberAddResultBase::UserAlreadyOnTeam(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddResultBase", 2)?;
+                s.serialize_field(".tag", "user_already_on_team")?;
+                s.serialize_field("user_already_on_team", x)?;
+                s.end()
+            }
+            MemberAddResultBase::UserOnAnotherTeam(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddResultBase", 2)?;
+                s.serialize_field(".tag", "user_on_another_team")?;
+                s.serialize_field("user_on_another_team", x)?;
+                s.end()
+            }
+            MemberAddResultBase::UserAlreadyPaired(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddResultBase", 2)?;
+                s.serialize_field(".tag", "user_already_paired")?;
+                s.serialize_field("user_already_paired", x)?;
+                s.end()
+            }
+            MemberAddResultBase::UserMigrationFailed(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddResultBase", 2)?;
+                s.serialize_field(".tag", "user_migration_failed")?;
+                s.serialize_field("user_migration_failed", x)?;
+                s.end()
+            }
+            MemberAddResultBase::DuplicateExternalMemberId(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddResultBase", 2)?;
+                s.serialize_field(".tag", "duplicate_external_member_id")?;
+                s.serialize_field("duplicate_external_member_id", x)?;
+                s.end()
+            }
+            MemberAddResultBase::DuplicateMemberPersistentId(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddResultBase", 2)?;
+                s.serialize_field(".tag", "duplicate_member_persistent_id")?;
+                s.serialize_field("duplicate_member_persistent_id", x)?;
+                s.end()
+            }
+            MemberAddResultBase::PersistentIdDisabled(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddResultBase", 2)?;
+                s.serialize_field(".tag", "persistent_id_disabled")?;
+                s.serialize_field("persistent_id_disabled", x)?;
+                s.end()
+            }
+            MemberAddResultBase::UserCreationFailed(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddResultBase", 2)?;
+                s.serialize_field(".tag", "user_creation_failed")?;
+                s.serialize_field("user_creation_failed", x)?;
+                s.end()
+            }
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct MemberAddV2Arg {
+    pub member_email: super::common::EmailAddress,
+    /// Member's first name.
+    pub member_given_name: Option<super::common::OptionalNamePart>,
+    /// Member's last name.
+    pub member_surname: Option<super::common::OptionalNamePart>,
+    /// External ID for member.
+    pub member_external_id: Option<super::team_common::MemberExternalId>,
+    /// Persistent ID for member. This field is only available to teams using persistent ID SAML
+    /// configuration.
+    pub member_persistent_id: Option<String>,
+    /// Whether to send a welcome email to the member. If send_welcome_email is false, no email
+    /// invitation will be sent to the user. This may be useful for apps using single sign-on (SSO)
+    /// flows for onboarding that want to handle announcements themselves.
+    pub send_welcome_email: bool,
+    /// Whether a user is directory restricted.
+    pub is_directory_restricted: Option<bool>,
+    pub role_ids: Option<Vec<TeamMemberRoleId>>,
+}
+
+impl MemberAddV2Arg {
+    pub fn new(member_email: super::common::EmailAddress) -> Self {
+        MemberAddV2Arg {
+            member_email,
+            member_given_name: None,
+            member_surname: None,
+            member_external_id: None,
+            member_persistent_id: None,
+            send_welcome_email: true,
+            is_directory_restricted: None,
+            role_ids: None,
+        }
+    }
+
+    pub fn with_member_given_name(mut self, value: super::common::OptionalNamePart) -> Self {
+        self.member_given_name = Some(value);
+        self
+    }
+
+    pub fn with_member_surname(mut self, value: super::common::OptionalNamePart) -> Self {
+        self.member_surname = Some(value);
+        self
+    }
+
+    pub fn with_member_external_id(mut self, value: super::team_common::MemberExternalId) -> Self {
+        self.member_external_id = Some(value);
+        self
+    }
+
+    pub fn with_member_persistent_id(mut self, value: String) -> Self {
+        self.member_persistent_id = Some(value);
+        self
+    }
+
+    pub fn with_send_welcome_email(mut self, value: bool) -> Self {
+        self.send_welcome_email = value;
+        self
+    }
+
+    pub fn with_is_directory_restricted(mut self, value: bool) -> Self {
+        self.is_directory_restricted = Some(value);
+        self
+    }
+
+    pub fn with_role_ids(mut self, value: Vec<TeamMemberRoleId>) -> Self {
+        self.role_ids = Some(value);
+        self
+    }
+}
+
+const MEMBER_ADD_V2_ARG_FIELDS: &[&str] = &["member_email",
+                                            "member_given_name",
+                                            "member_surname",
+                                            "member_external_id",
+                                            "member_persistent_id",
+                                            "send_welcome_email",
+                                            "is_directory_restricted",
+                                            "role_ids"];
+impl MemberAddV2Arg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MemberAddV2Arg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MemberAddV2Arg>, V::Error> {
+        let mut field_member_email = None;
+        let mut field_member_given_name = None;
+        let mut field_member_surname = None;
+        let mut field_member_external_id = None;
+        let mut field_member_persistent_id = None;
+        let mut field_send_welcome_email = None;
+        let mut field_is_directory_restricted = None;
+        let mut field_role_ids = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "member_email" => {
+                    if field_member_email.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("member_email"));
+                    }
+                    field_member_email = Some(map.next_value()?);
+                }
+                "member_given_name" => {
+                    if field_member_given_name.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("member_given_name"));
+                    }
+                    field_member_given_name = Some(map.next_value()?);
+                }
+                "member_surname" => {
+                    if field_member_surname.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("member_surname"));
+                    }
+                    field_member_surname = Some(map.next_value()?);
+                }
+                "member_external_id" => {
+                    if field_member_external_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("member_external_id"));
+                    }
+                    field_member_external_id = Some(map.next_value()?);
+                }
+                "member_persistent_id" => {
+                    if field_member_persistent_id.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("member_persistent_id"));
+                    }
+                    field_member_persistent_id = Some(map.next_value()?);
+                }
+                "send_welcome_email" => {
+                    if field_send_welcome_email.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("send_welcome_email"));
+                    }
+                    field_send_welcome_email = Some(map.next_value()?);
+                }
+                "is_directory_restricted" => {
+                    if field_is_directory_restricted.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("is_directory_restricted"));
+                    }
+                    field_is_directory_restricted = Some(map.next_value()?);
+                }
+                "role_ids" => {
+                    if field_role_ids.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("role_ids"));
+                    }
+                    field_role_ids = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MemberAddV2Arg {
+            member_email: field_member_email.ok_or_else(|| ::serde::de::Error::missing_field("member_email"))?,
+            member_given_name: field_member_given_name,
+            member_surname: field_member_surname,
+            member_external_id: field_member_external_id,
+            member_persistent_id: field_member_persistent_id,
+            send_welcome_email: field_send_welcome_email.unwrap_or(true),
+            is_directory_restricted: field_is_directory_restricted,
+            role_ids: field_role_ids,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("member_email", &self.member_email)?;
+        s.serialize_field("member_given_name", &self.member_given_name)?;
+        s.serialize_field("member_surname", &self.member_surname)?;
+        s.serialize_field("member_external_id", &self.member_external_id)?;
+        s.serialize_field("member_persistent_id", &self.member_persistent_id)?;
+        s.serialize_field("send_welcome_email", &self.send_welcome_email)?;
+        s.serialize_field("is_directory_restricted", &self.is_directory_restricted)?;
+        s.serialize_field("role_ids", &self.role_ids)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberAddV2Arg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MemberAddV2Arg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MemberAddV2Arg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MemberAddV2Arg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MemberAddV2Arg", MEMBER_ADD_V2_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberAddV2Arg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MemberAddV2Arg", 8)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Describes the result of attempting to add a single user to the team. 'success' is the only value
+/// indicating that a user was indeed added to the team - the other values explain the type of
+/// failure that occurred, and include the email of the user for which the operation has failed.
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum MemberAddV2Result {
+    /// Team is already full. The organization has no available licenses.
+    TeamLicenseLimit(super::common::EmailAddress),
+    /// Team is already full. The free team member limit has been reached.
+    FreeTeamMemberLimitReached(super::common::EmailAddress),
+    /// User is already on this team. The provided email address is associated with a user who is
+    /// already a member of (including in recoverable state) or invited to the team.
+    UserAlreadyOnTeam(super::common::EmailAddress),
+    /// User is already on another team. The provided email address is associated with a user that
+    /// is already a member or invited to another team.
+    UserOnAnotherTeam(super::common::EmailAddress),
+    /// User is already paired.
+    UserAlreadyPaired(super::common::EmailAddress),
+    /// User migration has failed.
+    UserMigrationFailed(super::common::EmailAddress),
+    /// A user with the given external member ID already exists on the team (including in
+    /// recoverable state).
+    DuplicateExternalMemberId(super::common::EmailAddress),
+    /// A user with the given persistent ID already exists on the team (including in recoverable
+    /// state).
+    DuplicateMemberPersistentId(super::common::EmailAddress),
+    /// Persistent ID is only available to teams with persistent ID SAML configuration. Please
+    /// contact Dropbox for more information.
+    PersistentIdDisabled(super::common::EmailAddress),
+    /// User creation has failed.
+    UserCreationFailed(super::common::EmailAddress),
+    /// Describes a user that was successfully added to the team.
+    Success(TeamMemberInfoV2),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MemberAddV2Result {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MemberAddV2Result;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MemberAddV2Result structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "team_license_limit" => {
+                        match map.next_key()? {
+                            Some("team_license_limit") => MemberAddV2Result::TeamLicenseLimit(map.next_value()?),
+                            None => return Err(de::Error::missing_field("team_license_limit")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "free_team_member_limit_reached" => {
+                        match map.next_key()? {
+                            Some("free_team_member_limit_reached") => MemberAddV2Result::FreeTeamMemberLimitReached(map.next_value()?),
+                            None => return Err(de::Error::missing_field("free_team_member_limit_reached")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_already_on_team" => {
+                        match map.next_key()? {
+                            Some("user_already_on_team") => MemberAddV2Result::UserAlreadyOnTeam(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_already_on_team")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_on_another_team" => {
+                        match map.next_key()? {
+                            Some("user_on_another_team") => MemberAddV2Result::UserOnAnotherTeam(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_on_another_team")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_already_paired" => {
+                        match map.next_key()? {
+                            Some("user_already_paired") => MemberAddV2Result::UserAlreadyPaired(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_already_paired")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_migration_failed" => {
+                        match map.next_key()? {
+                            Some("user_migration_failed") => MemberAddV2Result::UserMigrationFailed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_migration_failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "duplicate_external_member_id" => {
+                        match map.next_key()? {
+                            Some("duplicate_external_member_id") => MemberAddV2Result::DuplicateExternalMemberId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("duplicate_external_member_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "duplicate_member_persistent_id" => {
+                        match map.next_key()? {
+                            Some("duplicate_member_persistent_id") => MemberAddV2Result::DuplicateMemberPersistentId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("duplicate_member_persistent_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "persistent_id_disabled" => {
+                        match map.next_key()? {
+                            Some("persistent_id_disabled") => MemberAddV2Result::PersistentIdDisabled(map.next_value()?),
+                            None => return Err(de::Error::missing_field("persistent_id_disabled")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "user_creation_failed" => {
+                        match map.next_key()? {
+                            Some("user_creation_failed") => MemberAddV2Result::UserCreationFailed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("user_creation_failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "success" => MemberAddV2Result::Success(TeamMemberInfoV2::internal_deserialize(&mut map)?),
+                    _ => MemberAddV2Result::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["team_license_limit",
+                                    "free_team_member_limit_reached",
+                                    "user_already_on_team",
+                                    "user_on_another_team",
+                                    "user_already_paired",
+                                    "user_migration_failed",
+                                    "duplicate_external_member_id",
+                                    "duplicate_member_persistent_id",
+                                    "persistent_id_disabled",
+                                    "user_creation_failed",
+                                    "success",
+                                    "other"];
+        deserializer.deserialize_struct("MemberAddV2Result", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MemberAddV2Result {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MemberAddV2Result::TeamLicenseLimit(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddV2Result", 2)?;
+                s.serialize_field(".tag", "team_license_limit")?;
+                s.serialize_field("team_license_limit", x)?;
+                s.end()
+            }
+            MemberAddV2Result::FreeTeamMemberLimitReached(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddV2Result", 2)?;
+                s.serialize_field(".tag", "free_team_member_limit_reached")?;
+                s.serialize_field("free_team_member_limit_reached", x)?;
+                s.end()
+            }
+            MemberAddV2Result::UserAlreadyOnTeam(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddV2Result", 2)?;
+                s.serialize_field(".tag", "user_already_on_team")?;
+                s.serialize_field("user_already_on_team", x)?;
+                s.end()
+            }
+            MemberAddV2Result::UserOnAnotherTeam(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddV2Result", 2)?;
+                s.serialize_field(".tag", "user_on_another_team")?;
+                s.serialize_field("user_on_another_team", x)?;
+                s.end()
+            }
+            MemberAddV2Result::UserAlreadyPaired(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddV2Result", 2)?;
+                s.serialize_field(".tag", "user_already_paired")?;
+                s.serialize_field("user_already_paired", x)?;
+                s.end()
+            }
+            MemberAddV2Result::UserMigrationFailed(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddV2Result", 2)?;
+                s.serialize_field(".tag", "user_migration_failed")?;
+                s.serialize_field("user_migration_failed", x)?;
+                s.end()
+            }
+            MemberAddV2Result::DuplicateExternalMemberId(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddV2Result", 2)?;
+                s.serialize_field(".tag", "duplicate_external_member_id")?;
+                s.serialize_field("duplicate_external_member_id", x)?;
+                s.end()
+            }
+            MemberAddV2Result::DuplicateMemberPersistentId(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddV2Result", 2)?;
+                s.serialize_field(".tag", "duplicate_member_persistent_id")?;
+                s.serialize_field("duplicate_member_persistent_id", x)?;
+                s.end()
+            }
+            MemberAddV2Result::PersistentIdDisabled(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddV2Result", 2)?;
+                s.serialize_field(".tag", "persistent_id_disabled")?;
+                s.serialize_field("persistent_id_disabled", x)?;
+                s.end()
+            }
+            MemberAddV2Result::UserCreationFailed(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MemberAddV2Result", 2)?;
+                s.serialize_field(".tag", "user_creation_failed")?;
+                s.serialize_field("user_creation_failed", x)?;
+                s.end()
+            }
+            MemberAddV2Result::Success(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("MemberAddV2Result", 3)?;
+                s.serialize_field(".tag", "success")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            MemberAddV2Result::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
         }
     }
 }
@@ -15085,6 +16074,92 @@ impl ::serde::ser::Serialize for MembersAddArg {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct MembersAddArgBase {
+    /// Whether to force the add to happen asynchronously.
+    pub force_async: bool,
+}
+
+impl Default for MembersAddArgBase {
+    fn default() -> Self {
+        MembersAddArgBase {
+            force_async: false,
+        }
+    }
+}
+
+impl MembersAddArgBase {
+    pub fn with_force_async(mut self, value: bool) -> Self {
+        self.force_async = value;
+        self
+    }
+}
+
+const MEMBERS_ADD_ARG_BASE_FIELDS: &[&str] = &["force_async"];
+impl MembersAddArgBase {
+    // no _opt deserializer
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+    ) -> Result<MembersAddArgBase, V::Error> {
+        let mut field_force_async = None;
+        while let Some(key) = map.next_key::<&str>()? {
+            match key {
+                "force_async" => {
+                    if field_force_async.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("force_async"));
+                    }
+                    field_force_async = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        let result = MembersAddArgBase {
+            force_async: field_force_async.unwrap_or(false),
+        };
+        Ok(result)
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("force_async", &self.force_async)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersAddArgBase {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MembersAddArgBase;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersAddArgBase struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MembersAddArgBase::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MembersAddArgBase", MEMBERS_ADD_ARG_BASE_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersAddArgBase {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MembersAddArgBase", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum MembersAddJobStatus {
     /// The asynchronous job is still in progress.
     InProgress,
@@ -15170,6 +16245,97 @@ impl ::serde::ser::Serialize for MembersAddJobStatus {
 }
 
 #[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum MembersAddJobStatusV2Result {
+    /// The asynchronous job is still in progress.
+    InProgress,
+    /// The asynchronous job has finished. For each member that was specified in the parameter
+    /// [`MembersAddArg`](MembersAddArg) that was provided to [`members_add_v2()`](members_add_v2),
+    /// a corresponding item is returned in this list.
+    Complete(Vec<MemberAddV2Result>),
+    /// The asynchronous job returned an error. The string contains an error message.
+    Failed(String),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersAddJobStatusV2Result {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MembersAddJobStatusV2Result;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersAddJobStatusV2Result structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "in_progress" => MembersAddJobStatusV2Result::InProgress,
+                    "complete" => {
+                        match map.next_key()? {
+                            Some("complete") => MembersAddJobStatusV2Result::Complete(map.next_value()?),
+                            None => return Err(de::Error::missing_field("complete")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "failed" => {
+                        match map.next_key()? {
+                            Some("failed") => MembersAddJobStatusV2Result::Failed(map.next_value()?),
+                            None => return Err(de::Error::missing_field("failed")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => MembersAddJobStatusV2Result::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["in_progress",
+                                    "complete",
+                                    "failed",
+                                    "other"];
+        deserializer.deserialize_struct("MembersAddJobStatusV2Result", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersAddJobStatusV2Result {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MembersAddJobStatusV2Result::InProgress => {
+                // unit
+                let mut s = serializer.serialize_struct("MembersAddJobStatusV2Result", 1)?;
+                s.serialize_field(".tag", "in_progress")?;
+                s.end()
+            }
+            MembersAddJobStatusV2Result::Complete(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MembersAddJobStatusV2Result", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                s.serialize_field("complete", x)?;
+                s.end()
+            }
+            MembersAddJobStatusV2Result::Failed(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MembersAddJobStatusV2Result", 2)?;
+                s.serialize_field(".tag", "failed")?;
+                s.serialize_field("failed", x)?;
+                s.end()
+            }
+            MembersAddJobStatusV2Result::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
 pub enum MembersAddLaunch {
     /// This response indicates that the processing is asynchronous. The string is an id that can be
     /// used to obtain the status of the asynchronous job.
@@ -15239,6 +16405,193 @@ impl ::serde::ser::Serialize for MembersAddLaunch {
                 s.end()
             }
         }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum MembersAddLaunchV2Result {
+    /// This response indicates that the processing is asynchronous. The string is an id that can be
+    /// used to obtain the status of the asynchronous job.
+    AsyncJobId(super::dbx_async::AsyncJobId),
+    Complete(Vec<MemberAddV2Result>),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersAddLaunchV2Result {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MembersAddLaunchV2Result;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersAddLaunchV2Result structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "async_job_id" => {
+                        match map.next_key()? {
+                            Some("async_job_id") => MembersAddLaunchV2Result::AsyncJobId(map.next_value()?),
+                            None => return Err(de::Error::missing_field("async_job_id")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "complete" => {
+                        match map.next_key()? {
+                            Some("complete") => MembersAddLaunchV2Result::Complete(map.next_value()?),
+                            None => return Err(de::Error::missing_field("complete")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => MembersAddLaunchV2Result::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["async_job_id",
+                                    "complete",
+                                    "other"];
+        deserializer.deserialize_struct("MembersAddLaunchV2Result", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersAddLaunchV2Result {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MembersAddLaunchV2Result::AsyncJobId(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MembersAddLaunchV2Result", 2)?;
+                s.serialize_field(".tag", "async_job_id")?;
+                s.serialize_field("async_job_id", x)?;
+                s.end()
+            }
+            MembersAddLaunchV2Result::Complete(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MembersAddLaunchV2Result", 2)?;
+                s.serialize_field(".tag", "complete")?;
+                s.serialize_field("complete", x)?;
+                s.end()
+            }
+            MembersAddLaunchV2Result::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct MembersAddV2Arg {
+    /// Details of new members to be added to the team.
+    pub new_members: Vec<MemberAddV2Arg>,
+    /// Whether to force the add to happen asynchronously.
+    pub force_async: bool,
+}
+
+impl MembersAddV2Arg {
+    pub fn new(new_members: Vec<MemberAddV2Arg>) -> Self {
+        MembersAddV2Arg {
+            new_members,
+            force_async: false,
+        }
+    }
+
+    pub fn with_force_async(mut self, value: bool) -> Self {
+        self.force_async = value;
+        self
+    }
+}
+
+const MEMBERS_ADD_V2_ARG_FIELDS: &[&str] = &["new_members",
+                                             "force_async"];
+impl MembersAddV2Arg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MembersAddV2Arg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersAddV2Arg>, V::Error> {
+        let mut field_new_members = None;
+        let mut field_force_async = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "new_members" => {
+                    if field_new_members.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("new_members"));
+                    }
+                    field_new_members = Some(map.next_value()?);
+                }
+                "force_async" => {
+                    if field_force_async.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("force_async"));
+                    }
+                    field_force_async = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersAddV2Arg {
+            new_members: field_new_members.ok_or_else(|| ::serde::de::Error::missing_field("new_members"))?,
+            force_async: field_force_async.unwrap_or(false),
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("new_members", &self.new_members)?;
+        s.serialize_field("force_async", &self.force_async)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersAddV2Arg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MembersAddV2Arg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersAddV2Arg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MembersAddV2Arg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MembersAddV2Arg", MEMBERS_ADD_V2_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersAddV2Arg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MembersAddV2Arg", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -16059,9 +17412,10 @@ impl ::std::fmt::Display for MembersGetInfoError {
 /// [`members_get_info()`](members_get_info).
 #[derive(Debug, Clone, PartialEq)]
 pub enum MembersGetInfoItem {
-    /// An ID that was provided as a parameter to [`members_get_info()`](members_get_info), and did
-    /// not match a corresponding user. This might be a team_member_id, an email, or an external ID,
-    /// depending on how the method was called.
+    /// An ID that was provided as a parameter to [`members_get_info()`](members_get_info) or
+    /// [`members_get_info_v2()`](members_get_info_v2), and did not match a corresponding user. This
+    /// might be a team_member_id, an email, or an external ID, depending on how the method was
+    /// called.
     IdNotFound(String),
     /// Info about a team member.
     MemberInfo(TeamMemberInfo),
@@ -16123,6 +17477,323 @@ impl ::serde::ser::Serialize for MembersGetInfoItem {
                 s.end()
             }
         }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum MembersGetInfoItemBase {
+    /// An ID that was provided as a parameter to [`members_get_info()`](members_get_info) or
+    /// [`members_get_info_v2()`](members_get_info_v2), and did not match a corresponding user. This
+    /// might be a team_member_id, an email, or an external ID, depending on how the method was
+    /// called.
+    IdNotFound(String),
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersGetInfoItemBase {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MembersGetInfoItemBase;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersGetInfoItemBase structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "id_not_found" => {
+                        match map.next_key()? {
+                            Some("id_not_found") => MembersGetInfoItemBase::IdNotFound(map.next_value()?),
+                            None => return Err(de::Error::missing_field("id_not_found")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    _ => return Err(de::Error::unknown_variant(tag, VARIANTS))
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["id_not_found"];
+        deserializer.deserialize_struct("MembersGetInfoItemBase", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersGetInfoItemBase {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MembersGetInfoItemBase::IdNotFound(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MembersGetInfoItemBase", 2)?;
+                s.serialize_field(".tag", "id_not_found")?;
+                s.serialize_field("id_not_found", x)?;
+                s.end()
+            }
+        }
+    }
+}
+
+/// Describes a result obtained for a single user whose id was specified in the parameter of
+/// [`members_get_info_v2()`](members_get_info_v2).
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // variants may be added in the future
+pub enum MembersGetInfoItemV2 {
+    /// An ID that was provided as a parameter to [`members_get_info()`](members_get_info) or
+    /// [`members_get_info_v2()`](members_get_info_v2), and did not match a corresponding user. This
+    /// might be a team_member_id, an email, or an external ID, depending on how the method was
+    /// called.
+    IdNotFound(String),
+    /// Info about a team member.
+    MemberInfo(TeamMemberInfoV2),
+    /// Catch-all used for unrecognized values returned from the server. Encountering this value
+    /// typically indicates that this SDK version is out of date.
+    Other,
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersGetInfoItemV2 {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // union deserializer
+        use serde::de::{self, MapAccess, Visitor};
+        struct EnumVisitor;
+        impl<'de> Visitor<'de> for EnumVisitor {
+            type Value = MembersGetInfoItemV2;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersGetInfoItemV2 structure")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, mut map: V) -> Result<Self::Value, V::Error> {
+                let tag: &str = match map.next_key()? {
+                    Some(".tag") => map.next_value()?,
+                    _ => return Err(de::Error::missing_field(".tag"))
+                };
+                let value = match tag {
+                    "id_not_found" => {
+                        match map.next_key()? {
+                            Some("id_not_found") => MembersGetInfoItemV2::IdNotFound(map.next_value()?),
+                            None => return Err(de::Error::missing_field("id_not_found")),
+                            _ => return Err(de::Error::unknown_field(tag, VARIANTS))
+                        }
+                    }
+                    "member_info" => MembersGetInfoItemV2::MemberInfo(TeamMemberInfoV2::internal_deserialize(&mut map)?),
+                    _ => MembersGetInfoItemV2::Other,
+                };
+                crate::eat_json_fields(&mut map)?;
+                Ok(value)
+            }
+        }
+        const VARIANTS: &[&str] = &["id_not_found",
+                                    "member_info",
+                                    "other"];
+        deserializer.deserialize_struct("MembersGetInfoItemV2", VARIANTS, EnumVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersGetInfoItemV2 {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // union serializer
+        use serde::ser::SerializeStruct;
+        match *self {
+            MembersGetInfoItemV2::IdNotFound(ref x) => {
+                // primitive
+                let mut s = serializer.serialize_struct("MembersGetInfoItemV2", 2)?;
+                s.serialize_field(".tag", "id_not_found")?;
+                s.serialize_field("id_not_found", x)?;
+                s.end()
+            }
+            MembersGetInfoItemV2::MemberInfo(ref x) => {
+                // struct
+                let mut s = serializer.serialize_struct("MembersGetInfoItemV2", 3)?;
+                s.serialize_field(".tag", "member_info")?;
+                x.internal_serialize::<S>(&mut s)?;
+                s.end()
+            }
+            MembersGetInfoItemV2::Other => Err(::serde::ser::Error::custom("cannot serialize 'Other' variant"))
+        }
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct MembersGetInfoV2Arg {
+    /// List of team members.
+    pub members: Vec<UserSelectorArg>,
+}
+
+impl MembersGetInfoV2Arg {
+    pub fn new(members: Vec<UserSelectorArg>) -> Self {
+        MembersGetInfoV2Arg {
+            members,
+        }
+    }
+}
+
+const MEMBERS_GET_INFO_V2_ARG_FIELDS: &[&str] = &["members"];
+impl MembersGetInfoV2Arg {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MembersGetInfoV2Arg, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersGetInfoV2Arg>, V::Error> {
+        let mut field_members = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "members" => {
+                    if field_members.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("members"));
+                    }
+                    field_members = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersGetInfoV2Arg {
+            members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("members", &self.members)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersGetInfoV2Arg {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MembersGetInfoV2Arg;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersGetInfoV2Arg struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MembersGetInfoV2Arg::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MembersGetInfoV2Arg", MEMBERS_GET_INFO_V2_ARG_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersGetInfoV2Arg {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MembersGetInfoV2Arg", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct MembersGetInfoV2Result {
+    /// List of team members info.
+    pub members_info: Vec<MembersGetInfoItemV2>,
+}
+
+impl MembersGetInfoV2Result {
+    pub fn new(members_info: Vec<MembersGetInfoItemV2>) -> Self {
+        MembersGetInfoV2Result {
+            members_info,
+        }
+    }
+}
+
+const MEMBERS_GET_INFO_V2_RESULT_FIELDS: &[&str] = &["members_info"];
+impl MembersGetInfoV2Result {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MembersGetInfoV2Result, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersGetInfoV2Result>, V::Error> {
+        let mut field_members_info = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "members_info" => {
+                    if field_members_info.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("members_info"));
+                    }
+                    field_members_info = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersGetInfoV2Result {
+            members_info: field_members_info.ok_or_else(|| ::serde::de::Error::missing_field("members_info"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("members_info", &self.members_info)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersGetInfoV2Result {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MembersGetInfoV2Result;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersGetInfoV2Result struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MembersGetInfoV2Result::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MembersGetInfoV2Result", MEMBERS_GET_INFO_V2_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersGetInfoV2Result {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MembersGetInfoV2Result", 1)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
     }
 }
 
@@ -16658,6 +18329,124 @@ impl ::serde::ser::Serialize for MembersListResult {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("MembersListResult", 3)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct MembersListV2Result {
+    /// List of team members.
+    pub members: Vec<TeamMemberInfoV2>,
+    /// Pass the cursor into [`members_list_continue_v2()`](members_list_continue_v2) to obtain the
+    /// additional members.
+    pub cursor: String,
+    /// Is true if there are additional team members that have not been returned yet. An additional
+    /// call to [`members_list_continue_v2()`](members_list_continue_v2) can retrieve them.
+    pub has_more: bool,
+}
+
+impl MembersListV2Result {
+    pub fn new(members: Vec<TeamMemberInfoV2>, cursor: String, has_more: bool) -> Self {
+        MembersListV2Result {
+            members,
+            cursor,
+            has_more,
+        }
+    }
+}
+
+const MEMBERS_LIST_V2_RESULT_FIELDS: &[&str] = &["members",
+                                                 "cursor",
+                                                 "has_more"];
+impl MembersListV2Result {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<MembersListV2Result, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<MembersListV2Result>, V::Error> {
+        let mut field_members = None;
+        let mut field_cursor = None;
+        let mut field_has_more = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "members" => {
+                    if field_members.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("members"));
+                    }
+                    field_members = Some(map.next_value()?);
+                }
+                "cursor" => {
+                    if field_cursor.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("cursor"));
+                    }
+                    field_cursor = Some(map.next_value()?);
+                }
+                "has_more" => {
+                    if field_has_more.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("has_more"));
+                    }
+                    field_has_more = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = MembersListV2Result {
+            members: field_members.ok_or_else(|| ::serde::de::Error::missing_field("members"))?,
+            cursor: field_cursor.ok_or_else(|| ::serde::de::Error::missing_field("cursor"))?,
+            has_more: field_has_more.ok_or_else(|| ::serde::de::Error::missing_field("has_more"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("members", &self.members)?;
+        s.serialize_field("cursor", &self.cursor)?;
+        s.serialize_field("has_more", &self.has_more)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for MembersListV2Result {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = MembersListV2Result;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a MembersListV2Result struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                MembersListV2Result::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("MembersListV2Result", MEMBERS_LIST_V2_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for MembersListV2Result {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("MembersListV2Result", 3)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
@@ -24607,6 +26396,207 @@ impl ::serde::ser::Serialize for TeamMemberInfo {
         // struct serializer
         use serde::ser::SerializeStruct;
         let mut s = serializer.serialize_struct("TeamMemberInfo", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Information about a team member.
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct TeamMemberInfoV2 {
+    /// Profile of a user as a member of a team.
+    pub profile: TeamMemberProfile,
+    /// The user's roles in the team.
+    pub roles: Option<Vec<TeamMemberRole>>,
+}
+
+impl TeamMemberInfoV2 {
+    pub fn new(profile: TeamMemberProfile) -> Self {
+        TeamMemberInfoV2 {
+            profile,
+            roles: None,
+        }
+    }
+
+    pub fn with_roles(mut self, value: Vec<TeamMemberRole>) -> Self {
+        self.roles = Some(value);
+        self
+    }
+}
+
+const TEAM_MEMBER_INFO_V2_FIELDS: &[&str] = &["profile",
+                                              "roles"];
+impl TeamMemberInfoV2 {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TeamMemberInfoV2, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamMemberInfoV2>, V::Error> {
+        let mut field_profile = None;
+        let mut field_roles = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "profile" => {
+                    if field_profile.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("profile"));
+                    }
+                    field_profile = Some(map.next_value()?);
+                }
+                "roles" => {
+                    if field_roles.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("roles"));
+                    }
+                    field_roles = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamMemberInfoV2 {
+            profile: field_profile.ok_or_else(|| ::serde::de::Error::missing_field("profile"))?,
+            roles: field_roles,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("profile", &self.profile)?;
+        s.serialize_field("roles", &self.roles)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamMemberInfoV2 {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TeamMemberInfoV2;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamMemberInfoV2 struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TeamMemberInfoV2::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TeamMemberInfoV2", TEAM_MEMBER_INFO_V2_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamMemberInfoV2 {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TeamMemberInfoV2", 2)?;
+        self.internal_serialize::<S>(&mut s)?;
+        s.end()
+    }
+}
+
+/// Information about a team member, after the change, like at
+/// [`members_set_profile_v2()`](members_set_profile_v2).
+#[derive(Debug, Clone, PartialEq)]
+#[non_exhaustive] // structs may have more fields added in the future.
+pub struct TeamMemberInfoV2Result {
+    /// Member info, after the change.
+    pub member_info: TeamMemberInfoV2,
+}
+
+impl TeamMemberInfoV2Result {
+    pub fn new(member_info: TeamMemberInfoV2) -> Self {
+        TeamMemberInfoV2Result {
+            member_info,
+        }
+    }
+}
+
+const TEAM_MEMBER_INFO_V2_RESULT_FIELDS: &[&str] = &["member_info"];
+impl TeamMemberInfoV2Result {
+    pub(crate) fn internal_deserialize<'de, V: ::serde::de::MapAccess<'de>>(
+        map: V,
+    ) -> Result<TeamMemberInfoV2Result, V::Error> {
+        Self::internal_deserialize_opt(map, false).map(Option::unwrap)
+    }
+
+    pub(crate) fn internal_deserialize_opt<'de, V: ::serde::de::MapAccess<'de>>(
+        mut map: V,
+        optional: bool,
+    ) -> Result<Option<TeamMemberInfoV2Result>, V::Error> {
+        let mut field_member_info = None;
+        let mut nothing = true;
+        while let Some(key) = map.next_key::<&str>()? {
+            nothing = false;
+            match key {
+                "member_info" => {
+                    if field_member_info.is_some() {
+                        return Err(::serde::de::Error::duplicate_field("member_info"));
+                    }
+                    field_member_info = Some(map.next_value()?);
+                }
+                _ => {
+                    // unknown field allowed and ignored
+                    map.next_value::<::serde_json::Value>()?;
+                }
+            }
+        }
+        if optional && nothing {
+            return Ok(None);
+        }
+        let result = TeamMemberInfoV2Result {
+            member_info: field_member_info.ok_or_else(|| ::serde::de::Error::missing_field("member_info"))?,
+        };
+        Ok(Some(result))
+    }
+
+    pub(crate) fn internal_serialize<S: ::serde::ser::Serializer>(
+        &self,
+        s: &mut S::SerializeStruct,
+    ) -> Result<(), S::Error> {
+        use serde::ser::SerializeStruct;
+        s.serialize_field("member_info", &self.member_info)
+    }
+}
+
+impl<'de> ::serde::de::Deserialize<'de> for TeamMemberInfoV2Result {
+    fn deserialize<D: ::serde::de::Deserializer<'de>>(deserializer: D) -> Result<Self, D::Error> {
+        // struct deserializer
+        use serde::de::{MapAccess, Visitor};
+        struct StructVisitor;
+        impl<'de> Visitor<'de> for StructVisitor {
+            type Value = TeamMemberInfoV2Result;
+            fn expecting(&self, f: &mut ::std::fmt::Formatter<'_>) -> ::std::fmt::Result {
+                f.write_str("a TeamMemberInfoV2Result struct")
+            }
+            fn visit_map<V: MapAccess<'de>>(self, map: V) -> Result<Self::Value, V::Error> {
+                TeamMemberInfoV2Result::internal_deserialize(map)
+            }
+        }
+        deserializer.deserialize_struct("TeamMemberInfoV2Result", TEAM_MEMBER_INFO_V2_RESULT_FIELDS, StructVisitor)
+    }
+}
+
+impl ::serde::ser::Serialize for TeamMemberInfoV2Result {
+    fn serialize<S: ::serde::ser::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
+        // struct serializer
+        use serde::ser::SerializeStruct;
+        let mut s = serializer.serialize_struct("TeamMemberInfoV2Result", 1)?;
         self.internal_serialize::<S>(&mut s)?;
         s.end()
     }
