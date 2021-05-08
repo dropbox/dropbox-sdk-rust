@@ -1,5 +1,5 @@
 # v0.11.3
-xxxx-yy-zz
+2021-05-08
 * API spec updates:
   * 2021-05-07: team_members namespace
   * 2021-04-14: team namespace
