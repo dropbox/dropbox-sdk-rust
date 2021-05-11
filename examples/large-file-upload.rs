@@ -48,7 +48,7 @@ struct Args {
     resume: Option<Resume>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Resume {
     start_offset: u64,
     session_id: String,
@@ -312,10 +312,10 @@ fn upload_file(
 
     let (source_mtime, source_len) = get_file_mtime_and_size(&source_file)?;
 
-    let session = Arc::new(if let Some(resume) = resume {
+    let session = Arc::new(if let Some(ref resume) = resume {
         source_file.seek(SeekFrom::Start(resume.start_offset))
             .map_err(|e| format!("Seek error: {}", e))?;
-        UploadSession::resume(resume, source_len)
+        UploadSession::resume(resume.clone(), source_len)
     } else {
         UploadSession::new(client.as_ref(), source_len)?
     });
@@ -343,6 +343,7 @@ fn upload_file(
                     data,
                     start_time,
                     session.as_ref(),
+                    resume.as_ref(),
                 );
                 if result.is_ok() {
                     session.mark_block_uploaded(block_offset, data.len() as u64);
@@ -388,13 +389,20 @@ fn upload_block_with_retry(
     buf: &[u8],
     start_time: Instant,
     session: &UploadSession,
+    resume: Option<&Resume>,
 ) -> Result<(), String> {
     let block_start_time = Instant::now();
     let mut errors = 0;
+    const BLOCK_UPLOADED_MSG: &str = "Different data already uploaded at offset ";
     loop {
         match files::upload_session_append_v2(client, arg, buf) {
-            Ok(Ok(())) => {
-                break;
+            Ok(Ok(())) => { break; }
+            Err(dropbox_sdk::Error::BadRequest(msg))
+                if resume.is_some() && msg.contains(BLOCK_UPLOADED_MSG) =>
+            {
+                let i = msg.find(BLOCK_UPLOADED_MSG).unwrap();
+                eprintln!("already uploaded block at {}", &msg[i + BLOCK_UPLOADED_MSG.len() ..]);
+                return Ok(());
             }
             Err(dropbox_sdk::Error::RateLimited { reason, retry_after_seconds }) => {
                 eprintln!("rate-limited ({}), waiting {} seconds", reason, retry_after_seconds);
@@ -421,7 +429,8 @@ fn upload_block_with_retry(
     let block_bytes = buf.len() as u64;
     let bytes_sofar = session.bytes_transferred.fetch_add(block_bytes, SeqCst) + block_bytes;
 
-    let percent = bytes_sofar as f64 / session.file_size as f64 * 100.;
+    let percent = (resume.map(|r| r.start_offset).unwrap_or(0) + bytes_sofar) as f64
+        / session.file_size as f64 * 100.;
 
     // This assumes that we have `PARALLELISM` uploads going at the same time and at roughly the
     // same upload speed:
