@@ -396,6 +396,12 @@ fn upload_block_with_retry(
             Ok(Ok(())) => {
                 break;
             }
+            Err(dropbox_sdk::Error::RateLimited { reason, retry_after_seconds }) => {
+                eprintln!("rate-limited ({}), waiting {} seconds", reason, retry_after_seconds);
+                if retry_after_seconds > 0 {
+                    sleep(Duration::from_secs(u64::from(retry_after_seconds)));
+                }
+            }
             error => {
                 errors += 1;
                 let msg = format!("Error calling upload_session_append: {:?}", error);
