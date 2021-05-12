@@ -29,7 +29,7 @@ jobs:
         run: if [[ ! -z `git status --porcelain=v1` ]]; then echo "::error::Workspace is dirty after running generator. Did you remember to check in the generated files?"; exit 1; fi
 
       - name: Install stable toolchain
-        uses: actions-rs/toolchain@v1
+        uses: actions-rs/toolchain@v1.0.7
         with:
           profile: minimal
           components: clippy
