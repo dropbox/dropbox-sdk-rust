@@ -240,7 +240,7 @@ impl UploadSession {
     /// Mark a block as uploaded.
     pub fn mark_block_uploaded(&self, block_offset: u64, block_len: u64) {
         let mut completion = self.completion.lock().unwrap();
-        completion.complete_block(block_offset, block_len);
+        completion.complete_block(self.start_offset + block_offset, block_len);
     }
 
     /// Return the offset up to which the file is completely uploaded. It can be resumed from this
