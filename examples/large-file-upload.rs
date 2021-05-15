@@ -24,6 +24,10 @@ const PARALLELISM: usize = 20;
 /// The size of a block. This is a Dropbox constant, not adjustable.
 const BLOCK_SIZE: usize = 4 * 1024 * 1024;
 
+/// We can upload an integer multiple of BLOCK_SIZE in a single request. This reduces the number of
+/// requests needed to do the upload and can help avoid running into rate limits.
+const BLOCKS_PER_REQUEST: usize = 2;
+
 macro_rules! fatal {
     ($($arg:tt)*) => {
         eprintln!($($arg)*);
@@ -322,20 +326,31 @@ fn upload_file(
 
     eprintln!("upload session ID is {}", session.session_id);
 
+    // Initially set to the end of the file and an empty block; if the file is an exact multiple of
+    // BLOCK_SIZE, we'll need to upload an empty buffer when closing the session.
+    let last_block = Arc::new(Mutex::new((source_len, vec![])));
+
     let start_time = Instant::now();
     let upload_result = {
         let client = client.clone();
         let session = session.clone();
+        let last_block = last_block.clone();
+        let resume = resume.clone();
         parallel_reader::read_stream_and_process_chunks_in_parallel(
             &mut source_file,
-            BLOCK_SIZE,
+            BLOCK_SIZE * BLOCKS_PER_REQUEST,
             PARALLELISM,
             Arc::new(move |block_offset, data: &[u8]| -> Result<(), String> {
-                let mut append_arg = session.append_arg(block_offset);
-                if data.len() != BLOCK_SIZE {
+                let append_arg = session.append_arg(block_offset);
+                if data.len() != BLOCK_SIZE * BLOCKS_PER_REQUEST {
                     // This must be the last block. Only the last one is allowed to be not 4 MiB
-                    // exactly, so let's close the session.
-                    append_arg.close = true;
+                    // exactly. Save the block and offset so it can be uploaded after all the
+                    // parallel uploads are done. This is because once the session is closed, we
+                    // can't resume it.
+                    let mut last_block = last_block.lock().unwrap();
+                    last_block.0 = block_offset + session.start_offset;
+                    last_block.1 = data.to_vec();
+                    return Ok(());
                 }
                 let result = upload_block_with_retry(
                     client.as_ref(),
@@ -355,6 +370,19 @@ fn upload_file(
     if let Err(e) = upload_result {
         return Err(format!("{}. To resume, use --resume {},{}",
             e, session.session_id, session.complete_up_to()));
+    }
+
+    let (last_block_offset, last_block_data) = unwrap_arcmutex(last_block);
+    eprintln!("closing session at {} with {}-byte block",
+        last_block_offset, last_block_data.len());
+    let mut arg = session.append_arg(last_block_offset);
+    arg.close = true;
+    if let Err(e) = upload_block_with_retry(
+        client.as_ref(), &arg, &last_block_data, start_time, session.as_ref(), resume.as_ref())
+    {
+        eprintln!("failed to close session: {}", e);
+        // But don't error out; try committing anyway. It could be we're resuming a file where we
+        // already closed it out but failed to commit.
     }
 
     eprintln!("committing...");
@@ -393,17 +421,9 @@ fn upload_block_with_retry(
 ) -> Result<(), String> {
     let block_start_time = Instant::now();
     let mut errors = 0;
-    const BLOCK_UPLOADED_MSG: &str = "Different data already uploaded at offset ";
     loop {
         match files::upload_session_append_v2(client, arg, buf) {
             Ok(Ok(())) => { break; }
-            Err(dropbox_sdk::Error::BadRequest(msg))
-                if resume.is_some() && msg.contains(BLOCK_UPLOADED_MSG) =>
-            {
-                let i = msg.find(BLOCK_UPLOADED_MSG).unwrap();
-                eprintln!("already uploaded block at {}", &msg[i + BLOCK_UPLOADED_MSG.len() ..]);
-                return Ok(());
-            }
             Err(dropbox_sdk::Error::RateLimited { reason, retry_after_seconds }) => {
                 eprintln!("rate-limited ({}), waiting {} seconds", reason, retry_after_seconds);
                 if retry_after_seconds > 0 {
@@ -482,6 +502,13 @@ fn iso8601(t: SystemTime) -> String {
 
     chrono::NaiveDateTime::from_timestamp(timestamp, 0 /* nsecs */)
         .format("%Y-%m-%dT%H:%M:%SZ").to_string()
+}
+
+fn unwrap_arcmutex<T: std::fmt::Debug>(x: Arc<Mutex<T>>) -> T {
+    Arc::try_unwrap(x)
+        .expect("failed to unwrap Arc")
+        .into_inner()
+        .expect("failed to unwrap Mutex")
 }
 
 fn main() {
