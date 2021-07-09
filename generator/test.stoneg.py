@@ -38,7 +38,12 @@ class TestBackend(RustHelperBackend):
                 return [TestPolymorphicStruct(self, typ, self.reference_impls, variant)
                     for variant in typ.get_enumerated_subtypes()]
             else:
-                return [TestStruct(self, typ, self.reference_impls)]
+                vals = [TestStruct(self, typ, self.reference_impls)]
+                if typ.all_optional_fields:
+                    # If any fields are optional, also emit a test struct that lacks all optional fields.
+                    # This helps catch backwards-compat issues as well as checking serialization of None.
+                    vals += [TestStruct(self, typ, self.reference_impls, no_optional_fields=True)]
+                return vals
         elif ir.is_union_type(typ):
             return [TestUnion(self, typ, self.reference_impls, variant)
                 for variant in typ.all_fields]
@@ -241,7 +246,7 @@ class TestValue(object):
 
 
 class TestStruct(TestValue):
-    def __init__(self, rust_generator, stone_type, reference_impls):
+    def __init__(self, rust_generator: TestBackend, stone_type: ir.Struct, reference_impls, no_optional_fields=False):
         super(TestStruct, self).__init__(rust_generator)
 
         if stone_type.has_enumerated_subtypes():
@@ -249,6 +254,7 @@ class TestStruct(TestValue):
 
         self._stone_type = stone_type
         self._reference_impls = reference_impls
+        self._no_optional_fields = no_optional_fields
 
         py_name = fmt_py_class(stone_type.name)
         try:
@@ -256,7 +262,7 @@ class TestStruct(TestValue):
         except Exception as e:
             raise RuntimeError(u'Error instantiating value for {}: {}'.format(stone_type.name, e))
 
-        for field in stone_type.all_fields:
+        for field in (stone_type.all_required_fields if no_optional_fields else stone_type.all_fields):
             field_value = make_test_field(
                     field.name, field.data_type, rust_generator, reference_impls)
             if field_value is None:
@@ -272,6 +278,11 @@ class TestStruct(TestValue):
         for field in self.fields:
             field.emit_assert(codegen, expression_path)
 
+    def test_suffix(self):
+        if self._no_optional_fields:
+            return "_OnlyRequiredFields"
+        else:
+            return ""
 
 class TestUnion(TestValue):
     def __init__(self, rust_generator, stone_type, reference_impls, variant):
